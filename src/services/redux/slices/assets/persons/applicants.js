@@ -187,6 +187,11 @@ export const reduxSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(BROWSE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, query = {} } = action.payload || {};
         const { branchId } = query;

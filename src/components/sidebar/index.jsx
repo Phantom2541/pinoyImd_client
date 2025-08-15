@@ -11,6 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import { Policy, Sidebars } from "../../services/fakeDb";
 import {
+  Cloudinary,
   // ENDPOINT,
   FailedLogo,
   capitalize,
@@ -208,10 +209,6 @@ export default function SideNavigation({
     });
   };
 
-  useEffect(() => {
-    console.log("running");
-  }, []);
-
   return (
     <div className="white-skin no-print">
       <MDBSideNav
@@ -228,7 +225,10 @@ export default function SideNavigation({
         {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
           <img
-            src={FailedLogo}
+            src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
+              company?.name
+            }/logo.png`}
+            onError={(e) => (e.target.src = FailedLogo)}
             alt="Company Logo"
             style={{ width: "65px", aspectRatio: "1/1" }}
           />

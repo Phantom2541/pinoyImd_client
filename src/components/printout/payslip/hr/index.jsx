@@ -1,16 +1,17 @@
 import Table from "./table";
 import "./style.css";
 import { Banner } from "../../../../services/utilities";
-import { useSelector } from "react-redux";
-export default function Hr() {
-  const { activePlatform } = useSelector(({ auth }) => auth);
-  const { branch = {} } = activePlatform;
-  const { companyId = {}, name = "" } = branch;
+export default function Hr({ payroll, onloaded, setOnloaded }) {
+  const { branch = {} } = payroll;
+  const { companyId = {} } = branch;
   return (
     <div className="payslip-hr-printout">
       <Banner
         company={companyId?.name}
-        branch={name}
+        branch={branch?.name}
+        bid={branch?.bid || ""}
+        onloaded={onloaded}
+        setOnloaded={setOnloaded}
         className="payslip-banner-printout"
       />
       <Table />

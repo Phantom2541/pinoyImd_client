@@ -27,10 +27,11 @@ const _form = {
   user: "",
   department: "",
   section: "",
+  prc: { id: "", from: "", to: "" },
 };
-export default function Modal({ show, toggle, selected, willCreate }) {
+export default function Modal({ show, selected, willCreate }) {
   const { collections } = useSelector(({ personnels }) => personnels),
-    { formSubmitted, isSuccess } = useSelector(({ heads }) => heads),
+    { formSubmitted } = useSelector(({ heads }) => heads),
     [crews, setCrews] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
@@ -38,14 +39,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     [sections, setSections] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    if (show && !formSubmitted && isSuccess) {
-      dispatch(TOGGLE());
-      dispatch(RESET());
-      // setForm(_form);
-    }
-  }, [formSubmitted, isSuccess, show, toggle, setForm, dispatch]);
 
   useEffect(() => {
     if (activePlatform?.departments === department) {
@@ -96,8 +89,10 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         data: { ...form, branch: activePlatform?.branchId },
         token,
       })
-    );
-    dispatch(TOGGLE());
+    ).then(() => {
+      dispatch(TOGGLE());
+      dispatch(RESET());
+    });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -146,7 +141,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleClose = () => {
     dispatch(TOGGLE());
   };
-
+  console.log("form", form);
   return (
     <MDBModal
       isOpen={show}

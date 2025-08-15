@@ -25,7 +25,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   UPLOAD,
   RESET,
+  OverrideActivePlatform,
 } from "../../../../../services/redux/slices/assets/persons/auth";
+import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import { FailedBanner } from "../../../../../services/utilities";
 import ImageCropper from "../../../../../components/images/imageCropper";
 
@@ -33,16 +35,39 @@ const array = new Array(5).fill().map((_, index) => index);
 
 const Banner = () => {
   const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
-  const { addToast } = useToasts();
   const { activePlatform, company, token } = useSelector(({ auth }) => auth);
-  const [dateNow, setDateNow] = useState(Date.now()); //Used to display the banner in real time.
+  const { branch = {} } = activePlatform || {};
   const [showImgCropper, setShowImgCropper] = useState(false);
+  const [onloaded, setOnloaded] = useState(false);
   const dispatch = useDispatch();
-  const folder = `companies/${company.name}/${activePlatform?.branch?.name}`;
+  const { addToast } = useToasts();
+
+  const folder = `companies/${company?.name}/${branch?.name}`;
+
+  const bannerSrc = `${Cloudinary.getEndpoint()}/${
+    branch?.bid || ""
+  }/${folder}/banner.png`;
+
   useEffect(() => {
     setShowImgCropper(false);
     dispatch(RESET());
   }, [dispatch]);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = bannerSrc;
+    img
+      .decode()
+      .then(() => {
+        setTimeout(() => {
+          setOnloaded(true);
+        }, 500);
+      })
+      .catch(() => {
+        setOnloaded(true);
+      });
+  }, [bannerSrc]);
+
   useEffect(() => {
     if (message) {
       addToast(message, {
@@ -60,8 +85,20 @@ const Banner = () => {
         data: formData,
         token,
       })
-    ).then(() => {
-      setDateNow(Date.now());
+    ).then((action) => {
+      dispatch(
+        UPDATE({
+          token,
+          data: { bid: action.payload.imgId, _id: activePlatform?.branchId },
+        })
+      ).then(() =>
+        dispatch(
+          OverrideActivePlatform({
+            ...activePlatform,
+            branch: { ...branch, bid: action.payload.imgId },
+          })
+        )
+      );
     });
   };
 
@@ -85,13 +122,30 @@ const Banner = () => {
       <MDBCard>
         <MDBCardBody>
           <MDBView hover={!showImgCropper}>
-            <img
-              key={dateNow}
-              src={`${Cloudinary.getEndpoint()}/${folder}/banner.png?v=${dateNow}`}
-              className="img-fluid"
-              alt={company?.name || "Default Banner"}
-              onError={(e) => (e.target.src = FailedBanner)}
-            />
+            {onloaded ? (
+              <img
+                key={branch?.bid}
+                src={bannerSrc}
+                className="img-fluid"
+                alt={company?.name || "Default Banner"}
+                onError={(e) => (e.target.src = FailedBanner)}
+              />
+            ) : (
+              <MDBAnimation
+                type="flash"
+                infinite
+                delay={`100ms`}
+                duration="3000ms"
+              >
+                <MDBProgress
+                  animated
+                  color="light"
+                  value={3000}
+                  id="banner-printout-loading"
+                ></MDBProgress>
+              </MDBAnimation>
+            )}
+
             <MDBMask overlay="grey-strong d-flex align-items-center">
               <MDBBtnGroup className="mx-auto">
                 <MDBBtn color="warning" size="sm" onClick={handleDownload}>

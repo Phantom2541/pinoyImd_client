@@ -1,33 +1,17 @@
-import React, { useEffect, useState } from "react";
-import {
-  MDBAnimation,
-  MDBBtn,
-  MDBBtnGroup,
-  MDBCard,
-  MDBCardBody,
-  MDBIcon,
-  MDBMask,
-  MDBProgress,
-  MDBTypography,
-  MDBView,
-} from "mdbreact";
-import { useToasts } from "react-toast-notifications";
-import { ENDPOINT } from "./../../../../../services/utilities";
+import { useEffect, useState } from "react";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBMask, MDBView } from "mdbreact";
+import { axioKit, Cloudinary } from "./../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   UPLOAD,
   RESET,
+  SetCOMPANY,
 } from "./../../../../../services/redux/slices/assets/persons/auth";
 import { FailedLogo } from "./../../../../../services/utilities";
 import ImageCropper from "../../../../../components/images/imageCropper";
 
-const array = new Array(5).fill().map((_, index) => index);
-
 export default function Logo() {
-  const { addToast } = useToasts();
-  const { company, token, isLoading, message, isSuccess } = useSelector(
-    ({ auth }) => auth
-  );
+  const { company, token, isLoading } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
   const [preview, setPreview] = useState("");
   const [showImgCropper, setShowImgCropper] = useState(false);
@@ -36,16 +20,6 @@ export default function Logo() {
     setShowImgCropper(false);
     dispatch(RESET());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (message) {
-      addToast(message, {
-        appearance: isSuccess ? "success" : "error",
-      });
-    }
-
-    return () => dispatch(RESET());
-  }, [isSuccess, message, addToast, dispatch]);
 
   const handleUpload = (base64) => {
     const byteString = atob(base64.split(",")[1]);
@@ -57,18 +31,29 @@ export default function Logo() {
     const newBlob = new Blob([ab], { type: "image/png" });
     const objectUrl = URL.createObjectURL(newBlob);
     setPreview(objectUrl);
+    const formData = Cloudinary.buildFileForm(
+      base64,
+      `companies/${company.name}`,
+      "logo"
+    );
     dispatch(
       UPLOAD({
-        data: {
-          path: `companies/${company.name}`,
-          base64: base64.split(",")[1],
-          name: "logo.png",
-        },
+        data: formData,
         token,
       })
-    );
+    ).then(async (action) => {
+      axioKit
+        .update(
+          "assets/companies",
+          { _id: company._id, lid: action.payload.imgId },
+          token
+        )
+        .then(() => {
+          dispatch(SetCOMPANY({ ...company, lid: action.payload.imgId }));
+          setShowImgCropper(false);
+        });
+    });
   };
-
   const handleDownload = () => {
     const link = document.createElement("a");
     link.href = FailedLogo;
@@ -96,7 +81,10 @@ export default function Logo() {
         <MDBView hover={!showImgCropper}>
           <img
             src={
-              preview || `${ENDPOINT}/public/companies/${company.name}/logo.png`
+              preview ||
+              `${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
+                company.name
+              }/logo.png`
             }
             className="img-fluid"
             alt={company?.name || "Default Logo"}

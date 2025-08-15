@@ -1,6 +1,7 @@
 import { MDBRow, MDBCol, MDBInput } from "mdbreact";
 import Search from "../../../../../components/searchables/ao";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
+import EditableSelect from "../../../../../components/customizable/editableSelect";
 
 const Details = ({
   form,
@@ -13,7 +14,7 @@ const Details = ({
   return (
     <>
       <MDBRow>
-        <MDBCol md="4">
+        <MDBCol>
           <MDBInput
             label="Name"
             required
@@ -33,15 +34,17 @@ const Details = ({
             </h6>
           )}
         </MDBCol>
-        <MDBCol md="3">
+        <MDBCol>
           <MDBInput
             label="Subname"
             value={form.subName}
             onChange={({ target }) =>
-              setForm({ ...form, subName: target.value })
+              setForm({ ...form, subName: target.value, isGhost: false })
             }
           />
         </MDBCol>
+      </MDBRow>
+      <MDBRow>
         <MDBCol className="d-flex align-items-center w-100">
           <div className={`w-100 ${form?.ceo?._id && "mt-4"}`}>
             <Search
@@ -50,6 +53,15 @@ const Details = ({
               className="mt-4"
             />
           </div>
+        </MDBCol>
+        <MDBCol>
+          <EditableSelect
+            className="mt-4"
+            preValue={form.category}
+            label="Category"
+            collections={["laboratory", "radiology", "diagnostics", "supplier"]}
+            onChange={(value) => setForm({ ...form, category: value })}
+          />
         </MDBCol>
       </MDBRow>
       <AddressSelect
@@ -84,88 +96,6 @@ const Details = ({
               })
             }
           />
-        </MDBCol>
-      </MDBRow>
-
-      <MDBRow>
-        <MDBCol>
-          <div>
-            <span className="mr-2 " style={{ fontWeight: 500 }}>
-              Is Hiring ?
-            </span>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() => setForm({ ...form, isHiring: !form.isHiring })}
-              checked={form.isHiring}
-              id={"hiring-yes"}
-            />
-            <label
-              htmlFor={"hiring-yes"}
-              className="form-check-label label-table"
-              style={{ fontWeight: 300 }}
-            >
-              Yes
-            </label>
-
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() => {
-                setForm({ ...form, isHiring: !form.isHiring });
-                setBranch({ ...branch, isHiring: !branch.isHiring });
-              }}
-              checked={!form.isHiring}
-              id={"hiring-no"}
-            />
-            <label
-              htmlFor={"hiring-no"}
-              className="form-check-label label-table ml-3"
-              style={{ fontWeight: 300 }}
-            >
-              No
-            </label>
-          </div>
-        </MDBCol>
-        <MDBCol>
-          <div>
-            <span className="mr-2" style={{ fontWeight: 500 }}>
-              Is Verify ?
-            </span>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() =>
-                setForm({ ...form, hasVerified: !form.hasVerified })
-              }
-              checked={form.hasVerified}
-              id={"verified-yes"}
-            />
-            <label
-              htmlFor={"verified-yes"}
-              className="form-check-label label-table"
-              style={{ fontWeight: 300 }}
-            >
-              Yes
-            </label>
-
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() =>
-                setForm({ ...form, hasVerified: !form.hasVerified })
-              }
-              checked={!form.hasVerified}
-              id={"verified-no"}
-            />
-            <label
-              htmlFor={"verified-no"}
-              className="form-check-label label-table ml-3"
-              style={{ fontWeight: 300 }}
-            >
-              No
-            </label>
-          </div>
         </MDBCol>
       </MDBRow>
     </>

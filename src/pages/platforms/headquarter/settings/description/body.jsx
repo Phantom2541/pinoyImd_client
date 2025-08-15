@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 import { ENDPOINT } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,10 +30,6 @@ export default function DescriptionBody() {
   );
 
   const dispatch = useDispatch();
-
-  const logo = `${ENDPOINT}/public/companies/${encodeURIComponent(
-    companyId.name
-  )}/profile/logo.png`;
 
   useEffect(() => {
     if (message) {

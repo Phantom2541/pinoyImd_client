@@ -55,7 +55,6 @@ const Header = () => {
             placeholder="Search by name"
             haveAction={true}
             reset={() => dispatch(SetFILTERED(heads))}
-            hideButton={true}
             handleAdd={(item) => dispatch(SetCREATE(item))}
           />
         </div>

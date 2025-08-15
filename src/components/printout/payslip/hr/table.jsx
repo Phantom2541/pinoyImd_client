@@ -1,14 +1,11 @@
-import { useSelector } from "react-redux";
 import { toWords } from "number-to-words";
 import Header from "./header";
 import { currency } from "../../../../services/utilities";
 export default function Table() {
-  const { activePlatform } = useSelector(({ auth }) => auth);
   const payslip = JSON.parse(localStorage.getItem("payslip"));
-  const { breakdown = {}, rate = {} } = payslip || {};
+  const { breakdown = {}, rate = {}, branch = {} } = payslip || {};
   const { deduction = {}, earn = {} } = breakdown;
 
-  const { branch = {} } = activePlatform;
   const { overtime = 0, nightShift = 0, holiday } = earn;
   const { regular = { present: 0, absent: 0 }, special = 0 } = holiday;
   const { present = 0, absent = 0 } = regular || {};

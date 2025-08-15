@@ -207,6 +207,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.isSuccess = true;
         state.formSubmitted = false;
       })

@@ -14,9 +14,9 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
             zIndex: 0,
             position: "relative",
           }}
-          src={`${Cloudinary.getEndpoint()}/users/${
+          src={`${Cloudinary.getEndpoint()}/${person?.sid || ""}/users/${
             person?.email
-          }/signature.png?v=${Date.now()}`}
+          }/signature.png`}
           onError={(e) => (e.target.style.display = "none")} // hide if not found
           alt={person?.email || "signature"}
         />
@@ -36,9 +36,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
       <div style={{ position: "relative", zIndex: 1 }}>
         {label}
         <h6 style={{ fontSize: "0.8rem" }}>
-          {label !== "Receptionist" &&
-            person?.prc &&
-            ` PRC#: ${person?.prc.id}`}
+          {label !== "Encoder" && person?.prc && ` PRC#: ${person?.prc.id}`}{" "}
         </h6>
       </div>
     </div>

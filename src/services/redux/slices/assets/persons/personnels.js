@@ -386,7 +386,7 @@ export const reduxSlice = createSlice({
         );
 
         const staff = state.collections[index];
-        var StaffAccess = [...staff?.access];
+        var StaffAccess = [...(staff?.access || [])];
 
         if (deleted.length > 0) {
           deleted.forEach((element) => {

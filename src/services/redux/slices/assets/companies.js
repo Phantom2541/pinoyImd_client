@@ -239,6 +239,15 @@ export const reduxSlice = createSlice({
       state.willUPDATE = true;
       state.showModal = true;
     },
+    SETCEO: (state, { payload }) => {
+      state.selected = payload;
+
+      state.selectedId = payload?._id;
+      const full = payload?.fullName || {};
+      state.displayName = `${full.lname || ""}, ${full.fname || ""}${
+        full.mname ? " " + full.mname : ""
+      }`;
+    },
     SetUPDATEhmo: (state, { payload }) => {
       state.selected = payload;
       state.willUPDATEhmo = true;
@@ -554,6 +563,7 @@ export const {
   SetSELECTED,
   SetEDIT,
   SetHMO,
+  SETCEO,
   SetCREATE,
   SetFILTER,
 } = reduxSlice.actions;
