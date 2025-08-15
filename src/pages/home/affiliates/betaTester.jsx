@@ -63,6 +63,8 @@ export default function BetaTester() {
                     src={logoUrl}
                     alt={item.name}
                     fallback={fallbackLogo}
+                    scaleWidth={250}
+                    scaleHeight={200}
                   />
                 </MDBAnimation>
                 <MDBAnimation

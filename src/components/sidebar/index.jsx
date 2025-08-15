@@ -18,6 +18,7 @@ import {
   // isImageValid,
 } from "../../services/utilities";
 import "./style.css";
+import BgRemover from "../bgRemover";
 const diagnostics = [
   "diagnostic",
   "clinic",
@@ -154,7 +155,6 @@ export default function SideNavigation({
     filterSidebarByDepartment,
     isDiagnostics,
   ]);
-  console.log("links", links);
 
   // 🔁 Recursive nav render
   const renderNavItems = (
@@ -232,6 +232,15 @@ export default function SideNavigation({
             alt="Company Logo"
             style={{ width: "65px", aspectRatio: "1/1" }}
           />
+          {/* <BgRemover
+            className="affiliates-logo"
+            src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
+              company?.name
+            }/logo.png`}
+            fallback={FailedLogo}
+            scaleWidth={75}
+            scaleHeight={65}
+          /> */}
           <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company?.name}
           </div>
