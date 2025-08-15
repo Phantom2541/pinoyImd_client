@@ -10,7 +10,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Cloudinary, PresetImage } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
-import { IMAGE, UPLOAD } from "../../services/redux/slices/assets/persons/auth";
+import {
+  IMAGE,
+  UPDATE_INFO,
+  UPLOAD,
+} from "../../services/redux/slices/assets/persons/auth";
 import { ImageCropper } from "../../../src/components/images";
 
 export default function ProfileImage() {
@@ -37,26 +41,12 @@ export default function ProfileImage() {
       img.onload = function () {
         if (this.width !== this.height)
           return handleError("Image must be square.");
-
-        // Convert base64 to blob, then to file
-        const byteString = atob(e.target.result.split(",")[1]);
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-        }
-
-        const newBlob = new Blob([ab], { type: "image/jpeg" });
-        const newFile = new File([newBlob], "profile.jpg", {
-          type: "image/jpeg",
-        });
-
-        const formData = new FormData();
-        formData.append("file", newFile);
-        formData.append("folder", `users/${auth.email}`);
-        formData.append("filename", "profile");
-
-        // Upload using the same logic
+        const src = e.target.result;
+        const formData = Cloudinary.buildFileForm(
+          src,
+          `users/${auth.email}`,
+          "profile"
+        );
         dispatch(
           UPLOAD({
             data: formData,
@@ -84,8 +74,12 @@ export default function ProfileImage() {
         token,
       })
     ).then((action) => {
-      const freshUrl = `${action.payload.url}?v=${Date.now()}`;
-      dispatch(IMAGE(freshUrl));
+      dispatch(
+        UPDATE_INFO({ data: { _id: auth._id, pid: action.payload.imgId } })
+      ).then(() => {
+        const freshUrl = `${action.payload.url}?v=${Date.now()}`;
+        dispatch(IMAGE(freshUrl));
+      });
     });
   };
 

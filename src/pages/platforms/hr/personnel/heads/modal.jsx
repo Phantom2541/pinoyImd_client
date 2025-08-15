@@ -27,6 +27,7 @@ const _form = {
   user: "",
   department: "",
   section: "",
+  prc: { id: "", from: "", to: "" },
 };
 export default function Modal({ show, selected, willCreate }) {
   const { collections } = useSelector(({ personnels }) => personnels),
@@ -140,7 +141,7 @@ export default function Modal({ show, selected, willCreate }) {
   const handleClose = () => {
     dispatch(TOGGLE());
   };
-
+  console.log("form", form);
   return (
     <MDBModal
       isOpen={show}

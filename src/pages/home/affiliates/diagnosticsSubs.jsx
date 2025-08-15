@@ -1,4 +1,3 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -40,9 +39,9 @@ export default function DiagnosticsSubs() {
         }}
       >
         {diagnosticCompanies.map((item, index) => {
-          const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-            item.name
-          )}/profile/logo`;
+          const logoUrl = `${Cloudinary.getEndpoint()}/${
+            item?.lid || ""
+          }/companies/${encodeURIComponent(item.name)}/profile/logo`;
 
           return (
             <SwiperSlide key={item._id || index}>

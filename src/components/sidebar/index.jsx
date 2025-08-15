@@ -209,10 +209,6 @@ export default function SideNavigation({
     });
   };
 
-  useEffect(() => {
-    console.log("running");
-  }, []);
-
   return (
     <div className="white-skin no-print">
       <MDBSideNav
@@ -229,7 +225,7 @@ export default function SideNavigation({
         {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
           <img
-            src={`${Cloudinary.getEndpoint()}/companies/${
+            src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
               company?.name
             }/logo.png`}
             onError={(e) => (e.target.src = FailedLogo)}

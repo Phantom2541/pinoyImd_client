@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "./header";
 import { Banner } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
@@ -19,7 +19,6 @@ function chunkArray(array, size) {
 const Printout = ({ task, onloaded, setOnloaded }) => {
   const { branchId, remarks, signatories, packages } = task;
   const chunks = chunkArray(packages, 23); // adjust row count per page here
-
   return (
     <div className="laboratory-container">
       {chunks.map((chunk, index) => (
@@ -28,6 +27,7 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
             <Banner
               company={branchId.companyId.name}
               branch={branchId.name}
+              bid={branchId?.bid || ""}
               onloaded={onloaded}
               setOnloaded={setOnloaded}
               className="laboratory-banner"
@@ -77,7 +77,7 @@ export default function LabTaskPrintout() {
     if (onloaded) {
       setTimeout(() => {
         window.print();
-      }, 1000);
+      }, 500);
     }
   }, [onloaded]);
 

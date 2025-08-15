@@ -20,7 +20,7 @@ export default function Header({ remittance }) {
             <u>{fullName(cashier?.fullName)}</u>
           </h6>
         </div>
-        <div className="d-flex align-items-center" style={{ width: "25%" }}>
+        <div className="d-flex align-items-center">
           <h6>Patients:</h6>
           <h6 className="ml-1" style={{ fontWeight: 700 }}>
             {patients}
@@ -32,7 +32,7 @@ export default function Header({ remittance }) {
           <h6>Department:</h6>
           <h6 className="ml-1">{capitalize(department)}</h6>
         </div>
-        <div className="d-flex align-items-center" style={{ width: "25%" }}>
+        <div className="d-flex align-items-center">
           <h6>Shift:</h6>
           <h6 className="  ml-1">{capitalize(shift)}</h6>
         </div>
@@ -44,7 +44,7 @@ export default function Header({ remittance }) {
             {currency.format(opening?.sum)}
           </h6>
         </div>
-        <div className="d-flex align-items-center" style={{ width: "25%" }}>
+        <div className="d-flex align-items-center">
           <h6>Epenses:</h6>
           <h6 className="  ml-1" style={{ fontWeight: 700 }}>
             {currency.format(expenses)}

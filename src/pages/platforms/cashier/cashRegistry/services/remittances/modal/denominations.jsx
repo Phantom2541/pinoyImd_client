@@ -22,7 +22,6 @@ import {
   removeUndefinedValues,
 } from "./../../../../../../../services/utilities";
 import "./style.css";
-import { transform } from "lodash";
 import RollingNumber from "../../../../../../../components/rollingNumber";
 
 export default function Modal() {
@@ -158,6 +157,7 @@ export default function Modal() {
               sum, // floating is included
             },
             sales: selected.sales,
+            branch: activePlatform.branch,
           })
         );
         window.open(

@@ -25,7 +25,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   UPLOAD,
   RESET,
+  OverrideActivePlatform,
 } from "../../../../../services/redux/slices/assets/persons/auth";
+import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import { FailedBanner } from "../../../../../services/utilities";
 import ImageCropper from "../../../../../components/images/imageCropper";
 
@@ -35,10 +37,10 @@ const Banner = () => {
   const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
   const { activePlatform, company, token } = useSelector(({ auth }) => auth);
-  const [dateNow, setDateNow] = useState(Date.now()); //Used to display the banner in real time.
   const [showImgCropper, setShowImgCropper] = useState(false);
   const dispatch = useDispatch();
-  const folder = `companies/${company.name}/${activePlatform?.branch?.name}`;
+  const { branch = {} } = activePlatform || {};
+  const folder = `companies/${company?.name}/${branch?.name}`;
   useEffect(() => {
     setShowImgCropper(false);
     dispatch(RESET());
@@ -60,8 +62,20 @@ const Banner = () => {
         data: formData,
         token,
       })
-    ).then(() => {
-      setDateNow(Date.now());
+    ).then((action) => {
+      dispatch(
+        UPDATE({
+          token,
+          data: { bid: action.payload.imgId, _id: activePlatform?.branchId },
+        })
+      ).then(() =>
+        dispatch(
+          OverrideActivePlatform({
+            ...activePlatform,
+            branch: { ...branch, bid: action.payload.imgId },
+          })
+        )
+      );
     });
   };
 
@@ -86,8 +100,10 @@ const Banner = () => {
         <MDBCardBody>
           <MDBView hover={!showImgCropper}>
             <img
-              key={dateNow}
-              src={`${Cloudinary.getEndpoint()}/${folder}/banner.png?v=${dateNow}`}
+              key={branch?.bid}
+              src={`${Cloudinary.getEndpoint()}/${
+                branch?.bid || ""
+              }/${folder}/banner.png`}
               className="img-fluid"
               alt={company?.name || "Default Banner"}
               onError={(e) => (e.target.src = FailedBanner)}

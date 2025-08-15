@@ -22,6 +22,7 @@ const _form = {
   ceo: "",
   name: "",
   subName: "",
+  category: "laboratory",
   tagline: "",
   isHiring: true,
   hasVerified: false,
@@ -97,7 +98,11 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isDetails) {
-      setBranch((prev) => ({ ...prev, address: form.address }));
+      setBranch((prev) => ({
+        ...prev,
+        address: form.address,
+        category: form.category,
+      }));
       return setIsDetails(!isDetails);
     }
     const { name, displayname } = branch;

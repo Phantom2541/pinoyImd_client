@@ -1,4 +1,3 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -51,11 +50,9 @@ export default function BetaTester() {
           const mainBranch = branches.find((branch) => branch.isMain === true);
           const address = mainBranch?.address || {};
 
-          const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-            item.name
-          )}/profile/logo`;
-
-          console.log("item", item);
+          const logoUrl = `${Cloudinary.getEndpoint()}/${
+            item?.lid || ""
+          }/companies/${encodeURIComponent(item.name)}/profile/logo`;
 
           return (
             <SwiperSlide key={item._id || index}>

@@ -31,10 +31,6 @@ export default function DescriptionBody() {
 
   const dispatch = useDispatch();
 
-  const logo = `${ENDPOINT}/public/companies/${encodeURIComponent(
-    companyId.name
-  )}/profile/logo.png`;
-
   useEffect(() => {
     if (message) {
       addToast(message, {

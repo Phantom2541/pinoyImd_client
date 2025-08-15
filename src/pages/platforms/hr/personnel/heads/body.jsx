@@ -36,8 +36,6 @@ export default function Body() {
     [animateClass, setAnimateClass] = useState("");
   const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
-  const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
-  const [emailRefreshKey, setEmailRefreshKey] = useState({});
   const [heads, setHeads] = useState([]);
 
   useEffect(() => {
@@ -48,59 +46,9 @@ export default function Body() {
     }
   }, [isSuccess, message, addToast]);
 
-  // Load from localStorage (once)
-  useEffect(() => {
-    const savedSignatureKeys = JSON.parse(
-      localStorage.getItem("signatureRefreshKey") || "{}"
-    );
-    const savedEmailKeys = JSON.parse(
-      localStorage.getItem("emailRefreshKey") || "{}"
-    );
-    setSignatureRefreshKey(savedSignatureKeys);
-    setEmailRefreshKey(savedEmailKeys);
-  }, []);
-
   useEffect(() => {
     setHeads(filtered);
   }, [filtered]);
-
-  const handleSignature = (e, email) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.type === "image/png") {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        file.signature = file.name;
-        const formData = Cloudinary.buildFileForm(
-          reader.result,
-          `users/${email}`,
-          "signature"
-        );
-
-        dispatch(
-          UPLOAD({
-            data: formData,
-            token,
-          })
-        ).then(() => {
-          setImageErrors((prev) => ({ ...prev, [email]: false }));
-          const updated = { ...signatureRefreshKey, [email]: Date.now() };
-          setSignatureRefreshKey(updated);
-          localStorage.setItem("signatureRefreshKey", JSON.stringify(updated));
-          addToast("Signature updated!", { appearance: "success" });
-        });
-      };
-
-      reader.readAsDataURL(file);
-
-      e.target.value = null; // ✅ Reset only after success
-    } else {
-      addToast("Only PNG files are allowed!", { appearance: "error" });
-      e.target.value = null; // ✅ Reset if rejected
-    }
-  };
 
   const handleDelete = (_id, user) => {
     Swal.fire({
@@ -179,7 +127,67 @@ export default function Body() {
     return sections;
   };
 
-  const handleUploadProfile = (base64, email) => {
+  const updateHeadsImg = (_id, imgId, keyToUpdate, message = "") => {
+    const _heads = [...heads];
+    const users = _heads.filter((h) => h.user?._id === _id);
+    users.forEach((element) => {
+      const index = _heads.findIndex(({ _id: hId }) => hId === element._id);
+      _heads[index] = {
+        ..._heads[index],
+        user: { ..._heads[index]?.user, [keyToUpdate]: imgId },
+      };
+    });
+
+    setHeads(_heads);
+    addToast(message, { appearance: "success" });
+  };
+
+  const handleSignature = (e, email, _id) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.type === "image/png") {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        file.signature = file.name;
+        const formData = Cloudinary.buildFileForm(
+          reader.result,
+          `users/${email}`,
+          "signature"
+        );
+
+        dispatch(
+          UPLOAD({
+            data: formData,
+            token,
+          })
+        ).then((action) => {
+          dispatch(
+            UPDATE_INFO({ data: { _id, sid: action.payload.imgId } })
+          ).then(() =>
+            updateHeadsImg(
+              _id,
+              action.payload.imgId,
+              "sid",
+              "Signature updated!"
+            )
+          );
+
+          setImageErrors((prev) => ({ ...prev, [email]: false }));
+        });
+      };
+
+      reader.readAsDataURL(file);
+
+      e.target.value = null; // ✅ Reset only after success
+    } else {
+      addToast("Only PNG files are allowed!", { appearance: "error" });
+      e.target.value = null; // ✅ Reset if rejected
+    }
+  };
+
+  const handleUploadProfile = (base64, email, _id) => {
     const formData = Cloudinary.buildFileForm(
       base64,
       `users/${email}`,
@@ -190,12 +198,17 @@ export default function Body() {
         data: formData,
         token,
       })
-    ).then(() => {
-      const updated = { ...emailRefreshKey, [email]: Date.now() };
-      setEmailRefreshKey(updated);
-      localStorage.setItem("emailRefreshKey", JSON.stringify(updated));
-      addToast("Profile Successfully uploaded!", { appearance: "success" });
-    });
+    ).then((action) =>
+      dispatch(UPDATE_INFO({ data: { _id, pid: action.payload.imgId } })).then(
+        () =>
+          updateHeadsImg(
+            _id,
+            action.payload.imgId,
+            "pid",
+            "Profile Successfully uploaded!"
+          )
+      )
+    );
   };
 
   const totalPages = Math.ceil(heads.length / itemsPerPage);
@@ -208,21 +221,18 @@ export default function Body() {
     <div className="signatories-section">
       <div className={`signatories-card-container mt-4 ${animateClass}`}>
         {paginatedHeads.map(({ _id, department, section, user }, index) => {
-          const { email, prc } = user;
+          const { email, prc, pid = "", _id: userId = "", sid = "" } = user;
 
           return (
             <div
               key={_id || index}
               className={`signatories-card ${prc || "requiredPRC"}`}
             >
-              <div className="signatories-card-header">
+              <div className="signatories-card-header" key={`${_id}-${pid}`}>
                 <ImageDragAndDrop
-                  key={emailRefreshKey[email] || email}
-                  img={`${Cloudinary.getEndpoint()}/users/${email}/profile.png?refresh=${
-                    emailRefreshKey[email] || ""
-                  }`}
+                  img={`${Cloudinary.getEndpoint()}/${pid}/users/${email}/profile.png`}
                   handleUpload={(cropImg) =>
-                    handleUploadProfile(cropImg, email)
+                    handleUploadProfile(cropImg, email, userId)
                   }
                   formSubmitted={fsAuth}
                   allowedType="jpg"
@@ -285,14 +295,12 @@ export default function Body() {
                 <div className="signatories-card-signature-container">
                   {!imageErrors[email] ? (
                     <img
-                      key={signatureRefreshKey[email] || email}
+                      key={sid}
                       onClick={() => {
                         document.getElementById(`file-upload-${email}`).click();
                       }}
                       alt="Signature"
-                      src={`${Cloudinary.getEndpoint()}/users/${email}/signature.png?v=${
-                        signatureRefreshKey[email] || ""
-                      }`}
+                      src={`${Cloudinary.getEndpoint()}/${sid}/users/${email}/signature.png`}
                       onError={() => handleImageError(email)}
                       className="signatories-card-signature"
                     />
@@ -311,7 +319,7 @@ export default function Body() {
                   id={`file-upload-${email}`}
                   type="file"
                   accept="image/png"
-                  onChange={(e) => handleSignature(e, email)}
+                  onChange={(e) => handleSignature(e, email, userId)}
                   hidden
                 />
                 <div

@@ -1,6 +1,7 @@
 import { MDBRow, MDBCol, MDBInput } from "mdbreact";
 import Search from "../../../../../components/searchables/ao";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
+import EditableSelect from "../../../../../components/customizable/editableSelect";
 
 const Details = ({
   form,
@@ -13,7 +14,7 @@ const Details = ({
   return (
     <>
       <MDBRow>
-        <MDBCol md="4">
+        <MDBCol>
           <MDBInput
             label="Name"
             required
@@ -33,7 +34,7 @@ const Details = ({
             </h6>
           )}
         </MDBCol>
-        <MDBCol md="3">
+        <MDBCol>
           <MDBInput
             label="Subname"
             value={form.subName}
@@ -42,6 +43,8 @@ const Details = ({
             }
           />
         </MDBCol>
+      </MDBRow>
+      <MDBRow>
         <MDBCol className="d-flex align-items-center w-100">
           <div className={`w-100 ${form?.ceo?._id && "mt-4"}`}>
             <Search
@@ -50,6 +53,15 @@ const Details = ({
               className="mt-4"
             />
           </div>
+        </MDBCol>
+        <MDBCol>
+          <EditableSelect
+            className="mt-4"
+            preValue={form.category}
+            label="Category"
+            collections={["laboratory", "radiology", "diagnostics", "supplier"]}
+            onChange={(value) => setForm({ ...form, category: value })}
+          />
         </MDBCol>
       </MDBRow>
       <AddressSelect
