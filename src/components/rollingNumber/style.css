@@ -1,9 +1,8 @@
 .rolling-number {
   display: flex;
   align-items: center;
-  justify-content: end;
   overflow: hidden;
-  width: 100%;
+  width: fit-content;
   font-weight: 600;
   font-size: 1.2rem;
   line-height: 1;

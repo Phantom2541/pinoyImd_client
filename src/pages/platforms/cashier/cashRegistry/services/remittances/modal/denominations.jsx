@@ -189,64 +189,95 @@ export default function Modal() {
     if (!img || !floatingCashRef.current) return;
 
     const imgRect = img.getBoundingClientRect();
-    const targetRect = floatingCashRef.current.getBoundingClientRect();
 
+    // Clone setup
     const clone = img.cloneNode(true);
     clone.style.position = "fixed";
     clone.style.top = `${imgRect.top}px`;
     clone.style.left = `${imgRect.left}px`;
     clone.style.width = `${imgRect.width}px`;
     clone.style.height = `${imgRect.height}px`;
-    clone.style.transform = "scale(1)";
-    clone.style.transition = "all 1s ease-in-out";
+    clone.style.transition = "transform 1s ease-in-out, opacity 1s ease-in-out";
     clone.style.zIndex = 9999;
     clone.style.pointerEvents = "none";
     document.body.appendChild(clone);
 
-    // Trigger reflow
-    void clone.offsetWidth;
+    // Kukunin natin yung final target position sa susunod na frame
+    requestAnimationFrame(() => {
+      const targetElement =
+        floatingCashRef.current.firstElementChild || floatingCashRef.current;
+      const targetRect = targetElement.getBoundingClientRect();
 
-    // Animate to exact span position
-    clone.style.top = `${targetRect.top}px`;
-    clone.style.left = `${targetRect.left}px`;
-    clone.style.transform = "scale(0.2)";
-    clone.style.opacity = "0.3";
+      // Center-to-center calculation
+      const deltaX =
+        targetRect.left +
+        targetRect.width / 2 -
+        (imgRect.left + imgRect.width / 2);
+      const deltaY =
+        targetRect.top +
+        targetRect.height / 2 -
+        (imgRect.top + imgRect.height / 2);
 
-    clone.addEventListener("transitionend", () => {
-      clone.remove();
+      // Trigger reflow para mag-apply animation
+      void clone.offsetWidth;
+
+      // Animate to center
+      clone.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.2)`;
+      clone.style.opacity = "0.3";
+
+      clone.addEventListener("transitionend", () => {
+        clone.remove();
+      });
     });
   };
 
   const handleFlyBackFromFloatingCash = (event) => {
-    const target = event.currentTarget.querySelector("div");
-    if (!target || !floatingCashRef.current) return;
+    const billElement = event.currentTarget.querySelector("div");
+    if (!billElement || !floatingCashRef.current) return;
 
-    const targetRect = target.getBoundingClientRect();
-    const originRect = floatingCashRef.current.getBoundingClientRect();
+    const originElement =
+      floatingCashRef.current.firstElementChild || floatingCashRef.current;
+    const originRect = originElement.getBoundingClientRect();
 
-    const clone = target.cloneNode(true);
+    const computed = window.getComputedStyle(billElement);
+
+    const clone = billElement.cloneNode(true);
     clone.style.position = "fixed";
     clone.style.top = `${originRect.top}px`;
     clone.style.left = `${originRect.left}px`;
-    clone.style.width = `20px`;
-    clone.style.height = `20px`;
+    clone.style.width = `${originRect.width}px`;
+    clone.style.height = `${originRect.height}px`;
     clone.style.opacity = "0.3";
-    clone.style.transform = "scale(0.2)";
-    clone.style.transition = "all 1s ease-in-out";
+    clone.style.transform =
+      computed.transform === "none"
+        ? "scale(0.2)"
+        : `${computed.transform} scale(0.2)`;
+    clone.style.transition =
+      "transform 1s ease-in-out, opacity 1s ease-in-out, width 1s ease-in-out, height 1s ease-in-out, top 1s ease-in-out, left 1s ease-in-out";
     clone.style.zIndex = 9999;
     clone.style.pointerEvents = "none";
     document.body.appendChild(clone);
 
-    // Force reflow
-    void clone.offsetWidth;
+    requestAnimationFrame(() => {
+      const targetRect = billElement.getBoundingClientRect();
 
-    // Animate to the bill/coin
-    clone.style.top = `${targetRect.top}px`;
-    clone.style.left = `${targetRect.left}px`;
-    clone.style.width = `${targetRect.width}px`;
-    clone.style.height = `${targetRect.height}px`;
-    clone.style.opacity = "1";
-    clone.style.transform = "scale(1)";
+      // Get the unscaled dimensions by dividing by 0.8
+      const unscaledWidth = targetRect.width / 0.8;
+      const unscaledHeight = targetRect.height / 0.8;
+
+      // Para lapat kahit naka-scale, adjust din ang top/left position
+      const adjustedTop =
+        targetRect.top - (unscaledHeight - targetRect.height) / 2;
+      const adjustedLeft =
+        targetRect.left - (unscaledWidth - targetRect.width) / 2;
+
+      clone.style.top = `${adjustedTop}px`;
+      clone.style.left = `${adjustedLeft}px`;
+      clone.style.width = `${unscaledWidth}px`;
+      clone.style.height = `${unscaledHeight}px`;
+      clone.style.opacity = "1";
+      clone.style.transform = "scale(0.8)";
+    });
 
     clone.addEventListener("transitionend", () => {
       clone.remove();
@@ -257,13 +288,23 @@ export default function Modal() {
     <>
       <style>
         {`
-        .denomination-btn{
-        cursor: pointer;
-        }
-        .denomination-btn:active{
-          transform: scale(.98)
-        }
-        `}
+    .denomination-btn {
+      cursor: pointer;
+    }
+    .denomination-btn:active {
+      transform: scale(.98);
+    }
+
+    @keyframes denomination-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    .denomination-pulse {
+      animation: denomination-pulse 0.6s ease-in-out infinite;
+    }
+  `}
       </style>
       <MDBModal
         isOpen={showModal}
@@ -275,37 +316,23 @@ export default function Modal() {
           toggle={() => dispatch(TOGGLE({ key: "closed" }))}
           className="darken-3 light-blue white-text"
         >
-          <div className="d-flex" style={{ gap: "60px" }}>
-            <div className="d-flex justify-content-between align-content-center">
-              <MDBIcon icon="calendar-alt" className="mr-2" />
-              <div className="d-flex align-items-end">
-                <span ref={floatingCashRef}>
-                  {title || "Floating Cash  "}
-                  {sum > 0 && (
-                    <RollingNumber value={sum} color="white" duration={800} />
-                  )}
-                </span>
-                <span></span>
-              </div>
-            </div>
-
-            {title === "Closing Cash Register" && (
-              <span
-                className={
-                  sum < coh
-                    ? "text-danger" // 🔴 Shortage
-                    : sum > coh
-                    ? "text-warning" // 🟡 Overage
-                    : "text-success" // ✅ Balanced
-                }
-              >
-                COH: {currency.format(coh)}
-              </span>
-            )}
-          </div>
+          <span
+            className=" font-weight-bold mb-1"
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "25px",
+              fontSize: "1.5rem",
+              position: "absolute",
+              top: "10px",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            Denomination
+          </span>
         </MDBModalHeader>
 
-        <MDBModalBody className="mb-0">
+        <MDBModalBody>
           {!selected?._id && (
             //   ? (
             //   <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
@@ -320,22 +347,11 @@ export default function Modal() {
             </MDBTypography>
           )}
           <div className="d-flex flex-column align-items-center justify-content-center">
-            <span
-              className=" font-weight-bold mb-1"
-              style={{
-                textTransform: "uppercase",
-                letterSpacing: "25px",
-                fontSize: "1.5rem",
-              }}
-            >
-              Denomination
-            </span>
             <div
-              className="d-flex justify-content-center"
+              className="d-flex justify-content-center align-items-center"
               style={{ gap: "30px" }}
             >
               <div className="d-flex flex-column justify-content-center align-items-center">
-                <h5 className="text-center font-weight-bold mb-4">Bills</h5>
                 <div className="d-flex flex-column">
                   {/* LEFT COLUMN */}
                   {currency.Denominations.bills
@@ -376,7 +392,7 @@ export default function Modal() {
                             transformOrigin: "top",
                             marginBottom: "-20px",
                             boxShadow: "none",
-                            marginRight: "-20px",
+                            marginRight: "-50px",
                           }}
                         >
                           <MDBCardBody
@@ -458,11 +474,7 @@ export default function Modal() {
                 </div>
               </div>
               <div className="d-flex flex-column align-items-center">
-                <h5 className="text-center font-weight-bold mb-4">Coins</h5>
-                <div
-                  className="d-flex flex-column align-items-center"
-                  style={{ gap: "15px" }}
-                >
+                <div className="d-flex flex-column align-items-center ml-n4 mr-4">
                   {currency.Denominations?.coins.map((coin) => (
                     <div key={coin} className="d-flex align-items-center mb-3">
                       <MDBCard
@@ -506,16 +518,78 @@ export default function Modal() {
                   ))}
                 </div>
               </div>
+              {/* Summary */}
+              <div
+                className="d-flex flex-column align-items-center py-2 px-3 shadow-sm border rounded bg-white"
+                style={{ gap: "15px", height: "fit-content" }}
+              >
+                {title === "Closing Cash Register" && (
+                  <div className="d-flex flex-column align-items-center">
+                    <span className="text-muted" style={{ fontWeight: "400" }}>
+                      COH:
+                    </span>
+                    <span
+                      className={
+                        sum < coh
+                          ? "text-danger denomination-pulse font-weight-bold"
+                          : sum > coh
+                          ? "text-warning denomination-pulse font-weight-bold"
+                          : "text-success font-weight-bold"
+                      }
+                      style={{ fontSize: "1.5rem" }}
+                    >
+                      {currency?.format ? currency.format(coh || 0) : coh || 0}
+                    </span>
+                  </div>
+                )}
+
+                <div className="d-flex flex-column align-items-center">
+                  <span className="text-muted" style={{ fontWeight: "400" }}>
+                    <MDBIcon icon="calendar-alt" className="mr-2" />
+                    {title || "Floating Cash"}
+                  </span>
+
+                  <div className="mt-1" ref={floatingCashRef}>
+                    {sum > 0 && (
+                      <RollingNumber
+                        value={sum}
+                        color="black"
+                        size="1.5rem"
+                        duration={800}
+                        style={{ fontSize: "1.5rem", color: "red" }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <MDBBtn
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={
+                    (title === "Closing Cash Register" && sum !== coh) ||
+                    formSubmitted
+                  }
+                  className="mt-3"
+                  style={{ fontWeight: "bold" }}
+                  block
+                >
+                  <MDBIcon icon="check" className="mr-2" /> Submit
+                  {formSubmitted && (
+                    <MDBIcon icon="spinner" pulse className="ml-2" />
+                  )}
+                </MDBBtn>
+              </div>
             </div>
           </div>
+
           <div
-            className="d-flex align-items-center justify-content-between mt-3"
-            style={{ flexWrap: "nowrap", gap: "10px", width: "100%" }}
+            className="d-flex align-items-center justify-content-center w-100"
+            style={{ gap: "25px" }}
           >
-            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-              {title === "Floating Cash" && (
-                <>
-                  <span className="font-weight-bold">Shift:</span>
+            {title === "Floating Cash" && (
+              <>
+                <div className="d-flex align-items-center">
+                  <span className="font-weight-bold mr-1">Shift:</span>
                   <select
                     className="browser-default custom-select"
                     value={schedule}
@@ -527,38 +601,23 @@ export default function Modal() {
                     <option value="afternoon">afternoon</option>
                     <option value="night">Night</option>
                   </select>
-                  <MDBInput
-                    type="text"
-                    label="Cashier Position"
-                    value={position}
-                    onChange={(e) => setPosition(e.target.value)}
-                    style={{ minWidth: "10rem" }}
-                  />
-                  <MDBInput
-                    type="text"
-                    label="Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    style={{ minWidth: "10rem" }}
-                  />
-                </>
-              )}
-            </div>
-
-            {/* Button always at the end */}
-            <MDBBtn
-              color="primary"
-              onClick={handleSubmit}
-              disabled={
-                (title === "Closing Cash Register" && sum !== coh) ||
-                formSubmitted
-              }
-            >
-              <MDBIcon icon="check" className="mr-2" /> Submit
-              {formSubmitted && (
-                <MDBIcon icon="spinner" pulse className="ml-2" />
-              )}
-            </MDBBtn>
+                </div>
+                <MDBInput
+                  type="text"
+                  label="Cashier Position"
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                  style={{ minWidth: "10rem" }}
+                />
+                <MDBInput
+                  type="text"
+                  label="Location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  style={{ minWidth: "10rem" }}
+                />
+              </>
+            )}
           </div>
         </MDBModalBody>
       </MDBModal>

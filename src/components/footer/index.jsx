@@ -4,6 +4,10 @@ import "./style.css";
 export default function Copyrights({
   backgroundColor = "#0d4dbc",
   borderColor = "#0b429f",
+  fbLink = "",
+  linkedinLink = "",
+  instaLink = "",
+  twitterLink = "",
 }) {
   return (
     <div
@@ -15,39 +19,17 @@ export default function Copyrights({
         through Innovation. All rights reserved.
       </span>
       <div className="footer-socialAccounts">
-        <a
-          href="https://www.facebook.com/pinoyimd"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={fbLink} target="_blank" rel="noopener noreferrer">
           <MDBIcon fab icon="facebook-square" />
         </a>
-        <a
-          href="https://www.facebook.com/pinoyimd"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={linkedinLink} target="_blank" rel="noopener noreferrer">
           <MDBIcon fab icon="linkedin" />
         </a>
-        <a
-          href="https://www.facebook.com/pinoyimd"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <MDBIcon fab icon="google-plus-square" />
-        </a>
-        <a
-          href="https://www.facebook.com/pinoyimd"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+
+        <a href={instaLink} target="_blank" rel="noopener noreferrer">
           <MDBIcon fab icon="instagram" />
         </a>
-        <a
-          href="https://www.facebook.com/pinoyimd"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={twitterLink} target="_blank" rel="noopener noreferrer">
           <MDBIcon fab icon="twitter-square" />
         </a>
       </div>
