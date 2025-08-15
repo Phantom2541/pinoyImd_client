@@ -27,7 +27,7 @@ export default function Table({
   return (
     <>
       {!isLoading ? (
-        <MDBTable responsive hover style={{ cursor: "default" }}>
+        <MDBTable responsive hover style={{ cursor: "default" }} small>
           <thead>
             <tr>
               {!disableSelect && (

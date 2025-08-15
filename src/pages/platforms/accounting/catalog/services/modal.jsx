@@ -137,6 +137,8 @@ export default function Modal({
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    console.log("form", form);
+
     if (!validateHierarchy(form))
       return handleError(
         "Please input proper references. Hierarchy  of values is must."

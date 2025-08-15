@@ -30,6 +30,7 @@ export default function Search({
   setUser = () => {},
   isRequired = false,
   displayWithLabel = true,
+  selectedUser = {},
   label = "Please set a label",
 }) {
   const { collections } = useSelector(({ users }) => users),
@@ -58,6 +59,10 @@ export default function Search({
   useEffect(() => {
     setUsers(collections);
   }, [collections]);
+
+  useEffect(() => {
+    setSelected(selectedUser);
+  }, [selectedUser]);
 
   const debouncedSearch = useMemo(
     () =>
@@ -89,7 +94,6 @@ export default function Search({
       return debouncedSearch(_searchKey);
     }
   };
-
   const handleSelect = (user) => {
     setUser(user);
     setSelected(user);
