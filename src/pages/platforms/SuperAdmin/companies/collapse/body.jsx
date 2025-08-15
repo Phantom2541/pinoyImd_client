@@ -45,8 +45,8 @@ export default function Collapsable({ branches, cid }) {
     });
   };
 
-  const handleAssignAO = (data) => {
-    dispatch(ASSIGN_AO({ token, data })).then(({ payload }) => {
+  const handleAssignAO = (data, newAo) => {
+    dispatch(ASSIGN_AO({ token, data })).then(() => {
       const _branches = [...branches];
       const getIndex = (_collections, _id) =>
         _collections.findIndex(({ _id: id }) => id === _id);
@@ -54,7 +54,7 @@ export default function Collapsable({ branches, cid }) {
       const branchIndex = getIndex(_branches, data.branchId);
       _branches[branchIndex] = {
         ..._branches[branchIndex],
-        ao: payload?.payload?.ao,
+        ao: newAo,
       };
 
       const _collections = [...collections];
@@ -191,17 +191,6 @@ export default function Collapsable({ branches, cid }) {
 
               {/* category */}
               <td className="position-relative">
-                {/* <div
-                  style={{
-                    width: "17rem",
-                    marginBottom: "-0.7rem",
-                    opacity: isSourceEdit ? 1 : 0,
-                    zIndex: isSourceEdit ? 9999 : -1,
-                  }}
-                  className={`d-flex align-items-center position-absolute ${
-                    isSourceEdit && "deals-zoom-in"
-                  }`}
-                > */}
                 <EditableSelect
                   title="Click to edit"
                   isEditable
@@ -233,7 +222,6 @@ export default function Collapsable({ branches, cid }) {
                     })
                   }
                 />
-                {/* </div> */}
               </td>
 
               {/* subscription */}
@@ -358,12 +346,23 @@ export default function Collapsable({ branches, cid }) {
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
                   onSave={(newAo) =>
-                    handleAssignAO({
-                      userId: newAo._id,
-                      existingAo: branch?.ao?._id,
-                      authID: auth?._id,
-                      branchId: branch?._id,
-                    })
+                    handleAssignAO(
+                      {
+                        userId: newAo._id,
+                        existingAo: branch?.ao?._id,
+                        authID: auth?._id,
+                        branchId: branch?._id,
+                        newPersonnel: true,
+                        personnel: {
+                          user: newAo._id,
+                          branch: branch?._id,
+                          status: "active",
+                          platform: "headquarter",
+                          contract: { designation: 14 },
+                        },
+                      },
+                      newAo
+                    )
                   }
                 />
               </td>
