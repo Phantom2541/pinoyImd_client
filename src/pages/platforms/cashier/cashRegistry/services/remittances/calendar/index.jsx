@@ -15,7 +15,10 @@ export default function Calendar() {
   return (
     <div className="cashier-remittance-calendar p-3">
       <WeekHeader />
-      <div className="cashier-calendar-remittance-body">
+      <div
+        className="cashier-calendar-remittance-body"
+        style={{ boxShadow: "none" }}
+      >
         {generateCalendar(month, year).map(({ num, txt = "" }) => {
           const localDate = new Date(year, month - 1, num);
           localDate.setHours(0, 0, 0, 0); // normalize start of day

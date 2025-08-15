@@ -27,7 +27,16 @@ export default function Table({
   return (
     <>
       {!isLoading ? (
-        <MDBTable responsive hover style={{ cursor: "default" }} small>
+        <MDBTable
+          responsive
+          hover
+          style={{
+            cursor: "default",
+            tableLayout: "auto",
+            width: "100%",
+          }}
+          className="no-fixed-cols"
+        >
           <thead>
             <tr>
               {!disableSelect && (
@@ -63,7 +72,7 @@ export default function Table({
                   <th
                     style={_style}
                     key={`${_title}-thead-${index}`}
-                    className={`th-lg ${_className}`}
+                    className={`${_className}`}
                   >
                     {_text}
                   </th>

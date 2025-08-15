@@ -15,6 +15,7 @@ import {
 } from "../../../../../../../services/utilities";
 // import Search from "../../../../../../services/utilities/search";
 import { Categories, Services } from "../../../../../../../services/fakeDb";
+import "./../../cashierOld/style.css";
 
 export default function CashierMenu({ handlePicker }) {
   const [menus, setMenus] = useState([]),
@@ -76,82 +77,80 @@ export default function CashierMenu({ handlePicker }) {
 
   return (
     <MDBCol md="7">
-      <MDBAnimation type="slideInLeft">
-        <DataTable
-          disablePageSelect
-          disableSelect
-          minHeight="375px"
-          isLoading={isLoading}
-          title="Menus"
-          array={menus}
-          page={totalPages}
-          tableHeads={[
-            {
-              _text: "Name",
-            },
-            {
-              _text: "Services",
-            },
-            {
-              _text: "SRP",
-            },
-            {},
-          ]}
-          tableBodies={[
-            {
-              _isEmpty: true,
-              _key: "description",
-              _format: (data, { abbreviation }) => (
+      <DataTable
+        disablePageSelect
+        disableSelect
+        minHeight="375px"
+        isLoading={isLoading}
+        title="Menus"
+        array={menus}
+        page={totalPages}
+        tableHeads={[
+          {
+            _text: "Name",
+          },
+          {
+            _text: "Services",
+          },
+          {
+            _text: "SRP",
+          },
+          {},
+        ]}
+        tableBodies={[
+          {
+            _isEmpty: true,
+            _key: "description",
+            _format: (data, { abbreviation }) => (
+              <>
+                <p className="fw-bold mb-1">
+                  {String(data || abbreviation).toUpperCase()}
+                </p>
+                {data && <p className="mb-0">{abbreviation.toUpperCase()}</p>}
+              </>
+            ),
+          },
+          {
+            _isEmpty: true,
+            _key: "packages",
+            _format: (packages) => {
+              return (
                 <>
-                  <p className="fw-bold mb-1">
-                    {String(data || abbreviation).toUpperCase()}
-                  </p>
-                  {data && <p className="mb-0">{abbreviation.toUpperCase()}</p>}
+                  {Services.whereIn(packages)?.map((pack) => (
+                    <MDBBadge key={pack} className="mr-1" title={pack?.name}>
+                      {pack?.abbreviation}
+                    </MDBBadge>
+                  ))}
                 </>
+              );
+            },
+          },
+          {
+            _key: abbr,
+            _format: (data) => {
+              return data
+                ? currency.format(data)
+                : `This item has no price for ${name}.`;
+            },
+          },
+          {
+            _key: abbr,
+            _format: (data, item) =>
+              data && (
+                <MDBBtn
+                  onClick={() => handlePicker(item)}
+                  color="info"
+                  size="sm"
+                  className="py-1 px-2 m-0"
+                >
+                  <MDBIcon icon="share" />
+                </MDBBtn>
               ),
-            },
-            {
-              _isEmpty: true,
-              _key: "packages",
-              _format: (packages) => {
-                return (
-                  <>
-                    {Services.whereIn(packages)?.map((pack) => (
-                      <MDBBadge key={pack} className="mr-1" title={pack?.name}>
-                        {pack?.abbreviation}
-                      </MDBBadge>
-                    ))}
-                  </>
-                );
-              },
-            },
-            {
-              _key: abbr,
-              _format: (data) => {
-                return data
-                  ? currency.format(data)
-                  : `This item has no price for ${name}.`;
-              },
-            },
-            {
-              _key: abbr,
-              _format: (data, item) =>
-                data && (
-                  <MDBBtn
-                    onClick={() => handlePicker(item)}
-                    color="info"
-                    size="sm"
-                    className="py-1 px-2 m-0"
-                  >
-                    <MDBIcon icon="share" />
-                  </MDBBtn>
-                ),
-            },
-          ]}
-          handleSearch={handleSearch}
-          isLocal={true}
-        />
-      </MDBAnimation>
+          },
+        ]}
+        handleSearch={handleSearch}
+        isLocal={true}
+      />
     </MDBCol>
   );
 }

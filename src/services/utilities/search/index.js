@@ -1,3 +1,4 @@
+import { MDBIcon } from "mdbreact";
 import React, { useState } from "react";
 
 const Index = ({ handleSearch, isLocal = false }) => {
@@ -13,19 +14,22 @@ const Index = ({ handleSearch, isLocal = false }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="search"
-        name="search"
-        pattern=".*\S.*"
-        onChange={({ target }) => {
-          setClue(target.value);
+      <div>
+        <input
+          placeholder="Search here..."
+          type="search"
+          name="search"
+          pattern=".*\S.*"
+          onChange={({ target }) => {
+            setClue(target.value);
 
-          // rearranged local searching inside onchange to get updated value everytime
-          if (isLocal) handleSearch(true, target.value);
-        }}
-        required
-        className="form-control bg-transparent text-white"
-      />
+            // rearranged local searching inside onchange to get updated value everytime
+            if (isLocal) handleSearch(true, target.value);
+          }}
+          required
+          className="form-control bg-white"
+        />
+      </div>
     </form>
     // <div className="search-bar">
     //   <input

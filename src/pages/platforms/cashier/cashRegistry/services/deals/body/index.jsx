@@ -178,7 +178,7 @@ const Tables = () => {
         </div>
       )}
 
-      <MDBTable small>
+      <MDBTable hover small>
         <thead>
           <tr>
             <th>Patient Name</th>
@@ -416,7 +416,7 @@ const Tables = () => {
                           <button
                             onClick={() => handleCashRegister(deal)}
                             title="Add new service"
-                            className="mr-1 "
+                            className="mr-1"
                             style={{
                               background: "#28a745",
                               border: "none",
@@ -452,36 +452,38 @@ const Tables = () => {
                       )}
 
                       <div
-                        className="d-flex align-items-center"
+                        className="d-flex align-items-center flex-column"
                         style={{ opacity: index === didHoverID ? 0 : 1 }}
                       >
-                        <h6
-                          className="mt-2"
-                          style={{ fontWeight: 600 }}
-                          title="Amount"
-                        >
-                          {currency.format(deal.amount)}
-                        </h6>
+                        <div className="d-flex align-items-center">
+                          <h6
+                            className="mt-2"
+                            style={{ fontWeight: 600 }}
+                            title="Amount"
+                          >
+                            {currency.format(deal.amount)}
+                          </h6>
 
-                        <img
-                          src={img}
-                          alt={text}
-                          className="ml-1"
-                          title={text}
+                          <img
+                            src={img}
+                            alt={text}
+                            className="ml-1"
+                            title={text}
+                            style={{
+                              ...style,
+                            }}
+                          />
+                        </div>
+                        <h6
+                          title="Cash"
                           style={{
-                            ...style,
+                            opacity: index === didHoverID ? 0 : 1,
+                            fontSize: "0.7rem",
                           }}
-                        />
+                        >
+                          {currency.format(deal.cash)}
+                        </h6>
                       </div>
-                      <h6
-                        title="Cash"
-                        style={{
-                          opacity: index === didHoverID ? 0 : 1,
-                          fontSize: "0.7rem",
-                        }}
-                      >
-                        {currency.format(deal.cash)}
-                      </h6>
                     </>
                   </td>
                 </tr>

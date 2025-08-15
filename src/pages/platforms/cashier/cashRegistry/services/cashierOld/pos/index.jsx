@@ -200,7 +200,7 @@ export default function CashRegister() {
   );
 
   return (
-    <MDBModal isOpen={show} toggle={SetMODAL} size="fluid">
+    <MDBModal isOpen={show} toggle={SetMODAL} size="xl">
       <MDBModalHeader
         toggle={() => dispatch(SetMODAL())}
         className="light-blue darken-3 white-text"

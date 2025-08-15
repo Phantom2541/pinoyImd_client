@@ -8,6 +8,7 @@ export default function RollingNumber({
   duration = 1000,
   prefix = "₱",
   color = "#1266f1",
+  size = "1rem", // ✅ added size prop
 }) {
   const [displayValue, setDisplayValue] = useState(value);
   const previousValue = useRef(value);
@@ -15,7 +16,7 @@ export default function RollingNumber({
 
   useEffect(() => {
     let animationFrame;
-    const startValue = previousValue.current; // magsisimula sa current value
+    const startValue = previousValue.current;
     const endValue = value;
     previousValue.current = value;
     startTime.current = null;
@@ -46,21 +47,24 @@ export default function RollingNumber({
   return (
     <div
       className="rolling-number"
-      style={{ color }}
+      style={{
+        color,
+        fontSize: size, // ✅ size applied here
+      }}
       aria-label={`${prefix}${paddedValue}`}
     >
       {prefix && <div className="digit-static">{prefix}</div>}
       {characters.map((char, index) => (
-        <MemoDigit key={index} char={char} />
+        <MemoDigit key={index} char={char} size={size} />
       ))}
     </div>
   );
 }
 
-const Digit = ({ char }) => {
+const Digit = ({ char, size }) => {
   const isDigit = /\d/.test(char);
   return (
-    <div className="digit-wrapper">
+    <div className="digit-wrapper" style={{ fontSize: size }}>
       {isDigit ? (
         <div className="digit">{char}</div>
       ) : (

@@ -320,7 +320,11 @@ export default class Home extends React.Component {
           </div>
         </MDBContainer>
         <MDBFooter className="text-center text-md-left">
-          <Copyrights backgroundColor="#00564B" borderColor="#004B42 " />
+          <Copyrights
+            backgroundColor="#00564B"
+            borderColor="#004B42 "
+            fbLink="https://web.facebook.com/profile.php?id=61579153924730#"
+          />
         </MDBFooter>
       </div>
     );

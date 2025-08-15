@@ -193,21 +193,27 @@ export default function Summary() {
           <tr>
             <td>Gross Amount</td>
             <td className="table-price">
-              <RollingNumber value={gross} duration={2000} />
+              <div className="d-flex justify-content-end">
+                <RollingNumber value={gross} duration={1000} />
+              </div>
             </td>
             {/* <td className="table-price">{currency.format(gross)}</td> */}
           </tr>
           <tr>
             <td>Discount</td>
             <td className="table-price">
-              <RollingNumber value={discount} duration={2000} />
+              <div className="d-flex justify-content-end">
+                <RollingNumber value={discount} duration={1000} />
+              </div>
             </td>
             {/* <td className="table-price">{currency.format(discount)}</td> */}
           </tr>
           <tr>
             <td>Net Amount</td>
             <td className="table-price">
-              <RollingNumber value={amount} duration={2000} />
+              <div className="d-flex justify-content-end">
+                <RollingNumber value={amount} duration={1000} />
+              </div>
             </td>
             {/* <td className="table-price">{currency.format(amount)}</td> */}
           </tr>
