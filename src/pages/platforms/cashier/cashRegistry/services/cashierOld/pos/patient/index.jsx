@@ -39,7 +39,7 @@ export default function CashierPatient({
 
   return (
     <MDBCol md="5" className={didCheckout ? "pr-0 offset-md-2" : "pl-0"}>
-      <MDBCard className="h-100">
+      <MDBCard style={{ height: "fit-content" }}>
         <MDBCardBody>
           <MDBCardTitle>
             <MDBRow style={{ cursor: "default" }}>

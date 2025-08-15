@@ -293,3 +293,7 @@
   background-color: #007bff; /* Change this to your desired active color */
   box-shadow: 0 0 3px 0 #007bff;
 }
+
+.cashierDeals-search-container {
+  background-color: green;
+}
