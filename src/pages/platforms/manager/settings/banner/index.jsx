@@ -95,7 +95,7 @@ const Banner = () => {
         dispatch(
           OverrideActivePlatform({
             ...activePlatform,
-            branch: { ...branch, bid: action.payload.imgId },
+            branch: { ...branch, bid: action?.payload?.imgId },
           })
         )
       );

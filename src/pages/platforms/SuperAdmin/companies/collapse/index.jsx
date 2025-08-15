@@ -1,7 +1,6 @@
 import { useState } from "react";
-import ReactDOM from "react-dom";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -14,23 +13,11 @@ import {
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, fullName } from "../../../../../services/utilities";
-import Swal from "sweetalert2";
-import {
-  UPDATE,
-  SETCEO,
-} from "../../../../../services/redux/slices/assets/companies";
-import Search from "../../../../../components/searchables/users";
-import { SearchUser } from "../../../../../components/searchables";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
     ({ companies }) => companies
   );
-  const { token } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
-  const [form, setForm] = useState({});
-  const [user, setUser] = useState({});
-  console.log("user", user);
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -45,11 +32,6 @@ export default function Body() {
    */
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
-
-  const handleceo = (CEO) => {
-    setUser(CEO);
-    dispatch(SETCEO(CEO));
-  };
 
   const handleCEO = () => {};
 

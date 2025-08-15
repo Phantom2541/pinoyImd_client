@@ -238,8 +238,12 @@ export default function Applicants() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan={8} className="text-center fw-bold">
-                      No Applicants
+                    <td colSpan={8} className="text-center text-muted py-4">
+                      <div className="d-flex flex-column align-items-center justify-content-center">
+                        <MDBIcon icon="user-slash" size="2x" className="mb-2" />
+                        <span className="fw-bold">No Applicants Yet</span>
+                        <small className="text-muted">Check back later</small>
+                      </div>
                     </td>
                   </tr>
                 )}

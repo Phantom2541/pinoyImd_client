@@ -1,29 +1,32 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from "mdbreact";
-import { fullName } from "../../../../../services/utilities";
-import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
-import { SetFILTERED } from "../../../../../services/redux/slices/assets/companies";
+import {
+  ASSIGN_AO,
+  UPDATE,
+  RESET,
+} from "../../../../../services/redux/slices/assets/branches";
+import {
+  SetFILTERED,
+  SetCOLLECTIONS,
+} from "../../../../../services/redux/slices/assets/companies";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
 import EditableField from "../../../../../components/customizable/editableField";
+import Search from "../../../../../components/searchables/ao";
 // ... your existing imports remain the same
 export default function Collapsable({ branches, cid }) {
-  const { token } = useSelector(({ auth }) => auth),
+  const { token, auth } = useSelector(({ auth }) => auth),
     { isSuccess, formSubmitted } = useSelector(({ branches }) => branches),
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
-
-  console.log("collections", collections);
 
   const handleUpdate = ({ _id, key, value }) => {
     let data = { _id };
 
     if (key?.includes(".")) {
-      // Handle nested update like settings.subscription
       const keys = key.split(".");
       const nested = keys.reduceRight((acc, curr) => ({ [curr]: acc }), value);
       data = { ...data, ...nested };
     } else {
-      // Flat update like category
       data[key] = value;
     }
 
@@ -39,6 +42,30 @@ export default function Collapsable({ branches, cid }) {
       );
 
       dispatch(SetFILTERED(_collections));
+    });
+  };
+
+  const handleAssignAO = (data, newAo) => {
+    dispatch(ASSIGN_AO({ token, data })).then(() => {
+      const _branches = [...branches];
+      const getIndex = (_collections, _id) =>
+        _collections.findIndex(({ _id: id }) => id === _id);
+      const companyIndex = getIndex(collections, cid);
+      const branchIndex = getIndex(_branches, data.branchId);
+      _branches[branchIndex] = {
+        ..._branches[branchIndex],
+        ao: newAo,
+      };
+
+      const _collections = [...collections];
+      _collections[companyIndex] = {
+        ..._collections[companyIndex],
+        branches: _branches,
+      };
+
+      dispatch(SetFILTERED(_collections));
+      dispatch(SetCOLLECTIONS(_collections));
+      dispatch(RESET());
     });
   };
 
@@ -88,7 +115,6 @@ export default function Collapsable({ branches, cid }) {
                     <div className="flex-grow-1">
                       <EditableField
                         title="Click to edit"
-                        width="13rem"
                         type="string"
                         keyForValue="name"
                         fieldData={{
@@ -106,13 +132,12 @@ export default function Collapsable({ branches, cid }) {
                         isSuccess={isSuccess}
                       />
                     </div>
+                    {isMain && (
+                      <MDBBadge color="warning" className="ml-2">
+                        Main
+                      </MDBBadge>
+                    )}
                   </div>
-
-                  {isMain && (
-                    <MDBBadge color="warning" className="mt-1 ml-4">
-                      Main
-                    </MDBBadge>
-                  )}
                 </div>
               </td>
 
@@ -165,7 +190,7 @@ export default function Collapsable({ branches, cid }) {
               </td>
 
               {/* category */}
-              <td>
+              <td className="position-relative">
                 <EditableSelect
                   title="Click to edit"
                   isEditable
@@ -312,7 +337,35 @@ export default function Collapsable({ branches, cid }) {
               </td>
 
               {/* ao */}
-              <td>{fullName(branch?.ao?.fullName)}</td>
+              <td>
+                <Search
+                  selectedUser={branch?.ao}
+                  isToggle
+                  displayWithLabel={false}
+                  label="Search AO"
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(newAo) =>
+                    handleAssignAO(
+                      {
+                        userId: newAo._id,
+                        existingAo: branch?.ao?._id,
+                        authID: auth?._id,
+                        branchId: branch?._id,
+                        newPersonnel: true,
+                        personnel: {
+                          user: newAo._id,
+                          branch: branch?._id,
+                          status: "active",
+                          platform: "headquarter",
+                          contract: { designation: 14 },
+                        },
+                      },
+                      newAo
+                    )
+                  }
+                />
+              </td>
               <td></td>
             </tr>
           );

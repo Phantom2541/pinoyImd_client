@@ -22,7 +22,7 @@ const _form = {
   ceo: "",
   name: "",
   subName: "",
-  category: "laboratory",
+  category: "diagnostic",
   tagline: "",
   isHiring: true,
   hasVerified: false,

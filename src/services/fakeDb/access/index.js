@@ -22,11 +22,10 @@ const sort = (datas) => datas.sort((a, b) => a.name.localeCompare(b.name));
 const Access = {
   collections: sort(collections),
   getByCategory: (category) => {
-    console.log(accessMap[category.toLowerCase()]);
     const ids = new Set(Object.values(accessMap).flat());
     const uncategorizedItems = collections.filter(({ id }) => !ids.has(id));
     const categoryItems = collections.filter(({ id }) =>
-      accessMap[category.toLowerCase()]?.includes(id)
+      accessMap[category?.toLowerCase()]?.includes(id)
     );
     return sort([...uncategorizedItems, ...categoryItems]);
   },

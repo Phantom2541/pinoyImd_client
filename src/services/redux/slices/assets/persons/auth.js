@@ -504,7 +504,6 @@ export const reduxSlice = createSlice({
       .addCase(UPLOAD.fulfilled, (state, _) => {
         state.isSuccess = true;
         state.formSubmitted = false;
-
         state.message = "Sucessfully uploaded!";
       })
       .addCase(UPLOAD.rejected, (state, action) => {

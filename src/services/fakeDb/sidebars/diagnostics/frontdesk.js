@@ -14,10 +14,9 @@ import {
 
 import {
   Onboard,
-  Tasks,
   Reports,
 } from "../../../../pages/platforms/laboratory/diagnostics";
-
+import { Tasks } from "../../../../pages/platforms/frontdesk/diagnostics";
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 // import Products from "../../../../pages/platforms/frontdesk/market/products";
 // import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";

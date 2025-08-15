@@ -312,6 +312,7 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;

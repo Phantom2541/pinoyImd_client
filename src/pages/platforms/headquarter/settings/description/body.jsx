@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
-import { ENDPOINT } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   RESET,

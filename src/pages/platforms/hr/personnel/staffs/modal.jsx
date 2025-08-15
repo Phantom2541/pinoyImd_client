@@ -57,8 +57,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   }, [selected]);
 
   const handleUpdate = () => {
-    toggle();
-
     // check if object has changed
     if (isEqual(form, selected))
       return addToast("No changes found, skipping update.", {
@@ -70,7 +68,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         data: { ...form, _id: selected._id },
         token,
       })
-    );
+    ).then(() => toggle());
 
     setForm(_form);
   };
@@ -84,10 +82,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         },
         token,
       })
-    );
+    ).then(() => toggle());
 
     setForm(_form);
-    toggle();
   };
 
   const handleSubmit = (e) => {
