@@ -45,11 +45,11 @@ export default function Logo() {
       axioKit
         .update(
           "assets/companies",
-          { _id: company._id, lid: action.payload.imgId },
+          { _id: company._id, lid: action?.payload?.imgId },
           token
         )
         .then(() => {
-          dispatch(SetCOMPANY({ ...company, lid: action.payload.imgId }));
+          dispatch(SetCOMPANY({ ...company, lid: action?.payload?.imgId }));
           setShowImgCropper(false);
         });
     });
