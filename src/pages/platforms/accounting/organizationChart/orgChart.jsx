@@ -581,7 +581,7 @@ export default function OrgChart() {
             ))
           : availableNodes.map((item) => {
               const { position, eid } = item.data;
-              const { email, fullName: name } = eid;
+              const { email, fullName: name, pid = "" } = eid;
               return (
                 <div
                   key={item.id}
@@ -592,7 +592,9 @@ export default function OrgChart() {
                   onDragStart={(e) => handleDragStart(e, item)}
                 >
                   <img
-                    src={`${Cloudinary.getEndpoint()}/users/${email}/profile.png?v=${Date.now()}`}
+                    src={`${Cloudinary.getEndpoint()}/${
+                      pid || ""
+                    }/users/${email}/profile.png`}
                     alt="profile"
                     className="orgChart-innerCard-image"
                     onError={(e) => {

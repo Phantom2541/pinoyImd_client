@@ -267,6 +267,7 @@ export const reduxSlice = createSlice({
       state.showModal = !state.showModal;
       state.selected = {};
     },
+
     SetCOLLECTIONS: (state, { payload }) => {
       const { page, maxPage } = state;
       if (payload.length > 0) {
@@ -398,7 +399,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
+        if (state?.collections?.length > 0) {
           const updateCollections = (collections) => {
             const index = collections.findIndex(
               (item) => item._id === payload._id
@@ -428,7 +429,7 @@ export const reduxSlice = createSlice({
 
       .addCase(ASSIGN_AO.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
+        if (state?.collections?.length > 0) {
           const { newPersonnel = false, createdPersonnel } = payload;
           const getIndex = (collections) =>
             collections.findIndex(({ _id }) => _id === payload._id);

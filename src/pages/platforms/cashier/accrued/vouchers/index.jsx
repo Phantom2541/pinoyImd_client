@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 const Index = () => {
   const { isLoading } = useSelector(({ deals }) => deals);
   return (
-    <MDBAnimation className="pt-2" type="bounceInDown">
+    <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <Header />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>

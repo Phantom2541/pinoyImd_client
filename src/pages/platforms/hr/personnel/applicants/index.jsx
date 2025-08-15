@@ -54,6 +54,8 @@ export default function Applicants() {
         return status === "petition" && activeBranch === branch?._id;
       }
     });
+
+    console.log("_collections", collections);
     setApplicants(_collections);
   }, [collections, activeBranch]);
 

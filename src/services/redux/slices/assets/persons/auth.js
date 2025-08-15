@@ -188,6 +188,11 @@ export const reduxSlice = createSlice({
     UPLOADBAR: (state, data) => {
       state.progressBar = data.payload;
     },
+    OverrideActivePlatform: (state, { payload }) => {
+      state.activePlatform = payload;
+      localStorage.setItem("activePlatform", JSON.stringify(payload));
+    },
+
     SetActivePlatform: (state, action) => {
       const { isHMO = false, isBranch = false, data } = action.payload;
       const current = state.activePlatform;
@@ -362,7 +367,7 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${Cloudinary.getEndpoint()}/users/${
+        state.image = `${Cloudinary.getEndpoint()}/${auth.pid}/users/${
           auth.email
         }/profile.png?v=${Date.now()}`;
 
@@ -462,7 +467,7 @@ export const reduxSlice = createSlice({
             ...(!isEmployed && { platform: "" }),
           };
           state.company = branch?.companyId;
-          state.image = `${Cloudinary.getEndpoint()}/users/${
+          state.image = `${Cloudinary.getEndpoint()}/${auth.pid}/users/${
             auth.email
           }/profile.png?v=${Date.now()}`;
 
@@ -512,6 +517,7 @@ export const reduxSlice = createSlice({
 
 export const {
   RESET,
+  OverrideActivePlatform,
   SetAUTH,
   SetCOMPANY,
   MAXPAGE,

@@ -204,7 +204,6 @@ export default function Vouchers() {
             className="w-100"
             color="primary"
             size="sm"
-            rounded
             onClick={handleSubmit}
             disabled={menuCensus.length === 0 || isLoading}
           >

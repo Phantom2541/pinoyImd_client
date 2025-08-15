@@ -125,7 +125,9 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
         </button>
         <img
           className="orgChart-innerCard-image"
-          src={`${Cloudinary.getEndpoint()}/users/${eid?.email}/profile.png`}
+          src={`${Cloudinary.getEndpoint()}/${eid?.pid || ""}/users/${
+            eid?.email
+          }/profile.png`}
           alt="profile"
           onError={(e) => {
             e.target.onerror = null;

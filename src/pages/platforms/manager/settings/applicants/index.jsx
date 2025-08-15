@@ -139,7 +139,7 @@ export default function Applicants() {
       <MDBCard narrow className="pb-3">
         <MDBView
           cascade
-          className="gradient-card-header blue-gradient py-2 mx-4 d-flex justify-content-between align-items-center"
+          className="gradient-card-header blue-gradient py-3 mx-4 d-flex justify-content-between align-items-center"
         >
           <span className="ml-3">Applicant List</span>
         </MDBView>
@@ -163,78 +163,90 @@ export default function Applicants() {
               </thead>
 
               <tbody>
-                {applicants.map((applicant, index) => {
-                  const {
-                    _id,
-                    user = {},
-                    file201 = {},
-                    contract = {},
-                    message = "",
-                  } = applicant;
-                  const { hasPds, hasResume, hasLetter } = file201;
+                {applicants.length > 0 ? (
+                  applicants.map((applicant, index) => {
+                    const {
+                      _id,
+                      user = {},
+                      file201 = {},
+                      contract = {},
+                      message = "",
+                    } = applicant;
+                    const { hasPds, hasResume, hasLetter } = file201;
 
-                  return (
-                    <tr key={_id}>
-                      <td>{index + 1}</td>
-                      <td>{fullName(user.fullName)}</td>
-                      <td>
-                        <h6 className="font-weight-bold">
-                          {Policy.getPosition(contract?.designation)}
-                        </h6>
-                        <small
-                          style={{ marginTop: "-0.3rem", display: "block" }}
-                        >
-                          {Policy.getDepartment(contract?.designation)}
-                        </small>
-                      </td>
+                    return (
+                      <tr key={_id}>
+                        <td>{index + 1}</td>
+                        <td>{fullName(user.fullName)}</td>
+                        <td>
+                          <h6 className="font-weight-bold">
+                            {Policy.getPosition(contract?.designation)}
+                          </h6>
+                          <small
+                            style={{ marginTop: "-0.3rem", display: "block" }}
+                          >
+                            {Policy.getDepartment(contract?.designation)}
+                          </small>
+                        </td>
 
-                      <td>
-                        <CredentialChecker
-                          hasUpload={hasPds}
-                          user={user}
-                          type="DataSheet"
-                        />
-                      </td>
-                      <td>
-                        <CredentialChecker
-                          hasUpload={hasResume}
-                          user={user}
-                          type="Resume"
-                        />
-                      </td>
-                      <td>
-                        <CredentialChecker
-                          hasUpload={hasLetter}
-                          user={user}
-                          type="AppLetter"
-                        />
-                      </td>
-                      <td>{message}</td>
-                      <td className="text-center">
-                        <MDBBtnGroup>
-                          <MDBBtn
-                            rounded
-                            size="sm"
-                            color="danger"
-                            onClick={() => handleDeny(applicant)}
-                          >
-                            <MDBIcon icon="user-times" className="mr-2" />
-                            Deny
-                          </MDBBtn>
-                          <MDBBtn
-                            rounded
-                            size="sm"
-                            color="primary"
-                            onClick={() => dispatch(SetSELECTED(applicant))}
-                          >
-                            <MDBIcon icon="user-check" className="mr-2" />
-                            Accept
-                          </MDBBtn>
-                        </MDBBtnGroup>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        <td>
+                          <CredentialChecker
+                            hasUpload={hasPds}
+                            user={user}
+                            type="DataSheet"
+                          />
+                        </td>
+                        <td>
+                          <CredentialChecker
+                            hasUpload={hasResume}
+                            user={user}
+                            type="Resume"
+                          />
+                        </td>
+                        <td>
+                          <CredentialChecker
+                            hasUpload={hasLetter}
+                            user={user}
+                            type="AppLetter"
+                          />
+                        </td>
+                        <td>{message}</td>
+                        <td className="text-center">
+                          <MDBBtnGroup>
+                            <MDBBtn
+                              rounded
+                              size="sm"
+                              color="danger"
+                              onClick={() => handleDeny(applicant)}
+                            >
+                              <MDBIcon icon="user-times" className="mr-2" />
+                              Deny
+                            </MDBBtn>
+                            <MDBBtn
+                              rounded
+                              size="sm"
+                              color="primary"
+                              onClick={() => dispatch(SetSELECTED(applicant))}
+                            >
+                              <MDBIcon icon="user-check" className="mr-2" />
+                              Accept
+                            </MDBBtn>
+                          </MDBBtnGroup>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={8} className="text-center text-muted py-4">
+                      <div className="d-flex flex-column align-items-center justify-content-center">
+                        <MDBIcon icon="user-slash" size="2x" className="mb-2" />
+                        <span className="fw-bold">No Applicants Yet</span>
+                        <small className="text-muted">Check back later</small>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </MDBTable>
           ) : (

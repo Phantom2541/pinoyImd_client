@@ -19,7 +19,8 @@ import TableRowCount from "../../../../components/pagination/rows";
 import Pagination from "../../../../components/pagination";
 import Swal from "sweetalert2";
 const Body = () => {
-  const {
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    {
       collections,
       message,
       isSuccess,
@@ -142,7 +143,10 @@ const Body = () => {
 
   const handlePayslip = (selected) => {
     // console.log("selected", selected);
-    localStorage.setItem("payslip", JSON.stringify(selected));
+    localStorage.setItem(
+      "payslip",
+      JSON.stringify({ ...selected, branch: activePlatform?.branch })
+    );
 
     window.open(
       "/printout/payslip",

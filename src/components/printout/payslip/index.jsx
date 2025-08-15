@@ -2,46 +2,9 @@ import { useState, useEffect } from "react";
 import Hr from "./hr/index";
 import "./style.css";
 
-const Slip = () => {
-  return (
-    <div className="d-flex align-items-center payslip-printout-container">
-      <div className="payslip-hr-printout">
-        <Hr />
-        <i>HR copy</i>
-      </div>
-      <div className="payslip-cut-line">
-        <span className="cut-icon">✂️</span>
-      </div>
-      <div className="ml-3 payslip-employee-printout">
-        <Hr />
-        <i>Employee's copy</i>
-      </div>
-    </div>
-  );
-  // return (
-  //   <div
-  //     style={{
-  //       width: "100vw",
-  //       height: "100vh",
-  //       backgroundColor: "white",
-  //     }}
-  //   >
-  //     <MDBRow>
-  //       <MDBCol>
-  //         <Hr />
-  //         <i>Employee's copy</i>
-  //       </MDBCol>
-  //       <MDBCol>
-  //         <Hr />
-  //         <i>HR copy</i>
-  //       </MDBCol>
-  //     </MDBRow>
-  //   </div>
-  // );
-};
-
 export default function Payslip() {
   const [payroll, setPayroll] = useState({ _id: "" });
+  const [onloaded, setOnloaded] = useState(false);
 
   useEffect(() => {
     setPayroll(JSON.parse(localStorage.getItem("payslip")));
@@ -49,7 +12,29 @@ export default function Payslip() {
     return () => localStorage.removeItem("payslip");
   }, []);
 
-  if (payroll?._id) return <Slip payroll={payroll} />;
+  useEffect(() => {
+    if (onloaded) {
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+  }, [onloaded]);
 
-  return <div>Payroll is Empty</div>;
+  if (!payroll?._id) return <div>Payroll is Empty</div>;
+
+  return (
+    <div className="d-flex align-items-center payslip-printout-container">
+      <div className="payslip-hr-printout">
+        <Hr payroll={payroll} onloaded={onloaded} setOnloaded={setOnloaded} />
+        <i>HR copy</i>
+      </div>
+      <div className="payslip-cut-line">
+        <span className="cut-icon">✂️</span>
+      </div>
+      <div className="ml-3 payslip-employee-printout">
+        <Hr payroll={payroll} onloaded={onloaded} setOnloaded={setOnloaded} />
+        <i>Employee's copy</i>
+      </div>
+    </div>
+  );
 }

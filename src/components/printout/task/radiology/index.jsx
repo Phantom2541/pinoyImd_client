@@ -14,6 +14,7 @@ const Printout = ({ task }) => {
       <Banner
         company={branchId.companyId.name}
         branch={branchId.name}
+        bid={branchId?.bid || ""}
         className="radiology-banner"
       />
       <div className="radiology-body">

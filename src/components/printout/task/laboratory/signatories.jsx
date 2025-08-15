@@ -14,9 +14,9 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
             zIndex: 0,
             position: "relative",
           }}
-          src={`${Cloudinary.getEndpoint()}/users/${
+          src={`${Cloudinary.getEndpoint()}/${person?.sid || ""}/users/${
             person?.email
-          }/signature.png?v=${Date.now()}`}
+          }/signature.png`}
           onError={(e) => (e.target.style.display = "none")} // hide if not found
           alt={person?.email || "signature"}
         />

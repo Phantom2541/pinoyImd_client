@@ -76,7 +76,7 @@ export default function AccessModal() {
   }, []);
 
   const removeDuplicate = useCallback((_existingAccess) => {
-    return Access.collections.filter((c) =>
+    return Access.getByCategory(activePlatform?.branch?.category).filter((c) =>
       _existingAccess?.every(
         (existAcc) =>
           existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
@@ -301,7 +301,11 @@ export default function AccessModal() {
           </MDBRow>
         </MDBModalBody>
         <MDBModalFooter>
-          <MDBBtn type="submit" color="info" disabled={formSubmitted}>
+          <MDBBtn
+            type="submit"
+            color="info"
+            disabled={formSubmitted || clusters.length === 0}
+          >
             Approve {formSubmitted && <MDBIcon icon="spinner" pulse />}
           </MDBBtn>
         </MDBModalFooter>

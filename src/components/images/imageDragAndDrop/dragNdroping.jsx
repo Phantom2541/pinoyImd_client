@@ -214,7 +214,6 @@ const ImageDragAndDrop = ({ img = "", handleUpload, formSubmitted }) => {
         <>
           <img
             src={preview}
-            loading="lazy"
             onError={(e) => (e.target.src = logo)}
             alt="preview"
             className={isDraggingOver ? "dragging-preview" : "normal-preview"}

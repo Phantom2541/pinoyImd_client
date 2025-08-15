@@ -94,7 +94,7 @@ export default function Actions({
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
       <span className="white-text text-left mx-3">
         {!getPage && `${arrayLength} `}

@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import Header from "./header";
 import Body from "./body";
 import { Banner } from "../../../services/utilities";
@@ -6,11 +5,7 @@ import { useEffect, useState } from "react";
 import "./style.css";
 export default function Printout() {
   const [remittance, setRemittance] = useState({});
-  const { activePlatform } = useSelector(({ auth }) => auth);
-  const { branch = {} } = activePlatform;
-  const { name = "", companyId = {} } = branch;
-  // const { companyId, name } = branch;
-
+  const [onloaded, setOnloaded] = useState(false);
   useEffect(() => {
     const fakeDB = localStorage.getItem("remittance");
     if (fakeDB) {
@@ -18,6 +13,17 @@ export default function Printout() {
     }
   }, []);
 
+  useEffect(() => {
+    if (onloaded) {
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+  }, [onloaded]);
+
+  if (!remittance?._id) return "No data to print";
+  const { branch = {} } = remittance || {};
+  const { companyId = {} } = branch || {};
   const Printout = ({ isCashier }) => {
     return (
       <div
@@ -31,8 +37,11 @@ export default function Printout() {
         className="remittance-container bg-white mr-2"
       >
         <Banner
-          company={companyId.name}
-          branch={name}
+          company={companyId?.name}
+          onloaded={onloaded}
+          setOnloaded={setOnloaded}
+          branch={branch?.name}
+          bid={branch?.bid || ""}
           className="remittance-banner"
         />
         <div className="remittance-header">

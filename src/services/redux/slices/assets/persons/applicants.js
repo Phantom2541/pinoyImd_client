@@ -187,6 +187,11 @@ export const reduxSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(BROWSE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, query = {} } = action.payload || {};
         const { branchId } = query;
@@ -197,8 +202,8 @@ export const reduxSlice = createSlice({
           state.branches = Array.isArray(payload)
             ? payload.map(({ applicant, ...rest }) => rest)
             : [];
-          state.collections = Array.isArray(payload)
-            ? payload.flatMap(({ applicants }) => applicants)
+          state.collections = Array.isArray(payload.payload)
+            ? payload.payload.flatMap(({ applicants }) => applicants)
             : [];
           state.filtered = state.collections;
         }

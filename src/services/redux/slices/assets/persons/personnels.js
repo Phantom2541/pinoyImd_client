@@ -372,7 +372,7 @@ export const reduxSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(UPDATE_ACCESS.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -408,12 +408,12 @@ export const reduxSlice = createSlice({
 
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE_ACCESS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;

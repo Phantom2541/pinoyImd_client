@@ -191,6 +191,8 @@ export default function Modal() {
   const hourlyRate = selected?.rate?.daily / 8;
   const dailyRate = selected?.rate?.daily;
 
+  const frequency =
+    payCycle === 1 ? "Bi-Monthly" : payCycle == 2 ? "Monthly" : "Quarterly";
   return (
     <MDBModal
       isOpen={showModal}
@@ -204,7 +206,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {fullName(selected?.user?.fullName)}
+        {fullName(selected?.user?.fullName)} ({frequency})
         <h6 style={{ marginBottom: "-0.7rem", marginLeft: "1.9rem" }}>
           {designation?.toUpperCase()} | {contract?.soe?.toUpperCase()}
         </h6>
