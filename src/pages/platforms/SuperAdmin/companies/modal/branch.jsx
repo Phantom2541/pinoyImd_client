@@ -45,7 +45,7 @@ const Branch = ({
             className="mt-4"
             preValue={branch.category}
             label="Category"
-            collections={["laboratory", "radiology", "diagnostics", "supplier"]}
+            collections={["laboratory", "radiology", "diagnostic", "supplier"]}
             onChange={(value) => setBranch({ ...branch, category: value })}
           />
         </MDBCol>

@@ -115,18 +115,15 @@ const Body = ({ applicants }) => {
                     {Policy.getDepartment(contract?.designation)}
                   </small>
                 </td>
-                <td style={{ position: "relative ", width: "15rem" }}>
+                <td>
                   <EditableSelect
                     isEditable={true}
+                    animation
+                    animationStyle={{ width: "15rem" }}
                     keyForText={"name"}
                     keyForValue={"branch"}
-                    selectStyle={{
-                      position: "fixed",
-                      zIndex: "2",
-                      marginTop: "3.5rem",
-                    }}
                     preValue={branch?._id}
-                    className="m-0 p-0"
+                    className="m-0 p-0 mb-n2 mt-n2"
                     collections={branches.map(({ name, _id }) => ({
                       name,
                       branch: _id,
@@ -192,7 +189,7 @@ const Body = ({ applicants }) => {
         ) : (
           <tr>
             <td colSpan={9} className="text-center fw-bold">
-              No applicant records. try another branch
+              No applicant records.
             </td>
           </tr>
         )}

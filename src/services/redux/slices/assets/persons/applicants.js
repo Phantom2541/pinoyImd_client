@@ -202,8 +202,8 @@ export const reduxSlice = createSlice({
           state.branches = Array.isArray(payload)
             ? payload.map(({ applicant, ...rest }) => rest)
             : [];
-          state.collections = Array.isArray(payload)
-            ? payload.flatMap(({ applicants }) => applicants)
+          state.collections = Array.isArray(payload.payload)
+            ? payload.payload.flatMap(({ applicants }) => applicants)
             : [];
           state.filtered = state.collections;
         }

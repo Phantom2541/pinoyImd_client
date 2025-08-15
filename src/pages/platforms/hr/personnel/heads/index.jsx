@@ -43,12 +43,6 @@ const Index = () => {
         show={showModal}
         toggle={toggleModal}
       />
-      {/* <SignaturePreview 
-      // show={showPreviewSignature}
-      // toggle={togglePreviewSignature}
-      // selected={selected}
-      // setImageErrors={setImageErrors}
-       /> */}
     </>
   );
 };

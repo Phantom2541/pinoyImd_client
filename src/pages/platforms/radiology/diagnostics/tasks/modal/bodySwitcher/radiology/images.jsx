@@ -60,8 +60,8 @@ const Images = () => {
     const updatedTask = {
       ...task,
       signatories: [
-        isTechnician ? value : head?._id,
-        !isTechnician ? value : dr?._id,
+        isTechnician ? value : head?._id || head || null,
+        !isTechnician ? value : dr?._id || dr || null,
         encoder,
       ],
     };

@@ -15,6 +15,7 @@ import { fullName } from "./../../../../../../../services/utilities";
 import { Access } from "./../../../../../../../services/fakeDb";
 import { UPDATE_ACCESS } from "./../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
+import Spinner from "../../../../../../../components/spinner";
 
 /**
  * AccessModal component manages user access roles through a modal interface.
@@ -31,7 +32,7 @@ import Table from "./table";
 
 export default function AccessModal({ show, toggle, selected }) {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
-    // {stat}=useSelector(({personnels})=>personnels),
+    { formSubmitted } = useSelector(({ personnels }) => personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
@@ -84,8 +85,7 @@ export default function AccessModal({ show, toggle, selected }) {
 
     dispatch(
       UPDATE_ACCESS({ data: { accessChanges, staffID: selected._id }, token })
-    );
-    toggle();
+    ).then(() => toggle());
   };
 
   const handleAccessChanges = (role, isDelete = false) => {
@@ -283,12 +283,8 @@ export default function AccessModal({ show, toggle, selected }) {
         </MDBRow>
       </MDBModalBody>
       <MDBModalFooter>
-        <MDBBtn
-          onClick={handleSubmit}
-          color="info"
-          // disabled={existingAccess.length === 0}
-        >
-          Save Changes
+        <MDBBtn onClick={handleSubmit} color="info" disabled={formSubmitted}>
+          Save Changes <Spinner formSubmitted={formSubmitted} />
         </MDBBtn>
       </MDBModalFooter>
     </MDBModal>

@@ -5,9 +5,7 @@ import EditableSelect from "../../../../../components/customizable/editableSelec
 
 const Details = ({
   form,
-  branch,
   isDuplicate = false,
-  setBranch = () => {},
   setForm = () => {},
   validateName = () => {},
 }) => {
@@ -60,7 +58,7 @@ const Details = ({
             className="mt-4"
             preValue={form.category}
             label="Category"
-            collections={["laboratory", "radiology", "diagnostics", "supplier"]}
+            collections={["diagnostic", "supplier"]}
             onChange={(value) => setForm({ ...form, category: value })}
           />
         </MDBCol>

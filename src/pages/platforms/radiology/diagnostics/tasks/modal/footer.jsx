@@ -78,8 +78,10 @@ const Footer = () => {
     else if (task?.form === "Parasitology")
       dispatch(SetHEALTHY("parasitology"));
   };
-
   const handleDisablePost = () => {
+    const { signatories = [] } = task;
+    const [dr = null, head = null] = signatories;
+    if (!dr || !head) return true;
     if (task.form === "Ecg") return task.findings ? false : true;
     return task.description && task.impression ? false : true;
   };
