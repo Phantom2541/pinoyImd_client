@@ -165,7 +165,18 @@ export default function Collapsable({ branches, cid }) {
               </td>
 
               {/* category */}
-              <td>
+              <td className="position-relative">
+                {/* <div
+                  style={{
+                    width: "17rem",
+                    marginBottom: "-0.7rem",
+                    opacity: isSourceEdit ? 1 : 0,
+                    zIndex: isSourceEdit ? 9999 : -1,
+                  }}
+                  className={`d-flex align-items-center position-absolute ${
+                    isSourceEdit && "deals-zoom-in"
+                  }`}
+                > */}
                 <EditableSelect
                   title="Click to edit"
                   isEditable
@@ -197,6 +208,7 @@ export default function Collapsable({ branches, cid }) {
                     })
                   }
                 />
+                {/* </div> */}
               </td>
 
               {/* subscription */}
