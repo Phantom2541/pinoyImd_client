@@ -1,0 +1,123 @@
+.editUser-search-container {
+  width: 100%;
+  position: relative;
+}
+
+.editUser-search-input {
+  width: 100%;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  outline: none;
+  transition: 0.3s;
+}
+
+.editUser-search-input:focus {
+  border-color: #007bff;
+}
+
+.editUser-search-input:disabled {
+  background-color: transparent !important;
+  color: #000 !important; /* para di maging gray text */
+  cursor: not-allowed; /* para mukhang disabled pa rin */
+}
+
+.editUser-results-list {
+  max-height: 400px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  /* Animation */
+  animation: editUserFadeSlideIn 0.3s ease forwards;
+}
+
+.editUser-result-item {
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.editUser-result-item:last-child {
+  border-bottom: none;
+}
+
+.editUser-result-item:hover .editUser-result-content {
+  background-color: #f0f0f0;
+}
+
+.editUser-result-content {
+  padding: 10px 12px;
+}
+
+.editUser-no-result {
+  background-color: #fff;
+}
+
+.editUser-no-result .editUser-result-content {
+  color: #999;
+  padding: 10px 12px;
+}
+
+/* Animation Keyframes */
+@keyframes editUserFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes zoomInDeals {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.editUser-zoom-in {
+  position: absolute;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 0 10px;
+  background: white;
+  border-radius: 5px;
+  animation: zoomInDeals 0.3s ease-out;
+  display: inline-block;
+  transform-origin: left;
+}
+
+.editUser-zoom-in-input-User {
+  border: none !important;
+  border-bottom: 1px solid black !important;
+  outline: none !important;
+}
+.editUser-zoom-in-input-User:focus {
+  border: none !important;
+}
+
+.editUser-zoom-in-input-ssx {
+  border: none;
+  border-bottom: 1px solid black !important;
+  border-image: linear-gradient(to right, black 78%, white 22%);
+  border-image-slice: 1;
+  outline: none;
+}
+.editUser-zoom-in-input-ssx:focus {
+  border-bottom: 1px solid blue !important;
+  /* border-image: linear-gradient(to right, transparent 78%, transparent 22%); */
+  outline: none !important;
+  box-shadow: none !important;
+}
