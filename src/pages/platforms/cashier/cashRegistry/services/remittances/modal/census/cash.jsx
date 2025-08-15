@@ -61,7 +61,7 @@ export default function Cash({
             border: "1px solid #e0e0e0",
           }}
         >
-          <strong>Cash Summary</strong>
+          <strong>Daily Liquidation Summary</strong>
           <hr />
           <div className="d-flex justify-content-between mb-1">
             <span>Floating Cash</span>

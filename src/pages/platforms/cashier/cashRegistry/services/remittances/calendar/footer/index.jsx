@@ -22,7 +22,7 @@ const Footer = ({ num, item = {}, deals }) => {
   };
   const handleCensus = () =>
     dispatch(SetSELECTED({ key: "census", value: item, deals }));
-  const handleClose = () =>
+  const handleLiquidations = () =>
     dispatch(SetSELECTED({ key: "close", value: item }));
   const { opening, sales: gross, collector } = item;
 
@@ -45,7 +45,7 @@ const Footer = ({ num, item = {}, deals }) => {
         className="m-0 "
         size="sm"
         color="primary"
-        title="Census"
+        title="Services Census and Daily Liquidation Summary"
         onClick={() => handleCensus()}
         disabled={!opening}
       >
@@ -56,8 +56,8 @@ const Footer = ({ num, item = {}, deals }) => {
         className="m-0 "
         size="sm"
         color={gross < 0 ? "danger" : "primary"}
-        title="Close Cash Register, to unlock, declaire a census"
-        onClick={() => handleClose()}
+        title="Close Cash Register, to unlock, declaire the census"
+        onClick={() => handleLiquidations()}
         disabled={!gross || collector}
       >
         <MDBIcon icon="exchange-alt" />
