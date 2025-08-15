@@ -68,7 +68,6 @@ export default function Platforms() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
   const toggleSideNav = () => {
     if (windowWidth < breakWidth) {
       setSideNavToggled(!sideNavToggled);

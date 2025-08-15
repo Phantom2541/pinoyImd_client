@@ -42,7 +42,6 @@ export default function Tasks() {
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
   // references
   useEffect(() => {
     if (token && activePlatform?.branchId) {

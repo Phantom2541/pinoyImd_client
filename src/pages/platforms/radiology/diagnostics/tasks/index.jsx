@@ -97,7 +97,6 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-
   return (
     <MDBCard narrow>
       <Header />

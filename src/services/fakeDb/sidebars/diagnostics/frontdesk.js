@@ -61,13 +61,18 @@ import {
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
 import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
-const department =
-  JSON.parse(localStorage.getItem("activePlatform") || "{}")?.department ||
-  "Laboratory";
 
-const isRadiology =
-  department.toLowerCase() === "radiology" ||
-  department.toLowerCase() === "rad";
+let activePlatformRaw = localStorage.getItem("activePlatform");
+let isRadiology = false;
+
+try {
+  const { department = "" } = JSON.parse(activePlatformRaw) || {};
+  isRadiology =
+    department.toLowerCase() === "radiology" ||
+    department.toLowerCase() === "rad";
+} catch (e) {
+  isRadiology = false;
+}
 
 const frontdesk = [
   {
