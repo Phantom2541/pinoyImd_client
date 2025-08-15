@@ -248,7 +248,15 @@ export default function AccessModal() {
           <MDBIcon icon="universal-access" className="mr-2" />
           {`${fullName(user.fullName) || ""} `}
         </h6>
-        <small>{Policy.getPositions(contract?.designation)}</small>
+        <h5
+          style={{
+            marginTop: "-0.5rem",
+            marginLeft: "1.5rem",
+            marginBottom: "-0.7rem",
+          }}
+        >
+          {Policy.getPositions(contract?.designation)}
+        </h5>
       </MDBModalHeader>
       <form onSubmit={handleSubmit}>
         <MDBModalBody>

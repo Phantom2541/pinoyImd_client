@@ -67,18 +67,21 @@ export default function Applicants() {
           className="gradient-card-header blue-gradient py-2 mx-4 d-flex justify-content-between align-items-center"
         >
           <span className="ml-3">Applicant List</span>
-          <select
-            className="form-control"
-            style={{ width: "15rem" }}
-            onChange={({ target }) => setActiveBranch(target.value)}
-          >
-            <option value={"all"}> All</option>
-            {branchSelections.map(({ _id, name = "", displayname = "" }) => (
-              <option key={_id} value={_id}>
-                {capitalize(name || displayname)}
-              </option>
-            ))}
-          </select>
+          <div className="d-flex align-items-center ">
+            <span className="mr-1">Branch:</span>
+            <select
+              className="form-control"
+              style={{ width: "15rem" }}
+              onChange={({ target }) => setActiveBranch(target.value)}
+            >
+              <option value={"all"}> All</option>
+              {branchSelections.map(({ _id, name = "", displayname = "" }) => (
+                <option key={_id} value={_id}>
+                  {capitalize(name || displayname)}
+                </option>
+              ))}
+            </select>
+          </div>
         </MDBView>
         <MDBCardBody>
           {!isLoading ? <Body applicants={applicants} /> : <TableLoading />}
