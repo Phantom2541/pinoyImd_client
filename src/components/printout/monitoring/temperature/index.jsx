@@ -1,5 +1,5 @@
 import { Line } from "react-chartjs-2";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Chart } from "chart.js";
 
 // Register necessary components for Chart.js v3
@@ -178,15 +178,28 @@ const TempPrint = () => {
       document.head.removeChild(style);
     };
   }, []);
+
+  const [onloaded, setOnloaded] = useState(false);
+  useEffect(() => {
+    if (onloaded) {
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+  }, [onloaded]);
   return (
     <div>
       <Banner
         company={branch?.companyId?.name}
         branch={branch?.name}
+        onloaded={onloaded}
+        setOnloaded={setOnloaded}
         className="laboratory-banner"
         bid={branch?.bid || ""}
       />
-      <h3 className="text-center fw-bold mt-2">Temperature Monitoring</h3>
+      <h3 className="text-center mt-2" style={{ fontWeight: 600 }}>
+        Temperature Monitoring
+      </h3>
       <Line
         data={barChartData(titles, roomAM, roomPM, refAM, refPM)}
         options={barChartOptions}
