@@ -49,6 +49,10 @@ const Header = () => {
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
+      <span className="text-white text-center mx-3">
+        TEMPERATURE MONITORING
+      </span>
+
       <div className="d-flex align-items-center justify-content-between">
         <CalendarPicker
           month={month}
@@ -56,14 +60,12 @@ const Header = () => {
           year={year}
           reset={() => dispatch(ResetDATE())}
         />
-      </div>
-      <h3 className="text-white text-center mx-3">TEMPERATURE MONITORING</h3>
-      <div className="d-flex align-items-center">
         <MDBBtn
           type="submit"
           disabled={isLoading}
           color="primary"
-          size="md"
+          className="px-2 ml-3"
+          size="sm"
           rounded
           onClick={handlePrint}
         >

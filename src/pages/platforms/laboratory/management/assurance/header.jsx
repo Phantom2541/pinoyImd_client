@@ -17,7 +17,7 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ assurances }) => assurances),
     [template, setTemplate] = useState(1),
-    [service, setService] = useState(1),
+    [service, setService] = useState(59),
     memoizedSetService = useCallback((value) => {
       setService(value);
     }, []),
@@ -43,12 +43,9 @@ const Header = () => {
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-0 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-0 mx-4 d-flex justify-content-between align-items-center"
     >
-      <div
-        className="d-flex justify-items-center align-items-center"
-        style={{ maxWidth: "400px" }}
-      >
+      <div className="d-flex justify-items-center align-items-center">
         <span className="white-text mx-3 text-nowrap mt-0">EQAS </span>
         <Templates setTemplate={setTemplate} />
         <Services
@@ -67,7 +64,7 @@ const Header = () => {
           />
           <MDBBtn
             size="sm"
-            className="px-2"
+            className="px-2 ml-2"
             rounded
             color="success"
             onClick={() =>

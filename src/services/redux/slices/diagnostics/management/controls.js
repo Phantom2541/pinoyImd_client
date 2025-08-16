@@ -7,7 +7,7 @@ const today = new Date();
 const initialState = {
   collections: [], // incase one query only
   filtered: [], // filtered on collection to eliminate server load
-  serviceId: undefined,
+  serviceId: 59,
 
   // for BREAD
   selected: {},
@@ -169,10 +169,10 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         const { success, data } = payload;
-        console.log("payload", payload);
-        console.log("data", data);
-
         state.collections = data;
+        state.filtered = data.filter(
+          ({ serviceId }) => serviceId === state.serviceId
+        );
         state.isSuccess = success;
         state.isLoading = false;
       })
@@ -204,11 +204,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
-
-        state.collections[index] = payload;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          collections[index] = payload;
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -220,18 +223,20 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+        state.isSuccess = false;
       })
       .addCase(DESTROY.fulfilled, (state, { payload }) => {
-        state.collections = state.collections.filter(
-          ({ _id }) => _id !== payload
-        );
+        const updateCollections = (collections) => {
+          const index = collections.findIndex((item) => item._id === payload);
+          collections.splice(index, 1);
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
         state.isSuccess = true;
-        state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.isSuccess = false;
       });
   },
 });

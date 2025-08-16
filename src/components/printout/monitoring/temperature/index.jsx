@@ -1,5 +1,5 @@
 import { Line } from "react-chartjs-2";
-import React from "react";
+import React, { useEffect } from "react";
 import { Chart } from "chart.js";
 
 // Register necessary components for Chart.js v3
@@ -162,12 +162,26 @@ const TempPrint = () => {
   const refAM = collections.map((item) => item.AM?.ref || 0);
   const refPM = collections.map((item) => item.PM?.ref || 0);
 
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @media print {
+        @page {
+          size: landscape;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
   return (
     <div>
       <Line
         data={barChartData(titles, roomAM, roomPM, refAM, refPM)}
         options={barChartOptions}
-        height={150}
+        height={100}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
+import { MDBTable, MDBBtnGroup, MDBBtn, MDBIcon } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
@@ -40,7 +40,7 @@ const Tables = () => {
   };
 
   return (
-    <MDBTable responsive hover bordered className="text-center">
+    <MDBTable responsive className="text-center" small>
       <thead>
         <tr>
           <th>#</th>
@@ -75,20 +75,18 @@ const Tables = () => {
                   <MDBBtn
                     size="sm"
                     rounded
-                    color="success"
+                    color="info"
                     onClick={() => dispatch(SetEDIT(assurance))}
-                    style={{ marginRight: "10px", borderRadius: "50px" }}
                   >
-                    Edit
+                    <MDBIcon icon="pencil-alt" />
                   </MDBBtn>
                   <MDBBtn
                     size="sm"
                     rounded
                     color="danger"
                     onClick={() => handleDelete(assurance._id)}
-                    style={{ borderRadius: "50px" }}
                   >
-                    Delete
+                    <MDBIcon icon="trash" />
                   </MDBBtn>
                 </MDBBtnGroup>
               </td>

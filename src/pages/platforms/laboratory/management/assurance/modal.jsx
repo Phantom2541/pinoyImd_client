@@ -19,9 +19,10 @@ import { Services } from "../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import Spinner from "../../../../../components/spinner";
 
 export default function Modal() {
-  const { isLoading, showModal, willCreate, selected } = useSelector(
+  const { formSubmitted, showModal, willCreate, selected } = useSelector(
       ({ assurances }) => assurances
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -131,12 +132,13 @@ export default function Modal() {
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              {willCreate ? "Submit" : "Update"}
+              {willCreate ? "Submit" : "Update"}{" "}
+              <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
           </div>
         </form>

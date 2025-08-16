@@ -17,8 +17,8 @@ const Assurances = () => {
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
           <Footer />
         </MDBCard>
-        <Modal />
       </MDBAnimation>
+      <Modal />
     </>
   );
 };
