@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Banner } from "../../../../services/utilities";
 
 Chart.register(
   CategoryScale,
@@ -144,7 +145,8 @@ const barChartOptions = {
 
 // TempPrint component to render the graph
 const TempPrint = () => {
-  const collections = JSON.parse(localStorage.getItem("temperature")) || [];
+  const { collections = [], branch = {} } =
+    JSON.parse(localStorage.getItem("temperature") || "{}") || {};
 
   // Initialize arrays for the graph data
   const titles = collections.length
@@ -178,10 +180,17 @@ const TempPrint = () => {
   }, []);
   return (
     <div>
+      <Banner
+        company={branch?.companyId?.name}
+        branch={branch?.name}
+        className="laboratory-banner"
+        bid={branch?.bid || ""}
+      />
+      <h3 className="text-center fw-bold mt-2">Temperature Monitoring</h3>
       <Line
         data={barChartData(titles, roomAM, roomPM, refAM, refPM)}
         options={barChartOptions}
-        height={100}
+        height={150}
       />
     </div>
   );

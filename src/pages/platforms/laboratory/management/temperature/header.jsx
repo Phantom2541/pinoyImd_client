@@ -34,8 +34,10 @@ const Header = () => {
   }, [token, dispatch, activePlatform, month, year]);
 
   const handlePrint = () => {
-    localStorage.setItem("temperature", JSON.stringify(collections));
-    // console.log("collections: ", collections);
+    localStorage.setItem(
+      "temperature",
+      JSON.stringify({ collections, branch: activePlatform?.branch })
+    );
 
     window.open(
       "/printout/temperature/graph",
