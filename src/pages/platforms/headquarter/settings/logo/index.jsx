@@ -63,21 +63,7 @@ export default function Logo() {
 
   return (
     <>
-      {/* <div style={{ width: "31rem" }} className="mx-auto">
-        <MDBTypography
-          variant="h6"
-          noteColor="warning"
-          className="mt-2 "
-          note
-          noteTitle={"Description: "}
-        >
-          Hover over the logo to upload or download a new one.
-        </MDBTypography>
-      </div> */}
-      {/* <div style={{ width: "230px" }} className="mx-auto">
-        <MDBCard>
-          <MDBCardBody> */}
-      <div style={{ width: "150px" }}>
+      <div style={{ minWidth: "150px", width: "150px", aspectRatio: "1/1" }}>
         <MDBView hover={!showImgCropper}>
           <img
             src={
@@ -89,6 +75,7 @@ export default function Logo() {
             className="img-fluid"
             alt={company?.name || "Default Logo"}
             onError={(e) => (e.target.src = FailedLogo)}
+            style={{ minWidth: "150px", width: "150px", aspectRatio: "1/1" }}
           />
           <MDBMask overlay="grey-strong d-flex align-items-center">
             <MDBBtnGroup className="mx-auto">
@@ -117,30 +104,6 @@ export default function Logo() {
           </MDBMask>
         </MDBView>
       </div>
-      {/* <hr />
-            {array
-              .sort(() => Math.random() - 0.5)
-              .map((index, i) => (
-                <div
-                  key={`sampleSidebar-${index}`}
-                  style={{
-                    width: `${index * 10 + 100}px`,
-                  }}
-                >
-                  <MDBAnimation
-                    type="fadeIn"
-                    infinite
-                    delay={`${i + 1}00ms`}
-                    duration="2500ms"
-                  >
-                    <MDBProgress color="light" value={100} />
-                  </MDBAnimation>
-                  <br />
-                </div>
-              ))}
-          </MDBCardBody>
-        </MDBCard>
-      </div> */}
     </>
   );
 }

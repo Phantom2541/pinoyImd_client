@@ -224,23 +224,25 @@ export default function SideNavigation({
       >
         {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
-          <img
+          {/* <img
             src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
               company?.name
             }/logo.png`}
             onError={(e) => (e.target.src = FailedLogo)}
             alt="Company Logo"
             style={{ width: "65px", aspectRatio: "1/1" }}
-          />
-          {/* <BgRemover
-            className="affiliates-logo"
+          /> */}
+          <BgRemover
             src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
               company?.name
             }/logo.png`}
             fallback={FailedLogo}
-            scaleWidth={75}
-            scaleHeight={65}
-          /> */}
+            style={{
+              height: "70px",
+              aspectRatio: "1/1",
+              objectFit: "scale-down",
+            }}
+          />
           <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company?.name}
           </div>

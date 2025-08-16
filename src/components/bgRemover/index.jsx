@@ -15,8 +15,6 @@ function BgRemoverComponent({
   style,
   bgColor = { r: 255, g: 255, b: 255 },
   tolerance = 100,
-  scaleWidth, // target width
-  scaleHeight, // target height
 }) {
   const canvasRef = useRef(null);
   const imgRef = useRef(null);
@@ -32,18 +30,28 @@ function BgRemoverComponent({
     let cancelled = false;
     const maxToleranceSq = tolerance * tolerance;
 
+    // Helper: Draw image directly without processing
+    const drawImageDirect = (image) => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0);
+    };
+
     img.src = src;
 
     img.onload = () => {
       if (cancelled) return;
 
-      // Draw original image
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
+      // Process only original image, skip fallback
+      const imageData = (() => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        return ctx.getImageData(0, 0, canvas.width, canvas.height);
+      })();
 
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
       const { r: bgR, g: bgG, b: bgB } = bgColor;
 
@@ -63,7 +71,7 @@ function BgRemoverComponent({
 
       ctx.putImageData(imageData, 0, 0);
 
-      // Find bounding box of non-transparent pixels
+      // Find bounding box
       let minX = canvas.width,
         minY = canvas.height,
         maxX = 0,
@@ -90,43 +98,30 @@ function BgRemoverComponent({
       let width = maxX - minX + 1;
       let height = maxY - minY + 1;
 
-      // Robust square detection (5% tolerance)
+      // Keep squares square
       const aspectRatio = width / height;
       if (aspectRatio > 0.95 && aspectRatio < 1.05) {
         const size = Math.max(width, height);
         const centerX = Math.round((minX + maxX) / 2);
         const centerY = Math.round((minY + maxY) / 2);
 
-        // Clamp minX/minY to canvas boundaries
         minX = Math.max(0, centerX - Math.floor(size / 2));
         minY = Math.max(0, centerY - Math.floor(size / 2));
         width = Math.min(size, canvas.width - minX);
         height = Math.min(size, canvas.height - minY);
       }
 
-      // Offscreen canvas for smooth crop
+      // Crop to bounding box
       const tmpCanvas = document.createElement("canvas");
       const tmpCtx = tmpCanvas.getContext("2d");
       tmpCanvas.width = width;
       tmpCanvas.height = height;
       tmpCtx.drawImage(canvas, minX, minY, width, height, 0, 0, width, height);
 
-      // --- FINAL SCALING LOGIC ---
-      let finalWidth = scaleWidth || width;
-      let finalHeight = scaleHeight || height;
-
-      // Square image → use smaller of scaleWidth/scaleHeight
-      if (width === height && scaleWidth && scaleHeight) {
-        const size = Math.min(scaleWidth, scaleHeight);
-        finalWidth = size;
-        finalHeight = size;
-      }
-
-      // Draw final image
-      canvas.width = finalWidth;
-      canvas.height = finalHeight;
-      ctx.clearRect(0, 0, finalWidth, finalHeight);
-      ctx.drawImage(tmpCanvas, 0, 0, finalWidth, finalHeight);
+      canvas.width = width;
+      canvas.height = height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(tmpCanvas, 0, 0);
     };
 
     img.onerror = () => {
@@ -139,10 +134,8 @@ function BgRemoverComponent({
 
         fallbackImg.onload = () => {
           if (cancelled) return;
-          canvas.width = fallbackImg.width;
-          canvas.height = fallbackImg.height;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(fallbackImg, 0, 0);
+          // Draw fallback directly, no processing
+          drawImageDirect(fallbackImg);
         };
 
         fallbackImg.onerror = () => {
@@ -161,7 +154,7 @@ function BgRemoverComponent({
         imgRef.current.src = "";
       }
     };
-  }, [src, fallback, bgColor, tolerance, scaleWidth, scaleHeight]);
+  }, [src, fallback, bgColor, tolerance]);
 
   return (
     <canvas

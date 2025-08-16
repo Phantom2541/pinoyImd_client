@@ -10,7 +10,7 @@ import { MDBAnimation } from "mdbreact";
 export default function BetaTester() {
   const { collections } = useSelector(({ companies }) => companies);
 
-  const cutoffDate = new Date("2025-08-12");
+  const cutoffDate = new Date("2025-12-12");
 
   const earlyCompanies = collections.filter((company) => {
     const companyDate = new Date(company.createdAt); // change to your actual date property
@@ -63,8 +63,6 @@ export default function BetaTester() {
                     src={logoUrl}
                     alt={item.name}
                     fallback={fallbackLogo}
-                    scaleWidth={250}
-                    scaleHeight={200}
                   />
                 </MDBAnimation>
                 <MDBAnimation
