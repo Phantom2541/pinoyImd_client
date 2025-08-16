@@ -40,10 +40,10 @@ export default function POS() {
   }, [activeIndex]);
 
   useEffect(() => {
-    if (message.name === "Error") {
+    if (message?.name === "Error") {
       Swal.fire({
         title: "Duplicate Entry",
-        text: message.message,
+        text: message?.message,
         icon: "warning",
       });
     }
@@ -192,7 +192,6 @@ export default function POS() {
       window.removeEventListener("reset-ui", resetUI);
     };
   }, []);
-
   return (
     <div className="pos-container">
       <div
@@ -301,7 +300,13 @@ export default function POS() {
             <Classification />
           </div>
           <div className="flip-card-back" ref={backRef}>
-            <Patient setActiveIndex={setActiveIndex} />
+            <Patient
+              setActiveIndex={setActiveIndex}
+              setShowPatientInfo={() => {
+                setShowPatientInfo(!showPatientInfo);
+                setSearchDone(true);
+              }}
+            />
           </div>
         </div>
       </div>

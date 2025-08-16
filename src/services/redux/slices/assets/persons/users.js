@@ -45,6 +45,7 @@ export const GETPATIENTS = createAsyncThunk(
 
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
+    console.log("form", form);
     return axioKit.save(url, form.data, form.token);
   } catch (error) {
     const message =

@@ -1,5 +1,7 @@
 import { MDBBtn, MDBInput } from "mdbreact";
 import { useEffect, useState } from "react";
+import { useToasts } from "react-toast-notifications";
+
 import { Privileges, Suffixes } from "../../../../../../../../services/fakeDb";
 import {
   generateEmail,
@@ -8,23 +10,31 @@ import {
 } from "../../../../../../../../services/utilities";
 import AddressSelect from "../../../../../../../../components/searchables/addressSelect";
 import {
+  DUPLICATE_CHECKER,
   SAVE,
   UPDATE,
 } from "../../../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
 import { SETPATIENT } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
+import Swal from "sweetalert2";
+import Spinner from "../../../../../../../../components/spinner";
 
 /**
  * if user is not in quest, use branch address
  * else use user quest addres
  */
 
-export default function Patient({ setActiveIndex }) {
+export default function Patient({
+  setActiveIndex,
+  setShowPatientInfo = () => {},
+}) {
   const { token } = useSelector(({ auth }) => auth),
+    { formSubmitted } = useSelector(({ users }) => users),
     { customer } = useSelector(({ pos }) => pos),
     [form, setForm] = useState({}),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    { addToast } = useToasts();
 
   // inject searched name if no match
   useEffect(() => {
@@ -64,46 +74,87 @@ export default function Patient({ setActiveIndex }) {
     address,
     email,
   } = form;
-  console.log(fullName);
-  const handleSubmit = (e) => {
+
+  const isDuplicate = async (data) => {
+    return await dispatch(DUPLICATE_CHECKER(data)).then((action) => {
+      switch (action.type) {
+        case "assets/persons/users/duplicate_checker/fulfilled":
+          return false;
+        case "assets/persons/users/duplicate_checker/rejected":
+          const { error } = action;
+          Swal.fire({
+            title: "Ooops...",
+            text: error?.message,
+            icon: "error",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Okay, I understand.",
+          });
+          return true;
+
+        default:
+          return true;
+      }
+    });
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const _form = { ...form, password: form?.dob.replaceAll("-", "") };
     if (_id) {
       // update
-      if (!isEqual(_form, customer))
-        dispatch(
-          UPDATE({
-            data: _form,
-            token,
-          })
-        ).then((action) => {
-          if (action.type === "assets/persons/users/update/fulfilled") {
-            dispatch(SETPATIENT(action.payload.payload));
+      if (!isEqual(_form, customer)) {
+        const duplicate = await isDuplicate({
+          data: _form,
+          token,
+        });
+        if (!duplicate) {
+          dispatch(
+            UPDATE({
+              data: _form,
+              token,
+            })
+          ).then((action) => {
+            if (action.type === "assets/persons/users/update/fulfilled") {
+              dispatch(SETPATIENT(action.payload.payload));
+              setActiveIndex(0);
+              return addToast("Successfully updated patient.", {
+                appearance: "success",
+              });
+            }
+          });
+        }
+      } else {
+        return addToast("No changes found, skipping update.", {
+          appearance: "info",
+        });
+      }
+    } else {
+      const body = {
+        data: {
+          ..._form,
+          email: email || generateEmail(_form),
+          activePlatform: {
+            isPatient: true,
+            isCeo: false,
+            platform: "patron",
+            role: "patron",
+          },
+        },
+        token,
+      };
+      const duplicate = await isDuplicate(body);
+      if (!duplicate) {
+        dispatch(SAVE(body)).then((action) => {
+          if (action.type === "assets/persons/users/save/fulfilled") {
+            dispatch(SETPATIENT(action?.payload?.payload));
+            setShowPatientInfo(true);
+            setActiveIndex(0);
+            return addToast("Successfully registered patient.", {
+              appearance: "success",
+            });
           }
         });
-    } else {
-      // create
-      dispatch(
-        SAVE({
-          data: {
-            ..._form,
-            email: email || generateEmail(_form),
-            activePlatform: {
-              isPatient: true,
-              isCeo: false,
-              platform: "patron",
-              role: "patron",
-            },
-          },
-          token,
-        })
-      ).then((action) => {
-        if (action.type === "assets/persons/users/save/fulfilled") {
-          dispatch(SETPATIENT(action.payload.payload));
-        }
-      });
+      }
     }
-    setActiveIndex(0);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -113,7 +164,7 @@ export default function Patient({ setActiveIndex }) {
             <span>Last Name</span>
             <input
               type="text"
-              value={fullName?.lname || ""}
+              value={fullName?.lname?.toUpperCase() || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -127,7 +178,7 @@ export default function Patient({ setActiveIndex }) {
             <span>First Name</span>
             <input
               type="text"
-              value={fullName?.fname || ""}
+              value={fullName?.fname?.toUpperCase() || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -141,7 +192,7 @@ export default function Patient({ setActiveIndex }) {
             <span>Middle Name (Optional)</span>
             <input
               type="text"
-              value={fullName?.mname || ""}
+              value={fullName?.mname?.toUpperCase() || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -286,8 +337,9 @@ export default function Patient({ setActiveIndex }) {
         type="submit"
         color={_id ? "info" : "primary"}
         className="float-right mt-n2"
+        disabled={formSubmitted}
       >
-        {_id ? "Update" : "Register"}
+        {_id ? "Update" : "Register"} <Spinner formSubmitted={formSubmitted} />
       </MDBBtn>
     </form>
   );
