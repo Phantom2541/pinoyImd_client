@@ -132,6 +132,9 @@ export default function Search({
               detail: { excludeId: instanceId },
             })
           );
+          if (fullName(selectedUser?.fullName)) {
+            setSearchKey(fullName(selectedUser?.fullName));
+          }
         },
       },
       fullName(selectedUser?.fullName)
@@ -188,6 +191,7 @@ export default function Search({
                 type="search"
                 value={searchKey}
                 onChange={handleChange}
+                id="search-ao"
                 placeholder="Search..."
                 autoCorrect="off"
                 spellCheck={false}
