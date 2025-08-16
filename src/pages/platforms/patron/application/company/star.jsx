@@ -21,15 +21,16 @@ const StarRating = () => {
 
   return (
     <div
-      className="star-rating"
+      className="application-star-rating"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setHover(null)}
       onClick={handleClick}
     >
-      <div className="star-back">★★★★★</div>
-      <div className="star-front" style={{ width: percentage }}>
+      <div className="application-star-back">★★★★★</div>
+      <div className="application-star-front" style={{ width: percentage }}>
         ★★★★★
       </div>
+      <span className="application-star-count">(4.9)</span>
     </div>
   );
 };
