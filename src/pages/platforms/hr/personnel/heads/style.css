@@ -182,7 +182,7 @@
   padding: 5px 0;
 }
 .signatories-card-signature {
-  width: 300px;
+  width: 200px;
   height: 100px;
   object-fit: scale-down;
   -webkit-user-drag: none;
@@ -278,7 +278,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,7 +296,7 @@
   max-width: 95vw;
   height: 460px;
   max-height: 85vh;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   animation: signatories-slideUp 0.3s ease;
 }
@@ -315,7 +315,7 @@
 .signatories-cropper-body {
   flex: 1;
   position: relative;
-  background: #111;
+  background: white;
 }
 
 .signatories-cropper-guide {

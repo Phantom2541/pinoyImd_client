@@ -398,7 +398,9 @@ export default function Body() {
                               crop={crop}
                               zoom={zoom}
                               aspect={3 / 1}
-                              cropSize={{ width: 300, height: 100 }}
+                              cropSize={{ width: 200, height: 100 }}
+                              showGrid={false}
+                              restrictPosition={false}
                               onCropChange={setCrop}
                               onZoomChange={setZoom}
                               onCropComplete={(_, croppedAreaPixels) =>
