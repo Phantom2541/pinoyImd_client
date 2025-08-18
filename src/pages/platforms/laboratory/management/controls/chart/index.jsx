@@ -13,6 +13,8 @@ import {
 } from "chart.js";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
+import { Cloudinary, FailedBanner } from "../../../../../../services/utilities";
+// import { Cloudinary, FailedBanner } from "../index";
 
 // Register the required components
 Chart.register(
@@ -36,6 +38,8 @@ const calculateStats = (data) => {
 };
 
 const LeveyJennings = ({ title }) => {
+  const { activePlatform } = useSelector(({ auth }) => auth);
+
   const { filtered } = useSelector(({ controls }) => controls);
   const [hi, setHi] = useState([]);
   const [norm, setNorm] = useState([]);
@@ -43,6 +47,8 @@ const LeveyJennings = ({ title }) => {
   const [days, setDays] = useState([]);
   const { mean, stdDev } = calculateStats([...norm]);
   const chartRef = useRef(null);
+  const company = activePlatform?.branch?.companyId?.name;
+  const branch = activePlatform?.branch?.name;
 
   useEffect(() => {
     setHi(filtered.map((item) => item.hi));
@@ -56,79 +62,49 @@ const LeveyJennings = ({ title }) => {
   }, [filtered]);
 
   const printChart = () => {
-  window.open(
+    if (!chartRef.current) return;
+
+    const chartCanvas = chartRef.current.canvas;
+    const chartImage = chartCanvas.toDataURL("image/png"); // gawing image yung chart
+
+    const printWindow = window.open(
       `/printout/chart`,
       `${title} Logbook`,
       "top=100px,left=100px,width=1050px,height=750px"
     );
-  // if (chartRef.current) {
-  //   const chartCanvas = chartRef.current.canvas;
 
-  //   const tempCanvas = document.createElement("canvas");
-  //   tempCanvas.width = chartCanvas.width * 3;
-  //   tempCanvas.height = chartCanvas.height * 3;
-  //   const ctx = tempCanvas.getContext("2d");
+    const bannerSrc = `${Cloudinary.getEndpoint()}/companies/${company}/${branch}/banner.png`;
 
-  //   ctx.scale(3, 3);
-  //   ctx.drawImage(chartCanvas, 0, 0);
+    printWindow.document.write(`
+    <html>
+      <head>
+        <title>${title || "Levey-Jennings Control Chart"}</title>
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+ 
+          h1, h2 { margin: 0; }
+          img { max-width: 100%; height: auto; margin-top: 20px; }
+        </style>
+      </head>
+      <body>
+        <header>
+        <img src="${bannerSrc}" width="100%" height="85px" onerror="this.src='${FailedBanner}'" />
+        </header>
+        <h3>${title || "Levey-Jennings Control Chart"}</h3>
+        <img src="${chartImage}" />
+        <script>
+          window.onload = function() {
+            window.print();
+          }
+        </script>
+      </body>
+    </html>
+  `);
 
-  //   const chartImage = tempCanvas.toDataURL("image/png");
-  //   const printWindow = window.open("", "_blank");
-
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>Print Chart</title>
-  //         <style>
-  //           @page {
-  //             size: A4 landscape;
-  //             margin: 0;
-  //           }
-
-  //           html, body {
-  //             margin: 0;
-  //             height: 100%;
-  //             overflow: hidden;
-  //             background: white;
-  //           }
-
-  //           .chart-container {
-  //             display: flex;
-  //             justify-content: center;
-  //             align-items: center;
-  //             height: 100vh;
-  //             padding: 50px;
-  //             box-sizing: border-box;
-  //           }
-
-  //           img {
-  //             max-width: 100%;
-  //             max-height: 100%;
-  //             object-fit: contain;
-  //             page-break-inside: avoid;
-  //             break-inside: avoid;
-  //           }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <div class="chart-container">
-  //           <img src="${chartImage}" />
-  //         </div>
-  //         <script>
-  //           window.onload = () => {
-  //             window.print();
-  //             window.onafterprint = () => window.close();
-  //           };
-  //         </script>
-  //       </body>
-  //     </html>
-  //   `);
-
-
-
-  //   printWindow.document.close();
-  // }
-};
+    printWindow.document.close();
+  };
+  console.log("company", activePlatform?.branch?.companyId?.name);
+  console.log("branch", activePlatform?.branch?.name);
 
   const lineChartData = {
     labels: days,
