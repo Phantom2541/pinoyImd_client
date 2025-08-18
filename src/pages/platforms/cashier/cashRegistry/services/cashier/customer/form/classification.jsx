@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBadge, MDBTypography } from "mdbreact";
-
+import { useHistory } from "react-router";
 import {
   Categories,
   HMO,
@@ -45,7 +45,8 @@ export default function PosCard() {
     [categories, setCategories] = useState([]),
     [sources, setSources] = useState([]),
     [source, setSource] = useState({}),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    history = useHistory();
 
   const { branch = {} } = activePlatform;
   const { companyId: company = {} } = branch || {};
@@ -53,7 +54,7 @@ export default function PosCard() {
   useEffect(() => {
     const fakeDB = localStorage.getItem("activePlatform");
     if (fakeDB) {
-      setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
+      setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc?.filter(Boolean));
     }
   }, []);
 
@@ -154,6 +155,8 @@ export default function PosCard() {
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 
+  const categoryHasSource = [12, 7, 8].includes(category);
+  const hasSources = sources?.length > 0;
   return (
     <>
       <div>
@@ -199,7 +202,7 @@ export default function PosCard() {
             value={category}
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
-            {categories?.map((c, index) => {
+            {[0, ...categories]?.map((c, index) => {
               const { name = "", color = "" } = Categories[c];
               return (
                 <option value={c} key={`category-${index}`} style={{ color }}>
@@ -212,10 +215,29 @@ export default function PosCard() {
         <div className="patient-form mt-2">
           <span>Source</span>
           <select
-            disabled={!didSelect}
+            disabled={!didSelect || !categoryHasSource}
+            onClick={() => {
+              if (!hasSources && categoryHasSource)
+                history.push(
+                  `/cashier/sources/insources/${Categories[
+                    category
+                  ]?.name?.toLowerCase()}`
+                );
+            }}
+            className={
+              !hasSources && categoryHasSource
+                ? "text-primary cursor-pointer"
+                : ""
+            }
             onChange={({ target }) => handleSource(target.value)}
           >
-            <option value="">None</option>
+            <option value="">
+              {categoryHasSource
+                ? !hasSources
+                  ? `No ${Categories[category].name}. Click to register.`
+                  : "None"
+                : "Set category to (Membership,Contract,Referrals) first."}
+            </option>
             {sources?.map(({ _id, clients }) => (
               <option key={_id} value={_id}>
                 {clients?.displayname}
@@ -278,32 +300,7 @@ export default function PosCard() {
             formSubmitted={formSubmitted}
             isSuccess={isSuccess}
           />
-          {/* <select
-              // disabled={!didSelect}
-              onChange={({ target }) => handlePhysician(target.value)}
-            >
-              <option value="">None</option>
-              {physicians?.length === 0 && (
-                <option value="" disabled>
-                  No Physicians where tag to this company
-                </option>
-              )}
-              {physicians?.map(({ user }) => (
-                <option key={user?._id} value={user?._id}>
-                  {properFullname(user?.fullName)}
-                </option>
-              ))}
-            </select> */}
         </div>
-        {/* ) : (
-          <PickPhysician
-            label="Search Physician (lname,mname,fname)"
-            selectedClassName="mt-2"
-            disabled={!didSelect}
-            globalSearch
-            onClick={({ user }) => handlePhysician(user?._id)}
-          />
-        )} */}
       </div>
       {!_id && (
         <MDBTypography note noteColor="info" className="mt-3 mb-0">

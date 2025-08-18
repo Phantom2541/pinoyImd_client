@@ -125,7 +125,6 @@ export default function SideNavigation({
       return;
     }
     let group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
-    console.log("platformKey", platformKey, group, isDiagnostics);
 
     group.superadmin = Sidebars.superadmin;
     group.patron = Sidebars.patron;
@@ -243,7 +242,7 @@ export default function SideNavigation({
               objectFit: "scale-down",
             }}
           />
-          <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
+          <div className="mt-n2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company?.name}
           </div>
         </div>
