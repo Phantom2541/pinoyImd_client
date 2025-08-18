@@ -25,6 +25,8 @@ import { dragDrop, table } from "./slices/reusable";
 import {
   menus,
   services,
+  products, // <- dito na naka-import products mula commerce folder
+  productGenerics,
   pos,
   sales,
   taskGenerator,
@@ -33,7 +35,6 @@ import {
   dispenser,
   onBoardings,
   admission,
-  products,       // <- dito na naka-import products mula commerce folder
 } from "./slices/commerce";
 
 // DIAGNOSTICS
@@ -70,7 +71,7 @@ import {
 
 // MARKET
 import {
-  productsGenerics,
+  // productsGenerics,
   machines,
   medicines,
   generics,
@@ -129,11 +130,11 @@ const store = configureStore({
     providers,
     controls,
     assurances,
-    products,      // <- dito sa reducer register products mula commerce
+    products, // <- dito sa reducer register products mula commerce
     xray,
     ultrasound,
     ecg,
-    productsGenerics,
+    productGenerics,
     machines,
     attendances,
     medicines,
