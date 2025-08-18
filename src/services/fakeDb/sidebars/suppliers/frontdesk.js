@@ -14,6 +14,7 @@ import { Menus, Services } from "../../../../pages/platforms/cashier";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
 
 import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
+import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
 
 const frontdesk = [
   {
@@ -161,7 +162,7 @@ const frontdesk = [
         name: "Stocks",
         path: "/merchandise/stocks",
         icon: "box",
-        // component: StocksComponent, // add your component here
+        component: Stocks, // add your component here
       },
     ],
   },
