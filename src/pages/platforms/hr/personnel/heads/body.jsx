@@ -412,6 +412,7 @@ export default function Body() {
                           <div className="signatories-cropper-controls">
                             <input
                               type="range"
+                              className="signatories-crop-zoom-slider"
                               min={0.5}
                               max={3}
                               step={0.1}
