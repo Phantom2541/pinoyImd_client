@@ -238,8 +238,8 @@ export default function SideNavigation({
             }/logo.png`}
             fallback={FailedLogo}
             style={{
-              height: "70px",
-              aspectRatio: "1/1",
+              width: "100px",
+              height: "65px",
               objectFit: "scale-down",
             }}
           />
