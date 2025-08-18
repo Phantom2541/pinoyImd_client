@@ -367,7 +367,7 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${Cloudinary.getEndpoint()}/${auth.pid}/users/${
+        state.image = `${Cloudinary.getEndpoint()}/${auth?.pid || ""}/users/${
           auth.email
         }/profile.png?v=${Date.now()}`;
 
@@ -467,7 +467,7 @@ export const reduxSlice = createSlice({
             ...(!isEmployed && { platform: "" }),
           };
           state.company = branch?.companyId;
-          state.image = `${Cloudinary.getEndpoint()}/${auth.pid}/users/${
+          state.image = `${Cloudinary.getEndpoint()}/${auth?.pid || ""}/users/${
             auth.email
           }/profile.png?v=${Date.now()}`;
 
