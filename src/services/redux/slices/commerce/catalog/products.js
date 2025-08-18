@@ -6,12 +6,14 @@ const url = "/procurements/catalogs/products/source";
 const initialState = {
   collections: [],
   filtered: [],
+  selected: {},
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
   isSuccess: false,
   isLoading: false,
   formSubmitted: false,
+  showModal: false,
   message: "",
 };
 
@@ -89,6 +91,10 @@ const productsSlice = createSlice({
       state.filtered = action.payload;
       state.totalPages = Math.ceil(state.filtered.length / state.maxPage);
     },
+    SetPRODUCT: (state, action) => {
+      state.selected = action.payload || {};
+      state.showModal = true;
+    },
     SetCOLLECTIONS: (state, action) => {
       state.collections = action.payload;
     },
@@ -107,6 +113,9 @@ const productsSlice = createSlice({
       state.isLoading = false;
       state.formSubmitted = false;
     },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -116,14 +125,13 @@ const productsSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const payload = action.payload?.payload || [];
-        const success = action.payload?.success || false;
-
+        const { success, payload } = action.payload;
         state.collections = payload;
         state.filtered = payload;
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-        state.isSuccess = success;
+        state.message = success;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -206,11 +214,15 @@ const productsSlice = createSlice({
 
         if (payload) {
           // update in collections
-          const idx = state.collections.findIndex((item) => item._id === payload._id);
+          const idx = state.collections.findIndex(
+            (item) => item._id === payload._id
+          );
           if (idx !== -1) state.collections[idx] = payload;
 
           // update in filtered
-          const idx2 = state.filtered.findIndex((item) => item._id === payload._id);
+          const idx2 = state.filtered.findIndex(
+            (item) => item._id === payload._id
+          );
           if (idx2 !== -1) state.filtered[idx2] = payload;
         }
 
@@ -225,7 +237,14 @@ const productsSlice = createSlice({
   },
 });
 
-export const { SetFILTERED, SetCOLLECTIONS, SetMaxPage, SetActivePAGE, RESET } =
-  productsSlice.actions;
+export const {
+  SetFILTERED,
+  SetPRODUCT,
+  SetCOLLECTIONS,
+  TOGGLE,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+} = productsSlice.actions;
 
 export default productsSlice.reducer;

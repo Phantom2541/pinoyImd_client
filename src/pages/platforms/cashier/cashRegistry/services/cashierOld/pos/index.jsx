@@ -79,8 +79,6 @@ export default function CashRegister() {
     setDiscount(totalDiscount);
   }, [cart, categoryIndex, privilegeIndex]);
 
-  console.log("discount", discount);
-
   const toggleCheckout = () => setDidCheckout(!didCheckout);
   const handlePicker = (selected) => {
     const { packages } = selected;
