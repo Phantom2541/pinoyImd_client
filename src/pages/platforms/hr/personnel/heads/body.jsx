@@ -19,8 +19,17 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/auth";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
 import { Templates } from "../../../../../services/fakeDb";
+import Cropper from "react-easy-crop";
+import { createPortal } from "react-dom";
 
 export default function Body() {
+  const [showCropper, setShowCropper] = useState(false);
+  const [cropperUser, setCropperUser] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [currentUpload, setCurrentUpload] = useState(null); // { email, _id }
   const {
       token,
       formSubmitted: fsAuth,
@@ -146,44 +155,19 @@ export default function Body() {
     const file = e.target.files[0];
     if (!file) return;
 
+    // reset input para ma-trigger kahit same file i-upload ulit
+    e.target.value = "";
+
     if (file.type === "image/png") {
       const reader = new FileReader();
-
       reader.onload = () => {
-        file.signature = file.name;
-        const formData = Cloudinary.buildFileForm(
-          reader.result,
-          `users/${email}`,
-          "signature"
-        );
-
-        dispatch(
-          UPLOAD({
-            data: formData,
-            token,
-          })
-        ).then((action) => {
-          dispatch(
-            UPDATE_INFO({ data: { _id, sid: action.payload.imgId } })
-          ).then(() =>
-            updateHeadsImg(
-              _id,
-              action.payload.imgId,
-              "sid",
-              "Signature updated!"
-            )
-          );
-
-          setImageErrors((prev) => ({ ...prev, [email]: false }));
-        });
+        setSelectedImage(reader.result);
+        setShowCropper(true);
+        setCurrentUpload({ email, _id });
       };
-
       reader.readAsDataURL(file);
-
-      e.target.value = null; // ✅ Reset only after success
     } else {
       addToast("Only PNG files are allowed!", { appearance: "error" });
-      e.target.value = null; // ✅ Reset if rejected
     }
   };
 
@@ -216,6 +200,75 @@ export default function Body() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleCloseCropper = () => {
+    setShowCropper(false);
+    setSelectedImage(null);
+    setCroppedAreaPixels(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCurrentUpload(null);
+  };
+
+  const getCroppedImg = (imageSrc, crop) => {
+    const image = new Image();
+    image.src = imageSrc;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    return new Promise((resolve, reject) => {
+      image.onload = () => {
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+        ctx.drawImage(
+          image,
+          crop.x,
+          crop.y,
+          crop.width,
+          crop.height,
+          0,
+          0,
+          crop.width,
+          crop.height
+        );
+        resolve(canvas.toDataURL("image/png"));
+      };
+      image.onerror = (err) => reject(err);
+      handleCloseCropper();
+    });
+  };
+
+  const handleCropConfirm = async () => {
+    try {
+      const croppedImage = await getCroppedImg(
+        selectedImage,
+        croppedAreaPixels
+      );
+      const { email, _id } = currentUpload;
+
+      const formData = Cloudinary.buildFileForm(
+        croppedImage,
+        `users/${email}`,
+        "signature"
+      );
+
+      dispatch(UPLOAD({ data: formData, token })).then((action) => {
+        dispatch(
+          UPDATE_INFO({ data: { _id, sid: action.payload.imgId } })
+        ).then(() =>
+          updateHeadsImg(_id, action.payload.imgId, "sid", "Signature updated!")
+        );
+        setImageErrors((prev) => ({ ...prev, [email]: false }));
+      });
+    } catch (err) {
+      console.error(err);
+      addToast("Failed to crop image!", { appearance: "error" });
+    }
+
+    // reset at isara ang modal
+    handleCloseCropper();
+  };
 
   return (
     <div className="signatories-section">
@@ -302,6 +355,7 @@ export default function Body() {
                       <img
                         key={sid}
                         onClick={() => {
+                          setCropperUser(user);
                           document
                             .getElementById(`file-upload-${email}`)
                             .click();
@@ -331,6 +385,60 @@ export default function Body() {
                     onChange={(e) => handleSignature(e, email, userId)}
                     hidden
                   />
+                  {showCropper &&
+                    createPortal(
+                      <div className="signatories-cropper-modal">
+                        <div className="signatories-cropper-container">
+                          <div className="signatories-cropper-header">
+                            ✂️ Crop Signature
+                          </div>
+                          <div className="signatories-cropper-body">
+                            <Cropper
+                              image={selectedImage}
+                              crop={crop}
+                              zoom={zoom}
+                              aspect={3 / 1}
+                              cropSize={{ width: 200, height: 100 }}
+                              showGrid={false}
+                              restrictPosition={false}
+                              onCropChange={setCrop}
+                              onZoomChange={setZoom}
+                              onCropComplete={(_, croppedAreaPixels) =>
+                                setCroppedAreaPixels(croppedAreaPixels)
+                              }
+                            />
+                            <span className="signatories-cropper-guide">
+                              {fullName(cropperUser.fullName)}
+                            </span>
+                          </div>
+                          <div className="signatories-cropper-controls">
+                            <input
+                              type="range"
+                              className="signatories-crop-zoom-slider"
+                              min={0.5}
+                              max={3}
+                              step={0.1}
+                              value={zoom}
+                              onChange={(e) => setZoom(e.target.value)}
+                            />
+                            <button
+                              className="signatories-cropper-btn cancel"
+                              onClick={handleCloseCropper}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              className="signatories-cropper-btn confirm"
+                              onClick={handleCropConfirm}
+                            >
+                              Crop & Upload
+                            </button>
+                          </div>
+                        </div>
+                      </div>,
+                      document.body
+                    )}
+
                   <div
                     className="position-relative d-flex justify-content-center"
                     style={{ height: "1.6rem" }}

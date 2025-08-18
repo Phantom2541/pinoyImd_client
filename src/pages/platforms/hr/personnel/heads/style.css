@@ -182,8 +182,9 @@
   padding: 5px 0;
 }
 .signatories-card-signature {
-  width: 110px;
-  height: 90px;
+  width: 200px;
+  height: 100px;
+  object-fit: scale-down;
   -webkit-user-drag: none;
 }
 .signatories-card-signature-upload-btn {
@@ -269,3 +270,192 @@
 .signatories-card:hover .signatories-card-btn-delete {
   opacity: 1;
 } */
+
+/* ===== Overlay (background dimmer) ===== */
+.signatories-cropper-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  animation: signatories-fadeIn 0.25s ease;
+}
+
+/* ===== Modal Container ===== */
+.signatories-cropper-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 3px;
+  width: 640px;
+  max-width: 95vw;
+  height: 460px;
+  max-height: 85vh;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: signatories-slideUp 0.3s ease;
+}
+
+/* ===== Header ===== */
+.signatories-cropper-header {
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafafa;
+  color: #333;
+}
+
+/* ===== Cropper Body ===== */
+.signatories-cropper-body {
+  flex: 1;
+  position: relative;
+  background: white;
+}
+
+.signatories-cropper-guide {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* Green dashed border for crop area */
+.reactEasyCrop_CropArea {
+  border: 2px dashed #2e7d32 !important;
+}
+
+/* ===== Controls Footer ===== */
+.signatories-cropper-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-top: 1px solid #e0e0e0;
+  background: #fafafa;
+}
+
+/* Zoom slider */
+.signatories-cropper-controls input[type="range"] {
+  flex: 1;
+  accent-color: #2e7d32;
+  cursor: pointer;
+}
+
+/* ===== Buttons ===== */
+.signatories-cropper-btn {
+  padding: 7px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.signatories-cropper-btn.cancel {
+  background: #e53935;
+  color: #fff;
+}
+.signatories-cropper-btn.cancel:hover {
+  background: #c62828;
+}
+
+.signatories-cropper-btn.confirm {
+  background: #2e7d32;
+  color: #fff;
+}
+.signatories-cropper-btn.confirm:hover {
+  background: #1b5e20;
+}
+
+/* ===== Animations ===== */
+@keyframes signatories-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes signatories-slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.signatories-crop-zoom-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  outline: none;
+  background: #ddd; /* base line color */
+  cursor: pointer;
+}
+
+/* Chrome/Edge/Safari */
+.signatories-crop-zoom-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 5px;
+  background: #ddd;
+}
+
+.signatories-crop-zoom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #2196f3;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-top: -6px; /* para centered sa linya */
+  position: relative;
+  z-index: 2;
+}
+
+.signatories-crop-zoom-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Firefox */
+.signatories-crop-zoom-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 5px;
+  background: #ddd;
+}
+
+.signatories-crop-zoom-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #4cafef, #2196f3);
+}
+
+.signatories-crop-zoom-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #2196f3;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.signatories-crop-zoom-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
