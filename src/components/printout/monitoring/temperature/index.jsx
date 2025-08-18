@@ -180,6 +180,7 @@ const TempPrint = () => {
   }, []);
 
   const [onloaded, setOnloaded] = useState(false);
+
   useEffect(() => {
     if (onloaded) {
       setTimeout(() => {
@@ -187,6 +188,7 @@ const TempPrint = () => {
       }, 500);
     }
   }, [onloaded]);
+
   return (
     <div>
       <Banner
