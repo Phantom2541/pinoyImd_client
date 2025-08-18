@@ -181,8 +181,8 @@
 
 .application-card-joinButton {
   position: absolute;
-  top: 22px;
-  right: -38px;
+  top: 25px;
+  right: -35px;
   transform: rotate(45deg);
   background: #e63946;
   color: #fff;

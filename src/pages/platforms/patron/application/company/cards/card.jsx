@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBView,
-  MDBMask,
-  MDBCardText,
-  MDBIcon,
-  MDBCol,
-  MDBBtn,
-} from "mdbreact";
+import { MDBMask, MDBIcon, MDBCol } from "mdbreact";
 import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
 import ApplicationModal from "./modal";
 import BgRemover from "./../../../../../../components/bgRemover";
