@@ -2605,5 +2605,83 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4
+  },
+  {
+    "id": 332,
+    "name": "C-Peptide",
+    "abbreviation": "C-Peptide",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "none",
+    "preparation": "Fasting for at least 8 hours is preferred",
+    "specimen": "Serum",
+    "template": 4
+  },
+  {
+    "id": 333,
+    "name": "Cystatin C",
+    "abbreviation": "Cystatin C",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "none",
+    "preparation": "No special preparation required",
+    "specimen": "Serum",
+    "template": 4
+  },
+  {
+    "id": 334,
+    "name": "Dengue Dot (IgG/IgM)",
+    "abbreviation": "Dengue IgG/IgM",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "none",
+    "preparation": "No special preparation required",
+    "specimen": "Serum",
+    "template": 4
+  },
+  {
+    "id": 335,
+    "name": "Dengue NS1",
+    "abbreviation": "Dengue NS1",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "none",
+    "preparation": "No special preparation required",
+    "specimen": "Serum",
+    "template": 4
+  },
+  {
+    "id": 336,
+    "name": "Fluorescent Treponemal Antibody Absorption Test",
+    "abbreviation": "FTA-ABS",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "none",
+    "preparation": "No special preparation required",
+    "specimen": "Serum",
+    "template": 4
+  },
+  {
+    "id": 337,
+    "name": "Helicobacter pylori Stool Antigen Screening",
+    "abbreviation": "H. pylori Ag",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "none",
+    "preparation": "No special preparation required",
+    "specimen": "Stool",
+    "template": 4
   }
 ]
