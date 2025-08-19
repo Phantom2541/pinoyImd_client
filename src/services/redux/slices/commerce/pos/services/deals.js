@@ -930,24 +930,26 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload, success } = action.payload;
-        state.collections = state.refined = payload.map(({ cart, ...rest }) => {
-          const _cart = cart.map(({ menuId, ...etc }) => {
-            const packagesDisplay = Services.whereIn(menuId.packages)
-              .map(({ abbreviation }) => abbreviation)
-              .join(", ");
-            return {
-              ...etc,
-              packagesDisplay,
-              menuId,
-            };
-          });
+        const { payload = [], success } = action.payload;
+        state.collections = state.refined = payload?.map(
+          ({ cart, ...rest }) => {
+            const _cart = cart?.map(({ menuId, ...etc }) => {
+              const packagesDisplay = Services.whereIn(menuId.packages)
+                .map(({ abbreviation }) => abbreviation)
+                .join(", ");
+              return {
+                ...etc,
+                packagesDisplay,
+                menuId,
+              };
+            });
 
-          return {
-            ...rest,
-            cart: _cart, // ← remains as array of cart items
-          };
-        });
+            return {
+              ...rest,
+              cart: _cart, // ← remains as array of cart items
+            };
+          }
+        );
         let uniqueSource = [];
         if (payload.length > 0)
           uniqueSource = [

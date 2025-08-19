@@ -171,6 +171,7 @@ export const reduxSlice = createSlice({
           state.day = value;
           state.showModal = true;
           state.description = description;
+          state.selected = {};
         }
       }
     },
@@ -214,11 +215,22 @@ export const reduxSlice = createSlice({
         const { success, data } = action.payload;
         state.message = success;
         state.collections.unshift(data);
-        state.selected = data;
+        state.selected = {};
         state.showModal = false;
         state.isSuccess = true;
         state.formSubmitted = false;
-        localStorage.setItem("floatingcash", JSON.stringify(data));
+
+        const createdAt = new Date(data.createdAt);
+        const today = new Date();
+
+        const isSameDate =
+          createdAt.getFullYear() === today.getFullYear() &&
+          createdAt.getMonth() === today.getMonth() &&
+          createdAt.getDate() === today.getDate();
+
+        if (isSameDate) {
+          localStorage.setItem("floatingcash", JSON.stringify(data));
+        }
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;

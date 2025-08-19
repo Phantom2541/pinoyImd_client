@@ -20,19 +20,24 @@ export default function Vouchers() {
       total,
       dealsLoading: isLoading,
     } = useSelector(({ deals }) => deals),
-    { selected } = useSelector(({ remittances }) => remittances),
     [menuCensus, setMenuCensus] = useState([]),
-    [isDeclareFC, setIsDeclareFC] = useState(true),
     [serviceCensus, setServiceCensus] = useState([]),
     [breakdown, setBreakdown] = useState({}),
     [activeTab, setActiveTab] = useState("menus"),
     [show, setShow] = useState(false),
     [selectedCensus, setSelectedCensus] = useState({}),
+    [remittance, setRemittance] = useState({}),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => setShow(!show), [show]);
 
-  const handleSummary = useCallback(() => {
+  const getFloatingCash = () => {
+    const fcString = localStorage.getItem("floatingcash");
+    if (fcString) return JSON.parse(fcString);
+    return {};
+  };
+
+  const handleSummary = (selected) => {
     if (selected?._id) {
       const menus = menuCensus.reduce((acc, { _id, count }) => {
         acc[_id] = count;
@@ -49,24 +54,12 @@ export default function Vouchers() {
         patient: collections.length,
         gross: total,
       };
+      setRemittance(selected);
       setSelectedCensus(data);
       toggle();
     }
-  }, [
-    selected,
-    collections,
-    breakdown,
-    serviceCensus,
-    toggle,
-    menuCensus,
-    total,
-  ]);
+  };
 
-  useEffect(() => {
-    if (!isDeclareFC && selected?._id) {
-      handleSummary();
-    }
-  }, [isDeclareFC, handleSummary, selected]);
   useEffect(() => {
     if (collections && collections.length > 0 && !isLoading) {
       const menuCountMap = {};
@@ -103,7 +96,8 @@ export default function Vouchers() {
   }, [collections, isLoading]);
 
   const handleSubmit = () => {
-    if (!selected) {
+    const _selected = getFloatingCash();
+    if (!_selected?._id) {
       dispatch(
         TOGGLE({
           key: "open",
@@ -113,11 +107,8 @@ export default function Vouchers() {
             "Looks like you haven't set your floating cash yet. Go ahead and declare it now!",
         })
       );
-      setIsDeclareFC(false);
-      // alert("Please set a floating cash first.");
     } else {
-      setIsDeclareFC(true);
-      handleSummary();
+      handleSummary(_selected);
     }
   };
 
@@ -211,7 +202,12 @@ export default function Vouchers() {
           </MDBBtn>
         )}
       </MDBCardBody>
-      <Modal selected={selectedCensus} toggle={toggle} show={show} />
+      <Modal
+        selected={selectedCensus}
+        toggle={toggle}
+        show={show}
+        remittance={remittance}
+      />
     </MDBCard>
   );
 }
