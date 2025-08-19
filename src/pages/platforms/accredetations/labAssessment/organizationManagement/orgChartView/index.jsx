@@ -65,6 +65,8 @@ export default function OrgChartView() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const { activePlatform, company } = useSelector(({ auth }) => auth);
+  const { org } = useSelector(({ orgChart }) => orgChart);
+  console.log("org", org);
 
   const BANNER = `${Cloudinary.getEndpoint()}/companies/${company.name}/${
     activePlatform?.branch?.name
