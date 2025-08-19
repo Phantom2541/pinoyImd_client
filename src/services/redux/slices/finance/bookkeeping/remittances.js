@@ -17,6 +17,7 @@ const initialState = {
   showCensus: false,
   formSubmitted: false,
   isSuccess: false,
+  isDeclaredFC: false,
   isLoading: false,
   message: "",
   description: "",
@@ -178,6 +179,7 @@ export const reduxSlice = createSlice({
 
     RESET: (state) => {
       state.isSuccess = false;
+      state.isDeclaredFC = false;
       state.message = "";
     },
     ResetDATE: (state) => {
@@ -219,7 +221,6 @@ export const reduxSlice = createSlice({
         state.showModal = false;
         state.isSuccess = true;
         state.formSubmitted = false;
-
         const createdAt = new Date(data.createdAt);
         const today = new Date();
 
@@ -228,7 +229,10 @@ export const reduxSlice = createSlice({
           createdAt.getMonth() === today.getMonth() &&
           createdAt.getDate() === today.getDate();
 
+        //this is for declaring floating cash in deals
+
         if (isSameDate) {
+          state.isDeclaredFC = true;
           localStorage.setItem("floatingcash", JSON.stringify(data));
         }
       })

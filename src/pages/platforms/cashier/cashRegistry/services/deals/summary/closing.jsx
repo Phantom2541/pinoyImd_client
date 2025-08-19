@@ -12,7 +12,10 @@ import {
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
 import Modal from "../modal";
-import { TOGGLE } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import {
+  TOGGLE,
+  RESET,
+} from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Vouchers() {
   const {
@@ -20,11 +23,13 @@ export default function Vouchers() {
       total,
       dealsLoading: isLoading,
     } = useSelector(({ deals }) => deals),
+    { isDeclaredFC = false } = useSelector(({ remittances }) => remittances),
     [menuCensus, setMenuCensus] = useState([]),
     [serviceCensus, setServiceCensus] = useState([]),
     [breakdown, setBreakdown] = useState({}),
     [activeTab, setActiveTab] = useState("menus"),
     [show, setShow] = useState(false),
+    [isDeclarigFC, setIsDeclarigFC] = useState(false),
     [selectedCensus, setSelectedCensus] = useState({}),
     [remittance, setRemittance] = useState({}),
     dispatch = useDispatch();
@@ -37,28 +42,41 @@ export default function Vouchers() {
     return {};
   };
 
-  const handleSummary = (selected) => {
-    if (selected?._id) {
-      const menus = menuCensus.reduce((acc, { _id, count }) => {
-        acc[_id] = count;
-        return acc;
-      }, {});
+  const handleSummary = useCallback(
+    (selected) => {
+      if (selected?._id) {
+        const menus = menuCensus.reduce((acc, { _id, count }) => {
+          acc[_id] = count;
+          return acc;
+        }, {});
 
-      const data = {
-        _id: selected?._id,
-        census: {
-          menus,
-          services: serviceCensus,
-        },
-        breakdown,
-        patient: collections.length,
-        gross: total,
-      };
-      setRemittance(selected);
-      setSelectedCensus(data);
-      toggle();
+        const data = {
+          _id: selected._id,
+          census: {
+            menus,
+            services: serviceCensus,
+          },
+          breakdown,
+          patient: collections.length,
+          gross: total,
+        };
+
+        setRemittance(selected);
+        setSelectedCensus(data);
+        toggle();
+      }
+    },
+    [menuCensus, serviceCensus, breakdown, collections, total, toggle]
+  );
+
+  useEffect(() => {
+    if (isDeclarigFC && isDeclaredFC) {
+      //to automatic toggle the modal of closing cash after declaring the floating cash
+      handleSummary(getFloatingCash());
+      setIsDeclarigFC(false);
+      dispatch(RESET());
     }
-  };
+  }, [isDeclarigFC, isDeclaredFC, dispatch, handleSummary]);
 
   useEffect(() => {
     if (collections && collections.length > 0 && !isLoading) {
@@ -107,6 +125,7 @@ export default function Vouchers() {
             "Looks like you haven't set your floating cash yet. Go ahead and declare it now!",
         })
       );
+      setIsDeclarigFC(true);
     } else {
       handleSummary(_selected);
     }
