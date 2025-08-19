@@ -106,13 +106,13 @@ export default function Modal() {
             {Services.getName(selected?.serviceId)}
           </MDBTypography>
 
-          <MDBInput
+          {/* <MDBInput
             label="Date"
             type="date"
             value={form.createAt}
             required
             onChange={(e) => handleChange("createdAt", e.target.value)}
-          />
+          /> */}
 
           {/* Input fields */}
           <MDBInput

@@ -1,6 +1,7 @@
 /* calendar */
 .cashier-remittance-calendar {
   width: 100%;
+  min-width: 1420px;
   background-color: #fff;
 }
 
@@ -134,6 +135,10 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
+}
+
+.cashier-calendar-remittance-body:active {
+  cursor: grabbing;
 }
 
 .cashier-remittance-calendar .cashier-calendar-remittance-body div small {

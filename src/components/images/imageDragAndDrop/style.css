@@ -143,6 +143,29 @@
   border: none;
 }
 
+.accept-btn-crop,
+.reject-btn-crop {
+  background-color: transparent;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.accept-btn-crop {
+  background-color: #28a745;
+}
+
+.reject-btn-crop {
+  background-color: #dc3545;
+}
+
+.accept-btn-crop:hover,
+.reject-btn-crop:hover {
+  filter: brightness(1.1);
+}
 /* .reactEasyCrop_CropArea {
   transform: translate3d(0, 0, 0) !important;
   will-change: transform !important;

@@ -18,6 +18,7 @@ import {
   // isImageValid,
 } from "../../services/utilities";
 import "./style.css";
+import BgRemover from "../bgRemover";
 const diagnostics = [
   "diagnostic",
   "clinic",
@@ -124,7 +125,6 @@ export default function SideNavigation({
       return;
     }
     let group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
-    console.log("platformKey", platformKey, group, isDiagnostics);
 
     group.superadmin = Sidebars.superadmin;
     group.patron = Sidebars.patron;
@@ -154,7 +154,6 @@ export default function SideNavigation({
     filterSidebarByDepartment,
     isDiagnostics,
   ]);
-  console.log("links", links);
 
   // 🔁 Recursive nav render
   const renderNavItems = (
@@ -224,15 +223,26 @@ export default function SideNavigation({
       >
         {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
-          <img
+          {/* <img
             src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
               company?.name
             }/logo.png`}
             onError={(e) => (e.target.src = FailedLogo)}
             alt="Company Logo"
             style={{ width: "65px", aspectRatio: "1/1" }}
+          /> */}
+          <BgRemover
+            src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
+              company?.name
+            }/logo.png`}
+            fallback={FailedLogo}
+            style={{
+              width: "100px",
+              height: "65px",
+              objectFit: "scale-down",
+            }}
           />
-          <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
+          <div className="mt-n2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company?.name}
           </div>
         </div>

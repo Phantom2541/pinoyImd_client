@@ -30,67 +30,98 @@ function BgRemoverComponent({
     let cancelled = false;
     const maxToleranceSq = tolerance * tolerance;
 
+    // Helper: Draw image directly without processing
+    const drawImageDirect = (image) => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0);
+    };
+
     img.src = src;
 
     img.onload = () => {
       if (cancelled) return;
 
-      canvas.width = img.width;
-      canvas.height = img.height;
+      // Process only original image, skip fallback
+      const imageData = (() => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        return ctx.getImageData(0, 0, canvas.width, canvas.height);
+      })();
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
-
       const { r: bgR, g: bgG, b: bgB } = bgColor;
 
-      let i = 0;
-      const chunkSize = 10000;
-
-      function processChunk(deadline) {
-        if (cancelled) return;
-
-        const max = Math.min(i + chunkSize, data.length);
-        for (; i < max; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const a = data[i + 3];
-
-          if (a === 0) continue;
-
-          const distSq = colorDistanceSq(r, g, b, bgR, bgG, bgB);
-
-          if (distSq < maxToleranceSq) {
-            const alphaFactor = Math.sqrt(distSq) / tolerance;
-            data[i + 3] = a * alphaFactor;
-          }
-        }
-
-        if (i < data.length) {
-          if (
-            deadline &&
-            deadline.timeRemaining &&
-            deadline.timeRemaining() > 0
-          ) {
-            processChunk(deadline);
-          } else if ("requestIdleCallback" in window) {
-            requestIdleCallback(processChunk);
-          } else {
-            setTimeout(processChunk, 0);
-          }
-        } else {
-          ctx.putImageData(imageData, 0, 0);
+      // Remove background
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i],
+          g = data[i + 1],
+          b = data[i + 2],
+          a = data[i + 3];
+        if (a === 0) continue;
+        const distSq = colorDistanceSq(r, g, b, bgR, bgG, bgB);
+        if (distSq < maxToleranceSq) {
+          const alphaFactor = Math.sqrt(distSq) / tolerance;
+          data[i + 3] = a * alphaFactor;
         }
       }
 
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(processChunk);
-      } else {
-        setTimeout(processChunk, 0);
+      ctx.putImageData(imageData, 0, 0);
+
+      // Find bounding box
+      let minX = canvas.width,
+        minY = canvas.height,
+        maxX = 0,
+        maxY = 0;
+      for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+          const index = (y * canvas.width + x) * 4;
+          if (data[index + 3] > 0) {
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+          }
+        }
       }
+
+      if (minX > maxX || minY > maxY) {
+        minX = 0;
+        minY = 0;
+        maxX = canvas.width;
+        maxY = canvas.height;
+      }
+
+      let width = maxX - minX + 1;
+      let height = maxY - minY + 1;
+
+      // Keep squares square
+      const aspectRatio = width / height;
+      if (aspectRatio > 0.95 && aspectRatio < 1.05) {
+        const size = Math.max(width, height);
+        const centerX = Math.round((minX + maxX) / 2);
+        const centerY = Math.round((minY + maxY) / 2);
+
+        minX = Math.max(0, centerX - Math.floor(size / 2));
+        minY = Math.max(0, centerY - Math.floor(size / 2));
+        width = Math.min(size, canvas.width - minX);
+        height = Math.min(size, canvas.height - minY);
+      }
+
+      // Crop to bounding box
+      const tmpCanvas = document.createElement("canvas");
+      const tmpCtx = tmpCanvas.getContext("2d");
+      tmpCanvas.width = width;
+      tmpCanvas.height = height;
+      tmpCtx.drawImage(canvas, minX, minY, width, height, 0, 0, width, height);
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(tmpCanvas, 0, 0);
     };
 
     img.onerror = () => {
@@ -103,10 +134,8 @@ function BgRemoverComponent({
 
         fallbackImg.onload = () => {
           if (cancelled) return;
-          canvas.width = fallbackImg.width;
-          canvas.height = fallbackImg.height;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(fallbackImg, 0, 0);
+          // Draw fallback directly, no processing
+          drawImageDirect(fallbackImg);
         };
 
         fallbackImg.onerror = () => {

@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BROWSE,
+  SetPRODUCT,
+} from "../../../../../services/redux/slices/commerce/catalog/products";
 
 export default function Header({
   hideSort,
   onSearch,
   onSort,
-  sortType,
   onCartClick,
   onBack,
   cartIconRef,
@@ -14,8 +18,10 @@ export default function Header({
   primarySort,
   priceSort,
 }) {
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const [searchInput, setSearchInput] = useState("");
   const [animate, setAnimate] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (cartCount > 0) {
@@ -25,6 +31,10 @@ export default function Header({
       return () => clearTimeout(timeout);
     }
   }, [cartCount]);
+
+  useEffect(() => {
+    dispatch(BROWSE({ token, key: { vId: activePlatform?.branchId } }));
+  }, [activePlatform, token]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") onSearch(searchInput);
@@ -60,6 +70,16 @@ export default function Header({
               style={{ cursor: "pointer" }}
             />
           </div>
+          <button
+            onClick={() => dispatch(SetPRODUCT())}
+            size="sm"
+            style={{
+              marginRight: "-5px",
+            }}
+            className="search-add-btn ml-2"
+          >
+            <MDBIcon icon="plus" />
+          </button>
         </div>
 
         <div className="stocks-header-cart">

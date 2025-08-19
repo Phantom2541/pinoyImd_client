@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCard, MDBContainer, MDBAnimation } from "mdbreact";
 import Header from "./header";
 import Calendar from "./calendar";

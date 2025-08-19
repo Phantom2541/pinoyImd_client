@@ -24,6 +24,7 @@ export default function Banner({
         setOnloaded(true);
       });
   }, [setOnloaded, bannerSrc]);
+
   return (
     <div className={className}>
       {onloaded && (

@@ -30,7 +30,6 @@ import { Branches } from "../../../../pages/platforms/headquarter/humanResources
 import PatientCategories from "../../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../../pages/platforms/headquarter/dashboard";
 import hpWalkthrough from "../../../../pages/platforms/headquarter/hpWalkthrough";
-
 const headquarter = [
   {
     name: "Dashboard",

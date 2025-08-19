@@ -14,16 +14,9 @@ import {
 
 import {
   Onboard,
-  Tasks,
   Reports,
 } from "../../../../pages/platforms/laboratory/diagnostics";
-
-import {
-  Onboard as OnboardRadiology,
-  Tasks as TasksRadiology,
-  Reports as ReportsRadiology,
-} from "../../../../pages/platforms/radiology/diagnostics";
-
+import { Tasks } from "../../../../pages/platforms/frontdesk/diagnostics";
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 // import Products from "../../../../pages/platforms/frontdesk/market/products";
 // import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
@@ -61,13 +54,6 @@ import {
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
 import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
-const department =
-  JSON.parse(localStorage.getItem("activePlatform") || "{}")?.department ||
-  "Laboratory";
-
-const isRadiology =
-  department.toLowerCase() === "radiology" ||
-  department.toLowerCase() === "rad";
 
 const frontdesk = [
   {
@@ -91,21 +77,21 @@ const frontdesk = [
         path: "/onboarding",
         icon: "tv",
         title: "Register and onboard patients for diagnostic procedures.",
-        component: !isRadiology ? Onboard : OnboardRadiology,
+        component: Onboard,
       },
       {
         name: "Tasks",
         path: "/tasks",
         icon: "clipboard-list",
         title: "View and manage pending diagnostic tasks for patients.",
-        component: !isRadiology ? Tasks : TasksRadiology,
+        component: Tasks,
       },
       {
         name: "Tracker",
         path: "/reports",
         icon: "file-alt",
         title: "Monitor the progress and reports of diagnostics performed.",
-        component: !isRadiology ? Reports : ReportsRadiology,
+        component: Reports,
       },
       {
         name: "Sendouts",

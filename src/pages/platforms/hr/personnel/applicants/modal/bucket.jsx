@@ -83,7 +83,7 @@ const Table = ({
       <MDBCardBody
         className="m-0 p-0"
         style={{
-          minHeight: "30rem",
+          minHeight: "13rem",
           border: "1px solid #ccc",
         }}
         onDrop={(event) => handleDrop(event, tableName)}
@@ -91,7 +91,7 @@ const Table = ({
       >
         <MDBListGroup
           style={{
-            maxHeight: "30rem",
+            maxHeight: "13rem",
             overflowY: "auto",
           }}
           className="summary-scrollbar"

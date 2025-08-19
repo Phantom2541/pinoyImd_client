@@ -26,21 +26,23 @@
 }
 
 /* start design */
-.star-rating {
+.application-star-rating {
   position: relative;
-  display: inline-block;
-  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 1.5rem;
   font-family: Arial, sans-serif;
   line-height: 1;
   cursor: pointer;
   user-select: none;
 }
 
-.star-back {
+.application-star-back {
   color: #ccc; /* unfilled stars */
 }
 
-.star-front {
+.application-star-front {
   color: gold;
   position: absolute;
   top: 0;
@@ -48,4 +50,149 @@
   white-space: nowrap;
   overflow: hidden;
   pointer-events: none;
+}
+
+.application-star-count {
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.application-card {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  max-height: 360px;
+  min-height: 360px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.application-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 7px rgba(13, 110, 253, 0.4);
+}
+
+.application-card-image-wrapper {
+  position: relative;
+  height: 9rem;
+  width: 100%;
+  padding: 5px 0;
+}
+
+.application-card-image-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.application-card:hover .application-card-image-wrapper::before {
+  opacity: 1;
+}
+
+.application-card-image {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center; /* gitna ng image ang ipapakita */
+}
+
+.application-card-body {
+  position: relative;
+  height: 63%;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.application-card-companyName {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 1.5rem;
+  line-height: 1.6rem;
+  font-weight: bold;
+  overflow: hidden; /* walang quotes */
+  text-overflow: ellipsis; /* walang quotes */
+  white-space: nowrap; /* kailangan para gumana */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.application-card-companyName::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #1266f1;
+  z-index: -1;
+  transition: width 0.3s ease;
+}
+
+.application-card:hover .application-card-companyName::before {
+  width: 100%;
+}
+
+.application-card-subName {
+  font-size: 0.95rem;
+  font-weight: 500;
+  overflow: hidden; /* walang quotes */
+  text-overflow: ellipsis; /* walang quotes */
+  white-space: nowrap; /* kailangan para gumana */
+  text-transform: capitalize;
+}
+
+.application-card-tagline {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #555555;
+  display: -webkit-box; /* kailangan para gumana */
+  -webkit-line-clamp: 2; /* hanggang 2 lines */
+  -webkit-box-orient: vertical; /* vertical direction */
+  overflow: hidden; /* para itago yung sobra */
+  text-overflow: ellipsis; /* dagdag na safety */
+}
+
+.application-card-description {
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #555;
+  display: -webkit-box; /* kailangan para gumana */
+  -webkit-line-clamp: 3; /* hanggang 2 lines */
+  -webkit-box-orient: vertical; /* vertical direction */
+  overflow: hidden; /* para itago yung sobra */
+  text-overflow: ellipsis; /* dagdag na safety */
+}
+
+.application-card-rating {
+  margin-top: auto;
+}
+
+.application-card-joinButton {
+  position: absolute;
+  top: 25px;
+  right: -35px;
+  transform: rotate(45deg);
+  background: #e63946;
+  color: #fff;
+  width: 150px; /* fixed width */
+  height: 25px; /* fixed height */
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBContainer } from "mdbreact";
 import "./style.css";
@@ -11,11 +11,13 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Monthly } from "../../../../../../services/redux/slices/finance/journals/payments";
+import { over } from "lodash";
 
 export default function Remmitances() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
+  const containerRef = useRef(null);
 
   useEffect(() => {
     if (activePlatform?.branchId && token && year && month && auth?._id) {
@@ -55,11 +57,54 @@ export default function Remmitances() {
     );
   }, [month, year, token, activePlatform?.branchId, auth._id, dispatch]);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    let isDown = false;
+    let startX, scrollLeft;
+
+    const mouseDown = (e) => {
+      isDown = true;
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+
+    const mouseUp = () => {
+      isDown = false;
+    };
+    const mouseLeave = () => {
+      isDown = false;
+    };
+
+    const mouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = x - startX;
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    el.addEventListener("mousedown", mouseDown);
+    el.addEventListener("mouseup", mouseUp);
+    el.addEventListener("mouseleave", mouseLeave);
+    el.addEventListener("mousemove", mouseMove);
+
+    return () => {
+      el.removeEventListener("mousedown", mouseDown);
+      el.removeEventListener("mouseup", mouseUp);
+      el.removeEventListener("mouseleave", mouseLeave);
+      el.removeEventListener("mousemove", mouseMove);
+    };
+  }, []);
+
   return (
     <MDBContainer fluid>
       <MDBCard className="pb-3" narrow>
         <Header />
-        <Calendar />
+        <div style={{ overflow: "auto" }} ref={containerRef}>
+          <Calendar />
+        </div>
       </MDBCard>
       <Denomination />
       <Census />

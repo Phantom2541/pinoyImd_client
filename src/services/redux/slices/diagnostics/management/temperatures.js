@@ -153,13 +153,11 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
         state.formSubmitted = true;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         state.message = action?.success;
-        console.log(action.payload);
         state.collections.unshift(action.payload);
         state.isSuccess = true;
         state.formSubmitted = false;

@@ -5,10 +5,13 @@ import Description from "./desciption";
 import Cart from "./cart";
 import "./style.css";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import Modal from "./modal";
 
-import collections from "./collections";
+// import collections from "./collections";
 
 export default function Stocks() {
+  const { collections } = useSelector(({ products }) => products);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +22,6 @@ export default function Stocks() {
   const cartIconRef = useRef(null);
   const [primarySort, setPrimarySort] = useState(""); // quantity or topSales
   const [priceSort, setPriceSort] = useState(""); // priceLowHigh or priceHighLow
-
   const [cartItems, setCartItems] = useState(() => {
     try {
       const saved = localStorage.getItem("cartItems");
@@ -118,20 +120,20 @@ export default function Stocks() {
   };
 
   const filteredCollections = useMemo(() => {
-    let filtered = collections.filter((item) =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    let filtered = collections.filter(({ pid }) =>
+      pid.name.toLowerCase().includes(searchTerm?.toLowerCase())
     );
 
     if (primarySort === "topSales") {
-      filtered.sort((a, b) => b.sold - a.sold);
+      filtered.sort((a, b) => b?.sold - a?.sold);
     } else if (primarySort === "quantity") {
-      filtered.sort((a, b) => b.stock - a.stock);
+      filtered.sort((a, b) => b?.stock - a?.stock);
     }
 
     if (priceSort === "priceLowHigh") {
-      filtered.sort((a, b) => a.price - b.price);
+      filtered.sort((a, b) => a?.price - b?.price);
     } else if (priceSort === "priceHighLow") {
-      filtered.sort((a, b) => b.price - a.price);
+      filtered.sort((a, b) => b?.price - a?.price);
     }
 
     return filtered;
@@ -175,6 +177,7 @@ export default function Stocks() {
           onCardClick={handleCardClick}
         />
       )}
+      <Modal />
     </div>
   );
 }

@@ -12,7 +12,7 @@ const Services = ({ template, service, setService }) => {
         collections={services}
         keys={["id"]}
         values={["name"]}
-        // preValue={service}
+        preValue={service}
         onChange={handleChange}
         label="Choose a service"
         disableSearch={services.length < 10}

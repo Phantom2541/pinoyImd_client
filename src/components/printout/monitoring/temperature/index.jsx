@@ -1,5 +1,5 @@
 import { Line } from "react-chartjs-2";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chart } from "chart.js";
 
 // Register necessary components for Chart.js v3
@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Banner } from "../../../../services/utilities";
 
 Chart.register(
   CategoryScale,
@@ -144,7 +145,8 @@ const barChartOptions = {
 
 // TempPrint component to render the graph
 const TempPrint = () => {
-  const collections = JSON.parse(localStorage.getItem("temperature")) || [];
+  const { collections = [], branch = {} } =
+    JSON.parse(localStorage.getItem("temperature") || "{}") || {};
 
   // Initialize arrays for the graph data
   const titles = collections.length
@@ -162,8 +164,44 @@ const TempPrint = () => {
   const refAM = collections.map((item) => item.AM?.ref || 0);
   const refPM = collections.map((item) => item.PM?.ref || 0);
 
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @media print {
+        @page {
+          size: landscape;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  const [onloaded, setOnloaded] = useState(false);
+
+  useEffect(() => {
+    if (onloaded) {
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+  }, [onloaded]);
+
   return (
     <div>
+      <Banner
+        company={branch?.companyId?.name}
+        branch={branch?.name}
+        onloaded={onloaded}
+        setOnloaded={setOnloaded}
+        className="laboratory-banner"
+        bid={branch?.bid || ""}
+      />
+      <h3 className="text-center mt-2" style={{ fontWeight: 600 }}>
+        Temperature Monitoring
+      </h3>
       <Line
         data={barChartData(titles, roomAM, roomPM, refAM, refPM)}
         options={barChartOptions}

@@ -200,13 +200,15 @@ const ImageDragAndDrop = ({ img = "", handleUpload, formSubmitted }) => {
               position: "absolute",
               bottom: "10px",
               right: "10px",
+              display: "flex",
+              gap: "10px",
             }}
           >
-            <button className="accept-btn" onClick={handleCropDone}>
-              <MDBIcon icon="check-circle" size="2x" className="icon-accept" />
+            <button className="accept-btn-crop" onClick={handleCropDone}>
+              Crop
             </button>
-            <button className="reject-btn" onClick={handleRemove}>
-              <MDBIcon icon="times-circle" size="2x" className="icon-remove" />
+            <button className="reject-btn-crop" onClick={handleRemove}>
+              Cancel
             </button>
           </div>
         </>

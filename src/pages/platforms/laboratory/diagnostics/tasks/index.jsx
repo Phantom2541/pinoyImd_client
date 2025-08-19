@@ -42,7 +42,6 @@ export default function Tasks() {
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
   // references
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -106,7 +105,6 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-
   return (
     <MDBCard narrow>
       <Header />

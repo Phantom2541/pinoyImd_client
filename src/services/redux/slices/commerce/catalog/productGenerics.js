@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "commerce/catalog/generics";
+const url = "commerce/catalog/productGenerics";
 
 const initialState = {
   collections: [],
@@ -37,6 +37,24 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+
+export const SEARCH = createAsyncThunk(
+  `${url}/search`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/search`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const SAVE = createAsyncThunk(
   `${url}/save`,
@@ -136,6 +154,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SEARCH.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SEARCH.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(SEARCH.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
