@@ -38,7 +38,7 @@ const Header = () => {
     if (collections.length > 0) {
       setVendors([
         ...new Map(
-          collections.map((item) => [item.vendor?._id, item.vendor])
+          collections.map((item) => [item?.vendor?._id, item?.vendor])
         ).values(),
       ]);
     }
@@ -68,7 +68,7 @@ const Header = () => {
         >
           <option value={"all"}> All</option>
           {vendors.map((vendor) => (
-            <option key={vendor._id} value={vendor._id}>
+            <option key={vendor?._id} value={vendor?._id}>
               {vendor?.displayname || vendor?.name}
             </option>
           ))}

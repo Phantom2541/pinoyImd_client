@@ -26,7 +26,7 @@ const Product = ({ product }) => {
           left: "15px",
           background: "#fff", // same as container background
           padding: "0 5px",
-          color: "blue",
+          color: "gray",
         }}
       >
         Product Information

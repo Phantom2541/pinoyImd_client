@@ -4,7 +4,12 @@ import { MDBBtn, MDBIcon } from "mdbreact";
 import Variations from "./variations";
 
 const SalesInformation = () => {
-  const [hasVariants, setHasVariants] = useState(false);
+  const [variants, setVariants] = useState({});
+
+  const enableVariants = () => {
+    setVariants({ types: [{ title: "", options: [""] }] });
+  };
+  const hasVariants = variants?.types?.length > 0;
   return (
     <div
       style={{
@@ -22,22 +27,28 @@ const SalesInformation = () => {
           left: "15px",
           background: "#fff", // same as container background
           padding: "0 5px",
-          color: "blue",
+          color: "gray",
         }}
       >
         Sales Information
       </span>
       <div className="p-2">
-        {!hasVariants ? <Basic /> : <Variations />}
-        <MDBBtn
-          block
-          size="md"
-          color="primary"
-          outline
-          onClick={() => setHasVariants(!hasVariants)}
-        >
-          <MDBIcon icon="plus" className="mr-2" /> Enable Variations
-        </MDBBtn>
+        {!hasVariants ? (
+          <Basic />
+        ) : (
+          <Variations variants={variants} setVariants={setVariants} />
+        )}
+        {!hasVariants && (
+          <MDBBtn
+            block
+            size="md"
+            color="primary"
+            outline
+            onClick={enableVariants}
+          >
+            <MDBIcon icon="plus" className="mr-2" /> Enable Variations
+          </MDBBtn>
+        )}
       </div>
     </div>
   );

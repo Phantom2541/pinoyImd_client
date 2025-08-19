@@ -51,91 +51,101 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {filtered?.map((item, index) => {
-          const {
-            services = [],
-            vendor = {},
-            pid = {},
-            createdAt,
-            status,
-            cancelled = [],
-            remarks = "",
-          } = item;
-          const { name = "", displayname = "" } = vendor;
-          const baseOutsource = displayname || name;
+        {filtered?.length > 0 ? (
+          filtered.map((item, index) => {
+            const {
+              services = [],
+              vendor = {},
+              pid = {},
+              createdAt,
+              status,
+              cancelled = [],
+              remarks = "",
+            } = item;
+            const { name = "", displayname = "" } = vendor || {};
+            const baseOutsource = displayname || name;
 
-          const isLast = index === filtered.length - 1;
+            const isLast = index === filtered.length - 1;
 
-          return (
-            <React.Fragment key={index}>
-              <tr ref={isLast ? endOfTableRef : null}>
-                <td>{index + 1}</td>
-                {!vendorId && <td>{baseOutsource}</td>}
-                <td>{fullName(pid?.fullName)}</td>
-                <td>
-                  {services?.map((id) => {
-                    const notProcess = cancelled.includes(id);
-                    return (
-                      <MDBBadge
-                        pill
-                        color={
-                          !notProcess && status === "done" ? "light" : "primary"
-                        }
-                        className="mr-2"
-                        key={id}
-                      >
-                        <span
-                          title={
-                            status === "done"
-                              ? `${
-                                  notProcess ? "Not Available" : "Completed"
-                                } \n ${Services.getName(id)}`
-                              : Services.getName(id)
+            return (
+              <React.Fragment key={index}>
+                <tr ref={isLast ? endOfTableRef : null}>
+                  <td>{index + 1}</td>
+                  {!vendorId && <td>{baseOutsource}</td>}
+                  <td>{fullName(pid?.fullName)}</td>
+                  <td>
+                    {services?.map((id) => {
+                      const notProcess = cancelled.includes(id);
+                      return (
+                        <MDBBadge
+                          pill
+                          color={
+                            !notProcess && status === "done"
+                              ? "light"
+                              : "primary"
                           }
-                          style={{
-                            fontSize: "0.7rem",
-                            ...(!notProcess &&
-                              status === "done" && {
-                                textDecoration: "line-through",
-                                textDecorationThickness: "3px",
-                                textDecorationColor: "gray",
-                              }),
-                          }}
+                          className="mr-2"
+                          key={id}
                         >
-                          {Services.getAbbr(id)}
-                        </span>
-                      </MDBBadge>
-                    );
-                  })}
-                </td>
-                <td>{dateFormat(createdAt)}</td>
-                <td>{capitalize(status)}</td>
-                <td>
-                  <MDBBtn
-                    color="primary"
-                    rounded
-                    size="sm"
-                    onClick={() => handlePrint(item)}
-                  >
-                    <MDBIcon icon="print" />
-                  </MDBBtn>
-                </td>
-              </tr>
-              {remarks && (
-                <div className="mt-n4 position-absolute">
-                  <MDBTypography
-                    noteColor="warning"
-                    className="m-0 p-1"
-                    note
-                    noteTitle="Remarks: "
-                  >
-                    {remarks}
-                  </MDBTypography>
-                </div>
-              )}
-            </React.Fragment>
-          );
-        })}
+                          <span
+                            title={
+                              status === "done"
+                                ? `${
+                                    notProcess ? "Not Available" : "Completed"
+                                  } \n ${Services.getName(id)}`
+                                : Services.getName(id)
+                            }
+                            style={{
+                              fontSize: "0.7rem",
+                              ...(!notProcess &&
+                                status === "done" && {
+                                  textDecoration: "line-through",
+                                  textDecorationThickness: "3px",
+                                  textDecorationColor: "gray",
+                                }),
+                            }}
+                          >
+                            {Services.getAbbr(id)}
+                          </span>
+                        </MDBBadge>
+                      );
+                    })}
+                  </td>
+                  <td>{dateFormat(createdAt)}</td>
+                  <td>{capitalize(status)}</td>
+                  <td>
+                    <MDBBtn
+                      color="primary"
+                      rounded
+                      size="sm"
+                      onClick={() => handlePrint(item)}
+                    >
+                      <MDBIcon icon="print" />
+                    </MDBBtn>
+                  </td>
+                </tr>
+                {remarks && (
+                  <div className="mt-n4 position-absolute">
+                    <MDBTypography
+                      noteColor="warning"
+                      className="m-0 p-1"
+                      note
+                      noteTitle="Remarks: "
+                    >
+                      {remarks}
+                    </MDBTypography>
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <tr>
+            <td colSpan={7} className="text-center">
+              No sendout record.
+            </td>
+          </tr>
+        )}
       </tbody>
     </MDBTable>
   );
