@@ -15,7 +15,6 @@ import CustomEdge from "./customEdge";
 import { Cloudinary, properFullname } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
-import { ENDPOINT } from "../../../../services/utilities";
 import { v4 as uuidv4 } from "uuid";
 import {
   SAVE,
@@ -45,7 +44,9 @@ export default function OrgChart() {
     dragOriginRef = useRef({}),
     { addToast } = useToasts(),
     dispatch = useDispatch(),
-    BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
+    BANNER = `${Cloudinary.getEndpoint()}/companies/${company.name}/${
+      activePlatform?.branch?.name
+    }/banner`;
 
   const edgeTypes = useMemo(() => {
     return {
