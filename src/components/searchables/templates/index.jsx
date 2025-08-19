@@ -1,4 +1,3 @@
-import React from "react";
 import { Templates as templates } from "./../../../services/fakeDb";
 
 const Templates = ({ setTemplate, Department = "LAB", className = "" }) => {
@@ -19,7 +18,7 @@ const Templates = ({ setTemplate, Department = "LAB", className = "" }) => {
         <option value="" disabled>
           Choose a template
         </option>
-        <option value={-1}>Show All</option>
+        <option value={""}>Show All</option>
         {components.map((template, index) => (
           <option key={template} value={index}>
             {template}

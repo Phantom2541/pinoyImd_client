@@ -12,12 +12,14 @@ import {
   SetCLUSTER,
   SetFILTEREDbyDEPARTMENT,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+import EditableSelect from "../../../../../components/customizable/editableSelect";
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
-    { cluster, filtered } = useSelector(({ preferences }) => preferences),
+    { cluster, filtered, template, isLoading } = useSelector(
+      ({ preferences }) => preferences
+    ),
     [department, setDepartment] = useState("LAB"),
     dispatch = useDispatch();
-  console.log("cluster", cluster);
 
   // Initial Browse
   useEffect(() => {
@@ -30,13 +32,16 @@ const Header = () => {
 
   const handleTemplate = (template) =>
     dispatch(SetFILTEREDbyDEPARTMENT({ template, department }));
-  const handleChange = (services) =>
-    services.length > 0 && dispatch(SetCLUSTER(services));
+  const handleChange = (services) => {
+    services.length > 0
+      ? dispatch(SetCLUSTER(services))
+      : handleTemplate(template);
+  };
 
   return (
     <MDBView
       cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-content-end align-items-center">
         <span className="white-text font-weight-bold mr-2">Services:</span>
@@ -44,11 +49,20 @@ const Header = () => {
       </div>
       <div className="d-flex align-items-center ">
         <select
-          onChange={(e) => setDepartment(e.target.value)}
+          onChange={(e) => {
+            setDepartment(e.target.value);
+            dispatch(
+              SetFILTEREDbyDEPARTMENT({
+                template: "",
+                department: e.target.value,
+              })
+            );
+          }}
           className="form-control mr-2 bg-light"
           style={{ width: "13rem" }}
+          value={department}
         >
-          <option>Choose a department</option>
+          <option value={""}>Choose a department</option>
           <option value="LAB">Laboratory</option>
           <option value="RAD">Radiology</option>
         </select>
@@ -57,22 +71,21 @@ const Header = () => {
           Department={department}
           className="bg-light"
         />
-        <div className="d-flex align-items-center" style={{ width: "20rem" }}>
-          <Select
-            // CSS
-            className="m-0 p-0 ml-4 text-white w-100 mdb-custom-select"
-            inputClassName="text-white m-0 p-0"
-            // Data
+        <div className="d-flex align-items-center" style={{ width: "27rem" }}>
+          <EditableSelect
             collections={filtered}
-            keys="id"
+            parentClassName="w-100"
+            selectStyle={{ width: "25rem !important" }}
+            className="m-0 p-0 ml-4 text-white mdb-custom-select mt-1 "
+            inputClassName="text-white m-0 p-1"
             multiple={true}
-            // preValues={[5, 46]}
-            // whitelisted={true}
             getObject={true}
-            values="name"
-            label="Service"
-            preValue="Service"
+            label="Select a Service"
+            preValue=""
+            keyForValue="id"
+            keyForText="name"
             onChange={handleChange}
+            _key={String(`${isLoading}${template}${department}`)}
           />
         </div>
       </div>
