@@ -38,7 +38,7 @@ const Header = () => {
     if (collections.length > 0) {
       setVendors([
         ...new Map(
-          collections.map((item) => [item.vendor?._id, item.vendor])
+          collections.map((item) => [item?.vendor?._id, item?.vendor])
         ).values(),
       ]);
     }
@@ -56,20 +56,24 @@ const Header = () => {
         reset={() => dispatch(ResetDATE())}
       />
       <div>
-        <span className="white-text  text-nowrap fw-bold ">Sendout List</span>
+        <span className="white-text  text-nowrap fw-bold  mr-5">
+          Sendout List
+        </span>
       </div>
-      <select
-        className="form-control"
-        style={{ width: "200px" }}
-        onChange={({ target }) => dispatch(SetVENDOR(target.value))}
-      >
-        <option value={"all"}> All</option>
-        {vendors.map((vendor) => (
-          <option key={vendor._id} value={vendor._id}>
-            {vendor?.displayname || vendor?.name}
-          </option>
-        ))}
-      </select>
+      <div className="d-flex align-items-center" style={{ width: "300px" }}>
+        <span className="mr-2">Branch:</span>
+        <select
+          className="form-control"
+          onChange={({ target }) => dispatch(SetVENDOR(target.value))}
+        >
+          <option value={"all"}> All</option>
+          {vendors.map((vendor) => (
+            <option key={vendor?._id} value={vendor?._id}>
+              {vendor?.displayname || vendor?.name}
+            </option>
+          ))}
+        </select>
+      </div>
     </MDBView>
   );
 };

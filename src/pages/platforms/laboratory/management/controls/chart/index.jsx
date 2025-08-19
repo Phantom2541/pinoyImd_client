@@ -14,7 +14,6 @@ import {
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import { Cloudinary, FailedBanner } from "../../../../../../services/utilities";
-// import { Cloudinary, FailedBanner } from "../index";
 
 // Register the required components
 Chart.register(
@@ -39,13 +38,14 @@ const calculateStats = (data) => {
 
 const LeveyJennings = ({ title }) => {
   const { activePlatform } = useSelector(({ auth }) => auth);
-
   const { filtered } = useSelector(({ controls }) => controls);
+
   const [hi, setHi] = useState([]);
   const [norm, setNorm] = useState([]);
   const [lo, setLo] = useState([]);
   const [days, setDays] = useState([]);
   const { mean, stdDev } = calculateStats([...norm]);
+
   const chartRef = useRef(null);
   const company = activePlatform?.branch?.companyId?.name;
   const branch = activePlatform?.branch?.name;
@@ -65,7 +65,7 @@ const LeveyJennings = ({ title }) => {
     if (!chartRef.current) return;
 
     const chartCanvas = chartRef.current.canvas;
-    const chartImage = chartCanvas.toDataURL("image/png"); // gawing image yung chart
+    const chartImage = chartCanvas.toDataURL("image/png");
 
     const printWindow = window.open(
       `/printout/chart`,
@@ -76,35 +76,46 @@ const LeveyJennings = ({ title }) => {
     const bannerSrc = `${Cloudinary.getEndpoint()}/companies/${company}/${branch}/banner.png`;
 
     printWindow.document.write(`
-    <html>
-      <head>
-        <title>${title || "Levey-Jennings Control Chart"}</title>
-        <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
- 
-          h1, h2 { margin: 0; }
-          img { max-width: 100%; height: auto; margin-top: 20px; }
-        </style>
-      </head>
-      <body>
-        <header>
-        <img src="${bannerSrc}" width="100%" height="85px" onerror="this.src='${FailedBanner}'" />
-        </header>
-        <h3>${title || "Levey-Jennings Control Chart"}</h3>
-        <img src="${chartImage}" />
-        <script>
-          window.onload = function() {
-            window.print();
-          }
-        </script>
-      </body>
-    </html>
-  `);
+      <html>
+        <head>
+          <style>
+            @page { size: landscape; margin: 10mm; }
+            body { margin: 0; padding: 0; text-align: center; }
+
+            /* Banner sagad lapad */
+            header img {
+              width: 100%;
+              height: auto;
+              max-height: 120px;
+              display: block;
+            }
+
+            /* Chart sakto lang para hindi mag 2 pages */
+            .chart-img {
+              width: 100%;
+              height: auto;
+              max-height: calc(100vh - 150px);
+              object-fit: contain;
+              margin-top: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <header>
+            <img src="${bannerSrc}" onerror="this.src='${FailedBanner}'" />
+          </header>
+          <img src="${chartImage}" class="chart-img"/>
+          <script>
+            window.onload = function() {
+              window.print();
+            }
+          </script>
+        </body>
+      </html>
+    `);
 
     printWindow.document.close();
   };
-  console.log("company", activePlatform?.branch?.companyId?.name);
-  console.log("branch", activePlatform?.branch?.name);
 
   const lineChartData = {
     labels: days,

@@ -85,21 +85,24 @@ export const reduxSlice = createSlice({
   reducers: {
     SetCLUSTER: (state, { payload }) => {
       state.cluster = payload;
-      state.totalPages = Math.ceil(payload / state.maxPage);
+      state.totalPages = Math.ceil(payload.length / state.maxPage);
     },
     SetFILTEREDbyDEPARTMENT: (state, { payload }) => {
       const { template, department } = payload;
-      state.template = template;
+
       const _filtered =
-        payload === -1
-          ? [...state.collections]
+        !template && !department
+          ? state.collections
           : state.collections.filter(
-              (item) =>
-                item.template === template && item.department === department
+              ({ template: t, department: d }) =>
+                (!template || t === template) &&
+                (!department || d === department)
             );
+
+      state.template = template;
       state.filtered = _filtered;
       state.cluster = _filtered;
-      state.totalPages = Math.ceil(_filtered / state.maxPage);
+      state.totalPages = Math.ceil(_filtered.length / state.maxPage);
     },
 
     SetFILTERED: (state, { payload }) => {

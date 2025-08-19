@@ -105,11 +105,11 @@ const frontdesk = [
     ],
   },
   {
-    name: "Outsource",
+    name: "Outsourcing",
     icon: "tv",
     path: "/outsource",
     title:
-      "Monitor, record, and bill sendouts to outsourced diagnostic partners.",
+      "obtain (goods or a service) from an outside or foreign laboratories, especially in place of an internal source",
     allowedFor: ["Laboratory"],
     children: [
       {

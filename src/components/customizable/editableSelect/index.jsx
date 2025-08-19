@@ -78,6 +78,7 @@ export default function EditableSelect({
   displayTag = "small", //this is for editable display value tag
   onChange = () => {},
   onSave = () => {}, //this function is use to editable mode to get the edited data
+  _key = "",
 }) {
   const [editedData, setEditedData] = useState(null);
   const { addToast } = useToasts();
@@ -169,7 +170,9 @@ export default function EditableSelect({
           <MDBSelect
             label={!hideLabel && label}
             getValue={handleSelection}
-            key={JSON.stringify(isEmpty(preValues) ? preValue : preValues)}
+            key={
+              _key || JSON.stringify(isEmpty(preValues) ? preValue : preValues)
+            }
             className={`${className} w-100 p-0 m-0`}
             multiple={multiple}
             color="primary"
