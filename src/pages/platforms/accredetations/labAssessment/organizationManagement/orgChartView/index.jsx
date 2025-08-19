@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { ENDPOINT } from "../../../../../../services/utilities";
+import { Cloudinary } from "../../../../../../services/utilities";
 import ReactFlow, { ReactFlowProvider } from "react-flow-renderer";
 import CustomNode from "../../../../accounting/organizationChart/customNode";
 import CustomEdge from "../../../../accounting/organizationChart/customEdge";
@@ -65,8 +65,12 @@ export default function OrgChartView() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const { activePlatform, company } = useSelector(({ auth }) => auth);
+  const { org } = useSelector(({ orgChart }) => orgChart);
+  console.log("org", org);
 
-  const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
+  const BANNER = `${Cloudinary.getEndpoint()}/companies/${company.name}/${
+    activePlatform?.branch?.name
+  }/banner`;
 
   useEffect(() => {
     try {

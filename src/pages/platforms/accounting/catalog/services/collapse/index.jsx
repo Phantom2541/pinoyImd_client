@@ -18,7 +18,6 @@ export default function ServiceCollapse() {
       ({ preferences }) => preferences
     ),
     [activeId, setActiveId] = useState(0);
-
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
       {handlePagination(cluster, activePage, maxPage)?.map(

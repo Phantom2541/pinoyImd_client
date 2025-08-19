@@ -1,3 +1,4 @@
+import React from "react";
 import { MDBIcon } from "mdbreact";
 
 export default function Cards({
@@ -30,50 +31,43 @@ export default function Cards({
   return (
     <div className="stock-cards-wrapper">
       <div className="stock-cards-container">
-        {currentItems.map((item) => {
-          const { pid } = item;
-          return (
-            <div
-              className="stock-cards"
-              key={item.id}
-              onClick={() => onCardClick(item)}
-              style={{ cursor: "pointer" }}
-            >
-              {/* <img src={item?.image[0] || ""} alt={item.title} /> */}
-              <img src={""} alt={pid?.name} />
-
-              <div className="stock-cards-body">
-                <div className="stock-cards-info">
-                  <span className="stock-cards-title">{pid.name}</span>
-                  <span className="stock-cards-price">
-                    ₱{Math.round(item.price * (1 - item.discount / 100))}
-                    {item.discount > 0 && (
-                      <span className="stock-cards-original">
-                        &nbsp;₱{item.price}
-                      </span>
-                    )}
-                  </span>
+        {currentItems.map((item) => (
+          <div
+            className="stock-cards"
+            key={item.id}
+            onClick={() => onCardClick(item)}
+            style={{ cursor: "pointer" }}
+          >
+            <img src={item.image[0]} alt={item.title} />
+            <div className="stock-cards-body">
+              <div className="stock-cards-info">
+                <span className="stock-cards-title">{item.title}</span>
+                <span className="stock-cards-price">
+                  ₱{Math.round(item.price * (1 - item.discount / 100))}
                   {item.discount > 0 && (
-                    <span className="stock-cards-discount">
-                      {item.discount}% off
+                    <span className="stock-cards-original">
+                      &nbsp;₱{item.price}
                     </span>
                   )}
-                </div>
-                <div className="stock-cards-stats">
-                  <span className="stock-cards-star">★</span>
-                  <span className="stock-cards-rating">{item.rating}</span>
-                  <span className="stock-cards-sold">
-                    {item.sold} sold/month
-                  </span>
-                </div>
-                <span className="stock-cards-location">
-                  <MDBIcon fas icon="map-marker-alt" />
-                  {item.location}
                 </span>
+                {item.discount > 0 && (
+                  <span className="stock-cards-discount">
+                    {item.discount}% off
+                  </span>
+                )}
               </div>
+              <div className="stock-cards-stats">
+                <span className="stock-cards-star">★</span>
+                <span className="stock-cards-rating">{item.rating}</span>
+                <span className="stock-cards-sold">{item.sold} sold/month</span>
+              </div>
+              <span className="stock-cards-location">
+                <MDBIcon fas icon="map-marker-alt" />
+                {item.location}
+              </span>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       <div className="stock-cards-pagination">
