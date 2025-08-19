@@ -77,20 +77,10 @@ const LeveyJennings = ({ title }) => {
 
     printWindow.document.write(`
     <html>
-      <head>
-        <title>${title || "Levey-Jennings Control Chart"}</title>
-        <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
- 
-          h1, h2 { margin: 0; }
-          img { max-width: 100%; height: auto; margin-top: 20px; }
-        </style>
-      </head>
       <body>
         <header>
         <img src="${bannerSrc}" width="100%" height="85px" onerror="this.src='${FailedBanner}'" />
         </header>
-        <h3>${title || "Levey-Jennings Control Chart"}</h3>
         <img src="${chartImage}" />
         <script>
           window.onload = function() {
@@ -103,8 +93,6 @@ const LeveyJennings = ({ title }) => {
 
     printWindow.document.close();
   };
-  console.log("company", activePlatform?.branch?.companyId?.name);
-  console.log("branch", activePlatform?.branch?.name);
 
   const lineChartData = {
     labels: days,
