@@ -339,11 +339,16 @@ export default function CollapseTable({
                 errors,
                 saveField,
                 handleCancel,
-                value: field.value,
+                value:
+                  field.name !== "hasSchedule"
+                    ? field.value
+                    : field.value
+                    ? "included"
+                    : "excluded",
               }}
             >
               <input
-                type="number"
+                type={field.name === "hasSchedule" ? "boolean" : "number"}
                 {...register(field.name)}
                 className={`form-control form-control-sm ${
                   errors[field.name] ? "is-invalid" : ""
