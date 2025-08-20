@@ -356,7 +356,7 @@
   },
   {
     "id": 29,
-    "name": "MAGNESUIM",
+    "name": "MAGNESIUM",
     "abbreviation": "MG",
     "lo_ssx": "",
     "department": "LAB",
@@ -369,7 +369,7 @@
   },
   {
     "id": 30,
-    "name": "MAGNESUIM urine",
+    "name": "MAGNESIUM urine",
     "abbreviation": "Mg-urine",
     "lo_ssx": "",
     "department": "LAB",
