@@ -143,7 +143,7 @@ export default function CashRegister() {
                 m.packages.includes(p.id)
               );
               return isDuplicate
-                ? `<strong style="color:#d9534f;">${
+                ? `<strong style="color:#d9534f; font-size:17px;">${
                     p.description || p.abbreviation
                   }</strong>`
                 : `<span>${p.description || p.abbreviation}</span>`;

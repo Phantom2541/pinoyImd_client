@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -9,20 +9,23 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import { currency } from "../../../../../../../services/utilities";
-import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import {
+  CENSUS,
+  RESET,
+} from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import Spinner from "../../../../../../../components/spinner";
 
-export default function Modal({ show, selected, toggle }) {
+export default function Modal({ show, selected, toggle, remittance }) {
   const { token } = useSelector(({ auth }) => auth),
     { total, collections } = useSelector(({ deals }) => deals),
-    { selected: selectedRemittance, formSubmitted = false } = useSelector(
-      ({ remittances }) => remittances
-    ),
+    { formSubmitted = false } = useSelector(({ remittances }) => remittances),
     { filtered = [] } = useSelector(({ payments }) => payments),
     [expenses, setExpenses] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
   useEffect(() => {
+    setExpenses(0);
     if (filtered.length > 0) {
       const amount =
         filtered?.reduce((sum, voucher) => sum + voucher.amount, 0) || 0;
@@ -45,7 +48,7 @@ export default function Modal({ show, selected, toggle }) {
   const { cash, ...rest } = paymentTotals;
 
   const nonCash = Object.entries(rest).filter(([_, value]) => value > 0);
-  const fc = selectedRemittance?.opening?.sum;
+  const fc = remittance?.opening?.sum;
   const sales = total;
   const coh = cash + fc - expenses;
   const { patient = 0 } = selected;
@@ -55,6 +58,7 @@ export default function Modal({ show, selected, toggle }) {
       CENSUS({ token, data: { ...selected, coh, sales, expenses } })
     ).then(() => {
       toggle();
+      dispatch(RESET());
       addToast("End-of-Shift Summary saved successfully.", {
         appearance: "success",
       });

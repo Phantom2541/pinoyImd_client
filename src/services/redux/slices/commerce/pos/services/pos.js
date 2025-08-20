@@ -215,9 +215,11 @@ export const reduxSlice = createSlice({
       state.membership = membership;
       state.contract = contract;
     },
+    OVERRIDE_CART: (state, { payload }) => {
+      state.cart = payload;
+    },
     ADDTOCART: (state, { payload }) => {
       const index = state.cart.findIndex((item) => item._id === payload._id);
-
       if (index === -1) {
         state.cart = [...state.cart, payload];
       } else {
@@ -322,6 +324,7 @@ export const {
   SETHMO,
   ADDTOCART,
   REMOVEFROMCART,
+  OVERRIDE_CART,
   RESET,
   RESET_INSOURCE,
 } = reduxSlice.actions;
