@@ -46,7 +46,7 @@ const Headers = ({ searchKey }) => {
       <div className="d-flex justify-content-between align-items-center w-100">
         <span className="white-text mx-3">
           {filtered.length}&nbsp;
-          {searchKey ? `Matches with ${searchKey}` : "Onboarding Tasks xxxx"}
+          {searchKey ? `Matches with ${searchKey}` : "Onboarding Tasks"}
         </span>
 
         <div className="d-flex align-items-center" style={{ gap: 10 }}>
