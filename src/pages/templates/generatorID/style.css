@@ -1,172 +1,436 @@
-:root {
-  --gid-panel-bg: #ffffff;
-  --gid-muted: #888;
-  --gid-border: #e6e6e6;
-  --gid-accent: #2563eb;
-  --gid-soft: #f6f7fb;
-}
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&family=Roboto:wght@100;400;700&family=Poppins:wght@100;400;700&display=swap");
 
-.generatorID-header {
-  background-color: var(--gid-panel-bg);
-  padding: 10px 15px;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.IDGenerator-header {
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
-.generatorID-header-title {
-  font-size: 1.2rem;
-  font-weight: bold;
+.IDGenerator-header h1 {
+  font-size: 1.5rem;
 }
 
-.generatorID-header-options {
+.IDGenerator-header button {
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.IDGenerator-ID-container {
   display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.IDGenerator-ID-front,
+.IDGenerator-ID-back {
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  height: 450px;
+}
+
+.IDGenerator-ID-front img,
+.IDGenerator-ID-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.IDGenerator-setting-container {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.IDGenerator-setting-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.IDGenerator-setting-section-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #7f8187;
+}
+
+.IDGenerator-setting-inputs-wrapper {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 10px;
 }
 
-.generatorID-header-select {
-  appearance: none; /* tanggalin default arrow */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-color: #f8f9fa;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 8px 35px 8px 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-}
-
-.generatorID-header-select:hover {
-  border-color: #007bff;
-}
-
-.generatorID-header-select:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.generatorID-header-btn {
-  border: none;
-  background-color: var(--gid-panel-bg);
-  color: black;
+/* input design */
+.IDGenerator-setting-input-title {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #7f8187;
   text-transform: capitalize;
-  width: 55px;
-  aspect-ratio: 1/1;
-  font-size: 1rem;
-  line-height: 1.1rem;
-  padding: 3px 5px;
-  border-radius: 3px;
-  transition: background-color 0.3s ease;
-  border: 1px solid var(--gid-border);
 }
 
-.generatorID-header-btn.active {
-  background-color: var(--gid-accent);
-  color: var(--gid-panel-bg);
-}
-
-.generatorID-header-btn:active {
-  transform: scale(0.95);
-}
-
-.generatorID-header-btn:hover {
-  background-color: var(--gid-soft);
-  color: black;
-}
-
-.generatorID-header-btn.active:hover {
-  filter: brightness(1.1);
-}
-
-.generatorID-header-exportBtn {
-  border: none;
-  text-transform: capitalize;
-  font-size: 1rem;
-  line-height: 1.1rem;
-  padding: 3px 5px;
-  border-radius: 3px;
-  width: 65px;
-  height: 55px;
-  background-color: var(--gid-accent);
-  color: var(--gid-panel-bg);
-  transition: filter 0.3s ease;
-}
-
-.generatorID-header-exportBtn:hover {
-  filter: brightness(1.1);
-}
-
-/* Canvas Design */
-.generatorID-canvas {
-}
-
-.flipcard-container {
-  perspective: 1000px;
-  width: 300px;
-  height: 200px;
-  margin: 20px auto;
-}
-
-.flipcard {
-  width: 100%;
-  height: 100%;
+.IDGenerator-setting-input-container {
   position: relative;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-.flipcard.flipped {
-  transform: rotateY(180deg);
+.IDGenerator-setting-label {
+  all: unset;
+  height: 100%;
+  font-size: 1rem;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #7a7c9e;
+  font-weight: 400;
 }
 
-.flipcard-front,
-.flipcard-back {
-  position: absolute;
+.IDGenerator-setting-inputColor {
+  border: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 20px;
+}
+
+.IDGenerator-setting-input {
+  all: unset;
+  height: 100%;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.IDGenerator-setting-input::placeholder {
+  font-size: 1rem;
+  color: #7a7c9e;
+}
+
+.IDGenerator-setting-input-container:focus-within {
+  outline: 1px solid #0d99ff;
+}
+
+/* select design */
+.IDGenerator-setting-select-label {
+  font-size: 0.8rem;
+  color: #7f8187;
+  font-weight: 400;
+}
+
+.IDGenerator-setting-select-container {
+  position: relative;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #e6e6e6;
+  width: 100%;
+  height: 30px;
+}
+
+.IDGenerator-setting-select-container:focus-within {
+  outline: 1px solid #0d99ff;
+}
+
+.IDGenerator-setting-select-container.inputDesign {
+  background-color: #f5f5f5;
+  border: none;
+}
+
+.IDGenerator-setting-select-container.active {
+  background-color: #e6e6e6;
+}
+
+.IDGenerator-setting-select-placeholder {
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.IDGenerator-setting-select-placeholder span {
+  margin-left: 5px;
+  font-size: 1rem;
+  font-weight: 400;
+  max-width: 75%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.IDGenerator-setting-select-placeholder input {
+  all: unset;
+  height: 100%;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.IDGenerator-setting-select-icon {
+  height: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-family: sans-serif;
-  padding: 15px;
-  box-sizing: border-box;
 }
 
-.flipcard-front {
-  background: white;
-  color: black;
+.IDGenerator-setting-select-container:hover .IDGenerator-setting-select-icon {
+  background-color: #e6e6e6;
 }
 
-.flipcard-back {
-  background: #f8f9fa;
-  color: #333;
-  transform: rotateY(180deg);
+.IDGenerator-setting-select-options {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-105%, -50%);
+  width: 100%;
+  min-width: 250px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  visibility: hidden;
+  display: none;
 }
 
-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  background: #333;
-  color: #fff;
+.IDGenerator-setting-select-options.inputDesign {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: 90px;
+  max-width: 90px;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 5px;
+}
+
+.IDGenerator-setting-select-options.active {
+  visibility: visible;
+  display: block;
+}
+
+.IDGenerator-setting-select-options ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 300px;
+  min-height: 300px;
+  overflow: auto;
+  text-transform: capitalize;
+}
+.IDGenerator-setting-select-options.inputDesign ul {
+  text-align: center;
+  height: 100%;
+  max-height: 100%;
+}
+
+/* scrollbar container */
+.IDGenerator-setting-select-options ul::-webkit-scrollbar {
+  width: 6px; /* lapad ng scrollbar */
+  height: 5px;
+}
+
+/* scrollbar track (background) */
+.IDGenerator-setting-select-options ul::-webkit-scrollbar-track {
+  background: #f5f5f5; /* kulay ng track */
+  border-radius: 8px;
+}
+
+/* scrollbar thumb (yung handle) */
+.IDGenerator-setting-select-options ul::-webkit-scrollbar-thumb {
+  background: #d9d9d9; /* kulay ng handle */
+  border-radius: 8px;
+}
+
+.IDGenerator-setting-select-options ul li {
+  padding: 5px 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 400;
 }
 
-button:hover {
-  background: #555;
+.IDGenerator-setting-select-options ul li:hover {
+  background-color: #f5f5f5;
+}
+
+.IDGenerator-setting-select-options.inputDesign ul li {
+  border-radius: 5px;
+}
+
+.IDGenerator-setting-select-options.inputDesign ul li:hover {
+  background-color: #0d99ff;
+}
+
+.IDGenerator-setting-prev,
+.IDGenerator-setting-next {
+  font-size: 1rem;
+  border: none;
+  width: 100%;
+  padding: 5px 0;
+  background-color: #e6e6e6;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.IDGenerator-setting-prev:hover {
+  background-color: red;
+  color: white;
+}
+
+.IDGenerator-setting-next:hover {
+  background-color: green;
+  color: white;
+}
+
+.IDGenerator-setting-save {
+  margin-top: auto;
+  border: none;
+  width: 100%;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+/* modal design */
+.IDGenerator-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  visibility: hidden;
+}
+
+.IDGenerator-modal.active {
+  visibility: visible;
+}
+
+.IDGenerator-modal-content {
+  width: 60%;
+  height: 70%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.IDGenerator-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #0d99ff;
+}
+
+.IDGenerator-modal-header span {
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.IDGenerator-modal-header button {
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.IDGenerator-modal-body {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.IDGenerator-modal-preview-container {
+  height: 450px;
+  width: 350px;
+}
+.IDGenerator-modal-idUpload-addBtn {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #d9d9d9;
+  border: 2px solid #d9d9d9;
+  font-size: 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 0.3s ease, border 0.3s ease;
+}
+
+.IDGenerator-modal-idUpload-addBtn:hover {
+  color: #0d99ff;
+  border: 2px solid #0d99ff;
+}
+
+.IDGenerator-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 4px;
+  background: #f9f9f9;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.IDGenerator-modal-idUpload-changeBtn {
+  cursor: pointer;
+  width: 100%;
+  padding: 4px 0;
+  color: white;
+  font-weight: 400;
+  text-align: center;
+  border-radius: 3px;
+  margin-top: 10px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.IDGenerator-modal-template-calibrate button {
+  border: 1px solid #d9d9d9;
+  background-color: white;
+  border-radius: 3px;
+  padding: 5px 10px;
+}
+
+.IDGenerator-modal-template-calibrate-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.IDGenerator-modal-template-calibrate-buttons button:hover {
+  border: 1px solid #0d99ff;
+  color: white;
+  background-color: #0d99ff;
 }
