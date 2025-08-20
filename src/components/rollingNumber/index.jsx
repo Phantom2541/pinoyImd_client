@@ -1,5 +1,5 @@
 // RollingNumber.jsx
-import React, { useEffect, useRef, useState, memo } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import "./style.css";
 
 export default function RollingNumber({
@@ -20,7 +20,7 @@ export default function RollingNumber({
     const endValue = value;
     previousValue.current = value;
     startTime.current = null;
-
+    cancelAnimationFrame(animationFrame);
     const animate = (timestamp) => {
       if (!startTime.current) startTime.current = timestamp;
       const progress = Math.min((timestamp - startTime.current) / duration, 1);

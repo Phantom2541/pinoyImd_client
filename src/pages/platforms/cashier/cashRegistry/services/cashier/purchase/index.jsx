@@ -8,8 +8,10 @@ import {
 import { Services } from "../../../../../../../services/fakeDb/index.js";
 import {
   ADDTOCART,
+  OVERRIDE_CART,
   REMOVEFROMCART,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos.js";
+import Swal from "sweetalert2";
 
 export default function Menus({ patronPresent }) {
   const { category, privilege, cart, membership, hmo, contract } = useSelector(
@@ -17,7 +19,92 @@ export default function Menus({ patronPresent }) {
     ),
     dispatch = useDispatch();
 
-  const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
+  const handleADDtoCart = (selected) => {
+    const { packages } = selected;
+
+    const duplicateMenus = cart.filter(({ packages: sp }) =>
+      sp.every((p) => packages.includes(p))
+    );
+    if (duplicateMenus.length > 0) {
+      Swal.fire({
+        title: "Duplicate Services Found",
+        html: `
+             <div style="text-align:left; font-size:14px; line-height:1.5;">
+            
+            <!-- Already Charged -->
+            <h6 style="margin-bottom:8px; color:#d9534f;">Already Selected Menu(s)</h6>
+            ${duplicateMenus
+              .map((m) => {
+                const chargedServices = Services.whereIn(m.packages);
+                const chargedServiceNames = chargedServices
+                  .map(
+                    (p) =>
+                      `<span style="color:#d9534f;">${p.abbreviation}</span>`
+                  )
+                  .join(", ");
+
+                return `
+                  <div style="margin-bottom:12px; padding:8px; border:1px solid #f0ad4e; border-radius:6px; background:#fff3cd;">
+                    <div><strong>Menu:</strong> ${
+                      m.description || m.abbreviation
+                    }</div>
+                    <div><strong>Services:</strong> ${chargedServiceNames}</div>
+                  </div>
+                `;
+              })
+              .join("")}
+      
+            <!-- Newly Selected -->
+            <h6 style="margin-bottom:8px; color:#5cb85c;">Newly Selected Menu</h6>
+            <div style="padding:8px; border:1px solid #b2dfdb; border-radius:6px; background:#e0f2f1;">
+              <div><strong>Menu:</strong> ${
+                selected?.abbreviation || selected?.description
+              }</div>
+              <div><strong>Services:</strong> 
+                ${Services.whereIn(selected.packages)
+                  .map((p) => {
+                    const isDuplicate = duplicateMenus.some((m) =>
+                      m.packages.includes(p.id)
+                    );
+                    return isDuplicate
+                      ? `<strong style="color:#d9534f; font-size:17px;">${
+                          p.description || p.abbreviation
+                        }</strong>`
+                      : `<span>${p.description || p.abbreviation}</span>`;
+                  })
+                  .join(", ")}
+              </div>
+            </div>
+      
+            <hr style="margin:15px 0;">
+            <p style="margin:0; font-size:13px;">
+              <span style="color:#d9534f; font-weight:bold;">Red services</span> are already selected to this patient and also included in the new menu.<br>
+              If you choose to <strong>override</strong>, these previously selected menus will be removed and replaced by the new menu's services.
+            </p>
+          </div>
+        `,
+        showCancelButton: true, // For Cancel
+        showDenyButton: true, // For middle option
+        confirmButtonText: "Yes, override",
+        denyButtonText: "Keep current charges",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#d33", // Red for danger
+        denyButtonColor: "#3085d6", // Blue for keep
+        cancelButtonColor: "#6c757d", // Gray for cancel
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const overrideCart = [...cart].filter(
+            (c) => !duplicateMenus.some((d) => c._id === d._id)
+          );
+          dispatch(OVERRIDE_CART([...overrideCart, selected]));
+        } else if (result.isDenied) {
+          dispatch(ADDTOCART(selected));
+        }
+      });
+    } else {
+      dispatch(ADDTOCART(selected));
+    }
+  };
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
 
   return (
