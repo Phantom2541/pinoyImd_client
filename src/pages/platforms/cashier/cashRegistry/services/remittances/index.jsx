@@ -11,7 +11,6 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Monthly } from "../../../../../../services/redux/slices/finance/journals/payments";
-import { over } from "lodash";
 
 export default function Remmitances() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),

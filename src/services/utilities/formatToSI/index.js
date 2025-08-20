@@ -13,6 +13,7 @@ const formatToSI = (service, value = undefined) => {
     "ALANINE AMINOTRANSFERASE": "U/L",
     "ASPARTATE AMINOTRANSFERASE": "U/L",
     "GLYCOSYLATED HEMOGLOBIN": "%",
+    MAGNESIUM: "mmol/L",
   };
 
   const conversionFactors = {
@@ -25,6 +26,10 @@ const formatToSI = (service, value = undefined) => {
     CREATININE: 88.4,
     "BLOOD URIC ACID": 0.059,
     "BLOOD UREA NITROGEN": 0.357,
+    "ALANINE AMINOTRANSFERASE": 1.5,
+    "ASPARTATE AMINOTRANSFERASE": 1.5,
+    "GLYCOSYLATED HEMOGLOBIN": 1,
+    MAGNESIUM: 0.4114,
   };
 
   if (value === undefined) {

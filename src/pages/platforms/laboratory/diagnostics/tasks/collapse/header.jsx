@@ -11,7 +11,7 @@ import {
   sourceColor,
 } from "../../../../../../services/utilities";
 
-const Header = ({ deal, index }) => {
+const Header = ({ deal, index, totalDeals }) => {
   const { maxPage } = useSelector(({ auth }) => auth),
     { activeCOLAPSE, activePage } = useSelector(({ validator }) => validator),
     { customerId, category, source } = deal,
@@ -24,11 +24,14 @@ const Header = ({ deal, index }) => {
   const allDone = Object.values(deal.diagnostic).every(
     (section) => section.hasDone === true
   );
+
+  // 🔑 Compute correct numbering kahit naka-reverse
+  const displayIndex = (activePage - 1) * maxPage + (totalDeals - index);
   return (
     <div style={{ backgroundColor: allDone ? "rgba(255, 169, 0, 0.3)" : "" }}>
       <MDBCollapseHeader>
-        {(activePage - 1) * maxPage + index + 1}.{" "}
-        {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |
+        {displayIndex}. {getGenderIcon(customerId?.isMale)}{" "}
+        {fullName(customerId?.fullName)} |
         <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
         <MDBBadge color={sourceColor(categoryName)} className="mx-2">
           {categoryName}
