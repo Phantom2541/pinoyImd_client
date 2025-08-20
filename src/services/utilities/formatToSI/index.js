@@ -13,7 +13,7 @@ const formatToSI = (service, value = undefined) => {
     "ALANINE AMINOTRANSFERASE": "U/L",
     "ASPARTATE AMINOTRANSFERASE": "U/L",
     "GLYCOSYLATED HEMOGLOBIN": "%",
-    MAGNESUIM: "mmol/L",
+    MAGNESIUM: "mmol/L",
   };
 
   const conversionFactors = {
@@ -29,7 +29,7 @@ const formatToSI = (service, value = undefined) => {
     "ALANINE AMINOTRANSFERASE": 1.5,
     "ASPARTATE AMINOTRANSFERASE": 1.5,
     "GLYCOSYLATED HEMOGLOBIN": 1,
-    MAGNESUIM: 0.4114,
+    MAGNESIUM: 0.4114,
   };
 
   if (value === undefined) {
