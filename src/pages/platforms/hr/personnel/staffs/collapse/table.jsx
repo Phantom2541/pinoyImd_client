@@ -322,6 +322,11 @@ export default function CollapseTable({
                     name: "incentive",
                     value: rate?.incentive,
                   },
+                  {
+                    label: "Has Schedule",
+                    name: "hasSchedule",
+                    value: staff?.hasSchedule,
+                  },
                 ]),
           ].map((field) => (
             <EditableField
