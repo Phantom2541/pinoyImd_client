@@ -31,9 +31,15 @@ export default function GeneratorID() {
   };
 
   return (
-    <div>
+    <div
+      className="d-flex flex-column align-center"
+      style={{ maxWidth: "fit-content", margin: "auto", gap: "10px" }}
+    >
       <Header setIsOpen={setIsOpen} />
-      <div className="d-flex align-items-start" style={{ gap: "10px" }}>
+      <div
+        className="d-flex align-items-start justify-content-center"
+        style={{ gap: "10px" }}
+      >
         <ID
           frontImage={frontImage}
           backImage={backImage}
