@@ -20,7 +20,7 @@ export default function RollingNumber({
     const endValue = value;
     previousValue.current = value;
     startTime.current = null;
-    cancelAnimationFrame(animationFrame);
+
     const animate = (timestamp) => {
       if (!startTime.current) startTime.current = timestamp;
       const progress = Math.min((timestamp - startTime.current) / duration, 1);
