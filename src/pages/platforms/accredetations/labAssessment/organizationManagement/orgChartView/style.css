@@ -27,9 +27,78 @@
 }
 
 .orgChart-view-container-reactFlow {
+  position: relative;
   width: 100%;
   height: 100%;
   flex-grow: 1;
   min-height: 0;
   pointer-events: none;
+}
+
+.orgChart-view-print {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 20; /* higher than anything inside */
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  pointer-events: auto; /* enable clicks for button */
+}
+
+@media print {
+  /* Remove default page margin */
+  @page {
+    size: auto;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hide everything except the org chart container */
+  body * {
+    visibility: hidden;
+  }
+
+  .orgChart-view-container,
+  .orgChart-view-container * {
+    visibility: visible;
+  }
+
+  /* Hide the print button */
+  .orgChart-view-print {
+    display: none;
+  }
+
+  /* Make org chart container full-page */
+  .orgChart-view-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Scale ReactFlow to full width and height */
+  .orgChart-view-container-reactFlow {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .react-flow {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .react-flow__node {
+    /* replace box-shadow with drop-shadow */
+    box-shadow: none !important;
+    filter: drop-shadow(0 0 7px rgba(0, 0, 0, 0.2));
+  }
 }
