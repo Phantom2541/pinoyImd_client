@@ -1,53 +1,51 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Cloudinary } from "../../../../../../services/utilities";
-import ReactFlow, { ReactFlowProvider } from "react-flow-renderer";
+import ReactFlow, {
+  ReactFlowProvider,
+  useReactFlow,
+} from "react-flow-renderer";
 import CustomNode from "../../../../accounting/organizationChart/customNode";
 import CustomEdge from "../../../../accounting/organizationChart/customEdge";
 import "./style.css";
-// import { Zoom } from "swiper/modules";
+import { BROWSE } from "../../../../../../services/redux/slices/finance/bookkeeping/orgChart";
 
 const nodeTypes = { customNode: CustomNode };
 
 function ReactFlowInner({ nodes, edges }) {
+  const { fitView } = useReactFlow();
   const edgeTypes = { custom: CustomEdge };
 
-  const handleInit = (instance) => {
+  // Automatically fit the view whenever nodes change
+  useEffect(() => {
     if (nodes.length > 0) {
-      instance.fitView({ padding: 0.07 });
+      fitView({ padding: 0.2 });
     }
-  };
+  }, [nodes, fitView]);
 
+  // Prevent zooming unless Ctrl is pressed
   useEffect(() => {
     const flowWrapper = document.querySelector(".react-flow");
     if (!flowWrapper) return;
 
     const handleWheel = (e) => {
-      if (!e.ctrlKey) {
-        e.stopPropagation();
-      }
+      if (!e.ctrlKey) e.stopPropagation();
     };
 
     flowWrapper.addEventListener("wheel", handleWheel, {
       passive: false,
       capture: true,
     });
-
-    return () => {
-      flowWrapper.removeEventListener("wheel", handleWheel, {
-        capture: true,
-      });
-    };
+    return () =>
+      flowWrapper.removeEventListener("wheel", handleWheel, { capture: true });
   }, []);
 
   return (
     <ReactFlow
       nodes={nodes}
       edges={edges}
-      edgeTypes={edgeTypes}
       nodeTypes={nodeTypes}
-      fitView={false}
-      onInit={handleInit} // ✅ correct for v10
+      edgeTypes={edgeTypes}
       panOnScroll={false}
       zoomOnScroll={false}
       zoomOnPinch={false}
@@ -64,28 +62,48 @@ function ReactFlowInner({ nodes, edges }) {
 export default function OrgChartView() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const { activePlatform, company } = useSelector(({ auth }) => auth);
+  const { activePlatform, company, auth, token } = useSelector(
+    ({ auth }) => auth
+  );
   const { org } = useSelector(({ orgChart }) => orgChart);
+  const dispatch = useDispatch();
 
   const BANNER = `${Cloudinary.getEndpoint()}/companies/${company.name}/${
     activePlatform?.branch?.name
   }/banner`;
 
+  // Fetch org chart data
   useEffect(() => {
-    try {
-      const storedNodes = JSON.parse(
-        localStorage.getItem("savedNodes") || "[]"
-      );
-      const storedEdges = JSON.parse(
-        localStorage.getItem("savedEdges") || "[]"
-      );
+    dispatch(
+      BROWSE({
+        token,
+        key: { branchId: activePlatform?.branchId, userId: auth._id },
+      })
+    );
+  }, [token, dispatch, activePlatform, auth]);
 
-      setNodes(storedNodes);
-      setEdges(storedEdges);
-    } catch (err) {
-      console.error("Error loading org chart data:", err);
-    }
-  }, []);
+  // Load nodes and edges from org chart
+  useEffect(() => {
+    if (!org) return;
+
+    const nodesFromOrg = org.breakdown.map((n) => ({
+      id: n.id,
+      type: n.type || "customNode",
+      position: n.gps
+        ? { x: Number(n.gps.x), y: Number(n.gps.y) }
+        : { x: 0, y: 0 },
+      data: n.data || { eid: {} },
+    }));
+
+    const edgesFromOrg = org.edges.map((e) => ({
+      ...e,
+      id: e.id || `${e.source}-${e.target}`,
+      type: e.type || "custom",
+    }));
+
+    setNodes(nodesFromOrg);
+    setEdges(edgesFromOrg);
+  }, [org]);
 
   return (
     <div className="orgChart-view-section">
