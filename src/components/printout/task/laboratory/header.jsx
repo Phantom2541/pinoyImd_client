@@ -1,4 +1,4 @@
-import { capitalize, getAge } from "../../../../services/utilities";
+import { capitalize, fullName, getAge } from "../../../../services/utilities";
 import { MDBRow, MDBCol, MDBAlert } from "mdbreact";
 import { Categories } from "../../../../services/fakeDb";
 import { formColor } from "../../../../services/utilities";
@@ -16,7 +16,7 @@ export default function Header({ task }) {
         <div className="d-flex align-items-center">
           Name:&nbsp;
           <h5 className="mb-0 fw-bold text-nowrap">
-            <u className="text-nowrap">{patientName}</u>
+            <u className="text-nowrap">{fullName(pFull)}</u>
           </h5>
         </div>
         <div>
