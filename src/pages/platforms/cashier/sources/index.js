@@ -7,6 +7,7 @@ import Contract from "./insources/contract";
 import Wellness from "./insources/wellness";
 import Membership from "./insources/membership";
 import Referrals from "./insources/referrals";
+import Inhouse from "./inhouse";
 
 export {
   Membership,
@@ -18,4 +19,5 @@ export {
   Wellness,
   Contract,
   Referrals,
+  Inhouse,
 };
