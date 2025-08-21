@@ -85,9 +85,46 @@ export default function ID({
       .map((field) => {
         const pos = positions[field];
         const style = fieldStyles[field] || {};
+
+        // Determine value
+        if (field === "profileImage") {
+          const imgSrc = student.profileImage;
+          return (
+            <img
+              key={field}
+              src={imgSrc}
+              alt="Profile"
+              style={{
+                position: "absolute",
+                top: pos.y,
+                left: pos.x,
+                width: style.width || "50px",
+                height: style.height || "50px",
+                transform: "translate(-50%, -50%)",
+                borderRadius: style.borderRadius || "50%",
+                objectFit: "cover",
+                cursor: "grab",
+                zIndex: 10,
+              }}
+              onClick={() => setSelectedField(field)}
+              onMouseDown={(e) => handleMouseDown(field, e)}
+              draggable={false}
+            />
+          );
+        }
+
+        // Existing text fields
         const value =
           field === "fullName"
-            ? `${student.firstName} ${student.lastName}`
+            ? `${student.fullName?.fname || ""} ${
+                student.fullName?.mname || ""
+              } ${student.fullName?.lname || ""} ${
+                student.fullName?.suffix || ""
+              }`
+                .replace(/\s+/g, " ")
+                .trim()
+            : field === "postnominal"
+            ? student.fullName?.postnominal || ""
             : student[field] || "";
 
         return (
@@ -108,12 +145,8 @@ export default function ID({
               fontFamily: style.fontFamily || "Inter",
               letterSpacing: style.letterSpacing || "0px",
               opacity: style.opacity !== undefined ? style.opacity : 1,
-              pointerEvents: "auto",
               padding: "2px 5px",
               userSelect: "none",
-              borderBottom: style.lineWidth
-                ? `${style.lineWidth}px solid ${style.lineColor || "#000"}`
-                : "none",
             }}
           >
             {value}
