@@ -312,22 +312,12 @@ export default function CollapseTable({
                     value: rate?.daily,
                   },
                   { label: "COLA", name: "rateCola", value: rate?.cola },
-                  {
-                    label: "Has Schedule",
-                    name: "hasSchedule",
-                    value: staff?.hasSchedule,
-                  },
                 ]
               : [
                   {
                     label: "Incentive Rate",
                     name: "incentive",
                     value: rate?.incentive,
-                  },
-                  {
-                    label: "Has Schedule",
-                    name: "hasSchedule",
-                    value: staff?.hasSchedule,
                   },
                 ]),
           ].map((field) => (
@@ -341,16 +331,11 @@ export default function CollapseTable({
                 errors,
                 saveField,
                 handleCancel,
-                value:
-                  field.name !== "hasSchedule"
-                    ? field.value
-                    : field.value
-                    ? "included"
-                    : "excluded",
+                value: field.value,
               }}
             >
               <input
-                type={field.name === "hasSchedule" ? "boolean" : "number"}
+                type="number"
                 {...register(field.name)}
                 className={`form-control form-control-sm ${
                   errors[field.name] ? "is-invalid" : ""
@@ -358,6 +343,7 @@ export default function CollapseTable({
               />
             </EditableField>
           ))}
+
           <EditableField
             label="Has Schedule"
             fieldName="hasSchedule"
@@ -367,11 +353,7 @@ export default function CollapseTable({
               errors,
               saveField,
               handleCancel,
-              value: hasSchedule ? (
-                <MDBIcon icon="check" className="text-success ml-1" />
-              ) : (
-                <MDBIcon icon="times" className="text-danger ml-1" />
-              ),
+              value: hasSchedule ? "Included" : "Excluded",
             }}
           >
             <select
@@ -381,8 +363,8 @@ export default function CollapseTable({
               }`}
               defaultValue={hasSchedule ? "true" : "false"}
             >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+              <option value="true">Included</option>
+              <option value="false">Excluded</option>
             </select>
           </EditableField>
         </MDBCol>
