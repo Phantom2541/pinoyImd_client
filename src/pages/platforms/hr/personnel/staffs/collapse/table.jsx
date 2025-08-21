@@ -154,13 +154,12 @@ export default function CollapseTable({
     watch("employmentDepartment") ||
     Policy.getDepartment(employment?.designation);
   const isHonorarium = employment?.soe === "Honorarium";
-
   return (
     <>
       <MDBRow>
         {/* Employment */}
         <MDBCol md={"4"}>
-          <h5>Employment</h5>
+          <h5>Employment Contract Details</h5>
           <hr />
           <EditableField
             label="Hours of Service"
@@ -182,7 +181,6 @@ export default function CollapseTable({
               }`}
             />
           </EditableField>
-
           <EditableField
             label="Status of Employment"
             fieldName="employmentSoe"
@@ -207,7 +205,6 @@ export default function CollapseTable({
               <option value="Honorarium">Honorarium</option>
             </select>
           </EditableField>
-
           <EditableField
             label="Department"
             fieldName="employmentDepartment"
@@ -267,7 +264,6 @@ export default function CollapseTable({
               ))}
             </select>
           </EditableField>
-
           <EditableField
             label="Payment Cycle"
             fieldName="employmentPc"
@@ -306,15 +302,20 @@ export default function CollapseTable({
             ...(!isHonorarium
               ? [
                   {
-                    label: "Monthly Rate",
+                    label: "Monthly",
                     name: "rateMonthly",
                     value: rate?.monthly,
                   },
-                  { label: "COLA", name: "rateCola", value: rate?.cola },
                   {
-                    label: "Daily Rate",
+                    label: "Daily",
                     name: "rateDaily",
                     value: rate?.daily,
+                  },
+                  { label: "COLA", name: "rateCola", value: rate?.cola },
+                  {
+                    label: "Has Schedule",
+                    name: "hasSchedule",
+                    value: staff?.hasSchedule,
                   },
                 ]
               : [
@@ -322,6 +323,11 @@ export default function CollapseTable({
                     label: "Incentive Rate",
                     name: "incentive",
                     value: rate?.incentive,
+                  },
+                  {
+                    label: "Has Schedule",
+                    name: "hasSchedule",
+                    value: staff?.hasSchedule,
                   },
                 ]),
           ].map((field) => (
@@ -335,11 +341,16 @@ export default function CollapseTable({
                 errors,
                 saveField,
                 handleCancel,
-                value: field.value,
+                value:
+                  field.name !== "hasSchedule"
+                    ? field.value
+                    : field.value
+                    ? "included"
+                    : "excluded",
               }}
             >
               <input
-                type="number"
+                type={field.name === "hasSchedule" ? "boolean" : "number"}
                 {...register(field.name)}
                 className={`form-control form-control-sm ${
                   errors[field.name] ? "is-invalid" : ""

@@ -60,7 +60,8 @@ const cashier = [
         name: "Onboarding",
         path: "/onboarding",
         icon: "sign-in-alt",
-        title: "Pre-Registered Patients & HMO Approvals",
+        title:
+          "Pre-Registered Patients & HMO Approvals → moves to Accrued Vouchers when done",
         component: Onboarding,
       },
     ],

@@ -1,5 +1,5 @@
 // RollingNumber.jsx
-import React, { useEffect, useRef, useState, memo } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import "./style.css";
 
 export default function RollingNumber({

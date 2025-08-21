@@ -67,17 +67,6 @@ export default function Modal() {
     setFloating(denominations);
   }, [showModal, title, selected]);
 
-  const handleInputChange = (type, denomination, value) => {
-    const quantity = parseInt(value, 10) || 0;
-    setFloating((prev) => {
-      const newFloating = {
-        ...prev,
-        [type]: { ...prev[type], [denomination]: quantity },
-      };
-      return newFloating;
-    });
-  };
-
   const calculateSum = (data) => {
     if (!data) return; // Ensure data is not null or undefined
     const bills = data.bills || {}; // Default to empty object if undefined
@@ -293,6 +282,10 @@ export default function Modal() {
     });
   };
 
+  const dateHeader = selected?._id
+    ? new Date(selected.createdAt)
+    : new Date(year, month - 1, day);
+
   return (
     <>
       <style>
@@ -323,22 +316,37 @@ export default function Modal() {
       >
         <MDBModalHeader
           toggle={() => dispatch(TOGGLE({ key: "closed" }))}
-          className="darken-3 light-blue white-text"
+          className="darken-3 light-blue white-text py-3"
         >
-          <span
-            className=" font-weight-bold mb-1"
+          <div
             style={{
-              textTransform: "uppercase",
-              letterSpacing: "25px",
-              fontSize: "1.5rem",
               position: "absolute",
-              top: "10px",
+              top: "0px",
               left: "50%",
               transform: "translateX(-50%)",
             }}
           >
-            Denomination
-          </span>
+            <span
+              className=" font-weight-bold mb-1"
+              style={{
+                textTransform: "uppercase",
+                letterSpacing: "25px",
+                fontSize: "1.5rem",
+              }}
+            >
+              Denomination
+            </span>
+            <span
+              className="text-center d-block mt-n1"
+              style={{
+                fontSize: "1rem",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+              }}
+            >
+              {dateHeader.toDateString()}
+            </span>
+          </div>
         </MDBModalHeader>
 
         <MDBModalBody>

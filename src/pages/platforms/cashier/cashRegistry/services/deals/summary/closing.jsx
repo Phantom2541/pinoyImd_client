@@ -12,7 +12,10 @@ import {
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
 import Modal from "../modal";
-import { TOGGLE } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import {
+  TOGGLE,
+  RESET,
+} from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Vouchers() {
   const {
@@ -20,53 +23,61 @@ export default function Vouchers() {
       total,
       dealsLoading: isLoading,
     } = useSelector(({ deals }) => deals),
-    { selected } = useSelector(({ remittances }) => remittances),
+    { isDeclaredFC = false } = useSelector(({ remittances }) => remittances),
     [menuCensus, setMenuCensus] = useState([]),
-    [isDeclareFC, setIsDeclareFC] = useState(true),
     [serviceCensus, setServiceCensus] = useState([]),
     [breakdown, setBreakdown] = useState({}),
     [activeTab, setActiveTab] = useState("menus"),
     [show, setShow] = useState(false),
+    [isDeclarigFC, setIsDeclarigFC] = useState(false),
     [selectedCensus, setSelectedCensus] = useState({}),
+    [remittance, setRemittance] = useState({}),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => setShow(!show), [show]);
 
-  const handleSummary = useCallback(() => {
-    if (selected?._id) {
-      const menus = menuCensus.reduce((acc, { _id, count }) => {
-        acc[_id] = count;
-        return acc;
-      }, {});
+  const getFloatingCash = () => {
+    const fcString = localStorage.getItem("floatingcash");
+    if (fcString) return JSON.parse(fcString);
+    return {};
+  };
 
-      const data = {
-        _id: selected?._id,
-        census: {
-          menus,
-          services: serviceCensus,
-        },
-        breakdown,
-        patient: collections.length,
-        gross: total,
-      };
-      setSelectedCensus(data);
-      toggle();
-    }
-  }, [
-    selected,
-    collections,
-    breakdown,
-    serviceCensus,
-    toggle,
-    menuCensus,
-    total,
-  ]);
+  const handleSummary = useCallback(
+    (selected) => {
+      if (selected?._id) {
+        const menus = menuCensus.reduce((acc, { _id, count }) => {
+          acc[_id] = count;
+          return acc;
+        }, {});
+
+        const data = {
+          _id: selected._id,
+          census: {
+            menus,
+            services: serviceCensus,
+          },
+          breakdown,
+          patient: collections.length,
+          gross: total,
+        };
+
+        setRemittance(selected);
+        setSelectedCensus(data);
+        toggle();
+      }
+    },
+    [menuCensus, serviceCensus, breakdown, collections, total, toggle]
+  );
 
   useEffect(() => {
-    if (!isDeclareFC && selected?._id) {
-      handleSummary();
+    if (isDeclarigFC && isDeclaredFC) {
+      //to automatic toggle the modal of closing cash after declaring the floating cash
+      handleSummary(getFloatingCash());
+      setIsDeclarigFC(false);
+      dispatch(RESET());
     }
-  }, [isDeclareFC, handleSummary, selected]);
+  }, [isDeclarigFC, isDeclaredFC, dispatch, handleSummary]);
+
   useEffect(() => {
     if (collections && collections.length > 0 && !isLoading) {
       const menuCountMap = {};
@@ -103,7 +114,8 @@ export default function Vouchers() {
   }, [collections, isLoading]);
 
   const handleSubmit = () => {
-    if (!selected) {
+    const _selected = getFloatingCash();
+    if (!_selected?._id) {
       dispatch(
         TOGGLE({
           key: "open",
@@ -113,11 +125,9 @@ export default function Vouchers() {
             "Looks like you haven't set your floating cash yet. Go ahead and declare it now!",
         })
       );
-      setIsDeclareFC(false);
-      // alert("Please set a floating cash first.");
+      setIsDeclarigFC(true);
     } else {
-      setIsDeclareFC(true);
-      handleSummary();
+      handleSummary(_selected);
     }
   };
 
@@ -211,7 +221,12 @@ export default function Vouchers() {
           </MDBBtn>
         )}
       </MDBCardBody>
-      <Modal selected={selectedCensus} toggle={toggle} show={show} />
+      <Modal
+        selected={selectedCensus}
+        toggle={toggle}
+        show={show}
+        remittance={remittance}
+      />
     </MDBCard>
   );
 }
