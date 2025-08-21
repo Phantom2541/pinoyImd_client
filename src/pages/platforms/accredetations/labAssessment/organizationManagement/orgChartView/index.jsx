@@ -105,11 +105,19 @@ export default function OrgChartView() {
     setEdges(edgesFromOrg);
   }, [org]);
 
+  // Sa component
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="orgChart-view-section">
       <div className="orgChart-view-container">
         <img className="orgChart-view-img" src={BANNER} alt="Banner View" />
         <div className="orgChart-view-container-reactFlow">
+          <button className="orgChart-view-print" onClick={handlePrint}>
+            Print
+          </button>
           <ReactFlowProvider>
             <ReactFlowInner nodes={nodes} edges={edges} />
           </ReactFlowProvider>
