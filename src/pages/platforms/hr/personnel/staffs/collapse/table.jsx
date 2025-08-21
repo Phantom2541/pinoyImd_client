@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Policy } from "./../../../../../../services/fakeDb";
@@ -63,6 +63,7 @@ export default function CollapseTable({
   employment,
   staff,
   rate,
+  hasSchedule,
   contribution,
   _id,
   onSubmit,
@@ -91,6 +92,7 @@ export default function CollapseTable({
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
       employmentDesignation: employment?.designation || "",
+      hasSchedule: hasSchedule || false,
       rateMonthly: rate?.monthly || 0,
       rateCola: rate?.cola || 0,
       rateDaily: rate?.daily || 0,
@@ -98,7 +100,7 @@ export default function CollapseTable({
       contributionPi: contribution?.pi || 0,
       contributionSss: contribution?.sss || 0,
     });
-  }, [reset, contribution, rate, employment]);
+  }, [reset, contribution, rate, employment, hasSchedule]);
 
   useEffect(() => {
     resetData();
@@ -356,6 +358,33 @@ export default function CollapseTable({
               />
             </EditableField>
           ))}
+          <EditableField
+            label="Has Schedule"
+            fieldName="hasSchedule"
+            {...{
+              editField,
+              setEditField,
+              errors,
+              saveField,
+              handleCancel,
+              value: hasSchedule ? (
+                <MDBIcon icon="check" className="text-success ml-1" />
+              ) : (
+                <MDBIcon icon="times" className="text-danger ml-1" />
+              ),
+            }}
+          >
+            <select
+              {...register("hasSchedule")}
+              className={`form-control form-control-sm ${
+                errors.hasSchedule ? "is-invalid" : ""
+              }`}
+              defaultValue={hasSchedule ? "true" : "false"}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </EditableField>
         </MDBCol>
 
         {/* Contributions */}

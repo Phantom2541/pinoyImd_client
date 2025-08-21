@@ -142,7 +142,6 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.org = payload;
-        console.log("chart", state.org);
 
         state.isSuccess = true;
         state.formSubmitted = false;

@@ -20,7 +20,7 @@ import { capitalize } from "lodash";
 import EditableSelect from "./../../../../../../components/customizable/editableSelect";
 import Swal from "sweetalert2";
 import CharacterHistory from "./characterHistory";
-export default function MenuCollapse({ staffs }) {
+export default function MenuCollapse({ staffs, startIndex }) {
   const { token } = useSelector(({ auth }) => auth),
     { formSubmitted, isSuccess } = useSelector(({ personnels }) => personnels),
     [activeId, setActiveId] = useState(-1),
@@ -32,6 +32,7 @@ export default function MenuCollapse({ staffs }) {
       UPDATE({
         data: {
           _id: data._id,
+          hasSchedule: data.hasSchedule,
           contract: {
             hos: data.employmentHor,
             soe: data.employmentSoe,
@@ -112,6 +113,7 @@ export default function MenuCollapse({ staffs }) {
             contract,
             status,
             rate,
+            hasSchedule,
             contribution,
             _id,
             remarks = [],
@@ -126,6 +128,7 @@ export default function MenuCollapse({ staffs }) {
           );
           const isOpen = activeId === index;
           const viewHistory = didHoverId === index;
+
           return (
             <MDBCard
               key={`staffs-${index}`}
@@ -142,7 +145,7 @@ export default function MenuCollapse({ staffs }) {
                 >
                   <div className="position-relative ">
                     <span>
-                      <small> {index + 1}</small>.{" "}
+                      <small> {startIndex + index + 1}</small>.{" "}
                       {user && `${fullName(user?.fullName)} | `}
                       {contract?.designation && `${department}`}
                     </span>
@@ -242,6 +245,7 @@ export default function MenuCollapse({ staffs }) {
                     rate={rate}
                     contribution={contribution}
                     _id={_id}
+                    hasSchedule={hasSchedule}
                     onSubmit={onSubmit} // Updated to pass handleSubmit as onSubmit
                   />
                 </MDBCardBody>
