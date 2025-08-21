@@ -1,108 +1,83 @@
-import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  MDBBtn,
   MDBModal,
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBInput,
+  MDBStepper,
+  MDBStep,
+  MDBBtn,
 } from "mdbreact";
-import { TOGGLE } from "../../../../../services/redux/slices/reusable/table";
-import { SAVE, UPDATE } from "../../../../../services/redux/slices/commerce/catalog/products";
-import { isEqual } from "lodash";
-import { useToasts } from "react-toast-notifications";
-
+import { TOGGLE } from "../../../../../../services/redux/slices/commerce/catalog/products";
+import Search from "./search";
+import { useState } from "react";
+import Details from "./details";
 export default function Modal() {
-  const dispatch = useDispatch();
-  const { showModal = false, selected = null, willCreate = false, isLoading = false } =
-    useSelector((s) => s.table || {});
+  const { showModal: show } = useSelector(({ products }) => products),
+    [isDetails, setIsDetails] = useState(false),
+    [product, setProduct] = useState({}),
+    dispatch = useDispatch();
 
-  const { token, auth } = useSelector((s) => s.auth || {});
-  const [form, setForm] = useState(selected || {});
-  const { addToast } = useToasts();
+  const toggle = () => dispatch(TOGGLE());
 
-  // keep form in sync when selected changes
-  useEffect(() => {
-    setForm(selected || {});
-  }, [selected]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (willCreate) {
-      dispatch(SAVE({ data: form, token }))
-        .unwrap?.()
-        .then(() => {
-          dispatch(TOGGLE());
-          addToast("Created successfully", { appearance: "success" });
-        })
-        .catch((err) => {
-          addToast("Create failed: " + (err?.message || ""), { appearance: "error" });
-        });
-    } else {
-      if (!selected) return addToast("No item selected", { appearance: "info" });
-      if (isEqual(form, selected)) {
-        return addToast("No changes found.", { appearance: "info" });
-      }
-      dispatch(UPDATE({ data: { ...form, _id: selected._id }, token }))
-        .unwrap?.()
-        .then(() => {
-          dispatch(TOGGLE());
-          addToast("Updated successfully", { appearance: "success" });
-        })
-        .catch((err) => {
-          addToast("Update failed: " + (err?.message || ""), { appearance: "error" });
-        });
-    }
+  const handleNext = (_product) => {
+    setProduct(_product);
+    setIsDetails(true);
   };
-
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value, userId: auth?._id }));
-  };
-
-  const handleValue = (key) => (form && form[key]) || "";
 
   return (
-    <MDBModal isOpen={!!showModal} toggle={() => dispatch(TOGGLE())} backdrop size="sm">
-      <MDBModalHeader toggle={() => dispatch(TOGGLE())} className="light-blue darken-3 white-text">
-        <MDBIcon icon="box" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Product
+    <MDBModal
+      size={isDetails ? "xl" : "lg"}
+      isOpen={show}
+      toggle={toggle}
+      backdrop
+      className="transition transition-all"
+      disableFocusTrap={false}
+    >
+      <MDBModalHeader
+        toggle={toggle}
+        className="light-blue darken-3 white-text"
+      >
+        <MDBIcon icon="book-open" className="mr-2" />
+        Add Product
       </MDBModalHeader>
-      <MDBModalBody>
-        <form onSubmit={handleSubmit}>
-          <MDBInput
-            label="Product Name"
-            type="text"
-            value={handleValue("name")}
-            required
-            onChange={(e) => handleChange("name", e.target.value)}
-          />
-          <MDBInput
-            label="Unit Cost"
-            type="number"
-            value={handleValue("unitCost")}
-            onChange={(e) => handleChange("unitCost", e.target.value)}
-          />
-          <MDBInput
-            label="Stock Total"
-            type="number"
-            value={handleValue("stockTotal")}
-            onChange={(e) => handleChange("stockTotal", e.target.value)}
-          />
-          <MDBInput
-            label="Remarks"
-            type="text"
-            value={handleValue("remarks")}
-            onChange={(e) => handleChange("remarks", e.target.value)}
-          />
+      <MDBModalBody className="mb-0 ">
+        <div style={{ marginTop: "-33px" }}>
+          <MDBStepper className="m-0 p-0 ">
+            <MDBStep className={"active"}>
+              <a>
+                <span className="circle">1</span>
+                <span className="label">Choose Product</span>
+              </a>
+            </MDBStep>
+            <MDBStep className={isDetails ? "active" : ""}>
+              <a>
+                <span className="circle">2</span>
+                <span className="label">Product Details</span>
+              </a>
+            </MDBStep>
+          </MDBStepper>
+        </div>
+        {!isDetails ? (
+          <Search handleNext={handleNext} />
+        ) : (
+          <Details product={product} />
+        )}
 
-          <div className="text-center mb-1-half">
-            <MDBBtn type="submit" disabled={isLoading} color="info" rounded>
-              {willCreate ? "Submit" : "Update"}
+        <div className="d-flex justify-content-between">
+          {isDetails && (
+            <MDBBtn
+              size="md"
+              color="secondary"
+              onClick={() => setIsDetails(false)}
+            >
+              Back
             </MDBBtn>
-          </div>
-        </form>
+          )}
+          <MDBBtn size="md" color="primary">
+            Save
+          </MDBBtn>
+        </div>
       </MDBModalBody>
     </MDBModal>
   );
