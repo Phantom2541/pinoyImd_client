@@ -8,6 +8,7 @@ import {
 } from "../../../../../indexDB/commerce/pos/services/onboardings";
 
 const url = "commerce/pos/services/deals";
+const asyncThunkName = "taskGenerator";
 
 const initialState = {
   collections: [],
@@ -34,20 +35,25 @@ const initialState = {
   activePage: 1, // for active page
 };
 
-export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
-  try {
-    return axioKit.universal(`${url}/browse`, token, key);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const BROWSE = createAsyncThunk(
+  `${asyncThunkName}/browse`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 export const TASKS = createAsyncThunk(
-  `${url}/tasks`,
+  `${asyncThunkName}/tasks`,
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/tasks`, token, key);
@@ -65,7 +71,7 @@ export const TASKS = createAsyncThunk(
 );
 
 export const TAGGING = createAsyncThunk(
-  `${url}/tagging`,
+  `${asyncThunkName}/tagging`,
   ({ key, token }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/tagging`, token, key);
@@ -82,7 +88,7 @@ export const TAGGING = createAsyncThunk(
   }
 );
 export const REFORM = createAsyncThunk(
-  `${url}/update`,
+  `${asyncThunkName}/update`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.update(url, data, token);
@@ -99,7 +105,7 @@ export const REFORM = createAsyncThunk(
   }
 );
 export const SAVE = createAsyncThunk(
-  `${url}/save`,
+  `${asyncThunkName}/save`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
@@ -117,7 +123,7 @@ export const SAVE = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name: url,
+  name: "taskGenerator",
   initialState,
   reducers: {
     TOGGLE: (state) => {
@@ -258,6 +264,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
+        console.log("running task generator browseee");
         // filter by department
         const _collections = payload.map((item, index) => ({
           ...item,

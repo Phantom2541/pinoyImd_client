@@ -1088,7 +1088,7 @@ export const reduxSlice = createSlice({
         state.collections = state.filtered = payload;
         state.totalPages = payload.length;
         state.dealsLoading = false;
-        IDB_BULK_SAVE(payload);
+        IDB_BULK_SAVE(payload, "cashier");
         fetchTracker.setLoaded("deals");
       })
       .addCase(CASHIER.rejected, (state, action) => {
@@ -1484,7 +1484,6 @@ export const reduxSlice = createSlice({
 
 export const {
   SetCOLLECTIONS,
-
   SetTOTAL,
   SetToggleModal,
   SetFILTERBY,

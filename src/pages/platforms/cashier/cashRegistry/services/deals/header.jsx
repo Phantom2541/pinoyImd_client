@@ -22,20 +22,36 @@ const Header = () => {
 
   //Initial CASHIER
   useEffect(() => {
-    if (token && activePlatform?.branchId && auth._id) {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const date = new Intl.DateTimeFormat("en-CA", {
-        timeZone: timezone,
+    const formattedDate = (timeZone, date, hasTime = false) => {
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: timeZone,
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
+        ...(hasTime && {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
       })
-        .format(new Date())
+        .format(date)
         .replace(/\//g, "-");
+    };
+    if (token && activePlatform?.branchId && auth._id) {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       IDB_BROWSE().then((deals) => {
-        if (deals.length > 0 && fetchTracker.hasLoaded("deals")) {
+        if (fetchTracker.hasLoaded("deals")) {
           dispatch(SetCOLLECTIONS(deals));
         } else {
+          let date;
+          if (deals.length > 0) {
+            const latest = deals.reduce((prev, curr) =>
+              new Date(curr.createdAt) > new Date(prev.createdAt) ? curr : prev
+            );
+            date = formattedDate(timezone, new Date(latest.createdAt), true);
+          } else {
+            date = formattedDate(timezone, new Date());
+          }
           dispatch(
             CASHIER({
               token,
