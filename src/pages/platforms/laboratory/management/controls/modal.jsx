@@ -40,6 +40,15 @@ export default function Modal() {
     else setForm(selected);
   }, [willCreate, selected, auth._id, activePlatform.branchId]);
 
+  useEffect(() => {
+    if (selected?.createdAt) {
+      setForm((prev) => ({
+        ...prev,
+        createdAt: new Date(selected.createdAt).toISOString().split("T")[0],
+      }));
+    }
+  }, [selected]);
+
   // Handle update function
   const handleUpdate = () => {
     // Check if object has changed
@@ -84,7 +93,10 @@ export default function Modal() {
   const handleChange = (key, value) =>
     setForm({
       ...form,
-      [key]: key === "createdAt" ? value : Number(value),
+      [key]:
+        key === "createdAt"
+          ? value // already YYYY-MM-DD when user changes
+          : Number(value),
     });
 
   return (
@@ -106,15 +118,16 @@ export default function Modal() {
             {Services.getName(selected?.serviceId)}
           </MDBTypography>
 
-          {/* <MDBInput
+          <MDBInput
             label="Date"
             type="date"
-            value={form.createAt}
+            value={form.createdAt || ""}
             required
             onChange={(e) => handleChange("createdAt", e.target.value)}
-          /> */}
+          />
 
           {/* Input fields */}
+
           <MDBInput
             label="Low"
             type="number"

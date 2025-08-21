@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Policy } from "./../../../../../../services/fakeDb";
@@ -63,6 +63,7 @@ export default function CollapseTable({
   employment,
   staff,
   rate,
+  hasSchedule,
   contribution,
   _id,
   onSubmit,
@@ -91,6 +92,7 @@ export default function CollapseTable({
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
       employmentDesignation: employment?.designation || "",
+      hasSchedule: hasSchedule || false,
       rateMonthly: rate?.monthly || 0,
       rateCola: rate?.cola || 0,
       rateDaily: rate?.daily || 0,
@@ -98,7 +100,7 @@ export default function CollapseTable({
       contributionPi: contribution?.pi || 0,
       contributionSss: contribution?.sss || 0,
     });
-  }, [reset, contribution, rate, employment]);
+  }, [reset, contribution, rate, employment, hasSchedule]);
 
   useEffect(() => {
     resetData();
@@ -310,22 +312,12 @@ export default function CollapseTable({
                     value: rate?.daily,
                   },
                   { label: "COLA", name: "rateCola", value: rate?.cola },
-                  {
-                    label: "Has Schedule",
-                    name: "hasSchedule",
-                    value: staff?.hasSchedule,
-                  },
                 ]
               : [
                   {
                     label: "Incentive Rate",
                     name: "incentive",
                     value: rate?.incentive,
-                  },
-                  {
-                    label: "Has Schedule",
-                    name: "hasSchedule",
-                    value: staff?.hasSchedule,
                   },
                 ]),
           ].map((field) => (
@@ -339,16 +331,11 @@ export default function CollapseTable({
                 errors,
                 saveField,
                 handleCancel,
-                value:
-                  field.name !== "hasSchedule"
-                    ? field.value
-                    : field.value
-                    ? "included"
-                    : "excluded",
+                value: field.value,
               }}
             >
               <input
-                type={field.name === "hasSchedule" ? "boolean" : "number"}
+                type="number"
                 {...register(field.name)}
                 className={`form-control form-control-sm ${
                   errors[field.name] ? "is-invalid" : ""
@@ -356,6 +343,30 @@ export default function CollapseTable({
               />
             </EditableField>
           ))}
+
+          <EditableField
+            label="Has Schedule"
+            fieldName="hasSchedule"
+            {...{
+              editField,
+              setEditField,
+              errors,
+              saveField,
+              handleCancel,
+              value: hasSchedule ? "Included" : "Excluded",
+            }}
+          >
+            <select
+              {...register("hasSchedule")}
+              className={`form-control form-control-sm ${
+                errors.hasSchedule ? "is-invalid" : ""
+              }`}
+              defaultValue={hasSchedule ? "true" : "false"}
+            >
+              <option value="true">Included</option>
+              <option value="false">Excluded</option>
+            </select>
+          </EditableField>
         </MDBCol>
 
         {/* Contributions */}

@@ -17,25 +17,38 @@ export default function Setting({
   positions = {},
   setPositions = () => {},
   setStudent,
-  frontRef, // <- accept ref
-  backRef, // <- accept ref
+  frontRef,
+  backRef,
 }) {
-  const handleSave = () => {
-    if (!frontRef.current) return;
+  // ---------- Save ID as image ----------
+  const handleSave = async () => {
+    if (!frontRef.current || !backRef.current) return;
 
-    html2canvas(frontRef.current, { scale: 2 }).then((canvas) => {
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "front-id.png";
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+    const frontCanvas = await html2canvas(frontRef.current, { scale: 2 });
+    const backCanvas = await html2canvas(backRef.current, { scale: 2 });
+
+    const spacing = 20; // gap between front and back
+
+    const combined = document.createElement("canvas");
+    combined.width = frontCanvas.width + spacing + backCanvas.width;
+    combined.height = Math.max(frontCanvas.height, backCanvas.height);
+
+    const ctx = combined.getContext("2d");
+
+    ctx.drawImage(frontCanvas, 0, 0);
+    ctx.drawImage(backCanvas, frontCanvas.width + spacing, 0);
+
+    combined.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "id-card.png";
+      a.click();
+      URL.revokeObjectURL(url);
     });
   };
 
-  // --- Ctrl+S shortcut ---
+  // ---------- Ctrl+S Shortcut ----------
   useEffect(() => {
     const handleShortcut = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
@@ -43,7 +56,6 @@ export default function Setting({
         handleSave();
       }
     };
-
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
   }, [frontRef, backRef, fieldStyles, positions, student]);
@@ -73,14 +85,20 @@ export default function Setting({
             Next
           </button>
         </div>
+        <button
+          className="IDGenerator-setting-save bg-primary mt-2"
+          onClick={handleSave}
+        >
+          Save
+        </button>
       </div>
     );
   }
 
   const style = fieldStyles[selectedField] || {};
   const pos = positions[selectedField] || { x: 0, y: 0 };
-  const value = student ? student[selectedField] : "";
 
+  // ---------- Update style helper ----------
   const handleStyleChange = (key, value) => {
     if (key === "fontWeight") {
       const selected = FontWeights[value];
@@ -115,7 +133,7 @@ export default function Setting({
 
   return (
     <div className="IDGenerator-setting-container">
-      {/* Position */}
+      {/* ---------- Position ---------- */}
       <div className="IDGenerator-setting-section">
         <label className="IDGenerator-setting-section-label">Position</label>
         <div className="IDGenerator-setting-inputs-wrapper">
@@ -136,129 +154,198 @@ export default function Setting({
         </div>
       </div>
 
-      {/* Typography */}
-      <div className="IDGenerator-setting-section mt-2">
-        <label className="IDGenerator-setting-section-label">Typography</label>
-        <div className="IDGenerator-setting-inputs-wrapper">
-          <Select
-            label="Font Family"
-            options={Object.keys(Fonts)}
-            getLabel={(key) => key}
-            getValue={(key) => key}
-            getStyle={(key) => ({ fontFamily: key })}
-            defaultValue={style.fontFamily || "Inter"}
-            onSelect={(value) => handleStyleChange("fontFamily", value)}
+      {/* ---------- If field is profileImage ---------- */}
+      {selectedField === "profileImage" ? (
+        <div className="IDGenerator-setting-section mt-2">
+          <label className="IDGenerator-setting-section-label">
+            Profile Image
+          </label>
+
+          {/* Upload Image */}
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (!e.target.files[0]) return;
+              const url = URL.createObjectURL(e.target.files[0]);
+              setStudent({ ...student, profileImage: url });
+            }}
+            label="Upload Image"
           />
-          <div className="d-flex w-100" style={{ gap: "10px" }}>
-            <Select
-              label="Font Size"
-              options={Object.keys(FontSizes)}
-              getLabel={(size) => size}
-              getValue={(size) => size}
-              useInput={true}
-              showSearch={false}
-              defaultValue={style.fontSize || "12px"}
-              onSelect={(value) => handleStyleChange("fontSize", value + "px")}
+
+          {/* Width & Height */}
+          <div className="d-flex" style={{ gap: "10px", marginTop: "5px" }}>
+            <Input
+              type="number"
+              label="Width"
+              value={style.width || 50}
+              onChange={(e) =>
+                setFieldStyles({
+                  ...fieldStyles,
+                  [selectedField]: { ...style, width: Number(e.target.value) },
+                })
+              }
             />
-            <Select
-              label="Font Weight"
-              options={Object.keys(FontWeights)}
-              getLabel={(w) => w}
-              getValue={(w) => w}
-              defaultValue={style.fontWeight || "normal"}
-              onSelect={(value) => handleStyleChange("fontWeight", value)}
+            <Input
+              type="number"
+              label="Height"
+              value={style.height || 50}
+              onChange={(e) =>
+                setFieldStyles({
+                  ...fieldStyles,
+                  [selectedField]: { ...style, height: Number(e.target.value) },
+                })
+              }
             />
           </div>
-          <div className="d-flex" style={{ gap: "10px" }}>
-            <Input
-              title="Letter Spacing"
-              type="number"
-              value={parseFloat(style.letterSpacing) || 0}
-              onChange={(e) =>
-                handleStyleChange("letterSpacing", e.target.value + "px")
-              }
-              label={<MDBIcon fas icon="text-width" />}
-            />
-            <Input
-              title="Text Color"
-              type="color"
-              value={style.color || "#000000"}
-              onChange={(e) => handleStyleChange("color", e.target.value)}
-            />
-          </div>
-          <div className="d-flex" style={{ gap: "10px" }}>
-            <Input
-              title="Opacity"
-              type="number"
-              min={0}
-              max={100}
-              value={style.opacity !== undefined ? style.opacity * 100 : ""}
-              onChange={(e) =>
-                handleStyleChange(
-                  "opacity",
-                  e.target.value === "" ? undefined : e.target.value / 100
-                )
-              }
-              onBlur={(e) => {
-                if (!e.target.value || e.target.value === "0")
-                  handleStyleChange("opacity", 1);
-              }}
-              label={<MDBIcon fas icon="adjust" />}
-            />
-            <Input
-              title="Line"
-              type="number"
-              value={style.lineWidth || 0}
-              onChange={(e) =>
-                handleStyleChange("lineWidth", Number(e.target.value))
-              }
-              label={
-                <input
-                  type="color"
-                  className="IDGenerator-setting-inputColor"
-                  value={style.lineColor || "#000000"}
-                  onChange={(e) =>
-                    handleStyleChange("lineColor", e.target.value)
+
+          {/* Border Radius */}
+          <Input
+            type="number"
+            label="Border Radius"
+            value={style.borderRadius || 50}
+            onChange={(e) =>
+              setFieldStyles({
+                ...fieldStyles,
+                [selectedField]: {
+                  ...style,
+                  borderRadius: Number(e.target.value),
+                },
+              })
+            }
+          />
+        </div>
+      ) : (
+        <>
+          {/* ---------- Typography for text fields ---------- */}
+          <div className="IDGenerator-setting-section mt-2">
+            <label className="IDGenerator-setting-section-label">
+              Typography
+            </label>
+            <div className="IDGenerator-setting-inputs-wrapper">
+              <Select
+                label="Font Family"
+                options={Object.keys(Fonts)}
+                getLabel={(key) => key}
+                getValue={(key) => key}
+                getStyle={(key) => ({ fontFamily: key })}
+                defaultValue={style.fontFamily || "Inter"}
+                onSelect={(value) => handleStyleChange("fontFamily", value)}
+              />
+              <div className="d-flex w-100" style={{ gap: "10px" }}>
+                <Select
+                  label="Font Size"
+                  options={Object.keys(FontSizes)}
+                  getLabel={(size) => size}
+                  getValue={(size) => size}
+                  useInput={true}
+                  showSearch={false}
+                  defaultValue={style.fontSize || "12px"}
+                  onSelect={(value) =>
+                    handleStyleChange("fontSize", value + "px")
                   }
                 />
+                <Select
+                  label="Font Weight"
+                  options={Object.keys(FontWeights)}
+                  getLabel={(w) => w}
+                  getValue={(w) => w}
+                  defaultValue={style.fontWeight || "normal"}
+                  onSelect={(value) => handleStyleChange("fontWeight", value)}
+                />
+              </div>
+              <div className="d-flex" style={{ gap: "10px" }}>
+                <Input
+                  title="Letter Spacing"
+                  type="number"
+                  value={parseFloat(style.letterSpacing) || 0}
+                  onChange={(e) =>
+                    handleStyleChange("letterSpacing", e.target.value + "px")
+                  }
+                  label={<MDBIcon fas icon="text-width" />}
+                />
+                <Input
+                  title="Text Color"
+                  type="color"
+                  value={style.color || "#000000"}
+                  onChange={(e) => handleStyleChange("color", e.target.value)}
+                />
+              </div>
+              <div className="d-flex" style={{ gap: "10px" }}>
+                <Input
+                  title="Opacity"
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={style.opacity !== undefined ? style.opacity * 100 : ""}
+                  onChange={(e) =>
+                    handleStyleChange(
+                      "opacity",
+                      e.target.value === "" ? undefined : e.target.value / 100
+                    )
+                  }
+                  onBlur={(e) => {
+                    if (!e.target.value || e.target.value === "0")
+                      handleStyleChange("opacity", 1);
+                  }}
+                  label={<MDBIcon fas icon="adjust" />}
+                />
+                <Input
+                  title="Line"
+                  type="number"
+                  value={style.lineWidth || 0}
+                  onChange={(e) =>
+                    handleStyleChange("lineWidth", Number(e.target.value))
+                  }
+                  label={
+                    <input
+                      type="color"
+                      className="IDGenerator-setting-inputColor"
+                      value={style.lineColor || "#000000"}
+                      onChange={(e) =>
+                        handleStyleChange("lineColor", e.target.value)
+                      }
+                    />
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Permanent Edit */}
+          <div className="mt-2">
+            <Input
+              title="Edit"
+              type="textarea"
+              value={
+                selectedField === "fullName"
+                  ? `${student.firstName} ${student.lastName}`
+                  : student[selectedField] || ""
               }
+              onChange={(e) => {
+                if (!student) return;
+
+                let updated;
+                if (selectedField === "fullName") {
+                  const names = e.target.value.split(" ");
+                  updated = {
+                    ...student,
+                    firstName: names[0] || "",
+                    lastName: names.slice(1).join(" ") || "",
+                  };
+                } else {
+                  updated = { ...student, [selectedField]: e.target.value };
+                }
+
+                setStudent(updated);
+              }}
+              label={<MDBIcon fas icon="pencil-alt" />}
             />
           </div>
-        </div>
+        </>
+      )}
 
-        {/* Permanent Edit */}
-        <div className="mt-2">
-          <Input
-            title="Edit"
-            type="textarea"
-            value={
-              selectedField === "fullName"
-                ? `${student.firstName} ${student.lastName}`
-                : student[selectedField] || ""
-            }
-            onChange={(e) => {
-              if (!student) return;
-
-              let updated;
-              if (selectedField === "fullName") {
-                const names = e.target.value.split(" ");
-                updated = {
-                  ...student,
-                  firstName: names[0] || "",
-                  lastName: names.slice(1).join(" ") || "",
-                };
-              } else {
-                updated = { ...student, [selectedField]: e.target.value };
-              }
-
-              setStudent(updated);
-            }}
-            label={<MDBIcon fas icon="pencil-alt" />}
-          />
-        </div>
-      </div>
-
-      {/* Navigation */}
+      {/* ---------- Navigation ---------- */}
       <div
         className="d-flex align-items-center justify-content-center mt-2"
         style={{ gap: "10px" }}
