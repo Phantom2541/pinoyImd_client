@@ -6,18 +6,17 @@ import {
   BROWSE,
   RESET,
   SetFILTERED,
+  SetCOLLECTIONS,
   SetACTIVE_STATUS,
-  InsertRealtimeOnboard,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 import Search from "../../../../../../components/searchables/search.jsx";
-import { socket } from "../../../../../../services/utilities/index.js";
-import { useToasts } from "react-toast-notifications";
+import { IDB_BROWSE } from "../../../../../../services/indexDB/commerce/pos/services/onboardings.js";
+import { fetchTracker } from "../../../../../../services/utilities/index.js";
 
 export default function Header() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ taskGenerator }) => taskGenerator),
     [status, setStatus] = useState("All"),
-    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   //Initial Browse and Fetch Data
@@ -31,40 +30,30 @@ export default function Header() {
         .getDate()
         .toString()
         .padStart(2, "0")}/${now.getFullYear()}`;
-      dispatch(
-        BROWSE({
-          key: {
-            branchId: activePlatform?.branchId,
-            createdAt,
-            department: activePlatform?.department,
-            timezone,
-          },
-          token,
-        })
-      );
+
+      IDB_BROWSE().then((onboardings) => {
+        if (onboardings.length > 0 && fetchTracker.hasLoaded("onboardings")) {
+          dispatch(SetCOLLECTIONS(onboardings));
+        } else {
+          dispatch(
+            BROWSE({
+              key: {
+                branchId: activePlatform?.branchId,
+                createdAt,
+                department: activePlatform?.department,
+                timezone,
+              },
+              token,
+            })
+          );
+        }
+      });
     }
 
     return () => {
       dispatch(RESET());
     };
   }, [token, dispatch, activePlatform, auth]);
-
-  useEffect(() => {
-    socket.on("received_onboard", (data) => {
-      const { branchId, department } = activePlatform;
-      if (data?.branchId === branchId && data?.department === department) {
-        const pn = collections.length + 1;
-        dispatch(InsertRealtimeOnboard({ ...data, pn }));
-        addToast(`New patient onboarded. No. ${pn}`, {
-          appearance: "success",
-        });
-      }
-    });
-
-    return () => {
-      socket.off("received_onboard");
-    };
-  }, [activePlatform, dispatch, collections, addToast]);
 
   return (
     <MDBView

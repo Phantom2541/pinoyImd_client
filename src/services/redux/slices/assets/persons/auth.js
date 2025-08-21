@@ -4,6 +4,7 @@ import {
   Cloudinary,
   employment,
   ENDPOINT,
+  fetchTracker,
 } from "../../../../utilities";
 import { Policy } from "../../../../fakeDb";
 
@@ -350,6 +351,7 @@ export const reduxSlice = createSlice({
             position: contract.designation,
             ...(!isEmployed && { platform: "" }),
           };
+
           localStorage.setItem(
             "activePlatform",
             JSON.stringify(activePlatform)
@@ -376,6 +378,7 @@ export const reduxSlice = createSlice({
         state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
         state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
+        fetchTracker.reset();
       })
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;

@@ -6,9 +6,12 @@ import { Search } from "./../../../../../../components/searchables";
 import {
   CASHIER,
   SetFILTERED,
+  SetCOLLECTIONS,
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { IDB_BROWSE } from "../../../../../../services/indexDB/commerce/pos/services/deals";
 import { INSOURCE } from "./../../../../../../services/redux/slices/assets/providers";
+import { fetchTracker } from "../../../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
@@ -27,20 +30,25 @@ const Header = () => {
         month: "2-digit",
         day: "2-digit",
       })
-      .format(new Date())
-      .replace(/\//g, "-");
-
-      dispatch(
-        CASHIER({
-          token,
-          key: {
-            branchId: activePlatform?.branchId,
-            cashierId: auth._id,
-            date,
-            timezone,
-          },
-        })
-      );
+        .format(new Date())
+        .replace(/\//g, "-");
+      IDB_BROWSE().then((deals) => {
+        if (deals.length > 0 && fetchTracker.hasLoaded("deals")) {
+          dispatch(SetCOLLECTIONS(deals));
+        } else {
+          dispatch(
+            CASHIER({
+              token,
+              key: {
+                branchId: activePlatform?.branchId,
+                cashierId: auth._id,
+                date,
+                timezone,
+              },
+            })
+          );
+        }
+      });
     }
 
     return () => dispatch(RESET());

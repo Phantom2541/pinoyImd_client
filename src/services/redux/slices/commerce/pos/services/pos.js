@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, getAge, socket } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
+import { IDB_SAVE } from "../../../../../indexDB/commerce/pos/services/deals";
 // import _ from "lodash";
 const url = "commerce/pos/services/deals";
 // Get data once
@@ -291,6 +292,7 @@ export const reduxSlice = createSlice({
           //this is realtime send it to the onboarding
           socket.emit("send_onboard", { ...dealForOnboard, department });
         }
+        IDB_SAVE(dealForOnboard);
         state.sourceId = "";
         state.message = success;
         state.transaction = payload;

@@ -43,7 +43,7 @@ const Footer = () => {
 
   const findSignatoryId = (identifier) =>
     heads.find(
-      ({ section }) => section.replace("-", "").toLowerCase() === identifier
+      ({ section }) => section?.replace("-", "").toLowerCase() === identifier
     )?.user?._id;
 
   const findPhysicianId = (_user) =>
@@ -61,6 +61,7 @@ const Footer = () => {
     // if radiologist  and ecg   = cardiologist
 
     const head = findSignatoryId(form.toLowerCase());
+    console.log("head", heads);
     let dr;
     if (form !== "Ecg") {
       dr = findSignatoryId(
@@ -93,8 +94,6 @@ const Footer = () => {
         data,
       })
     ).then(({ payload }) => {
-      console.log("payload", payload);
-
       setIsLoading(false);
       dispatch(SetVALIDATOR(payload?.item || payload?.payload));
       dispatch(SetMODAL(false));

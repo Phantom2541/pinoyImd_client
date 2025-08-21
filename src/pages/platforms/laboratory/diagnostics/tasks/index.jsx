@@ -24,6 +24,7 @@ import {
 import {
   BROWSE as PHYSICIANS,
   RESET as PHYRESET,
+  SetPHYSICIANS,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
 import Table from "./table";
@@ -49,6 +50,7 @@ export default function Tasks() {
 
       const prefData = localStorage.getItem(`preferences`);
       const headsData = localStorage.getItem(`heads-${branchId}`);
+      const physicians = localStorage.getItem(`physicians-${branchId}`);
 
       if (prefData) {
         dispatch(SetPREFERENCES(JSON.parse(prefData)));
@@ -74,14 +76,18 @@ export default function Tasks() {
         });
       }
 
-      dispatch(PHYSICIANS({ token, branchId })).then((res) => {
-        if (res?.payload) {
-          localStorage.setItem(
-            `physicians`,
-            JSON.stringify(res.payload?.payload)
-          );
-        }
-      });
+      if (physicians) {
+        dispatch(SetPHYSICIANS(JSON.parse(physicians)));
+      } else {
+        dispatch(PHYSICIANS({ token, branchId })).then((res) => {
+          if (res?.payload) {
+            localStorage.setItem(
+              `physicians-${branchId}`,
+              JSON.stringify(res.payload?.payload)
+            );
+          }
+        });
+      }
 
       return () => {
         dispatch(PREFRESET());

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -7,9 +7,16 @@ import {
   SetByGroup,
   SetByStatus,
   SetFILTERED_STATUS,
+  SetCOLLECTIONS,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Search as SEARCH } from "../../../../../components/searchables";
-import { capitalize } from "../../../../../services/utilities";
+import { capitalize, fetchTracker } from "../../../../../services/utilities";
+import { IDB_BROWSE } from "../../../../../services/indexDB/commerce/pos/services/tasks";
+
+const departmentMapping = {
+  laboratory: "LAB",
+  radiology: "RAD",
+};
 
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
@@ -17,23 +24,28 @@ const Headers = ({ searchKey }) => {
   const { filtered, byStatus, sections, filteredStatus, byGroup } = useSelector(
     ({ validator }) => validator
   );
+
   const departmentCode =
-    activePlatform?.department?.toLowerCase() === "laboratory"
-      ? "LAB"
-      : activePlatform?.department?.toUpperCase();
+    departmentMapping[activePlatform?.department?.toLowerCase()] || "";
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(
-        TASKS({
-          token,
-          key: {
-            department: [departmentCode],
-            branchId: activePlatform?.branchId,
-            createdAt: new Date().setHours(0, 0, 0, 0),
-          },
-        })
-      );
+      IDB_BROWSE().then((_tasks) => {
+        if (_tasks.length > 0 && fetchTracker.hasLoaded("tasks")) {
+          dispatch(SetCOLLECTIONS(_tasks));
+        } else {
+          dispatch(
+            TASKS({
+              token,
+              key: {
+                department: [departmentCode],
+                branchId: activePlatform?.branchId,
+                createdAt: new Date().setHours(0, 0, 0, 0),
+              },
+            })
+          );
+        }
+      });
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, departmentCode]);

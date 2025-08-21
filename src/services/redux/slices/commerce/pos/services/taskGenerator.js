@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, fetchTracker, socket } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
+import {
+  IDB_BULK_SAVE,
+  IDB_SAVE,
+  IDB_UPDATE,
+} from "../../../../../indexDB/commerce/pos/services/onboardings";
 
 const url = "commerce/pos/services/deals";
 
@@ -118,6 +123,11 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.show = !state.show;
     },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+      state.filtered = payload;
+      state.totalPages = Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+    },
 
     SetSTATUS: (state, { payload }) => {
       const { status: stats, department } = payload;
@@ -151,6 +161,20 @@ export const reduxSlice = createSlice({
       //this reducer is for received realtime onboard and set into the filtered and collections
       state.collections.unshift(payload);
       state.filtered.unshift(payload);
+      IDB_SAVE(payload);
+    },
+
+    UpdateRealtimeOnboard: (state, { payload }) => {
+      const updateCollection = (collections) => {
+        const index = collections.findIndex((item) => item._id === payload._id);
+        if (index > -1) {
+          collections[index] = payload;
+        }
+      };
+
+      updateCollection(state.collections);
+      updateCollection(state.filtered);
+      IDB_UPDATE(payload);
     },
 
     SetACTIVE_STATUS: (state, { payload }) => {
@@ -245,14 +269,13 @@ export const reduxSlice = createSlice({
             )
           ),
         }));
-
         state.collections = state.filtered = _collections;
-
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-
         state.isLoading = false;
+        IDB_BULK_SAVE(_collections);
+        fetchTracker.setLoaded("onboardings");
       })
       .addCase(BROWSE.rejected, (state, action) => {
         const { error } = action;
@@ -315,21 +338,23 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(REFORM.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload, task } = action.payload;
 
         const updateCollections = (collections) => {
           const index = collections.findIndex(
             (item) => item._id === payload._id
           );
-
           const oldCollections = collections[index];
-
           collections[index] = { ...oldCollections, ...payload };
         };
 
         updateCollections(state.collections);
         updateCollections(state.filtered);
 
+        IDB_UPDATE(payload);
+        //this is for realtime send in task page
+        socket.emit("send_tasks", task);
+        socket.emit("send_updated_onboarding", task);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -344,6 +369,7 @@ export const reduxSlice = createSlice({
 
 export const {
   RESET,
+  SetCOLLECTIONS,
   SETSOURCE,
   SetSTATUS,
   SETPHYSICIAN,
@@ -358,6 +384,7 @@ export const {
   SetFILTERED,
   //socket
   InsertRealtimeOnboard,
+  UpdateRealtimeOnboard,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

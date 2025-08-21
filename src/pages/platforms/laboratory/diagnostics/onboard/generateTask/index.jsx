@@ -208,8 +208,9 @@ export default function Modal() {
     const data = {
       _id,
       ssx,
+      department,
       rendered: [
-        ...deal.rendered,
+        ...(deal?.rendered || []),
         {
           dept: department,
           by: auth._id,

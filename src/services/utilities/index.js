@@ -73,6 +73,9 @@ import MenusToPDF from "./export/pdf/menus";
 //status
 import employment from "../fakeDb/employment";
 
+//fetch tracker
+import fetchTracker from "./fetchTracker";
+
 const ENDPOINT = "http://localhost:5000";
 
 // const ENDPOINT = window.location.origin;
@@ -174,4 +177,5 @@ export {
   EMR_RESULT_TO_PDF,
   //Logo
   Logo,
+  fetchTracker,
 };

@@ -2,12 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
   dateFormat,
+  fetchTracker,
   fullName,
   getAge,
+  socket,
 } from "../../../../../utilities";
 import { HMO, Services } from "../../../../../fakeDb";
 import { orderBy } from "lodash";
-
+import {
+  IDB_BULK_SAVE,
+  IDB_UPDATE,
+} from "../../../../../indexDB/commerce/pos/services/deals";
 const url = "commerce/pos/services/deals";
 const today = new Date();
 
@@ -485,6 +490,11 @@ export const reduxSlice = createSlice({
   reducers: {
     SetTOTAL: (state, { payload }) => {
       state.total = payload;
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+      state.filtered = payload;
+      state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
     },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
@@ -1078,6 +1088,8 @@ export const reduxSlice = createSlice({
         state.collections = state.filtered = payload;
         state.totalPages = payload.length;
         state.dealsLoading = false;
+        IDB_BULK_SAVE(payload);
+        fetchTracker.setLoaded("deals");
       })
       .addCase(CASHIER.rejected, (state, action) => {
         const { error } = action;
@@ -1451,6 +1463,11 @@ export const reduxSlice = createSlice({
         const currentValue = { ...state.collections[index] };
 
         state.collections[index] = { ...currentValue, ...payload };
+        const updatedData = JSON.parse(
+          JSON.stringify({ ...state.collections[index] })
+        );
+        IDB_UPDATE(updatedData);
+        socket.emit("send_updated_deal_menus", payload);
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -1466,6 +1483,8 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCOLLECTIONS,
+
   SetTOTAL,
   SetToggleModal,
   SetFILTERBY,

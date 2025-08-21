@@ -69,7 +69,6 @@ export default function CashierPayment({
         });
     }
   }, [isSuccess, formSubmitted, discount, gross, dispatch, cash, amountPaid]);
-  console.log("net", gross - (discount + amountPaid));
   const handleSales = (authorizedBy) => {
     const net = gross - (discount + amountPaid),
       _payment = payment || paymentOptions[0];

@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, getAge } from "../../../../utilities";
+import { axioKit, fetchTracker, getAge, socket } from "../../../../utilities";
 import { capitalize } from "lodash";
+import {
+  IDB_BULK_SAVE,
+  IDB_SAVE,
+  IDB_UPDATE,
+} from "../../../../indexDB/commerce/pos/services/tasks";
 
 const url = "commerce/pos/services/deals";
 const healthyClient = {
@@ -51,7 +56,6 @@ const initialState = {
   isSuccess: false,
   print: false,
   isLoading: false,
-  isLoadingHeads: false,
   formSubmitted: false,
   message: "",
 };
@@ -155,6 +159,31 @@ export const reduxSlice = createSlice({
   name: "validator",
   initialState,
   reducers: {
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+      state.filtered = payload;
+      state.filteredStatus = payload;
+      state.totalPages = Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+    },
+    InsertRealtimeTask: (state, { payload }) => {
+      console.log("payload realtime task", payload);
+      state.filtered.unshift(payload);
+      state.collections.unshift(payload);
+      state.filteredStatus.unshift(payload);
+      IDB_SAVE(payload);
+    },
+    UpdateRealtimeTask: (state, { payload }) => {
+      const updateCollections = (collections) => {
+        const index = collections.findIndex((item) => item._id === payload._id);
+        if (index > -1) {
+          collections[index] = payload;
+        }
+      };
+      updateCollections(state.filtered);
+      updateCollections(state.collections);
+      updateCollections(state.filteredStatus);
+      IDB_UPDATE(payload);
+    },
     RECEIVE_A15: (state, { payload }) => {
       const index = state.collections.findIndex(
         (item) => item._id === payload._id
@@ -177,8 +206,6 @@ export const reduxSlice = createSlice({
       }
     },
     SetVALIDATOR: (state, { payload }) => {
-      console.log("payload", payload);
-
       const form = capitalize(payload?.form);
       const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
@@ -207,6 +234,10 @@ export const reduxSlice = createSlice({
       updateCollection(state.collections, findIndex(state.collections));
       updateCollection(state.filtered, findIndex(state.filtered));
       updateCollection(state.filteredStatus, findIndex(state.filteredStatus));
+      const updatedItem = state.collections[findIndex(state.collections)];
+      const item = JSON.parse(JSON.stringify(updatedItem));
+      IDB_UPDATE(item);
+      socket.emit("send_updated_task", item);
     },
     SetRAD_READER: (state, { payload }) => {
       state.showRadReader = true;
@@ -348,7 +379,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(TASKS.fulfilled, (state, action) => {
         const { payload } = action.payload;
-
         state.collections = payload;
         state.filtered = payload;
         state.filteredStatus = payload;
@@ -357,11 +387,12 @@ export const reduxSlice = createSlice({
             payload.flatMap(({ diagnostic }) => Object.keys(diagnostic))
           ),
         ].sort();
-
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
+        IDB_BULK_SAVE(payload);
+        fetchTracker.setLoaded("tasks");
       })
       .addCase(TASKS.rejected, (state, action) => {
         const { error } = action;
@@ -444,6 +475,9 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCOLLECTIONS,
+  InsertRealtimeTask,
+  UpdateRealtimeTask,
   SetSELECTED,
   SetPatient,
   SetTASK,
