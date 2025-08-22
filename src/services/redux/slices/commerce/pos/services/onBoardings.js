@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, capitalize } from "../../../../../utilities";
 
 const url = "/commerce/pos/services/onboardings";
 const today = new Date();
@@ -236,6 +236,43 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSENDOUT_TASK_RESULT: (state, { payload }) => {
+      if (payload?._id) {
+        const form = capitalize(payload?.form);
+        const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(
+          form
+        )
+          ? "dealId"
+          : "_id";
+
+        const findIndex = (collections) =>
+          collections?.findIndex(
+            ({ dealId, vendor = {} }) =>
+              dealId?._id === payload[identifier] &&
+              payload?.soTo?._id === vendor?._id
+          );
+        const findFormIndex = (forms) =>
+          forms.findIndex((item) => item?._id === payload?._id);
+
+        const updateCollection = (collections, index) => {
+          if (index > -1) {
+            if (identifier === "_id") {
+              collections[index].dealId.soDiagnostic[form] = payload;
+            } else {
+              const formIndex = findFormIndex(
+                collections[index]?.dealId.soDiagnostic[form]
+              );
+              if (formIndex > -1) {
+                collections[index].dealId.soDiagnostic[form][formIndex] =
+                  payload;
+              }
+            }
+          }
+        };
+        updateCollection(state.collections, findIndex(state.collections));
+        updateCollection(state.filtered, findIndex(state.filtered));
+      }
+    },
     SetVALIDATE_ID: (state, { payload }) => {
       const updateCollections = (collections) => {
         const onboardingUsers = collections.filter(
@@ -740,6 +777,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetSENDOUT_TASK_RESULT,
   FilterByVendor, //for soa records
   SetSoaCluster,
   CHECK_BULK_SOA,

@@ -4,7 +4,7 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Tasks = ({ key, form, obj, index, customer }) => {
+const Tasks = ({ key, form, obj, index, customer, deal }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
@@ -61,7 +61,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     remarks,
   };
 
-  const handleEntry = () => dispatch(SetTASK({ task }));
+  const handleEntry = () => dispatch(SetTASK({ task, deal }));
 
   const isEmptyEntry = _packages.length === 0;
   return (

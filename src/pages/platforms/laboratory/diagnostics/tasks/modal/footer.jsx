@@ -9,6 +9,7 @@ import {
   SetHEALTHY,
   SetVALIDATOR,
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetSENDOUT_TASK_RESULT } from "../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 
 const Footer = () => {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
@@ -93,10 +94,9 @@ const Footer = () => {
         data,
       })
     ).then(({ payload }) => {
-      console.log("payload", payload);
-
       setIsLoading(false);
       dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+      dispatch(SetSENDOUT_TASK_RESULT(payload?.item || payload?.payload));
       dispatch(SetMODAL(false));
     });
   };

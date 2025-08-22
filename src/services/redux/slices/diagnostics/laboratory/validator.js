@@ -177,8 +177,6 @@ export const reduxSlice = createSlice({
       }
     },
     SetVALIDATOR: (state, { payload }) => {
-      console.log("payload", payload);
-
       const form = capitalize(payload?.form);
       const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
@@ -282,8 +280,9 @@ export const reduxSlice = createSlice({
       state.privilege = payload.privilege || (isSenior ? 2 : 0);
     },
     SetTASK: (state, { payload }) => {
-      const { task } = payload;
+      const { task, deal } = payload;
       state.task = task;
+      if (deal?._id) state.selected = deal;
       state.showModal = true;
     },
     SetWorkArea: (state, { payload }) => {
@@ -404,7 +403,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(TRACKER.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = state.filtered = payload;
+        const formattedCollections = payload?.map((item) => ({
+          ...item,
+          diagnostic: {
+            ...(item?.diagnostic || {}),
+            ...(item?.soDiagnostic || {}),
+          },
+        }));
+        state.collections = state.filtered = formattedCollections;
         state.isLoading = false;
       })
       .addCase(TRACKER.rejected, (state, action) => {

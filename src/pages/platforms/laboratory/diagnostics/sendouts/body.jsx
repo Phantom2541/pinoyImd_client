@@ -2,13 +2,15 @@ import { useSelector } from "react-redux";
 import { MDBBadge, MDBBtn, MDBIcon, MDBTable, MDBTypography } from "mdbreact";
 import { dateFormat, fullName } from "../../../../../services/utilities";
 import { Services } from "../../../../../services/fakeDb";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { capitalize } from "lodash";
+import Task from "./task";
 
 const Body = () => {
   const { filtered, vendorId } = useSelector(({ onBoardings }) => onBoardings);
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { department } = activePlatform;
+  const [activeId, setActiveId] = useState(-1);
 
   const endOfTableRef = useRef(null); // 👈 Step 1: create ref
 
@@ -62,12 +64,14 @@ const Body = () => {
               cancelled = [],
               remarks = "",
               reason = "",
+              dealId = {},
             } = item;
             const { name = "", displayname = "" } = vendor || {};
             const isDenied = status === "denied";
             const baseOutsource = displayname || name;
 
             const isLast = index === filtered.length - 1;
+            const isOpen = activeId === item._id;
 
             return (
               <React.Fragment key={index}>
@@ -115,7 +119,49 @@ const Body = () => {
                       );
                     })}
                   </td>
-                  <td style={{ fontWeight: 400 }}>{dateFormat(createdAt)}</td>
+                  <td style={{ fontWeight: 400 }}>
+                    <div className="d-flex align-items-center">
+                      {dateFormat(createdAt)}
+                      {item?.dealId?._id ? (
+                        <div className="m-0 p-0 d-flex align-items-center ml-3">
+                          <MDBBtn
+                            size="sm"
+                            color="white"
+                            rounded
+                            title="View Sendout Sections"
+                            onClick={() =>
+                              setActiveId((prev) =>
+                                prev === item?._id ? -1 : item?._id
+                              )
+                            }
+                            className="m-0 p-0 transition-all float-right "
+                            style={{
+                              width: isOpen ? "1.5rem" : "2.5rem",
+                              height: isOpen ? "2rem" : "1.5rem",
+                            }}
+                          >
+                            <i
+                              style={{ rotate: `${isOpen ? 0 : 90}deg` }}
+                              className="fa fa-angle-down transition-all "
+                            />
+                          </MDBBtn>
+                          {!isOpen && (
+                            <span
+                              className="counter"
+                              style={{
+                                marginBottom: "-10px",
+                                marginRight: "-10px !important",
+                              }}
+                            >
+                              {Object.keys(dealId.soDiagnostic)?.length}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
+                    </div>
+                  </td>
                   <td
                     style={{
                       fontWeight: 500,
@@ -139,6 +185,13 @@ const Body = () => {
                     </MDBBtn>
                   </td>
                 </tr>
+                {item.dealId?._id && (
+                  <tr>
+                    <td colSpan={7} className="text-center">
+                      <Task dealId={item.dealId} isOpen={isOpen} />
+                    </td>
+                  </tr>
+                )}
                 {(remarks || reason) && (
                   <div className="mt-n4 position-absolute">
                     <MDBTypography

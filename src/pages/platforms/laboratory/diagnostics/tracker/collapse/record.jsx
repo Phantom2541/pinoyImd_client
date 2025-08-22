@@ -70,6 +70,8 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
+    const { soTo = {} } = obj;
+    const sendout = soTo?.name || soTo?.displayname;
     const department = Templates.findByComponentName(form)?.department;
 
     const _packages = Array.isArray(obj?.packages)
@@ -78,7 +80,7 @@ export default function CollapseTable({ menu }) {
 
     const task = {
       ...obj,
-      key: `${form}-${index}`,
+      key: `${form}-${index}-${obj?._id}`,
       form,
       generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
       patient: customerId,
@@ -101,6 +103,10 @@ export default function CollapseTable({ menu }) {
       <tr key={task.key}>
         <td className="fw-bold">
           {capitalize(department)}
+          {sendout && (
+            <MDBBadge className="ml-2">Send to out: {sendout}</MDBBadge>
+          )}
+
           {obj?.hasDone && (
             <MDBBadge color="success" className="ml-2">
               Done
@@ -180,6 +186,7 @@ export default function CollapseTable({ menu }) {
     physicianSTR,
   } = menu;
   const referral = physicianId?.fullName?.lname || physicianSTR || "";
+
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">

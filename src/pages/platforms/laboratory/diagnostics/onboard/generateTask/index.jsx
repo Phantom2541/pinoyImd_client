@@ -92,10 +92,7 @@ export default function Modal() {
 
   const getSendoutBy = (tests) => {
     const sendout = Object.keys(cluster).find((key) => {
-      return (
-        cluster[key].length === tests.length &&
-        cluster[key].every((val) => tests.includes(val.id))
-      );
+      return tests.every((test) => cluster[key].some(({ id }) => id === test));
     });
     return sendout;
   };
@@ -123,6 +120,8 @@ export default function Modal() {
       for (const key in tests) {
         const lowercaseKey = key.toLowerCase();
         let bucket = tests[key];
+        const soTo = getSendoutBy(bucket);
+
         let requestData = {
           pn,
           _id,
@@ -130,7 +129,7 @@ export default function Modal() {
           customerId: customerId?._id,
           branchId: activePlatform.branchId,
           hasRead: false,
-          ...(isSendout && { soBy: getSendoutBy(bucket) }),
+          ...(isSendout && { soTo }),
         };
 
         switch (key) {
@@ -145,6 +144,7 @@ export default function Modal() {
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
                 buntis: true,
+                ...(isSendout && { soTo }),
               });
             }
             if (bucket.length > 0) {
@@ -157,6 +157,7 @@ export default function Modal() {
                     customerId: customerId?._id,
                     branchId: activePlatform.branchId,
                     _buntis: false,
+                    ...(isSendout && { soTo }),
                   })
               );
             }
@@ -172,6 +173,7 @@ export default function Modal() {
                   hasRead: false,
                   customerId: customerId?._id,
                   branchId: activePlatform.branchId,
+                  ...(isSendout && { soTo }),
                 })
               )
             );
@@ -211,6 +213,7 @@ export default function Modal() {
               pid: customerId?._id,
               client: activePlatform.branchId,
               services: getIDS(value),
+              dealId: _id,
             },
             true
           );
@@ -222,6 +225,7 @@ export default function Modal() {
               hasRead: true,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
+              dealId: _id,
             });
           }
         }
