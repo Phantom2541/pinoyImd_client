@@ -1,20 +1,20 @@
 const fetchTracker = {
   hasLoaded: (entity) => {
     const _fetchedFlags = JSON.parse(
-      localStorage.getItem("fetchedFlags" || "{}")
+      localStorage.getItem("fetchedTracker" || "{}")
     );
     return _fetchedFlags[entity];
   },
   setLoaded: (entity) => {
     const _fetchedFlags = JSON.parse(
-      localStorage.getItem("fetchedFlags" || "{}")
+      localStorage.getItem("fetchedTracker" || "{}")
     );
     _fetchedFlags[entity] = true;
-    localStorage.setItem("fetchedFlags", JSON.stringify(_fetchedFlags));
+    localStorage.setItem("fetchedTracker", JSON.stringify(_fetchedFlags));
   },
   reset: () => {
     localStorage.setItem(
-      "fetchedFlags",
+      "fetchedTracker",
       JSON.stringify({ deals: false, onboardings: false, tasks: false })
     );
   },

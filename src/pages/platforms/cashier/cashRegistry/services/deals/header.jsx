@@ -23,20 +23,33 @@ const Header = () => {
   //Initial CASHIER
   useEffect(() => {
     const formattedDate = (timeZone, date, hasTime = false) => {
-      return new Intl.DateTimeFormat("en-CA", {
-        timeZone: timeZone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        ...(hasTime && {
+      if (hasTime) {
+        // Gamitin ang Intl.DateTimeFormat + 24h format
+        const dtf = new Intl.DateTimeFormat("en-CA", {
+          timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-        }),
-      })
-        .format(date)
-        .replace(/\//g, "-");
+          hour12: false, // 24-hour format
+        });
+        const parts = dtf.formatToParts(date);
+        const obj = {};
+        parts.forEach(({ type, value }) => (obj[type] = value));
+        // Format as ISO-like string without comma and AM/PM
+        return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.minute}:${obj.second}`;
+      } else {
+        return new Intl.DateTimeFormat("en-CA", {
+          timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(date);
+      }
     };
+
     if (token && activePlatform?.branchId && auth._id) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       IDB_BROWSE().then((deals) => {

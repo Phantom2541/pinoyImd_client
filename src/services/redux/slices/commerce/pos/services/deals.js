@@ -10,6 +10,7 @@ import {
 import { HMO, Services } from "../../../../../fakeDb";
 import { orderBy } from "lodash";
 import {
+  IDB_BROWSE,
   IDB_BULK_SAVE,
   IDB_UPDATE,
 } from "../../../../../indexDB/commerce/pos/services/deals";
@@ -137,9 +138,21 @@ export const INSOURCES = createAsyncThunk(
 );
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,
-  ({ token, key }, thunkAPI) => {
+  async ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/cashier`, token, key);
+      var { payload = [], ...rest } = await axioKit.universal(
+        `${url}/cashier`,
+        token,
+        key
+      );
+      if (payload.length > 0) {
+        IDB_BULK_SAVE(payload);
+        payload = await IDB_BROWSE();
+      } else {
+        payload = await IDB_BROWSE();
+      }
+
+      return { ...rest, payload };
     } catch (error) {
       const message =
         (error.response &&
@@ -1088,7 +1101,7 @@ export const reduxSlice = createSlice({
         state.collections = state.filtered = payload;
         state.totalPages = payload.length;
         state.dealsLoading = false;
-        IDB_BULK_SAVE(payload, "cashier");
+        // IDB_BULK_SAVE(payload, "cashier");
         fetchTracker.setLoaded("deals");
       })
       .addCase(CASHIER.rejected, (state, action) => {
