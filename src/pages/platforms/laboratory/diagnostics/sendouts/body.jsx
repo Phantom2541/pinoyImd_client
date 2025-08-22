@@ -136,8 +136,8 @@ const Body = () => {
                             }
                             className="m-0 p-0 transition-all float-right "
                             style={{
-                              width: isOpen ? "1.5rem" : "2.5rem",
-                              height: isOpen ? "2rem" : "1.5rem",
+                              width: isOpen ? "1.5rem" : "2.2rem",
+                              height: isOpen ? "1.6rem" : "1.5rem",
                             }}
                           >
                             <i
@@ -185,7 +185,7 @@ const Body = () => {
                     </MDBBtn>
                   </td>
                 </tr>
-                {item.dealId?._id && (
+                {item.dealId?._id && isOpen && (
                   <tr>
                     <td colSpan={7} className="text-center">
                       <Task dealId={item.dealId} isOpen={isOpen} />
