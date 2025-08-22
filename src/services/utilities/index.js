@@ -74,7 +74,6 @@ import MenusToPDF from "./export/pdf/menus";
 import employment from "../fakeDb/employment";
 
 const ENDPOINT = "http://localhost:5000";
-
 // const ENDPOINT = window.location.origin;
 
 //
