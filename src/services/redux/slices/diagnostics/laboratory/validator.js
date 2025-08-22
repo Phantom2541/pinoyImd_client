@@ -403,13 +403,39 @@ export const reduxSlice = createSlice({
       })
       .addCase(TRACKER.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        const formattedCollections = payload?.map((item) => ({
-          ...item,
-          diagnostic: {
-            ...(item?.diagnostic || {}),
-            ...(item?.soDiagnostic || {}),
-          },
-        }));
+
+        const mergeDiagnostics = (diagnostic = {}, soDiagnostic = {}) => {
+          Object.entries(soDiagnostic).forEach(([key, value]) => {
+            if (!(key in diagnostic)) {
+              diagnostic[key] = value;
+            } else {
+              const existing = diagnostic[key];
+
+              if (Array.isArray(existing) && Array.isArray(value)) {
+                diagnostic[key] = [...existing, ...value];
+              } else if (
+                typeof existing === "object" &&
+                existing !== null &&
+                typeof value === "object" &&
+                value !== null
+              ) {
+                diagnostic[`${key}-1`] = value;
+              } else {
+                diagnostic[key] = value;
+              }
+            }
+          });
+
+          return diagnostic;
+        };
+        const formattedCollections = payload?.map((item) => {
+          const diagnostic = { ...(item?.diagnostic || {}) };
+          const soDiagnostic = item?.soDiagnostic || {};
+          return {
+            ...item,
+            diagnostic: mergeDiagnostics(diagnostic, soDiagnostic),
+          };
+        });
         state.collections = state.filtered = formattedCollections;
         state.isLoading = false;
       })
