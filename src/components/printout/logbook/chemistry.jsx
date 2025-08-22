@@ -7,7 +7,7 @@ import {
   BROWSE,
   RESET,
 } from "../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
-
+import "./table.css";
 const dayNames = [
   "Sunday",
   "Monday",
@@ -133,6 +133,7 @@ export default function ChemsPrint() {
       <Banner
         company={activePlatform?.branch?.companyId?.name}
         branch={activePlatform?.branch?.name}
+        className="banner"
       />
 
       <h3 className="text-center">
