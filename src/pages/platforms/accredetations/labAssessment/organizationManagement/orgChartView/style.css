@@ -63,9 +63,6 @@
   }
 
   /* Hide everything except the org chart container */
-  body * {
-    visibility: hidden;
-  }
 
   .orgChart-view-container,
   .orgChart-view-container * {
