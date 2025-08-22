@@ -30,7 +30,7 @@ export default function Modal() {
       inhouse,
       cluster,
     } = useSelector(({ taskGenerator }) => taskGenerator),
-    // { collections } = useSelector(({ providers }) => providers),
+    { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
 
@@ -63,30 +63,14 @@ export default function Modal() {
     }
   };
 
-  const generateTask = async () => {
-    const inhouseIDS = getIDS(inhouse);
-    const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
-    const _forms = Services.getTemplates(inhouseIDS, department);
-    const { _id, customerId, ssx, forms: oldForms, pn } = deal;
-    // const sentOut = [...collections].find(
-    //   ({ vendors }) => vendors?._id === outSourceId
-    // );
+  const formattedData = (datas) => {
+    const inhouseIDS = getIDS(datas);
+    const templateKey = Services.getTemplatesWithIntKey(inhouseIDS, department);
+    const forms = Services.getTemplates(inhouseIDS, department);
+    return { templateKey, forms };
+  };
 
-    localStorage.setItem(
-      "inhouse",
-      JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
-    );
-    // localStorage.setItem(
-    //   "outsource_request",
-    //   JSON.stringify({
-    //     deal: { ...deal, ssx },
-    //     sentOut,
-    //     isRad: department === "RAD",
-    //     outsources: outsource,
-    //   })
-    // );
-    // localStorage.setItem("ssx", JSON.stringify(ssx));
-
+  const arrangeForms = (oldForms = {}, templateKey = []) => {
     const deptIndexMap = {
       LAB: 0,
       RAD: 1,
@@ -94,9 +78,9 @@ export default function Modal() {
     };
 
     const deptIndex = deptIndexMap[department];
-    const newFormKeys = Object.keys(_inhouse).map(Number);
+    const newFormKeys = Object.keys(templateKey).map(Number);
 
-    const forms = {
+    return {
       ...(oldForms || {}),
       [deptIndex]: [
         ...new Set(
@@ -104,69 +88,107 @@ export default function Modal() {
         ),
       ],
     };
+  };
 
-    for (const key in _forms) {
-      const lowercaseKey = key.toLowerCase();
-      let bucket = _forms[key];
-      let requestData = {
-        pn,
-        _id,
-        packages: bucket,
-        customerId: customerId?._id,
-        branchId: activePlatform.branchId,
-        hasRead: false,
-      };
-      switch (key) {
-        case "Miscellaneous":
-          const panelAvail = bucket.filter((test) => panel.includes(test));
-          if (panelAvail.length) {
-            bucket = bucket.filter((item) => !panel.includes(item));
-            await saveRequest(lowercaseKey, {
-              dealId: _id,
-              pn,
-              packages: panelAvail,
-              customerId: customerId?._id,
-              branchId: activePlatform.branchId,
-              buntis: true,
-            });
-          }
-          if (bucket.length > 0) {
-            bucket.map(
-              async (test) =>
-                await saveRequest(lowercaseKey, {
-                  dealId: _id,
-                  pn,
-                  packages: [test],
-                  customerId: customerId?._id,
-                  branchId: activePlatform.branchId,
-                  _buntis: false,
-                })
-            );
-          }
-          break;
-        case "Ultrasound":
-        case "Xray":
-          await Promise.all(
-            bucket.map((test) =>
-              saveRequest(lowercaseKey, {
-                pn,
+  const getSendoutBy = (tests) => {
+    const sendout = Object.keys(cluster).find((key) => {
+      return (
+        cluster[key].length === tests.length &&
+        cluster[key].every((val) => tests.includes(val.id))
+      );
+    });
+    return sendout;
+  };
+
+  const generateTask = async () => {
+    const { templateKey: _inhouse, forms: _forms } = formattedData(inhouse);
+    const { templateKey: _cluster, forms: clusterForms } = formattedData(
+      Object.values(cluster).flat()
+    );
+
+    const {
+      _id,
+      customerId,
+      ssx,
+      forms: oldForms,
+      pn,
+      soForms: oldSOForms,
+    } = deal;
+
+    localStorage.setItem(
+      "inhouse",
+      JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
+    );
+    const saveTests = async (tests, isSendout = false) => {
+      for (const key in tests) {
+        const lowercaseKey = key.toLowerCase();
+        let bucket = tests[key];
+        let requestData = {
+          pn,
+          _id,
+          packages: bucket,
+          customerId: customerId?._id,
+          branchId: activePlatform.branchId,
+          hasRead: false,
+          ...(isSendout && { soBy: getSendoutBy(bucket) }),
+        };
+
+        switch (key) {
+          case "Miscellaneous":
+            const panelAvail = bucket.filter((test) => panel.includes(test));
+            if (panelAvail.length) {
+              bucket = bucket.filter((item) => !panel.includes(item));
+              await saveRequest(lowercaseKey, {
                 dealId: _id,
-                packages: test,
-                hasRead: false,
+                pn,
+                packages: panelAvail,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
-              })
-            )
-          );
-          break;
-        case "ECG":
-          requestData.packages = bucket[0];
-          await saveRequest(lowercaseKey, requestData);
-          break;
-        default:
-          await saveRequest(lowercaseKey, requestData);
+                buntis: true,
+              });
+            }
+            if (bucket.length > 0) {
+              bucket.map(
+                async (test) =>
+                  await saveRequest(lowercaseKey, {
+                    dealId: _id,
+                    pn,
+                    packages: [test],
+                    customerId: customerId?._id,
+                    branchId: activePlatform.branchId,
+                    _buntis: false,
+                  })
+              );
+            }
+            break;
+          case "Ultrasound":
+          case "Xray":
+            await Promise.all(
+              bucket.map((test) =>
+                saveRequest(lowercaseKey, {
+                  pn,
+                  dealId: _id,
+                  packages: test,
+                  hasRead: false,
+                  customerId: customerId?._id,
+                  branchId: activePlatform.branchId,
+                })
+              )
+            );
+            break;
+          case "ECG":
+            requestData.packages = bucket[0];
+            await saveRequest(lowercaseKey, requestData);
+            break;
+          default:
+            await saveRequest(lowercaseKey, requestData);
+        }
       }
-    }
+    };
+
+    const forms = arrangeForms(oldForms, _inhouse);
+    const soForms = arrangeForms(oldSOForms, _cluster); //sendout forms
+    await saveTests(_forms, false);
 
     if (inhouse.length > 0) {
       window.open(
@@ -179,6 +201,7 @@ export default function Modal() {
     const haveOutSource = Object.keys(cluster).length > 0;
 
     if (haveOutSource) {
+      await saveTests(clusterForms, true);
       for (const [key, value] of Object.entries(cluster)) {
         if (department !== "RAD") {
           await saveRequest(
@@ -209,7 +232,7 @@ export default function Modal() {
       _id,
       ssx,
       rendered: [
-        ...deal.rendered,
+        ...(deal.rendered || []),
         {
           dept: department,
           by: auth._id,
@@ -217,6 +240,7 @@ export default function Modal() {
         },
       ],
       forms,
+      soForms,
     };
 
     dispatch(
@@ -227,7 +251,7 @@ export default function Modal() {
     );
     dispatch(TOGGLE());
 
-    // MachineSender(_forms,deal)
+    // MachineSender(_forms, deal);
   };
 
   return (
