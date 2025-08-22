@@ -87,18 +87,18 @@ export default function Platforms() {
             <MDBDropdownItem
               key={index}
               onClick={(e) => {
-                // if (isDisabled) {
-                //   e.preventDefault(); // prevent default action
-                //   e.stopPropagation(); // stop from closing dropdown
-                //   return;
-                // }
+                if (isDisabled) {
+                  e.preventDefault(); // prevent default action
+                  e.stopPropagation(); // stop from closing dropdown
+                  return;
+                }
                 handlePlatform(platform);
               }}
-              // style={{
-              //   color: isDisabled ? "#aaa" : "#212529",
-              //   pointerEvents: isDisabled ? "none" : "auto",
-              //   cursor: isDisabled ? "not-allowed" : "pointer",
-              // }}
+              style={{
+                color: isDisabled ? "#aaa" : "#212529",
+                pointerEvents: isDisabled ? "none" : "auto",
+                cursor: isDisabled ? "not-allowed" : "pointer",
+              }}
             >
               {capitalize(platform)}
             </MDBDropdownItem>

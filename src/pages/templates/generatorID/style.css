@@ -32,8 +32,8 @@
 .IDGenerator-ID-back {
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  width: 350px;
-  height: 450px;
+  width: 319px;
+  height: 505px;
 }
 
 .IDGenerator-ID-front img,
@@ -329,11 +329,23 @@
 
 .IDGenerator-modal.active {
   visibility: visible;
+  animation: IDGenerator-modal 0.5s ease;
+}
+
+@keyframes IDGenerator-modal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .IDGenerator-modal-content {
-  width: 60%;
-  height: 70%;
+  width: auto;
+  height: auto;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -368,11 +380,32 @@
   padding: 10px;
   display: flex;
   align-items: flex-start;
+  gap: 20px;
+}
+
+.IDGenerator-modal-IdUpload-container {
+  position: relative;
+}
+
+.IDGenerator-modal-idUpload-title {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  text-transform: uppercase;
+  color: #ddd;
+  font-weight: bold;
+  letter-spacing: 2px;
+  opacity: 0.4;
+  z-index: 0;
 }
 
 .IDGenerator-modal-preview-container {
-  height: 450px;
-  width: 350px;
+  height: 505px;
+  width: 319px;
+  position: relative;
+  display: inline-block; /* keep it tight around image */
 }
 .IDGenerator-modal-idUpload-addBtn {
   height: 100%;
@@ -386,6 +419,8 @@
   border-radius: 5px;
   cursor: pointer;
   transition: color 0.3s ease, border 0.3s ease;
+  position: relative;
+  z-index: 10;
 }
 
 .IDGenerator-modal-idUpload-addBtn:hover {
@@ -402,6 +437,9 @@
   padding: 4px;
   background: #f9f9f9;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 5;
+  -webkit-user-drag: none;
 }
 
 .IDGenerator-modal-idUpload-changeBtn {
@@ -416,21 +454,47 @@
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
 }
 
-.IDGenerator-modal-template-calibrate button {
+.IDGenerator-modal-template-calibrate-buttons {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+  /* max-width: 400px; */
+}
+
+.IDGenerator-modal-template-calibrate-buttons div {
+  display: flex;
+  align-items: center;
+}
+
+.IDGenerator-modal-template-calibrate-buttons label {
+  all: unset;
+  font-weight: 400;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  width: 100px;
+}
+
+.IDGenerator-modal-template-calibrate-buttons button {
   border: 1px solid #d9d9d9;
   background-color: white;
   border-radius: 3px;
   padding: 5px 10px;
-}
-
-.IDGenerator-modal-template-calibrate-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  font-size: 0.8rem;
+  max-width: 200px;
+  white-space: nowrap; /* Iwasan ang line break */
+  overflow: hidden; /* Tagong lampas na text */
+  text-overflow: ellipsis; /* Maglagay ng "..." */
 }
 
 .IDGenerator-modal-template-calibrate-buttons button:hover {
   border: 1px solid #0d99ff;
   color: white;
   background-color: #0d99ff;
+}
+
+.IDGenerator-modal-footer {
+  display: flex;
+  justify-content: end;
+  padding: 10px 20px;
 }

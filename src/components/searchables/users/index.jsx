@@ -31,6 +31,7 @@ export default function Search({
   setRegister = () => {},
   excludes = [],
   excludeKey = "",
+  notFoundMessage = "No Patient Record found.",
 }) {
   const { filtered } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
@@ -40,6 +41,7 @@ export default function Search({
     [isFetching, setIsFetching] = useState(false),
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
+
   useEffect(() => {
     let _filtered = filtered;
     if (excludes.length > 0) {
@@ -124,7 +126,7 @@ export default function Search({
                   onMouseEnter={() => setDidHover(true)}
                   onMouseLeave={() => setDidHover(false)}
                 >
-                  No Patient Record found. <br /> click here to register
+                  {notFoundMessage} <br /> click here to register
                 </small>
               ) : (
                 <ul>

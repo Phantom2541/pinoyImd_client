@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import TableRowCount from "../../../../components/pagination/rows";
-import Pagination from "../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../services/redux/slices/commerce/catalog/services";
+} from "../../../../../services/redux/slices/assets/branches";
+import TableRowCount from "../../../../../components/pagination/rows";
+import Pagination from "../../../../../components/pagination";
+
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
-      ({ services }) => services
+      ({ branches }) => branches
     ),
     { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
@@ -18,8 +19,7 @@ const Footer = () => {
   }, [dispatch, maxPage]);
 
   const handlePageChange = (action) => {
-    const newPage =
-      typeof action === "number" ? action : activePage + (action ? 1 : -1);
+    const newPage = activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
       dispatch(SetActivePAGE(newPage));
     }

@@ -4,6 +4,7 @@ import { useToasts } from "react-toast-notifications";
 import {
   BROWSE,
   SetActivePAGE,
+  SetMaxPage,
   RESET,
 } from "./../../../../../services/redux/slices/assets/persons/personnels";
 import { MDBCard, MDBCardBody, MDBView } from "mdbreact";
@@ -16,16 +17,9 @@ import { employment } from "./../../../../../services/utilities";
 
 export default function Staffs() {
   const [staffs, setStaffs] = useState([]),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    {
-      collections,
-      message,
-      isSuccess,
-      isLoading,
-      activePage,
-      totalPages,
-      maxPage,
-    } = useSelector(({ personnels }) => personnels),
+    { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
+    { collections, message, isSuccess, isLoading, activePage, totalPages } =
+      useSelector(({ personnels }) => personnels),
     [searchKey, setSearchKey] = useState(""),
     [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
@@ -76,6 +70,10 @@ export default function Staffs() {
     }
   };
 
+  useEffect(() => {
+    dispatch(SetMaxPage(maxPage));
+  }, [dispatch, maxPage]);
+
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -88,7 +86,7 @@ export default function Staffs() {
           cascade
           className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
         >
-          <span className="white-text mx-3">Staff List</span>
+          <span className="white-text mx-3">{staffs?.length} Staff List</span>
           <div className="d-flex align-items-center">
             <Search
               haveAction={false}
@@ -104,6 +102,7 @@ export default function Staffs() {
           ) : (
             <>
               <MenuCollapse
+                startIndex={startIndex}
                 staffs={paginatedData}
                 page={activePage}
                 resetSearch={resetSearch}
@@ -111,7 +110,7 @@ export default function Staffs() {
                 handleUpdate={handleUpdate}
               />
               <div className="d-flex justify-content-between align-items-center px-4">
-                <TableRowCount />
+                <TableRowCount disablePageSelect={false} />
 
                 <Pagination
                   isLoading={isLoading}

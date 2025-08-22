@@ -33,7 +33,7 @@ const Index = () => {
 
   return (
     <>
-      <MDBAnimation className="pt-2" type="bounceInDown">
+      <MDBAnimation type="bounceInDown">
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
           {/* ✅ pass setFiltered and records to Header */}
           <Header collections={records} setFiltered={setFiltered} />

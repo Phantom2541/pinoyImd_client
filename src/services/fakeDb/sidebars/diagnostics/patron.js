@@ -97,7 +97,7 @@ const patron = [
         component: Apply,
       },
       {
-        name: "Applied",
+        name: "Application Status",
         path: "/applied",
         icon: "file-alt",
         component: Documents,

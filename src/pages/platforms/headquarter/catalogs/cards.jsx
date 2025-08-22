@@ -1,12 +1,14 @@
 import React from "react";
 import { MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
 
 export default function Cards({
-  collections,
   currentPage,
   onPageChange,
   onCardClick,
 }) {
+  const { collections } = useSelector(({ products }) => products);
+
   const itemsPerPage = 12;
   const totalPages = Math.ceil(collections.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -14,6 +16,8 @@ export default function Cards({
     indexOfLastItem - itemsPerPage,
     indexOfLastItem
   );
+  console.log("collections", collections);
+  
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -31,19 +35,19 @@ export default function Cards({
   return (
     <div className="stock-cards-wrapper">
       <div className="stock-cards-container">
-        {currentItems.map((item) => (
+        {collections.map((item, index) => (
           <div
             className="stock-cards"
             key={item.id}
             onClick={() => onCardClick(item)}
             style={{ cursor: "pointer" }}
           >
-            <img src={item.image[0]} alt={item.title} />
+            <img src={""} alt={item.pid.name} />
             <div className="stock-cards-body">
               <div className="stock-cards-info">
-                <span className="stock-cards-title">{item.title}</span>
+                <span className="stock-cards-title">{item.pid.name}</span>
                 <span className="stock-cards-price">
-                  ₱{Math.round(item.price * (1 - item.discount / 100))}
+                  ₱{Math.round(item.u * (1 - item.discount / 100))}
                   {item.discount > 0 && (
                     <span className="stock-cards-original">
                       &nbsp;₱{item.price}

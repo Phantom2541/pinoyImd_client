@@ -2,7 +2,6 @@ import { capitalize, orderBy } from "lodash";
 import { dateFormat } from "./../../../../../../services/utilities";
 
 const CharacterHistory = ({ remarks }) => {
-  console.log("remarks", remarks);
   return (
     <div
       className="bg-white w-100 text-dark"

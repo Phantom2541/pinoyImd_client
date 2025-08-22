@@ -2,7 +2,10 @@ import { useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
-import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import {
+  AUTOSELECT,
+  SetSELECTED,
+} from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
 
 export default function Payments() {
@@ -70,7 +73,13 @@ export default function Payments() {
           date,
         },
       })
-    );
+    ).then(({ payload }) => {
+      const { data } = payload;
+      if (data) {
+        localStorage.setItem("floatingcash", JSON.stringify(data));
+        dispatch(SetSELECTED({ value: data }));
+      }
+    });
   }, [activePlatform, auth, token, dispatch]);
 
   return (

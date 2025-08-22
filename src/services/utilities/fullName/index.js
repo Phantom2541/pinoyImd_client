@@ -18,7 +18,7 @@ const fullName = (fullname, isComplete = false) => {
   const suffixPart = suffix && suffix !== "NONE" ? ` ${suffix}` : "";
   const middlePart = mname ? ` y ${middleName}` : "";
 
-  return capitalize(`${lname}, ${fname}${suffixPart}${middlePart}`.trim());
+  return `${lname.toUpperCase()}, ${fname.toUpperCase()}${suffixPart?.toUpperCase()}${middlePart}`;
 };
 
 export default fullName;

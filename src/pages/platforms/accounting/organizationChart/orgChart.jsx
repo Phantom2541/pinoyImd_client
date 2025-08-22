@@ -47,6 +47,14 @@ export default function OrgChart() {
     BANNER = `${Cloudinary.getEndpoint()}/companies/${company.name}/${
       activePlatform?.branch?.name
     }/banner`;
+  const hasFittedRef = useRef(false);
+
+  const handleInit = (reactFlowInstance) => {
+    if (!hasFittedRef.current && nodes.length > 0) {
+      hasFittedRef.current = true;
+      reactFlowInstance.fitView({ padding: 0.2 });
+    }
+  };
 
   const edgeTypes = useMemo(() => {
     return {
@@ -703,6 +711,7 @@ export default function OrgChart() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             onNodeDrag={handleNodeDrag}
+            onInit={handleInit}
             onNodeMouseEnter={(_, node) => setHoveredNodeId(node.id)}
             onNodeMouseLeave={() => setHoveredNodeId(null)}
             onNodeDragStart={(_, node) =>
