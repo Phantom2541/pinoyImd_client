@@ -69,6 +69,7 @@ export default function Body() {
                 textColor={color}
                 setActiveId={setActiveId}
                 index={actualIndex}
+                total={filtered.length}
               />
             </MDBCollapseHeader>
 
