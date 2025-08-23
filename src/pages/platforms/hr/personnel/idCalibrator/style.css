@@ -1,0 +1,143 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&family=Roboto:wght@100;400;700&family=Poppins:wght@100;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.id-calibrator-main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "leftside rightside"
+    "bottomside bottomside";
+  width: fit-content;
+  max-width: 1150px;
+  margin: auto;
+  gap: 10px;
+}
+
+.id-calibrator-container {
+  grid-area: leftside;
+}
+
+.IDGenerator-setting-container {
+  grid-area: rightside;
+  height: 100%;
+}
+
+.id-calibrator-details {
+  grid-area: bottomside;
+}
+
+.id-calibrator-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: transparent;
+}
+
+.id-calibrator-preview-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+}
+
+.id-calibrator-preview {
+  position: relative;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+
+  background-color: #ffffff;
+}
+
+.id-calibrator-preview.portrait {
+  width: 350px;
+  height: 450px;
+}
+
+.id-calibrator-preview.landscape {
+  width: 450px;
+  height: 350px;
+}
+
+.id-calibrator-preview-upload {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  border: 2px solid #ccc;
+  color: #e9e9e9;
+  background-color: transparent;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.id-calibrator-preview-label {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #e9e9e9;
+}
+
+.id-calibrator-preview-upload:hover {
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.id-calibrator-preview-upload.hide {
+  display: none;
+}
+
+.id-calibrator-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.id-calibrator-details {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.id-calibrator-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.id-calibrator-detail-value {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.id-calibrator-placed-value {
+  position: absolute;
+}
+
+.id-calibrator-detail-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(70%, -50%);
+  cursor: pointer;
+  color: red;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.id-calibrator-placed-value:hover .id-calibrator-detail-remove {
+  opacity: 1;
+}

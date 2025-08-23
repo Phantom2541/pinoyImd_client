@@ -1,315 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&family=Roboto:wght@100;400;700&family=Poppins:wght@100;400;700&display=swap");
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 .IDGenerator-header {
-  background-color: white;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.IDGenerator-header h1 {
-  font-size: 1.5rem;
-}
-
-.IDGenerator-header button {
-  border: none;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.IDGenerator-ID-container {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.IDGenerator-ID-front,
-.IDGenerator-ID-back {
-  background-color: white;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  width: 319px;
-  height: 505px;
-}
-
-.IDGenerator-ID-front img,
-.IDGenerator-ID-back img {
   width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-
-.IDGenerator-setting-container {
-  width: 100%;
-  max-width: 300px;
   height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-}
-
-.IDGenerator-setting-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.IDGenerator-setting-section-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #7f8187;
-}
-
-.IDGenerator-setting-inputs-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-/* input design */
-.IDGenerator-setting-input-title {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: #7f8187;
-  text-transform: capitalize;
-}
-
-.IDGenerator-setting-input-container {
-  position: relative;
-  background-color: #f5f5f5;
-  display: flex;
-  align-items: center;
-  height: 30px;
-  width: 100%;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.IDGenerator-setting-label {
-  all: unset;
-  height: 100%;
-  font-size: 1rem;
-  margin: 0 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #7a7c9e;
-  font-weight: 400;
-}
-
-.IDGenerator-setting-inputColor {
-  border: none;
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 20px;
-}
-
-.IDGenerator-setting-input {
-  all: unset;
-  height: 100%;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.IDGenerator-setting-input::placeholder {
-  font-size: 1rem;
-  color: #7a7c9e;
-}
-
-.IDGenerator-setting-input-container:focus-within {
-  outline: 1px solid #0d99ff;
-}
-
-/* select design */
-.IDGenerator-setting-select-label {
-  font-size: 0.8rem;
-  color: #7f8187;
-  font-weight: 400;
-}
-
-.IDGenerator-setting-select-container {
-  position: relative;
-  background-color: white;
-  border-radius: 5px;
-  border: 1px solid #e6e6e6;
-  width: 100%;
-  height: 30px;
-}
-
-.IDGenerator-setting-select-container:focus-within {
-  outline: 1px solid #0d99ff;
-}
-
-.IDGenerator-setting-select-container.inputDesign {
-  background-color: #f5f5f5;
-  border: none;
-}
-
-.IDGenerator-setting-select-container.active {
-  background-color: #e6e6e6;
-}
-
-.IDGenerator-setting-select-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 1rem;
-  overflow: hidden;
-}
-
-.IDGenerator-setting-select-placeholder span {
-  margin-left: 5px;
-  font-size: 1rem;
-  font-weight: 400;
-  max-width: 75%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.IDGenerator-setting-select-placeholder input {
-  all: unset;
-  height: 100%;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 400;
-  margin-left: 5px;
-}
-
-.IDGenerator-setting-select-icon {
-  height: 100%;
-  aspect-ratio: 1/1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.IDGenerator-setting-select-container:hover .IDGenerator-setting-select-icon {
-  background-color: #e6e6e6;
-}
-
-.IDGenerator-setting-select-options {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(-105%, -50%);
-  width: 100%;
-  min-width: 250px;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  visibility: hidden;
-  display: none;
-}
-
-.IDGenerator-setting-select-options.inputDesign {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  min-width: 90px;
-  max-width: 90px;
-  background-color: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 5px;
-}
-
-.IDGenerator-setting-select-options.active {
-  visibility: visible;
-  display: block;
-}
-
-.IDGenerator-setting-select-options ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-height: 300px;
-  min-height: 300px;
-  overflow: auto;
-  text-transform: capitalize;
-}
-.IDGenerator-setting-select-options.inputDesign ul {
-  text-align: center;
-  height: 100%;
-  max-height: 100%;
-}
-
-/* scrollbar container */
-.IDGenerator-setting-select-options ul::-webkit-scrollbar {
-  width: 6px; /* lapad ng scrollbar */
-  height: 5px;
-}
-
-/* scrollbar track (background) */
-.IDGenerator-setting-select-options ul::-webkit-scrollbar-track {
-  background: #f5f5f5; /* kulay ng track */
-  border-radius: 8px;
-}
-
-/* scrollbar thumb (yung handle) */
-.IDGenerator-setting-select-options ul::-webkit-scrollbar-thumb {
-  background: #d9d9d9; /* kulay ng handle */
-  border-radius: 8px;
-}
-
-.IDGenerator-setting-select-options ul li {
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.IDGenerator-setting-select-options ul li:hover {
-  background-color: #f5f5f5;
-}
-
-.IDGenerator-setting-select-options.inputDesign ul li {
-  border-radius: 5px;
-}
-
-.IDGenerator-setting-select-options.inputDesign ul li:hover {
-  background-color: #0d99ff;
-}
-
-.IDGenerator-setting-prev,
-.IDGenerator-setting-next {
-  font-size: 1rem;
-  border: none;
-  width: 100%;
-  padding: 5px 0;
-  background-color: #e6e6e6;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.IDGenerator-setting-prev:hover {
-  background-color: red;
-  color: white;
-}
-
-.IDGenerator-setting-next:hover {
-  background-color: green;
-  color: white;
-}
-
-.IDGenerator-setting-save {
-  margin-top: auto;
-  border: none;
-  width: 100%;
-  color: white;
-  border-radius: 5px;
-  padding: 5px 0;
 }
 
 /* modal design */
@@ -319,182 +18,377 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999999;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 99999;
   visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .IDGenerator-modal.active {
   visibility: visible;
-  animation: IDGenerator-modal 0.5s ease;
+  opacity: 1;
+  transform: translateY(0);
 }
 
-@keyframes IDGenerator-modal {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.IDGenerator-modal-content {
+.IDGenerator-content {
+  min-width: 600px;
+  min-height: 450px;
   width: auto;
   height: auto;
+
   background-color: white;
-  display: flex;
-  flex-direction: column;
 }
 
 .IDGenerator-modal-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
   padding: 10px;
-  background-color: #0d99ff;
-}
-
-.IDGenerator-modal-header span {
-  font-size: 1.1rem;
-  font-weight: 400;
-  letter-spacing: 0.5px;
+  background-color: #007bff;
   color: white;
-}
-
-.IDGenerator-modal-header button {
-  border: none;
-  background-color: transparent;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
 }
 
 .IDGenerator-modal-body {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.IDGenerator-modal-IdUpload-container {
-  position: relative;
-}
-
-.IDGenerator-modal-idUpload-title {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 4rem;
-  text-transform: uppercase;
-  color: #ddd;
-  font-weight: bold;
-  letter-spacing: 2px;
-  opacity: 0.4;
-  z-index: 0;
-}
-
-.IDGenerator-modal-preview-container {
-  height: 505px;
-  width: 319px;
-  position: relative;
-  display: inline-block; /* keep it tight around image */
-}
-.IDGenerator-modal-idUpload-addBtn {
-  height: 100%;
-  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  color: #d9d9d9;
-  border: 2px solid #d9d9d9;
-  font-size: 2rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: color 0.3s ease, border 0.3s ease;
-  position: relative;
-  z-index: 10;
-}
-
-.IDGenerator-modal-idUpload-addBtn:hover {
-  color: #0d99ff;
-  border: 2px solid #0d99ff;
-}
-
-.IDGenerator-preview-img {
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
   width: 100%;
-  height: 100%;
-  object-fit: fill;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 4px;
-  background: #f9f9f9;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  position: relative;
-  z-index: 5;
-  -webkit-user-drag: none;
-}
-
-.IDGenerator-modal-idUpload-changeBtn {
-  cursor: pointer;
-  width: 100%;
-  padding: 4px 0;
-  color: white;
-  font-weight: 400;
-  text-align: center;
-  border-radius: 3px;
-  margin-top: 10px;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-}
-
-.IDGenerator-modal-template-calibrate-buttons {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 10px;
-  /* max-width: 400px; */
-}
-
-.IDGenerator-modal-template-calibrate-buttons div {
-  display: flex;
-  align-items: center;
-}
-
-.IDGenerator-modal-template-calibrate-buttons label {
-  all: unset;
-  font-weight: 400;
-  font-size: 0.9rem;
-  text-transform: capitalize;
-  width: 100px;
-}
-
-.IDGenerator-modal-template-calibrate-buttons button {
-  border: 1px solid #d9d9d9;
-  background-color: white;
-  border-radius: 3px;
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  max-width: 200px;
-  white-space: nowrap; /* Iwasan ang line break */
-  overflow: hidden; /* Tagong lampas na text */
-  text-overflow: ellipsis; /* Maglagay ng "..." */
-}
-
-.IDGenerator-modal-template-calibrate-buttons button:hover {
-  border: 1px solid #0d99ff;
-  color: white;
-  background-color: #0d99ff;
 }
 
 .IDGenerator-modal-footer {
+  width: 100%;
   display: flex;
-  justify-content: end;
-  padding: 10px 20px;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+.IDGenerator-modal-header-title {
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.IDGenerator-modal-header-close {
+  cursor: pointer;
+}
+
+.IDGenerator-template-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  height: auto;
+  gap: 10px;
+}
+
+.IDGenerator-template-preview-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+}
+
+/* Default portrait (vertical layout) */
+.IDGenerator-template-preview-wrapper.portrait {
+  flex-direction: row;
+}
+
+/* Landscape (horizontal layout) */
+.IDGenerator-template-preview-wrapper.landscape {
+  flex-direction: column;
+}
+
+.IDGenerator-template-preview {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.IDGenerator-template-preview.portrait {
+  width: 315px;
+  height: 500px;
+}
+
+.IDGenerator-template-preview.landscape {
+  width: 500px;
+  height: 315px;
+}
+
+.IDGenerator-template-preview .IDGenerator-template-addImg {
+  all: unset;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #d9d9d9;
+  color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  cursor: pointer;
+}
+
+.IDGenerator-template-preview .IDGenerator-template-addImg.hide {
+  display: none;
+}
+
+.IDGenerator-template-changeImg {
+  position: absolute;
+  bottom: -2.5%;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  background-color: #007bff;
+  color: white;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+  padding: 5px 0;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.IDGenerator-template-changeImg.hide {
+  display: none;
+}
+
+.IDGenerator-template-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.IDGenerator-template-previewData {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+.IDGenerator-template-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(130%, -50%);
+  color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.IDGenerator-template-previewData:hover .IDGenerator-template-remove {
+  opacity: 1;
+}
+
+.IDGenerator-template-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.IDGenerator-template-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.IDGenerator-template-button label {
+  all: unset;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-transform: capitalize;
+  width: 110px;
+}
+
+.IDGenerator-template-buttonBtn {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* select design */
+.IDGenerator-setting-select-label {
+  color: #c3c3c3;
+  text-transform: capitalize;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.IDGenerator-setting-select-container {
+  position: relative;
+  width: 100%;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.IDGenerator-setting-select-container.inputDesign {
+  background-color: #f5f5f5;
+}
+
+/* Focus / active state */
+.IDGenerator-setting-select-container.active {
+  border-color: #1976d2;
+  box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+}
+
+/* Placeholder o selected value */
+.IDGenerator-setting-select-placeholder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 28px;
+  font-size: 14px;
+  color: #333;
+}
+
+.IDGenerator-setting-select-placeholder span {
+  color: black;
+  margin-left: 7px;
+  text-transform: capitalize;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.IDGenerator-setting-select-placeholder input {
+  all: unset;
+  width: 100%;
+  height: 100%;
+  margin-left: 7px;
+  font-weight: 400;
+}
+
+.IDGenerator-setting-select-placeholder input:focus {
+  outline: none; /* alisin ang default outline */
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
+/* Icon arrow */
+.IDGenerator-setting-select-icon {
+  border-left: 1px solid #ffffff;
+  font-size: 0.9rem;
+  color: #888;
+  height: 28px;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.IDGenerator-setting-select-container:hover .IDGenerator-setting-select-icon {
+  background-color: #e6e6e6;
+}
+
+/* Dropdown options */
+.IDGenerator-setting-select-options {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-105%, -50%);
+  width: 100%;
+  max-width: 300px;
+  background-color: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  z-index: 10;
+}
+
+.IDGenerator-setting-select-options.inputDesign {
+  background-color: #1e1e1e;
+  color: #f7f7f7;
+  max-width: 120px;
+  text-align: center;
+  border: 1px solid #1e1e1e;
+}
+
+.IDGenerator-setting-select-options.inputDesign ul {
+  padding: 10px;
+}
+
+.IDGenerator-setting-select-options.inputDesign li {
+  border-radius: 5px;
+}
+
+.IDGenerator-setting-select-options.inputDesign li:hover {
+  background-color: #007bff;
+}
+
+/* Active dropdown */
+.IDGenerator-setting-select-options.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Individual option */
+.IDGenerator-setting-select-options ul {
+  list-style: none;
+  margin: 0;
+  padding: 5px 0;
+  max-height: 510px;
+  overflow: auto;
+}
+
+.IDGenerator-setting-select-options li {
+  padding: 8px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: capitalize;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: background 0.15s;
+}
+
+.IDGenerator-setting-select-options li:hover {
+  background-color: #f2f2f2;
+}
+
+/* setting design */
+
+/* ID component design */
+.IDGenerator-ID-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.IDGenerator-ID-imgPreview {
+  width: 315px;
+  height: 500px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.IDGenerator-ID-imgPreview img {
+  width: 100%;
+  height: 100%;
 }

@@ -1,185 +1,242 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { Employee } from "./collections";
+import Setting from "./setting";
+import html2canvas from "html2canvas";
 
-export default function ID({
-  frontImage,
-  backImage,
-  positions,
-  student,
-  selectedField,
-  setSelectedField,
-  fieldStyles,
-  setPositions,
-  frontRef,
-  backRef,
-}) {
-  const [draggingField, setDraggingField] = useState(null);
-  const dragOffset = useRef({ x: 0, y: 0 });
+function getNestedValue(obj, path) {
+  return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+}
 
-  // Handle arrow keys for moving selected field
+const fieldMapper = {
+  FullName: "fullName",
+  "Contact FullName": "contactInfo.fullName",
+  ID: "id",
+  Position: "position",
+  Department: "department",
+  Email: "email",
+  Mobile: "mobile",
+  "Contact Number": "contactInfo.pn",
+  ProfileImage: "profileImage",
+};
+
+export default function ID({ dfpData, frontImage, backImage }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedField, setSelectedField] = useState(null);
+  const [employeeData, setEmployeeData] = useState([]);
+
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!selectedField) return;
+    if (!dfpData) return; // walang template pa
+    setEmployeeData(
+      Employee.map((emp) => ({
+        ...JSON.parse(JSON.stringify(emp)),
+        dfpData: JSON.parse(JSON.stringify(dfpData)),
+      }))
+    );
+  }, [dfpData]);
 
-      let delta = 1;
-      let newPos = { ...positions[selectedField] };
+  if (!dfpData) return <div>Select a template first</div>;
+  if (employeeData.length === 0) return <div>No employee data available</div>;
 
-      switch (e.key) {
-        case "ArrowUp":
-          newPos.y -= delta;
-          break;
-        case "ArrowDown":
-          newPos.y += delta;
-          break;
-        case "ArrowLeft":
-          newPos.x -= delta;
-          break;
-        case "ArrowRight":
-          newPos.x += delta;
-          break;
-        default:
-          return;
+  const currentEmployee = employeeData[currentIndex];
+
+  const frontValues = Object.entries(currentEmployee.dfpData || {}).filter(
+    ([, pos]) => pos.target === "front" || !pos.target
+  );
+  const backValues = Object.entries(currentEmployee.dfpData || {}).filter(
+    ([, pos]) => pos.target === "back"
+  );
+  // 🔹 Update helpers (setState para mag-trigger ng re-render)
+  const updatePosition = (x, y) => {
+    if (!selectedField) return;
+    setEmployeeData((prev) => {
+      const clone = [...prev];
+      clone[currentIndex] = {
+        ...clone[currentIndex],
+        dfpData: {
+          ...clone[currentIndex].dfpData,
+          [selectedField.key]: {
+            ...clone[currentIndex].dfpData[selectedField.key],
+            x,
+            y,
+          },
+        },
+      };
+      return clone;
+    });
+    setSelectedField((f) => ({ ...f, x, y }));
+  };
+
+  const updateStyle = (styleUpdate) => {
+    if (!selectedField) return;
+    setEmployeeData((prev) => {
+      const clone = [...prev];
+      clone[currentIndex] = {
+        ...clone[currentIndex],
+        dfpData: {
+          ...clone[currentIndex].dfpData,
+          [selectedField.key]: {
+            ...clone[currentIndex].dfpData[selectedField.key],
+            ...styleUpdate,
+          },
+        },
+      };
+      return clone;
+    });
+    setSelectedField((f) => ({ ...f, ...styleUpdate }));
+  };
+
+  const saveEmployeeData = () => {
+    // 1️⃣ overwrite yung original Employee[currentIndex]
+    Employee[currentIndex].dfpData = employeeData[currentIndex].dfpData;
+
+    const frontEl = document.getElementById("front-preview");
+    const backEl = document.getElementById("back-preview");
+
+    if (frontEl && backEl) {
+      Promise.all([html2canvas(frontEl), html2canvas(backEl)]).then(
+        ([frontCanvas, backCanvas]) => {
+          const space = 20; // space sa gitna
+          const width = frontCanvas.width + backCanvas.width + space;
+          const height = Math.max(frontCanvas.height, backCanvas.height);
+
+          // create combined canvas
+          const combinedCanvas = document.createElement("canvas");
+          combinedCanvas.width = width;
+          combinedCanvas.height = height;
+          const ctx = combinedCanvas.getContext("2d");
+
+          // draw front (left)
+          ctx.drawImage(frontCanvas, 0, 0);
+          // draw back (right) na may 20px space
+          ctx.drawImage(backCanvas, frontCanvas.width + space, 0);
+
+          // save as single file
+          const link = document.createElement("a");
+          link.download = `employee-${currentIndex + 1}-id.png`;
+          link.href = combinedCanvas.toDataURL("image/png");
+          link.click();
+        }
+      );
+    }
+  };
+
+  const renderValues = (values) =>
+    values.map(([key, pos]) => {
+      const style = {
+        position: "absolute",
+        left: pos.x || 0,
+        top: pos.y || 0,
+        width: pos.width ? `${pos.width}px` : "auto",
+        height: pos.height ? `${pos.height}px` : "auto",
+        border: pos.border || "none",
+        borderRadius: pos.borderRadius ? `${pos.borderRadius}px` : 0,
+        opacity: pos.opacity !== undefined ? pos.opacity : 1,
+        fontFamily: pos.fontFamily || "Arial",
+        fontSize: pos.fontSize ? `${pos.fontSize}px` : "12px",
+        fontWeight: pos.fontWeight || "normal",
+        color: pos.color || "#000",
+        letterSpacing: pos.letterSpacing ? `${pos.letterSpacing}px` : "0px",
+        cursor: "pointer",
+      };
+
+      const mappedPath = fieldMapper[key];
+      if (!mappedPath) return null;
+
+      let value = getNestedValue(currentEmployee, mappedPath);
+
+      if (mappedPath === "fullName" && value) {
+        const { title, fname, mname, lname, suffix } = value;
+        value = `${title ? title + " " : ""}${fname} ${
+          mname ? mname + " " : ""
+        }${lname}${suffix ? ", " + suffix : ""}`;
+      }
+      if (mappedPath === "contactInfo.fullName" && value) {
+        const { title, fname, mname, lname, suffix } = value;
+        value = `${title ? title + " " : ""}${fname} ${
+          mname ? mname + " " : ""
+        }${lname}${suffix ? ", " + suffix : ""}`;
       }
 
-      e.preventDefault();
-      setPositions({
-        ...positions,
-        [selectedField]: newPos,
-      });
-    };
+      const commonProps = {
+        key,
+        style,
+        onClick: () =>
+          setSelectedField({
+            key,
+            value,
+            type: key.toLowerCase().includes("image") ? "image" : "text",
+            ...pos,
+          }),
+      };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedField, positions, setPositions]);
+      if (
+        key.toLowerCase().includes("image") ||
+        (typeof value === "string" && value.startsWith("http")) ||
+        (typeof value === "string" && value.startsWith("data:"))
+      ) {
+        return <img {...commonProps} src={value} alt={key} />;
+      }
 
-  const handleMouseDown = (field, e) => {
-    setDraggingField(field);
-    const pos = positions[field];
-    dragOffset.current = {
-      x: e.clientX - pos.x,
-      y: e.clientY - pos.y,
-    };
-  };
-
-  const handleMouseMove = (e) => {
-    if (!draggingField) return;
-
-    const newPos = {
-      x: e.clientX - dragOffset.current.x,
-      y: e.clientY - dragOffset.current.y,
-    };
-
-    setPositions({
-      ...positions,
-      [draggingField]: { ...positions[draggingField], ...newPos },
+      return <span {...commonProps}>{value}</span>;
     });
-  };
-
-  const handleMouseUp = () => {
-    setDraggingField(null);
-  };
-
-  // Helper to render fields for a specific side
-  const renderFields = (side) =>
-    Object.keys(positions)
-      .filter((field) => (positions[field].side || "front") === side)
-      .map((field) => {
-        const pos = positions[field];
-        const style = fieldStyles[field] || {};
-
-        // Determine value
-        if (field === "profileImage") {
-          const imgSrc = student.profileImage;
-          return (
-            <img
-              key={field}
-              src={imgSrc}
-              alt="Profile"
-              style={{
-                position: "absolute",
-                top: pos.y,
-                left: pos.x,
-                width: style.width || "50px",
-                height: style.height || "50px",
-                transform: "translate(-50%, -50%)",
-                borderRadius: style.borderRadius || "50%",
-                objectFit: "cover",
-                cursor: "grab",
-                zIndex: 10,
-              }}
-              onClick={() => setSelectedField(field)}
-              onMouseDown={(e) => handleMouseDown(field, e)}
-              draggable={false}
-            />
-          );
-        }
-
-        // Existing text fields
-        const value =
-          field === "fullName"
-            ? `${student.fullName?.fname || ""} ${
-                student.fullName?.mname || ""
-              } ${student.fullName?.lname || ""} ${
-                student.fullName?.suffix || ""
-              }`
-                .replace(/\s+/g, " ")
-                .trim()
-            : field === "postnominal"
-            ? student.fullName?.postnominal || ""
-            : student[field] || "";
-
-        return (
-          <div
-            key={field}
-            data-field={field}
-            onClick={() => setSelectedField(field)}
-            onMouseDown={(e) => handleMouseDown(field, e)}
-            style={{
-              position: "absolute",
-              top: pos.y,
-              left: pos.x,
-              cursor: "grab",
-              color: style.color || "#000",
-              fontSize: style.fontSize || "12px",
-              fontWeight: style.fontWeight || "normal",
-              fontStyle: style.fontStyle || "normal",
-              fontFamily: style.fontFamily || "Inter",
-              letterSpacing: style.letterSpacing || "0px",
-              opacity: style.opacity !== undefined ? style.opacity : 1,
-              padding: "2px 5px",
-              userSelect: "none",
-            }}
-          >
-            {value}
-          </div>
-        );
-      });
 
   return (
-    <div
-      className="IDGenerator-ID-container"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-    >
-      {/* Front Side */}
-      <div
-        className="IDGenerator-ID-front"
-        style={{ position: "relative" }}
-        ref={frontRef}
-      >
-        {frontImage && (
-          <img src={frontImage} alt="Front ID" draggable={false} />
-        )}
-        {renderFields("front")}
+    <div style={{ display: "flex", gap: "20px" }}>
+      <div>
+        <div
+          className="IDGenerator-ID-container"
+          style={{ display: "flex", gap: "20px" }}
+        >
+          {/* Front */}
+          <div
+            id="front-preview"
+            className="IDGenerator-ID-imgPreview"
+            style={{ position: "relative" }}
+          >
+            <img
+              src={frontImage || ""}
+              alt="front ID"
+              style={{ width: "100%" }}
+            />
+            {renderValues(frontValues)}
+          </div>
+
+          {/* Back */}
+          <div
+            id="back-preview"
+            className="IDGenerator-ID-imgPreview"
+            style={{ position: "relative" }}
+          >
+            <img
+              src={backImage || ""}
+              alt="back ID"
+              style={{ width: "100%" }}
+            />
+            {renderValues(backValues)}
+          </div>
+        </div>
       </div>
 
-      {/* Back Side */}
-      <div
-        className="IDGenerator-ID-back"
-        style={{ position: "relative" }}
-        ref={backRef}
-      >
-        {backImage && <img src={backImage} alt="Back ID" draggable={false} />}
-        {renderFields("back")}
+      {/* Setting Panel */}
+      <div style={{ flex: 1 }}>
+        <Setting
+          placedValue={selectedField}
+          updatePosition={updatePosition}
+          updateStyle={updateStyle}
+          currentIndex={currentIndex}
+          total={employeeData.length}
+          onPrev={() =>
+            setCurrentIndex((prev) =>
+              prev > 0 ? prev - 1 : employeeData.length - 1
+            )
+          }
+          onNext={() =>
+            setCurrentIndex((prev) =>
+              prev < employeeData.length - 1 ? prev + 1 : 0
+            )
+          }
+          onSave={saveEmployeeData}
+        />
       </div>
     </div>
   );

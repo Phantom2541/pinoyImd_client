@@ -1,13 +1,14 @@
 import React from "react";
+import { MDBBtn } from "mdbreact";
 
-export default function Header({ setIsOpen }) {
+export default function Header({ setIsModalOpen }) {
   return (
     <div className="IDGenerator-header">
       <h1>Generate ID</h1>
       <div>
-        <button className="bg-primary" onClick={() => setIsOpen(true)}>
+        <MDBBtn color="primary" onClick={() => setIsModalOpen(true)}>
           Add Template
-        </button>
+        </MDBBtn>
       </div>
     </div>
   );
