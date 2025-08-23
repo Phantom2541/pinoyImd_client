@@ -1,28 +1,34 @@
 import { MDBBtn, MDBIcon, MDBInput } from "mdbreact";
 
 const Specifications = ({ info, setInfo = () => {} }) => {
-  const { specifications = {} } = info;
+  const { specifications = [{ title: "", desc: "" }] } = info;
 
-  const handleChange = (oldKey, newKey, newValue) => {
-    setInfo((prevInfo) => {
-      const newSpecs = { ...prevInfo.specifications };
-
-      // Update key if it changed
-      if (oldKey !== newKey) {
-        delete newSpecs[oldKey];
-      }
-
-      newSpecs[newKey] = newValue;
-      return { ...prevInfo, specifications: newSpecs };
-    });
-  };
-
-  const handleAdd = () => {
-    const newKey = `spec-${Date.now()}`; // unique key
+  const handleAddSpecification = () => {
+    if (specifications.length >= 8) return;
     setInfo((prevInfo) => ({
       ...prevInfo,
-      specifications: { ...prevInfo.specifications, [newKey]: "" },
+      specifications: [
+        ...(prevInfo.specifications || []),
+        { title: "", desc: "" },
+      ],
     }));
+  };
+
+  const handleTitleChange = (value, index) => {
+    const _specifications = [...specifications];
+    _specifications[index].title = value;
+    setInfo({ ...info, specifications: _specifications });
+  };
+
+  const handleDescChange = (value, index) => {
+    const _specifications = [...(specifications || [])];
+    _specifications[index].desc = value;
+    setInfo({ ...info, specifications: _specifications });
+  };
+  const handleRemove = (index) => {
+    const _specifications = [...(specifications || [])];
+    _specifications.splice(index, 1);
+    setInfo({ ...info, specifications: _specifications });
   };
 
   return (
@@ -48,13 +54,17 @@ const Specifications = ({ info, setInfo = () => {} }) => {
         Specifications
       </span>
       <div className="p-2">
-        {Object.entries(specifications).map(([key, value], i) => (
-          <div className="d-flex align-items-center mb-2 mt-n3" key={key}>
-            <div className="me-2">
+        {specifications.map(({ title, desc }, i) => (
+          <div
+            className={`d-flex align-items-center mt-n${i === 0 ? 2 : 4}`}
+            key={`specification-${i}`}
+          >
+            <div style={{ width: i === 0 ? "20rem" : "21rem" }}>
               <MDBInput
                 label="Title"
-                value={key}
-                onChange={(e) => handleChange(key, e.target.value, value)}
+                required
+                value={title}
+                onChange={(e) => handleTitleChange(e.target.value, i)}
               />
             </div>
             <div>
@@ -63,14 +73,40 @@ const Specifications = ({ info, setInfo = () => {} }) => {
             <div className="w-100">
               <MDBInput
                 label="Description"
-                value={value}
-                onChange={(e) => handleChange(key, key, e.target.value)}
+                required
+                value={desc}
+                onChange={(e) => handleDescChange(e.target.value, i)}
               />
             </div>
+            {i !== 0 && (
+              <MDBBtn
+                size="sm"
+                rounded
+                className="px-2"
+                color="danger"
+                outline
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => handleRemove(i)}
+              >
+                <MDBIcon icon="trash" />
+              </MDBBtn>
+            )}
           </div>
         ))}
-        <MDBBtn block size="md" color="primary" outline onClick={handleAdd}>
-          <MDBIcon icon="plus" className="me-2" /> ADD SPECIFICATION
+        <MDBBtn
+          block
+          size="md"
+          color="primary"
+          outline
+          onClick={handleAddSpecification}
+        >
+          <MDBIcon icon="plus" className="mr-2" /> ADD SPECIFICATION (
+          {specifications?.length}/10)
         </MDBBtn>
       </div>
     </div>

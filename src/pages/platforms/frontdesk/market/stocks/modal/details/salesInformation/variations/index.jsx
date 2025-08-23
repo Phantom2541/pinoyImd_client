@@ -33,6 +33,7 @@ const Variations = ({
                 setVariants((prevVariants) => ({
                   ...prevVariants,
                   types: [...prevVariants.types, { title: "", options: [""] }],
+                  prices: {},
                 }))
               }
             >

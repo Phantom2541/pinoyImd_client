@@ -58,6 +58,8 @@ const Pricing = ({ variants, setVariants = () => {}, isDuplicate = false }) => {
     return prices?.[primary]?.[option] ?? "";
   };
 
+  console.log("variants", variants.prices);
+
   return (
     <div
       style={{
@@ -89,10 +91,10 @@ const Pricing = ({ variants, setVariants = () => {}, isDuplicate = false }) => {
                 </th>
               ))}
               <th>
-                <span className="ml-3">Price</span>
+                <span className="ml-3">Cost</span>
               </th>
               <th>
-                <span className="ml-3">Cost</span>
+                <span className="ml-3">Price</span>
               </th>
               <th>
                 <span className="ml-3">Stock</span>

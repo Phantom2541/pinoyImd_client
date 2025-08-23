@@ -5,20 +5,20 @@ const Basic = ({ info, setInfo = () => {} }) => {
     <MDBRow>
       <MDBCol>
         <MDBInput
-          required
-          label="Price"
-          type="number"
-          value={String(info.price) || ""}
-          onChange={(e) => setInfo({ ...info, price: Number(e.target.value) })}
-        />
-      </MDBCol>
-      <MDBCol>
-        <MDBInput
           label="Cost"
           type="number"
           required
           value={String(info.cost) || ""}
           onChange={(e) => setInfo({ ...info, cost: Number(e.target.value) })}
+        />
+      </MDBCol>
+      <MDBCol>
+        <MDBInput
+          required
+          label="Price"
+          type="number"
+          value={String(info.price) || ""}
+          onChange={(e) => setInfo({ ...info, price: Number(e.target.value) })}
         />
       </MDBCol>
       <MDBCol>
