@@ -21,11 +21,11 @@ const Index = () => {
         ...rec,
         date: dayNum,
         day: recDate.toLocaleDateString("en-US", { weekday: "long" }),
-        amIn: rec.amIn || "",
-        amOut: rec.amOut || "",
-        pmIn: rec.pmIn || "",
-        pmOut: rec.pmOut || "",
-        status: rec.status || "",
+        amIn: rec?.am?.in || "",
+        amOut: rec?.am?.out || "",
+        pmIn: rec?.pm?.in || "",
+        pmOut: rec?.pm?.out || "",
+        status: rec?.status || "",
         isSunday: recDate.getDay() === 0,
       };
     }
@@ -53,7 +53,13 @@ const Index = () => {
 
   return (
     <MDBTable responsive hover bordered>
-      <thead style={{ backgroundColor: "#f0f0f0", color: "black", textAlign: "center" }}>
+      <thead
+        style={{
+          backgroundColor: "#f0f0f0",
+          color: "black",
+          textAlign: "center",
+        }}
+      >
         <tr>
           <th>Date</th>
           <th>Day</th>

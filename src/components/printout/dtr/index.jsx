@@ -3,21 +3,21 @@ import Cell from "./cell";
 
 const AttendancePrint = () => {
   const collections = JSON.parse(localStorage.getItem("attendances")) || [];
+  console.log("collections", collections);
+  
 
   const firstDate = collections[0]?.createdAt
     ? new Date(collections[0].createdAt)
     : new Date();
-  const month = firstDate.getMonth() + 1;
+  const month = firstDate.getMonth();
   const year = firstDate.getFullYear();
-  const jsMonth = month - 1;
-  const daysInMonth = new Date(year, jsMonth + 1, 0).getDate();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+  // Map existing records
   const recordMap = {};
   collections.forEach((rec) => {
     const recDate = new Date(rec.createdAt);
-    const recMonth = recDate.getMonth() + 1;
-    const recYear = recDate.getFullYear();
-    if (recMonth === month && recYear === year) {
+    if (recDate.getMonth() === month && recDate.getFullYear() === year) {
       const dayNum = recDate.getDate();
       recordMap[dayNum] = {
         ...rec,
@@ -27,22 +27,22 @@ const AttendancePrint = () => {
     }
   });
 
+  // Generate all days of the month
   const allDays = Array.from({ length: daysInMonth }, (_, i) => {
     const dayNum = i + 1;
     if (recordMap[dayNum]) {
       const rec = recordMap[dayNum];
-      return {
-        ...rec,
-        isSunday: rec.day === "Sunday",
-      };
+      return { ...rec, isSunday: rec.day === "Sunday" };
     } else {
-      const dateObj = new Date(year, jsMonth, dayNum);
+      const dateObj = new Date(year, month, dayNum);
       const weekday = dateObj.toLocaleDateString("en-US", { weekday: "long" });
       return {
         date: dayNum,
         day: weekday,
-        in: "",
-        out: "",
+        amIn: "",
+        amOut: "",
+        pmIn: "",
+        pmOut: "",
         status: "",
         _id: `empty-${dayNum}`,
         isSunday: weekday === "Sunday",
@@ -50,10 +50,10 @@ const AttendancePrint = () => {
     }
   });
 
+  // Delay printing
   useEffect(() => {
-    setTimeout(() => {
-      window.print();
-    }, 500);
+    const timer = setTimeout(() => window.print(), 1200);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -64,52 +64,42 @@ const AttendancePrint = () => {
           margin: 0;
         }
         @media print {
-          /* force background colors to print */
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
-
           html, body {
             margin: 0;
             padding: 0;
             width: 100%;
           }
           .print-container {
-            display: flex;
             width: 100%;
-            position: relative;
-            height: 100vh;
           }
           .left-copy, .right-copy {
-            width: 50%;
-            height: 100%;
-            padding: 1cm;
+            display: inline-table;
+            vertical-align: top;
+            width: 48%;
+            margin-right: 2%;
+            padding: 0.5cm;
             box-sizing: border-box;
             border: 2px solid #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
-          .divider {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -1px;
-            border-left: 2px dashed #000;
           }
           table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
+            page-break-inside: avoid;
           }
           th, td {
             border: 1px solid #000;
-            padding: 6px;
+            padding: 4px;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             word-wrap: break-word;
+          }
+          .sunday {
+            background-color: #ffe6e6 !important;
           }
         }
       `}</style>
@@ -120,95 +110,96 @@ const AttendancePrint = () => {
           <table>
             <thead>
               <tr>
-                <th colSpan="5" style={{ fontSize: "20px", padding: "10px", fontWeight: "bold" }}>
+                <th colSpan="7" style={{ fontSize: "16px", padding: "6px", fontWeight: "bold" }}>
                   DAILY TIME RECORD
                 </th>
               </tr>
               <tr>
-                <td colSpan="2"><strong>Employee Name</strong></td>
-                <td colSpan="3"><strong>Employee Number</strong></td>
+                <td colSpan="3"><strong>Employee Name</strong></td>
+                <td colSpan="4"><strong>Employee Number</strong></td>
               </tr>
               <tr>
-                <td colSpan="2"><strong>Pay Period Starting</strong></td>
-                <td colSpan="3"><strong>Pay Period Ending</strong></td>
+                <td colSpan="3"><strong>Pay Period Starting</strong></td>
+                <td colSpan="4"><strong>Pay Period Ending</strong></td>
               </tr>
               <tr>
                 <th>Date</th>
                 <th>Day</th>
-                <th>In</th>
-                <th>Out</th>
+                <th>AM In</th>
+                <th>AM Out</th>
+                <th>PM In</th>
+                <th>PM Out</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {allDays.map((item) => (
-                <Cell key={`left-${item._id || `day-${item.date}`}`} item={item} />
+                <Cell key={`left-${item._id}`} item={item} />
               ))}
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan="5"><strong>Total</strong></td>
+                <td colSpan="7"><strong>Total</strong></td>
               </tr>
               <tr>
-                <td colSpan="5"><strong>Notes</strong></td>
+                <td colSpan="7"><strong>Notes</strong></td>
               </tr>
               <tr>
-                <td colSpan="5"><strong>Approver's Name & Designation</strong></td>
+                <td colSpan="7"><strong>Approver's Name & Designation</strong></td>
               </tr>
               <tr>
-                <td colSpan="2"><strong>Employee's Signature</strong></td>
-                <td colSpan="3"><strong>Approver's Signature</strong></td>
+                <td colSpan="3"><strong>Employee's Signature</strong></td>
+                <td colSpan="4"><strong>Approver's Signature</strong></td>
               </tr>
             </tfoot>
           </table>
         </div>
 
-        {/* Divider */}
-        <div className="divider"></div>
-
-        {/* Right Copy (Mirror) */}
+        {/* Right Copy */}
         <div className="right-copy">
           <table>
             <thead>
               <tr>
-                <th colSpan="5" style={{ fontSize: "20px", padding: "10px", fontWeight: "bold" }}>
+                <th colSpan="7" style={{ fontSize: "16px", padding: "6px", fontWeight: "bold" }}>
                   DAILY TIME RECORD
                 </th>
               </tr>
               <tr>
-                <td colSpan="2"><strong>Employee Name</strong></td>
-                <td colSpan="3"><strong>Employee Number</strong></td>
+                <td colSpan="3"><strong>Employee Name</strong></td>
+                <td colSpan="4"><strong>Employee Number</strong></td>
               </tr>
               <tr>
-                <td colSpan="2"><strong>Pay Period Starting</strong></td>
-                <td colSpan="3"><strong>Pay Period Ending</strong></td>
+                <td colSpan="3"><strong>Pay Period Starting</strong></td>
+                <td colSpan="4"><strong>Pay Period Ending</strong></td>
               </tr>
               <tr>
                 <th>Date</th>
                 <th>Day</th>
-                <th>In</th>
-                <th>Out</th>
+                <th>AM In</th>
+                <th>AM Out</th>
+                <th>PM In</th>
+                <th>PM Out</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {allDays.map((item) => (
-                <Cell key={`right-${item._id || `day-${item.date}`}`} item={item} />
+                <Cell key={`right-${item._id}`} item={item} />
               ))}
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan="5"><strong>Total</strong></td>
+                <td colSpan="7"><strong>Total</strong></td>
               </tr>
               <tr>
-                <td colSpan="5"><strong>Notes</strong></td>
+                <td colSpan="7"><strong>Notes</strong></td>
               </tr>
               <tr>
-                <td colSpan="5"><strong>Approver's Name & Designation</strong></td>
+                <td colSpan="7"><strong>Approver's Name & Designation</strong></td>
               </tr>
               <tr>
-                <td colSpan="2"><strong>Employee's Signature</strong></td>
-                <td colSpan="3"><strong>Approver's Signature</strong></td>
+                <td colSpan="3"><strong>Employee's Signature</strong></td>
+                <td colSpan="4"><strong>Approver's Signature</strong></td>
               </tr>
             </tfoot>
           </table>
