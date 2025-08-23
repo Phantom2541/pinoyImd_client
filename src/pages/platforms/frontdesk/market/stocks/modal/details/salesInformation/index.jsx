@@ -7,6 +7,8 @@ const SalesInformation = ({
   variants = {},
   setInfo = () => {},
   setVariants = () => {},
+  setIsDuplicate = () => {},
+  isDuplicate = false,
 }) => {
   const enableVariants = () => {
     setVariants({ types: [{ title: "", options: [""] }] });
@@ -38,7 +40,12 @@ const SalesInformation = ({
         {!hasVariants ? (
           <Basic info={info} setInfo={setInfo} />
         ) : (
-          <Variations variants={variants} setVariants={setVariants} />
+          <Variations
+            variants={variants}
+            setVariants={setVariants}
+            setIsDuplicate={setIsDuplicate}
+            isDuplicate={isDuplicate}
+          />
         )}
         {!hasVariants && (
           <MDBBtn

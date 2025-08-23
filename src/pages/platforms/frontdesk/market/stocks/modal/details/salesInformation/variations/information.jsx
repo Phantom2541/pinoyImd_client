@@ -1,10 +1,12 @@
 import { MDBBtn, MDBInput } from "mdbreact";
 import { useState } from "react";
 import { capitalize } from "lodash";
+import validate from "../../../validate";
 const Information = ({ variants, setVariants = () => {} }) => {
   const [form, setForm] = useState({ price: 0, cost: 0, stock: 0 });
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate.pricing(false, variants)) return;
     const { types = [], prices: _prices = {} } = variants;
     var prices = { ..._prices };
     const options1 = types[0]?.options || [];

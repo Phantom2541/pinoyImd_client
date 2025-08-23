@@ -9,19 +9,26 @@ const Details = ({ product }) => {
   const [info, setInfo] = useState({});
   const [variants, setVariants] = useState({});
   const [images, setImages] = useState({ covers: [null, null, null, null] });
-  console.log("variants", variants);
+  const [isDuplicate, setIsDuplicate] = useState(false);
   return (
     <>
       <Product product={product} />
-      <Specifications />
-      <Description />
+      <Specifications info={info} setInfo={setInfo} />
+      <Description info={info} setInfo={setInfo} />
       <SalesInformation
         variants={variants}
         setVariants={setVariants}
         info={info}
         setInfo={setInfo}
+        setIsDuplicate={setIsDuplicate}
+        isDuplicate={isDuplicate}
       />
-      <Media variants={variants} images={images} setImages={setImages} />
+      <Media
+        variants={variants}
+        images={images}
+        setImages={setImages}
+        isDuplicate={isDuplicate}
+      />
     </>
   );
 };

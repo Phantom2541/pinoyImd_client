@@ -21,6 +21,21 @@ export default function Collapsable({ branch = {} }) {
   const { token, auth } = useSelector(({ auth }) => auth),
     { personnels = [], ao = "" } = branch,
     dispatch = useDispatch();
+
+  let filteredPersonnels = personnels
+    .map((p, index) => ({ ...p, index }))
+    .filter((p) => p.status?.toLowerCase() === "active");
+
+  // Step 2: find AO personnel (even if not active)
+  const aoUser = personnels
+    .map((p, index) => ({ ...p, index }))
+    .find((p) => p.user._id === ao);
+
+  // Step 3: add AO user to top if exists and not already in the list
+  if (aoUser && !filteredPersonnels.some((p) => p._id === aoUser._id)) {
+    filteredPersonnels = [aoUser, ...filteredPersonnels];
+  }
+
   // const
   const style = {
     border: "black !important",
@@ -121,8 +136,8 @@ export default function Collapsable({ branch = {} }) {
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        {Array.isArray(personnels) &&
-          personnels?.map((personnel, index) => {
+        {Array.isArray(filteredPersonnels) &&
+          filteredPersonnels?.map((personnel, index) => {
             const { user = {}, contract = { designation: -1 } } =
               personnel || {};
 
@@ -130,7 +145,7 @@ export default function Collapsable({ branch = {} }) {
             return (
               <tr key={index} style={style}>
                 <td style={style}>
-                  {fullName(user?.fullName)}
+                  {index + 1}. {fullName(user?.fullName)}
                   {isAO && (
                     <MDBBadge
                       color="primary"
