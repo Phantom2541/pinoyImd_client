@@ -55,11 +55,23 @@ const Index = () => {
     <MDBTable responsive hover bordered>
       <thead
         style={{
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "#ffffffff",
           color: "black",
           textAlign: "center",
         }}
-      >
+      ><tr>
+                <th colSpan="7" style={{ fontSize: "16px", padding: "0px", fontWeight: "bold" }}>
+                  DAILY TIME RECORD
+                </th>
+              </tr>
+              <tr>
+                <td colSpan="3"><strong>Employee Name</strong></td>
+                <td colSpan="4"><strong>Employee Number</strong></td>
+              </tr>
+              <tr>
+                <td colSpan="3"><strong>Pay Period Starting</strong></td>
+                <td colSpan="4"><strong>Pay Period Ending</strong></td>
+              </tr>
         <tr>
           <th>Date</th>
           <th>Day</th>
