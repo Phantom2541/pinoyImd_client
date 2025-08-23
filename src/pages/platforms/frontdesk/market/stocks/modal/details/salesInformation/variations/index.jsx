@@ -5,6 +5,7 @@ import Information from "./information";
 
 const Variations = ({
   variants,
+  isDuplicate = false,
   setVariants = () => {},
   setIsDuplicate = () => {},
 }) => {
@@ -41,7 +42,11 @@ const Variations = ({
         </div>
       </div>
       <Information variants={variants} setVariants={setVariants} />
-      <Pricing variants={variants} setVariants={setVariants} />
+      <Pricing
+        variants={variants}
+        setVariants={setVariants}
+        isDuplicate={isDuplicate}
+      />
     </>
   );
 };

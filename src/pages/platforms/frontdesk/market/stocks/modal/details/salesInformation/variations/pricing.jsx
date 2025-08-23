@@ -1,7 +1,8 @@
 import { MDBInput, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import { useState } from "react";
+import validate from "../../../validate";
 
-const Pricing = ({ variants, setVariants = () => {} }) => {
+const Pricing = ({ variants, setVariants = () => {}, isDuplicate = false }) => {
   const { types = [], prices = {} } = variants || {};
   const [option1Focus, setOption1Focus] = useState(-1);
   const [option2Focus, setOption2Focus] = useState(-1);
@@ -15,7 +16,12 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
     setOption2Focus(op2);
   };
 
+  // 🔎 Validation before allowing changes
+
   const handleChange = (primaryKey, option, value, secondaryKey) => {
+    // ✅ run validation before allowing edits
+    if (!validate.pricing(isDuplicate, variants)) return;
+
     let _prices = { ...prices };
 
     if (secondaryKey) {
@@ -66,7 +72,7 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
           position: "absolute",
           top: "-12px",
           left: "15px",
-          background: "#fff", // same as container background
+          background: "#fff",
           padding: "0 5px",
           color: "gray",
         }}

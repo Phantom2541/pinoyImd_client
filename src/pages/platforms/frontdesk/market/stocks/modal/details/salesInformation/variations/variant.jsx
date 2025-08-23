@@ -161,7 +161,7 @@ const Variant = ({
         {variant.options.map((option, subIndex) => {
           const showDup = optionDupList[subIndex];
           return (
-            <div className="d-flex align-items-center" key={subIndex}>
+            <div className="d-flex align-items-center mx-3" key={subIndex}>
               <div className="w-100 mt-n4">
                 <MDBInput
                   label="Enter Options (e.g., Red, Blue, Green)"

@@ -8,6 +8,7 @@ const SalesInformation = ({
   setInfo = () => {},
   setVariants = () => {},
   setIsDuplicate = () => {},
+  isDuplicate = false,
 }) => {
   const enableVariants = () => {
     setVariants({ types: [{ title: "", options: [""] }] });
@@ -43,6 +44,7 @@ const SalesInformation = ({
             variants={variants}
             setVariants={setVariants}
             setIsDuplicate={setIsDuplicate}
+            isDuplicate={isDuplicate}
           />
         )}
         {!hasVariants && (

@@ -69,18 +69,20 @@ export default function Modal() {
 
           <div className="d-flex justify-content-between">
             {isDetails && (
-              <MDBBtn
-                size="md"
-                type="button"
-                color="secondary"
-                onClick={() => setIsDetails(false)}
-              >
-                Back
-              </MDBBtn>
+              <>
+                <MDBBtn
+                  size="md"
+                  type="button"
+                  color="secondary"
+                  onClick={() => setIsDetails(false)}
+                >
+                  Back
+                </MDBBtn>
+                <MDBBtn size="md" color="primary" type="submit">
+                  Save
+                </MDBBtn>
+              </>
             )}
-            <MDBBtn size="md" color="primary" type="submit">
-              Save
-            </MDBBtn>
           </div>
         </form>
       </MDBModalBody>

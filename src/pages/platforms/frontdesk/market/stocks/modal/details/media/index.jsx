@@ -1,7 +1,12 @@
 import CoverPhoto from "./coverPhoto";
 import Variants from "./variants";
 
-const Media = ({ variants, images, setImages = () => {} }) => {
+const Media = ({
+  isDuplicate = false,
+  variants,
+  images,
+  setImages = () => {},
+}) => {
   const variant1 = { ...(variants?.types?.[0] || {}) };
   return (
     <div
@@ -27,7 +32,12 @@ const Media = ({ variants, images, setImages = () => {} }) => {
       </span>
       <CoverPhoto images={images} setImages={setImages} />
       {variant1?.options?.length > 0 && (
-        <Variants images={images} setImages={setImages} variant={variant1} />
+        <Variants
+          images={images}
+          setImages={setImages}
+          variant={variant1}
+          isDuplicate={isDuplicate}
+        />
       )}
     </div>
   );

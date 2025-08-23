@@ -1,6 +1,11 @@
 import { MDBIcon } from "mdbreact";
-import Swal from "sweetalert2";
-const Variants = ({ images, setImages = () => {}, variant = {} }) => {
+import validate from "../../validate";
+const Variants = ({
+  isDuplicate = false,
+  images,
+  setImages = () => {},
+  variant = {},
+}) => {
   const { options = [] } = variant;
   // handle file upload / re-upload
   const handleUpload = (e, option) => {
@@ -95,23 +100,10 @@ const Variants = ({ images, setImages = () => {}, variant = {} }) => {
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => handleDrop(e, option)}
                 onClick={() => {
-                  if (!option) {
-                    return Swal.fire({
-                      icon: "warning",
-                      title: `<span style="font-size: 20px; font-weight: 600; color:#f39c12">⚠ Missing Option Name</span>`,
-                      html: `
-        <div style="font-size:16px; color:#333; text-align:left; line-height:1.5;">
-          You are trying to <b style="color:#3498db;">upload an image</b> for 
-          <b style="color:#e74c3c;">Option #${index + 1}</b>, 
-          but this option doesn't have a <b>name</b> yet.
-          <br/><br/>
-          👉 Please add a name for this option before uploading an image.
-        </div>
-      `,
-                      confirmButtonText: "Got it",
-                      confirmButtonColor: "#3085d6",
-                    });
-                  }
+                  if (!validate.img.hasOption(option, variant?.title, index))
+                    return;
+                  if (validate.img.duplicateVariant(isDuplicate)) return;
+
                   document.getElementById(`fileInput-variant-${index}`).click();
                 }}
               >
