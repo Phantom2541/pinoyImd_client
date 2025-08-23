@@ -21,11 +21,11 @@ const properFullname = (fullname) => {
       .join("")}.`;
   }
 
-  return capitalize(
-    `${fname} ${mname && middleName} ${lname}${suffix && ` ${suffix}`}${
-      postnominal && `, ${postnominal}`
-    }`.replace(/^\s+|\s+$/gm, "")
-  );
+  return `${capitalize(fname)} ${mname && capitalize(middleName)} ${capitalize(
+    lname
+  )}${suffix && ` ${capitalize(suffix)}`}${
+    postnominal && `, ${postnominal.toUpperCase()}`
+  }`.replace(/^\s+|\s+$/gm, "");
 };
 
 export default properFullname;

@@ -125,44 +125,48 @@ export default function Modal() {
               </tr>
             </thead>
             <tbody>
-              {collections.map((item, index) => (
-                <tr key={index}>
-                  <td>
-                    <span style={{ fontWeight: 500 }}>
-                      {fullName(item.user.fullName)}
-                    </span>{" "}
-                    <br />
-                    <span>
-                      {Policy.getPositions(item?.contract?.designation)}
-                    </span>
-                  </td>
-                  <td>
-                    <select
-                      className="form-control form-control-sm"
-                      value={item?.code}
-                      onChange={({ target }) =>
-                        handleChange(item._id, target.value)
-                      }
-                    >
-                      <option value="">Choose a duty code</option>
-                      {Duty.getWithoutOff().map(
-                        ({ code, label, time }, index) => (
-                          <option
-                            value={code}
-                            style={{
-                              display: codes.includes(code) ? "none" : "block",
-                            }}
-                            title={`${code} = ${time} ${label}`}
-                            key={index}
-                          >
-                            {code}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </td>
-                </tr>
-              ))}
+              {collections
+                .filter(({ contract }) => contract.designation !== 42)
+                .map((item, index) => (
+                  <tr key={index}>
+                    <td>
+                      <span style={{ fontWeight: 500 }}>
+                        {fullName(item.user.fullName)}
+                      </span>{" "}
+                      <br />
+                      <span>
+                        {Policy.getPositions(item?.contract?.designation)}
+                      </span>
+                    </td>
+                    <td>
+                      <select
+                        className="form-control form-control-sm"
+                        value={item?.code}
+                        onChange={({ target }) =>
+                          handleChange(item._id, target.value)
+                        }
+                      >
+                        <option value="">Choose a duty code</option>
+                        {Duty.getWithoutOff().map(
+                          ({ code, label, time }, index) => (
+                            <option
+                              value={code}
+                              style={{
+                                display: codes.includes(code)
+                                  ? "none"
+                                  : "block",
+                              }}
+                              title={`${code} = ${time} ${label}`}
+                              key={index}
+                            >
+                              {code}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </MDBTable>
         </div>
