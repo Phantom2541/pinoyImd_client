@@ -8,7 +8,7 @@ const Basic = ({ info, setInfo = () => {} }) => {
           required
           label="Price"
           type="number"
-          value={String(info.price)}
+          value={String(info.price) || ""}
           onChange={(e) => setInfo({ ...info, price: Number(e.target.value) })}
         />
       </MDBCol>
@@ -17,8 +17,8 @@ const Basic = ({ info, setInfo = () => {} }) => {
           label="Cost"
           type="number"
           required
-          value={String(info.price)}
-          onChange={(e) => setInfo({ ...info, price: Number(e.target.value) })}
+          value={String(info.cost) || ""}
+          onChange={(e) => setInfo({ ...info, cost: Number(e.target.value) })}
         />
       </MDBCol>
       <MDBCol>
@@ -26,8 +26,8 @@ const Basic = ({ info, setInfo = () => {} }) => {
           label="Stock"
           type="number"
           required
-          value={String(info.price)}
-          onChange={(e) => setInfo({ ...info, price: Number(e.target.value) })}
+          value={String(info.stock) || ""}
+          onChange={(e) => setInfo({ ...info, stock: Number(e.target.value) })}
         />
       </MDBCol>
     </MDBRow>

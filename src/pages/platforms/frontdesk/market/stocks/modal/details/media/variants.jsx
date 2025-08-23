@@ -23,8 +23,6 @@ const Variants = ({ images, setImages = () => {}, variant = {} }) => {
     setImages({ ...newImages });
   };
 
-  console.log("images", images);
-
   // drag & drop
   const handleDragStart = (e, option) => {
     e.dataTransfer.setData("option", option);
@@ -65,7 +63,7 @@ const Variants = ({ images, setImages = () => {}, variant = {} }) => {
           color: "gray",
         }}
       >
-        Variants
+        {variant?.title || "Variant Name"} Images
       </span>
       <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
         {options?.map((option, index) => {
@@ -102,16 +100,14 @@ const Variants = ({ images, setImages = () => {}, variant = {} }) => {
                       icon: "warning",
                       title: `<span style="font-size: 20px; font-weight: 600; color:#f39c12">⚠ Missing Option Name</span>`,
                       html: `
-                                   <div style="font-size:16px; color:#333; text-align:left; line-height:1.5;">
-                                   You are trying to remove an image from 
-                                    <b style="color:#e74c3c;">Option #${
-                                      index + 1
-                                    }</b>, 
-                                    but this option doesn't have a <b>name</b> yet.
-                                    <br/><br/>
-                                    👉 Please add a name for this option before adding or removing an image.
-                                    </div>
-                                `,
+        <div style="font-size:16px; color:#333; text-align:left; line-height:1.5;">
+          You are trying to <b style="color:#3498db;">upload an image</b> for 
+          <b style="color:#e74c3c;">Option #${index + 1}</b>, 
+          but this option doesn't have a <b>name</b> yet.
+          <br/><br/>
+          👉 Please add a name for this option before uploading an image.
+        </div>
+      `,
                       confirmButtonText: "Got it",
                       confirmButtonColor: "#3085d6",
                     });

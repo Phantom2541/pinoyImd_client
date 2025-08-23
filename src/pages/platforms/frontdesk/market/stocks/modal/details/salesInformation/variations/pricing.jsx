@@ -47,9 +47,9 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
 
   const handleValue = (primary, option, secondary) => {
     if (secondary) {
-      return prices?.[primary]?.[secondary]?.[option] ?? "0";
+      return prices?.[primary]?.[secondary]?.[option] ?? "";
     }
-    return prices?.[primary]?.[option] ?? "0";
+    return prices?.[primary]?.[option] ?? "";
   };
 
   return (
@@ -127,10 +127,11 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
                         <td key={field}>
                           <div className="px-3 mr-1">
                             <MDBInput
+                              required
                               className="m-0 p-1 mt-n4 mb-n4"
                               label={fieldIndex <= 1 ? "₱" : ""}
                               value={String(
-                                handleValue(option1, field, option2) || "0"
+                                handleValue(option1, field, option2) || ""
                               )}
                               onChange={(e) =>
                                 handleChange(
@@ -166,7 +167,8 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
                         <div className="px-3 mr-1">
                           <MDBInput
                             className="m-0 p-1 mt-n4 mb-n4"
-                            value={String(handleValue(option1, field) || "0")}
+                            required
+                            value={String(handleValue(option1, field) || "")}
                             onChange={(e) =>
                               handleChange(
                                 option1,

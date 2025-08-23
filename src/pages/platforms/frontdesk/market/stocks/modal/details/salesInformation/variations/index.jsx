@@ -3,7 +3,11 @@ import Variant from "./variant";
 import Pricing from "./pricing";
 import Information from "./information";
 
-const Variations = ({ variants, setVariants = () => {} }) => {
+const Variations = ({
+  variants,
+  setVariants = () => {},
+  setIsDuplicate = () => {},
+}) => {
   return (
     <>
       <div className="d-flex justify-content-center align-items-center">
@@ -13,6 +17,8 @@ const Variations = ({ variants, setVariants = () => {} }) => {
               index={index}
               variant={variant}
               setVariants={setVariants}
+              variants={variants}
+              setIsDuplicate={setIsDuplicate}
             />
           ))}
           {variants.types?.length < 2 && (
