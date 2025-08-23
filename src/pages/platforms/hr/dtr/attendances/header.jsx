@@ -37,19 +37,13 @@ const Header = () => {
     );
   }, [token, dispatch, activePlatform, month, year]);
 
-  // ✅ Check for July and June records
-  const hasJulyRecord = collections.some((item) => {
+  // ✅ Dynamic check for current month
+  const hasRecordForCurrentMonth = collections.some((item) => {
     const date = new Date(item.createdAt);
-    return date.getMonth() === 6; // July (0-based index)
+    return date.getMonth() === month - 1 && date.getFullYear() === year;
   });
 
-  const hasJuneRecord = collections.some((item) => {
-    const date = new Date(item.createdAt);
-    return date.getMonth() === 5; // June
-  });
-
-  // ✅ Show button logic
-  const showPrintButton = hasJulyRecord || (month === 6 && hasJuneRecord);
+  const showPrintButton = hasRecordForCurrentMonth;
 
   return (
     <div style={{ position: "relative" }}>

@@ -4,6 +4,7 @@ import HealthCard from "../../../pages/platforms/SuperAdmin/healthCard";
 import Products from "../../../pages/platforms/SuperAdmin/commerce/supplies/products";
 import generics from "../../../pages/platforms/SuperAdmin/commerce/medicines/generics";
 import machines from "../../../pages/platforms/SuperAdmin/commerce/assets/machines";
+import PasswordReseter from "../../../pages/platforms/SuperAdmin/passwordReseter";
 
 const admin = [
   {
@@ -25,7 +26,6 @@ const admin = [
     icon: "code-branch",
     component: HealthCard,
   },
-
   {
     name: "Users",
     path: "/users",
@@ -77,6 +77,12 @@ const admin = [
         component: generics, // add your component here
       },
     ],
+  },
+  {
+    name: "Password Reseter",
+    path: "/super/admin/password-reseter",
+    icon: "key",
+    component: PasswordReseter,
   },
 ];
 

@@ -32,8 +32,8 @@
 .IDGenerator-ID-back {
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  width: 350px;
-  height: 450px;
+  width: 319px;
+  height: 505px;
 }
 
 .IDGenerator-ID-front img,
@@ -402,8 +402,8 @@
 }
 
 .IDGenerator-modal-preview-container {
-  height: 450px;
-  width: 350px;
+  height: 505px;
+  width: 319px;
   position: relative;
   display: inline-block; /* keep it tight around image */
 }
@@ -454,18 +454,37 @@
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
 }
 
-.IDGenerator-modal-template-calibrate button {
+.IDGenerator-modal-template-calibrate-buttons {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+  /* max-width: 400px; */
+}
+
+.IDGenerator-modal-template-calibrate-buttons div {
+  display: flex;
+  align-items: center;
+}
+
+.IDGenerator-modal-template-calibrate-buttons label {
+  all: unset;
+  font-weight: 400;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  width: 100px;
+}
+
+.IDGenerator-modal-template-calibrate-buttons button {
   border: 1px solid #d9d9d9;
   background-color: white;
   border-radius: 3px;
   padding: 5px 10px;
-}
-
-.IDGenerator-modal-template-calibrate-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  max-width: 400px;
+  font-size: 0.8rem;
+  max-width: 200px;
+  white-space: nowrap; /* Iwasan ang line break */
+  overflow: hidden; /* Tagong lampas na text */
+  text-overflow: ellipsis; /* Maglagay ng "..." */
 }
 
 .IDGenerator-modal-template-calibrate-buttons button:hover {

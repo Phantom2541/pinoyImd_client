@@ -19,6 +19,7 @@ import {
   Payments,
   // SOA,
   Onboarding,
+  Inhouse,
 } from "../../../../pages/platforms/cashier";
 
 const cashier = [
@@ -114,6 +115,13 @@ const cashier = [
         icon: "people-carry",
         title: "External Service Providers (Sendouts)",
         component: Outsources,
+      },
+      {
+        name: "Inhouse",
+        path: "/inhouse",
+        icon: "user-md",
+        title: "Inhouse",
+        component: Inhouse,
       },
       {
         name: "Affiliated Patient Programs",

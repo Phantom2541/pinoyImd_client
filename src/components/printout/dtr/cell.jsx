@@ -1,24 +1,17 @@
 import React from "react";
 
-const Cell = ({ item }) => {
-  const {
-    date,
-    day,
-    in: timeIn,
-    out: timeOut,
-    status,
-    isSunday
-  } = item;
+export default function Cell({ item }) {
+  const isSunday = item.day === "Sunday";
 
   return (
-    <tr style={{ backgroundColor: isSunday ? "#f8d7da" : "inherit" }}>
-      <td style={{ textAlign: "center" }}>{date}</td>
-      <td style={{ textAlign: "center" }}>{day}</td>
-      <td style={{ textAlign: "center" }}>{timeIn || "-"}</td>
-      <td style={{ textAlign: "center" }}>{timeOut || "-"}</td>
-      <td style={{ textAlign: "center", textTransform: "capitalize" }}>{status || "-"}</td>
+    <tr className={isSunday ? "sunday" : ""}>
+      <td>{item.date}</td>
+      <td>{item.day}</td>
+      <td>{item.amIn || "-"}</td>
+      <td>{item.amOut || "-"}</td>
+      <td>{item.pmIn || "-"}</td>
+      <td>{item.pmOut || "-"}</td>
+      <td>{item.status || "-"}</td>
     </tr>
   );
-};
-
-export default Cell;
+}

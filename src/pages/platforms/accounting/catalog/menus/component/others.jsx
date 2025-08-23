@@ -42,9 +42,9 @@ export default function Others({ handleChange, handleValue }) {
             Discountable
           </label>
           <select
-            value={handleValue("hasDiscount")}
+            value={handleValue("discountable")}
             onChange={(e) =>
-              handleChange("hasDiscount", e.target.value === "true")
+              handleChange("discountable", e.target.value === "true")
             }
             className="mb-0 form-control"
           >

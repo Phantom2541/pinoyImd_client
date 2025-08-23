@@ -30,7 +30,6 @@ export default function Modal() {
       size={isDetails ? "xl" : "lg"}
       isOpen={show}
       toggle={toggle}
-      backdrop
       className="transition transition-all"
       disableFocusTrap={false}
     >

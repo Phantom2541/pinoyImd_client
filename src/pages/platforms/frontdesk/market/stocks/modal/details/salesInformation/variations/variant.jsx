@@ -52,6 +52,9 @@ const Variant = ({ index, variant, setVariants = () => {} }) => {
           setVariants((prevVariants) => {
             const newVariants = { ...prevVariants };
             newVariants.types.splice(index, 1);
+            if (newVariants.types.length === 0) {
+              return {};
+            }
             return { ...newVariants, prices: {} };
           });
         }}
