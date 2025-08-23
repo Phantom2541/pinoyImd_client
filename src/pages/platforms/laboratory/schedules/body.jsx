@@ -5,6 +5,7 @@ import { Duty } from "../../../../services/fakeDb";
 import Footer from "./footer";
 import EditableSelect from "../../../../components/customizable/editableSelect";
 import { UPDATE } from "../../../../services/redux/slices/finance/bookkeeping/duties";
+import Legend from "./legend";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -62,7 +63,11 @@ const Body = () => {
           </tr>
           <tr>
             {weekHeaders.map((day, index) => (
-              <th key={index} className="text-center">
+              <th
+                key={index}
+                className="text-center"
+                style={{ color: day === "Sun" ? "red" : "" }}
+              >
                 {day}
               </th>
             ))}
@@ -135,7 +140,7 @@ const Body = () => {
               ))}
         </tbody>
       </table>
-
+      <Legend />
       <Footer />
     </MDBCardBody>
   );

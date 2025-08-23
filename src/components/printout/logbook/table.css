@@ -1,8 +1,8 @@
 @media print {
   /* Hide everything initially */
-  body * {
+  /* body * {
     visibility: hidden;
-  }
+  } */
 
   /* Show only the banner and table */
   .banner,

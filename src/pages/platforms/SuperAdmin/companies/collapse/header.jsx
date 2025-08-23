@@ -1,10 +1,17 @@
 import { MDBBtn } from "mdbreact";
 
-const Header = ({ company = {}, isOpen, textColor, index, setActiveId }) => {
+const Header = ({
+  company = {},
+  isOpen,
+  textColor,
+  index,
+  total,
+  setActiveId,
+}) => {
   const { name = "", subName = "" } = company;
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
-      {index + 1}. {name} {subName}
+      {total - index}. {name} {subName}
       <div className="d-flex">
         <MDBBtn
           size="sm"
