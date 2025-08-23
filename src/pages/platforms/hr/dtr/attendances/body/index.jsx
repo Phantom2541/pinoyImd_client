@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import Cell from "./cell";
 
 const Index = () => {
-  // Gamitin collections imbes na records
   const { month, year, collections = [] } = useSelector(({ attendances }) => attendances);
 
   const jsMonth = month - 1;
@@ -22,8 +21,10 @@ const Index = () => {
         ...rec,
         date: dayNum,
         day: recDate.toLocaleDateString("en-US", { weekday: "long" }),
-        in: rec.in || "",
-        out: rec.out || "",
+        amIn: rec.amIn || "",
+        amOut: rec.amOut || "",
+        pmIn: rec.pmIn || "",
+        pmOut: rec.pmOut || "",
         status: rec.status || "",
         isSunday: recDate.getDay() === 0,
       };
@@ -39,8 +40,10 @@ const Index = () => {
       return {
         date: dayNum,
         day: dateObj.toLocaleDateString("en-US", { weekday: "long" }),
-        in: "",
-        out: "",
+        amIn: "",
+        amOut: "",
+        pmIn: "",
+        pmOut: "",
         status: "",
         isSunday: dateObj.getDay() === 0,
         _id: `empty-${dayNum}`,
@@ -54,8 +57,10 @@ const Index = () => {
         <tr>
           <th>Date</th>
           <th>Day</th>
-          <th>In</th>
-          <th>Out</th>
+          <th>AM In</th>
+          <th>AM Out</th>
+          <th>PM In</th>
+          <th>PM Out</th>
           <th>Status</th>
         </tr>
       </thead>
