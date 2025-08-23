@@ -1,11 +1,13 @@
-import { useState } from "react";
 import Basic from "./basic";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Variations from "./variations";
 
-const SalesInformation = () => {
-  const [variants, setVariants] = useState({});
-
+const SalesInformation = ({
+  info,
+  variants = {},
+  setInfo = () => {},
+  setVariants = () => {},
+}) => {
   const enableVariants = () => {
     setVariants({ types: [{ title: "", options: [""] }] });
   };
@@ -34,7 +36,7 @@ const SalesInformation = () => {
       </span>
       <div className="p-2">
         {!hasVariants ? (
-          <Basic />
+          <Basic info={info} setInfo={setInfo} />
         ) : (
           <Variations variants={variants} setVariants={setVariants} />
         )}

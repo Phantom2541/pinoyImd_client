@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Description from "./description";
 import Media from "./media";
 import Product from "./product";
@@ -5,13 +6,22 @@ import SalesInformation from "./salesInformation";
 import Specifications from "./specification";
 
 const Details = ({ product }) => {
+  const [info, setInfo] = useState({});
+  const [variants, setVariants] = useState({});
+  const [images, setImages] = useState({ covers: [null, null, null, null] });
+  console.log("variants", variants);
   return (
     <>
       <Product product={product} />
       <Specifications />
       <Description />
-      <SalesInformation />
-      <Media />
+      <SalesInformation
+        variants={variants}
+        setVariants={setVariants}
+        info={info}
+        setInfo={setInfo}
+      />
+      <Media variants={variants} images={images} setImages={setImages} />
     </>
   );
 };
