@@ -107,6 +107,23 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+export const RESET_PASSWORD = createAsyncThunk(
+  `${url}/reset_password`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "reset_password");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const VALIDATE_ID = createAsyncThunk(
   `${url}/validate_ID`,
   (form, thunkAPI) => {
@@ -129,6 +146,9 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+    },
     CUSTOMALERT: (state, data) => {
       state.message = data.payload;
     },
@@ -164,6 +184,7 @@ export const reduxSlice = createSlice({
       .addCase(GETPATIENTS.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.filtered = payload;
+        state.collections = payload;
         state.isLoading = false;
       })
       .addCase(GETPATIENTS.rejected, (state, action) => {
@@ -207,6 +228,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error;
+        state.isLoading = false;
+      })
+
+      .addCase(RESET_PASSWORD.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(RESET_PASSWORD.fulfilled, (state, action) => {
+        const { success, payload } = action?.payload;
+        const index = state.collections.findIndex(
+          (item) => item?._id === payload?._id
+        );
+        state.collections.splice(index, 1);
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(RESET_PASSWORD.rejected, (state, action) => {
         const { error } = action;
         state.message = error;
         state.isLoading = false;
@@ -262,6 +304,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, CUSTOMALERT } = reduxSlice.actions;
+export const { RESET, CUSTOMALERT, SetCOLLECTIONS } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

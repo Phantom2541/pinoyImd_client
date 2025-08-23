@@ -10,6 +10,7 @@ import {
   Membership,
   Wellness,
   Referrals,
+  Inhouse,
 } from "./sources";
 
 import {
@@ -44,4 +45,5 @@ export {
   Payments,
   SOA,
   Reseco,
+  Inhouse,
 };

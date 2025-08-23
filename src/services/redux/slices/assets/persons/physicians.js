@@ -125,6 +125,49 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   }
 });
 
+export const TAG = createAsyncThunk(`${url}/tag`, (form, thunkAPI) => {
+  try {
+    return axioKit.save(url, form.data, form.token, "tag");
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+export const UNTAG = createAsyncThunk(`${url}/untag`, (form, thunkAPI) => {
+  try {
+    return axioKit.save(url, form.data, form.token, "untag");
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const CHANGE_MAIN = createAsyncThunk(
+  `${url}/CHANGE_MAIN`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "change_main");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token);
@@ -336,6 +379,60 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
+      .addCase(TAG.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TAG.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        if (state.collections.length > 0) {
+          state.collections.unshift(payload);
+          state.filtered.unshift(payload);
+        }
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+
+      .addCase(TAG.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+      .addCase(UNTAG.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UNTAG.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UNTAG.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(CHANGE_MAIN.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(CHANGE_MAIN.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(CHANGE_MAIN.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error?.message || "";
+        state.formSubmitted = false;
+      })
       .addCase(UPDATE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;

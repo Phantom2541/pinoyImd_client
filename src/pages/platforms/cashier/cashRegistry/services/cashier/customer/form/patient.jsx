@@ -98,7 +98,7 @@ export default function Patient({
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const _form = { ...form, password: form?.dob.replaceAll("-", "") };
+    const _form = { ...form };
     if (_id) {
       // update
       if (!isEqual(_form, customer)) {
@@ -131,6 +131,7 @@ export default function Patient({
       const body = {
         data: {
           ..._form,
+          password: form?.dob.replaceAll("-", ""),
           email: email || generateEmail(_form),
           activePlatform: {
             isPatient: true,

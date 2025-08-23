@@ -225,6 +225,78 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetAFFILIATED: (state, { payload }) => {
+      const { isNew = false, physican, branchID, oldMajor } = payload;
+      const updateCollections = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === branchID);
+        const affiliated = [...collections[index].affiliated];
+        if (isNew) {
+          affiliated.unshift(physican);
+          if (oldMajor._id) {
+            //to set isMajor to false
+            const oldMainIndex = collections.findIndex(
+              ({ _id }) => _id === oldMajor.branch
+            );
+            const { affiliated: aff = [] } = collections[oldMainIndex];
+            const afIndex = aff.findIndex(({ _id }) => _id === oldMajor._id);
+            aff[afIndex] = {
+              ...oldMajor,
+              isMajor: false,
+            };
+            collections[oldMainIndex] = {
+              ...collections[oldMainIndex],
+              affiliated: aff,
+            };
+          }
+        } else {
+          const afIndex = affiliated.findIndex(
+            ({ _id }) => _id === physican._id
+          );
+          affiliated.splice(afIndex, 1);
+        }
+        collections[index] = {
+          ...collections[index],
+          affiliated,
+        };
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
+    SetAFFILIATED_MAIN: (state, { payload }) => {
+      const { branchID, physician, currentMainBranch = "" } = payload;
+      const updateCollections = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === branchID);
+        const affiliated = [...collections[index].affiliated];
+        const afIndex = affiliated.findIndex(
+          ({ _id }) => _id === physician._id
+        );
+        affiliated[afIndex] = physician;
+        collections[index] = {
+          ...collections[index],
+          affiliated,
+        };
+
+        if (currentMainBranch) {
+          const mainIndex = collections.findIndex(
+            ({ _id }) => _id === currentMainBranch
+          );
+          const mainAffiliated = [...collections[mainIndex].affiliated];
+          const mainAfIndex = mainAffiliated.findIndex(
+            ({ user }) => user._id === physician?.user?._id
+          );
+          mainAffiliated[mainAfIndex] = {
+            ...mainAffiliated[mainAfIndex],
+            isMajor: false,
+          };
+          collections[mainIndex] = {
+            ...collections[mainIndex],
+            affiliated: mainAffiliated,
+          };
+        }
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
     SetCREATE: (state) => {
       state.selected = {
         department: state.department,
@@ -305,13 +377,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload;
+        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
 
-        let totalPAges = Math.floor(payload.length / state.maxPage);
-        if (payload.length % state.maxPage > 0) totalPAges += 1;
-        state.totalPages = totalPAges;
-        if (state.activePage > totalPAges) {
-          state.activePage = totalPAges;
-        }
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -583,6 +651,8 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetAFFILIATED,
+  SetAFFILIATED_MAIN,
   SetFILTERED,
   SetSELECTED,
   SetCOLLECTIONS,

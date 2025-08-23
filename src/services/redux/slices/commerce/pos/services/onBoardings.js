@@ -12,6 +12,7 @@ const initialState = {
   didSearch: false,
   selected: {},
   supplier: "all", //this is value for soa records header select
+  status: "pending",
   vendor: { _id: "" },
   vendorId: "",
   page: 0,
@@ -264,6 +265,7 @@ export const reduxSlice = createSlice({
           ({ status }) => status !== "done"
         );
       }
+      state.status = payload;
     },
     SetVENDOR: (state, { payload }) => {
       if (payload === "all") {
@@ -642,7 +644,7 @@ export const reduxSlice = createSlice({
 
         const updateCollections = (collections) => {
           const index = collections.findIndex(({ _id }) => _id === payload._id);
-          collections[index] = payload;
+          collections.splice(index, 1);
         };
 
         updateCollections(state.collections);
