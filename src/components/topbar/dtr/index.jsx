@@ -178,6 +178,16 @@ export default function DTR() {
         >
           Shifts
         </MDBDropdownItem>
+        <MDBDropdownItem
+          onClick={() => {
+            const target = `${activePlatform?.platform?.toLowerCase()}/shifts`;
+            if (history.location.pathname !== `/${target}`) {
+              history.push(`/${target}`);
+            }
+          }}
+        >
+          Schedule @Darrel ilagay mo dito work mo.
+        </MDBDropdownItem>
       </MDBDropdownMenu>
     </MDBDropdown>
   );
