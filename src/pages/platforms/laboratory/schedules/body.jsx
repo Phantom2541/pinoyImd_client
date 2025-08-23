@@ -63,7 +63,11 @@ const Body = () => {
           </tr>
           <tr>
             {weekHeaders.map((day, index) => (
-              <th key={index} className="text-center">
+              <th
+                key={index}
+                className="text-center"
+                style={{ color: day === "Sun" ? "red" : "" }}
+              >
                 {day}
               </th>
             ))}

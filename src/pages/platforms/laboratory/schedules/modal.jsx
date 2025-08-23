@@ -126,7 +126,7 @@ export default function Modal() {
             </thead>
             <tbody>
               {collections
-                .filter(({ contract }) => contract.designation !== 42)
+                .filter(({ contract }) => contract?.designation !== 42)
                 .map((item, index) => (
                   <tr key={index}>
                     <td>

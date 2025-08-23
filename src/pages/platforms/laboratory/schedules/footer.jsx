@@ -10,35 +10,38 @@ const Footer = () => {
     <div className="template-schedule-signatures">
       {[
         {
-          name: properFullname(lms?.fullName),
+          name: lms ? properFullname(lms?.fullName) : "",
           src: `${Cloudinary.getEndpoint()}/${lms?.sid || ""}/users/${
             lms?.email
           }/signature.png`,
           title: "Chief Medical Technologist",
+          label: "Prepared By:",
         },
         {
           name: admin ? properFullname(admin?.fullName) : "",
           title: "Administrator",
+          label: "Checked By:",
         },
         {
-          name: properFullname(pathologist?.fullName),
+          name: pathologist ? properFullname(pathologist?.fullName) : "",
           title: "Pathologist",
           src: `${Cloudinary.getEndpoint()}/${pathologist?.sid || ""}/users/${
             pathologist?.email
           }/signature.png`,
+          label: "Approved By:",
         },
       ].map((person, idx) => {
         const hasPerson = person?.name ? true : false;
         return (
           <div key={idx} className="template-schedule-signature-container">
             <span className="template-schedule-signature-checked">
-              Checked By:
+              {person.label}
             </span>
 
             <div className="template-schedule-signature-info">
               <img src={person.src} alt="signature" />
               <span style={{ color: hasPerson ? "black" : "red" }}>
-                {hasPerson ? person?.name : `No ${person.title} found`}
+                {hasPerson ? person?.name : `No ${person.title} found.`}
               </span>
               <em className="text-center">{person.title}</em>
             </div>
