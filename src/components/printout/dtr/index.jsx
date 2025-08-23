@@ -3,8 +3,6 @@ import Cell from "./cell";
 
 const AttendancePrint = () => {
   const collections = JSON.parse(localStorage.getItem("attendances")) || [];
-  console.log("collections", collections);
-  
 
   const firstDate = collections[0]?.createdAt
     ? new Date(collections[0].createdAt)
@@ -56,58 +54,71 @@ const AttendancePrint = () => {
     return () => clearTimeout(timer);
   }, []);
 
+
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
       <style>{`
-        @page {
-          size: landscape;
-          margin: 0;
-        }
-        @media print {
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-          html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-          }
-          .print-container {
-            width: 100%;
-          }
-          .left-copy, .right-copy {
-            display: inline-table;
-            vertical-align: top;
-            width: 48%;
-            margin-right: 2%;
-            padding: 0.5cm;
-            box-sizing: border-box;
-            border: 2px solid #000;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            page-break-inside: avoid;
-          }
-          th, td {
-            border: 1px solid #000;
-            padding: 4px;
-            text-align: center;
-            font-size: 11px;
-            word-wrap: break-word;
-          }
-          .sunday {
-            background-color: #ffe6e6 !important;
-          }
-        }
+    .dtr-printout-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    }
+  .dtr-printout-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+}
+
+.dtr-printout-table th,
+.dtr-printout-table td {
+  border: 1px solid #333;
+  padding: 6px 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.dtr-printout-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.dtr-printout-table thead tr:first-child th {
+  font-size: 16px;
+  padding: 10px 6px;
+}
+
+.dtr-printout-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.dtr-printout-table tfoot td {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+@media print {
+  .dtr-printout-table {
+    page-break-inside: auto;
+    font-size: 12px;
+  }
+
+  .dtr-printout-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  .dtr-printout-table th,
+  .dtr-printout-table td {
+    border: 1px solid #000;
+  }
+}
       `}</style>
 
-      <div className="print-container">
+      <div className="dtr-printout-container" style={{display:"flex"}}>
         {/* Left Copy */}
-        <div className="left-copy">
-          <table>
+          <table className="dtr-printout-table">
             <thead>
               <tr>
                 <th colSpan="7" style={{ fontSize: "16px", padding: "6px", fontWeight: "bold" }}>
@@ -133,9 +144,9 @@ const AttendancePrint = () => {
               </tr>
             </thead>
             <tbody>
-              {allDays.map((item) => (
-                <Cell key={`left-${item._id}`} item={item} />
-              ))}
+                {allDays.map((item) => (
+          <Cell key={item._id || `day-${item.date}`} item={item} />
+        ))}
             </tbody>
             <tfoot>
               <tr>
@@ -153,11 +164,9 @@ const AttendancePrint = () => {
               </tr>
             </tfoot>
           </table>
-        </div>
 
         {/* Right Copy */}
-        <div className="right-copy">
-          <table>
+          <table className="dtr-printout-table">
             <thead>
               <tr>
                 <th colSpan="7" style={{ fontSize: "16px", padding: "6px", fontWeight: "bold" }}>
@@ -203,7 +212,6 @@ const AttendancePrint = () => {
               </tr>
             </tfoot>
           </table>
-        </div>
       </div>
     </div>
   );
