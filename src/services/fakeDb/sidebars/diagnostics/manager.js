@@ -128,6 +128,13 @@ const ManagerSidebar = [
         component: Staffs,
       },
       {
+        name: "Signatories",
+        title: "List of section signatories.",
+        path: "/signatories",
+        icon: "pen",
+        component: Heads,
+      },
+      {
         name: "File 201",
         title: "Comprehensive employee records.",
         path: "/file201",
@@ -362,20 +369,6 @@ const ManagerSidebar = [
             component: Philhealth,
           },
           {
-            name: "Turn Around Times",
-            title: "Turn around Time for services.",
-            path: "/tat/Services",
-            icon: "clock",
-            component: TatServices,
-          },
-          {
-            name: "Signatories",
-            title: "List of section signatories.",
-            path: "/signatories",
-            icon: "pen",
-            component: Heads,
-          },
-          {
             name: "Q R Code",
             title: "Qr Code for Homepage.",
             path: "/qrCode",
@@ -437,6 +430,13 @@ const ManagerSidebar = [
             path: "/menus",
             icon: "bars",
             component: Menus,
+          },
+          {
+            name: "Turn Around Times",
+            title: "Turn around Time for services.",
+            path: "/tat/Services",
+            icon: "clock",
+            component: TatServices,
           },
           {
             name: "Services",

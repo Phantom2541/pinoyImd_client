@@ -93,7 +93,7 @@ const Protime = ({ task, setTask }) => {
           <td>%Activity</td>
           <td>
             <MDBInput
-              label="INR"
+              label="%Activity"
               // icon="cog"
               group
               step="0.01"

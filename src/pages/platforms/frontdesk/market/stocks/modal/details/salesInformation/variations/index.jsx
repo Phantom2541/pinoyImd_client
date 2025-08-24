@@ -3,7 +3,12 @@ import Variant from "./variant";
 import Pricing from "./pricing";
 import Information from "./information";
 
-const Variations = ({ variants, setVariants = () => {} }) => {
+const Variations = ({
+  variants,
+  isDuplicate = false,
+  setVariants = () => {},
+  setIsDuplicate = () => {},
+}) => {
   return (
     <>
       <div className="d-flex justify-content-center align-items-center">
@@ -13,6 +18,8 @@ const Variations = ({ variants, setVariants = () => {} }) => {
               index={index}
               variant={variant}
               setVariants={setVariants}
+              variants={variants}
+              setIsDuplicate={setIsDuplicate}
             />
           ))}
           {variants.types?.length < 2 && (
@@ -26,6 +33,7 @@ const Variations = ({ variants, setVariants = () => {} }) => {
                 setVariants((prevVariants) => ({
                   ...prevVariants,
                   types: [...prevVariants.types, { title: "", options: [""] }],
+                  prices: {},
                 }))
               }
             >
@@ -35,7 +43,11 @@ const Variations = ({ variants, setVariants = () => {} }) => {
         </div>
       </div>
       <Information variants={variants} setVariants={setVariants} />
-      <Pricing variants={variants} setVariants={setVariants} />
+      <Pricing
+        variants={variants}
+        setVariants={setVariants}
+        isDuplicate={isDuplicate}
+      />
     </>
   );
 };

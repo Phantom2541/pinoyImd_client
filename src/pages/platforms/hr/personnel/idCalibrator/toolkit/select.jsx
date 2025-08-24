@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MDBIcon } from "mdbreact";
+import "./style.css";
 
 export default function Select({
   label = "",

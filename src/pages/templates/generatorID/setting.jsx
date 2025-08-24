@@ -1,377 +1,236 @@
 import React, { useEffect } from "react";
-import { MDBIcon } from "mdbreact";
 import { Fonts, FontSizes, FontWeights } from "./fontStyle";
 import Input from "./input";
 import Select from "./select";
-import html2canvas from "html2canvas";
+import { MDBIcon } from "mdbreact";
 
 export default function Setting({
-  onPrev,
+  placedValue,
+  updatePosition,
+  updateStyle,
   onNext,
-  disablePrev,
-  disableNext,
-  selectedField,
-  student,
-  fieldStyles = {},
-  setFieldStyles = () => {},
-  positions = {},
-  setPositions = () => {},
-  setStudent,
-  frontRef,
-  backRef,
+  onPrev,
+  currentIndex,
+  total,
+  onSave,
 }) {
-  // ---------- Save ID as image ----------
-  const handleSave = async () => {
-    if (!frontRef.current || !backRef.current) return;
-
-    const frontCanvas = await html2canvas(frontRef.current, { scale: 2 });
-    const backCanvas = await html2canvas(backRef.current, { scale: 2 });
-
-    const spacing = 20; // gap between front and back
-
-    const combined = document.createElement("canvas");
-    combined.width = frontCanvas.width + spacing + backCanvas.width;
-    combined.height = Math.max(frontCanvas.height, backCanvas.height);
-
-    const ctx = combined.getContext("2d");
-
-    ctx.drawImage(frontCanvas, 0, 0);
-    ctx.drawImage(backCanvas, frontCanvas.width + spacing, 0);
-
-    combined.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "id-card.png";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-  };
-
-  // ---------- Ctrl+S Shortcut ----------
   useEffect(() => {
-    const handleShortcut = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        handleSave();
+    if (!placedValue) return;
+
+    const handleKeyDown = (e) => {
+      let { x, y } = placedValue;
+      const step = e.shiftKey ? 10 : 1;
+
+      switch (e.key) {
+        case "ArrowUp":
+          e.preventDefault();
+          y -= step;
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          y += step;
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          x -= step;
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          x += step;
+          break;
+        default:
+          return;
       }
+      updatePosition(x, y);
     };
-    window.addEventListener("keydown", handleShortcut);
-    return () => window.removeEventListener("keydown", handleShortcut);
-  }, [frontRef, backRef, fieldStyles, positions, student]);
 
-  if (!selectedField) {
-    return (
-      <div className="IDGenerator-setting-container">
-        <p style={{ padding: "10px" }}>
-          Select a field on the ID to edit its settings.
-        </p>
-        <div
-          className="d-flex align-items-center justify-content-center mt-2"
-          style={{ gap: "10px" }}
-        >
-          <button
-            className="IDGenerator-setting-prev"
-            onClick={onPrev}
-            disabled={disablePrev}
-          >
-            Prev
-          </button>
-          <button
-            className="IDGenerator-setting-next"
-            onClick={onNext}
-            disabled={disableNext}
-          >
-            Next
-          </button>
-        </div>
-        <button
-          className="IDGenerator-setting-save bg-primary mt-2"
-          onClick={handleSave}
-        >
-          Save
-        </button>
-      </div>
-    );
-  }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [placedValue, updatePosition]);
 
-  const style = fieldStyles[selectedField] || {};
-  const pos = positions[selectedField] || { x: 0, y: 0 };
+  if (!placedValue) return <div>Select a value on the image</div>;
 
-  // ---------- Update style helper ----------
-  const handleStyleChange = (key, value) => {
-    if (key === "fontWeight") {
-      const selected = FontWeights[value];
-      setFieldStyles({
-        ...fieldStyles,
-        [selectedField]: {
-          ...style,
-          fontWeight: typeof selected === "object" ? selected.weight : selected,
-          fontStyle: typeof selected === "object" ? selected.style : "normal",
-        },
-      });
-    } else {
-      setFieldStyles({
-        ...fieldStyles,
-        [selectedField]: {
-          ...style,
-          [key]: value,
-        },
-      });
-    }
-  };
+  const fontWeightOptions = Object.entries(FontWeights).map(([key, weight]) => {
+    const w = typeof weight === "object" ? weight.weight : weight;
+    return { label: key, value: w };
+  });
 
-  const handlePositionChange = (axis, value) => {
-    setPositions({
-      ...positions,
-      [selectedField]: {
-        ...pos,
-        [axis]: Number(value),
-      },
-    });
-  };
+  const fontSizeOptions = Object.keys(FontSizes).map((size) => ({
+    label: `${size}px`,
+    value: Number(size),
+  }));
+
+  const isImage = placedValue.type === "image";
 
   return (
     <div className="IDGenerator-setting-container">
-      {/* ---------- Position ---------- */}
-      <div className="IDGenerator-setting-section">
-        <label className="IDGenerator-setting-section-label">Position</label>
-        <div className="IDGenerator-setting-inputs-wrapper">
-          <div className="d-flex" style={{ gap: "10px" }}>
-            <Input
-              type="number"
-              label="X"
-              value={pos.x}
-              onChange={(e) => handlePositionChange("x", e.target.value)}
-            />
-            <Input
-              type="number"
-              label="Y"
-              value={pos.y}
-              onChange={(e) => handlePositionChange("y", e.target.value)}
-            />
-          </div>
-        </div>
+      {/* Position */}
+      <div className="d-flex align-items-end" style={{ gap: "5px" }}>
+        <Input
+          label="X"
+          type="number"
+          title="alignment"
+          value={placedValue.x}
+          onChange={(e) =>
+            updatePosition(Number(e.target.value), placedValue.y)
+          }
+        />
+        <Input
+          label="Y"
+          type="number"
+          value={placedValue.y}
+          onChange={(e) =>
+            updatePosition(placedValue.x, Number(e.target.value))
+          }
+        />
       </div>
 
-      {/* ---------- If field is profileImage ---------- */}
-      {selectedField === "profileImage" ? (
-        <div className="IDGenerator-setting-section mt-2">
-          <label className="IDGenerator-setting-section-label">
-            Profile Image
-          </label>
-
-          {/* Upload Image */}
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              if (!e.target.files[0]) return;
-              const url = URL.createObjectURL(e.target.files[0]);
-              setStudent({ ...student, profileImage: url });
-            }}
-            label="Upload Image"
-          />
-
-          {/* Width & Height */}
-          <div className="d-flex" style={{ gap: "10px", marginTop: "5px" }}>
+      {isImage ? (
+        <>
+          {/* Image-specific settings */}
+          <div className="d-flex align-items-center" style={{ gap: "5px" }}>
             <Input
               type="number"
-              label="Width"
-              value={style.width || 50}
+              title="Width"
+              label={<MDBIcon fas icon="arrows-alt-h" />}
+              value={placedValue.width || 100}
+              onChange={(e) => updateStyle({ width: Number(e.target.value) })}
+            />
+            <Input
+              type="number"
+              title="Height"
+              label={<MDBIcon fas icon="arrows-alt-v" />}
+              value={placedValue.height || 100}
+              onChange={(e) => updateStyle({ height: Number(e.target.value) })}
+            />
+          </div>
+          <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+            <Input
+              type="number"
+              title="Corner Radius"
+              label={<MDBIcon fas icon="stop" />}
+              value={placedValue.borderRadius || 0}
               onChange={(e) =>
-                setFieldStyles({
-                  ...fieldStyles,
-                  [selectedField]: { ...style, width: Number(e.target.value) },
-                })
+                updateStyle({ borderRadius: Number(e.target.value) })
               }
             />
             <Input
               type="number"
-              label="Height"
-              value={style.height || 50}
-              onChange={(e) =>
-                setFieldStyles({
-                  ...fieldStyles,
-                  [selectedField]: { ...style, height: Number(e.target.value) },
-                })
+              title="Border"
+              label={
+                <input
+                  type="color"
+                  value={placedValue.borderColor || "#000000"}
+                  onChange={(e) => updateStyle({ borderColor: e.target.value })}
+                  style={{
+                    border: "none",
+                    height: "25px",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    padding: "0",
+                  }}
+                />
               }
+              value={placedValue.border} // example: "2px solid #000"
+              onChange={(e) => updateStyle({ border: e.target.value })}
             />
           </div>
 
-          {/* Border Radius */}
           <Input
             type="number"
-            label="Border Radius"
-            value={style.borderRadius || 50}
-            onChange={(e) =>
-              setFieldStyles({
-                ...fieldStyles,
-                [selectedField]: {
-                  ...style,
-                  borderRadius: Number(e.target.value),
-                },
-              })
-            }
+            title="opacity"
+            label={<MDBIcon fas icon="adjust" />}
+            value={placedValue.opacity !== undefined ? placedValue.opacity : 1}
+            onChange={(e) => updateStyle({ opacity: Number(e.target.value) })}
+            min={0}
+            max={1}
+            step={0.05}
           />
-        </div>
+        </>
       ) : (
         <>
-          {/* ---------- Typography for text fields ---------- */}
-          <div className="IDGenerator-setting-section mt-2">
-            <label className="IDGenerator-setting-section-label">
-              Typography
-            </label>
-            <div className="IDGenerator-setting-inputs-wrapper">
-              <Select
-                label="Font Family"
-                options={Object.keys(Fonts)}
-                getLabel={(key) => key}
-                getValue={(key) => key}
-                getStyle={(key) => ({ fontFamily: key })}
-                defaultValue={style.fontFamily || "Inter"}
-                onSelect={(value) => handleStyleChange("fontFamily", value)}
-              />
-              <div className="d-flex w-100" style={{ gap: "10px" }}>
-                <Select
-                  label="Font Size"
-                  options={Object.keys(FontSizes)}
-                  getLabel={(size) => size}
-                  getValue={(size) => size}
-                  useInput={true}
-                  showSearch={false}
-                  defaultValue={style.fontSize || "12px"}
-                  onSelect={(value) =>
-                    handleStyleChange("fontSize", value + "px")
-                  }
-                />
-                <Select
-                  label="Font Weight"
-                  options={Object.keys(FontWeights)}
-                  getLabel={(w) => w}
-                  getValue={(w) => w}
-                  defaultValue={style.fontWeight || "normal"}
-                  onSelect={(value) => handleStyleChange("fontWeight", value)}
-                />
-              </div>
-              <div className="d-flex" style={{ gap: "10px" }}>
-                <Input
-                  title="Letter Spacing"
-                  type="number"
-                  value={parseFloat(style.letterSpacing) || 0}
-                  onChange={(e) =>
-                    handleStyleChange("letterSpacing", e.target.value + "px")
-                  }
-                  label={<MDBIcon fas icon="text-width" />}
-                />
-                <Input
-                  title="Text Color"
-                  type="color"
-                  value={style.color || "#000000"}
-                  onChange={(e) => handleStyleChange("color", e.target.value)}
-                />
-              </div>
-              <div className="d-flex" style={{ gap: "10px" }}>
-                <Input
-                  title="Opacity"
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={style.opacity !== undefined ? style.opacity * 100 : ""}
-                  onChange={(e) =>
-                    handleStyleChange(
-                      "opacity",
-                      e.target.value === "" ? undefined : e.target.value / 100
-                    )
-                  }
-                  onBlur={(e) => {
-                    if (!e.target.value || e.target.value === "0")
-                      handleStyleChange("opacity", 1);
-                  }}
-                  label={<MDBIcon fas icon="adjust" />}
-                />
-                <Input
-                  title="Line"
-                  type="number"
-                  value={style.lineWidth || 0}
-                  onChange={(e) =>
-                    handleStyleChange("lineWidth", Number(e.target.value))
-                  }
-                  label={
-                    <input
-                      type="color"
-                      className="IDGenerator-setting-inputColor"
-                      value={style.lineColor || "#000000"}
-                      onChange={(e) =>
-                        handleStyleChange("lineColor", e.target.value)
-                      }
-                    />
-                  }
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Permanent Edit */}
-          <div className="mt-2">
-            <Input
-              title="Edit"
-              type="textarea"
-              value={
-                selectedField === "fullName"
-                  ? `${student.firstName} ${student.lastName}`
-                  : student[selectedField] || ""
-              }
-              onChange={(e) => {
-                if (!student) return;
-
-                let updated;
-                if (selectedField === "fullName") {
-                  const names = e.target.value.split(" ");
-                  updated = {
-                    ...student,
-                    firstName: names[0] || "",
-                    lastName: names.slice(1).join(" ") || "",
-                  };
-                } else {
-                  updated = { ...student, [selectedField]: e.target.value };
-                }
-
-                setStudent(updated);
+          {/* Text-specific settings */}
+          <Select
+            label="Font Family"
+            options={Object.entries(Fonts).map(([key, value]) => ({
+              label: key,
+              value,
+            }))}
+            getLabel={(option) => option.label}
+            getValue={(option) => option.value}
+            getStyle={(option) => ({ fontFamily: option.value })}
+            defaultValue={{
+              label: placedValue.fontFamily || "Arial",
+              value: placedValue.fontFamily || "Arial",
+            }}
+            onSelect={(value) => updateStyle({ fontFamily: value })}
+          />
+          <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+            <Select
+              label="Font Size"
+              options={fontSizeOptions}
+              getLabel={(option) => option.label}
+              getValue={(option) => option.value}
+              defaultValue={{
+                label: `${placedValue.fontSize || 12}px`,
+                value: placedValue.fontSize || 12,
               }}
-              label={<MDBIcon fas icon="pencil-alt" />}
+              useInput={true}
+              showSearch={false}
+              onSelect={(value) => updateStyle({ fontSize: Number(value) })}
+            />
+            <Select
+              label="Font Weight"
+              options={fontWeightOptions}
+              getLabel={(option) => option.label}
+              getValue={(option) => option.value}
+              getStyle={(option) => ({ fontWeight: option.value })}
+              defaultValue={{
+                label: Object.keys(FontWeights).find((k) => {
+                  const w =
+                    typeof FontWeights[k] === "object"
+                      ? FontWeights[k].weight
+                      : FontWeights[k];
+                  return w === (placedValue.fontWeight || 400);
+                }),
+                value: placedValue.fontWeight || 400,
+              }}
+              onSelect={(value) => updateStyle({ fontWeight: Number(value) })}
+              showSearch={false}
+            />
+          </div>
+          <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+            <Input
+              type="color"
+              title="Font Color"
+              label={<MDBIcon fas icon="palette" />}
+              value={placedValue.color || "#000000"}
+              onChange={(e) => updateStyle({ color: e.target.value })}
+            />
+            <Input
+              type="number"
+              title="Letter Spacing"
+              label={<MDBIcon fas icon="text-width" />}
+              value={placedValue.letterSpacing || 0}
+              onChange={(e) =>
+                updateStyle({ letterSpacing: Number(e.target.value) })
+              }
             />
           </div>
         </>
       )}
 
-      {/* ---------- Navigation ---------- */}
-      <div
-        className="d-flex align-items-center justify-content-center mt-2"
-        style={{ gap: "10px" }}
-      >
-        <button
-          className="IDGenerator-setting-prev"
-          onClick={onPrev}
-          disabled={disablePrev}
-        >
-          Prev
-        </button>
-        <button
-          className="IDGenerator-setting-next"
-          onClick={onNext}
-          disabled={disableNext}
-        >
-          Next
-        </button>
+      {/* 🔹 Navigation controls */}
+      <div className="IDGenerator-settings-navigation">
+        <button onClick={onPrev}>Prev</button>
+
+        <button onClick={onNext}>Next</button>
       </div>
 
-      <button
-        className="IDGenerator-setting-save bg-primary mt-2"
-        onClick={handleSave}
-      >
-        Save
-      </button>
+      {/* ✅ Save button */}
+      <div className="IDGenerator-settings-save">
+        <button onClick={onSave}>💾 Save</button>
+      </div>
     </div>
   );
 }

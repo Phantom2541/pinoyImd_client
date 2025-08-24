@@ -25,13 +25,16 @@ export default function Modal() {
     setIsDetails(true);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <MDBModal
       size={isDetails ? "xl" : "lg"}
       isOpen={show}
       toggle={toggle}
       className="transition transition-all"
-      disableFocusTrap={false}
+      backdrop
     >
       <MDBModalHeader
         toggle={toggle}
@@ -41,42 +44,47 @@ export default function Modal() {
         Add Product
       </MDBModalHeader>
       <MDBModalBody className="mb-0 ">
-        <div style={{ marginTop: "-33px" }}>
-          <MDBStepper className="m-0 p-0 ">
-            <MDBStep className={"active"}>
-              <a>
-                <span className="circle">1</span>
-                <span className="label">Choose Product</span>
-              </a>
-            </MDBStep>
-            <MDBStep className={isDetails ? "active" : ""}>
-              <a>
-                <span className="circle">2</span>
-                <span className="label">Product Details</span>
-              </a>
-            </MDBStep>
-          </MDBStepper>
-        </div>
-        {!isDetails ? (
-          <Search handleNext={handleNext} />
-        ) : (
-          <Details product={product} />
-        )}
-
-        <div className="d-flex justify-content-between">
-          {isDetails && (
-            <MDBBtn
-              size="md"
-              color="secondary"
-              onClick={() => setIsDetails(false)}
-            >
-              Back
-            </MDBBtn>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginTop: "-33px" }}>
+            <MDBStepper className="m-0 p-0 ">
+              <MDBStep className={"active"}>
+                <a>
+                  <span className="circle">1</span>
+                  <span className="label">Choose Product</span>
+                </a>
+              </MDBStep>
+              <MDBStep className={isDetails ? "active" : ""}>
+                <a>
+                  <span className="circle">2</span>
+                  <span className="label">Product Details</span>
+                </a>
+              </MDBStep>
+            </MDBStepper>
+          </div>
+          {!isDetails ? (
+            <Search handleNext={handleNext} />
+          ) : (
+            <Details product={product} />
           )}
-          <MDBBtn size="md" color="primary">
-            Save
-          </MDBBtn>
-        </div>
+
+          <div className="d-flex justify-content-between">
+            {isDetails && (
+              <>
+                <MDBBtn
+                  size="md"
+                  type="button"
+                  color="secondary"
+                  onClick={() => setIsDetails(false)}
+                >
+                  Back
+                </MDBBtn>
+                <MDBBtn size="md" color="primary" type="submit">
+                  Save
+                </MDBBtn>
+              </>
+            )}
+          </div>
+        </form>
       </MDBModalBody>
     </MDBModal>
   );
