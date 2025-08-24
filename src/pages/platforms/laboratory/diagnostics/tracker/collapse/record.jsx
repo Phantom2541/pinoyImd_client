@@ -3,17 +3,17 @@ import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "../modal";
+import Modal from "../../tasks/modal";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    [showModal, setShowModal] = useState(false),
+    // [showModal, setShowModal] = useState(false),
     dispatch = useDispatch(),
     department = menu?.department[0];
 
-  const toggleModal = () => setShowModal(!showModal);
+  // const toggleModal = () => setShowModal(!showModal);
 
   const handleLabPrint = (task) => {
     const _task = {
@@ -94,7 +94,6 @@ export default function CollapseTable({ menu }) {
 
     const handleModal = () => {
       dispatch(SetTASK({ task }));
-      toggleModal();
     };
 
     return (
