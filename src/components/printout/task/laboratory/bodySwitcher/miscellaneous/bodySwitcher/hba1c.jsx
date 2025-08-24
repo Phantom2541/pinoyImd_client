@@ -3,12 +3,13 @@ import { MDBTable } from "mdbreact";
 export default function Gloucose({ task, fontSize }) {
   const { results } = task;
 
-  const getColorClass = (value) => {
+  // color logic for HbA1c
+  const getColorClass = (value, lo = 4, hi = 6) => {
     const num = parseFloat(value);
-    if (isNaN(num)) return "";
-    if (num < 4) return "text-primary fw-bold"; // Low = blue
-    if (num > 6) return "text-danger fw-bold"; // High = red
-    return "text-dark fw-bold"; // Normal = black
+    if (isNaN(num)) return "text-dark fw-bold";
+    if (num < lo) return "text-primary fw-bold"; // Low = Blue
+    if (num > hi) return "text-danger fw-bold"; // High = Red
+    return "text-dark fw-bold"; // Normal = Black
   };
 
   return (
