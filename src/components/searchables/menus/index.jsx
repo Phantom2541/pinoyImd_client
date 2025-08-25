@@ -11,6 +11,7 @@ import {
 import { globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
+import Swal from "sweetalert2";
 
 /**
  * A Search component that allows the user to search for a menu item by name.
@@ -28,6 +29,8 @@ export default function Search({
   setMenu,
   setRegister = () => {},
   filtered = [],
+  customer = {},
+  strict = false,
 }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),
@@ -91,6 +94,39 @@ export default function Search({
   ); // dependencies
 
   const handleChange = (value) => {
+    if (strict && !customer._id) {
+      Swal.fire({
+        title: "Patient Required",
+        html: `
+    <div style="text-align: left; font-size: 15px; line-height: 1.6;">
+      <p>You need to <b>select</b> or <b>register</b> a patient before you can charge menus.</p>
+      <hr/>
+      
+      <p style="margin-top: 10px;"><b>🔍 To select a patient:</b></p>
+      <ol style="padding-left: 20px; margin: 0; margin-top:-15px">
+        <li>Use the <b>Search</b> bar to find an existing patient.</li>
+        <li>Click on the patient from the search results to select them.</li>
+      </ol>
+      
+      <p style="margin-top: 15px;"><b>📝 To register a new patient:</b></p>
+      <ol style="padding-left: 20px; margin: 0; margin-top:-15px ">
+        <li>Click the <b>Patient</b> button on the left side of first form.</li>
+        <li>Fill out all the required information in the registration form.</li>
+        <li>Scroll down and click the <b>Register</b> button to save the patient.</li>
+      </ol>
+
+      <hr style="margin: 15px 0;"/>
+      <p style="font-weight: 500; text-align: center;">
+        ✅ After completing these steps, you can now type and charge menus.
+      </p>
+    </div>
+  `,
+        confirmButtonText: "Got it",
+        confirmButtonColor: "#1266f1",
+        width: 600,
+      });
+      return;
+    }
     setSearchKey(value);
     setIsLoading(true);
     // Debounced search trigger
