@@ -1,6 +1,5 @@
 import { MDBIcon } from "mdbreact";
 import "./style.css";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 export default function Copyrights({
