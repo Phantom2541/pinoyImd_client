@@ -1,25 +1,27 @@
-// students.js
-export const fakeData = [
-  {
-    id: 1,
-    fullName: {
-      fname: "Juan",
-      lname: "Dela Cruz",
-      mname: "Ramos",
-      suffix: "jr",
-      postnominal: "MIT",
-      title: "Dr.",
-    },
-    address: {
-      region: "REGION III (CENTRAL LUZON)",
-      province: "NUEVA ECIJA",
-      city: "CABANATUAN CITY",
-      barangay: "Mabini Extension",
-      street: "#25",
-    },
-    dob: "2005-12-24",
-    mobile: "9273526159",
-    email: "juan@gmail.com",
-    profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+export const fakeEMP = {
+  id: "SCGT-001",
+  emp: "Dr. Juan R. Dela Cruz Jr",
+  address: "Brgy Mabini Extension, Cabanatuan City, Nueva Ecija",
+  position: "Medical Technologist 1",
+  department: "Laboratory",
+  dob: "Dec. 24, 2005",
+  // mobile: "+63 927 352 6159",
+  img: "https://randomuser.me/api/portraits/men/1.jpg",
+  guardian: "Maria L. Santos",
+  pn: "+63 927 352 6159",
+  layout: "portrait",
+  // cardFront
+  cf: "https://randomuser.me/api/portraits/men/1.jpg",
+  // cardBack
+  cb: "https://randomuser.me/api/portraits/men/1.jpg",
+  // data field position
+  dfp: {
+    emp: { x: 3323, y: 143, font: "Arial", size: 12, color: "#000000" },
+    address: { x: 3323, y: 143 },
+    position: { x: 3323, y: 143, size: 12, color: "#000000" },
+    department: { x: 3323, y: 143 },
+    // img: { x: 3323, y: 143, shape: "rectangle" },
+    guardian: { x: 3323, y: 143, font: "Arial", size: 12, color: "#000000" },
+    pn: { x: 3323, y: 143, font: "Arial", size: 12, color: "#000000" },
   },
-];
+};

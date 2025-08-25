@@ -8,13 +8,7 @@ const individual = (
   hmoCode,
   contract
 ) => {
-  const {
-    isPromo,
-    promo = 0,
-    discountable: disc = false, //old key for discountabel
-    hasDiscount = false,
-  } = menu;
-  const discountable = disc || hasDiscount;
+  const { isPromo = false, promo = 0, discountable = false } = menu;
   const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(category)
     ? "opd"
     : category;

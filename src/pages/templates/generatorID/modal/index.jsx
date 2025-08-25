@@ -1,443 +1,493 @@
-import React, { useState, useEffect } from "react";
-import "./../style.css";
 import { MDBBtn, MDBIcon } from "mdbreact";
-import { fakeData } from "./fakeDB";
+import React, { useState, useEffect } from "react";
+import { fakeEMP } from "./fakeDB";
+import Setting from "../setting";
 
-export default function Modal({
-  isOpen,
-  setIsOpen,
-  setFrontImage,
-  setBackImage,
-  positions,
-  setPositions,
-}) {
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
-  const [calibrateField, setCalibrateField] = useState(null);
-  const [placedFields, setPlacedFields] = useState([]);
+export default function Modal({ isModalOpen, setIsModalOpen, onSave }) {
+  const [frontImage, setFrontImage] = useState(null);
+  const [backImage, setBackImage] = useState(null);
+  const [orientation, setOrientation] = useState("portrait");
+  const [dragValue, setDragValue] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [dragIndex, setDragIndex] = useState(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [placedValues, setPlacedValues] = useState([]);
+  const [draggingId, setDraggingId] = useState(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [selectedValueId, setSelectedValueId] = useState(null);
 
-  const startDrag = (e, label, side) => {
-    e.stopPropagation();
-    const index = placedFields.findIndex(
-      (f) => f.label === label && f.side === side
-    );
-    if (index === -1) return;
-    setDragIndex(index);
-
-    const f = placedFields[index];
-    setDragOffset({ x: e.clientX - f.x, y: e.clientY - f.y });
-  };
-
-  useEffect(() => {
-    const handleMove = (e) => {
-      if (dragIndex === null) return;
-
-      setPlacedFields((prev) => {
-        const newFields = [...prev];
-        const f = newFields[dragIndex];
-
-        // Get the parent image container
-        const container = document.querySelector(
-          f.side === "front"
-            ? ".IDGenerator-modal-preview-container img[src='" + image1 + "']"
-            : ".IDGenerator-modal-preview-container img[src='" + image2 + "']"
-        );
-        if (!container) return newFields;
-
-        const rect = container.getBoundingClientRect();
-
-        // Get the div representing the dragged field
-        const div = document.getElementById(`field-${dragIndex}`);
-        const divRect = div
-          ? div.getBoundingClientRect()
-          : { width: 0, height: 0 };
-
-        // Clamp x and y inside image, accounting for div size
-        const newX = Math.min(
-          Math.max(e.clientX - dragOffset.x, divRect.width / 2),
-          rect.width - divRect.width / 2
-        );
-        const newY = Math.min(
-          Math.max(e.clientY - dragOffset.y, divRect.height / 2),
-          rect.height - divRect.height / 2
-        );
-
-        newFields[dragIndex] = { ...f, x: newX, y: newY };
-
-        return newFields;
-      });
-    };
-
-    const handleUp = () => setDragIndex(null);
-
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("mouseup", handleUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("mouseup", handleUp);
-    };
-  }, [dragIndex, dragOffset, image1, image2]);
-
-  // Generate dynamic fields from fakeData[0]
-  const generateFields = (obj, prefix = "") => {
-    let fields = [];
-    Object.keys(obj).forEach((key) => {
-      if (
-        (key === "fullName" || key === "address") &&
-        typeof obj[key] === "object"
-      ) {
-        fields.push({
-          label: key === "fullName" ? "Full Name" : "Address",
-          keys: [`${prefix}${key}`],
-        });
-        if (key === "fullName" && obj[key].postnominal) {
-          fields.push({
-            label: "Postnominal",
-            keys: [`${prefix}${key}.postnominal`],
-          });
-        }
-      } else if (typeof obj[key] === "object" && obj[key] !== null) {
-        fields = [...fields, ...generateFields(obj[key], `${prefix}${key}.`)];
-      } else {
-        fields.push({
-          label: key.charAt(0).toUpperCase() + key.slice(1),
-          keys: [`${prefix}${key}`],
-        });
-      }
-    });
-    return fields;
-  };
-
-  const idFields = generateFields(fakeData[0]);
-
-  // Cursor effect
   useEffect(() => {
     const handleMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
-    if (calibrateField) {
-      window.addEventListener("mousemove", handleMove);
-    }
+    window.addEventListener("mousemove", handleMove);
     return () => window.removeEventListener("mousemove", handleMove);
-  }, [calibrateField]);
+  }, []);
 
-  // Upload handler
-  const handleUpload = (event, setImage) => {
-    const file = event.target.files[0];
-    if (file) setImage(URL.createObjectURL(file));
+  const formatFullName = (f) =>
+    [f.title, f.fname, f.mname, f.lname, f.suffix].filter(Boolean).join(" ");
+  const formatAddress = (a) =>
+    [a.barangay, a.city, a.province, a.region].filter(Boolean).join(", ");
+  const formatPhone = (num) => {
+    if (!num) return "";
+    let digits = num.replace(/\D/g, "");
+    if (digits.startsWith("0")) digits = "63" + digits.slice(1);
+    if (!digits.startsWith("63")) digits = "63" + digits;
+    return digits.replace(/^(63)(\d{3})(\d{3})(\d{4})$/, "+$1 $2 $3 $4");
   };
 
-  // Save handler
-  const handleSave = () => {
-    if (!image1 || !image2) {
-      alert("Please upload both Front and Back ID templates.");
-      return;
-    }
-    setFrontImage(image1);
-    setBackImage(image2);
-    setIsOpen(false);
+  const mappedEMP = {
+    ID: fakeEMP.id,
+    FullName: formatFullName(fakeEMP.fullName),
+    Address: formatAddress(fakeEMP.address),
+    Position: fakeEMP.position,
+    Department: fakeEMP.department,
+    DOB: fakeEMP.dob,
+    Mobile: formatPhone(fakeEMP.mobile),
+    Email: fakeEMP.email,
+    ProfileImage: fakeEMP.profileImage,
+    "Contact FullName": formatFullName(fakeEMP.contactInfo.fullName),
+    "Contact Address": formatAddress(fakeEMP.contactInfo.address),
+    "Contact Number": formatPhone(fakeEMP.contactInfo.pn),
   };
 
-  // Place field value on image
-  const handleImageClick = (e, imageSide) => {
-    if (!calibrateField) return;
-
-    // Check if field is already placed on the other side
-    const existing = placedFields.find(
-      (f) => f.label === calibrateField.label && f.side !== imageSide
+  const handleDrop = (e, target, key) => {
+    if (!dragValue) return;
+    const container = document.querySelector(
+      `.IDGenerator-template-preview.${target}`
     );
-    if (existing) {
-      alert(
-        `Field "${calibrateField.label}" is already placed on the ${existing.side}. Remove it first.`
-      );
-      setCalibrateField(null);
-      return;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const defaultPos = fakeEMP.dfp[key] || {};
+
+    // Temporary element para makuha size
+    const tempEl = document.createElement("span");
+    tempEl.style.position = "absolute";
+    tempEl.style.visibility = "hidden";
+    tempEl.style.padding =
+      dragValue.startsWith("data:") || dragValue.startsWith("http")
+        ? "0"
+        : "2px 4px";
+
+    if (dragValue.startsWith("data:") || dragValue.startsWith("http")) {
+      const img = document.createElement("img");
+      img.src = dragValue;
+      img.style.maxWidth = "100px";
+      img.style.maxHeight = "100px";
+      tempEl.appendChild(img);
+    } else {
+      tempEl.innerText = dragValue;
     }
 
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    container.appendChild(tempEl);
+    const elWidth = tempEl.offsetWidth;
+    const elHeight = tempEl.offsetHeight;
+    container.removeChild(tempEl);
 
-    const value = getFieldValue(calibrateField.keys[0]);
+    let x = defaultPos.x ? defaultPos.x : e.clientX - rect.left - elWidth / 2;
+    let y = defaultPos.y ? defaultPos.y : e.clientY - rect.top - elHeight / 2;
 
-    setPlacedFields((prev) => [
-      ...prev,
-      { x, y, side: imageSide, label: calibrateField.label, value },
-    ]);
+    x = Math.max(0, Math.min(x, rect.width - elWidth));
+    y = Math.max(0, Math.min(y, rect.height - elHeight));
 
-    setCalibrateField(null);
-  };
-
-  const getFieldValue = (keyPath) => {
-    const keys = keyPath.split(".");
-    let val = fakeData[0];
-    keys.forEach((k) => {
-      val = val?.[k] ?? "";
+    setPlacedValues((prev) => {
+      const index = prev.findIndex(
+        (p) => p.target === target && p.value === dragValue
+      );
+      if (index !== -1) {
+        const newArr = [...prev];
+        newArr[index] = { ...newArr[index], x, y, ...defaultPos };
+        return newArr;
+      }
+      return [
+        ...prev,
+        {
+          id: Date.now(),
+          target,
+          value: dragValue,
+          x,
+          y,
+          fontSize: 12,
+          fontFamily: "Arial",
+          fontWeight: "normal",
+          color: "#000000",
+          letterSpacing: 0,
+          width: 100,
+          height: 100,
+          border: "none",
+          borderRadius: 0,
+          opacity: 1,
+          ...defaultPos,
+        },
+      ];
     });
 
-    // Handle objects
-    if (typeof val === "object" && val !== null) {
-      if (keys[0] === "fullName") {
-        const { postnominal, ...nameParts } = val;
-
-        const ordered = [];
-        if (nameParts.title) ordered.push(nameParts.title);
-        if (nameParts.fname) ordered.push(nameParts.fname);
-        if (nameParts.mname) ordered.push(nameParts.mname);
-        if (nameParts.lname) ordered.push(nameParts.lname);
-        if (nameParts.suffix) ordered.push(nameParts.suffix);
-
-        return ordered.join(" ");
-      }
-
-      // Other objects like address
-      return Object.values(val)
-        .map((v) => (typeof v === "object" && v !== null ? "" : v))
-        .filter(Boolean)
-        .join(" ");
-    }
-
-    return val;
+    setDragValue(null);
   };
 
-  const handleSelectField = (field) => {
-    // Check if field is already placed
-    const isAlreadyPlaced = placedFields.some((f) => f.label === field.label);
+  const handleMouseDown = (id, e) => {
+    e.stopPropagation();
+    setSelectedValueId(id); // add this
+    const p = placedValues.find((p) => p.id === id);
+    if (!p) return;
 
-    if (isAlreadyPlaced) {
-      // Alisin sa placedFields kung kinlick ulit
-      setPlacedFields((prev) => prev.filter((f) => f.label !== field.label));
-      // Also deselect if it was the current calibration field
-      if (calibrateField?.label === field.label) {
-        setCalibrateField(null);
-      }
-    } else {
-      // Otherwise, enter calibration mode
-      setCalibrateField(field);
-    }
+    const container = document.querySelector(
+      `.IDGenerator-template-preview.${p.target}`
+    );
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    setDraggingId(id);
+    setOffset({
+      x: e.clientX - rect.left - p.x,
+      y: e.clientY - rect.top - p.y,
+    });
   };
+
+  const handleMouseMove = (e) => {
+    if (!draggingId) return;
+
+    const p = placedValues.find((p) => p.id === draggingId);
+    if (!p) return;
+
+    const container = document.querySelector(
+      `.IDGenerator-template-preview.${p.target}`
+    );
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    let x = e.clientX - rect.left - offset.x;
+    let y = e.clientY - rect.top - offset.y;
+
+    x = Math.max(0, Math.min(x, rect.width));
+    y = Math.max(0, Math.min(y, rect.height));
+
+    updatePlacedValuePosition(draggingId, x, y);
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", () => setDraggingId(null));
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", () => setDraggingId(null));
+    };
+  }, [draggingId, offset]);
+
+  const selectedValue = placedValues.find((p) => p.id === selectedValueId);
+
+  // Function to update position
+  const updatePosition = (x, y) => {
+    if (!selectedValueId) return;
+    setPlacedValues((prev) =>
+      prev.map((p) => (p.id === selectedValueId ? { ...p, x, y } : p))
+    );
+  };
+
+  // Function to update style (font size, font family, font weight)
+  const updateStyle = (style) => {
+    if (!selectedValueId) return;
+    setPlacedValues((prev) =>
+      prev.map((p) => (p.id === selectedValueId ? { ...p, ...style } : p))
+    );
+  };
+
+  const updatePlacedValuePosition = (id, newX, newY) => {
+    setPlacedValues((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, x: newX, y: newY } : p))
+    );
+  };
+
+  const getDFPData = () => {
+    const dfp = {};
+    Object.entries(mappedEMP).forEach(([key, value]) => {
+      const placed = placedValues.find((p) => p.value === value);
+      if (!placed) return;
+
+      dfp[key] = {
+        x: placed.x,
+        y: placed.y,
+        target: placed.target,
+      };
+
+      if (value.startsWith("data:") || value.startsWith("http")) {
+        if (placed.width) dfp[key].width = placed.width;
+        if (placed.height) dfp[key].height = placed.height;
+        if (placed.border)
+          dfp[key].border = `${placed.border}px solid ${
+            placed.borderColor || "#000"
+          }`;
+        if (placed.borderRadius) dfp[key].borderRadius = placed.borderRadius;
+        if (placed.opacity !== undefined) dfp[key].opacity = placed.opacity;
+      } else {
+        if (placed.fontFamily) dfp[key].font = placed.fontFamily;
+        if (placed.fontSize) dfp[key].size = placed.fontSize;
+        if (placed.color) dfp[key].color = placed.color;
+        if (placed.fontWeight) dfp[key].weight = placed.fontWeight;
+        if (placed.letterSpacing) dfp[key].letterSpacing = placed.letterSpacing;
+      }
+    });
+    return dfp;
+  };
+
+  const renderPlacedValues = (target) =>
+    placedValues
+      .filter((p) => p.target === target)
+      .map((p) => {
+        const style = {
+          position: "absolute",
+          left: p.x,
+          top: p.y,
+          cursor: "move",
+          background: draggingId === p.id ? "rgba(0,0,0,0.1)" : "transparent",
+          padding:
+            p.value.startsWith("data:") || p.value.startsWith("http")
+              ? 0
+              : "2px 4px",
+          userSelect: "none",
+          zIndex: draggingId === p.id ? 999 : 1,
+          fontSize: p.fontSize ? `${p.fontSize}px` : undefined,
+          fontFamily: p.fontFamily || undefined,
+          fontWeight: p.fontWeight || undefined,
+          color: p.color || "#000", // ← dapat idagdag
+          letterSpacing: p.letterSpacing ? `${p.letterSpacing}px` : undefined, // ← dapat idagdag
+        };
+
+        return (
+          <span
+            key={p.id}
+            onMouseDown={(e) => handleMouseDown(p.id, e)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedValueId(p.id);
+            }}
+            className="IDGenerator-template-previewData"
+            style={style}
+          >
+            {p.value.startsWith("data:") || p.value.startsWith("http") ? (
+              <img
+                src={p.value}
+                alt="dynamic"
+                style={{
+                  width: p.width ? `${p.width}px` : "auto",
+                  height: p.height ? `${p.height}px` : "auto",
+                  border: p.border
+                    ? `${p.border}px solid ${p.borderColor || "#000"}`
+                    : "none", // ← dito pinagsama yung number + color
+                  borderRadius: p.borderRadius ? `${p.borderRadius}px` : 0,
+                  opacity: p.opacity !== undefined ? p.opacity : 1,
+                  maxWidth: 200,
+                  maxHeight: 200,
+                  pointerEvents: "none",
+                }}
+              />
+            ) : (
+              p.value
+            )}
+            <span
+              className="IDGenerator-template-remove"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPlacedValues((prev) =>
+                  prev.filter((item) => item.id !== p.id)
+                );
+              }}
+            >
+              <MDBIcon icon="times" />
+            </span>
+          </span>
+        );
+      });
 
   return (
-    <div className={`IDGenerator-modal ${isOpen ? "active" : ""}`}>
-      <div className="IDGenerator-modal-content">
+    <div className={`IDGenerator-modal ${isModalOpen ? "active" : ""}`}>
+      <div className="IDGenerator-content">
         <div className="IDGenerator-modal-header">
-          <span>Upload ID Template</span>
-          <button onClick={() => setIsOpen(false)}>
-            <MDBIcon fas icon="times" />
-          </button>
+          <span className="IDGenerator-modal-header-title">Add a template</span>
+          <MDBIcon
+            className="IDGenerator-modal-header-close"
+            icon="times"
+            onClick={() => setIsModalOpen(false)}
+          />
         </div>
 
         <div className="IDGenerator-modal-body">
-          <div className="d-flex align-items-start" style={{ gap: "20px" }}>
-            {/* FRONT */}
-            <div
-              className="IDGenerator-modal-IdUpload-container"
-              style={{ position: "relative" }}
+          <div className="IDGenerator-template-container">
+            <select
+              className="form-control"
+              value={orientation}
+              onChange={(e) => setOrientation(e.target.value)}
             >
-              <span className="IDGenerator-modal-idUpload-title">Front</span>
-              <input
-                id="idUploadInput1"
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleUpload(e, setImage1)}
-                hidden
-              />
-              <div
-                className="IDGenerator-modal-preview-container"
-                style={{ position: "relative" }}
-                onClick={(e) => handleImageClick(e, "front")}
-              >
-                {!image1 ? (
-                  <label
-                    htmlFor="idUploadInput1"
-                    className="IDGenerator-modal-idUpload-addBtn"
-                  >
-                    <MDBIcon fas icon="plus" />
-                  </label>
-                ) : (
-                  <>
-                    <img
-                      src={image1}
-                      alt="Front"
-                      className="IDGenerator-preview-img"
-                    />
-                    {placedFields
-                      .filter((f) => f.side === "front")
-                      .map((f, i) => (
-                        <div
-                          id={`field-${i}`}
-                          key={f.label + "_front"}
-                          style={{
-                            position: "absolute",
-                            left: f.x,
-                            top: f.y,
-                            transform: "translate(-50%, -50%)",
-                            color: "#000",
-                            zIndex: 20,
-                            fontSize: "16px",
-                            cursor: "move",
-                            whiteSpace: "nowrap",
-                          }}
-                          onMouseDown={(e) => startDrag(e, f.label, "front")}
-                        >
-                          {f.value}
-                        </div>
-                      ))}
-                  </>
-                )}
-              </div>
-            </div>
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
 
-            {/* BACK */}
             <div
-              className="IDGenerator-modal-IdUpload-container"
-              style={{ position: "relative" }}
+              className={`IDGenerator-template-preview-wrapper ${orientation}`}
             >
-              <span className="IDGenerator-modal-idUpload-title">Back</span>
-              <input
-                id="idUploadInput2"
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleUpload(e, setImage2)}
-                hidden
-              />
               <div
-                className="IDGenerator-modal-preview-container"
-                style={{ position: "relative" }}
-                onClick={(e) => handleImageClick(e, "back")}
+                className={`IDGenerator-template-preview front ${orientation}`}
+                onClick={(e) => handleDrop(e, "front")}
               >
-                {!image2 ? (
-                  <label
-                    htmlFor="idUploadInput2"
-                    className="IDGenerator-modal-idUpload-addBtn"
-                  >
-                    <MDBIcon fas icon="plus" />
-                  </label>
-                ) : (
-                  <>
-                    <img
-                      src={image2}
-                      alt="Back"
-                      className="IDGenerator-preview-img"
-                    />
-                    {placedFields
-                      .filter((f) => f.side === "back")
-                      .map((f, i) => (
-                        <div
-                          id={`field-${i}`}
-                          key={f.label + "_back"}
-                          style={{
-                            position: "absolute",
-                            left: f.x,
-                            top: f.y,
-                            transform: "translate(-50%, -50%)",
-                            color: "#000",
-                            zIndex: 20,
-                            fontSize: "16px",
-                            cursor: "move",
-                            whiteSpace: "nowrap",
-                          }}
-                          onMouseDown={(e) => startDrag(e, f.label, "back")}
-                        >
-                          {f.value}
-                        </div>
-                      ))}
-                  </>
+                <label
+                  htmlFor="frontImageInput"
+                  className={`IDGenerator-template-addImg ${
+                    frontImage && "hide"
+                  }`}
+                >
+                  <MDBIcon icon="plus" />
+                </label>
+                <label
+                  htmlFor="frontImageInput"
+                  className={`IDGenerator-template-changeImg ${
+                    !frontImage && "hide"
+                  }`}
+                >
+                  Change Template
+                </label>
+                {frontImage && (
+                  <img
+                    src={frontImage}
+                    alt="front ID"
+                    draggable={false}
+                    style={{ userSelect: "none", pointerEvents: "none" }}
+                  />
                 )}
+                {renderPlacedValues("front")}
+                <input
+                  id="frontImageInput"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) setFrontImage(URL.createObjectURL(file));
+                  }}
+                />
+              </div>
+
+              <div
+                className={`IDGenerator-template-preview back ${orientation}`}
+                onClick={(e) => handleDrop(e, "back")}
+              >
+                <label
+                  htmlFor="backImageInput"
+                  className={`IDGenerator-template-addImg ${
+                    backImage && "hide"
+                  }`}
+                >
+                  <MDBIcon icon="plus" />
+                </label>
+                <label
+                  htmlFor="backImageInput"
+                  className={`IDGenerator-template-changeImg ${
+                    !backImage && "hide"
+                  }`}
+                >
+                  Change Template
+                </label>
+                {backImage && (
+                  <img
+                    src={backImage}
+                    alt="back ID"
+                    draggable={false}
+                    style={{ userSelect: "none", pointerEvents: "none" }}
+                  />
+                )}
+                {renderPlacedValues("back")}
+                <input
+                  id="backImageInput"
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) setBackImage(URL.createObjectURL(file));
+                  }}
+                />
               </div>
             </div>
           </div>
 
-          {/* calibration buttons */}
-          <div className="IDGenerator-modal-template-calibrate">
-            <div
-              style={{
-                background: "#f8f9fa",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                padding: "12px",
-                marginBottom: "15px",
-                fontSize: "14px",
-                color: "#333",
-                lineHeight: "1.4",
-              }}
-            >
-              <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>
-                How to set up your ID template:
-              </p>
-              <ol style={{ margin: 0, paddingLeft: "18px" }}>
-                <li>
-                  Upload the <strong>Front</strong> and <strong>Back</strong> ID
-                  images.
-                </li>
-                <li>Click a field name to enter calibration mode.</li>
-                <li>
-                  Click on the image where that field should appear; the value
-                  will follow your cursor.
-                </li>
-                <li>Repeat for all fields you want to place.</li>
-                <li>
-                  Click <strong>Save</strong> when done.
-                </li>
-              </ol>
-            </div>
-
-            <div className="IDGenerator-modal-template-calibrate-buttons">
-              {idFields.map((field) => {
-                const isSelected = calibrateField?.label === field.label;
-                const isPlaced = placedFields.some(
-                  (f) => f.label === field.label
-                );
-
-                // Kunin ang current value ng field
-                const fieldValue = getFieldValue(field.keys[0]);
-
-                return (
-                  <div key={field.label} style={{ marginBottom: "5px" }}>
-                    <label>{field.label}:</label>
-                    <button
-                      onClick={() => handleSelectField(field)}
+          <div className="IDGenerator-template-buttons">
+            {Object.entries(mappedEMP).map(([key, value]) => (
+              <div key={key} className="IDGenerator-template-button">
+                <label>{key}</label>
+                <MDBBtn
+                  className="IDGenerator-template-buttonBtn"
+                  color="primary"
+                  size="sm"
+                  onClick={() => {
+                    setPlacedValues((prev) =>
+                      prev.filter((p) => p.value !== value)
+                    );
+                    setDragValue(value);
+                  }}
+                >
+                  {typeof value === "string" &&
+                  (value.startsWith("data:") || value.startsWith("http")) ? (
+                    <img
+                      src={value}
+                      alt={key}
                       style={{
-                        backgroundColor: isSelected || isPlaced ? "#000" : "",
-                        color: isSelected || isPlaced ? "white" : "",
-                        border: `1px solid #000`,
-                        padding: "4px 8px",
+                        maxWidth: 50,
+                        maxHeight: 50,
+                        pointerEvents: "none",
                       }}
-                      disabled={!image1 || !image2}
-                    >
-                      {fieldValue || field.label}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+                    />
+                  ) : (
+                    value
+                  )}
+                </MDBBtn>
+              </div>
+            ))}
           </div>
+          <Setting
+            placedValue={selectedValue}
+            updatePosition={updatePosition}
+            updateStyle={updateStyle}
+          />
         </div>
-
         <div className="IDGenerator-modal-footer">
-          <MDBBtn color="primary" size="md" onClick={handleSave}>
+          <MDBBtn
+            color="primary"
+            onClick={() => {
+              const dfpData = getDFPData();
+              console.log("DFP DATA:", dfpData);
+              if (typeof onSave === "function") {
+                onSave(dfpData, frontImage, backImage);
+              }
+            }}
+          >
             Save
           </MDBBtn>
         </div>
       </div>
 
-      {/* custom cursor showing field value */}
-      {calibrateField && (
+      {dragValue && (
         <div
           style={{
             position: "fixed",
             left: mousePos.x,
             top: mousePos.y,
-            transform: "translate(-50%, -50%)",
             pointerEvents: "none",
-            color: "#000",
-            fontSize: "16px",
+            transform: "translate(-50%, -50%)",
+            background: "rgba(0,0,0,0.7)",
+            color: "#fff",
+            padding:
+              dragValue.startsWith("data:") || dragValue.startsWith("http")
+                ? 0
+                : "2px 6px",
+            borderRadius: "4px",
             zIndex: 9999,
           }}
         >
-          {getFieldValue(calibrateField.keys[0])}
+          {dragValue.startsWith("data:") || dragValue.startsWith("http") ? (
+            <img
+              src={dragValue}
+              alt="dragging"
+              style={{ maxWidth: 100, maxHeight: 100, pointerEvents: "none" }}
+            />
+          ) : (
+            dragValue
+          )}
         </div>
       )}
     </div>

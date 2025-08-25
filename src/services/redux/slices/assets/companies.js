@@ -396,7 +396,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(GET_DETAILS.fulfilled, (state, action) => {
         state.details = action.payload;
-        console.log("state.details", state.details);
 
         state.isLoading = false;
         localStorage.setItem("patronCompany", JSON.stringify(action.payload));

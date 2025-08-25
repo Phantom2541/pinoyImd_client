@@ -10,6 +10,7 @@ import {
   Applicants,
 } from "../../../../pages/platforms/hr";
 import { Services, Menus } from "../../../../pages/platforms/accounting";
+import IdCalibrator from "../../../../pages/platforms/hr/personnel/idCalibrator";
 
 const humanresources = [
   {
@@ -85,6 +86,13 @@ const humanresources = [
         path: "/organizationChart",
         icon: "user-tie",
         // component: OrgChart,
+      },
+      {
+        name: "ID Calibrator",
+        title: "ID Calibrator",
+        path: "/idCalibrator",
+        icon: "user-tie",
+        component: IdCalibrator,
       },
     ],
   },

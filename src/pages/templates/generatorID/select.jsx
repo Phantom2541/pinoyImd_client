@@ -13,19 +13,19 @@ export default function Select({
   useInput = false, // 🔹 toggle label or input
   showSearch = true, // 🔹 toggle search bar
 }) {
+  // 🔹 Store the full option object
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectActive, setSelectActive] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(getValue(defaultValue));
-  const selectRef = useRef(null); // 🔹 ref sa buong select container
+  const selectRef = useRef(null);
 
-  // 🔹 close dropdown kapag nag click sa labas
+  // 🔹 Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (selectRef.current && !selectRef.current.contains(event.target)) {
         setSelectActive(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -37,9 +37,8 @@ export default function Select({
   );
 
   const handleSelect = (option) => {
-    const value = getValue(option);
-    setSelectedValue(value); // store the actual value
-    onSelect(value); // notify parent
+    setSelectedValue(option); // 🔹 store object
+    onSelect(getValue(option)); // 🔹 notify parent
     setSelectActive(false);
   };
 
@@ -49,34 +48,36 @@ export default function Select({
       style={{ minWidth: "50%" }}
     >
       <span className="IDGenerator-setting-select-label">{label}</span>
+
       <div
-        ref={selectRef} // 🔹 attach ref
+        ref={selectRef}
         className={`IDGenerator-setting-select-container ${
           selectActive ? "active" : ""
         } ${useInput ? "inputDesign" : ""}`}
       >
         <div className="IDGenerator-setting-select-placeholder">
-          {/* 🔹 pwede label or input depende sa prop */}
           {useInput ? (
             <input
               type="text"
-              value={selectedValue}
+              value={getLabel(selectedValue)}
+              style={getStyle(selectedValue)} // 🔹 apply style to input
               onChange={(e) => {
                 const val = e.target.value;
-                setSelectedValue(val);
-                onSelect(val); // 🔹 trigger immediately while typing
+                const obj = { label: val, value: val }; // allow typing custom value
+                setSelectedValue(obj);
+                onSelect(val);
               }}
+              onClick={() => setSelectActive(true)}
             />
           ) : (
             <span
-              style={getStyle(selectedValue)}
+              style={getStyle(selectedValue)} // 🔹 apply style to placeholder
               onClick={() => setSelectActive(!selectActive)}
             >
               {getLabel(selectedValue)}
             </span>
           )}
 
-          {/* 🔹 kapag useInput=true dito lang ang toggle */}
           <MDBIcon
             className="IDGenerator-setting-select-icon"
             fas
@@ -90,10 +91,9 @@ export default function Select({
             selectActive ? "active" : ""
           } ${useInput ? "inputDesign" : ""}`}
         >
-          {/* 🔹 search bar (toggle on/off) */}
           {showSearch && (
             <div className="p-2">
-              <div className="IDGenerator-setting-input-container">
+              <div className="IDGenerator-setting-input-wrapper">
                 <label className="IDGenerator-setting-label">
                   <MDBIcon fas icon="search" />
                 </label>
@@ -110,22 +110,16 @@ export default function Select({
 
           <ul>
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((option, index) => {
-                const value = getValue(option);
-                return (
-                  <li
-                    key={index}
-                    style={getStyle(value)}
-                    onClick={() => handleSelect(option)}
-                    onMouseEnter={() => {
-                      setSelectedValue(value); // 🔹 update selection on hover
-                      onSelect(value); // 🔹 trigger effect on hover
-                    }}
-                  >
-                    {getLabel(option)}
-                  </li>
-                );
-              })
+              filteredOptions.map((option, index) => (
+                <li
+                  key={index}
+                  style={getStyle(option)} // 🔹 apply style to option
+                  onClick={() => handleSelect(option)}
+                  onMouseEnter={() => setSelectedValue(option)}
+                >
+                  {getLabel(option)}
+                </li>
+              ))
             ) : (
               <li style={{ color: "#888" }}>No results found</li>
             )}

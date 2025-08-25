@@ -345,7 +345,7 @@ export default function CollapseTable({
           ))}
 
           <EditableField
-            label="Has Schedule"
+            label="Schedule"
             fieldName="hasSchedule"
             {...{
               editField,
