@@ -21,14 +21,13 @@ const initialState = {
   isLoading: false,
   message: "",
 
-  // Calendar
   month: today.getMonth() + 1,
   year: today.getFullYear(),
-  activeDate: null,       // ✅ existing
-  activeEmployee: null,   // ✅ new
+  activeDate: null,
+  activeEmployee: null,
 };
 
-// ====== FIXED HELPER ======
+
 const enrichEmployeeName = (rec) => {
   const user = rec.userId || rec.user || {};
   const fullName = user.fullName || {};
@@ -46,7 +45,7 @@ const enrichEmployeeName = (rec) => {
   };
 };
 
-// ================= ASYNC THUNKS =================
+
 export const BROWSE = createAsyncThunk(
   `${url}`,
   async ({ token, params }, thunkAPI) => {
@@ -155,7 +154,7 @@ export const reduxSlice = createSlice({
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
       state.activeDate = null;
-      state.activeEmployee = null; // ✅ reset employee too
+      state.activeEmployee = null;
     },
     setYear: (state, { payload }) => {
       state.year = payload;
@@ -171,13 +170,12 @@ export const reduxSlice = createSlice({
       state.showModal = !state.showModal;
     },
 
-    // ✅ Minimal additions
     SetActiveDATE: (state, { payload }) => {
       state.activeDate = payload;
-      state.activeEmployee = null; // reset employee when changing date
+      state.activeEmployee = null;
     },
     SetActiveEmployee: (state, { payload }) => {
-      state.activeEmployee = payload; // only this employee shows in summary
+      state.activeEmployee = payload;
     },
   },
   extraReducers: (builder) => {
@@ -272,7 +270,7 @@ export const {
   ResetDATE,
   setYear,
   SetActiveDATE,
-  SetActiveEmployee, // ✅ added
+  SetActiveEmployee,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

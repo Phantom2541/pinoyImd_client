@@ -18,21 +18,24 @@ const Card = ({ txt, num, items = [], summaryRef, lastAnimatedCard, setLastAnima
 
   const handleDate = () => {
     dispatch(SetActiveDATE(num));
-    dispatch(SetActiveEmployee(null)); // reset employee when date changes
+    dispatch(SetActiveEmployee(null));
   };
 
   const presentCount = items.filter((i) => i.status === "Present").length;
 
-  // Dynamic styles
   let bgColor = "bg-blue-100";
   if (isToday) bgColor = "bg-green-200";
   else if (isSunday) bgColor = "bg-red-200";
+
+  const filteredItems = items.filter(
+    (rec) => rec.am?.in || rec.am?.out || rec.pm?.in || rec.pm?.out
+  );
 
   return (
     <div
       className={`calendar-card ${bgColor} ${num ? "cursor-pointer" : "opacity-0 pointer-events-none"} ${activeDate === Number(num) ? "active" : ""}`}
       onClick={(e) => {
-        if (items.length > 0)
+        if (filteredItems.length > 0)
           flyToSummary(e, Number(num), summaryRef, lastAnimatedCard, setLastAnimatedCard);
         handleDate();
       }}
@@ -40,26 +43,23 @@ const Card = ({ txt, num, items = [], summaryRef, lastAnimatedCard, setLastAnima
       <Indicator activeCell={activeDate === Number(num)} num={num} isFuture={dateCell > today} />
 
       <div className="attendance-card-body">
-        {items.length > 0 ? (
+        {filteredItems.length > 0 ? (
           <>
             <strong>
-              {presentCount}/{items.length} present
+              {presentCount}/{filteredItems.length} present
             </strong>
             <div className="attendance-details mt-1">
-              {items.map((rec, i) => (
+              {filteredItems.map((rec, i) => (
                 <div
                   key={rec._id || i}
                   className={`d-flex justify-content-between small border-bottom py-1 cursor-pointer ${activeEmployee?.employeeName === rec.employeeName ? "bg-yellow-200" : ""}`}
                   onClick={(e) => {
-                    e.stopPropagation(); // prevent triggering date click
+                    e.stopPropagation();
                     dispatch(SetActiveEmployee(rec));
                   }}
                 >
                   <span className="font-weight-bold">
                     {rec.employeeName || rec.user?.name || "Unknown"}
-                  </span>
-                  <span>
-                    AM: {rec.amIn || "-"} - {rec.amOut || "-"} | PM: {rec.pmIn || "-"} - {rec.pmOut || "-"} ({rec.status})
                   </span>
                 </div>
               ))}
@@ -75,7 +75,6 @@ const Card = ({ txt, num, items = [], summaryRef, lastAnimatedCard, setLastAnima
 
 export default Card;
 
-// ===== Fly-to-summary function =====
 const flyToSummary = (e, currentCardNum, summaryRef, lastAnimatedCard, setLastAnimatedCard) => {
   const current = Number(currentCardNum);
   if (lastAnimatedCard === current) return;

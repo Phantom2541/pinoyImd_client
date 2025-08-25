@@ -8,17 +8,16 @@ import "./style.css";
 export default function Calendar({ summaryRef }) {
   const {
     collections = [],
-    month = new Date().getMonth() + 1, // month is 1-based
+    month = new Date().getMonth() + 1,
     year = new Date().getFullYear(),
   } = useSelector(({ attendances }) => attendances);
 
   const [lastAnimatedCard, setLastAnimatedCard] = useState(null);
 
-  // ✅ group data by day number
   const items = useMemo(() => {
     const map = new Map();
     collections.forEach((att) => {
-      const dateObj = new Date(att.createdAt || att.date); // fallback if date field differs
+      const dateObj = new Date(att.createdAt || att.date);
       const dayNum = dateObj.getDate();
       if (!map.has(dayNum)) map.set(dayNum, []);
       map.get(dayNum).push({ ...att, date: dateObj });
@@ -38,7 +37,7 @@ export default function Calendar({ summaryRef }) {
             key={index}
             num={num}
             txt={txt}
-            items={items.get(num) || []} // ✅ pass attendances for this day
+            items={items.get(num) || []}
             summaryRef={summaryRef}
             lastAnimatedCard={lastAnimatedCard}
             setLastAnimatedCard={setLastAnimatedCard}

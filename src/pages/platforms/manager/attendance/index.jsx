@@ -36,7 +36,6 @@ export default function Attendances() {
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
 
-  // ✅ Ensure Summary has mounted
   useEffect(() => {
     const checkIfReady = setInterval(() => {
       if (summaryRef.current) {

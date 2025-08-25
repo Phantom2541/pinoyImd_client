@@ -39,7 +39,6 @@ const Header = () => {
     );
   }, [token, dispatch, activePlatform, month, year]);
 
-  // ✅ Dynamic check for current month
   const hasRecordForCurrentMonth = collections.some((item) => {
     const date = new Date(item.createdAt);
     return date.getMonth() === month - 1 && date.getFullYear() === year;
@@ -53,7 +52,6 @@ const Header = () => {
         cascade
         className="gradient-card-header blue-gradient py-2 d-flex justify-content-between align-items-center"
       >
-        {/* Left: Calendar */}
         <div className="d-flex align-items-center">
           <CalendarPicker
             month={month}
@@ -62,8 +60,6 @@ const Header = () => {
             reset={() => dispatch(ResetDATE())}
           />
         </div>
-
-        {/* Center: Absolutely Centered Title */}
         <div
           className="white-text text-nowrap text-center"
           style={{

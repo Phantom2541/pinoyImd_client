@@ -5,21 +5,11 @@ import SummaryLoading from "../../cashier/cashRegistry/services/deals/summary/lo
 import "./style.css";
 
 export default function Summary({ summaryRef }) {
-  const { month, year, activeDate, activeEmployee, collections = [], isLoading } =
+  const { month, year, activeEmployee, collections = [], isLoading } =
     useSelector(({ attendances }) => attendances);
 
-  // If no active date, fallback to today
-  const date = activeDate
-    ? new Date(year, month - 1, activeDate)
-    : new Date(year, month - 1, new Date().getDate());
+  const contentRef = useRef(null);
 
-  const activeDateLabel = date.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-  const isSunday = date.getDay() === 0;
-
-  // Filter attendances for the selected employee for the whole month
   const filteredAttendances = useMemo(() => {
     if (!activeEmployee) return [];
 
@@ -32,8 +22,6 @@ export default function Summary({ summaryRef }) {
       );
     });
   }, [collections, month, year, activeEmployee]);
-
-  const contentRef = useRef(null);
 
   const expandSection = (element, hasContent, delay = 300) => {
     if (!element) return;
@@ -77,10 +65,8 @@ export default function Summary({ summaryRef }) {
           ref={summaryRef}
           className="d-flex justify-content-between items-center font-bold text-lg w-100"
         >
-          <span
-            className={isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"}
-          >
-            {activeDateLabel}
+          <span className="text-gray-600 text-sm">
+            {activeEmployee?.employeeName || "Select an employee"}
           </span>
           <span className="text-end">ATTENDANCE SUMMARY</span>
         </div>
@@ -94,11 +80,9 @@ export default function Summary({ summaryRef }) {
         >
           {!isLoading ? (
             <div className="w-full">
-              <div className="d-flex justify-between align-items-center w-full">
-                <p className="font-bold flex-1 text-left">
-                  {filteredAttendances.length} Days attended
-                </p>
-              </div>
+              <p className="font-bold flex-1 text-left">
+                {filteredAttendances.length} Day(s) attended
+              </p>
 
               {filteredAttendances.length > 0 ? (
                 <div
@@ -107,7 +91,14 @@ export default function Summary({ summaryRef }) {
                 >
                   <ol className="mt-2 list-decimal list-inside">
                     {filteredAttendances.map((att, index) => {
-                      const { _id, createdAt, amIn, amOut, pmIn, pmOut } = att;
+                      const { _id, createdAt } = att;
+
+                      // Determine AM/PM in/out values
+                      const amIn = att.am?.in || att.in || "--";
+                      const amOut = att.am?.out || att.out || "--";
+                      const pmIn = att.pm?.in || "--";
+                      const pmOut = att.pm?.out || "--";
+
                       return (
                         <li key={_id || index} className="p-2 border-b">
                           <div className="font-bold">
@@ -119,10 +110,10 @@ export default function Summary({ summaryRef }) {
                             {new Date(createdAt).toLocaleDateString()}
                           </div>
                           <div className="text-blue-600 mt-1">
-                            <strong>AM:</strong> {amIn || "--"} - {amOut || "--"}
+                            <strong>AM:</strong> {amIn} - {amOut}
                           </div>
                           <div className="text-blue-600 mt-1">
-                            <strong>PM:</strong> {pmIn || "--"} - {pmOut || "--"}
+                            <strong>PM:</strong> {pmIn} - {pmOut}
                           </div>
                         </li>
                       );
@@ -131,7 +122,9 @@ export default function Summary({ summaryRef }) {
                 </div>
               ) : (
                 <p className="text-gray-500 mt-5 text-center">
-                  {activeEmployee ? "No attendance found for this employee this month." : "Select an employee to view summary."}
+                  {activeEmployee
+                    ? "No attendance found for this employee this month."
+                    : "Select an employee to view summary."}
                 </p>
               )}
             </div>

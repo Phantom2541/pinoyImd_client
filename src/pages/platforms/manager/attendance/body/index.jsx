@@ -9,9 +9,7 @@ export default function AttendanceLedger({ summaryRef, summaryBodyRef }) {
     <MDBAnimation type="bounceInDown">
       <MDBContainer className="d-grid" fluid>
         <MDBCard className="pb-3" narrow>
-          {/* ✅ Attendance Header */}
           <Header />
-          {/* ✅ Attendance Calendar */}
           <div style={{ maxHeight: "68vh", overflowY: "auto" }}>
             <Calendar summaryRef={summaryRef} />
           </div>
