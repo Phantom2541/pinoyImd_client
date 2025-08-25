@@ -55,7 +55,8 @@ import {
 } from "../../../../pages/platforms/cashier/index.js";
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
 import QrCodePage from "../../../../pages/platforms/manager/settings/qrCode/index.jsx";
-
+import  Attendance  from "../../../../pages/platforms/manager/attendance/index.jsx";
+import { at } from "lodash";
 const ManagerSidebar = [
   {
     name: "Dashboard",
@@ -111,7 +112,7 @@ const ManagerSidebar = [
         title: "Employee daily attendance tracker.",
         path: "/attendances",
         icon: "clock",
-        // component: Calender,
+        component: Attendance,
       },
       {
         name: "Schedule",
