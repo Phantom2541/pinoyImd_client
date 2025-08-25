@@ -1,27 +1,16 @@
-import React, {
-  useEffect,
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useSelector } from "react-redux";
 import { debounce, isEmpty } from "lodash";
 import { MDBIcon, MDBAnimation, MDBProgress } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE as MENUS,
   SetCOLLECTIONS,
-  RESET as MENUSRESET,
+  // RESET as MENUSRESET,
 } from "../../../services/redux/slices/commerce/catalog/menus";
-import { BROWSE as TRACKER } from "../../../services/redux/slices/tracker";
-import { globalSearch } from "../../../services/utilities";
+import { globalSearch, Tracker } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
-import {
-  IDB_BROWSE,
-  IDB_SAVE as IDB_TRACKER_SAVE,
-} from "../../../services/indexDB/tracker";
 
 import {
   IDB_BULK_SAVE as IDB_MENUS_SAVE,
@@ -50,110 +39,28 @@ export default function Search({
     [match, setMatch] = useState([]),
     [searchKey, setSearchKey] = useState(""),
     [isLoading, setIsLoading] = useState(false),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+    { addToast } = useToasts();
 
   const inputRef = useRef(null); // Reference to the input field
 
-  // useEffect(() => {
-  //   if (token && activePlatform.branchId) {
-  //     const branchId = activePlatform.branchId;
-
-  //     // Check if the data for the specific branchId is already in localStorage
-  //     const storedMenus = localStorage.getItem(`menus_${branchId}`);
-
-  //     if (storedMenus) {
-  //       // If menus are found in localStorage, use them (parse back to an object)
-  //       const menus = JSON.parse(storedMenus);
-  //       // You can dispatch the menus here if needed
-  //       dispatch(SetCOLLECTIONS(menus));
-  //     } else {
-  //       // If no data in localStorage, make the server request
-  //       dispatch(MENUS({ token, key: { branchId } }))
-  //         .then(({ payload }) => {
-  //           // Assuming the response contains the menus data in 'payload'
-  //           const menus = payload.payload;
-
-  //           // Store the fetched data in localStorage for future use
-  //           localStorage.setItem(`menus_${branchId}`, JSON.stringify(menus));
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error fetching menus:", error);
-  //         });
-  //     }
-
-  //     // Cleanup function (reset state if necessary)
-  //     return () => {
-  //       dispatch(MENUSRESET());
-  //     };
-  //   }
-  // }, [token, dispatch, activePlatform]);
-
-  const Tracker = useCallback(
-    async (mdbTracker) => {
-      const { branchId = "" } = activePlatform;
-      const idbTracker = await IDB_BROWSE();
-      const idbMenus = await IDB_MENUS_BROWSE();
-      const shouldFetchMenus =
-        (!idbTracker?._id && idbMenus.length === 0) ||
-        mdbTracker?.menu?.id !== idbTracker?.menu?.id;
-
-      if (shouldFetchMenus) {
-        const { menu = {} } = mdbTracker;
-        const { menu: idbMenu = {} } = idbTracker || {};
-        dispatch(
-          MENUS({
-            token,
-            key: {
-              branchId,
-              ...(idbMenus?.length > 0 &&
-                idbTracker?.menu?.id && {
-                  startDate: idbMenu?.updatedAt || menu?.updatedAt,
-                  endDate: menu?.updatedAt || "",
-                }),
-            },
-          })
-        ).then(async ({ payload }) => {
-          IDB_MENUS_SAVE(payload.payload);
-          const menus = await IDB_MENUS_BROWSE();
-          dispatch(SetCOLLECTIONS(menus));
-        });
-      } else {
-        dispatch(SetCOLLECTIONS(idbMenus));
-      }
-
-      if (mdbTracker?._id) {
-        IDB_TRACKER_SAVE(mdbTracker);
-      }
-    },
-    [dispatch, activePlatform, token]
-  );
-
   useEffect(() => {
-    const { branchId = "" } = activePlatform;
-
     const init = async () => {
-      const lcTracker = localStorage.getItem(`tracker-${branchId}`) || "";
-      if (lcTracker) {
-        await Tracker(JSON.parse(lcTracker));
-      } else {
-        dispatch(TRACKER({ token, params: { branchId } })).then(
-          async (action) => {
-            const mdbTracker = action?.payload?.payload || {};
-            await Tracker(mdbTracker);
-            if (mdbTracker?._id) {
-              localStorage.setItem(
-                `tracker-${branchId}`,
-                JSON.stringify(mdbTracker)
-              );
-            }
-          }
-        );
-      }
+      await Tracker.initialize({
+        config: {
+          token,
+          branchId: activePlatform.branchId,
+          trackerKey: "menu",
+        },
+        idb: { BROWSE: IDB_MENUS_BROWSE, SAVE: IDB_MENUS_SAVE },
+        redux: {
+          BROWSE: MENUS,
+          SetCOLLECTIONS,
+        },
+      });
     };
 
     init();
-  }, [activePlatform, dispatch, token, Tracker]);
+  }, [token, activePlatform]);
 
   // Debounced search function to avoid too many re-renders
   const debouncedSearch = useMemo(

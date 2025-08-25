@@ -74,7 +74,10 @@ import MenusToPDF from "./export/pdf/menus";
 import employment from "../fakeDb/employment";
 
 //fetch tracker
+//this is Daily Tracker
 import fetchTracker from "./fetchTracker";
+//this is for once tracker fetching
+import Tracker from "./tracker";
 
 const ENDPOINT = "http://localhost:5000";
 
@@ -178,4 +181,5 @@ export {
   //Logo
   Logo,
   fetchTracker,
+  Tracker,
 };
