@@ -9,7 +9,10 @@ import {
 } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { BROWSE } from "../../../../../../../../services/redux/slices/market/machines";
 import SEARCH from "./search";
-import { capitalize } from "../../../../../../../../services/utilities";
+import {
+  capitalize,
+  fetchTracker,
+} from "../../../../../../../../services/utilities";
 
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
@@ -26,7 +29,7 @@ const Headers = ({ searchKey }) => {
           key: {
             department: "LAB",
             branchId: "637097f0535529a3a57e933e",
-            createdAt: new Date().setHours(0, 0, 0, 0),
+            createdAt: fetchTracker.get.formattedDate(),
           },
         })
       );
