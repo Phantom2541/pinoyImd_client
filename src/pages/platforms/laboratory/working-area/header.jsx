@@ -72,7 +72,7 @@ const Headers = ({ searchKey }) => {
               style={{ width: 150 }}
               value={byStatus}
               onChange={(e) => {
-                dispatch(SetByStatus(e.target.value));
+                dispatch(SetByStatus({ status: e.target.value }));
               }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>

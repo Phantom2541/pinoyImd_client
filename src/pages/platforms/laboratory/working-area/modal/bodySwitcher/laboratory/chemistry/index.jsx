@@ -22,7 +22,7 @@ export default function Chemistry() {
   const handleChange = (target) => {
     const { name, value } = target,
       _name = Number(name),
-      _value = Number(value);
+      _value = value;
 
     if (_name !== 16)
       return dispatch(
