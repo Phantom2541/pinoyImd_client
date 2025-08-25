@@ -88,9 +88,9 @@ const humanresources = [
         // component: OrgChart,
       },
       {
-        name: "ID Calibrator",
-        title: "ID Calibrator",
-        path: "/idCalibrator",
+        name: "CARD Calibrator",
+        title: "CARD Calibrator",
+        path: "/card/Calibrator",
         icon: "user-tie",
         component: IdCalibrator,
       },

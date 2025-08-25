@@ -9,9 +9,17 @@
     "leftside rightside"
     "bottomside bottomside";
   width: fit-content;
-  max-width: 1150px;
   margin: auto;
   gap: 10px;
+  user-select: none;
+}
+
+.id-calibrator-main-container.portrait {
+  max-width: 1150px;
+}
+.id-calibrator-main-container.landscape {
+  max-width: 1300px;
+  align-items: center;
 }
 
 .id-calibrator-container {
@@ -45,18 +53,18 @@
 .id-calibrator-preview {
   position: relative;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-
+  border-radius: 5px;
   background-color: #ffffff;
 }
 
 .id-calibrator-preview.portrait {
-  width: 350px;
-  height: 450px;
+  width: 3.1875in;
+  height: 5.0625in;
 }
 
 .id-calibrator-preview.landscape {
-  width: 450px;
-  height: 350px;
+  width: 5.0625in;
+  height: 3.1875in;
 }
 
 .id-calibrator-preview-upload {
@@ -66,22 +74,38 @@
   justify-content: center;
   align-items: center;
   font-size: 3rem;
-  border: 2px solid #ccc;
-  color: #e9e9e9;
-  background-color: transparent;
+  border: 2px solid rgba(0, 0, 0, 0.6); /* muted black border */
+  color: rgba(0, 0, 0, 0.8); /* off-white text/icon */
   cursor: pointer;
-  transition: border-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  z-index: 1;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.id-calibrator-preview-upload:hover {
+  border-color: rgba(255, 255, 255, 0.6); /* lighter border on hover */
+  color: #fff; /* solid white for contrast */
 }
 
 .id-calibrator-preview-label {
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight: 700;
   text-transform: uppercase;
   color: #e9e9e9;
+  letter-spacing: 4px;
+
+  /* Embossed / naka-bakat effect */
+  text-shadow: 1px 1px 2px #fff,
+    /* highlight (upper-left light source) */ -1px -1px 2px rgba(0, 0, 0, 0.3); /* shadow (lower-right depth) */
+
+  pointer-events: none; /* para di ma-click, purely design lang */
+  user-select: none; /* di rin mako-copy */
+  opacity: 0.5;
 }
 
 .id-calibrator-preview-upload:hover {
@@ -97,47 +121,118 @@
   width: 100%;
   height: 100%;
   object-fit: fill;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.id-calibrator-preview-image.active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2),
+    /* natural depth shadow */ 0 0 10px rgba(0, 123, 255, 0.5); /* subtle blue accent */
 }
 
 .id-calibrator-details {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 12px;
-  background-color: white;
-  padding: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.id-calibrator-detail-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 70px;
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .id-calibrator-detail-value {
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8px;
+  max-height: 40px;
+  padding: 8px 14px;
+  border-radius: 5px;
+  color: white;
+  background-color: #0d6efd;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.id-calibrator-placed-value {
+.id-calibrator-detail-value.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.id-calibrator-detail-value.img {
+  padding: 0 0;
+  width: 40px;
+  aspect-ratio: 1/1;
+}
+
+.id-calibrator-detail-value:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.id-calibrator-detail-value img {
+  display: block;
+  height: 30px;
+  width: 30px;
+  object-fit: fill;
+}
+
+.id-calibrator-value-eye {
   position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.id-calibrator-value-eye:hover {
+  color: #0d6efd;
 }
 
 .id-calibrator-detail-remove {
   position: absolute;
   top: 0;
   right: 0;
-  transform: translate(70%, -50%);
+  transform: translate(150%, -80%);
   cursor: pointer;
   color: red;
   opacity: 0;
+  z-index: 10;
   transition: opacity 0.3s ease;
 }
 
 .id-calibrator-placed-value:hover .id-calibrator-detail-remove {
   opacity: 1;
+}
+
+.id-calibrator-placed-value.selected {
+  outline: 2px dashed #1976d2;
+  outline-offset: 2px;
+}
+
+.id-calibrator-detail-value.crossed {
+  text-decoration: line-through;
+  background-color: white;
+  box-shadow: none;
+  color: black;
+}
+
+.id-calibrator-detail-value.crossed:hover {
+  background-color: #dc3545;
+  color: white;
+  cursor: pointer;
+}
+.id-calibrator-placed-value.highlight {
+  outline: 2px dashed #dc3545;
+}
+
+.id-calibrator-placed-value-text.highlight {
+  color: white;
+  mix-blend-mode: difference;
 }
