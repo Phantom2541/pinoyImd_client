@@ -12,271 +12,302 @@
     "procedure": "Collect cerebrospinal fluid through lumbar puncture. Send immediately to the laboratory for analysis (cell counts, glucose, protein, cultures).",
     "specimen": "Cerebrospinal Fluid (CSF)",
     "template": 7,
-    "preference": ""
+    "preference": "",
+    "purpose": "To evaluate for central nervous system infections (meningitis, encephalitis), subarachnoid hemorrhage, inflammatory or autoimmune conditions (e.g., multiple sclerosis), malignancies, and other neurological disorders."
   },
   {
     "id": 2,
-    "name": "FLUID ANALYSIS",
-    "abbreviation": "FA",
-    "ssx": "Swelling in joints, pleural effusion, ascites, pericardial effusion",
-    "lo_ssx": "",
-    "hi_ssx": "",
+    "name": "Body Fluid Analysis",
+    "abbreviation": "FLUID",
+    "ssx": "Site-specific symptoms such as chest pain and dyspnea (pleural effusion), abdominal distension and pain (ascites), joint swelling and pain (synovial effusion), or chest discomfort and palpitations (pericardial effusion)",
+    "lo_ssx": "Transudate: usually clear, low protein and LDH, due to systemic conditions (e.g., heart failure, cirrhosis, nephrotic syndrome)",
+    "hi_ssx": "Exudate: cloudy or bloody, high protein and LDH, due to local pathology (e.g., infection, malignancy, inflammation, trauma)",
     "department": "LAB",
     "frequency": null,
-    "preparation": "No special preparation. Fluid is aspirated by physician depending on site (pleural, peritoneal, synovial).",
-    "procedure": "Collect body fluid (pleural, ascitic, pericardial, synovial). Perform cell counts, chemical analysis, and microscopic evaluation.",
-    "specimen": "Body Fluid (pleural, ascitic, pericardial, synovial)",
+    "preparation": "No special preparation. Fluid is collected by physician via thoracentesis, paracentesis, pericardiocentesis, or arthrocentesis depending on site.",
+    "procedure": "Collect appropriate body fluid under sterile conditions. Send to laboratory for cell count, differential, chemical analysis, microbiology, and cytology as needed.",
+    "specimen": "Pleural, Peritoneal, Pericardial, or Synovial Fluid",
     "template": 7,
-    "preference": ""
+    "preference": "",
+    "purpose": "To differentiate between transudate and exudate, evaluate for infection, malignancy, hemorrhage, or inflammatory conditions in body cavities or joints."
   },
   {
     "id": 3,
     "name": "SEMINAL FLUID ANALYSIS",
     "abbreviation": "SFA",
     "ssx": "Male infertility, abnormal sperm count, erectile dysfunction, difficulty conceiving",
-    "lo_ssx": "",
-    "hi_ssx": "",
+    "lo_ssx": "Low sperm count, poor motility, abnormal morphology, or low semen volume may indicate infertility or reproductive disorder",
+    "hi_ssx": "Normal sperm concentration (>15 million/mL), motility (>40%), morphology (≥4% normal forms), and adequate volume (≥1.5 mL) suggest normal fertility potential",
     "department": "LAB",
     "frequency": null,
     "preparation": "Abstinence from sexual activity for 3–5 days before collection.",
     "procedure": "Collect semen sample via masturbation into sterile container. Evaluate sperm count, motility, morphology, and other parameters.",
     "specimen": "Semen",
     "template": 7,
-    "preference": ""
+    "preference": "",
+    "purpose": "To evaluate male fertility potential and investigate causes of infertility by assessing semen quality, sperm count, motility, morphology, and other seminal parameters."
   },
   {
     "id": 4,
     "name": "CULTURE AND SENSITIVITY - BLOOD",
     "abbreviation": "CS-Bld",
     "ssx": "Fever, chills, sepsis, unexplained infections, prolonged fever of unknown origin",
-    "lo_ssx": "",
-    "hi_ssx": "",
+    "lo_ssx": "No microbial growth detected after incubation period (negative culture)",
+    "hi_ssx": "Positive culture indicating presence of pathogenic microorganisms with antibiotic susceptibility pattern",
     "department": "LAB",
     "frequency": null,
     "preparation": "No fasting required. Specimen collected aseptically prior to antibiotic therapy.",
     "procedure": "Collect blood aseptically and inoculate into blood culture bottles. Incubate and monitor for microbial growth. Perform sensitivity testing.",
     "specimen": "Whole Blood",
     "template": 8,
-    "preference": ""
+    "preference": "",
+    "purpose": "To detect bloodstream infections, identify causative organisms, and determine appropriate antibiotic therapy."
   },
   {
     "id": 5,
     "name": "ACID FAST BACILLI STAIN",
     "abbreviation": "AFB",
     "ssx": "Cough lasting ≥3 weeks, hemoptysis, chest pain, weight loss, fever, night sweats, fatigue, loss of appetite",
-    "lo_ssx": "",
-    "hi_ssx": "",
+    "lo_ssx": "No acid-fast bacilli observed in smear (negative result)",
+    "hi_ssx": "Presence of acid-fast bacilli in smear (positive result), suggestive of tuberculosis or other mycobacterial infection",
     "department": "LAB",
     "frequency": null,
     "preparation": "No special preparation; provide early morning sputum specimen on 3 consecutive days if possible.",
     "procedure": "Prepare sputum smear, heat-fix, stain with carbolfuchsin, decolorize with acid alcohol, counterstain with methylene blue. Examine microscopically for acid-fast bacilli.",
     "specimen": "Sputum (preferred), may also use gastric aspirates or bronchoalveolar lavage",
     "template": 8,
-    "preference": ""
+    "preference": "",
+    "purpose": "To detect Mycobacterium tuberculosis and other acid-fast bacilli in respiratory and other specimens."
   },
   {
     "id": 6,
     "name": "CULTURE AND SENSITIVITY / URINE",
     "abbreviation": "CS-urine",
-    "lo_ssx": "Dysuria, frequency, urgency, suprapubic pain, flank pain, fever, chills",
-    "hi_ssx": "Pyelonephritis: fever, chills, flank pain, nausea/vomiting; UTI: dysuria, frequency, urgency",
+    "ssx": "Dysuria, frequency, urgency, suprapubic pain, flank pain, fever, chills",
+    "lo_ssx": "No growth after incubation (negative urine culture)",
+    "hi_ssx": "Growth of pathogenic bacteria with antibiotic susceptibility profile (positive urine culture)",
     "department": "LAB",
     "frequency": null,
     "preparation": "Midstream clean-catch urine sample preferred. If catheterized, use sterile technique.",
     "specimen": "Urine",
     "template": 8,
-    "preference": ""
+    "preference": "",
+    "purpose": "To detect urinary tract infections and guide appropriate antibiotic therapy."
   },
   {
     "id": 7,
     "name": "CULTURE AND SENSITIVITY / BODY FLUID",
     "abbreviation": "CS-bf",
-    "lo_ssx": "N/A",
-    "hi_ssx": "N/A",
+    "ssx": "Site-specific symptoms depending on fluid: pleural effusion (chest pain, dyspnea), peritoneal effusion (abdominal pain, distension), synovial effusion (joint pain, swelling)",
+    "lo_ssx": "No microbial growth detected (negative culture)",
+    "hi_ssx": "Positive growth of microorganisms with antibiotic susceptibility profile",
     "department": "LAB",
     "frequency": null,
-    "preparation": "None",
-    "specimen": "Body Fluid",
+    "preparation": "Specimen collected aseptically by physician depending on site.",
+    "specimen": "Body Fluid (pleural, peritoneal, pericardial, synovial, etc.)",
     "template": 8,
-    "preference": ""
+    "preference": "",
+    "purpose": "To identify infectious agents in body fluids and determine appropriate antimicrobial therapy."
   },
   {
     "id": 8,
     "name": "CULTURE AND SENSITIVITY / OTHER",
     "abbreviation": "CS-other",
-    "lo_ssx": "N/A",
-    "hi_ssx": "N/A",
+    "ssx": "Depends on suspected site of infection",
+    "lo_ssx": "No microbial growth detected (negative culture)",
+    "hi_ssx": "Positive microbial growth with antibiotic susceptibility profile",
     "department": "LAB",
     "frequency": null,
-    "preparation": "None",
-    "specimen": "Whole Blood",
+    "preparation": "Specimen collected aseptically depending on clinical requirement.",
+    "specimen": "Other specimen types (e.g., pus, wound swab, catheter tip, etc.)",
     "template": 8,
-    "preference": ""
+    "preference": "",
+    "purpose": "To detect pathogens from non-routine specimens and guide antibiotic therapy."
   },
   {
     "id": 9,
     "name": "RANDOM BLOOD SUGAR",
     "abbreviation": "RBS | CBG",
-    "lo_ssx": "Hypoglycemia: sweating, shakiness, dizziness, confusion, blurred vision, irritability, seizures (severe).",
-    "hi_ssx": "Hyperglycemia: frequent urination, increased thirst, fatigue, headache, blurred vision; in severe cases, nausea and altered consciousness.",
+    "ssx": "Symptoms of abnormal glucose levels: hypoglycemia (sweating, shakiness, dizziness, confusion, seizures), hyperglycemia (frequent urination, excessive thirst, fatigue, blurred vision).",
+    "lo_ssx": "Hypoglycemia: <70 mg/dL",
+    "hi_ssx": "Hyperglycemia: ≥200 mg/dL (suggestive of diabetes if symptomatic)",
     "department": "LAB",
     "frequency": "Monitoring",
-    "preparation": "Use finger stick on side of finger not on tip to minimize pain and tissue juice. Don't smear blood on strip; allow drop to dry on strip.",
-    "specimen": "Serum",
+    "preparation": "No fasting required. Sample may be collected at any time of day.",
+    "specimen": "Whole Blood (capillary) or Serum/Plasma (venous)",
     "template": 2,
-    "preference": "equal"
+    "preference": "equal",
+    "purpose": "To assess blood glucose level at any time of day, useful for diabetes screening and monitoring."
   },
   {
     "id": 10,
     "name": "FASTING BLOOD SUGAR",
     "abbreviation": "FBS",
-    "lo_ssx": "Hypoglycemia: hunger, sweating, tremors, confusion, irritability, blurred vision, seizures (severe).",
-    "hi_ssx": "Hyperglycemia: excessive thirst, frequent urination, fatigue, nausea, headache, fruity breath odor (severe).",
+    "ssx": "Symptoms of abnormal glucose levels: hypoglycemia (hunger, sweating, tremors, confusion, seizures), hyperglycemia (excessive thirst, frequent urination, nausea, fruity breath odor).",
+    "lo_ssx": "Hypoglycemia: <70 mg/dL",
+    "hi_ssx": "Hyperglycemia: ≥126 mg/dL (diagnostic for diabetes if confirmed)",
     "department": "LAB",
     "frequency": "Monitoring",
     "preparation": "8–10 hours fasting, no food or drinks except water before collection.",
-    "specimen": "Serum",
+    "specimen": "Serum or Plasma",
     "template": 2,
-    "preference": "equal"
+    "preference": "equal",
+    "purpose": "To measure fasting blood glucose level for the diagnosis and monitoring of diabetes mellitus."
   },
   {
     "id": 11,
     "name": "GLYCOSYLATED HEMOGLOBIN",
-    "abbreviation": "HBA1c",
-    "lo_ssx": "Possible hypoglycemia: sweating, shakiness, confusion",
+    "abbreviation": "HbA1c",
+    "ssx": "Long-term monitoring of blood glucose control in diabetic and pre-diabetic patients",
+    "lo_ssx": "Possible hypoglycemia or over-treatment: sweating, shakiness, confusion",
+    "hi_ssx": "Uncontrolled diabetes: frequent urination, excessive thirst, fatigue, poor wound healing",
     "department": "LAB",
-    "frequency": "3 months",
-    "hi_ssx": "Uncontrolled diabetes: frequent urination, excessive thirst, fatigue",
+    "frequency": "Every 3 months for diabetic monitoring",
     "preference": "equal",
-    "preparation": "none",
+    "preparation": "No special preparation required",
     "specimen": "Whole Blood (EDTA)",
-    "template": 4
+    "template": 4,
+    "purpose": "To assess average blood glucose levels over the past 2–3 months and monitor diabetes control"
   },
   {
     "id": 12,
     "name": "ALANINE AMINOTRANSFERASE",
     "abbreviation": "ALT/SGPT",
-    "lo_ssx": "Rare; maaaring nutrient deficiency o muscle wasting",
+    "ssx": "Often requested for suspected liver disease",
+    "lo_ssx": "Low values usually not clinically significant; may be seen in nutrient deficiency or muscle wasting",
+    "hi_ssx": "Liver injury: jaundice, right upper quadrant abdominal pain, fatigue, nausea",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "Liver damage: paninilaw ng balat/mata, pananakit sa kanang itaas ng tiyan, pagkapagod, pagduduwal",
     "preference": "gender",
-    "preparation": "none",
+    "preparation": "No special preparation",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To detect and monitor liver injury or disease"
   },
   {
     "id": 13,
     "name": "ASPARTATE AMINOTRANSFERASE",
     "abbreviation": "AST/SGOT",
-    "lo_ssx": "Rare; maaaring nutrient deficiency o muscle wasting",
+    "ssx": "Used to evaluate liver and muscle health",
+    "lo_ssx": "Low values usually not clinically significant; may be seen in nutrient deficiency or muscle wasting",
+    "hi_ssx": "Elevated in liver disease, myocardial infarction, or muscle injury: jaundice, muscle pain, abdominal pain, fatigue",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "Liver/muscle damage: paninilaw ng balat/mata, pananakit ng kalamnan, pagkapagod, pananakit ng tiyan",
     "preference": "gender",
-    "preparation": "none",
+    "preparation": "No special preparation",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To detect liver or muscle damage and monitor treatment response"
   },
   {
     "id": 14,
     "name": "TOTAL CHOLESTEROL",
     "abbreviation": "TC",
-    "lo_ssx": "Hormonal imbalance, risk ng hemorrhagic stroke, fatigue",
+    "ssx": "Part of lipid profile to assess cardiovascular risk",
+    "lo_ssx": "Low cholesterol may indicate malnutrition, hyperthyroidism, or chronic illness",
+    "hi_ssx": "Hypercholesterolemia: risk for atherosclerosis, heart disease, and stroke; symptoms may include chest pain or shortness of breath in advanced cases",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "Hypercholesterolemia: chest pain, madaling hingalin, panganib sa atherosclerosis, stroke, heart attack",
     "preference": "equal",
-    "preparation": "10-12 hrs fasting",
+    "preparation": "10–12 hours fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate lipid status and assess cardiovascular disease risk"
   },
   {
     "id": 15,
     "name": "TRIGLYCERIDES",
-    "abbreviation": "Tg",
-    "lo_ssx": "Mababa ang energy reserve, maaaring undernutrition o hyperthyroidism",
+    "abbreviation": "TG",
+    "ssx": "Part of lipid profile to assess risk of cardiovascular and metabolic disease",
+    "lo_ssx": "Low levels may indicate undernutrition, hyperthyroidism, or malabsorption",
+    "hi_ssx": "Hypertriglyceridemia: associated with pancreatitis (severe abdominal pain), fatty liver, metabolic syndrome, and increased risk of cardiovascular disease",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "Hypertriglyceridemia: pancreatitis (matinding pananakit ng tiyan), fatty liver, panganib ng heart disease",
     "preference": "gender",
-    "preparation": "10-12 hrs fasting",
+    "preparation": "10–12 hours fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate triglyceride levels for cardiovascular risk assessment and to monitor treatment of lipid disorders"
   },
   {
     "id": 16,
     "name": "High Density Lipoprotein-Cholesterol",
     "abbreviation": "HDL",
-    "lo_ssx": "↑ risk ng atherosclerosis, coronary artery disease, stroke, metabolic syndrome",
+    "purpose": "Measures protective cholesterol that helps remove excess cholesterol from the blood, lowering the risk of heart disease and stroke.",
+    "lo_ssx": "Increased risk of atherosclerosis, coronary artery disease, stroke, metabolic syndrome",
+    "hi_ssx": "Usually asymptomatic; may occur in rare genetic disorders (e.g., CETP deficiency)",
     "department": "LAB",
     "frequency": "As necessary",
-    "hi_ssx": "Usually asymptomatic; may occur sa mga genetic disorders (CETP deficiency)",
-    "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "preference": "equal"
   },
   {
     "id": 17,
     "name": "Low Density Lipoprotein-Cholesterol",
     "abbreviation": "LDL",
-    "lo_ssx": "Possible malnutrition, hyperthyroidism, severe liver disease",
+    "purpose": "Assesses the 'bad cholesterol' that deposits in blood vessel walls, contributing to plaque formation and cardiovascular disease.",
+    "lo_ssx": "Rare, usually linked to genetic lipid disorders; may affect hormone synthesis",
+    "hi_ssx": "Increased risk of coronary artery disease, heart attack, and stroke",
     "department": "LAB",
     "frequency": "As necessary",
-    "hi_ssx": "↑ risk ng atherosclerosis, xanthomas, chest pain, peripheral vascular disease",
-    "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "preference": "equal"
   },
   {
     "id": 18,
     "name": "Very Low Density Lipoprotein",
     "abbreviation": "VLDL",
-    "lo_ssx": "Possible malabsorption, hyperthyroidism, malnutrition",
+    "purpose": "Estimates triglyceride-carrying particles that contribute to plaque buildup and cardiovascular risk.",
+    "lo_ssx": "May indicate malnutrition or liver disease",
+    "hi_ssx": "Associated with atherosclerosis, metabolic syndrome, and pancreatitis (if triglycerides very high)",
     "department": "LAB",
     "frequency": "As necessary",
-    "hi_ssx": "↑ risk ng pancreatitis, fatty liver disease, insulin resistance",
-    "preference": "equal",
-    "preparation": "none",
+    "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "preference": "equal"
   },
   {
     "id": 19,
-    "name": "Chole/HDL Ratio",
-    "abbreviation": "Chole:HDL",
-    "lo_ssx": "Usually not clinically significant; maaaring magpahiwatig ng hypolipidemia",
+    "name": "Cholesterol/HDL Ratio",
+    "abbreviation": "Chole/HDL",
+    "purpose": "Provides a risk index for cardiovascular disease by comparing total cholesterol to protective HDL cholesterol.",
+    "lo_ssx": "Lower ratios generally indicate protection against heart disease",
+    "hi_ssx": "High ratios suggest increased risk of coronary artery disease and stroke",
     "department": "LAB",
     "frequency": "As necessary",
-    "hi_ssx": "↑ risk ng cardiovascular disease, atherosclerosis, heart attack, stroke",
-    "preference": "equal",
-    "preparation": "none",
+    "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "preference": "equal"
   },
   {
     "id": 20,
     "name": "Creatinine",
     "abbreviation": "CREA",
-    "lo_ssx": "Muscle wasting, low muscle mass, poor nutritional status",
+    "purpose": "Assesses kidney function and filtration ability by measuring waste product from muscle metabolism.",
+    "lo_ssx": "Low levels may indicate reduced muscle mass or certain liver disease",
+    "hi_ssx": "Elevated in kidney dysfunction, dehydration, or muscle breakdown",
     "department": "LAB",
     "frequency": "As necessary",
-    "hi_ssx": "Kidney dysfunction (CKD, AKI), fatigue, edema, shortness of breath, decreased urine output",
-    "preference": "gender",
-    "preparation": "none",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "preference": "equal"
   },
   {
     "id": 21,
     "name": "BLOOD UREA NITROGEN",
     "abbreviation": "BUN",
+    "purpose": "Assesses kidney function and protein metabolism by measuring nitrogen waste products in the blood.",
     "lo_ssx": "Fatigue, decreased urine output, confusion, hypotension",
+    "hi_ssx": "Nausea, vomiting, edema, confusion, signs of uremia, pruritus",
     "department": "LAB",
     "frequency": "As needed or every 6-12 months (renal monitoring)",
-    "hi_ssx": "Nausea, vomiting, edema, confusion, signs of uremia, pruritus",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
@@ -286,10 +317,11 @@
     "id": 22,
     "name": "BLOOD URIC ACID",
     "abbreviation": "BUA",
+    "purpose": "Evaluates uric acid metabolism for the diagnosis and monitoring of gout, kidney stones, and renal function.",
     "lo_ssx": "Fatigue, weakness, weight loss (rare, usually asymptomatic)",
+    "hi_ssx": "Joint pain, swelling, redness (gout), kidney stones, fever",
     "department": "LAB",
     "frequency": "Every 6-12 months (gout/renal patients)",
-    "hi_ssx": "Joint pain, swelling, redness (gout), kidney stones, fever",
     "preference": "gender",
     "preparation": "FASTING 6 HOURS",
     "specimen": "Serum",
@@ -299,12 +331,13 @@
     "id": 23,
     "name": "POTASSIUM",
     "abbreviation": "K+",
+    "purpose": "Measures potassium levels to evaluate electrolyte balance, kidney function, and cardiac status.",
     "lo_ssx": "Muscle weakness, cramps, fatigue, arrhythmias",
+    "hi_ssx": "Palpitations, arrhythmias, muscle weakness, cardiac arrest",
     "department": "LAB",
     "frequency": "Every 3-6 months (cardiac/renal monitoring)",
-    "hi_ssx": "Palpitations, arrhythmias, muscle weakness, cardiac arrest",
     "preference": "development",
-    "preparation": "Never give K to any patient who is not voiding. Limit K to 40 mEqs/L of fluid added to IVF. Used for little injection (Death sentence)",
+    "preparation": "Never give K to any patient who is not voiding. Limit K to 40 mEqs/L of fluid added to IVF.",
     "specimen": "Serum",
     "template": 2
   },
@@ -312,10 +345,11 @@
     "id": 24,
     "name": "CHLORIDE",
     "abbreviation": "Cl-",
+    "purpose": "Helps assess electrolyte and acid-base balance, especially in relation to sodium and bicarbonate levels.",
     "lo_ssx": "Muscle spasms, dehydration, confusion, respiratory alkalosis",
+    "hi_ssx": "Fatigue, weakness, excessive thirst, hypertension, metabolic acidosis",
     "department": "LAB",
     "frequency": "Every 6-12 months or as needed (electrolyte monitoring)",
-    "hi_ssx": "Fatigue, weakness, excessive thirst, hypertension, metabolic acidosis",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
@@ -325,10 +359,11 @@
     "id": 25,
     "name": "SODIUM",
     "abbreviation": "Na+",
+    "purpose": "Measures sodium levels to monitor fluid balance, kidney function, and neurological status.",
     "lo_ssx": "Headache, confusion, seizures, nausea, vomiting, coma (hyponatremia)",
+    "hi_ssx": "Thirst, restlessness, irritability, seizures, coma (hypernatremia)",
     "department": "LAB",
     "frequency": "Every 6-12 months or as needed (electrolyte monitoring)",
-    "hi_ssx": "Thirst, restlessness, irritability, seizures, coma (hypernatremia)",
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
@@ -339,65 +374,70 @@
     "name": "PHOSPHORUS, INORGANIC",
     "abbreviation": "PO4",
     "lo_ssx": "Muscle weakness, bone pain, confusion, respiratory failure",
+    "hi_ssx": "Muscle cramps, tetany, hypotension, soft tissue calcification",
     "department": "LAB",
     "frequency": "as clinically indicated",
-    "hi_ssx": "Muscle cramps, tetany, hypotension, soft tissue calcification",
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "Used to evaluate phosphate metabolism, kidney function, and bone disorders such as rickets and osteomalacia."
   },
   {
     "id": 27,
     "name": "CALCIUM",
     "abbreviation": "Ca++",
     "lo_ssx": "Muscle spasms, tingling, seizures, cardiac arrhythmias",
+    "hi_ssx": "Constipation, kidney stones, abdominal pain, confusion",
     "department": "LAB",
     "frequency": "as clinically indicated",
-    "hi_ssx": "Constipation, kidney stones, abdominal pain, confusion",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "Assesses calcium balance, helpful in diagnosing bone disease, kidney disease, and parathyroid disorders."
   },
   {
     "id": 28,
     "name": "CALCIUM, IONIZED",
     "abbreviation": "iCa++",
     "lo_ssx": "Numbness, tingling, muscle twitching, tetany",
+    "hi_ssx": "Weakness, nausea, vomiting, cardiac arrhythmias",
     "department": "LAB",
     "frequency": "as clinically indicated",
-    "hi_ssx": "Weakness, nausea, vomiting, cardiac arrhythmias",
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "Measures the biologically active form of calcium; important in critically ill patients, surgery, and monitoring parathyroid function."
   },
   {
     "id": 29,
     "name": "MAGNESIUM",
     "abbreviation": "Mg",
     "lo_ssx": "Tremors, seizures, muscle cramps, cardiac arrhythmias",
+    "hi_ssx": "Nausea, hypotension, respiratory depression, loss of reflexes",
     "department": "LAB",
     "frequency": "as clinically indicated",
-    "hi_ssx": "Nausea, hypotension, respiratory depression, loss of reflexes",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "Evaluates magnesium levels in relation to muscle, nerve, and cardiac function; also used in monitoring kidney disorders and malnutrition."
   },
   {
     "id": 30,
     "name": "MAGNESIUM, URINE",
     "abbreviation": "Mg-urine",
     "lo_ssx": "May reflect low dietary intake or renal wasting",
+    "hi_ssx": "May indicate excessive supplementation or renal loss",
     "department": "LAB",
     "frequency": "as clinically indicated",
-    "hi_ssx": "May indicate excessive supplementation or renal loss",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Urine",
-    "template": 2
+    "template": 2,
+    "purpose": "Assesses urinary magnesium excretion to help differentiate causes of low or high blood magnesium levels."
   },
   {
     "id": 31,
@@ -410,7 +450,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate liver and bone health, useful in diagnosing liver disease, bone disorders, and bile duct obstructions."
   },
   {
     "id": 32,
@@ -423,7 +464,8 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction."
   },
   {
     "id": 33,
@@ -436,7 +478,8 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction."
   },
   {
     "id": 34,
@@ -449,7 +492,8 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction."
   },
   {
     "id": 35,
@@ -462,85 +506,92 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate protein levels in the blood and diagnose anemia, malnutrition, and kidney disease."
   },
   {
     "id": 36,
     "name": "ALBUMIN",
     "abbreviation": "ALB",
     "lo_ssx": "Edema, ascites, delayed wound healing, fatigue",
+    "hi_ssx": "Dehydration, diarrhea, high-protein diet, steroid use",
     "department": "LAB",
     "frequency": "As needed / kapag may liver o kidney disease monitoring",
-    "hi_ssx": "Dehydration, diarrhea, high-protein diet, steroid use",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess nutritional status, liver function, and kidney disease by measuring the main protein in blood plasma."
   },
   {
     "id": 37,
     "name": "GLOBULIN",
     "abbreviation": "Glob",
     "lo_ssx": "Frequent infections, immune deficiency, liver disease",
+    "hi_ssx": "Chronic inflammation, multiple myeloma, autoimmune disease",
     "department": "LAB",
     "frequency": "As needed / depende sa case",
-    "hi_ssx": "Chronic inflammation, multiple myeloma, autoimmune disease",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate immune system function and detect chronic infections, liver disease, or certain blood cancers."
   },
   {
     "id": 38,
     "name": "ALBUMIN/ GLOBULIN RATIO",
     "abbreviation": "A/G RATIO",
     "lo_ssx": "Liver disease, kidney disease, chronic infections",
+    "hi_ssx": "Leukemia, genetic disorders, low globulin production",
     "department": "LAB",
     "frequency": "As needed / kapag abnormal ang Albumin o Globulin",
-    "hi_ssx": "Leukemia, genetic disorders, low globulin production",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To help differentiate between liver disease, kidney disease, and immune disorders by comparing albumin and globulin levels."
   },
   {
     "id": 39,
     "name": "ALDOSTERONE",
     "abbreviation": "ALD",
     "lo_ssx": "Low blood pressure, dehydration, dizziness, salt craving",
+    "hi_ssx": "Hypertension, muscle weakness, frequent urination, metabolic alkalosis",
     "department": "LAB",
     "frequency": "As ordered / kapag suspected adrenal disorder",
-    "hi_ssx": "Hypertension, muscle weakness, frequent urination, metabolic alkalosis",
     "preference": "gender",
     "preparation": "none (pero minsan fasting or posture-specific)",
     "specimen": "Whole Blood",
-    "template": 2
+    "template": 2,
+    "purpose": "To diagnose and monitor adrenal gland disorders such as hyperaldosteronism, Addison’s disease, and secondary hypertension."
   },
   {
     "id": 40,
     "name": "LACTATE DEHYDROGENASE",
     "abbreviation": "LDH",
     "lo_ssx": "Rare, usually not clinically significant",
+    "hi_ssx": "Tissue damage, hemolysis, myocardial infarction, liver disease, cancers",
     "department": "LAB",
     "frequency": "As needed / cancer or tissue damage monitoring",
-    "hi_ssx": "Tissue damage, hemolysis, myocardial infarction, liver disease, cancers",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum or Plasma",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess tissue damage and aid in diagnosing conditions such as heart attack, liver disease, hemolysis, and cancer."
   },
   {
     "id": 41,
     "name": "Gamma-Glutamyl Transferase",
     "abbreviation": "GGT",
     "lo_ssx": "Low: Rare, usually not clinically significant.",
+    "hi_ssx": "High: Liver disease, bile duct obstruction, chronic alcohol use.",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "High: Liver disease, bile duct obstruction, chronic alcohol use.",
     "preference": "gender",
     "preparation": "Fasting preferred; avoid alcohol before test",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate liver and bile duct function, and to help detect alcohol-related liver damage."
   },
   {
     "id": 42,
@@ -553,46 +604,50 @@
     "preference": "gender",
     "preparation": "Fasting preferred; morning sample recommended",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate pituitary gland function and investigate infertility, galactorrhea, or suspected pituitary tumors."
   },
   {
     "id": 43,
     "name": "Serum Iron",
     "abbreviation": "Fe",
     "lo_ssx": "Low: Iron deficiency anemia, chronic disease.",
+    "hi_ssx": "High: Hemochromatosis, hemolytic anemia, iron overload.",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "High: Hemochromatosis, hemolytic anemia, iron overload.",
     "preference": "gender",
     "preparation": "Morning sample preferred; fasting recommended",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To measure circulating iron levels and help diagnose anemia, iron overload, or other iron metabolism disorders."
   },
   {
     "id": 44,
     "name": "Total Iron Binding Capacity",
     "abbreviation": "TIBC",
     "lo_ssx": "Low: Chronic disease, malnutrition, liver disease.",
+    "hi_ssx": "High: Iron deficiency anemia, pregnancy.",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "High: Iron deficiency anemia, pregnancy.",
     "preference": "gender",
     "preparation": "Morning sample preferred; fasting recommended",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess the blood’s capacity to transport iron and help distinguish between iron deficiency and other types of anemia."
   },
   {
     "id": 45,
     "name": "Urobilinogen",
     "abbreviation": "URO",
     "lo_ssx": "Low: Not clinically significant (may indicate antibiotic use).",
+    "hi_ssx": "High: Liver disease, hemolytic anemia.",
     "department": "LAB",
     "frequency": null,
-    "hi_ssx": "High: Liver disease, hemolytic anemia.",
     "preference": "gender",
     "preparation": "none",
     "specimen": "Urine",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate liver function and detect hemolysis through measurement of urinary bilirubin breakdown products."
   },
   {
     "id": 46,
@@ -605,7 +660,8 @@
     "preference": "gender",
     "preparation": "Fasting preferred, avoid prostate manipulation prior to test",
     "specimen": "Serum (separated immediately), EDTA plasma",
-    "template": 2
+    "template": 2,
+    "purpose": "To assess prostate function and detect prostate cancer or bone-related disorders."
   },
   {
     "id": 48,
@@ -618,7 +674,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum or heparinized plasma",
-    "template": 2
+    "template": 2,
+    "purpose": "To detect early muscle injury, including myocardial infarction and rhabdomyolysis."
   },
   {
     "id": 49,
@@ -631,7 +688,8 @@
     "preference": "gender",
     "preparation": "None",
     "specimen": "EDTA plasma",
-    "template": 2
+    "template": 2,
+    "purpose": "To diagnose and monitor heart failure and ventricular dysfunction."
   },
   {
     "id": 50,
@@ -644,7 +702,8 @@
     "preference": "gender",
     "preparation": "Avoid intramuscular injections or vigorous exercise before test",
     "specimen": "Serum or plasma",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate muscle damage and support the diagnosis of myocardial infarction or rhabdomyolysis."
   },
   {
     "id": 51,
@@ -657,7 +716,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum (red-top or SST)",
-    "template": 2
+    "template": 2,
+    "purpose": "To diagnose and monitor acute pancreatitis and other pancreatic disorders."
   },
   {
     "id": 52,
@@ -670,7 +730,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum or urine",
-    "template": 2
+    "template": 2,
+    "purpose": "To diagnose and monitor acute pancreatitis and other pancreatic or salivary gland disorders."
   },
   {
     "id": 53,
@@ -683,7 +744,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Citrated plasma",
-    "template": 5
+    "template": 5,
+    "purpose": "To evaluate coagulation function and monitor warfarin therapy."
   },
   {
     "id": 54,
@@ -696,7 +758,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Citrated plasma",
-    "template": 5
+    "template": 5,
+    "purpose": "To evaluate coagulation function and monitor heparin therapy."
   },
   {
     "id": 55,
@@ -709,7 +772,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Whole blood (EDTA)",
-    "template": 10
+    "template": 10,
+    "purpose": "To detect unexpected antibodies that may cause transfusion reactions or hemolytic disease of the newborn."
   },
   {
     "id": 56,
@@ -722,7 +786,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Whole blood (EDTA)",
-    "template": 10
+    "template": 10,
+    "purpose": "To ensure donor-recipient blood compatibility before transfusion and prevent transfusion reactions."
   },
   {
     "id": 57,
@@ -735,7 +800,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Whole blood (EDTA)",
-    "template": 10
+    "template": 10,
+    "purpose": "To confirm donor-recipient blood compatibility before transfusion and prevent transfusion reactions."
   },
   {
     "id": 58,
@@ -748,7 +814,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 1
+    "template": 1,
+    "purpose": "To evaluate overall blood health and detect conditions such as anemia, infection, and hematologic disorders."
   },
   {
     "id": 59,
@@ -761,7 +828,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 1
+    "template": 1,
+    "purpose": "To measure platelet levels and diagnose bleeding or clotting disorders."
   },
   {
     "id": 60,
@@ -774,7 +842,8 @@
     "preference": "equal",
     "preparation": "Avoid aspirin/NSAIDs prior to test",
     "specimen": "Capillary blood (skin puncture)",
-    "template": 1
+    "template": 1,
+    "purpose": "To assess platelet function and screen for bleeding disorders."
   },
   {
     "id": 61,
@@ -787,7 +856,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Whole blood (capillary or venous)",
-    "template": 1
+    "template": 1,
+    "purpose": "To assess overall clotting ability and help diagnose bleeding disorders."
   },
   {
     "id": 62,
@@ -800,7 +870,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 1
+    "template": 1,
+    "purpose": "To evaluate bone marrow activity and monitor treatment response in anemia."
   },
   {
     "id": 63,
@@ -813,7 +884,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 1
+    "template": 1,
+    "purpose": "To detect and monitor inflammation and inflammatory conditions."
   },
   {
     "id": 64,
@@ -826,7 +898,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 1
+    "template": 1,
+    "purpose": "To evaluate red blood cell levels and diagnose anemia or polycythemia."
   },
   {
     "id": 65,
@@ -839,7 +912,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 1
+    "template": 1,
+    "purpose": "To assess red blood cell and platelet levels and diagnose anemia, polycythemia, or bleeding/clotting disorders."
   },
   {
     "id": 66,
@@ -848,520 +922,559 @@
     "lo_ssx": "N/A",
     "hi_ssx": "N/A (result is categorical: A, B, AB, O; Rh+ or Rh−)",
     "department": "LAB",
-    "frequency": "Once (unless discrepancy or transfusion needed)",
-    "preference": "none",
+    "frequency": "Once (unless discrepancy or transfusion required)",
+    "preference": "None",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 4
+    "template": 4,
+    "purpose": "To determine ABO blood group and Rh factor for transfusion compatibility and pregnancy management."
   },
   {
     "id": 67,
     "name": "Pregnancy Test",
-    "abbreviation": "HCG",
-    "lo_ssx": "Negative in pregnancy (false negatives possible in very early gestation)",
-    "hi_ssx": "Positive in pregnancy, trophoblastic disease, some tumors",
+    "abbreviation": "hCG",
+    "lo_ssx": "Negative (may be false-negative in very early gestation)",
+    "hi_ssx": "Positive (pregnancy, trophoblastic disease, or some tumors)",
     "department": "LAB",
-    "frequency": "as ordered (confirmation of pregnancy, rule out in procedures)",
-    "preference": "none",
+    "frequency": "As ordered (confirmation of pregnancy, pre-procedural testing)",
+    "preference": "None",
     "preparation": "No special preparation required",
     "specimen": "Serum or urine",
-    "template": 4
+    "template": 4,
+    "purpose": "To detect pregnancy through the presence of human chorionic gonadotropin (hCG)."
   },
   {
     "id": 68,
     "name": "Human Immunodeficiency Virus 1/2 Screening",
-    "abbreviation": "HIV 1/2 Screening",
-    "lo_ssx": "Negative (no detectable antibodies/antigen)",
-    "hi_ssx": "Positive (requires confirmatory testing with Western blot/ELISA/NAAT)",
+    "abbreviation": "HIV 1/2",
+    "lo_ssx": "Negative (no detectable antibodies or antigen)",
+    "hi_ssx": "Positive (requires confirmatory testing: Western blot, ELISA, or NAAT)",
     "department": "LAB",
-    "frequency": "as ordered (screening, diagnostic, prenatal, high-risk patients)",
-    "preference": "none",
+    "frequency": "As ordered (screening, diagnostic, prenatal, or high-risk assessment)",
+    "preference": "None",
     "preparation": "No special preparation required",
     "specimen": "Serum or plasma",
-    "template": 4
+    "template": 4,
+    "purpose": "To screen for HIV infection."
   },
   {
     "id": 69,
-    "name": "Rapid Plasma Reagin / Screening",
+    "name": "Rapid Plasma Reagin (RPR) / VDRL Screening",
     "abbreviation": "RPR/VDRL",
     "lo_ssx": "Negative (no syphilis antibodies detected)",
-    "hi_ssx": "Positive (may indicate syphilis, but requires confirmatory test like FTA-ABS or TPHA)",
+    "hi_ssx": "Positive (suggestive of syphilis; confirmatory testing with FTA-ABS or TPHA required)",
     "department": "LAB",
-    "frequency": "as ordered (STI screening, prenatal, blood donation)",
-    "preference": "none",
+    "frequency": "As ordered (STI screening, prenatal, blood donation)",
+    "preference": "None",
     "preparation": "No special preparation required",
     "specimen": "Serum or plasma",
-    "template": 4
+    "template": 4,
+    "purpose": "To screen for syphilis infection."
   },
   {
     "id": 71,
-    "name": "GLUCOSE 6 PHOSPHATE DEHYDROGENASE ASSAY",
-    "abbreviation": "G6PD SCREENING",
-    "lo_ssx": "Jaundice in newborn, pallor, dark-colored urine, fatigue, shortness of breath",
+    "name": "Glucose-6-Phosphate Dehydrogenase Screening",
+    "abbreviation": "G6PD Screening",
+    "lo_ssx": "Jaundice in newborn, pallor, dark urine, fatigue, shortness of breath",
+    "hi_ssx": "Usually asymptomatic (high enzyme activity has no clinical significance)",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "Usually asymptomatic (high enzyme activity is not clinically significant)",
-    "preference": "gender",
-    "preparation": "none",
+    "frequency": "As ordered (newborn screening, suspected hemolysis)",
+    "preference": "Gender",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To screen for G6PD deficiency, which may cause hemolytic anemia under oxidative stress."
   },
   {
     "id": 72,
-    "name": "GLUCOSE 6 PHOSPHATE DEHYDROGENASE CONFIRMATORY",
+    "name": "Glucose-6-Phosphate Dehydrogenase Confirmatory",
     "abbreviation": "G6PD Confirmatory",
-    "lo_ssx": "Hemolytic anemia, jaundice, dark urine after exposure to fava beans, certain drugs, or infection",
+    "lo_ssx": "Hemolytic anemia, jaundice, dark urine after fava beans, certain drugs, or infections",
+    "hi_ssx": "No clinical consequence (high activity is rare and not associated with disease)",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "No clinical consequence (high activity is rare and not usually associated with disease)",
-    "preparation": "none",
+    "frequency": "As ordered (follow-up to abnormal screening)",
+    "preference": "None",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "preference": ""
+    "purpose": "To confirm G6PD deficiency in patients with low enzyme activity on screening tests."
   },
   {
     "id": 77,
     "name": "Dengue DUO (Ag/Ab) Screening",
     "abbreviation": "Dengue NS1, IgG & IgM",
-    "lo_ssx": " May indicate early stage (<24h) or absence of dengue infection",
-    "hi_ssx": "Fever >24 hours, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding manifestations",
+    "lo_ssx": "Possible early infection (<24h) or absence of dengue",
+    "hi_ssx": "Fever >24h, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding tendencies",
     "department": "LAB",
-    "frequency": null,
-    "preparation": "At least 24 hours of fever",
+    "frequency": "As ordered (acute febrile illness)",
+    "preparation": "At least 24 hours of fever before testing",
     "specimen": "Serum/Plasma",
     "template": 4,
-    "preference": "For screening purposes only, not confirmatory. Interpretation: NS1 positive = possible acute dengue within 1–7 days of illness; IgM positive = recent/ongoing infection; IgG positive = past infection or secondary dengue."
+    "preference": "For screening only. Interpretation: NS1 positive = acute infection (1–7 days); IgM positive = recent/ongoing infection; IgG positive = past infection or secondary dengue.",
+    "purpose": "To screen for dengue using both antigen (NS1) and antibody (IgG/IgM) detection."
   },
   {
     "id": 334,
     "name": "Dengue Antibody Screening (IgG/IgM)",
     "abbreviation": "Dengue IgG/IgM",
     "lo_ssx": "Asymptomatic or mild fever, body weakness",
-    "hi_ssx": "Fever >24 hours, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding manifestations",
+    "hi_ssx": "Fever >24h, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding tendencies",
     "department": "LAB",
-    "frequency": null,
+    "frequency": "As ordered (suspected or past dengue infection)",
     "preparation": "At least 24 hours of fever before testing",
     "specimen": "Serum/Plasma",
     "template": 4,
-    "preference": "For screening purposes only, not confirmatory. Interpretation: IgM positive = recent/ongoing infection; IgG positive = past infection or secondary dengue."
+    "preference": "For screening only. Interpretation: IgM positive = recent/ongoing infection; IgG positive = past infection or secondary dengue.",
+    "purpose": "To screen for dengue infection using antibody detection (IgG/IgM)."
   },
   {
     "id": 335,
     "name": "Dengue Antigen Screening (NS1)",
     "abbreviation": "Dengue NS1",
-    "lo_ssx": "Asymptomatic or mild fever <24 hours",
-    "hi_ssx": "Fever >24 hours, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding manifestations",
+    "lo_ssx": "Asymptomatic or mild fever (<24h)",
+    "hi_ssx": "Fever >24h, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding tendencies",
     "department": "LAB",
-    "frequency": null,
+    "frequency": "As ordered (suspected acute dengue)",
     "preparation": "At least 24 hours of fever before testing",
     "specimen": "Serum/Plasma",
     "template": 4,
-    "preference": "For screening purposes only, not confirmatory. Interpretation: NS1 positive = possible acute dengue within 1–7 days of illness."
+    "preference": "For screening only. Interpretation: NS1 positive = acute dengue infection (1–7 days).",
+    "purpose": "To screen for dengue infection using antigen detection (NS1)."
   },
   {
     "id": 80,
-    "name": "POTASSIUM HYDROXIDE SMEAR (10%)",
+    "name": "Potassium Hydroxide Smear (10%)",
     "abbreviation": "10% KOH",
-    "lo_ssx": " No fungal elements seen (but does not rule out infection if symptoms persist)",
+    "lo_ssx": "No fungal elements seen (does not rule out infection if symptoms persist)",
+    "hi_ssx": "Itching, scaling, redness, whitish patches, brittle/thickened nails, hair loss in affected area",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "Itching, scaling, redness, whitish patches, brittle or thickened nails, hair loss in affected area",
-    "preparation": "none",
+    "frequency": "As ordered (suspected fungal infection)",
+    "preparation": "No special preparation required",
     "specimen": "Skin scrapings / Hair / Nail clippings",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To detect fungal infections using a 10% potassium hydroxide (KOH) smear."
   },
   {
     "id": 82,
-    "name": "MALARIAL SMEAR",
+    "name": "Malarial Smear",
     "abbreviation": "MS",
-    "lo_ssx": " No malarial parasites seen (but repeat testing may be required if fever persists)",
-    "department": "LAB",
-    "frequency": null,
+    "lo_ssx": "No malarial parasites seen (repeat testing may be required if fever persists)",
     "hi_ssx": "Chills, intermittent fever, sweating, headache, anemia, splenomegaly",
-    "preparation": "none",
-    "specimen": "EDTA",
+    "department": "LAB",
+    "frequency": "As ordered (febrile illness, travel history to endemic area)",
+    "preparation": "No special preparation required",
+    "specimen": "EDTA whole blood",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To diagnose malaria by detecting malarial parasites in blood smears."
   },
   {
     "id": 131,
-    "name": "HEPATITIS A VIRUS SCREENING",
-    "abbreviation": "HAV SCREENING",
+    "name": "Hepatitis A Virus Screening",
+    "abbreviation": "HAV Screening",
     "lo_ssx": "Asymptomatic or resolved past infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Acute hepatitis: fatigue, fever, abdominal pain, jaundice, dark urine, pale stools",
-    "preparation": "none",
-    "specimen": "Serum",
-    "template": 4,
-    "preference": "none"
-  },
-  {
-    "id": 138,
-    "name": "ANTI HEPATITIS A VIRUS IGG",
-    "abbreviation": "Anti-HAV IgG",
-    "lo_ssx": " no evidence of past infection or immunity",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "indicates past infection or immunity (post-vaccination or recovery)",
-    "preparation": "none",
-    "specimen": "Serum",
-    "template": 4,
-    "preference": ""
-  },
-  {
-    "id": 139,
-    "name": "ANTI HEPATITIS A VIRUS IGM",
-    "abbreviation": "Anti-HAV IgM",
-    "lo_ssx": " no evidence of acute infection",
-    "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "acute/recent HAV infection with jaundice, abdominal pain, anorexia",
+    "frequency": "As ordered (suspected acute hepatitis, screening in high-risk groups)",
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To screen for acute or past hepatitis A virus infection."
+  },
+  {
+    "id": 138,
+    "name": "Anti-Hepatitis A Virus IgG",
+    "abbreviation": "Anti-HAV IgG",
+    "lo_ssx": "No evidence of past infection or immunity",
+    "hi_ssx": "Indicates past infection or immunity (post-vaccination or recovery)",
+    "department": "LAB",
+    "frequency": "As ordered (assessment of immunity)",
+    "preparation": "No special preparation required",
+    "specimen": "Serum",
+    "template": 4,
+    "preference": "None",
+    "purpose": "To determine past infection or immunity to hepatitis A virus."
+  },
+  {
+    "id": 139,
+    "name": "Anti-Hepatitis A Virus IgM",
+    "abbreviation": "Anti-HAV IgM",
+    "lo_ssx": "No evidence of acute infection",
+    "hi_ssx": "Acute or recent HAV infection with jaundice, abdominal pain, anorexia",
+    "department": "LAB",
+    "frequency": "As ordered (suspected acute hepatitis A infection)",
+    "preparation": "No special preparation required",
+    "specimen": "Serum",
+    "template": 4,
+    "preference": "None",
+    "purpose": "To detect acute or recent hepatitis A virus infection."
   },
   {
     "id": 70,
-    "name": "HEPATITIS B SURFACE ANTIGEN SCREENING",
+    "name": "Hepatitis B Surface Antigen Screening",
     "abbreviation": "HBsAg Screening",
     "lo_ssx": "Negative: no evidence of active infection",
+    "hi_ssx": "Positive: may indicate acute or chronic hepatitis B infection (jaundice, fatigue, hepatomegaly)",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "Positive: may indicate acute or chronic hepatitis B infection (symptoms: jaundice, fatigue, hepatomegaly)",
-    "preparation": "none",
+    "frequency": "As ordered (screening, suspected hepatitis, prenatal testing)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To screen for hepatitis B virus infection."
   },
   {
     "id": 95,
-    "name": "HEPATITIS B ENVELOPE ANTIGEN",
+    "name": "Hepatitis B Envelope Antigen",
     "abbreviation": "HBeAg",
     "lo_ssx": "Negative: low infectivity or inactive infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: high infectivity, active viral replication",
-    "preference": "development",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (monitoring hepatitis B infection and infectivity)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "preference": "None",
+    "purpose": "To assess hepatitis B infectivity and viral replication activity."
   },
   {
     "id": 96,
-    "name": "HEPATITIS B SURFACE ANTIGEN TITER",
-    "abbreviation": "HBsAg titer",
+    "name": "Hepatitis B Surface Antigen Titer",
+    "abbreviation": "HBsAg Titer",
     "lo_ssx": "Low/undetectable titer: no active infection or resolved past infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "High titer: active infection, either acute or chronic, with possible symptoms of hepatitis",
-    "preparation": "equal",
+    "department": "LAB",
+    "frequency": "As ordered (monitoring hepatitis B infection and treatment response)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To quantify hepatitis B surface antigen levels for monitoring infection status and treatment response."
   },
   {
     "id": 97,
-    "name": "HEPATITIS C VIRUS SCREENING",
-    "abbreviation": "HCV Qlty",
+    "name": "Hepatitis C Virus Screening",
+    "abbreviation": "HCV Screening",
     "lo_ssx": "Negative: no evidence of infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: possible chronic HCV infection; symptoms may include fatigue, hepatomegaly, elevated liver enzymes",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (screening or suspected hepatitis C)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To screen for hepatitis C virus infection."
   },
   {
     "id": 83,
-    "name": "FECALYSIS",
+    "name": "Fecalysis",
     "abbreviation": "F/A",
     "lo_ssx": "Normal: no parasites, no WBC/RBC, normal stool consistency",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Abnormal: presence of parasites (Giardia, Entamoeba), ova, cysts, blood, or fat malabsorption",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (diarrhea, abdominal pain, suspected parasitic infection)",
+    "preparation": "No special preparation required",
     "specimen": "Stool",
     "template": 3,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To detect parasites, ova, cysts, and other abnormalities in stool."
   },
   {
     "id": 84,
-    "name": "OCCULT BLOOD",
+    "name": "Occult Blood",
     "abbreviation": "OB",
-    "lo_ssx": "Negative: no hidden blood detected in stool",
+    "lo_ssx": "No hidden blood detected in stool",
+    "hi_ssx": "Hidden GI bleeding, may suggest peptic ulcer, gastritis, colon polyp, or colorectal cancer",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "Positive: hidden GI bleeding, may suggest peptic ulcer, gastritis, colon polyp, or colorectal cancer",
-    "preparation": "no meat in food intake",
+    "frequency": "As ordered (screening for GI bleeding, anemia, colorectal cancer)",
+    "preparation": "Avoid red meat, certain vegetables, and iron supplements 48–72 hours before test",
     "specimen": "Stool",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To detect hidden (occult) blood in stool, useful for diagnosing gastrointestinal bleeding."
   },
   {
     "id": 85,
-    "name": "APTS TEST",
+    "name": "Apt–Downey Test",
     "abbreviation": "APTS",
-    "lo_ssx": "Negative: blood in stool is of maternal origin (not from infant)",
+    "lo_ssx": "Blood in stool is of maternal origin (not from infant)",
+    "hi_ssx": "Blood in stool/infant vomitus is fetal in origin (possible neonatal GI bleeding)",
     "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "Positive: blood in stool/infant vomitus is fetal in origin (possible neonatal GI bleeding)",
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": "Stool",
-    "template": 3
+    "frequency": "As ordered (evaluation of neonatal GI bleeding)",
+    "preparation": "No special preparation required",
+    "specimen": "Stool or vomitus sample",
+    "template": 3,
+    "preference": "None",
+    "purpose": "To determine whether the blood in stool or infant vomitus is of maternal or fetal origin."
   },
-
   {
     "id": 86,
     "name": "Papanicolaou Smear",
-    "abbreviation": "PAP's Smear",
+    "abbreviation": "Pap Smear",
     "lo_ssx": "Negative: normal cervical cells, no dysplasia or malignancy",
-    "department": "LAB",
-    "frequency": "Every 3 years for women aged 21–65 (if normal)",
     "hi_ssx": "Abnormal: cervical dysplasia, atypical squamous cells, or possible cervical cancer (may present with postcoital bleeding, abnormal vaginal discharge, pelvic pain)",
-    "preference": "development",
+    "department": "LAB",
+    "frequency": "Every 3 years for women aged 21–65 if results are normal",
     "preparation": "Avoid douching, intercourse, or vaginal medications 48 hours before test",
-    "specimen": "Vaginal Smear",
+    "specimen": "Cervical smear",
     "template": 4,
-    "description": "A procedure in which a small brush is used to gently remove cells from the surface of the cervix and the area around it so they can be checked under a microscope for cervical cancer or cell changes that may lead to cervical cancer."
+    "preference": "None",
+    "purpose": "To screen for cervical cancer and precancerous changes in cervical cells.",
+    "description": "A procedure in which a small brush is used to gently remove cells from the surface of the cervix and the area around it so they can be checked under a microscope for cervical cancer or precancerous changes."
   },
   {
     "id": 87,
-    "name": "PERIPHERAL BLOOD SMEAR",
+    "name": "Peripheral Blood Smear",
     "abbreviation": "PBS",
     "lo_ssx": "Normal morphology of red cells, white cells, and platelets",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Abnormal cell morphology: anemia (microcytic, macrocytic, sickle cells), leukemia (blasts), infections (malarial parasites)",
-    "preference": "development",
-    "preparation": "none",
-    "specimen": "EDTA",
-    "template": 10
+    "department": "LAB",
+    "frequency": "As ordered (suspected anemia, leukemia, or infections)",
+    "preparation": "No special preparation required",
+    "specimen": "EDTA whole blood",
+    "template": 10,
+    "preference": "None",
+    "purpose": "To evaluate blood cell morphology and diagnose hematologic disorders."
   },
   {
     "id": 132,
-    "name": "ANTI HEPATITIS B CORE IGM",
+    "name": "Anti-Hepatitis B Core IgM",
     "abbreviation": "Anti-HBc IgM",
     "lo_ssx": "Negative: no acute/recent HBV infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: acute or recent HBV infection, may present with jaundice, anorexia, fatigue, hepatomegaly",
-    "preference": "none",
-    "preparation": "Not vaccinated with Hepatitis B",
+    "department": "LAB",
+    "frequency": "As ordered (suspected acute HBV infection)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "preference": "None",
+    "purpose": "To detect acute or recent hepatitis B infection."
   },
   {
     "id": 133,
-    "name": "ANTI HEPATITIS B CORE IGG",
+    "name": "Anti-Hepatitis B Core IgG",
     "abbreviation": "Anti-HBc IgG",
     "lo_ssx": "Negative: no past HBV infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: indicates past or chronic HBV infection; may be asymptomatic or present with chronic hepatitis symptoms",
-    "preference": "none",
-    "preparation": "Not vaccinated with Hepatitis B",
+    "department": "LAB",
+    "frequency": "As ordered (screening past or chronic HBV)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "preference": "None",
+    "purpose": "To detect past exposure or chronic hepatitis B infection."
   },
   {
     "id": 134,
-    "name": "ANTI HEPATITIS B ENVELOPE IGG",
+    "name": "Anti-Hepatitis B Envelope IgG",
     "abbreviation": "Anti-HBe IgG",
     "lo_ssx": "Negative: absence of HBe antibody, may indicate ongoing replication",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: usually indicates low infectivity or recovery phase from HBV infection",
-    "preference": "none",
-    "preparation": "Not vaccinated with Hepatitis B",
+    "department": "LAB",
+    "frequency": "As ordered (monitoring HBV infectivity)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "preference": "None",
+    "purpose": "To assess hepatitis B infection status, infectivity, and recovery phase."
   },
   {
     "id": 99,
-    "name": "ANTI HEPATITIS B ENVELOPE IGM",
+    "name": "Anti-Hepatitis B Envelope IgM",
     "abbreviation": "Anti-HBe IgM",
     "lo_ssx": "Negative: no evidence of acute HBe response",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: suggests recent/acute HBV infection and seroconversion phase",
-    "preference": "none",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (suspected acute HBV)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "preference": "None",
+    "purpose": "To detect acute hepatitis B infection and seroconversion phase."
   },
   {
     "id": 140,
-    "name": "ANTI HEPATITIS C VIRUS TITER",
-    "abbreviation": "ANTI-HCV titter",
+    "name": "Anti-Hepatitis C Virus Titer",
+    "abbreviation": "Anti-HCV Titer",
     "lo_ssx": "Negative: no evidence of HCV infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: indicates exposure to HCV; may represent chronic infection. Symptoms: fatigue, elevated liver enzymes, hepatomegaly, risk of cirrhosis",
-    "preference": "gender",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (screening or monitoring HCV infection)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To quantify antibodies against hepatitis C virus and help evaluate exposure or chronic infection."
   },
   {
     "id": 147,
-    "name": "ANTI HEPATITIS C VIRUS",
-    "abbreviation": "ANTI-HCV Qlty",
+    "name": "Anti-Hepatitis C Virus",
+    "abbreviation": "Anti-HCV (Qualitative)",
     "lo_ssx": "Negative: no evidence of HCV infection",
-    "department": "LAB",
-    "frequency": null,
     "hi_ssx": "Positive: indicates exposure to HCV; may represent chronic infection. Symptoms: fatigue, elevated liver enzymes, hepatomegaly, risk of cirrhosis",
-    "preference": "none",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (screening or suspected HCV)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "preference": "None",
+    "purpose": "To screen for hepatitis C virus infection."
   },
   {
     "id": 146,
-    "name": "ORAL GLUCOSE TOLERANCE TEST",
+    "name": "Oral Glucose Tolerance Test",
     "abbreviation": "OGTT",
     "lo_ssx": "Normal: FBS <100 mg/dl, 2-hr post glucose <140 mg/dl (no symptoms)",
-    "department": "LAB",
-    "frequency": "As necessary (diagnosis, pregnancy, suspected diabetes)",
     "hi_ssx": "Diabetes: FBS ≥126 mg/dl or 2-hr ≥200 mg/dl; discontinue if FBS is more than 180 mg/dl. Symptoms: polyuria, polydipsia, polyphagia, weight loss",
-    "preparation": "8–12 hrs fasting, avoid strenuous activity before test",
+    "department": "LAB",
+    "frequency": "As necessary (diagnosis of diabetes or during pregnancy for gestational diabetes)",
+    "preparation": "8–12 hours fasting; avoid strenuous activity before test",
     "specimen": "Serum/Plasma",
     "template": 4,
-    "preference": "development"
+    "preference": "None",
+    "purpose": "To diagnose diabetes mellitus and impaired glucose tolerance."
   },
   {
     "id": 78,
     "name": "Creatine Phosphokinase MM",
     "abbreviation": "CPK-MM",
     "lo_ssx": "Normal: no evidence of skeletal muscle damage",
-    "department": "LAB",
-    "frequency": "As necessary",
     "hi_ssx": "Elevated in muscular dystrophy, trauma, rhabdomyolysis, intense exercise. Symptoms: muscle weakness, myalgia, dark urine",
-    "preference": "gender",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (suspected muscle injury or disease)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To evaluate skeletal muscle damage."
   },
   {
     "id": 79,
     "name": "Creatine Phosphokinase MB",
     "abbreviation": "CK-MB",
     "lo_ssx": "Normal: no cardiac muscle injury",
-    "department": "LAB",
-    "frequency": "As necessary (cardiac workup)",
     "hi_ssx": "Elevated in myocardial infarction, myocarditis, cardiac trauma. Symptoms: chest pain, dyspnea, diaphoresis, palpitations",
-    "preference": "gender",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (cardiac workup, suspected MI)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To evaluate cardiac muscle injury, especially myocardial infarction."
   },
   {
     "id": 81,
-    "name": "CREATININE CLEARANCE",
+    "name": "Creatinine Clearance",
     "abbreviation": "CrCl",
-    "lo_ssx": "Low: indicates renal impairment, symptoms may include oliguria, edema, fatigue",
+    "lo_ssx": "Low: indicates renal impairment; symptoms may include oliguria, edema, fatigue",
+    "hi_ssx": "High: may be seen in pregnancy, high protein intake, or hyperfiltration states",
     "department": "LAB",
-    "frequency": "As necessary (renal function monitoring)",
-    "hi_ssx": "High: may be seen in pregnancy, high protein intake, hyperfiltration states",
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": "Serum (and 24-hr urine if required)",
-    "template": 6
+    "frequency": "As ordered (renal function monitoring)",
+    "preparation": "No special preparation required",
+    "specimen": "Serum (and 24-hour urine if required)",
+    "template": 6,
+    "preference": "None",
+    "purpose": "To assess renal function and estimate glomerular filtration rate (GFR)."
   },
   {
     "id": 73,
-    "name": "TESTOSTERONE",
+    "name": "Testosterone",
     "abbreviation": "Testo",
     "lo_ssx": "Low: male—fatigue, decreased libido, erectile dysfunction, loss of muscle mass; female—irregular menses, infertility",
-    "department": "LAB",
-    "frequency": "As necessary (hormonal evaluation)",
     "hi_ssx": "High: male—aggressiveness, acne, polycythemia; female—hirsutism, virilization, acne, polycystic ovarian syndrome (PCOS)",
-    "preference": "development",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (hormonal evaluation)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To evaluate androgen status and diagnose hormonal imbalances."
   },
   {
     "id": 74,
-    "name": "PANCREATIC CANCER MARKER",
+    "name": "Pancreatic Cancer Marker",
     "abbreviation": "CA 19-9",
     "lo_ssx": "Normal: low levels, no clinical significance",
-    "department": "LAB",
-    "frequency": "As necessary (oncology monitoring)",
     "hi_ssx": "Elevated in pancreatic cancer, cholangiocarcinoma, hepatobiliary disease. Symptoms: jaundice, weight loss, abdominal pain",
-    "preference": "gender",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (oncology monitoring)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To monitor pancreatic cancer and other gastrointestinal malignancies."
   },
   {
     "id": 75,
-    "name": "ANTI-DS DNA",
+    "name": "Anti-dsDNA",
     "abbreviation": "Anti-dsDNA",
     "lo_ssx": "Negative: no evidence of SLE",
-    "department": "LAB",
-    "frequency": "As necessary (autoimmune panel)",
     "hi_ssx": "Positive: Systemic Lupus Erythematosus (SLE). Symptoms: butterfly rash, arthritis, nephritis, fatigue",
-    "preference": "gender",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (autoimmune workup)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To diagnose and monitor systemic lupus erythematosus (SLE)."
   },
   {
     "id": 76,
-    "name": "ESTROGEN & PROGESTERONE RECEPTOR W/ HER2 NEU",
+    "name": "Estrogen & Progesterone Receptor with HER2/neu",
     "abbreviation": "ER/PR + HER2",
     "lo_ssx": "Negative receptors: may predict poor response to hormonal therapy",
-    "department": "LAB",
-    "frequency": "As necessary (oncology workup)",
     "hi_ssx": "Positive receptors: suggests hormone-dependent or HER2-positive breast cancer. Symptoms: breast mass, nipple discharge, skin changes",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (oncology workup)",
+    "preparation": "No special preparation required",
     "specimen": "Tissue (biopsy specimen)",
     "template": 4,
-    "preference": ""
+    "preference": "None",
+    "purpose": "To guide therapy in breast cancer by assessing hormone receptor and HER2 status."
   },
   {
     "id": 88,
-    "name": "CARCINOEMBRYONIC ANTIGEN / COLORECTAL CANCER",
+    "name": "Carcinoembryonic Antigen",
     "abbreviation": "CEA",
     "lo_ssx": "Normal: <3 ng/mL (nonsmoker)",
+    "hi_ssx": "Elevated in colorectal cancer, gastric cancer, pancreatic cancer, and in smokers. Symptoms: weight loss, bowel habit changes, bleeding",
     "department": "LAB",
-    "frequency": "As necessary (cancer monitoring)",
-    "hi_ssx": "Elevated in colorectal cancer, gastric cancer, pancreatic cancer, smoker. Symptoms: weight loss, bowel habit changes, bleeding",
-    "preference": "gender",
-    "preparation": "none",
+    "frequency": "As ordered (cancer monitoring)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To monitor colorectal and other gastrointestinal cancers."
   },
   {
     "id": 89,
-    "name": "OVARIAN CANCER MARKER (QUANTI)",
-    "abbreviation": "CA-125 Qnti",
+    "name": "Ovarian Cancer Marker (Quantitative)",
+    "abbreviation": "CA-125 (Quantitative)",
     "lo_ssx": "Normal: <35 U/mL",
+    "hi_ssx": "Elevated in ovarian cancer, endometriosis, pelvic inflammatory disease, and menstruation. Symptoms: abdominal bloating, pelvic pain, irregular menses",
     "department": "LAB",
-    "frequency": "As necessary (gyne-onco workup)",
-    "hi_ssx": "Elevated in ovarian cancer, endometriosis, PID, menstruation. Symptoms: abdominal bloating, pelvic pain, irregular menses",
-    "preference": "development",
-    "preparation": "none",
+    "frequency": "As ordered (gyne-oncology workup)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To monitor ovarian cancer and evaluate pelvic masses."
   },
   {
     "id": 90,
-    "name": "ESTROGEN / ESTRADIOL",
+    "name": "Estrogen / Estradiol",
     "abbreviation": "E2",
     "lo_ssx": "Low: amenorrhea, infertility, menopausal symptoms, decreased bone density",
-    "department": "LAB",
-    "frequency": "As necessary",
     "hi_ssx": "High: precocious puberty, estrogen-secreting tumors, gynecomastia in men",
-    "preference": "gender",
-    "preparation": "none",
+    "department": "LAB",
+    "frequency": "As ordered (hormonal evaluation)",
+    "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "preference": "None",
+    "purpose": "To evaluate estrogen status and diagnose hormonal imbalances."
   },
   {
     "id": 91,
@@ -1374,7 +1487,8 @@
     "preference": "gender",
     "preparation": "Clean-catch midstream urine sample",
     "specimen": "Urine",
-    "template": 6
+    "template": 6,
+    "purpose": "To detect urinary tract infections and guide antibiotic therapy."
   },
   {
     "id": 93,
@@ -1387,7 +1501,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To detect recent or acute Helicobacter pylori infection."
   },
   {
     "id": 94,
@@ -1400,7 +1515,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To detect and quantify recent or acute Helicobacter pylori infection."
   },
   {
     "id": 101,
@@ -1413,7 +1529,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "gender"
+    "preference": "gender",
+    "purpose": "To detect current or past leptospira infection."
   },
   {
     "id": 102,
@@ -1426,7 +1543,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "gender"
+    "preference": "gender",
+    "purpose": "To evaluate luteinizing hormone levels and assess reproductive status."
   },
   {
     "id": 103,
@@ -1439,7 +1557,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To monitor for breast cancer."
   },
   {
     "id": 104,
@@ -1452,7 +1571,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate parathyroid function and calcium metabolism."
   },
   {
     "id": 105,
@@ -1465,7 +1585,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate progesterone levels and reproductive hormone status."
   },
   {
     "id": 106,
@@ -1476,9 +1597,10 @@
     "department": "LAB",
     "frequency": null,
     "preparation": "none",
-    "specimen": null,
+    "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate prostate health and screen for prostate disorders."
   },
   {
     "id": 107,
@@ -1489,9 +1611,10 @@
     "department": "LAB",
     "frequency": null,
     "preparation": "none",
-    "specimen": null,
+    "specimen": "Serum",
     "template": 4,
-    "preference": "none"
+    "preference": "none",
+    "purpose": "To screen for autoimmune disorders."
   },
   {
     "id": 108,
@@ -1502,13 +1625,14 @@
     "department": "LAB",
     "frequency": null,
     "preparation": "none",
-    "specimen": null,
+    "specimen": "Serum",
     "template": 6,
-    "preference": "gender"
+    "preference": "gender",
+    "purpose": "To quantify autoimmune activity."
   },
   {
     "id": 109,
-    "name": "Tatol CPK",
+    "name": "Total CPK",
     "abbreviation": "tCPK",
     "lo_ssx": null,
     "hi_ssx": "Elevated CPK may indicate muscle damage or myocardial injury; interpret according to gender-specific reference ranges.",
@@ -1517,9 +1641,9 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "gender"
+    "preference": "gender",
+    "purpose": "To evaluate muscle injury and monitor cardiac health."
   },
-
   {
     "id": 98,
     "name": "FOLLICLE STIMULATING HORMONE",
@@ -1531,7 +1655,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate follicle-stimulating hormone levels and reproductive status."
   },
   {
     "id": 110,
@@ -1544,7 +1669,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate thyroid function."
   },
   {
     "id": 111,
@@ -1557,11 +1683,12 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate thyroid function."
   },
   {
     "id": 112,
-    "name": "FREE TETRAIODOTHYRONINE/ THYROXINE",
+    "name": "FREE TETRAIODOTHYRONINE / THYROXINE",
     "abbreviation": "FT4",
     "lo_ssx": "Low FT4 may indicate hypothyroidism.",
     "hi_ssx": "High FT4 may suggest hyperthyroidism.",
@@ -1570,11 +1697,12 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate thyroid function."
   },
   {
     "id": 113,
-    "name": "Triiodothyronine",
+    "name": "TRIIODOTHYRONINE",
     "abbreviation": "T3",
     "lo_ssx": "Decreased T3 may indicate hypothyroidism.",
     "hi_ssx": "Elevated T3 may suggest hyperthyroidism.",
@@ -1583,11 +1711,12 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate thyroid function."
   },
   {
     "id": 114,
-    "name": "TETRAIODOTHYRONINE/THYROXINE",
+    "name": "TETRAIODOTHYRONINE / THYROXINE",
     "abbreviation": "T4",
     "lo_ssx": "Low T4 may indicate hypothyroidism.",
     "hi_ssx": "High T4 may suggest hyperthyroidism.",
@@ -1596,7 +1725,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate thyroid function."
   },
   {
     "id": 115,
@@ -1609,25 +1739,26 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "preference": "development"
+    "preference": "development",
+    "purpose": "To evaluate for rheumatoid arthritis and other autoimmune disorders."
   },
-
   {
     "id": 116,
     "name": "TREPONEMA PALLIDUM HEME AGGLUTINATION / Confirmatory",
     "abbreviation": "TPHA",
-    "lo_ssx": " No clinical signs",
+    "lo_ssx": "No clinical signs",
     "hi_ssx": "Fever, rash, malaise, lymphadenopathy, genital ulcers",
     "department": "LAB",
     "frequency": null,
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To confirm syphilis infection."
   },
   {
     "id": 117,
-    "name": "TREPONEMA PALLIDUM HEME AGGLUTINATION / titer",
+    "name": "TREPONEMA PALLIDUM HEME AGGLUTINATION / Titer",
     "abbreviation": "TPHA titer",
     "lo_ssx": "Negative: No clinical signs",
     "hi_ssx": "Positive: Fever, rash, malaise, lymphadenopathy, genital ulcers",
@@ -1636,7 +1767,8 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To quantify antibody levels and confirm syphilis infection."
   },
   {
     "id": 118,
@@ -1649,7 +1781,8 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate cardiac injury and diagnose myocardial infarction."
   },
   {
     "id": 119,
@@ -1662,11 +1795,12 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate cardiac injury and diagnose myocardial infarction."
   },
   {
     "id": 120,
-    "name": "TYPHOID /TYPHIDOT Test",
+    "name": "TYPHOID / TYPHIDOT Test",
     "abbreviation": "Typhoid IgG & IgM",
     "lo_ssx": "Negative: No fever or gastrointestinal symptoms",
     "hi_ssx": "Positive: Fever, headache, abdominal pain, diarrhea, malaise",
@@ -1675,12 +1809,13 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To detect IgM/IgG antibodies for screening typhoid fever."
   },
   {
     "id": 121,
-    "name": "TYPHOID /Widal Test",
-    "abbreviation": "",
+    "name": "TYPHOID / Widal Test",
+    "abbreviation": "Widal",
     "lo_ssx": "Negative: No fever or gastrointestinal symptoms",
     "hi_ssx": "Positive: Fever, headache, abdominal pain, diarrhea, malaise",
     "department": "LAB",
@@ -1688,12 +1823,13 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To screen for typhoid fever by detecting agglutinating antibodies against Salmonella antigens."
   },
   {
     "id": 122,
     "name": "ESTROGEN",
-    "abbreviation": "",
+    "abbreviation": "E2",
     "lo_ssx": "Low: Irregular periods, hot flashes, fatigue",
     "hi_ssx": "Elevated: Nausea, breast tenderness, bloating, mood changes",
     "department": "LAB",
@@ -1701,11 +1837,12 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate ovarian function, menstrual irregularities, and hormonal balance."
   },
   {
     "id": 123,
-    "name": "D-Dimer",
+    "name": "D-DIMER",
     "abbreviation": "D-Dimer",
     "lo_ssx": "Normal: No clotting symptoms",
     "hi_ssx": "Elevated: Swelling, pain in extremities, shortness of breath, risk of thrombosis",
@@ -1713,40 +1850,42 @@
     "frequency": null,
     "preference": "gender",
     "preparation": "none",
-    "specimen": "Serum",
-    "template": 6
+    "specimen": "Plasma or Serum",
+    "template": 6,
+    "purpose": "To assess fibrin degradation products and evaluate thrombotic disorders such as DVT, PE, or DIC."
   },
   {
     "id": 124,
     "name": "COMPLEMENT 3",
     "abbreviation": "C3",
-    "lo_ssx": "Low: Increased susceptibility to infections, fatigue",
+    "lo_ssx": "Low: Increased susceptibility to infections, autoimmune activity",
     "hi_ssx": "Elevated: Inflammatory symptoms, fever, rash",
     "department": "LAB",
     "frequency": null,
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate immune function and autoimmune disorders (e.g., lupus, glomerulonephritis)."
   },
   {
     "id": 125,
     "name": "COMPLEMENT 4",
     "abbreviation": "C4",
-    "lo_ssx": "Low: Increased susceptibility to infections, fatigue",
+    "lo_ssx": "Low: Increased susceptibility to infections, autoimmune activity",
     "hi_ssx": "Elevated: Inflammatory symptoms, fever, rash",
     "department": "LAB",
     "frequency": null,
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate immune function and autoimmune disorders (e.g., lupus, rheumatoid arthritis)."
   },
-
   {
     "id": 126,
     "name": "FERRITIN",
-    "abbreviation": "",
+    "abbreviation": "Ferritin",
     "lo_ssx": "Low: Fatigue, pallor, weakness, shortness of breath (iron deficiency signs)",
     "hi_ssx": "High: Joint pain, liver disease symptoms, fatigue, fever, inflammation",
     "department": "LAB",
@@ -1754,50 +1893,54 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate iron storage and metabolism, and to assess anemia or iron overload."
   },
   {
     "id": 127,
-    "name": "CA-17.2",
-    "abbreviation": "",
+    "name": "CA 17-2",
+    "abbreviation": "CA 17-2",
     "lo_ssx": "Low: Usually asymptomatic, normal finding",
     "hi_ssx": "High: May indicate gastrointestinal cancers or malignancy, fatigue, unexplained weight loss",
     "department": "LAB",
     "frequency": null,
     "preference": "development",
     "preparation": "none",
-    "specimen": null,
-    "template": 6
+    "specimen": "Serum",
+    "template": 6,
+    "purpose": "To evaluate gastrointestinal cancers and monitor tumor activity."
   },
   {
     "id": 128,
     "name": "PROSTATIC ACID PHOSPHATASE",
-    "abbreviation": "",
+    "abbreviation": "PAP",
     "lo_ssx": "Low: Usually asymptomatic, normal prostate function",
     "hi_ssx": "High: May indicate prostate cancer or prostatic inflammation, urinary difficulties",
     "department": "LAB",
     "frequency": null,
     "preference": "development",
     "preparation": "none",
-    "specimen": null,
-    "template": 6
+    "specimen": "Serum",
+    "template": 6,
+    "purpose": "To evaluate and monitor prostate cancer and related disorders."
   },
   {
     "id": 129,
     "name": "CORTISOL",
-    "abbreviation": "",
+    "abbreviation": "Cortisol",
     "lo_ssx": "Low: Fatigue, weakness, hypotension, dizziness (adrenal insufficiency signs)",
     "hi_ssx": "High: Weight gain, high blood pressure, anxiety, hyperglycemia, mood changes (Cushing’s features)",
     "department": "LAB",
     "frequency": null,
     "preference": "equal",
     "preparation": "none",
-    "specimen": null,
-    "template": 6
+    "specimen": "Serum",
+    "template": 6,
+    "purpose": "To assess adrenal gland function and diagnose adrenal disorders."
   },
   {
     "id": 130,
-    "name": "ALPHA FETO PROTEIN Quantitative",
+    "name": "ALPHA-FETOPROTEIN Quantitative",
     "abbreviation": "AFP Q",
     "lo_ssx": "Low: Usually asymptomatic, normal finding",
     "hi_ssx": "High: May indicate liver disease, hepatocellular carcinoma, or germ cell tumors",
@@ -1806,22 +1949,9 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate liver disease and monitor cancer progression or recurrence."
   },
-  {
-    "id": 145,
-    "name": "GRAM STAIN /BODY FLUIDS",
-    "abbreviation": "GS/bf",
-    "lo_ssx": "Negative: No infection signs",
-    "hi_ssx": "Positive: Fever, localized pain, redness, swelling, signs of bacterial infection",
-    "department": "LAB",
-    "frequency": null,
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": "Other Body Fluids",
-    "template": 6
-  },
-
   {
     "id": 135,
     "name": "ANTI-STREPTOLYSIN O TITER",
@@ -1833,24 +1963,40 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To detect recent streptococcal infection and assess risk of complications (e.g., rheumatic fever, glomerulonephritis)."
   },
   {
     "id": 136,
-    "name": "BETA-HUMAN CHORIONIC GONADOTROPIN QUANTI",
-    "abbreviation": "",
-    "lo_ssx": "Low: May indicate non-pregnancy or early pregnancy, miscarriage risk",
-    "hi_ssx": "High: Pregnancy, gestational trophoblastic disease, multiple pregnancy",
+    "name": "BETA-HUMAN CHORIONIC GONADOTROPIN Quantitative",
+    "abbreviation": "β-hCG Q",
+    "lo_ssx": "Low: May indicate non-pregnancy, early pregnancy, or miscarriage risk",
+    "hi_ssx": "High: Normal in pregnancy; elevated in gestational trophoblastic disease or multiple pregnancy",
     "department": "LAB",
     "frequency": null,
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To confirm and monitor pregnancy and evaluate trophoblastic or germ cell tumors."
+  },
+  {
+    "id": 145,
+    "name": "GRAM STAIN / BODY FLUIDS",
+    "abbreviation": "GS/BF",
+    "lo_ssx": "Negative: No infection signs",
+    "hi_ssx": "Positive: Fever, localized pain, redness, swelling, signs of bacterial infection",
+    "department": "LAB",
+    "frequency": null,
+    "preference": "gender",
+    "preparation": "none",
+    "specimen": "Body Fluids",
+    "template": 6,
+    "purpose": "To identify bacteria in body fluids and guide antibiotic therapy."
   },
   {
     "id": 137,
-    "name": "C-REACTIVE PROTIEN/ QUALITATIVE",
+    "name": "C-REACTIVE PROTEIN / QUALITATIVE",
     "abbreviation": "CRP",
     "lo_ssx": "Low: Normal finding, no inflammation",
     "hi_ssx": "High: Inflammation, infection, autoimmune disease, fever, malaise",
@@ -1859,12 +2005,13 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate inflammation."
   },
   {
     "id": 141,
-    "name": "ANTI-CARDIOLIPIN IGG",
-    "abbreviation": "",
+    "name": "ANTI-CARDIOLIPIN IgG",
+    "abbreviation": "aCL IgG",
     "lo_ssx": "Low: Normal finding, no autoimmune risk",
     "hi_ssx": "High: Risk for clotting disorders, antiphospholipid syndrome, history of thrombosis or miscarriage",
     "department": "LAB",
@@ -1872,12 +2019,13 @@
     "preference": "gender",
     "preparation": "Patient should fast at least 6 hrs",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate autoimmune risk."
   },
   {
     "id": 142,
-    "name": "ANTI CARDIOLIPIN IGM",
-    "abbreviation": "",
+    "name": "ANTI-CARDIOLIPIN IgM",
+    "abbreviation": "aCL IgM",
     "lo_ssx": "Low: Normal finding, no autoimmune risk",
     "hi_ssx": "High: Risk for clotting disorders, antiphospholipid syndrome, history of thrombosis or miscarriage",
     "department": "LAB",
@@ -1885,7 +2033,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 3,
+    "purpose": "To evaluate autoimmune risk."
   },
   {
     "id": 143,
@@ -1898,12 +2047,13 @@
     "preparation": "none",
     "specimen": "Urine",
     "template": 0,
-    "preference": ""
+    "preference": "",
+    "purpose": "To evaluate kidney function."
   },
   {
     "id": 144,
-    "name": "Glucose (Urine)",
-    "abbreviation": "Glu(Urine)",
+    "name": "GLUCOSE (URINE)",
+    "abbreviation": "Glu (Urine)",
     "lo_ssx": "Low: Normal finding, negative glucose in urine",
     "hi_ssx": "High: Glucosuria, may indicate diabetes mellitus, hyperglycemia",
     "department": "LAB",
@@ -1911,93 +2061,106 @@
     "preparation": "none",
     "specimen": "Urine",
     "template": 0,
-    "preference": ""
+    "preference": "",
+    "purpose": "To evaluate glucose metabolism."
   },
-
   {
     "id": 170,
-    "name": "FINE NEEDLE ASPIRATION BIOPSY",
+    "name": "Fine Needle Aspiration Biopsy",
     "abbreviation": "FNAB",
-    "lo_ssx": "Low: Usually normal tissue, no malignancy",
-    "hi_ssx": "High: Presence of abnormal or malignant cells, swelling, pain",
+    "lo_ssx": "Normal tissue, no evidence of malignancy",
+    "hi_ssx": "Presence of abnormal or malignant cells, swelling, or pain at the site",
     "department": "LAB",
     "frequency": null,
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": null,
-    "template": 9
+    "preference": "",
+    "preparation": "No special preparation required. Performed by a physician.",
+    "specimen": "Tissue or fluid sample obtained via fine needle",
+    "template": 9,
+    "purpose": "To evaluate suspicious tissue or fluid for infection, inflammation, or malignancy."
   },
   {
     "id": 172,
-    "name": "BIOPSY SMALL",
-    "abbreviation": "s-Biopsy",
-    "lo_ssx": "Low: Normal tissue, no abnormalities",
-    "hi_ssx": "High: Abnormal tissue, tumor detected, pain or swelling",
+    "name": "Small Biopsy",
+    "abbreviation": "S-Biopsy",
+    "lo_ssx": "Normal tissue, no abnormalities",
+    "hi_ssx": "Abnormal tissue or tumor detected, possible swelling or pain",
     "department": "LAB",
     "frequency": null,
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": null,
-    "template": 9
+    "preference": "",
+    "preparation": "No special preparation required.",
+    "specimen": "Small tissue sample",
+    "template": 9,
+    "purpose": "To analyze small tissue samples for signs of disease or malignancy."
   },
   {
     "id": 173,
-    "name": "BIOPSY MEDIUM",
-    "abbreviation": "m-Biopsy",
-    "lo_ssx": "Low: Normal tissue, no abnormalities",
-    "hi_ssx": "High: Abnormal tissue, tumor detected, pain or swelling",
+    "name": "Medium Biopsy",
+    "abbreviation": "M-Biopsy",
+    "lo_ssx": "Normal tissue, no abnormalities",
+    "hi_ssx": "Abnormal tissue or tumor detected, possible swelling or pain",
     "department": "LAB",
     "frequency": null,
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": null,
-    "template": 9
+    "preference": "",
+    "preparation": "No special preparation required.",
+    "specimen": "Medium-sized tissue sample",
+    "template": 9,
+    "purpose": "To analyze medium tissue samples for signs of disease or malignancy."
   },
   {
     "id": 174,
-    "name": "BIOPSY LARGE",
-    "abbreviation": "l-Biopsy",
-    "lo_ssx": "Low: Normal tissue, no abnormalities",
-    "hi_ssx": "High: Abnormal tissue, tumor detected, pain or swelling",
+    "name": "Large Biopsy",
+    "abbreviation": "L-Biopsy",
+    "lo_ssx": "Normal tissue, no abnormalities",
+    "hi_ssx": "Abnormal tissue or tumor detected, possible swelling or pain",
     "department": "LAB",
     "frequency": null,
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": null,
-    "template": 9
+    "preference": "",
+    "preparation": "No special preparation required.",
+    "specimen": "Large tissue sample",
+    "template": 9,
+    "purpose": "To analyze large tissue samples for signs of disease or malignancy."
   },
   {
     "id": 175,
-    "name": "BIOPSY XLARGE",
-    "abbreviation": "xl-Biopsy",
-    "lo_ssx": "Low: Normal tissue, no abnormalities",
-    "hi_ssx": "High: Abnormal tissue, tumor detected, pain or swelling",
+    "name": "Extra Large Biopsy",
+    "abbreviation": "XL-Biopsy",
+    "lo_ssx": "Normal tissue, no abnormalities",
+    "hi_ssx": "Abnormal tissue or tumor detected, possible swelling or pain",
     "department": "LAB",
     "frequency": null,
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": null,
-    "template": 9
+    "preference": "",
+    "preparation": "No special preparation required.",
+    "specimen": "Extra large tissue sample",
+    "template": 9,
+    "purpose": "To analyze extra large tissue samples for signs of disease or malignancy."
   },
   {
     "id": 176,
     "name": "Drug Test",
     "abbreviation": "DT",
     "lo_ssx": "Negative: No drugs detected",
-    "hi_ssx": "Positive: Presence of illicit or prescribed drugs, abnormal behavior may be noted",
+    "hi_ssx": "Positive: Presence of illicit or prescribed drugs",
     "department": "LAB",
-    "preference": "equal",
+    "frequency": null,
+    "preference": "",
+    "preparation": "Urine collection in a sterile container.",
     "specimen": "Urine",
-    "template": 13
+    "template": 13,
+    "purpose": "To detect the presence of illicit or prescribed drugs."
   },
   {
     "id": 177,
     "name": "Physical Examination",
     "abbreviation": "PE",
     "lo_ssx": "Normal findings: No abnormalities detected",
-    "hi_ssx": "Abnormal findings: Signs of illness, weakness, abnormal vital signs",
-    "department": "clinic",
-    "template": 1
+    "hi_ssx": "Abnormal findings: Signs of illness, weakness, or abnormal vital signs",
+    "department": "CLINIC",
+    "frequency": null,
+    "preference": "",
+    "preparation": "No preparation required.",
+    "specimen": "Not applicable",
+    "template": 1,
+    "purpose": "To assess general health through physical signs and symptoms."
   },
   {
     "id": 178,
@@ -2005,401 +2168,430 @@
     "abbreviation": "MC",
     "lo_ssx": "",
     "hi_ssx": "",
-    "department": "clinic",
-    "template": 0
+    "department": "CLINIC",
+    "frequency": null,
+    "preference": "",
+    "preparation": "No preparation required.",
+    "specimen": "Not applicable",
+    "template": 0,
+    "purpose": "To provide official documentation of medical condition or fitness."
   },
-
   {
     "id": 201,
-    "name": "ElectroCardiogram",
-    "abbreviation": "ECG | EKG",
-    "department": "RAD",
+    "name": "Electrocardiogram",
+    "abbreviation": "ECG",
+    "department": "CARDIO",
     "template": 0,
     "lo_ssx": "Normal sinus rhythm, no abnormalities",
-    "hi_ssx": "Arrhythmias, ischemia, infarction, abnormal heart rate"
+    "hi_ssx": "Arrhythmias, ischemia, infarction, abnormal heart rate",
+    "purpose": "To evaluate electrical activity and rhythm of the heart."
   },
   {
     "id": 202,
     "name": "Whole Abdomen Ultrasound",
     "abbreviation": "WA-utz",
-    "preparation": "Fasting",
+    "preparation": "Fasting (6–8 hours)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal abdominal organs, no masses or fluid",
-    "hi_ssx": "Masses, fluid collection, organ enlargement, abnormal findings"
+    "hi_ssx": "Masses, fluid collection, organ enlargement, abnormal findings",
+    "purpose": "To evaluate the entire abdomen for structural abnormalities."
   },
   {
     "id": 203,
     "name": "Upper Abdomen Ultrasound",
     "abbreviation": "UA-utz",
-    "preparation": "Fasting",
+    "preparation": "Fasting (6–8 hours)",
     "department": "RAD",
     "template": 1,
-    "lo_ssx": "Normal upper abdominal organs (liver, gallbladder, pancreas, spleen)",
-    "hi_ssx": "Masses, stones, cysts, organ enlargement, abnormal findings"
+    "lo_ssx": "Normal liver, gallbladder, pancreas, spleen",
+    "hi_ssx": "Masses, stones, cysts, organ enlargement, abnormal findings",
+    "purpose": "To evaluate upper abdominal organs."
   },
   {
     "id": 204,
     "name": "Lower Abdomen Ultrasound",
     "abbreviation": "LA-utz",
-    "preparation": "Fasting",
+    "preparation": "Full bladder",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal lower abdominal organs, no abnormalities",
-    "hi_ssx": "Masses, fluid, organ enlargement, abnormal findings"
+    "hi_ssx": "Masses, fluid, organ enlargement, abnormal findings",
+    "purpose": "To evaluate lower abdominal organs and pelvis."
   },
   {
     "id": 205,
     "name": "Hepatobiliary Ultrasound",
     "abbreviation": "HB-utz",
-    "preparation": "Fasting",
+    "preparation": "Fasting (6–8 hours)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal liver and biliary tree, no stones or obstruction",
-    "hi_ssx": "Liver lesions, gallstones, bile duct obstruction, hepatomegaly"
+    "hi_ssx": "Liver lesions, gallstones, bile duct obstruction, hepatomegaly",
+    "purpose": "To evaluate liver and biliary system."
   },
   {
     "id": 206,
     "name": "Liver Ultrasound",
     "abbreviation": "L-utz",
-    "preparation": "Fasting",
+    "preparation": "Fasting (6–8 hours)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal liver size and echotexture",
-    "hi_ssx": "Fatty liver, masses, cirrhosis, hepatomegaly"
+    "hi_ssx": "Fatty liver, cirrhosis, masses, hepatomegaly",
+    "purpose": "To evaluate liver."
   },
   {
     "id": 207,
     "name": "Kidney Ultrasound",
     "abbreviation": "K-utz",
-    "preparation": "Fasting",
+    "preparation": "Full bladder",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal kidney size and structure",
-    "hi_ssx": "Stones, cysts, hydronephrosis, masses, abnormal echotexture"
+    "hi_ssx": "Stones, cysts, hydronephrosis, masses, abnormal echotexture",
+    "purpose": "To evaluate kidneys."
   },
   {
     "id": 208,
     "name": "Spleen Ultrasound",
     "abbreviation": "S-utz",
-    "preparation": "Fasting",
+    "preparation": "Fasting (6–8 hours) or none if isolated study",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal spleen size and echotexture",
-    "hi_ssx": "Splenomegaly, masses, cysts, abnormal echotexture"
+    "hi_ssx": "Splenomegaly, masses, cysts, abnormal echotexture",
+    "purpose": "To evaluate spleen."
   },
   {
     "id": 209,
     "name": "Pancreas Ultrasound",
     "abbreviation": "P-utz",
-    "preparation": "Fasting",
+    "preparation": "Fasting (6–8 hours)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal pancreas size and echotexture",
-    "hi_ssx": "Pancreatitis, masses, cysts, abnormal echotexture"
+    "hi_ssx": "Pancreatitis, masses, cysts, abnormal echotexture",
+    "purpose": "To evaluate pancreas."
   },
   {
     "id": 210,
     "name": "Gallbladder Ultrasound",
-    "abbreviation": "G-utz",
-    "preparation": "Fasting",
+    "abbreviation": "GB-utz",
+    "preparation": "Fasting (6–8 hours)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal gallbladder, no stones or sludge",
-    "hi_ssx": "Cholelithiasis, cholecystitis, wall thickening, polyps"
+    "hi_ssx": "Cholelithiasis, cholecystitis, wall thickening, polyps",
+    "purpose": "To evaluate gallbladder."
   },
-
   {
     "id": 211,
     "name": "Transvaginal Ultrasound",
     "abbreviation": "TV-utz",
-    "preparation": "Fasting",
+    "preparation": "Empty bladder",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal uterus, ovaries, and adnexa",
-    "hi_ssx": "Fibroids, cysts, masses, abnormal endometrium"
+    "hi_ssx": "Fibroids, cysts, masses, abnormal endometrium",
+    "purpose": "To evaluate uterus, ovaries, and adnexa."
   },
   {
     "id": 212,
     "name": "Pelvic Ultrasound",
-    "abbreviation": "P-utz",
-    "preparation": "Fasting",
+    "abbreviation": "PL-utz",
+    "preparation": "Full bladder",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal pelvic organs",
-    "hi_ssx": "Masses, cysts, fluid collection, abnormal findings"
-  },
-  {
-    "id": 213,
-    "name": "Pelvic Ultrasound",
-    "abbreviation": "P-utz",
-    "preparation": "Fasting",
-    "department": "RAD",
-    "template": 1,
-    "lo_ssx": "Normal pelvic organs",
-    "hi_ssx": "Masses, cysts, fluid collection, abnormal findings"
+    "hi_ssx": "Masses, cysts, fluid collection, abnormal findings",
+    "purpose": "To evaluate pelvic organs."
   },
   {
     "id": 214,
     "name": "Follicle Monitoring Ultrasound",
     "abbreviation": "FM-utz",
-    "preparation": "Fasting",
+    "preparation": "Full bladder",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal follicular development",
-    "hi_ssx": "Delayed or abnormal follicle growth, ovarian cysts"
+    "hi_ssx": "Delayed or abnormal follicle growth, ovarian cysts",
+    "purpose": "To monitor ovarian follicle development."
   },
   {
     "id": 215,
     "name": "Biophysical Profile Ultrasound",
-    "abbreviation": "BP-utz",
-    "preparation": "Fasting",
+    "abbreviation": "BPP-utz",
+    "preparation": "None (may require partially full bladder depending on gestational age)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal fetal movement, tone, amniotic fluid, breathing",
-    "hi_ssx": "Decreased fetal movement, abnormal amniotic fluid, abnormal tone"
+    "hi_ssx": "Decreased fetal movement, abnormal amniotic fluid, abnormal tone",
+    "purpose": "To monitor fetal well-being and development."
   },
   {
     "id": 216,
     "name": "Fetal Gender Determination Ultrasound",
     "abbreviation": "FGD-utz",
-    "preparation": "Fasting",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Unable to determine gender",
-    "hi_ssx": "Gender visualized"
+    "hi_ssx": "Gender visualized",
+    "purpose": "To determine fetal gender."
   },
   {
     "id": 217,
     "name": "Congenital Anomaly Scan Ultrasound",
     "abbreviation": "CAS-utz",
-    "preparation": "Fasting",
+    "preparation": "None (full bladder may be requested in early pregnancy)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "No congenital anomalies detected",
-    "hi_ssx": "Congenital anomalies or malformations detected"
+    "hi_ssx": "Congenital anomalies or malformations detected",
+    "purpose": "To screen for fetal anomalies."
   },
   {
     "id": 218,
     "name": "Kidney-Ureter-Bladder Ultrasound",
     "abbreviation": "KUB-utz",
-    "preparation": "Fasting",
+    "preparation": "Full bladder",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal KUB structures",
-    "hi_ssx": "Stones, masses, hydronephrosis, abnormal findings"
+    "hi_ssx": "Stones, masses, hydronephrosis, abnormal findings",
+    "purpose": "To evaluate kidneys, ureters, and bladder."
   },
   {
     "id": 219,
     "name": "Prostate Ultrasound (Transabdominal or Transrectal)",
-    "abbreviation": "P-utz",
-    "preparation": "Fasting",
+    "abbreviation": "PR-utz",
+    "preparation": "Full bladder (transabdominal) / Enema prep (transrectal)",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal prostate size and echotexture",
-    "hi_ssx": "Enlargement, nodules, cysts, abnormal findings"
+    "hi_ssx": "Enlargement, nodules, cysts, abnormal findings",
+    "purpose": "To evaluate prostate gland."
   },
   {
     "id": 220,
     "name": "Breast Ultrasound",
-    "abbreviation": "B-utz",
-    "preparation": "Fasting",
+    "abbreviation": "BR-utz",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal breast tissue",
-    "hi_ssx": "Masses, cysts, abnormal findings"
+    "hi_ssx": "Masses, cysts, abnormal findings",
+    "purpose": "To evaluate breast."
   },
-
   {
     "id": 221,
     "name": "Scrotal/Testicular Ultrasound",
-    "abbreviation": "S-utz",
-    "preparation": "Fasting",
+    "abbreviation": "ST-utz",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal testicular size, echotexture, and blood flow",
-    "hi_ssx": "Masses, cysts, varicocele, hydrocele, abnormal findings"
+    "hi_ssx": "Masses, cysts, varicocele, hydrocele, abnormal findings",
+    "purpose": "To evaluate scrotal and testicular structures."
   },
   {
     "id": 222,
     "name": "Thyroid Ultrasonography",
-    "abbreviation": "T-utz",
-    "preparation": "Fasting",
+    "abbreviation": "TH-utz",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal thyroid size, echotexture, and vascularity",
-    "hi_ssx": "Nodules, cysts, goiter, abnormal vascularity"
+    "hi_ssx": "Nodules, cysts, goiter, abnormal vascularity",
+    "purpose": "To evaluate thyroid gland."
   },
   {
     "id": 223,
     "name": "Neck Ultrasound",
-    "abbreviation": "N-utz",
-    "preparation": "Fasting",
+    "abbreviation": "NK-utz",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal neck structures, lymph nodes, vessels",
-    "hi_ssx": "Enlarged lymph nodes, masses, cysts, abnormal findings"
+    "hi_ssx": "Enlarged lymph nodes, masses, cysts, abnormal findings",
+    "purpose": "To evaluate neck structures."
   },
   {
     "id": 224,
     "name": "Inguinal Ultrasound",
-    "abbreviation": "I-utz",
-    "preparation": "Fasting",
+    "abbreviation": "IG-utz",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal inguinal structures",
-    "hi_ssx": "Hernias, lymphadenopathy, masses"
+    "hi_ssx": "Hernias, lymphadenopathy, masses",
+    "purpose": "To evaluate inguinal structures."
   },
   {
     "id": 225,
     "name": "Soft Tissue Mass Ultrasound",
     "abbreviation": "STM-utz",
-    "preparation": "Fasting",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "No abnormal soft tissue mass",
-    "hi_ssx": "Soft tissue mass, cysts, abscess, abnormal findings"
+    "hi_ssx": "Soft tissue mass, cysts, abscess, abnormal findings",
+    "purpose": "To evaluate soft tissue mass."
   },
   {
     "id": 226,
     "name": "Carotid Duplex Scan",
     "abbreviation": "CD Scan",
-    "preparation": "Fasting",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal carotid artery flow, no stenosis",
-    "hi_ssx": "Plaque, stenosis, abnormal blood flow"
+    "hi_ssx": "Plaque, stenosis, abnormal blood flow",
+    "purpose": "To evaluate carotid arteries."
   },
   {
     "id": 227,
     "name": "Venous Duplex Scan",
     "abbreviation": "VD Scan",
-    "preparation": "Fasting",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal venous flow, no thrombus",
-    "hi_ssx": "Deep vein thrombosis, venous insufficiency"
+    "hi_ssx": "Deep vein thrombosis, venous insufficiency",
+    "purpose": "To evaluate venous structures."
   },
   {
     "id": 228,
     "name": "Arterial Doppler Study (Upper/Lower Extremities)",
     "abbreviation": "AD Scan",
-    "preparation": "Fasting",
+    "preparation": "None",
     "department": "RAD",
     "template": 1,
     "lo_ssx": "Normal arterial flow, no stenosis",
-    "hi_ssx": "Stenosis, occlusion, abnormal flow patterns"
+    "hi_ssx": "Stenosis, occlusion, abnormal flow patterns",
+    "purpose": "To evaluate arterial structures."
   },
   {
     "id": 234,
     "name": "Chest X-ray (Posterior-Anterior View)",
-    "abbreviation": "x-ray CHEST PA",
+    "abbreviation": "CXR PA",
     "department": "RAD",
     "template": 2,
     "reference": 1,
     "lo_ssx": "Normal lung fields, heart, and mediastinum",
-    "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings"
+    "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings",
+    "purpose": "To evaluate chest structures."
   },
   {
     "id": 235,
     "name": "Chest X-ray (AP View – supine/seated)",
-    "abbreviation": "x-ray CHEST AP",
+    "abbreviation": "CXR AP",
     "department": "RAD",
     "template": 2,
     "reference": 1,
     "lo_ssx": "Normal lung fields, heart, and mediastinum",
-    "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings"
+    "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings",
+    "purpose": "To evaluate chest structures."
   },
-
   {
     "id": 236,
     "name": "Chest X-ray with Lateral View",
-    "abbreviation": "x-ray CHEST LV",
+    "abbreviation": "CXR LAT",
     "department": "RAD",
     "template": 2,
     "reference": 1,
     "lo_ssx": "Normal lung fields, heart, and mediastinum",
-    "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings"
+    "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings",
+    "purpose": "To evaluate chest structures."
   },
   {
     "id": 237,
     "name": "Ribs X-ray",
-    "abbreviation": "x-ray PELV",
+    "abbreviation": "XR RIBS",
     "department": "RAD",
     "template": 2,
     "reference": 3,
     "lo_ssx": "Normal rib alignment and density",
-    "hi_ssx": "Fractures, lesions, deformities"
+    "hi_ssx": "Fractures, lesions, deformities",
+    "purpose": "To evaluate rib structures."
   },
   {
     "id": 238,
     "name": "Sternum X-ray",
-    "abbreviation": "x-ray STERNUM",
+    "abbreviation": "XR STERNUM",
     "department": "RAD",
     "template": 2,
     "reference": 19,
     "lo_ssx": "Normal sternum appearance",
-    "hi_ssx": "Fracture, dislocation, abnormal mass"
+    "hi_ssx": "Fracture, dislocation, abnormal mass",
+    "purpose": "To evaluate sternum structures."
   },
   {
     "id": 239,
     "name": "X-ray of the Arm (Humerus, Forearm)",
-    "abbreviation": "x-ray ARM",
+    "abbreviation": "XR ARM",
     "department": "RAD",
     "template": 2,
     "reference": 5,
     "lo_ssx": "Normal bone structure, no fracture",
-    "hi_ssx": "Fractures, lesions, deformities"
+    "hi_ssx": "Fractures, lesions, deformities",
+    "purpose": "To evaluate arm structures."
   },
   {
     "id": 240,
     "name": "X-ray of the Hand or Wrist",
-    "abbreviation": "x-ray HAND",
+    "abbreviation": "XR HAND",
     "department": "RAD",
     "template": 2,
     "reference": 5,
     "lo_ssx": "Normal bone and joint alignment",
-    "hi_ssx": "Fractures, arthritis, deformities"
+    "hi_ssx": "Fractures, arthritis, deformities",
+    "purpose": "To evaluate hand structures."
   },
   {
     "id": 241,
     "name": "X-ray of the Shoulder",
-    "abbreviation": "x-ray SHOULDER",
+    "abbreviation": "XR SHOULDER",
     "department": "RAD",
     "template": 2,
     "reference": 5,
     "lo_ssx": "Normal shoulder joint, bones, and alignment",
-    "hi_ssx": "Dislocation, fracture, degenerative changes"
+    "hi_ssx": "Dislocation, fracture, degenerative changes",
+    "purpose": "To evaluate shoulder structures."
   },
   {
     "id": 242,
     "name": "X-ray of the Clavicle",
-    "abbreviation": "x-ray CLAVICLE",
+    "abbreviation": "XR CLAVICLE",
     "department": "RAD",
     "template": 2,
     "reference": 20,
     "lo_ssx": "Normal clavicle structure",
-    "hi_ssx": "Fracture, malalignment, bone lesions"
+    "hi_ssx": "Fracture, malalignment, bone lesions",
+    "purpose": "To evaluate clavicle structures."
   },
   {
     "id": 243,
     "name": "X-ray of the Elbow",
-    "abbreviation": "x-ray ELBOW",
+    "abbreviation": "XR ELBOW",
     "department": "RAD",
     "template": 2,
     "reference": 21,
     "lo_ssx": "Normal elbow joint and bones",
-    "hi_ssx": "Fractures, dislocations, abnormal growths"
+    "hi_ssx": "Fractures, dislocations, abnormal growths",
+    "purpose": "To evaluate elbow structures."
   },
   {
     "id": 244,
     "name": "X-ray of the Leg (Tibia/Fibula)",
-    "abbreviation": "x-ray LEG",
+    "abbreviation": "XR LEG",
     "department": "RAD",
     "template": 2,
     "reference": 22,
     "lo_ssx": "Normal tibia and fibula",
-    "hi_ssx": "Fractures, lesions, deformities"
+    "hi_ssx": "Fractures, lesions, deformities",
+    "purpose": "To evaluate leg structures."
   },
   {
     "id": 245,
@@ -2409,7 +2601,8 @@
     "template": 2,
     "reference": 9,
     "lo_ssx": "Normal knee joint, bones, and alignment",
-    "hi_ssx": "Fractures, arthritis, ligament injury, abnormal findings"
+    "hi_ssx": "Fractures, arthritis, ligament injury, abnormal findings",
+    "purpose": "To evaluate knee structures."
   },
 
   {
@@ -2420,7 +2613,8 @@
     "template": 2,
     "reference": 23,
     "lo_ssx": "Normal bones, joints, and alignment",
-    "hi_ssx": "Fractures, dislocations, arthritis, bone lesions"
+    "hi_ssx": "Fractures, dislocations, arthritis, bone lesions",
+    "purpose": "To evaluate ankle structures."
   },
   {
     "id": 247,
@@ -2430,7 +2624,8 @@
     "template": 2,
     "reference": 17,
     "lo_ssx": "Normal hip and pelvic bones, no deformities",
-    "hi_ssx": "Fractures, dislocations, osteoarthritis, abnormal lesions"
+    "hi_ssx": "Fractures, dislocations, osteoarthritis, abnormal lesions",
+    "purpose": "To evaluate hip structures."
   },
   {
     "id": 248,
@@ -2440,7 +2635,8 @@
     "template": 2,
     "reference": 18,
     "lo_ssx": "Normal femur structure and alignment",
-    "hi_ssx": "Fractures, lesions, deformities"
+    "hi_ssx": "Fractures, lesions, deformities",
+    "purpose": "To evaluate femur structures."
   },
   {
     "id": 249,
@@ -2450,7 +2646,8 @@
     "template": 2,
     "reference": 13,
     "lo_ssx": "Normal thoracic vertebrae and curvature",
-    "hi_ssx": "Fractures, scoliosis, degenerative changes, lesions"
+    "hi_ssx": "Fractures, scoliosis, degenerative changes, lesions",
+    "purpose": "To evaluate thoracic spine structures."
   },
   {
     "id": 250,
@@ -2460,7 +2657,8 @@
     "template": 2,
     "reference": 14,
     "lo_ssx": "Normal thoracolumbar vertebrae and alignment",
-    "hi_ssx": "Fractures, scoliosis, degenerative changes, lesions"
+    "hi_ssx": "Fractures, scoliosis, degenerative changes, lesions",
+    "purpose": "To evaluate thoracolumbar spine structures."
   },
   {
     "id": 251,
@@ -2470,7 +2668,8 @@
     "template": 2,
     "reference": 8,
     "lo_ssx": "Normal lumbar vertebrae, disc spaces, and alignment",
-    "hi_ssx": "Fractures, spondylosis, disc degeneration, lesions"
+    "hi_ssx": "Fractures, spondylosis, disc degeneration, lesions",
+    "purpose": "To evaluate lumbar spine structures."
   },
   {
     "id": 252,
@@ -2480,7 +2679,8 @@
     "template": 2,
     "reference": 8,
     "lo_ssx": "Normal lumbosacral vertebrae and sacrum",
-    "hi_ssx": "Fractures, degenerative changes, abnormal lesions"
+    "hi_ssx": "Fractures, degenerative changes, abnormal lesions",
+    "purpose": "To evaluate lumbosacral spine structures."
   },
   {
     "id": 253,
@@ -2490,7 +2690,8 @@
     "template": 2,
     "reference": 4,
     "lo_ssx": "Normal sacroiliac joint spaces",
-    "hi_ssx": "Inflammation, arthritis, joint irregularities"
+    "hi_ssx": "Inflammation, arthritis, joint irregularities",
+    "purpose": "To evaluate sacroiliac joint structures."
   },
   {
     "id": 254,
@@ -2500,7 +2701,8 @@
     "template": 2,
     "reference": 2,
     "lo_ssx": "Normal skull bones and sutures",
-    "hi_ssx": "Fractures, lesions, abnormal calcifications"
+    "hi_ssx": "Fractures, lesions, abnormal calcifications",
+    "purpose": "To evaluate skull structures."
   },
   {
     "id": 255,
@@ -2510,7 +2712,8 @@
     "template": 2,
     "reference": 11,
     "lo_ssx": "Clear sinuses, normal air spaces",
-    "hi_ssx": "Sinusitis, fluid levels, masses"
+    "hi_ssx": "Sinusitis, fluid levels, masses",
+    "purpose": "To evaluate sinus structures."
   },
   {
     "id": 256,
@@ -2520,7 +2723,8 @@
     "template": 2,
     "reference": 7,
     "lo_ssx": "Normal TMJ alignment and spacing",
-    "hi_ssx": "Dislocation, arthritis, fractures, abnormal growths"
+    "hi_ssx": "Dislocation, arthritis, fractures, abnormal growths",
+    "purpose": "To evaluate TMJ structures."
   },
   {
     "id": 257,
@@ -2530,7 +2734,8 @@
     "template": 2,
     "special-view": true,
     "lo_ssx": "Normal oblique view findings",
-    "hi_ssx": "Abnormal alignment, fractures, deformities"
+    "hi_ssx": "Abnormal alignment, fractures, deformities",
+    "purpose": "To provide additional perspective on bone structures."
   },
   {
     "id": 258,
@@ -2540,7 +2745,8 @@
     "template": 2,
     "special-view": true,
     "lo_ssx": "Normal lateral view findings",
-    "hi_ssx": "Abnormalities, fractures, deformities"
+    "hi_ssx": "Abnormalities, fractures, deformities",
+    "purpose": "To provide additional perspective on bone structures."
   },
   {
     "id": 259,
@@ -2550,7 +2756,8 @@
     "template": 2,
     "special-view": true,
     "lo_ssx": "Normal spot film findings",
-    "hi_ssx": "Localized fractures, masses, deformities"
+    "hi_ssx": "Localized fractures, masses, deformities",
+    "purpose": "To provide additional perspective on bone structures."
   },
   {
     "id": 260,
@@ -2559,7 +2766,8 @@
     "department": "RAD",
     "template": 3,
     "lo_ssx": "Normal cardiac structure and function",
-    "hi_ssx": "Valvular disease, heart failure, abnormal flow patterns"
+    "hi_ssx": "Valvular disease, heart failure, abnormal flow patterns",
+    "purpose": "To evaluate cardiac structure and function."
   },
 
   {
@@ -2569,7 +2777,8 @@
     "department": "RAD",
     "template": 3,
     "lo_ssx": "Normal cardiac chambers, valves, and flow patterns",
-    "hi_ssx": "Valve regurgitation, stenosis, abnormal shunts, heart failure"
+    "hi_ssx": "Valve regurgitation, stenosis, abnormal shunts, heart failure",
+    "purpose": "To evaluate cardiac chambers, valves, and flow patterns."
   },
   {
     "id": 262,
@@ -2578,7 +2787,8 @@
     "department": "RAD",
     "template": 3,
     "lo_ssx": "Normal cardiac function under stress",
-    "hi_ssx": "Ischemia, arrhythmias, wall motion abnormalities"
+    "hi_ssx": "Ischemia, arrhythmias, wall motion abnormalities",
+    "purpose": "To evaluate cardiac function under stress."
   },
   {
     "id": 263,
@@ -2587,49 +2797,58 @@
     "department": "RAD",
     "template": 3,
     "lo_ssx": "Clear cardiac structures and normal function",
-    "hi_ssx": "Valve abnormalities, thrombi, atrial septal defects"
+    "hi_ssx": "Valve abnormalities, thrombi, atrial septal defects",
+    "purpose": "To evaluate cardiac structures and function."
   },
   {
     "id": 310,
     "name": "Joint Mobility Enhancement",
     "abbreviation": "JME",
-    "department": "REHAB"
+    "department": "REHAB",
+    "template": 0,
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 311,
     "name": "Musculoskeletal Rehabilitation",
     "abbreviation": "MSR",
-    "department": "REHAB"
+    "department": "REHAB",
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 312,
     "name": "Orthopedic Rehabilitation",
     "abbreviation": "OR",
-    "department": "REHAB"
+    "department": "REHAB",
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 313,
     "name": "Movement Restoration",
     "abbreviation": "MR",
-    "department": "REHAB"
+    "department": "REHAB",
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 314,
     "name": "Pain Management Therapy",
     "abbreviation": "PMT",
-    "department": "REHAB"
+    "department": "REHAB",
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 315,
     "name": "Post-Injury Rehabilitation",
     "abbreviation": "PIR",
-    "department": "REHAB"
+    "department": "REHAB",
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 316,
     "name": "Sports Injury Recovery",
     "abbreviation": "SIR",
-    "department": "REHAB"
+    "department": "REHAB",
+    "purpose": "To improve joint mobility and function."
   },
   {
     "id": 317,
@@ -2642,7 +2861,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "SERUM",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate calcium metabolism."
   },
   {
     "id": 320,
@@ -2655,7 +2875,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for autoimmune liver disease."
   },
 
   {
@@ -2669,7 +2890,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for vasculitis or autoimmune inflammation."
   },
   {
     "id": 322,
@@ -2682,7 +2904,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for thyroid autoimmune disease."
   },
   {
     "id": 323,
@@ -2695,7 +2918,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for thyroid autoimmune disease."
   },
   {
     "id": 324,
@@ -2708,7 +2932,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 7
+    "template": 7,
+    "purpose": "To evaluate for rheumatoid arthritis."
   },
   {
     "id": 325,
@@ -2721,7 +2946,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for autoimmune liver disease."
   },
   {
     "id": 326,
@@ -2734,7 +2960,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate coagulation status."
   },
   {
     "id": 327,
@@ -2747,7 +2974,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for antiphospholipid syndrome."
   },
   {
     "id": 328,
@@ -2760,7 +2988,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate lipid metabolism and cardiovascular risk."
   },
   {
     "id": 329,
@@ -2773,7 +3002,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate lipid metabolism and cardiovascular risk."
   },
   {
     "id": 330,
@@ -2786,7 +3016,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for antiphospholipid syndrome."
   },
   {
     "id": 331,
@@ -2799,7 +3030,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for antiphospholipid syndrome."
   },
   {
     "id": 332,
@@ -2812,7 +3044,8 @@
     "preference": "equal",
     "preparation": "Fasting for at least 8 hours is preferred",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for diabetes."
   },
   {
     "id": 333,
@@ -2825,7 +3058,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate kidney function."
   },
   {
     "id": 336,
@@ -2838,7 +3072,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for syphilis infection."
   },
   {
     "id": 337,
@@ -2851,7 +3086,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Stool",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for H. pylori infection."
   },
   {
     "id": 338,
@@ -2864,7 +3100,8 @@
     "preference": "gender",
     "preparation": "Fasting not required; avoid contamination",
     "specimen": "Serum or Plasma",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for hepatitis C infection."
   },
   {
     "id": 339,
@@ -2877,7 +3114,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for ovarian pathology."
   },
   {
     "id": 340,
@@ -2890,7 +3128,8 @@
     "preference": "gender",
     "preparation": "Fasting not required",
     "specimen": "Whole Blood (EDTA)",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for anemia."
   },
   {
     "id": 341,
@@ -2903,7 +3142,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for hepatitis B infection."
   },
   {
     "id": 347,
@@ -2916,7 +3156,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for hepatitis B infection."
   },
   {
     "id": 342,
@@ -2929,7 +3170,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Whole Blood (EDTA)",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for autoimmune arthritis."
   },
   {
     "id": 343,
@@ -2942,7 +3184,8 @@
     "preference": "equal",
     "preparation": "Fasting for 8–12 hours is preferred",
     "specimen": "Plasma (EDTA)",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for cardiovascular risk."
   },
   {
     "id": 344,
@@ -2955,7 +3198,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for inflammation and cardiovascular risk."
   },
   {
     "id": 345,
@@ -2968,7 +3212,8 @@
     "preference": "gender",
     "preparation": "Fasting for at least 8 hours is required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for diabetes."
   },
   {
     "id": 346,
@@ -2981,7 +3226,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for thyroid disease."
   },
   {
     "id": 348,
@@ -2994,7 +3240,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Plasma (EDTA or Heparin)",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for heart failure."
   },
   {
     "id": 349,
@@ -3007,7 +3254,8 @@
     "preference": "gender",
     "preparation": "Sample taken 2 hours after meal",
     "specimen": "Plasma (Fluoride Oxalate)",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for diabetes."
   },
   {
     "id": 350,
@@ -3020,7 +3268,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum or Plasma",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for bacterial infection."
   },
   {
     "id": 352,
@@ -3033,7 +3282,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Plasma (Citrate)",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate coagulation status."
   },
   {
     "id": 353,
@@ -3046,7 +3296,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Plasma (Citrate)",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate coagulation status."
   },
   {
     "id": 354,
@@ -3059,7 +3310,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for rubella infection."
   },
   {
     "id": 355,
@@ -3072,7 +3324,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for thyroid disease."
   },
   {
     "id": 356,
@@ -3098,7 +3351,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for thyroid autoimmune disease."
   },
   {
     "id": 370,
@@ -3111,7 +3365,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for thyroid autoimmune disease."
   },
   {
     "id": 358,
@@ -3124,7 +3379,8 @@
     "preference": "gender",
     "preparation": "Collect midstream urine sample",
     "specimen": "Urine",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for kidney disease."
   },
   {
     "id": 359,
@@ -3137,7 +3393,8 @@
     "preference": "gender",
     "preparation": "Collect midstream urine sample",
     "specimen": "Urine",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for kidney disease."
   },
   {
     "id": 360,
@@ -3150,7 +3407,8 @@
     "preference": "gender",
     "preparation": "Collect midstream urine sample",
     "specimen": "Urine",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for kidney disease."
   },
   {
     "id": 361,
@@ -3163,7 +3421,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for varicella infection."
   },
   {
     "id": 362,
@@ -3176,7 +3435,8 @@
     "preference": "none",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for varicella infection."
   },
   {
     "id": 363,
@@ -3189,7 +3449,8 @@
     "preference": "gender",
     "preparation": "Fasting for 6–8 hours is preferred",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for vitamin B12 deficiency."
   },
   {
     "id": 364,
@@ -3202,7 +3463,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for vitamin D deficiency."
   },
   {
     "id": 365,
@@ -3215,7 +3477,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for vitamin D deficiency."
   },
   {
     "id": 366,
@@ -3228,7 +3491,8 @@
     "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "purpose": "To evaluate for vitamin D deficiency."
   },
   {
     "id": 367,
@@ -3241,7 +3505,8 @@
     "preference": "",
     "preparation": "Fasting preferred, follow physician instruction",
     "specimen": "Serum/Plasma",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for hepatitis B infection."
   },
   {
     "id": 368,
@@ -3254,7 +3519,8 @@
     "preference": "",
     "preparation": "Fasting preferred, follow physician instruction",
     "specimen": "Serum/Plasma",
-    "template": 4
+    "template": 4,
+    "purpose": "To evaluate for hepatitis C infection."
   },
   {
     "id": 369,
@@ -3267,6 +3533,7 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "purpose": "To evaluate for ovarian pathology."
   }
 ]

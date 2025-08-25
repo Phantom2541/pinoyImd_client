@@ -17,6 +17,7 @@ export default function Menus({ patronPresent }) {
   const { category, privilege, cart, membership, hmo, contract } = useSelector(
       ({ pos }) => pos
     ),
+    { customer } = useSelector(({ pos }) => pos),
     dispatch = useDispatch();
 
   const duplicateMenusChecker = (duplicateMenus, selected) => {
@@ -156,19 +157,19 @@ export default function Menus({ patronPresent }) {
   };
 
   const handleADDtoCart = (selected) => {
-    const { packages } = selected;
+    const { packages = [] } = selected;
 
-    const duplicateMenus = cart.filter(({ packages: sp }) =>
-      sp.every((p) => packages.includes(p))
+    const duplicateMenus = cart.filter(({ packages: sp = [] }) =>
+      sp?.every((p) => packages?.includes(p))
     );
     const servicesExisting = cart.find(
-      ({ packages: sp }) =>
-        packages.some((p) => sp.includes(p)) && sp.length > packages.length
+      ({ packages: sp = [] }) =>
+        packages?.some((p) => sp?.includes(p)) && sp?.length > packages?.length
     );
 
-    if (duplicateMenus.length > 0) {
+    if (duplicateMenus.length > 0 && packages?.length > 0) {
       duplicateMenusChecker(duplicateMenus, selected);
-    } else if (servicesExisting?._id) {
+    } else if (servicesExisting?._id && packages?.length > 0) {
       servicesChecker(servicesExisting, selected);
     } else {
       dispatch(ADDTOCART(selected));
@@ -179,7 +180,7 @@ export default function Menus({ patronPresent }) {
   return (
     <>
       <div className="menus-table-container">
-        <SearchMenu setMenu={handleADDtoCart} />
+        <SearchMenu setMenu={handleADDtoCart} customer={customer} strict />
         <table className="menus-table">
           <thead>
             <tr>

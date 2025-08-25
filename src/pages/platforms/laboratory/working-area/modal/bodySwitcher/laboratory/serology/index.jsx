@@ -16,11 +16,11 @@ export default function Serology() {
 
   const handleChange = (target) => {
     const { name, value } = target;
-    dispatch(SetPackages({ ...params, [name]: Number(value) }));
+    dispatch(SetPackages({ ...params, [name]: value }));
     dispatch(
       SetTASK({
         form: task.form,
-        task: { ...task, packages: { ...packages, [name]: Number(value) } },
+        task: { ...task, packages: { ...packages, [name]: value } },
       })
     );
   };
