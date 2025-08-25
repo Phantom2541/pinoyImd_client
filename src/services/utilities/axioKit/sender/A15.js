@@ -8,7 +8,7 @@ import axios from "axios";
  */
 const sendToA15 = async (data, token) => {
   await axios
-    .post("http://localhost:5050/receive-task", data, {
+    .post(" https://9919ae10167c.ngrok-free.app/receive-task", data, {
       headers: {
         Authorization: `QTracy ${token}`,
       },
