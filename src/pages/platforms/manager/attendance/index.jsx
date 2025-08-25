@@ -5,14 +5,14 @@ import Calendar from "./body";
 import {
   BROWSE,
   RESET,
-} from "../../../../services/redux/slices/commerce/pos/services/deals";
+} from "../../../../services/redux/slices/market/attendances";
 
 export default function Attendances() {
   const summaryRef = useRef();
   const [isSummaryReady, setIsSummaryReady] = useState(false);
 
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { month, year } = useSelector(({ remittances }) => remittances),
+    { month, year } = useSelector(({ attendances }) => attendances),
     dispatch = useDispatch();
 
   useEffect(() => {

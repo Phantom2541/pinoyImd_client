@@ -1,12 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Calendars } from "../../../../../components/header";
-import { SetMONTH, ResetDATE } from "../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import {
+  BROWSE,
+  SetMONTH,
+  ResetDATE,
+} from "../../../../../services/redux/slices/market/attendances";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { month, year } = useSelector(({ remittances }) => remittances);
+
+  const { month, year, collections = [] } = useSelector(
+    ({ attendances }) => attendances
+  );
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    if (!token || !activePlatform?.branchId) return;
+
+    dispatch(
+      BROWSE({
+        token,
+        params: {
+          branchId: activePlatform?.branchId,
+          createdAt: new Date(year, month - 1, 1),
+          endDate: new Date(year, month, 0, 23, 59, 59, 999),
+        },
+      })
+    );
+  }, [token, dispatch, activePlatform, month, year]);
+
+  const hasRecordForCurrentMonth = collections.some((item) => {
+    const date = new Date(item.createdAt);
+    return date.getMonth() === month - 1 && date.getFullYear() === year;
+  });
 
   return (
     <MDBView
@@ -19,6 +47,10 @@ const Header = () => {
         year={year}
         reset={() => dispatch(ResetDATE())}
       />
+      
+      {!hasRecordForCurrentMonth && (
+        <span className="text-white ml-3">No records found this month</span>
+      )}
     </MDBView>
   );
 };

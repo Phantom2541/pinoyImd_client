@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { generateCalendar } from "../../../../../../services/utilities";
 import WeekHeader from "./weekHeader";
@@ -7,23 +7,27 @@ import "./style.css";
 
 export default function Calendar({ summaryRef }) {
   const {
-    collections,
-    month = new Date().getMonth(),
+    collections = [],
+    month = new Date().getMonth() + 1, // month is 1-based
     year = new Date().getFullYear(),
-  } = useSelector(({ remittances }) => remittances);
+  } = useSelector(({ attendances }) => attendances);
 
-  const [lastAnimatedCard, setLastAnimatedCard] = useState(null); // ✅ shared state
+  const [lastAnimatedCard, setLastAnimatedCard] = useState(null);
 
-  const items = collections.reduce((acc, { createdAt, ...rest }) => {
-    if (createdAt) {
-      const date = new Date(createdAt).getUTCDate();
-      if (!acc.has(date)) {
-        acc.set(date, []);
-      }
-      acc.get(date).push({ createdAt, ...rest });
-    }
-    return acc;
-  }, new Map());
+  // ✅ group data by day number
+  const items = useMemo(() => {
+    const map = new Map();
+    collections.forEach((att) => {
+      const dateObj = new Date(att.createdAt || att.date); // fallback if date field differs
+      const dayNum = dateObj.getDate();
+      if (!map.has(dayNum)) map.set(dayNum, []);
+      map.get(dayNum).push({ ...att, date: dateObj });
+    });
+    return map;
+  }, [collections]);
+
+  console.log("collections", collections);
+  console.log("grouped items", items);
 
   return (
     <div className="calendar-template">
@@ -34,7 +38,7 @@ export default function Calendar({ summaryRef }) {
             key={index}
             num={num}
             txt={txt}
-            items={items.get(num) || []}
+            items={items.get(num) || []} // ✅ pass attendances for this day
             summaryRef={summaryRef}
             lastAnimatedCard={lastAnimatedCard}
             setLastAnimatedCard={setLastAnimatedCard}

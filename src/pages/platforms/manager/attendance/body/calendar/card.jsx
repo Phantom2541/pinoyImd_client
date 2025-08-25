@@ -1,61 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Indicator from "./indicator";
-import { SetActiveDATE } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import { SetActiveDATE, SetActiveEmployee } from "../../../../../../services/redux/slices/market/attendances";
 
 const Card = ({ txt, num, items = [], summaryRef, lastAnimatedCard, setLastAnimatedCard }) => {
-  const { day } = useSelector(({ remittances }) => remittances);
-  const [activeCell, setActiveCell] = useState(false);
-  const [expanded, setExpanded] = useState(false); // toggle names/details
+  const { activeDate, activeEmployee } = useSelector(({ attendances }) => attendances);
   const dispatch = useDispatch();
 
   const today = new Date();
-  const dateCell = new Date(txt);
+  const dateCell = new Date();
+  dateCell.setDate(num);
+  dateCell.setMonth(new Date().getMonth());
+  dateCell.setFullYear(new Date().getFullYear());
+
   const isToday = dateCell.toDateString() === today.toDateString();
+  const isSunday = dateCell.getDay() === 0;
 
-  useEffect(() => {
-    setActiveCell(day === Number(num));
-  }, [day, num]);
-
-  const handleDate = () => dispatch(SetActiveDATE(num));
-  const toggleExpand = () => setExpanded(!expanded);
+  const handleDate = () => {
+    dispatch(SetActiveDATE(num));
+    dispatch(SetActiveEmployee(null)); // reset employee when date changes
+  };
 
   const presentCount = items.filter((i) => i.status === "Present").length;
 
+  // Dynamic styles
+  let bgColor = "bg-blue-100";
+  if (isToday) bgColor = "bg-green-200";
+  else if (isSunday) bgColor = "bg-red-200";
+
   return (
     <div
-      className={`calendar-card ${isToday ? "today" : ""} ${num ? "cursor-pointer" : "opacity-0 pointer-events-none"} ${activeCell ? "active" : ""}`}
-      style={!num ? { opacity: 0, pointerEvents: "none" } : {}}
+      className={`calendar-card ${bgColor} ${num ? "cursor-pointer" : "opacity-0 pointer-events-none"} ${activeDate === Number(num) ? "active" : ""}`}
       onClick={(e) => {
-        if (items.length > 0) flyToSummary(e, Number(num), summaryRef, lastAnimatedCard, setLastAnimatedCard);
+        if (items.length > 0)
+          flyToSummary(e, Number(num), summaryRef, lastAnimatedCard, setLastAnimatedCard);
         handleDate();
       }}
     >
-      {/* Indicator (week/day on top) */}
-      <Indicator activeCell={activeCell} num={num} isFuture={dateCell > today} />
+      <Indicator activeCell={activeDate === Number(num)} num={num} isFuture={dateCell > today} />
 
-      {/* Attendance summary */}
       <div className="attendance-card-body">
-        <div className="d-flex justify-content-between align-items-center">
-          <strong>{presentCount}/{items.length} present</strong>
-          {items.length > 0 && (
-            <button className="btn btn-sm btn-link" onClick={toggleExpand}>
-              {expanded ? "Hide" : "Show"}
-            </button>
-          )}
-        </div>
-
-        {expanded && items.length > 0 && (
-          <div className="attendance-details mt-1">
-            {items.map((rec, i) => (
-              <div key={i} className="d-flex justify-content-between small">
-                <span>{rec.employee?.name || "Unknown"}</span>
-                <span>
-                  {rec.amIn || "-"}-{rec.amOut || "-"} / {rec.pmIn || "-"}-{rec.pmOut || "-"} ({rec.status})
-                </span>
-              </div>
-            ))}
-          </div>
+        {items.length > 0 ? (
+          <>
+            <strong>
+              {presentCount}/{items.length} present
+            </strong>
+            <div className="attendance-details mt-1">
+              {items.map((rec, i) => (
+                <div
+                  key={rec._id || i}
+                  className={`d-flex justify-content-between small border-bottom py-1 cursor-pointer ${activeEmployee?.employeeName === rec.employeeName ? "bg-yellow-200" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent triggering date click
+                    dispatch(SetActiveEmployee(rec));
+                  }}
+                >
+                  <span className="font-weight-bold">
+                    {rec.employeeName || rec.user?.name || "Unknown"}
+                  </span>
+                  <span>
+                    AM: {rec.amIn || "-"} - {rec.amOut || "-"} | PM: {rec.pmIn || "-"} - {rec.pmOut || "-"} ({rec.status})
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-muted small text-center">No records</div>
         )}
       </div>
     </div>
@@ -64,7 +75,7 @@ const Card = ({ txt, num, items = [], summaryRef, lastAnimatedCard, setLastAnima
 
 export default Card;
 
-// Fly-to-summary animation (unchanged)
+// ===== Fly-to-summary function =====
 const flyToSummary = (e, currentCardNum, summaryRef, lastAnimatedCard, setLastAnimatedCard) => {
   const current = Number(currentCardNum);
   if (lastAnimatedCard === current) return;
