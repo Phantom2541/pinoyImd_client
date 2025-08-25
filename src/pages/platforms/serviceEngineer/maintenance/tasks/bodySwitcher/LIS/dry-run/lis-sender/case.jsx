@@ -59,18 +59,18 @@ const Case = ({ cluster, form, setCluster = () => {}, setForm = () => {} }) => {
 
   const handleDragStart = (e, item, fromList) => {
     const dragPreview = document.createElement("div");
-    if (serviceWithoutCode.includes(item)) {
-      Swal.fire({
-        icon: "warning",
-        title: Services.find(item)?.name,
-        html: `
-      This service cannot be sent to LIS because no code has been assigned to it yet.<br/><br/>
-      Please go to the <strong>Configure</strong> tab and set a code for this service before proceeding.
-    `,
-        confirmButtonText: "Got it",
-      });
-      return;
-    }
+    // if (serviceWithoutCode.includes(item)) {
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: Services.find(item)?.name,
+    //     html: `
+    //   This service cannot be sent to LIS because no code has been assigned to it yet.<br/><br/>
+    //   Please go to the <strong>Configure</strong> tab and set a code for this service before proceeding.
+    // `,
+    //     confirmButtonText: "Got it",
+    //   });
+    //   return;
+    // }
     dragPreview.textContent = Services.find(item)?.name;
     Object.assign(dragPreview.style, {
       position: "absolute",
@@ -187,7 +187,7 @@ const Case = ({ cluster, form, setCluster = () => {}, setForm = () => {} }) => {
                   onChange={({ target }) =>
                     setForm({ ...form, machine: target.value })
                   }
-                  required
+                  // required
                 >
                   <option value="">Select a machine</option>
                   {filteredMachines.map((machine) => (
