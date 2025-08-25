@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { COMPANY } from "../../../../services/redux/slices/assets/persons/personnels";
+// import { COMPANY } from "../../../../services/redux/slices/assets/persons/personnels";
 import { ENDPOINT } from "../../../../services/utilities";
+import { BROWSE } from "../../../../services/redux/slices/assets/branches";
 
 export default function Employees({ match }) {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
@@ -33,16 +34,32 @@ export default function Employees({ match }) {
   const cardsPerRow = getCardsPerRow();
   const CARDS_PER_PAGE = cardsPerRow * 2;
 
-  const { company } = useSelector(({ personnels }) => personnels);
-  const allPersonnels = company.flatMap((branch) => branch.personnels);
-  const totalPersonnel = allPersonnels.length;
-  const totalPages = Math.ceil(totalPersonnel / CARDS_PER_PAGE);
-
+  const { company } = useSelector(({ personnels }) => personnels),
+    { token } = useSelector(({ auth }) => auth),
+    { filtered } = useSelector(({ branches }) => branches),
+    allPersonnels = company.flatMap((branch) => branch.personnels),
+    totalPersonnel = allPersonnels.length,
+    totalPages = Math.ceil(totalPersonnel / CARDS_PER_PAGE),
+    [personnel, setPersonnel] = useState({});
   useEffect(() => {
-    if (match) {
-      dispatch(COMPANY({ params: match.params }));
+    const stored = localStorage.getItem("patronCompany");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setPersonnel(parsed);
+
+      dispatch(
+        BROWSE({
+          key: { companyId: parsed?.branches?.companyId },
+        })
+      );
     }
-  }, [dispatch, match]);
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (match) {
+  //     dispatch(COMPANY({ params: match.params }));
+  //   }
+  // }, [dispatch, match]);
 
   const handleNext = () => {
     if (currentPage < totalPages - 1) {

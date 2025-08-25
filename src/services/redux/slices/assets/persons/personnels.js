@@ -555,8 +555,6 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(EMPLOYEES.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
-
         state.collections = payload.sort((a, b) => {
           const aDesignation = String(a?.contract?.designation || "");
           const bDesignation = String(b?.contract?.designation || "");

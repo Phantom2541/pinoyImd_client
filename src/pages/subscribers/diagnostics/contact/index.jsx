@@ -14,6 +14,7 @@ import { useToasts } from "react-toast-notifications";
 
 import { useSelector } from "react-redux";
 import {
+  Cloudinary,
   ENDPOINT,
   fullAddress,
   LatitudeAddress,
@@ -35,6 +36,10 @@ export default function ContactUs() {
 
   const [coordinates, setCoordinates] = useState([15.35, 121.05]), // default lang
     { addToast } = useToasts();
+
+  const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+    details?.name
+  )}/logo`;
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -58,9 +63,7 @@ export default function ContactUs() {
           const lon = parseFloat(data[0].lon);
           setCoordinates([lat, lon]);
         }
-      } catch (error) {
-        console.error("Geocoding error:", error);
-      }
+      } catch (error) {}
     };
 
     fetchCoordinates();
@@ -73,8 +76,6 @@ export default function ContactUs() {
 
     try {
       const convertedAddress = LatitudeAddress(branch.address);
-
-      console.log("Converted Address:", convertedAddress);
 
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
@@ -90,7 +91,6 @@ export default function ContactUs() {
       if (!response.ok) throw new Error("Network response was not ok");
 
       const data = await response.json();
-      console.log("Geocode Data:", data);
 
       if (data.length > 0) {
         const lat = parseFloat(data[0].lat);
@@ -109,7 +109,6 @@ export default function ContactUs() {
       addToast("Error detecting location.", { appearance: "error" });
     }
   };
-  console.log("address", address);
 
   return (
     <section className="subscriber-contactUs-section">
@@ -122,7 +121,7 @@ export default function ContactUs() {
         >
           <div className="subscriber-contactUs-logo">
             <img
-              src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
+              src={logoUrl}
               alt="logo"
               onError={(e) => (e.target.src = LOGO)}
               width="90px"
