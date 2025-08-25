@@ -12,7 +12,7 @@ import axios from "axios";
 import { UPDATE } from "../../../services/redux/slices/market/attendances";
 
 export default function DTR() {
-  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { activePlatform, auth } = useSelector(({ auth }) => auth);
   const [dateIn, setDateIn] = useState(null);
   const [dateOut, setDateOut] = useState(null);
   const [ipIn, setIPIn] = useState("");
@@ -62,7 +62,7 @@ export default function DTR() {
 
       const attendanceData = {
         branchId: activePlatform?.branchId,
-        userId: activePlatform?.userId,
+        userId: auth?._id,
         publicIP: currentIP,
       };
 
