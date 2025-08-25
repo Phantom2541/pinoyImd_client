@@ -86,6 +86,9 @@ import { access, liabilities } from "./slices/liability";
 import portal from "./slices/emr/portal";
 import { quest } from "./slices/diagnostics";
 
+// TRACKER of menus and services
+import tracker from "./slices/tracker";
+
 const store = configureStore({
   reducer: {
     duties,
@@ -147,6 +150,8 @@ const store = configureStore({
     miscellaneous,
     orgChart,
     cases,
+    //tracker for menus and services
+    tracker,
   },
   devTools: true,
 });

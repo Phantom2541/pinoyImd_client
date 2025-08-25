@@ -2,10 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, fetchTracker, socket } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 import {
+  IDB_BROWSE,
   IDB_BULK_SAVE,
   IDB_SAVE,
   IDB_UPDATE,
 } from "../../../../../indexDB/commerce/pos/services/onboardings";
+
+import { IDB_SAVE as IDB_SAVE_TASK } from "../../../../../indexDB/commerce/pos/services/tasks";
 
 const url = "commerce/pos/services/deals";
 const asyncThunkName = "taskGenerator";
@@ -37,9 +40,14 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${asyncThunkName}/browse`,
-  ({ token, key }, thunkAPI) => {
+  async ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, key);
+      var res = await axioKit.universal(`${url}/browse`, token, key);
+      if (res?.payload) {
+        await IDB_BULK_SAVE(res.payload);
+        res.payload = await IDB_BROWSE();
+      }
+      return res;
     } catch (error) {
       const message =
         (error.response &&
@@ -88,7 +96,7 @@ export const TAGGING = createAsyncThunk(
   }
 );
 export const REFORM = createAsyncThunk(
-  `${asyncThunkName}/update`,
+  `${asyncThunkName}/update/taskGenerator`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.update(url, data, token);
@@ -130,9 +138,19 @@ export const reduxSlice = createSlice({
       state.show = !state.show;
     },
     SetCOLLECTIONS: (state, { payload }) => {
-      state.collections = payload;
-      state.filtered = payload;
-      state.totalPages = Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+      const { department, onboardings = [] } = payload;
+      state.collections = state.filtered = onboardings.map((item, index) => ({
+        ...item,
+        pn: onboardings.length - index,
+        cart: item?.cart?.filter(({ packages }) =>
+          Services.filterByDepartment(
+            packages,
+            department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
+          )
+        ),
+      }));
+      state.totalPages =
+        Math.ceil((onboardings?.length || 0) / state.maxPage) || 1;
     },
 
     SetSTATUS: (state, { payload }) => {
@@ -165,22 +183,28 @@ export const reduxSlice = createSlice({
 
     InsertRealtimeOnboard: (state, { payload }) => {
       //this reducer is for received realtime onboard and set into the filtered and collections
-      state.collections.unshift(payload);
-      state.filtered.unshift(payload);
-      IDB_SAVE(payload);
+      if (fetchTracker.hasLoaded("onboardings")) {
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
+        IDB_SAVE(payload);
+      }
     },
 
     UpdateRealtimeOnboard: (state, { payload }) => {
-      const updateCollection = (collections) => {
-        const index = collections.findIndex((item) => item._id === payload._id);
-        if (index > -1) {
-          collections[index] = payload;
-        }
-      };
+      if (fetchTracker.hasLoaded("onboardings")) {
+        const updateCollection = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          if (index > -1) {
+            collections[index] = { ...collections[index], ...payload };
+          }
+        };
 
-      updateCollection(state.collections);
-      updateCollection(state.filtered);
-      IDB_UPDATE(payload);
+        updateCollection(state.collections);
+        updateCollection(state.filtered);
+        IDB_UPDATE(payload);
+      }
     },
 
     SetACTIVE_STATUS: (state, { payload }) => {
@@ -264,7 +288,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
-        console.log("running task generator browseee");
         // filter by department
         const _collections = payload.map((item, index) => ({
           ...item,
@@ -281,7 +304,6 @@ export const reduxSlice = createSlice({
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
-        IDB_BULK_SAVE(_collections);
         fetchTracker.setLoaded("onboardings");
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -359,9 +381,13 @@ export const reduxSlice = createSlice({
         updateCollections(state.filtered);
 
         IDB_UPDATE(payload);
-        //this is for realtime send in task page
+        //this is for realtime send in task page in another client
+        socket.emit("send_updated_onboarding", payload);
+        if (fetchTracker.hasLoaded("tasks")) {
+          //this is for saving local indexDB
+          IDB_SAVE_TASK(task);
+        }
         socket.emit("send_tasks", task);
-        socket.emit("send_updated_onboarding", task);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

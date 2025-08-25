@@ -1,7 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, getAge, socket } from "../../../../../utilities";
+import {
+  axioKit,
+  fetchTracker,
+  getAge,
+  socket,
+} from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 import { IDB_SAVE } from "../../../../../indexDB/commerce/pos/services/deals";
+import { IDB_SAVE as IDB_SAVE_ONBOARD } from "../../../../../indexDB/commerce/pos/services/onboardings";
 // import _ from "lodash";
 const url = "commerce/pos/services/deals";
 // Get data once
@@ -287,12 +293,34 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload, dealForOnboard } = action.payload;
         const fakeDB = localStorage.getItem("activePlatform");
+        const { department = "" } = JSON.parse(fakeDB || "{}");
+        //formatted the cart, filter base on the department
+        const onboarding = {
+          ...dealForOnboard,
+          department,
+          cart: dealForOnboard?.cart?.filter(({ packages }) =>
+            Services.filterByDepartment(
+              packages,
+              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
+            )
+          ),
+        };
+
         if (fakeDB) {
-          const { department } = JSON.parse(fakeDB);
-          //this is realtime send it to the onboarding
-          socket.emit("send_onboard", { ...dealForOnboard, department });
+          //this is realtime send it to the onboarding but not in sender side
+          socket.emit("send_onboard", onboarding);
         }
-        IDB_SAVE(dealForOnboard);
+        //same scenario in onboardings
+        if (fetchTracker.hasLoaded("deals")) {
+          IDB_SAVE(dealForOnboard);
+        }
+
+        //we need to check if onboardings has been loaded before saving in index DB
+        //if loadead then save
+        //if not loaded then do nothing.. para kapag pumunta siya sa onboardings ma fefetch parin niya lahat ng onboardings
+        if (fetchTracker.hasLoaded("onboardings")) {
+          IDB_SAVE_ONBOARD(onboarding);
+        }
         state.sourceId = "";
         state.message = success;
         state.transaction = payload;

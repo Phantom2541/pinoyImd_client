@@ -10,7 +10,6 @@ import {
   SetSELECTED,
   TOGGLE,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-
 import Denominations from "../remittances/modal/denominations";
 import {
   BROWSE,

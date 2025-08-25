@@ -227,8 +227,6 @@ export default function Modal() {
       })
     );
     dispatch(TOGGLE());
-
-    // MachineSender(_forms,deal)
   };
 
   return (

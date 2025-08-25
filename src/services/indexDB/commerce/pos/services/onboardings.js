@@ -1,112 +1,139 @@
-// indexedDB.js
-const DB_NAME = "Onboardings";
-const STORE_NAME = "onboardings";
-const DB_VERSION = 1;
+// onboardingsIndexedDB.js
+const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+const DB_NAME = `Onboardings-${today}`;
 
-// Open or create DB
+// Generate store name dynamically based on user & branch
+const getStoreName = () => {
+  const activePlatform = JSON.parse(
+    localStorage.getItem("activePlatform") || "{}"
+  );
+  const { branch = {} } = activePlatform;
+  return `Onboardings-${branch._id || "nobranch"}`;
+};
+
+// Open DB and ensure store exists
 export function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open(DB_NAME);
 
-    request.onupgradeneeded = (event) => {
+    request.onsuccess = (event) => {
       const db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, {
-          keyPath: "_id",
-        });
+      const storeName = getStoreName();
+
+      if (!db.objectStoreNames.contains(storeName)) {
+        const newVersion = db.version + 1;
+        db.close();
+
+        const upgradeReq = indexedDB.open(DB_NAME, newVersion);
+        upgradeReq.onupgradeneeded = (e) => {
+          const upgradeDb = e.target.result;
+          if (!upgradeDb.objectStoreNames.contains(storeName)) {
+            upgradeDb.createObjectStore(storeName, { keyPath: "_id" });
+          }
+        };
+        upgradeReq.onsuccess = () => resolve(upgradeReq.result);
+        upgradeReq.onerror = (e) => reject(e.target.error);
+      } else {
+        resolve(db);
       }
     };
 
-    request.onsuccess = (event) => resolve(event.target.result);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      const storeName = getStoreName();
+      if (!db.objectStoreNames.contains(storeName)) {
+        db.createObjectStore(storeName, { keyPath: "_id" });
+      }
+    };
+
     request.onerror = (event) => reject(event.target.error);
   });
 }
 
-// Add single deal
-export async function IDB_SAVE(deal) {
+// Helper for transactions
+async function withStore(mode, callback) {
   const db = await openDB();
+  const storeName = getStoreName();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    const store = tx.objectStore(STORE_NAME);
-    const request = store.add(deal);
+    const tx = db.transaction(storeName, mode);
+    const store = tx.objectStore(storeName);
 
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+    try {
+      const result = callback(store);
+      tx.oncomplete = () => resolve(result);
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 
-// Bulk add deals (array)
-export async function IDB_BULK_SAVE(deals) {
-  await IDB_DESTROY_DB();
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    const store = tx.objectStore(STORE_NAME);
+// Save single onboarding
+export async function IDB_SAVE(onboarding) {
+  return withStore("readwrite", (store) => store.add(onboarding));
+}
 
-    deals.forEach((deal) => store.add(deal));
-
-    tx.oncomplete = () => resolve(true);
-    tx.onerror = () => reject(tx.error);
+// Bulk save onboardings
+export async function IDB_BULK_SAVE(onboardings) {
+  return withStore("readwrite", async (store) => {
+    for (const onboarding of onboardings) {
+      try {
+        const getReq = store.get(onboarding._id);
+        const exists = await new Promise((resolve, reject) => {
+          getReq.onsuccess = () => resolve(!!getReq.result);
+          getReq.onerror = () => reject(getReq.error);
+        });
+        if (!exists) store.add(onboarding);
+      } catch (err) {
+        console.error("IDB_BULK_SAVE error:", err);
+      }
+    }
   });
 }
 
-// Update deal (by id)
-export async function IDB_UPDATE(deal) {
-  const db = await openDB();
+// Update onboarding
+export async function IDB_UPDATE(onboarding) {
+  return withStore("readwrite", (store) => {
+    return new Promise((resolve, reject) => {
+      // kunin muna yung lumang data base sa key (dito gamit ko _id, adjust kung iba key mo)
+      const getReq = store.get(onboarding._id);
 
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    const store = tx.objectStore(STORE_NAME);
+      getReq.onsuccess = () => {
+        const oldData = getReq.result || {};
+        const newData = { ...oldData, ...onboarding };
 
-    // hanapin muna kung existing na
-    const getRequest = store.get(deal._id);
+        const putReq = store.put(newData);
+        putReq.onsuccess = () => resolve(newData);
+        putReq.onerror = (e) => reject(e.target.error);
+      };
 
-    getRequest.onsuccess = () => {
-      const oldData = getRequest.result || {}; // kung wala, empty object lang
-      const updatedData = { ...oldData, ...deal };
-
-      const putRequest = store.put(updatedData);
-
-      putRequest.onsuccess = () => resolve(putRequest.result);
-      putRequest.onerror = () => reject(putRequest.error);
-    };
-
-    getRequest.onerror = () => reject(getRequest.error);
+      getReq.onerror = (e) => reject(e.target.error);
+    });
   });
 }
 
-// Browse all deals
+// Browse all onboardings
 export async function IDB_BROWSE() {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-    const request = store.getAll();
-
-    request.onsuccess = () => {
-      const result = request.result || [];
-      // sort by createdAt desc (latest first)
-      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      resolve(result);
-    };
-
-    request.onerror = () => reject(request.error);
+  return withStore("readonly", (store) => {
+    return new Promise((resolve, reject) => {
+      const request = store.getAll();
+      request.onsuccess = () => {
+        const result = request.result || [];
+        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        resolve(result);
+      };
+      request.onerror = () => reject(request.error);
+    });
   });
 }
 
-// Delete deal by id
+// Delete onboarding by id
 export async function IDB_DESTROY(id) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    const store = tx.objectStore(STORE_NAME);
-    const request = store.delete(id);
-
-    request.onsuccess = () => resolve(true);
-    request.onerror = () => reject(request.error);
-  });
+  return withStore("readwrite", (store) => store.delete(id));
 }
 
+// Delete entire DB
 export function IDB_DESTROY_DB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.deleteDatabase(DB_NAME);

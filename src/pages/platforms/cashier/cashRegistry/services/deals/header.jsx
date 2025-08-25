@@ -22,48 +22,19 @@ const Header = () => {
 
   //Initial CASHIER
   useEffect(() => {
-    const formattedDate = (timeZone, date, hasTime = false) => {
-      if (hasTime) {
-        // Gamitin ang Intl.DateTimeFormat + 24h format
-        const dtf = new Intl.DateTimeFormat("en-CA", {
-          timeZone,
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false, // 24-hour format
-        });
-        const parts = dtf.formatToParts(date);
-        const obj = {};
-        parts.forEach(({ type, value }) => (obj[type] = value));
-        // Format as ISO-like string without comma and AM/PM
-        return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.minute}:${obj.second}`;
-      } else {
-        return new Intl.DateTimeFormat("en-CA", {
-          timeZone,
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }).format(date);
-      }
-    };
-
     if (token && activePlatform?.branchId && auth._id) {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       IDB_BROWSE().then((deals) => {
         if (fetchTracker.hasLoaded("deals")) {
           dispatch(SetCOLLECTIONS(deals));
         } else {
           let date;
           if (deals.length > 0) {
-            const latest = deals.reduce((prev, curr) =>
-              new Date(curr.createdAt) > new Date(prev.createdAt) ? curr : prev
+            date = fetchTracker.get.formattedDate(
+              fetchTracker.get.lastFetchCreatedAt(deals),
+              true
             );
-            date = formattedDate(timezone, new Date(latest.createdAt), true);
           } else {
-            date = formattedDate(timezone, new Date());
+            date = fetchTracker.get.formattedDate();
           }
           dispatch(
             CASHIER({
@@ -72,7 +43,7 @@ const Header = () => {
                 branchId: activePlatform?.branchId,
                 cashierId: auth._id,
                 date,
-                timezone,
+                timezone: fetchTracker.get.timeZone(),
               },
             })
           );

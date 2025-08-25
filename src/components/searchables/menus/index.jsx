@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce, isEmpty } from "lodash";
 import { MDBIcon, MDBAnimation, MDBProgress } from "mdbreact";
@@ -8,9 +14,19 @@ import {
   SetCOLLECTIONS,
   RESET as MENUSRESET,
 } from "../../../services/redux/slices/commerce/catalog/menus";
+import { BROWSE as TRACKER } from "../../../services/redux/slices/tracker";
 import { globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
+import {
+  IDB_BROWSE,
+  IDB_SAVE as IDB_TRACKER_SAVE,
+} from "../../../services/indexDB/tracker";
+
+import {
+  IDB_BULK_SAVE as IDB_MENUS_SAVE,
+  IDB_BROWSE as IDB_MENUS_BROWSE,
+} from "../../../services/indexDB/commerce/catalog/menus";
 
 /**
  * A Search component that allows the user to search for a menu item by name.
@@ -39,40 +55,105 @@ export default function Search({
 
   const inputRef = useRef(null); // Reference to the input field
 
-  // initial values
-  useEffect(() => {
-    if (token && activePlatform.branchId) {
-      const branchId = activePlatform.branchId;
+  // useEffect(() => {
+  //   if (token && activePlatform.branchId) {
+  //     const branchId = activePlatform.branchId;
 
-      // Check if the data for the specific branchId is already in localStorage
-      const storedMenus = localStorage.getItem(`menus_${branchId}`);
+  //     // Check if the data for the specific branchId is already in localStorage
+  //     const storedMenus = localStorage.getItem(`menus_${branchId}`);
 
-      if (storedMenus) {
-        // If menus are found in localStorage, use them (parse back to an object)
-        const menus = JSON.parse(storedMenus);
-        // You can dispatch the menus here if needed
-        dispatch(SetCOLLECTIONS(menus));
-      } else {
-        // If no data in localStorage, make the server request
-        dispatch(MENUS({ token, key: { branchId } }))
-          .then(({ payload }) => {
-            // Assuming the response contains the menus data in 'payload'
-            const menus = payload.payload;
+  //     if (storedMenus) {
+  //       // If menus are found in localStorage, use them (parse back to an object)
+  //       const menus = JSON.parse(storedMenus);
+  //       // You can dispatch the menus here if needed
+  //       dispatch(SetCOLLECTIONS(menus));
+  //     } else {
+  //       // If no data in localStorage, make the server request
+  //       dispatch(MENUS({ token, key: { branchId } }))
+  //         .then(({ payload }) => {
+  //           // Assuming the response contains the menus data in 'payload'
+  //           const menus = payload.payload;
 
-            // Store the fetched data in localStorage for future use
-            localStorage.setItem(`menus_${branchId}`, JSON.stringify(menus));
+  //           // Store the fetched data in localStorage for future use
+  //           localStorage.setItem(`menus_${branchId}`, JSON.stringify(menus));
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error fetching menus:", error);
+  //         });
+  //     }
+
+  //     // Cleanup function (reset state if necessary)
+  //     return () => {
+  //       dispatch(MENUSRESET());
+  //     };
+  //   }
+  // }, [token, dispatch, activePlatform]);
+
+  const Tracker = useCallback(
+    async (mdbTracker) => {
+      const { branchId = "" } = activePlatform;
+      const idbTracker = await IDB_BROWSE();
+      const idbMenus = await IDB_MENUS_BROWSE();
+      const shouldFetchMenus =
+        (!idbTracker?._id && idbMenus.length === 0) ||
+        mdbTracker?.menu?.id !== idbTracker?.menu?.id;
+
+      if (shouldFetchMenus) {
+        const { menu = {} } = mdbTracker;
+        const { menu: idbMenu = {} } = idbTracker || {};
+        dispatch(
+          MENUS({
+            token,
+            key: {
+              branchId,
+              ...(idbMenus?.length > 0 &&
+                idbTracker?.menu?.id && {
+                  startDate: idbMenu?.updatedAt || menu?.updatedAt,
+                  endDate: menu?.updatedAt || "",
+                }),
+            },
           })
-          .catch((error) => {
-            console.error("Error fetching menus:", error);
-          });
+        ).then(async ({ payload }) => {
+          IDB_MENUS_SAVE(payload.payload);
+          const menus = await IDB_MENUS_BROWSE();
+          dispatch(SetCOLLECTIONS(menus));
+        });
+      } else {
+        dispatch(SetCOLLECTIONS(idbMenus));
       }
 
-      // Cleanup function (reset state if necessary)
-      return () => {
-        dispatch(MENUSRESET());
-      };
-    }
-  }, [token, dispatch, activePlatform]);
+      if (mdbTracker?._id) {
+        IDB_TRACKER_SAVE(mdbTracker);
+      }
+    },
+    [dispatch, activePlatform, token]
+  );
+
+  useEffect(() => {
+    const { branchId = "" } = activePlatform;
+
+    const init = async () => {
+      const lcTracker = localStorage.getItem(`tracker-${branchId}`) || "";
+      if (lcTracker) {
+        await Tracker(JSON.parse(lcTracker));
+      } else {
+        dispatch(TRACKER({ token, params: { branchId } })).then(
+          async (action) => {
+            const mdbTracker = action?.payload?.payload || {};
+            await Tracker(mdbTracker);
+            if (mdbTracker?._id) {
+              localStorage.setItem(
+                `tracker-${branchId}`,
+                JSON.stringify(mdbTracker)
+              );
+            }
+          }
+        );
+      }
+    };
+
+    init();
+  }, [activePlatform, dispatch, token, Tracker]);
 
   // Debounced search function to avoid too many re-renders
   const debouncedSearch = useMemo(

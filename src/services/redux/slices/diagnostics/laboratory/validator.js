@@ -5,6 +5,7 @@ import {
   IDB_BULK_SAVE,
   IDB_SAVE,
   IDB_UPDATE,
+  IDB_BROWSE,
 } from "../../../../indexDB/commerce/pos/services/tasks";
 
 const url = "commerce/pos/services/deals";
@@ -62,9 +63,16 @@ const initialState = {
 
 export const TASKS = createAsyncThunk(
   `${url}/tasks`,
-  ({ token, key }, thunkAPI) => {
+  async ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/tasks`, token, key);
+      var { payload = [], ...rest } = await axioKit.universal(
+        `${url}/tasks`,
+        token,
+        key
+      );
+      IDB_BULK_SAVE(payload);
+      payload = await IDB_BROWSE();
+      return { ...rest, payload };
     } catch (error) {
       const message =
         (error.response &&
@@ -166,23 +174,28 @@ export const reduxSlice = createSlice({
       state.totalPages = Math.ceil((payload?.length || 0) / state.maxPage) || 1;
     },
     InsertRealtimeTask: (state, { payload }) => {
-      console.log("payload realtime task", payload);
-      state.filtered.unshift(payload);
-      state.collections.unshift(payload);
-      state.filteredStatus.unshift(payload);
-      IDB_SAVE(payload);
+      if (fetchTracker.hasLoaded("tasks")) {
+        state.filtered.unshift(payload);
+        state.collections.unshift(payload);
+        state.filteredStatus.unshift(payload);
+        IDB_SAVE(payload);
+      }
     },
     UpdateRealtimeTask: (state, { payload }) => {
-      const updateCollections = (collections) => {
-        const index = collections.findIndex((item) => item._id === payload._id);
-        if (index > -1) {
-          collections[index] = payload;
-        }
-      };
-      updateCollections(state.filtered);
-      updateCollections(state.collections);
-      updateCollections(state.filteredStatus);
-      IDB_UPDATE(payload);
+      if (fetchTracker.hasLoaded("tasks")) {
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          if (index > -1) {
+            collections[index] = payload;
+          }
+        };
+        updateCollections(state.filtered);
+        updateCollections(state.collections);
+        updateCollections(state.filteredStatus);
+        IDB_UPDATE(payload);
+      }
     },
     RECEIVE_A15: (state, { payload }) => {
       const index = state.collections.findIndex(
@@ -391,7 +404,6 @@ export const reduxSlice = createSlice({
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
-        IDB_BULK_SAVE(payload);
         fetchTracker.setLoaded("tasks");
       })
       .addCase(TASKS.rejected, (state, action) => {

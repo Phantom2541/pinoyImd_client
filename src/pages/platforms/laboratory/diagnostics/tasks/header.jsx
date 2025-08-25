@@ -31,16 +31,27 @@ const Headers = ({ searchKey }) => {
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       IDB_BROWSE().then((_tasks) => {
-        if (_tasks.length > 0 && fetchTracker.hasLoaded("tasks")) {
+        if (fetchTracker.hasLoaded("tasks")) {
           dispatch(SetCOLLECTIONS(_tasks));
         } else {
+          let date;
+          if (_tasks?.length > 0) {
+            date = fetchTracker.get.formattedDate(
+              fetchTracker.get.lastFetchCreatedAt(_tasks),
+              true
+            );
+          } else {
+            date = fetchTracker.get.formattedDate();
+          }
+
           dispatch(
             TASKS({
               token,
               key: {
                 department: [departmentCode],
                 branchId: activePlatform?.branchId,
-                createdAt: new Date().setHours(0, 0, 0, 0),
+                createdAt: date,
+                timezone: fetchTracker.get.timeZone(),
               },
             })
           );

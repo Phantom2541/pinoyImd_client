@@ -82,16 +82,13 @@ export default function Platforms() {
       ) {
         const pn = onboardings.length + 1;
         dispatch(InsertRealtimeOnboard({ ...data, pn }));
-        addToast(`New patient onboarded. No. ${pn}`, {
-          appearance: "success",
-        });
       }
     });
 
     return () => {
       socket.off("received_onboard");
     };
-  }, [activePlatform, dispatch, onboardings, addToast]);
+  }, [activePlatform, dispatch, onboardings, addToast, auth]);
 
   //received updated task
   useEffect(() => {

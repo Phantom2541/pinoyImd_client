@@ -19,29 +19,33 @@ export default function Header() {
     [status, setStatus] = useState("All"),
     dispatch = useDispatch();
 
-  //Initial Browse and Fetch Data
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const timezone = Intl.DateTimeFormat().resolvedOptions()?.timeZone;
-      const now = new Date();
-      const createdAt = `${(now.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${now
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${now.getFullYear()}`;
-
       IDB_BROWSE().then((onboardings) => {
-        if (onboardings.length > 0 && fetchTracker.hasLoaded("onboardings")) {
-          dispatch(SetCOLLECTIONS(onboardings));
+        if (fetchTracker.hasLoaded("onboardings")) {
+          dispatch(
+            SetCOLLECTIONS({
+              onboardings,
+              department: activePlatform?.department,
+            })
+          );
         } else {
+          let date;
+          if (onboardings?.length > 0) {
+            date = fetchTracker.get.formattedDate(
+              fetchTracker.get.lastFetchCreatedAt(onboardings),
+              true
+            );
+          } else {
+            date = fetchTracker.get.formattedDate();
+          }
           dispatch(
             BROWSE({
               key: {
                 branchId: activePlatform?.branchId,
-                createdAt,
+                createdAt: date,
                 department: activePlatform?.department,
-                timezone,
+                timezone: fetchTracker.get.timeZone(),
               },
               token,
             })

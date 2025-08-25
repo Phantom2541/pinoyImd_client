@@ -101,9 +101,27 @@ export async function IDB_BULK_SAVE(deals) {
 
 // Update deal
 export async function IDB_UPDATE(deal) {
-  return withStore("readwrite", (store) => store.put(deal));
-}
+  return withStore("readwrite", (store) => {
+    return new Promise((resolve, reject) => {
+      const getReq = store.get(deal._id);
 
+      getReq.onsuccess = () => {
+        const oldData = getReq.result || {};
+
+        // pagsamahin yung dati at bago
+        const merged = { ...oldData, ...deal };
+
+        // isave gamit put
+        const putReq = store.put(merged);
+
+        putReq.onsuccess = () => resolve(merged);
+        putReq.onerror = () => reject(putReq.error);
+      };
+
+      getReq.onerror = () => reject(getReq.error);
+    });
+  });
+}
 // Browse all deals
 export async function IDB_BROWSE() {
   return withStore("readonly", (store) => {
