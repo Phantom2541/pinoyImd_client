@@ -384,41 +384,44 @@ const ManagerSidebar = [
         children: [
           {
             name: "Outsourcing",
-            title: "External service providers.",
+            title:
+              "Services or tests referred to external labs when not available in-house.",
             path: "/outsourcing",
             icon: "external-link",
             component: Outsources,
           },
           {
             name: "Suppliers",
-            title: "Vendor contact and supply chain.",
+            title:
+              "Vendors providing reagents, equipment, and office supplies.",
             path: "/suppliers",
             icon: "briefcase",
             component: Suppliers,
           },
           {
             name: "Utilities",
-            title: "Utilities used by the organization.",
+            title: "Basic services such as water, electricity, and internet.",
             path: "/utilities",
             icon: "tools",
             component: Utilities,
           },
           {
             name: "Hotlines",
-            title: "Emergency or support hotlines.",
+            title: "Emergency and support contacts (fire, medical, IT).",
             path: "/hotlines",
             icon: "phone",
             component: Hotlines,
           },
           {
             name: "Tie Ups",
-            title: "Affiliate or corporate tie-ups.",
+            title: "Partner companies, HMOs, and schools for contracts or APE.",
             path: "/tieup",
             icon: "handshake",
             component: Tieups,
           },
         ],
       },
+
       {
         name: "Product & Services Setup",
         path: "/product-config",
