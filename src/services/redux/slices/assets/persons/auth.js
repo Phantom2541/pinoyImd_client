@@ -288,7 +288,7 @@ export const reduxSlice = createSlice({
           access: [..._access],
           department,
         };
-        fetchTracker.reset();
+
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -385,6 +385,8 @@ export const reduxSlice = createSlice({
         state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         fetchTracker.reset();
+        console.log("runninggg reseterrrrr");
+
         indexDB.cleanOldStores();
       })
       .addCase(LOGIN.rejected, (state, action) => {
