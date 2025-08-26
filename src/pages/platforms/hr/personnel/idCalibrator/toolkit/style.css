@@ -233,6 +233,16 @@
   color: #7a7c9e;
   font-weight: 400;
   font-size: 0.9rem;
+  cursor: ew-resize;
+  transition: color 0.3s ease;
+}
+
+.IDGenerator-setting-label:hover {
+  color: #007bff;
+}
+
+.IDGenerator-setting-label.active {
+  color: #007bff; /* active color while dragging */
 }
 
 .IDGenerator-setting-input {

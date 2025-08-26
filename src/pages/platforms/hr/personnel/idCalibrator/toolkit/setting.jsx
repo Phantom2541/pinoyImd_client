@@ -15,6 +15,8 @@ export default function Setting({
   lockAspect,
   setLockAspect,
   lockAspectRatio,
+  setSelectedValue,
+  placedValues,
 }) {
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
@@ -68,6 +70,93 @@ export default function Setting({
     style.width && style.height
       ? parseInt(style.width) / parseInt(style.height)
       : 1;
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select") return;
+
+      if (!selectedValue) return;
+
+      let updated = {};
+
+      // Arrow keys
+      let delta = 1;
+      if (e.shiftKey) delta = 5;
+      switch (e.key) {
+        case "ArrowUp":
+          updated.y = selectedValue.y - delta;
+          e.preventDefault();
+          break;
+        case "ArrowDown":
+          updated.y = selectedValue.y + delta;
+          e.preventDefault();
+          break;
+        case "ArrowLeft":
+          updated.x = selectedValue.x - delta;
+          e.preventDefault();
+          break;
+        case "ArrowRight":
+          updated.x = selectedValue.x + delta;
+          e.preventDefault();
+          break;
+        default:
+          break;
+      }
+
+      // Font size / Image size shortcuts
+      if (e.ctrlKey) {
+        if (lastSelectedType === "text") {
+          if (e.key === "[") {
+            const currentSize = parseInt(selectedValue.style.fontSize) || 16;
+            updated.fontSize = Math.max(1, currentSize - 1);
+            e.preventDefault();
+          } else if (e.key === "]") {
+            const currentSize = parseInt(selectedValue.style.fontSize) || 16;
+            updated.fontSize = currentSize + 1;
+            e.preventDefault();
+          }
+        } else if (lastSelectedType === "img") {
+          const currentWidth = parseInt(selectedValue.style.width) || 100;
+          const currentHeight = parseInt(selectedValue.style.height) || 100;
+
+          if (e.key === "[") {
+            updated.width = Math.max(1, currentWidth - 1);
+            updated.height = Math.max(1, currentHeight - 1);
+            e.preventDefault();
+          } else if (e.key === "]") {
+            updated.width = currentWidth + 1;
+            updated.height = currentHeight + 1;
+            e.preventDefault();
+          }
+        }
+      }
+      // Aspect Ratio Lock
+      if (e.ctrlKey && e.key.toLowerCase() === "l") {
+        e.preventDefault();
+        if (!imgDisabled) setLockAspect((prev) => !prev);
+      }
+
+      // 🔹 Tab navigation
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const allValues = Object.values(placedValues);
+        const currentIndex = allValues.findIndex(
+          (v) => v.id === selectedValue.id
+        );
+        const nextIndex = (currentIndex + 1) % allValues.length;
+        setSelectedValue({ ...allValues[nextIndex], index: nextIndex });
+        return; // tapos na dito
+      }
+
+      if (Object.keys(updated).length > 0) {
+        updateStyle(updated);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedValue, placedValues, updateStyle]);
 
   return (
     <div className="IDGenerator-setting-container">
