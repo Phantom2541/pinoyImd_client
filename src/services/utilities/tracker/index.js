@@ -6,20 +6,24 @@ import {
 } from "../../indexDB/tracker";
 
 function extractActionData(action) {
-  const firstPayload = action?.payload;
-  if (!firstPayload) return null;
-  const lastPayload = firstPayload.payload;
-  if (
-    !lastPayload ||
-    (Array.isArray(lastPayload) && lastPayload.length === 0)
-  ) {
-    const fallbackKey = Object.keys(firstPayload).find(
-      (key) => key !== "payload" && firstPayload[key]
-    );
-    return fallbackKey ? firstPayload[fallbackKey] : null;
+  let current = action?.payload;
+
+  while (current && typeof current === "object" && "payload" in current) {
+    current = current.payload;
   }
 
-  return lastPayload;
+  // Kung wala talagang laman, tingnan ang key na 'data'
+  if (
+    current === undefined ||
+    (Array.isArray(current) && current.length === 0) ||
+    (current &&
+      typeof current === "object" &&
+      Object.keys(current).length === 0)
+  ) {
+    return action?.payload?.data || [];
+  }
+
+  return current;
 }
 
 const fetchDatas = async ({
@@ -71,6 +75,7 @@ const fetchDatas = async ({
         })
       )
       .then(async (action) => {
+        console.log("payload", extractActionData(action), trackerKey);
         idb.SAVE(extractActionData(action));
         const menus = await idb.BROWSE();
         store.dispatch(redux?.SetCOLLECTIONS(menus));

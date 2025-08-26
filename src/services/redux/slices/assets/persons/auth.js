@@ -288,10 +288,15 @@ export const reduxSlice = createSlice({
           access: [..._access],
           department,
         };
+        fetchTracker.reset();
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
+        localStorage.setItem(
+          "activePlatform",
+          JSON.stringify(state.activePlatform)
+        );
       })
       .addCase(SETACTIVEPLATFORM.rejected, (state, action) => {
         const { error } = action;

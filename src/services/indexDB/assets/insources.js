@@ -71,6 +71,7 @@ async function withStore(mode, callback) {
 
 export async function IDB_BULK_SAVE(menus) {
   if (menus.length === 0) return;
+  console.log("sources", menus.length);
   return withStore("readwrite", async (store) => {
     for (const menu of menus) {
       await new Promise((resolve, reject) => {
