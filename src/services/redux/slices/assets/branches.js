@@ -10,6 +10,7 @@ const initialState = {
   formSubmitted: false,
   didSearch: false,
   selected: {},
+  ct: {},
   page: 0,
   isSuccess: false,
   // main loading
@@ -33,6 +34,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const CTBROWSE = createAsyncThunk(
+  `${url}/ctbrowse`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/ctbrowse`, token, data);
     } catch (error) {
       const message =
         (error.response &&
@@ -387,6 +405,22 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+
+      .addCase(CTBROWSE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(CTBROWSE.fulfilled, (state, { payload }) => {
+        state.ct = payload;
+
+        state.isLoading = false;
+      })
+      .addCase(CTBROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(GET_PHYSICIANS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -479,6 +513,7 @@ export const reduxSlice = createSlice({
           updateCollections(state.collections);
           updateCollections(state.filtered);
         }
+        state.ct = payload;
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;

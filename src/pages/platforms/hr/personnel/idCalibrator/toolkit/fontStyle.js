@@ -103,21 +103,7 @@ const Fonts = {
   times: "'Times New Roman', serif",
 };
 
-const FontSizes = {
-  12: "0.75rem", // 12px
-  14: "0.875rem", // 14px
-  16: "1rem", // 16px
-  18: "1.125rem", // 18px
-  20: "1.25rem", // 20px
-  24: "1.5rem", // 24px
-  30: "1.875rem", // 30px
-  36: "2.25rem", // 36px
-  38: "3rem", // 48px
-  60: "3.75rem", // 60px
-  72: "4.5rem", // 72px
-  96: "6rem", // 96px
-  128: "8rem", // 128px
-};
+const FontSizes = [12, 14, 16, 18, 20, 24, 30, 36, 38, 60, 72, 96, 128];
 
 const FontWeights = {
   thin: 100,

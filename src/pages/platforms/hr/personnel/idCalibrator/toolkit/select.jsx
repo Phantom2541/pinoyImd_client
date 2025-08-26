@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 
@@ -11,16 +17,20 @@ export default function Select({
   getValue = (option) => option,
   getStyle = () => ({}),
   defaultValue = "",
-  useInput = false, // 🔹 toggle label or input
-  showSearch = true, // 🔹 toggle search bar
+  useInput = false, // toggle label or input
+  showSearch = true, // toggle search bar
+  disabled,
 }) {
-  // 🔹 Store the full option object
   const [selectedValue, setSelectedValue] = useState(defaultValue);
+  const [inputValue, setInputValue] = useState(
+    defaultValue?.value !== undefined ? defaultValue.value : ""
+  );
+  const [editing, setEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectActive, setSelectActive] = useState(false);
   const selectRef = useRef(null);
 
-  // 🔹 Close dropdown on outside click
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (selectRef.current && !selectRef.current.contains(event.target)) {
@@ -28,54 +38,161 @@ export default function Select({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredOptions = options.filter((option) =>
-    getLabel(option).toLowerCase().includes(searchTerm.toLowerCase())
+  // Memoized filtering
+  const filteredOptions = useMemo(
+    () =>
+      options.filter((option) =>
+        getLabel(option).toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [options, searchTerm, getLabel]
   );
 
-  const handleSelect = (option) => {
-    setSelectedValue(option); // 🔹 store object
-    onSelect(getValue(option)); // 🔹 notify parent
-    setSelectActive(false);
-  };
+  // Select option
+  const handleSelect = useCallback(
+    (option) => {
+      const value = getValue(option);
+      setSelectedValue(option);
+      setInputValue(option.value);
+      onSelect(value);
+      setSelectActive(false);
+      setEditing(false);
+    },
+    [getValue, onSelect]
+  );
+
+  // Input change handler
+  const handleInputChange = useCallback(
+    (e) => {
+      const val = e.target.value.replace(/[^\d]/g, "");
+      setInputValue(val);
+
+      if (val) {
+        const numeric = parseInt(val, 10);
+        const obj = { label: `${numeric}px`, value: numeric };
+        setSelectedValue(obj);
+        onSelect(numeric);
+      }
+    },
+    [onSelect]
+  );
+
+  // Blur input
+  const handleInputBlur = useCallback(() => {
+    setEditing(false);
+    if (inputValue) {
+      const numeric = parseInt(inputValue, 10);
+      const obj = { label: `${numeric}px`, value: numeric };
+      setSelectedValue(obj);
+      onSelect(numeric);
+    } else {
+      setInputValue(selectedValue?.value || "");
+    }
+  }, [inputValue, onSelect, selectedValue]);
+
+  // Drag handler (Font Size)
+  const handleMouseDown = useCallback(
+    (e) => {
+      e.preventDefault();
+      const startX = e.clientX;
+      const startValue = parseInt(selectedValue?.value || inputValue || 16, 10);
+      const sensitivity = 0.2;
+
+      // lock cursor globally
+      document.documentElement.style.setProperty(
+        "cursor",
+        "ew-resize",
+        "important"
+      );
+      document.body.style.userSelect = "none";
+      document.body.style.pointerEvents = "none"; // disable lahat
+      e.currentTarget.style.pointerEvents = "auto"; // pero enable yung mismong handle
+
+      const handleMouseMove = (moveEvent) => {
+        const deltaX = moveEvent.clientX - startX;
+        let newValue = Math.max(
+          1,
+          Math.round(startValue + deltaX * sensitivity)
+        );
+
+        const obj = { label: `${newValue}px`, value: newValue };
+        setSelectedValue(obj);
+        setInputValue(newValue);
+        onSelect(newValue);
+
+        // siguraduhin hindi nawawala kahit saan
+        document.documentElement.style.setProperty(
+          "cursor",
+          "ew-resize",
+          "important"
+        );
+      };
+
+      const handleMouseUp = () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+
+        // restore defaults
+        document.documentElement.style.removeProperty("cursor");
+        document.body.style.userSelect = "";
+        document.body.style.pointerEvents = "";
+      };
+
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    },
+    [selectedValue, inputValue, onSelect]
+  );
 
   return (
     <div
       className="d-flex flex-column align-items-start w-100"
       style={{ minWidth: "50%" }}
     >
-      <span className="IDGenerator-setting-select-label">{label}</span>
+      <span
+        className={`IDGenerator-setting-select-label ${
+          disabled ? "disabled" : ""
+        }`}
+      >
+        {label}
+      </span>
 
       <div
         ref={selectRef}
         className={`IDGenerator-setting-select-container ${
           selectActive ? "active" : ""
-        } ${useInput ? "inputDesign" : ""}`}
+        } ${showSearch ? "" : "inputDesign"} ${disabled ? "disabled" : ""}`}
       >
         <div className="IDGenerator-setting-select-placeholder">
+          {label === "Font Size" && (
+            <span
+              onMouseDown={handleMouseDown}
+              style={{ cursor: "ew-resize", userSelect: "none" }}
+            >
+              <MDBIcon fas icon="font" />
+            </span>
+          )}
+
           {useInput ? (
             <input
               type="text"
-              value={getLabel(selectedValue)}
-              style={getStyle(selectedValue)} // 🔹 apply style to input
-              onChange={(e) => {
-                const val = e.target.value;
-                const obj = { label: val, value: val }; // allow typing custom value
-                setSelectedValue(obj);
-                onSelect(val);
+              value={editing ? inputValue : selectedValue?.label || ""}
+              style={getStyle(selectedValue)}
+              onFocus={() => {
+                setEditing(true);
+                setInputValue(selectedValue?.value || "");
               }}
-              onClick={() => setSelectActive(true)}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
           ) : (
             <span
-              style={getStyle(selectedValue)} // 🔹 apply style to placeholder
+              style={getStyle(selectedValue)}
               onClick={() => setSelectActive(!selectActive)}
             >
-              {getLabel(selectedValue)}
+              {selectedValue ? getLabel(selectedValue) : "Select..."}
             </span>
           )}
 
@@ -90,7 +207,9 @@ export default function Select({
         <div
           className={`IDGenerator-setting-select-options ${
             selectActive ? "active" : ""
-          } ${useInput ? "inputDesign" : ""}`}
+          } ${showSearch ? "" : "inputDesign"} ${
+            label === "Font Weight" ? "weight" : ""
+          }`}
         >
           {showSearch && (
             <div className="p-2">
@@ -114,7 +233,7 @@ export default function Select({
               filteredOptions.map((option, index) => (
                 <li
                   key={index}
-                  style={getStyle(option)} // 🔹 apply style to option
+                  style={getStyle(option)}
                   onClick={() => handleSelect(option)}
                   onMouseEnter={() => setSelectedValue(option)}
                 >
