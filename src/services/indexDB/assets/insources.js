@@ -1,14 +1,13 @@
-// onboardingsIndexedDB.js
-const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-const DB_NAME = `Onboardings-${today}`;
+// menusIndexedDB.js
+const DB_NAME = "Insources";
 
-// Generate store name dynamically based on user & branch
+// Generate store name based on user & branch
 const getStoreName = () => {
   const activePlatform = JSON.parse(
     localStorage.getItem("activePlatform") || "{}"
   );
   const { branch = {} } = activePlatform;
-  return `Onboardings-${branch._id || "nobranch"}`;
+  return `insources-${branch._id || "nobranch"}`;
 };
 
 // Open DB and ensure store exists
@@ -21,6 +20,7 @@ export function openDB() {
       const storeName = getStoreName();
 
       if (!db.objectStoreNames.contains(storeName)) {
+        // Close and upgrade DB to add store
         const newVersion = db.version + 1;
         db.close();
 
@@ -50,7 +50,7 @@ export function openDB() {
   });
 }
 
-// Helper for transactions
+// Helper to run a callback with store in a transaction
 async function withStore(mode, callback) {
   const db = await openDB();
   const storeName = getStoreName();
@@ -69,75 +69,50 @@ async function withStore(mode, callback) {
   });
 }
 
-// Save single onboarding
-export async function IDB_SAVE(onboarding) {
-  return withStore("readwrite", (store) => store.add(onboarding));
-}
-
-// Bulk save onboardings
-export async function IDB_BULK_SAVE(onboardings) {
-  if (onboardings.length === 0) return;
-
+export async function IDB_BULK_SAVE(menus) {
+  if (menus.length === 0) return;
   return withStore("readwrite", async (store) => {
-    for (const onboarding of onboardings) {
-      try {
-        const getReq = store.get(onboarding._id);
-        const exists = await new Promise((resolve, reject) => {
-          getReq.onsuccess = () => resolve(!!getReq.result);
-          getReq.onerror = () => reject(getReq.error);
-        });
-        if (!exists) store.add(onboarding);
-      } catch (err) {
-        console.error("IDB_BULK_SAVE error:", err);
-      }
+    for (const menu of menus) {
+      await new Promise((resolve, reject) => {
+        const getReq = store.get(menu._id);
+
+        getReq.onsuccess = () => {
+          const existing = getReq.result;
+
+          if (existing && menu.deletedAt) {
+            const delReq = store.delete(menu._id);
+            delReq.onsuccess = () => resolve();
+            delReq.onerror = () => reject(delReq.error);
+            return;
+          }
+
+          if (!existing && menu.deletedAt) {
+            resolve();
+            return;
+          }
+
+          const updated = existing ? { ...existing, ...menu } : menu;
+          const putReq = store.put(updated);
+          putReq.onsuccess = () => resolve();
+          putReq.onerror = () => reject(putReq.error);
+        };
+
+        getReq.onerror = () => reject(getReq.error);
+      });
     }
+    return true;
   });
 }
 
-// Update onboarding
-export async function IDB_UPDATE(onboarding) {
-  return withStore("readwrite", (store) => {
-    return new Promise((resolve, reject) => {
-      const getReq = store.get(onboarding._id);
-      getReq.onsuccess = () => {
-        const oldData = getReq.result || {};
-        const newData = { ...oldData, ...onboarding };
-
-        const putReq = store.put(newData);
-        putReq.onsuccess = () => resolve(newData);
-        putReq.onerror = (e) => reject(e.target.error);
-      };
-
-      getReq.onerror = (e) => reject(e.target.error);
-    });
-  });
-}
-
-// Browse all onboardings
 export async function IDB_BROWSE() {
   return withStore("readonly", (store) => {
     return new Promise((resolve, reject) => {
       const request = store.getAll();
       request.onsuccess = () => {
         const result = request.result || [];
-        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         resolve(result);
       };
       request.onerror = () => reject(request.error);
     });
-  });
-}
-
-// Delete onboarding by id
-export async function IDB_DESTROY(id) {
-  return withStore("readwrite", (store) => store.delete(id));
-}
-
-// Delete entire DB
-export function IDB_DESTROY_DB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.deleteDatabase(DB_NAME);
-    request.onsuccess = () => resolve(true);
-    request.onerror = () => reject(request.error);
   });
 }

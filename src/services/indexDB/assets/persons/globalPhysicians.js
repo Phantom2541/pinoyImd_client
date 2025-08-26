@@ -1,15 +1,9 @@
-// indexedDB.js
-const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-const DB_NAME = `Deals-${today}`;
+// menusIndexedDB.js
+const DB_NAME = "Global-Physicians";
 
 // Generate store name based on user & branch
 const getStoreName = () => {
-  const activePlatform = JSON.parse(
-    localStorage.getItem("activePlatform") || "{}"
-  );
-  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-  const { branch = {} } = activePlatform;
-  return `Deals-${auth._id || "noauth"}-${branch._id || "nobranch"}`;
+  return `global-physicians`;
 };
 
 // Open DB and ensure store exists
@@ -71,83 +65,50 @@ async function withStore(mode, callback) {
   });
 }
 
-// Save single deal
-export async function IDB_SAVE(deal) {
-  return withStore("readwrite", (store) => store.add(deal));
-}
-
-// Bulk save deals
-export async function IDB_BULK_SAVE(deals) {
-  if (deals.length === 0) return;
+export async function IDB_BULK_SAVE(menus) {
+  if (menus.length === 0) return;
   return withStore("readwrite", async (store) => {
-    for (const deal of deals) {
-      try {
-        // subukan i-get muna kung existing
-        const getReq = store.get(deal._id);
-        const exists = await new Promise((resolve, reject) => {
-          getReq.onsuccess = () => resolve(!!getReq.result);
-          getReq.onerror = () => reject(getReq.error);
-        });
+    for (const menu of menus) {
+      await new Promise((resolve, reject) => {
+        const getReq = store.get(menu._id);
 
-        if (!exists) {
-          store.add(deal); // add only kung wala pa
-        }
-        // kung exists, skip lang
-      } catch (err) {
-        console.error("IDB_BULK_SAVE error:", err);
-      }
+        getReq.onsuccess = () => {
+          const existing = getReq.result;
+
+          if (existing && menu.deletedAt) {
+            const delReq = store.delete(menu._id);
+            delReq.onsuccess = () => resolve();
+            delReq.onerror = () => reject(delReq.error);
+            return;
+          }
+
+          if (!existing && menu.deletedAt) {
+            resolve();
+            return;
+          }
+
+          const updated = existing ? { ...existing, ...menu } : menu;
+          const putReq = store.put(updated);
+          putReq.onsuccess = () => resolve();
+          putReq.onerror = () => reject(putReq.error);
+        };
+
+        getReq.onerror = () => reject(getReq.error);
+      });
     }
+    return true;
   });
 }
 
-// Update deal
-export async function IDB_UPDATE(deal) {
-  return withStore("readwrite", (store) => {
-    return new Promise((resolve, reject) => {
-      const getReq = store.get(deal._id);
-
-      getReq.onsuccess = () => {
-        const oldData = getReq.result || {};
-
-        // pagsamahin yung dati at bago
-        const merged = { ...oldData, ...deal };
-
-        // isave gamit put
-        const putReq = store.put(merged);
-
-        putReq.onsuccess = () => resolve(merged);
-        putReq.onerror = () => reject(putReq.error);
-      };
-
-      getReq.onerror = () => reject(getReq.error);
-    });
-  });
-}
-// Browse all deals
 export async function IDB_BROWSE() {
   return withStore("readonly", (store) => {
     return new Promise((resolve, reject) => {
       const request = store.getAll();
       request.onsuccess = () => {
         const result = request.result || [];
-        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         resolve(result);
       };
       request.onerror = () => reject(request.error);
     });
-  });
-}
-
-// Delete deal by id
-export async function IDB_DESTROY(id) {
-  return withStore("readwrite", (store) => store.delete(id));
-}
-
-// Delete entire DB
-export function IDB_DESTROY_DB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.deleteDatabase(DB_NAME);
-    request.onsuccess = () => resolve(true);
-    request.onerror = () => reject(request.error);
   });
 }

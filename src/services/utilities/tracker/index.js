@@ -34,22 +34,14 @@ const fetchDatas = async ({
     SAVE: () => {},
   },
 }) => {
-  const { branchId, token, trackerKey } = config;
+  const { params = {}, token, trackerKey } = config;
   const idbTracker = await IDB_TRACKER_BROWSE();
   const idbDatas = await idb.BROWSE();
   const mdbId = mdbTracker?.[trackerKey]?.id;
   const idbId = idbTracker?.[trackerKey]?.id;
   var shouldFetch = false;
   if (idbDatas.length === 0) shouldFetch = true;
-  if (mdbId !== idbId) shouldFetch = true;
-  console.log("mbdId", mdbId, "idbId", idbId);
-  console.log("shouldFetch", shouldFetch);
-  console.log("not equal", mdbId !== idbId);
-
-  // const shouldFetchMenus =
-  //   ((!idbTracker.hasOwnProperty(trackerKey) || !idbTracker?._id) &&
-  //     idbDatas.length === 0) ||
-  //   mdbTracker?.[trackerKey]?.id !== idbTracker?.[trackerKey]?.id;
+  else if (mdbId !== idbId) shouldFetch = true;
 
   //IF WE HAVE A DATAS IN THE INDEXDB AND WE HAVE A MDBTRACKER GET ALL MENU FROM THE LAST DATA IN THE INDEXDB AND FROM THE MDBTRACKER
   const latestIdbUpdatedAt = idbDatas?.reduce((latest, m) => {
@@ -59,14 +51,13 @@ const fetchDatas = async ({
   if (shouldFetch) {
     const idbTrackerUpdatedAt = idbTracker?.[trackerKey]?.updatedAt || "";
     const mdbTrackerUpdatedAt = mdbTracker?.[trackerKey]?.updatedAt || "";
-
     store
       .dispatch(
         redux.BROWSE({
           token,
           [config?.paramsKey || "key"]: {
-            branchId,
             isTracker: true,
+            ...params,
             ...(idbDatas?.length > 0 && idbId > -1
               ? {
                   startDate: idbTrackerUpdatedAt || mdbTrackerUpdatedAt,
@@ -90,7 +81,6 @@ const fetchDatas = async ({
 
   if (mdbTracker?._id && mdbTracker[trackerKey]) {
     IDB_TRACKER_SAVE({
-      ...(idbTracker || {}),
       [trackerKey]: mdbTracker[trackerKey],
       branch: mdbTracker?.branch,
     });
@@ -110,9 +100,9 @@ const getMDB_TRACKER = async (config) => {
   );
   const mdbTracker = action?.payload?.payload || {};
 
-  if (mdbTracker?._id) {
-    localStorage.setItem(`tracker-${branchId}`, JSON.stringify(mdbTracker));
-  }
+  // if (mdbTracker?._id) {
+  //   localStorage.setItem(`tracker-${branchId}`, JSON.stringify(mdbTracker));
+  // }
 
   return mdbTracker;
 };
@@ -151,7 +141,13 @@ const Tracker = {
       BROWSE: () => {},
       SAVE: () => {},
     },
-    config = { branchId: "", token: "", trackerKey: "", paramsKey: "" },
+    config = {
+      branchId: "", // this required is for query of tracker
+      token: "",
+      trackerKey: "",
+      paramsKey: "", //example value:(key,keys,params)
+      params: {}, // additional params if needed for the request
+    },
   }) => {
     const mdbTracker = await getMDB_TRACKER(config);
     await fetchDatas({

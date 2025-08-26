@@ -448,8 +448,6 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
-
         state.collections = state.filtered = payload.payload;
         const { page, maxPage } = state;
         if (payload.length > 0) {
@@ -463,7 +461,7 @@ export const reduxSlice = createSlice({
         state.totalPages =
           Math.ceil((payload.payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-        localStorage.setItem("insource", JSON.stringify(payload.payload));
+        // localStorage.setItem("insource", JSON.stringify(payload.payload));
         state.isLoading = false;
       })
       .addCase(INSOURCE.rejected, (state, { payload }) => {
