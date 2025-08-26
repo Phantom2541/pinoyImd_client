@@ -101,6 +101,7 @@ const getMDB_TRACKER = async (config) => {
   return mdbTracker;
 };
 
+//This file is handle the localstorage tracker and indexDB to store the data and get the data in database
 const Tracker = {
   /**
    * Initializes the tracker by fetching data from the backend and saving it to
@@ -144,6 +145,12 @@ const Tracker = {
       idb,
       config,
     });
+  },
+  set: (updatedTracker) => {
+    localStorage.setItem(
+      `tracker-${updatedTracker.branch}`,
+      JSON.stringify(updatedTracker)
+    );
   },
 };
 
