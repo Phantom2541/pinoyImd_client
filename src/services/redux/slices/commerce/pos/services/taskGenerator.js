@@ -211,7 +211,6 @@ export const reduxSlice = createSlice({
           Services.filterByDepartment(packages, department)
         ),
       };
-      console.log("updatingggg", onboarding);
 
       if (
         fetchTracker.hasLoaded("onboardings") &&
