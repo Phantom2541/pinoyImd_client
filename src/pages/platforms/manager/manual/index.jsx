@@ -7,7 +7,7 @@ export default function UserManual() {
       <MDBCard>
         <MDBCardBody>
           <h1 className="mb-4">
-            📌 Pinoy-iMD Registration & Setup Instructions
+            📌 Subscriber Registration & Setup Instructions
           </h1>
 
           {/* STEP 1 */}
