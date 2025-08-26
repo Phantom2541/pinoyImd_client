@@ -12,10 +12,11 @@ export default function DraggableButtons({
   showAllValues,
   setShowAllValues,
   setPlacedValues,
+  selectedSide,
 }) {
   return (
     <div className="id-calibrator-details">
-      <span>Back</span>
+      <span className="id-calibrator-details-title">{selectedSide} :</span>
       {filteredKeys
         .filter((key) =>
           showAllValues

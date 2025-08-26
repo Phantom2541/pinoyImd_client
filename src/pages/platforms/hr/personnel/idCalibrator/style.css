@@ -10,7 +10,7 @@
     "bottomside bottomside";
   width: fit-content;
   margin: auto;
-  gap: 10px;
+  gap: 15px;
   user-select: none;
 }
 
@@ -18,7 +18,7 @@
   max-width: 1150px;
 }
 .id-calibrator-main-container.landscape {
-  max-width: 1300px;
+  max-width: 900px;
   align-items: center;
 }
 
@@ -47,7 +47,15 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
+}
+
+.id-calibrator-preview-wrapper.portrait {
+  flex-direction: row;
+}
+
+.id-calibrator-preview-wrapper.landscape {
+  flex-direction: column;
 }
 
 .id-calibrator-preview {
@@ -55,6 +63,7 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   background-color: #ffffff;
+  overflow: hidden;
 }
 
 .id-calibrator-preview.portrait {
@@ -65,6 +74,10 @@
 .id-calibrator-preview.landscape {
   width: 5.0625in;
   height: 3.1875in;
+}
+
+.id-calibrator-preview.active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 123, 255, 0.5);
 }
 
 .id-calibrator-preview-upload {
@@ -124,11 +137,6 @@
   cursor: pointer;
 }
 
-.id-calibrator-preview-image.active {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2),
-    /* natural depth shadow */ 0 0 10px rgba(0, 123, 255, 0.5); /* subtle blue accent */
-}
-
 .id-calibrator-details {
   position: relative;
   display: flex;
@@ -138,8 +146,12 @@
   min-height: 70px;
   background: #fff;
   padding: 14px;
-  border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.id-calibrator-details-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
 .id-calibrator-detail-value {

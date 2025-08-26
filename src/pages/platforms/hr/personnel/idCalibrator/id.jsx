@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 import { fakeEMP } from "./fakeDB";
-import { FontWeights } from "./toolkit/fontStyle";
 
 export default function ID({
   frontImage,
@@ -21,6 +20,8 @@ export default function ID({
   setSelectedValue,
   selectedValue,
   showAllValues,
+  lockAspect,
+  lockAspectRatio,
 }) {
   // const [draggingIndex, setDraggingIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -28,15 +29,16 @@ export default function ID({
   const [dragging, setDragging] = useState(null);
 
   const valueToKeyMap = {
-    [fakeEMP.front.emp]: "FullName",
-    [fakeEMP.front.img]: "Profile",
+    [fakeEMP.front.empID]: "id",
+    [fakeEMP.front.emp]: "fullName",
+    [fakeEMP.front.img]: "profile",
     [fakeEMP.front.position]: "position",
     [fakeEMP.front.department]: "department",
     [fakeEMP.back.signature]: "signature",
     [fakeEMP.back.dob]: "birthday",
     [fakeEMP.back.address]: "address",
     [fakeEMP.back.guardian]: "guardian",
-    [fakeEMP.back.pn]: "Phone number",
+    [fakeEMP.back.pn]: "phone number",
   };
 
   const defaultTextStyle = {
@@ -51,7 +53,7 @@ export default function ID({
     width: "100px",
     height: "100px",
     borderRadius: 0,
-    opacity: 100,
+    opacity: 1,
   };
 
   // ------------------- Click & Place -------------------
@@ -85,6 +87,61 @@ export default function ID({
     document.body.style.cursor = "auto";
   };
 
+  const handleResizeImage = (e, i, target) => {
+    e.stopPropagation();
+
+    if (!placedValues[i]) return;
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+
+    const item = placedValues[i];
+    const startWidth = parseFloat(item.style.width) || 100;
+    const startHeight = parseFloat(item.style.height) || 100;
+    const aspectRatio = startWidth / startHeight;
+
+    const move = (ev) => {
+      let rawWidth = Math.max(50, startWidth + ev.clientX - startX);
+      let rawHeight = Math.max(50, startHeight + ev.clientY - startY);
+
+      const driver =
+        Math.abs(ev.clientX - startX) > Math.abs(ev.clientY - startY)
+          ? "width"
+          : "height";
+
+      const { width, height } = lockAspectRatio(
+        rawWidth,
+        rawHeight,
+        lockAspect,
+        aspectRatio,
+        driver
+      );
+
+      setPlacedValues((prev) =>
+        prev.map((p, idx) =>
+          idx === i && p.target === target
+            ? { ...p, style: { ...p.style, width, height } }
+            : p
+        )
+      );
+
+      if (selectedValue?.index === i && selectedValue.target === target) {
+        setSelectedValue((prev) => ({
+          ...prev,
+          style: { ...prev.style, width, height },
+        }));
+      }
+    };
+
+    const up = () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  };
+
   const handleMouseMove = (e) => {
     if (floatingValue) {
       setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 });
@@ -92,8 +149,17 @@ export default function ID({
 
     if (dragging) {
       const { rect } = dragging;
-      const x = e.clientX - rect.left - dragOffset.x;
-      const y = e.clientY - rect.top - dragOffset.y;
+      const item = placedValues[dragging.index];
+
+      const itemWidth = parseInt(item.style.width) || 50;
+      const itemHeight = parseInt(item.style.height) || 20;
+
+      let x = e.clientX - rect.left - dragOffset.x;
+      let y = e.clientY - rect.top - dragOffset.y;
+
+      // ✅ clamp sa loob ng preview
+      x = Math.max(0, Math.min(x, rect.width - itemWidth));
+      y = Math.max(0, Math.min(y, rect.height - itemHeight));
 
       setPlacedValues((prev) =>
         prev.map((p, i) =>
@@ -103,7 +169,6 @@ export default function ID({
         )
       );
 
-      // 🔹 keep selectedValue updated in real-time
       setSelectedValue((prev) =>
         prev && prev.index === dragging.index && prev.target === dragging.target
           ? { ...prev, x, y }
@@ -167,18 +232,42 @@ export default function ID({
           onClick={(e) => e.stopPropagation()}
         >
           {isImage ? (
-            <img
-              src={p.value}
-              alt="placed"
-              draggable={false}
+            <div
               style={{
-                ...p.style,
-
-                objectFit: "fill",
-                maxHeight: "200px",
-                maxWidth: "200px",
+                position: "relative",
+                display: "inline-block",
+                width: p.style.width,
+                height: p.style.height,
               }}
-            />
+            >
+              <img
+                src={p.value}
+                alt="placed"
+                draggable={false}
+                style={{
+                  ...p.style,
+                  objectFit: "fill",
+                }}
+              />
+              {/* Resize handle */}
+              {selectedValue?.id === p.id && (
+                <div
+                  onMouseDown={(e) => handleResizeImage(e, i, target)}
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: 15,
+                    height: 15,
+                    cursor: "se-resize",
+                    clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
+                    backgroundColor: "black",
+                    boxShadow: "1px 1px 3px rgba(0,0,0,0.3)",
+                    zIndex: 10,
+                  }}
+                />
+              )}
+            </div>
           ) : (
             <span
               className={`id-calibrator-placed-value-text ${
@@ -210,9 +299,10 @@ export default function ID({
 
   const IDPreview = ({ image, target, handleChange }) => (
     <div
-      className={`id-calibrator-preview ${layout || "landscape"}`}
+      className={`id-calibrator-preview ${layout || "landscape"} ${
+        selectedSide === target ? "active" : ""
+      }`}
       onClick={(e) => handleClickOnImage(target, e)}
-      style={{ position: "relative" }}
     >
       {!image && (
         <>
@@ -228,9 +318,7 @@ export default function ID({
 
       {image && (
         <img
-          className={`id-calibrator-preview-image ${
-            selectedSide === target ? "active" : ""
-          }`}
+          className="id-calibrator-preview-image"
           src={image}
           alt={`${target} ID Preview`}
           draggable={false}
@@ -259,7 +347,7 @@ export default function ID({
         }
       }}
     >
-      <div className="id-calibrator-preview-wrapper">
+      <div className={`id-calibrator-preview-wrapper ${layout || "landscape"}`}>
         <IDPreview
           image={frontImage}
           target="front"
@@ -281,7 +369,7 @@ export default function ID({
             left: cursorPos.x,
             transform: "translate(-50%, -50%)",
             pointerEvents: "none",
-            background: "#1976d2",
+            background: "rgba(0,0,0,0.5)",
             color: "white",
             padding: "4px 8px",
             borderRadius: "4px",

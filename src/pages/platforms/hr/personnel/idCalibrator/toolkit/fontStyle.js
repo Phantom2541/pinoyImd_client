@@ -128,15 +128,4 @@ const FontWeights = {
   "black Italic": { weight: 900, style: "italic" },
 };
 
-const borderStyles = {
-  solid: "solid",
-  dashed: "dashed",
-  dotted: "dotted",
-  double: "double",
-  groove: "groove",
-  ridge: "ridge",
-  inset: "inset",
-  outset: "outset",
-};
-
-export { Fonts, FontSizes, FontWeights, borderStyles };
+export { Fonts, FontSizes, FontWeights };

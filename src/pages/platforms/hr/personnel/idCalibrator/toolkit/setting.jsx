@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Fonts, FontSizes, FontWeights, borderStyles } from "./fontStyle";
+import { Fonts, FontSizes, FontWeights } from "./fontStyle";
 import { MDBIcon } from "mdbreact";
 import Input from "./input";
 import Select from "./select";
@@ -9,9 +9,12 @@ export default function Setting({
   options,
   isPersonalize = false,
   onReset,
-  isDisabled = false,
   selectedValue,
   onUpdateValueStyle,
+  onSave,
+  lockAspect,
+  setLockAspect,
+  lockAspectRatio,
 }) {
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
@@ -61,6 +64,11 @@ export default function Setting({
     return ctx.fillStyle; // browser auto-converts to rgb/hex
   }
 
+  const aspectRatio =
+    style.width && style.height
+      ? parseInt(style.width) / parseInt(style.height)
+      : 1;
+
   return (
     <div className="IDGenerator-setting-container">
       {/* Layout controls */}
@@ -76,6 +84,7 @@ export default function Setting({
             onSelect={(val) => setLayout(val)}
             getLabel={(option) => option}
             getValue={(option) => option}
+            showSearch={false}
           />
           <button
             className="IDGenerator-setting-reset-button"
@@ -89,28 +98,73 @@ export default function Setting({
       {/* 🔹 Image Settings */}
       {showImg && (
         <div className="IDGenerator-setting-section">
-          <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+          <div className="d-flex align-items-end" style={{ gap: "5px" }}>
             <Input
               type="number"
               title="Width"
+              unit="px"
               label={<MDBIcon fas icon="arrows-alt-h" />}
-              value={parseInt(style.width) || 100} // default 100
+              value={parseInt(style.width)}
               disabled={imgDisabled}
-              onChange={(e) => updateStyle({ width: `${e.target.value}px` })}
+              onChange={(e) => {
+                const newWidth = parseInt(e.target.value, 10) || 0;
+                const currentHeight = parseFloat(style.height) || 100;
+                const aspectRatio =
+                  (parseFloat(style.width) || 100) / currentHeight;
+
+                const { width, height } = lockAspectRatio(
+                  newWidth,
+                  currentHeight,
+                  lockAspect,
+                  aspectRatio,
+                  "width"
+                );
+
+                updateStyle({ width, height });
+              }}
             />
+
             <Input
               type="number"
               title="Height"
+              unit="px"
               label={<MDBIcon fas icon="arrows-alt-v" />}
-              value={parseInt(style.height) || 100}
+              value={parseInt(style.height)}
               disabled={imgDisabled}
-              onChange={(e) => updateStyle({ height: `${e.target.value}px` })}
+              onChange={(e) => {
+                const newHeight = parseInt(e.target.value, 10) || 0;
+                const currentWidth = parseFloat(style.width) || 100;
+                const aspectRatio =
+                  currentWidth / (parseFloat(style.height) || 100);
+
+                const { width, height } = lockAspectRatio(
+                  currentWidth,
+                  newHeight,
+                  lockAspect,
+                  aspectRatio,
+                  "height"
+                );
+
+                updateStyle({ width, height });
+              }}
             />
+
+            <button
+              className={`IDGenerator-setting-aspectRatio-button ${
+                lockAspect ? "active" : ""
+              }`}
+              title="Lock Aspect Ratio"
+              onClick={() => setLockAspect((prev) => !prev)}
+              disabled={imgDisabled}
+            >
+              <MDBIcon fas icon="expand" />
+            </button>
           </div>
           <div className="d-flex align-items-center" style={{ gap: "5px" }}>
             <Input
               type="number"
               title="Corner Radius"
+              unit="%"
               label={<MDBIcon fas icon="stop" />}
               value={parseInt(style.borderRadius) || 0}
               disabled={imgDisabled}
@@ -121,6 +175,7 @@ export default function Setting({
             <Input
               type="number"
               title="Border"
+              unit="px"
               label={
                 <input
                   type="color"
@@ -166,9 +221,11 @@ export default function Setting({
             min={0}
             max={100}
             step={5}
+            unit="%"
             disabled={imgDisabled}
             onChange={(e) => {
-              const val = Math.min(100, Math.max(0, e.target.value)); // clamp 0–100
+              const raw = parseFloat(e.target.value) || 0;
+              const val = Math.min(100, Math.max(0, raw)); // clamp 0–100
               updateStyle({ opacity: val / 100 }); // 100% → 1
             }}
           />
@@ -275,6 +332,7 @@ export default function Setting({
             <Input
               type="number"
               title="Letter Spacing"
+              unit="%"
               label={<MDBIcon fas icon="text-width" />}
               value={parseInt(style.letterSpacing) || 0}
               onChange={(e) =>
@@ -287,7 +345,7 @@ export default function Setting({
 
       {/* Save Button */}
       <div className="IDGenerator-settings-save">
-        <button disabled={imgDisabled && textDisabled}>💾 Save</button>
+        <button onClick={onSave}>💾 Save</button>
       </div>
     </div>
   );

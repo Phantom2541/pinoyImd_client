@@ -10,6 +10,7 @@ const initialState = {
   formSubmitted: false,
   didSearch: false,
   selected: {},
+  ct: {},
   page: 0,
   isSuccess: false,
   // main loading
@@ -479,6 +480,7 @@ export const reduxSlice = createSlice({
           updateCollections(state.collections);
           updateCollections(state.filtered);
         }
+        state.ct = payload;
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;

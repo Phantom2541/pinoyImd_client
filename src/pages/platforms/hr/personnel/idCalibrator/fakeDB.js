@@ -3,18 +3,18 @@ import Signature from "../../../../../assets/templateSampleSignature.png";
 
 export const fakeEMP = {
   front: {
-    id: "LIS-001",
+    empID: "PiMD-001",
     img: Avatar,
-    emp: "Dr. Juan R. Dela Cruz Jr",
-    position: "Medical Technologist 1",
-    department: "Laboratory",
+    emp: "Dr. Juan Dela Cruz jr",
+    position: "Administrative Aide I",
+    department: "Human Resources",
   },
   back: {
     signature: Signature,
-    dob: "Dec. 24, 2005",
-    address: "Mabini Ext, Cabanatuan City, N.E.",
-    guardian: "Maria L. Santos",
-    pn: "+63 927 352 6159",
+    dob: "Jan. 1, 1990",
+    address: "Sta. Mesa, Manila",
+    guardian: "Jose Dela Cruz",
+    pn: "+63 912 345 6789",
   },
   layout: "portrait",
   // cardFront

@@ -10,23 +10,23 @@ export default function Input({
   min,
   max,
   step,
+  unit, // 🔹 new prop: "px" | "%" | undefined
 }) {
   const [innerValue, setInnerValue] = useState(value || 0);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     setInnerValue(value || 0);
   }, [value]);
 
-  // 🔹 Drag logic on label (scaled like % para hindi mabilis)
+  // 🔹 Drag logic (unchanged)
   const handleLabelMouseDown = useCallback(
     (e) => {
       e.preventDefault();
-
       const startX = e.clientX;
       const startValue = parseFloat(innerValue) || 0;
-      const sensitivity = 0.05; // maliit na step (1px per 20px drag)
+      const sensitivity = 0.05;
 
-      // lock cursor globally
       document.documentElement.style.setProperty(
         "cursor",
         "ew-resize",
@@ -38,9 +38,7 @@ export default function Input({
 
       const handleMouseMove = (moveEvent) => {
         const deltaX = moveEvent.clientX - startX;
-        // maliit ang increment para parang % ang dating
         let newValue = Math.round(startValue + deltaX * sensitivity);
-
         setInnerValue(newValue);
         onChange({ target: { value: newValue } });
 
@@ -54,7 +52,6 @@ export default function Input({
       const handleMouseUp = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
-
         document.documentElement.style.removeProperty("cursor");
         document.body.style.userSelect = "";
         document.body.style.pointerEvents = "";
@@ -69,6 +66,17 @@ export default function Input({
   const inputId = title
     ? title.replace(/\s+/g, "-").toLowerCase()
     : `input-${type}`;
+
+  // 🔹 Format display value based on focus + unit
+  const formatValue = () => {
+    if (!unit) return innerValue; // no unit → plain
+    return focused ? innerValue : `${innerValue}${unit}`;
+  };
+
+  // 🔹 Parse raw input (strip unit if needed)
+  const parseValue = (val) => {
+    return parseFloat(String(val).replace(unit || "", "")) || 0;
+  };
 
   return (
     <div className="IDGenerator-setting-input-container">
@@ -99,11 +107,20 @@ export default function Input({
         <input
           id={inputId}
           className="IDGenerator-setting-input"
-          type={type}
-          value={innerValue}
+          type="text" // text para pwede maglagay ng "px"/"%"
+          value={formatValue()}
+          onFocus={() => setFocused(true)}
+          onBlur={(e) => {
+            setFocused(false);
+            const raw = parseValue(e.target.value);
+            let clamped = Math.min(max ?? raw, Math.max(min ?? raw, raw));
+            setInnerValue(clamped);
+            onChange({ target: { value: clamped } });
+          }}
           onChange={(e) => {
-            setInnerValue(e.target.value);
-            onChange(e);
+            const raw = parseValue(e.target.value);
+            setInnerValue(raw);
+            onChange({ target: { value: raw } });
           }}
           min={min}
           max={max}
