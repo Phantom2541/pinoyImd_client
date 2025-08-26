@@ -7,6 +7,7 @@ import {
   fetchTracker,
 } from "../../../../utilities";
 import { Policy } from "../../../../fakeDb";
+import indexDB from "../../../../indexDB";
 
 const url = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
@@ -379,6 +380,7 @@ export const reduxSlice = createSlice({
         state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         fetchTracker.reset();
+        indexDB.cleanOldStores();
       })
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;

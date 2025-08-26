@@ -308,7 +308,7 @@ export const reduxSlice = createSlice({
 
         if (fakeDB) {
           //this is realtime send it to the onboarding but not in sender side
-          socket.emit("send_onboard", onboarding);
+          socket.emit("send_onboard", dealForOnboard);
         }
         //same scenario in onboardings
         if (fetchTracker.hasLoaded("deals")) {
@@ -318,7 +318,10 @@ export const reduxSlice = createSlice({
         //we need to check if onboardings has been loaded before saving in index DB
         //if loadead then save
         //if not loaded then do nothing.. para kapag pumunta siya sa onboardings ma fefetch parin niya lahat ng onboardings
-        if (fetchTracker.hasLoaded("onboardings")) {
+        if (
+          fetchTracker.hasLoaded("onboardings") &&
+          onboarding?.cart?.length > 0
+        ) {
           IDB_SAVE_ONBOARD(onboarding);
         }
         state.sourceId = "";

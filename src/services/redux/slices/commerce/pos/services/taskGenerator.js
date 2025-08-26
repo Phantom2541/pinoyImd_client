@@ -139,16 +139,18 @@ export const reduxSlice = createSlice({
     },
     SetCOLLECTIONS: (state, { payload }) => {
       const { department, onboardings = [] } = payload;
-      state.collections = state.filtered = onboardings.map((item, index) => ({
-        ...item,
-        pn: onboardings.length - index,
-        cart: item?.cart?.filter(({ packages }) =>
-          Services.filterByDepartment(
-            packages,
-            department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
-          )
-        ),
-      }));
+      state.collections = state.filtered = onboardings
+        .map((item, index) => ({
+          ...item,
+          pn: onboardings.length - index,
+          cart: item?.cart?.filter(({ packages }) =>
+            Services.filterByDepartment(
+              packages,
+              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
+            )
+          ),
+        }))
+        .filter(({ cart }) => cart?.length > 0);
       state.totalPages =
         Math.ceil((onboardings?.length || 0) / state.maxPage) || 1;
     },
@@ -182,16 +184,39 @@ export const reduxSlice = createSlice({
     },
 
     InsertRealtimeOnboard: (state, { payload }) => {
+      const { department, ...rest } = payload;
+      const onboarding = {
+        ...rest,
+        cart: rest?.cart?.filter(({ packages }) =>
+          Services.filterByDepartment(packages, department)
+        ),
+      };
+
       //this reducer is for received realtime onboard and set into the filtered and collections
-      if (fetchTracker.hasLoaded("onboardings")) {
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
-        IDB_SAVE(payload);
+      if (
+        fetchTracker.hasLoaded("onboardings") &&
+        onboarding?.cart?.length > 0
+      ) {
+        state.collections.unshift(onboarding);
+        state.filtered.unshift(onboarding);
+        IDB_SAVE(onboarding);
       }
     },
 
     UpdateRealtimeOnboard: (state, { payload }) => {
-      if (fetchTracker.hasLoaded("onboardings")) {
+      const { department, ...rest } = payload;
+      const onboarding = {
+        ...rest,
+        cart: rest?.cart?.filter(({ packages }) =>
+          Services.filterByDepartment(packages, department)
+        ),
+      };
+      console.log("updatingggg", onboarding);
+
+      if (
+        fetchTracker.hasLoaded("onboardings") &&
+        onboarding?.cart?.length > 0
+      ) {
         const updateCollection = (collections) => {
           const index = collections.findIndex(
             (item) => item._id === payload._id

@@ -81,14 +81,16 @@ export default function Platforms() {
         data?._id
       ) {
         const pn = onboardings.length + 1;
-        dispatch(InsertRealtimeOnboard({ ...data, pn }));
+        dispatch(
+          InsertRealtimeOnboard({ ...data, pn, department: departmentCode })
+        );
       }
     });
 
     return () => {
       socket.off("received_onboard");
     };
-  }, [activePlatform, dispatch, onboardings, addToast, auth]);
+  }, [activePlatform, dispatch, onboardings, addToast, auth, departmentCode]);
 
   //received updated task
   useEffect(() => {
@@ -118,7 +120,9 @@ export default function Platforms() {
               pn = index + 1;
             }
           }
-          dispatch(UpdateRealtimeOnboard({ ...data, pn }));
+          dispatch(
+            UpdateRealtimeOnboard({ ...data, pn, department: departmentCode })
+          );
         });
       }
     });
@@ -126,21 +130,23 @@ export default function Platforms() {
     return () => {
       socket.off("received_updated_deal_menus");
     };
-  }, [activePlatform, dispatch, addToast]);
+  }, [activePlatform, dispatch, addToast, departmentCode]);
 
   // received_updated_onboarding
   useEffect(() => {
     socket.on("received_updated_onboarding", (data) => {
       const { branchId } = activePlatform;
       if (data?.branchId === branchId) {
-        dispatch(UpdateRealtimeOnboard(data));
+        dispatch(
+          UpdateRealtimeOnboard({ ...data, department: departmentCode })
+        );
       }
     });
 
     return () => {
       socket.off("received_updated_onboarding");
     };
-  }, [activePlatform, dispatch, addToast]);
+  }, [activePlatform, dispatch, addToast, departmentCode]);
 
   useEffect(() => {
     const handleOnline = () => dispatch(NETWORK(true));

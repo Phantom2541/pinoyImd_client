@@ -13,9 +13,30 @@ const getStoreName = () => {
 // Open DB and ensure store exists
 export function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
+    const request = indexedDB.open(DB_NAME);
 
-    request.onsuccess = (event) => resolve(event.target.result);
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+      const storeName = getStoreName();
+
+      if (!db.objectStoreNames.contains(storeName)) {
+        // Close and upgrade DB to add store
+        const newVersion = db.version + 1;
+        db.close();
+
+        const upgradeReq = indexedDB.open(DB_NAME, newVersion);
+        upgradeReq.onupgradeneeded = (e) => {
+          const upgradeDb = e.target.result;
+          if (!upgradeDb.objectStoreNames.contains(storeName)) {
+            upgradeDb.createObjectStore(storeName, { keyPath: "_id" });
+          }
+        };
+        upgradeReq.onsuccess = () => resolve(upgradeReq.result);
+        upgradeReq.onerror = (e) => reject(e.target.error);
+      } else {
+        resolve(db);
+      }
+    };
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
