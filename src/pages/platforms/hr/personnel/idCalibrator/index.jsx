@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import "./style.css";
 import { fakeEMP } from "./fakeDB";
 import ID from "./id";
 import Setting from "./toolkit/setting";
 import DraggableButtons from "./buttons";
 import { useDispatch, useSelector } from "react-redux";
-import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
+import {
+  UPDATE,
+  CTBROWSE,
+} from "../../../../../services/redux/slices/assets/branches";
 
 export default function IdCalibrator() {
   const [frontImage, setFrontImage] = useState(null);
@@ -30,6 +34,67 @@ export default function IdCalibrator() {
   } catch (err) {
     console.error("Invalid JSON in branch.ct:", branch.ct, err);
   }
+
+  console.log("frontimg", frontImage, backImage);
+
+  useEffect(() => {
+    dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
+  }, []);
+
+  useEffect(() => {
+    if (!branch.ct) return;
+
+    let ctData;
+    try {
+      ctData = JSON.parse(branch.ct);
+    } catch (err) {
+      console.error("Invalid JSON in branch.ct:", branch.ct, err);
+      return;
+    }
+
+    // ✅ Direktang i-set ang front/back image sa state
+    setFrontImage(ctData.cf || null);
+    setBackImage(ctData.cb || null);
+
+    const dfp = ctData.dfp || {};
+    const newPlaced = [];
+
+    // Key mapping
+    const keyMap = {
+      fullName: "emp",
+      profile: "img",
+      id: "empID",
+      "phone number": "pn",
+      birthday: "dob",
+      guardian: "guardian",
+      address: "address",
+      department: "department",
+      signature: "signature",
+    };
+
+    // Function para i-tugma ang keys sa fakeEMP gamit keyMap
+    const matchKeys = (empData, target) => {
+      Object.keys(dfp).forEach((dfpKey) => {
+        const mappedKey = keyMap[dfpKey] || dfpKey; // kung wala sa map, default sa dfpKey
+        if (empData[mappedKey] !== undefined) {
+          newPlaced.push({
+            id: Date.now() + Math.random(),
+            key: dfpKey, // ilalagay natin dfp key para consistent sa dfp
+            value: empData[mappedKey], // value galing sa fakeEMP
+            x: dfp[dfpKey].x || 0,
+            y: dfp[dfpKey].y || 0,
+            target,
+            style: { ...dfp[dfpKey] },
+          });
+        }
+      });
+    };
+
+    matchKeys(fakeEMP.front, "front");
+    matchKeys(fakeEMP.back, "back");
+
+    setPlacedValues(newPlaced);
+  }, [branch]);
 
   // 🔹 Eto yung onSave arrow function
   const onSave = () => {

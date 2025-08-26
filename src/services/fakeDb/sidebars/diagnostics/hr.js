@@ -11,6 +11,7 @@ import {
 } from "../../../../pages/platforms/hr";
 import { Services, Menus } from "../../../../pages/platforms/accounting";
 import IdCalibrator from "../../../../pages/platforms/hr/personnel/idCalibrator";
+import IdGenerator from "../../../../pages/platforms/hr/personnel/idGenerator";
 
 const humanresources = [
   {
@@ -88,11 +89,25 @@ const humanresources = [
         // component: OrgChart,
       },
       {
-        name: "CARD Calibrator",
-        title: "CARD Calibrator",
+        name: "Card",
         path: "/card/Calibrator",
-        icon: "user-tie",
-        component: IdCalibrator,
+        icon: "tv",
+        children: [
+          {
+            name: " Calibrator",
+            title: "CARD Calibrator",
+            path: "/card/Calibrator",
+            icon: "user-tie",
+            component: IdCalibrator,
+          },
+          {
+            name: "Generator",
+            title: "CARD Generator",
+            path: "/card/Generator",
+            icon: "user-tie",
+            component: IdGenerator,
+          },
+        ],
       },
     ],
   },
