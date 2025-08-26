@@ -109,11 +109,10 @@ export const PREFERENCES = createAsyncThunk(
 );
 export const HEADS = createAsyncThunk(
   `assets/persons/heads/browse`,
-  ({ token, branchId }, thunkAPI) => {
+  ({ token, branchId, key }, thunkAPI) => {
+    const _key = { branchId, ...key };
     try {
-      return axioKit.universal(`assets/persons/heads/browse`, token, {
-        branchId,
-      });
+      return axioKit.universal(`assets/persons/heads/browse`, token, _key);
     } catch (error) {
       const message =
         (error.response &&
@@ -175,9 +174,19 @@ export const reduxSlice = createSlice({
     },
     InsertRealtimeTask: (state, { payload }) => {
       if (fetchTracker.hasLoaded("tasks")) {
-        state.filtered.unshift(payload);
-        state.collections.unshift(payload);
-        state.filteredStatus.unshift(payload);
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          if (index > -1) {
+            collections[index] = payload;
+          } else {
+            collections.unshift(payload);
+          }
+        };
+        updateCollections(state.filtered);
+        updateCollections(state.collections);
+        updateCollections(state.filteredStatus);
         IDB_SAVE(payload);
       }
     },

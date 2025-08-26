@@ -96,9 +96,7 @@ export async function IDB_BULK_SAVE(onboardings) {
 export async function IDB_UPDATE(onboarding) {
   return withStore("readwrite", (store) => {
     return new Promise((resolve, reject) => {
-      // kunin muna yung lumang data base sa key (dito gamit ko _id, adjust kung iba key mo)
       const getReq = store.get(onboarding._id);
-
       getReq.onsuccess = () => {
         const oldData = getReq.result || {};
         const newData = { ...oldData, ...onboarding };

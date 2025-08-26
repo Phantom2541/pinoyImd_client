@@ -1,5 +1,5 @@
 // menusIndexedDB.js
-const DB_NAME = "Menus";
+const DB_NAME = "Preferences";
 
 // Generate store name based on user & branch
 const getStoreName = () => {
@@ -7,7 +7,7 @@ const getStoreName = () => {
     localStorage.getItem("activePlatform") || "{}"
   );
   const { branch = {} } = activePlatform;
-  return `menus-${branch._id || "nobranch"}`;
+  return `preferences-${branch._id || "nobranch"}`;
 };
 
 // Open DB and ensure store exists

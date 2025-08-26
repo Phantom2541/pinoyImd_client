@@ -5,10 +5,12 @@ import {
   Applicants,
   Tieups,
 } from "../../../../pages/platforms/manager/index.js";
+
 import {
   Services,
   Menus,
 } from "../../../../pages/platforms/accounting/index.js";
+
 import UserManual from "../../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../../pages/platforms/manager/purchases/request/index.jsx";
 import Banners from "../../../../pages/platforms/manager/settings/banner/index.jsx";

@@ -33,11 +33,10 @@ export default function Body() {
   useEffect(() => {
     setTieups(filtered);
   }, [filtered, isSuccess, closeModal]);
-  console.log("filtered", filtered);
-  console.log("bodycollections", collections);
 
   //Trigger for update
   const handleDelete = (item) => {
+    console.log("item", item);
     Swal.fire({
       title: `Are you sure to remove  ${String(
         properFullname(item?.user?.fullName, true)
@@ -109,6 +108,7 @@ export default function Body() {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
+          console.log("item", item);
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>

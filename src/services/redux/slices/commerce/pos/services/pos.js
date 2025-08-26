@@ -308,6 +308,7 @@ export const reduxSlice = createSlice({
 
         if (fakeDB) {
           //this is realtime send it to the onboarding but not in sender side
+          console.log("sendddd onboarding");
           socket.emit("send_onboard", dealForOnboard);
         }
         //same scenario in onboardings

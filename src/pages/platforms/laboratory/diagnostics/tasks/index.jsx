@@ -11,23 +11,36 @@ import TableLoading from "../../../../../components/tableLoading";
  * For refrences to the following deals
  */
 import {
-  HEADS,
+  HEADS as BROWSE_HEADS,
   SetHEADS,
   SetByGroup,
   SetByStatus,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
-  BROWSE,
+  BROWSE as BROWSE_PREFERENCES,
   SetPREFERENCES,
   RESET as PREFRESET,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 import {
-  BROWSE as PHYSICIANS,
+  IDB_BROWSE as IDB_BROWSE_PREFERENCES,
+  IDB_BULK_SAVE as IDB_SAVE_PEREFERENCES,
+} from "../../../../../services/indexDB/diagnostics/laboratory/preferences";
+import {
+  IDB_BROWSE as IDB_BROWSE_HEADS,
+  IDB_BULK_SAVE as IDB_SAVE_HEADS,
+} from "../../../../../services/indexDB/assets/persons/heads";
+import {
+  IDB_BROWSE as IDB_BROWSE_PHYSICIANS,
+  IDB_BULK_SAVE as IDB_SAVE_PHYSICIANS,
+} from "../../../../../services/indexDB/assets/persons/physicians";
+import {
+  BROWSE as BROWSE_PHYSICIANS,
   RESET as PHYRESET,
   SetPHYSICIANS,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
 import Table from "./table";
+import { Tracker } from "../../../../../services/utilities";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -43,59 +56,42 @@ export default function Tasks() {
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  // references
+
   useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      const branchId = activePlatform.branchId;
+    const trackers = [
+      {
+        trackerKey: "preference",
+        idb: { BROWSE: IDB_BROWSE_PREFERENCES, SAVE: IDB_SAVE_PEREFERENCES },
+        redux: { BROWSE: BROWSE_PREFERENCES, SetCOLLECTIONS: SetPREFERENCES },
+      },
+      {
+        trackerKey: "head",
+        idb: { BROWSE: IDB_BROWSE_HEADS, SAVE: IDB_SAVE_HEADS },
+        redux: { BROWSE: BROWSE_HEADS, SetCOLLECTIONS: SetHEADS },
+      },
+      {
+        trackerKey: "physician",
+        idb: { BROWSE: IDB_BROWSE_PHYSICIANS, SAVE: IDB_SAVE_PHYSICIANS },
+        redux: { BROWSE: BROWSE_PHYSICIANS, SetCOLLECTIONS: SetPHYSICIANS },
+      },
+    ];
 
-      const prefData = localStorage.getItem(`preferences`);
-      const headsData = localStorage.getItem(`heads-${branchId}`);
-      const physicians = localStorage.getItem(`physicians-${branchId}`);
-
-      if (prefData) {
-        dispatch(SetPREFERENCES(JSON.parse(prefData)));
-      } else if (token && activePlatform?.branchId) {
-        dispatch(
-          BROWSE({
+    const init = async () => {
+      for (const t of trackers) {
+        await Tracker.initialize({
+          config: {
             token,
             branchId: activePlatform.branchId,
-          })
-        );
-      }
-
-      if (headsData) {
-        dispatch(SetHEADS(JSON.parse(headsData)));
-      } else {
-        dispatch(HEADS({ token, branchId })).then((res) => {
-          if (res?.payload) {
-            localStorage.setItem(
-              `heads-${branchId}`,
-              JSON.stringify(res.payload?.payload)
-            );
-          }
+            trackerKey: t.trackerKey,
+          },
+          idb: t.idb,
+          redux: t.redux,
         });
       }
+    };
 
-      if (physicians) {
-        dispatch(SetPHYSICIANS(JSON.parse(physicians)));
-      } else {
-        dispatch(PHYSICIANS({ token, branchId })).then((res) => {
-          if (res?.payload) {
-            localStorage.setItem(
-              `physicians-${branchId}`,
-              JSON.stringify(res.payload?.payload)
-            );
-          }
-        });
-      }
-
-      return () => {
-        dispatch(PREFRESET());
-        dispatch(PHYRESET());
-      };
-    }
-  }, [token, dispatch, activePlatform]);
-
+    init();
+  }, [token, activePlatform]);
   useEffect(() => {
     dispatch(SetByGroup("all"));
     dispatch(SetByStatus("all"));

@@ -54,7 +54,6 @@ export default function Modal() {
 
   const buildData = () => {
     const { fname, mname, lname } = splitFullName(form.fullName || "");
-    console.log("form", form);
 
     if (user._id) {
       // Registered physician

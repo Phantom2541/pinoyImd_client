@@ -1,5 +1,5 @@
 // menusIndexedDB.js
-const DB_NAME = "Menus";
+const DB_NAME = "Heads";
 
 // Generate store name based on user & branch
 const getStoreName = () => {
@@ -7,7 +7,7 @@ const getStoreName = () => {
     localStorage.getItem("activePlatform") || "{}"
   );
   const { branch = {} } = activePlatform;
-  return `menus-${branch._id || "nobranch"}`;
+  return `Heads-${branch._id || "nobranch"}`;
 };
 
 // Open DB and ensure store exists
@@ -69,19 +69,34 @@ async function withStore(mode, callback) {
   });
 }
 
-export async function IDB_BULK_SAVE(menus) {
+export async function IDB_BULK_SAVE(menus = []) {
+  if (menus.length === 0) return;
   return withStore("readwrite", async (store) => {
     for (const menu of menus) {
       await new Promise((resolve, reject) => {
         const getReq = store.get(menu._id);
+
         getReq.onsuccess = () => {
           const existing = getReq.result;
-          const updated = existing ? { ...existing, ...menu } : menu;
 
+          if (existing && menu.deletedAt) {
+            const delReq = store.delete(menu._id);
+            delReq.onsuccess = () => resolve();
+            delReq.onerror = () => reject(delReq.error);
+            return;
+          }
+
+          if (!existing && menu.deletedAt) {
+            resolve();
+            return;
+          }
+
+          const updated = existing ? { ...existing, ...menu } : menu;
           const putReq = store.put(updated);
           putReq.onsuccess = () => resolve();
           putReq.onerror = () => reject(putReq.error);
         };
+
         getReq.onerror = () => reject(getReq.error);
       });
     }

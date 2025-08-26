@@ -49,11 +49,11 @@ async function withStore(mode, callback) {
 
 // Save or update a single object
 export async function IDB_SAVE(task) {
-  if (!task) return;
+  if (!task?.branch) return;
   return withStore("readwrite", (store) => {
     return new Promise((resolve, reject) => {
       // check if object exists
-      const getReq = store.get(task?._id);
+      const getReq = store.get(task?.branch);
       getReq.onsuccess = () => {
         const existing = getReq.result;
         const updated = existing ? { ...existing, ...task } : task;

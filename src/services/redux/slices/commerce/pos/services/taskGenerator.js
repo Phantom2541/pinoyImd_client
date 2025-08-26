@@ -184,14 +184,13 @@ export const reduxSlice = createSlice({
     },
 
     InsertRealtimeOnboard: (state, { payload }) => {
-      const { department, ...rest } = payload;
+      const { department, cart: baseCart = [], ...rest } = payload;
       const onboarding = {
         ...rest,
-        cart: rest?.cart?.filter(({ packages }) =>
+        cart: baseCart?.filter(({ packages }) =>
           Services.filterByDepartment(packages, department)
         ),
       };
-
       //this reducer is for received realtime onboard and set into the filtered and collections
       if (
         fetchTracker.hasLoaded("onboardings") &&
@@ -204,18 +203,20 @@ export const reduxSlice = createSlice({
     },
 
     UpdateRealtimeOnboard: (state, { payload }) => {
-      const { department, ...rest } = payload;
+      const { department, cart: baseCart = [], ...rest } = payload;
+
       const onboarding = {
         ...rest,
-        cart: rest?.cart?.filter(({ packages }) =>
+        cart: baseCart?.filter(({ packages }) =>
           Services.filterByDepartment(packages, department)
         ),
       };
 
       if (
         fetchTracker.hasLoaded("onboardings") &&
-        onboarding?.cart?.length > 0
+        (baseCart.length === 0 || onboarding?.cart?.length > 0)
       ) {
+        console.log("update onboarding");
         const updateCollection = (collections) => {
           const index = collections.findIndex(
             (item) => item._id === payload._id
