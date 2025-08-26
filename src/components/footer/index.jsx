@@ -1,6 +1,5 @@
 import { MDBIcon } from "mdbreact";
 import "./style.css";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 export default function Copyrights({
@@ -12,8 +11,8 @@ export default function Copyrights({
   xLink = "",
 }) {
   const [company, setCompany] = useState({});
-  const { media = {} } = company,
-    { fb, ig, li, x } = media;
+  const { media = {} } = company || {},
+    { fb, ig, li, x } = media || {};
 
   useEffect(() => {
     setCompany(JSON.parse(localStorage.getItem("patronCompany")));

@@ -82,7 +82,7 @@ export default function Search() {
   const handleChange = (_search) => {
     if (!_search) {
       dispatch(SetByGroup(byGroup));
-      return dispatch(SetByStatus(byStatus));
+      return dispatch(SetByStatus({ status: byStatus }));
     }
     if (!inputStartTimeRef.current) {
       inputStartTimeRef.current = currentTime;

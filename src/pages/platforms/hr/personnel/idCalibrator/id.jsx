@@ -1,6 +1,8 @@
+import React, { useState, useRef } from "react";
 import { MDBIcon } from "mdbreact";
-import React, { useRef } from "react";
 import "./style.css";
+import { fakeEMP } from "./fakeDB";
+import { FontWeights } from "./toolkit/fontStyle";
 
 export default function ID({
   frontImage,
@@ -10,148 +12,205 @@ export default function ID({
   layout,
   placedValues,
   setPlacedValues,
-  draggedValue,
-  setDraggedValue,
   floatingValue,
   setFloatingValue,
   cursorPos,
   setCursorPos,
+  setSelectedSide,
+  selectedSide,
+  setSelectedValue,
+  selectedValue,
+  showAllValues,
 }) {
-  const clickRef = useRef(false); // NEW: tracks if a drag occurred
+  // const [draggingIndex, setDraggingIndex] = useState(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const containerRef = useRef(null);
+  const [dragging, setDragging] = useState(null);
 
-  // ------------------- Drag & Drop -------------------
-  const handleDrop = (e, target) => {
-    e.preventDefault();
-    const value =
-      e.dataTransfer.getData("text/plain") || draggedValue || floatingValue;
-    if (!value) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    setPlacedValues([...placedValues, { value, x, y, target }]);
-    setDraggedValue(null);
-    setFloatingValue(null);
-    document.body.style.cursor = "auto";
+  const valueToKeyMap = {
+    [fakeEMP.front.emp]: "FullName",
+    [fakeEMP.front.img]: "Profile",
+    [fakeEMP.front.position]: "position",
+    [fakeEMP.front.department]: "department",
+    [fakeEMP.back.signature]: "signature",
+    [fakeEMP.back.dob]: "birthday",
+    [fakeEMP.back.address]: "address",
+    [fakeEMP.back.guardian]: "guardian",
+    [fakeEMP.back.pn]: "Phone number",
   };
 
-  const handleDragOver = (e) => e.preventDefault();
+  const defaultTextStyle = {
+    color: "black",
+    fontSize: "16px",
+    fontFamily: "Arial, sans-serif",
+    letterSpacing: "0",
+    FontWeights: "regular",
+  };
 
-  // ------------------- Click & Follow Cursor -------------------
+  const defaultImageStyle = {
+    width: "100px",
+    height: "100px",
+    borderRadius: 0,
+    opacity: 100,
+  };
+
+  // ------------------- Click & Place -------------------
   const handleClickOnImage = (target, e) => {
-    // Ignore clicks on already placed images or after a drag
-    if (
-      e.target.closest(".id-calibrator-placed-value") ||
-      !floatingValue ||
-      !clickRef.current
-    )
+    if (!floatingValue) {
+      setSelectedValue(null);
       return;
+    }
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setPlacedValues([...placedValues, { value: floatingValue, x, y, target }]);
+    const isImage =
+      typeof floatingValue === "string" &&
+      floatingValue.match(/\.(jpeg|jpg|gif|png|svg)$/i);
+
+    const newPlaced = {
+      id: Date.now(),
+      key: valueToKeyMap[floatingValue] || floatingValue,
+      value: floatingValue,
+      x,
+      y,
+      target,
+      style: isImage ? { ...defaultImageStyle } : { ...defaultTextStyle }, // 👈 default styles here
+    };
+
+    setPlacedValues([...placedValues, newPlaced]);
+    setSelectedValue({ ...newPlaced, index: placedValues.length, target });
     setFloatingValue(null);
     document.body.style.cursor = "auto";
   };
 
   const handleMouseMove = (e) => {
-    if (floatingValue) setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 });
-  };
+    if (floatingValue) {
+      setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 });
+    }
 
-  // ------------------- Drag Helper -------------------
-  const makeDraggable = (index) => (e) => {
-    e.stopPropagation();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const orig = placedValues[index];
-
-    clickRef.current = true; // assume click until movement detected
-
-    const handleMouseMove = (ev) => {
-      const dx = ev.clientX - startX;
-      const dy = ev.clientY - startY;
-
-      // if moved more than 3px, consider a drag
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) clickRef.current = false;
+    if (dragging) {
+      const { rect } = dragging;
+      const x = e.clientX - rect.left - dragOffset.x;
+      const y = e.clientY - rect.top - dragOffset.y;
 
       setPlacedValues((prev) =>
-        prev.map((item, idx) =>
-          idx === index ? { ...item, x: orig.x + dx, y: orig.y + dy } : item
+        prev.map((p, i) =>
+          i === dragging.index && p.target === dragging.target
+            ? { ...p, x, y }
+            : p
         )
       );
-    };
 
-    const handleMouseUp = () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
+      // 🔹 keep selectedValue updated in real-time
+      setSelectedValue((prev) =>
+        prev && prev.index === dragging.index && prev.target === dragging.target
+          ? { ...prev, x, y }
+          : prev
+      );
+    }
+  };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+  const handleMouseUp = () => {
+    setDragging(null);
   };
 
   // ------------------- Helper Component -------------------
   const PlacedValues = ({ target }) =>
-    placedValues
-      .filter((p) => p.target === target)
-      .map((p, i) => {
-        const handleMouseDown = (e) => makeDraggable(i, p)(e);
-        const handleRemove = () => {
-          setPlacedValues((prev) => prev.filter((_, idx) => idx !== i));
-        };
+    placedValues.map((p, i) => {
+      if (p.target !== target) return null; // filter dito, pero retain original index i
 
-        const isImage =
-          typeof p.value === "string" &&
-          p.value.match(/\.(jpeg|jpg|gif|png|svg)$/i);
+      const handleRemove = () => {
+        setPlacedValues((prev) => prev.filter((p2) => p2.id !== p.id));
+        if (selectedValue?.id === p.id) {
+          setSelectedValue(null);
+        }
+      };
 
-        return (
-          <div
-            key={i}
-            onMouseDown={handleMouseDown}
-            className="id-calibrator-placed-value"
-            style={{
-              top: p.y,
-              left: p.x,
-              cursor: "move",
-              position: "absolute",
-              userSelect: "none",
+      const isImage =
+        typeof p.value === "string" &&
+        p.value.match(/\.(jpeg|jpg|gif|png|svg)$/i);
+
+      const handleMouseDown = (e) => {
+        // ❌ check if click is on remove button
+        if (e.target.closest(".id-calibrator-detail-remove")) return;
+        e.stopPropagation();
+        const rect = e.currentTarget.parentElement.getBoundingClientRect();
+        // 👆 parentElement = yung IDPreview wrapper
+
+        setDragging({ index: i, target, rect }); // store rect kasama sa dragging
+        setSelectedValue({ ...p, index: i, target });
+        setDragOffset({
+          x: e.clientX - rect.left - p.x,
+          y: e.clientY - rect.top - p.y,
+        });
+      };
+
+      return (
+        <div
+          key={p.id}
+          className={`id-calibrator-placed-value ${
+            selectedValue?.index === i && selectedValue?.target === target
+              ? "selected"
+              : ""
+          } ${showAllValues ? "highlight" : ""}`}
+          style={{
+            top: p.y,
+            left: p.x,
+            position: "absolute",
+            userSelect: "none",
+            cursor: "grab",
+            ...p.style,
+          }}
+          onMouseDown={handleMouseDown}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {isImage ? (
+            <img
+              src={p.value}
+              alt="placed"
+              draggable={false}
+              style={{
+                ...p.style,
+
+                objectFit: "fill",
+                maxHeight: "200px",
+                maxWidth: "200px",
+              }}
+            />
+          ) : (
+            <span
+              className={`id-calibrator-placed-value-text ${
+                showAllValues ? "highlight" : ""
+              }`}
+            >
+              {p.value}
+            </span>
+          )}
+
+          <span
+            className="id-calibrator-detail-remove"
+            onClick={(e) => {
+              e.stopPropagation();
+              setPlacedValues((prev) =>
+                prev.filter((item) => item.id !== p.id)
+              );
+              if (selectedValue?.id === p.id) {
+                setSelectedValue(null);
+              }
             }}
+            style={{ marginLeft: "4px", cursor: "pointer" }}
           >
-            {isImage ? (
-              <img
-                src={p.value}
-                alt="placed"
-                style={{ maxWidth: 50, maxHeight: 50 }}
-              />
-            ) : (
-              <>
-                {p.value}
-                <span
-                  className="id-calibrator-detail-remove"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemove();
-                  }}
-                  style={{ marginLeft: "4px", cursor: "pointer" }}
-                >
-                  <MDBIcon icon="times" />
-                </span>
-              </>
-            )}
-          </div>
-        );
-      });
+            <MDBIcon icon="times" />
+          </span>
+        </div>
+      );
+    });
 
   const IDPreview = ({ image, target, handleChange }) => (
     <div
-      className={`id-calibrator-preview ${
-        layout === "Portrait" ? "portrait" : "landscape"
-      }`}
-      onDrop={(e) => handleDrop(e, target)}
-      onDragOver={handleDragOver}
+      className={`id-calibrator-preview ${layout || "landscape"}`}
       onClick={(e) => handleClickOnImage(target, e)}
       style={{ position: "relative" }}
     >
@@ -169,10 +228,13 @@ export default function ID({
 
       {image && (
         <img
-          className="id-calibrator-preview-image"
+          className={`id-calibrator-preview-image ${
+            selectedSide === target ? "active" : ""
+          }`}
           src={image}
           alt={`${target} ID Preview`}
           draggable={false}
+          onClick={() => setSelectedSide(target)}
         />
       )}
       <PlacedValues target={target} />
@@ -186,7 +248,17 @@ export default function ID({
   );
 
   return (
-    <div className="id-calibrator-container" onMouseMove={handleMouseMove}>
+    <div
+      className="id-calibrator-container"
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          setSelectedValue(null);
+        }
+      }}
+    >
       <div className="id-calibrator-preview-wrapper">
         <IDPreview
           image={frontImage}
@@ -200,7 +272,7 @@ export default function ID({
         />
       </div>
 
-      {/* Floating draggable value */}
+      {/* Floating value that follows cursor */}
       {floatingValue && (
         <div
           style={{

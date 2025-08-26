@@ -6,19 +6,46 @@ import axios from "axios";
  * @param {object} data - Patient information to send to Node (pn, patientName, test, result, unit, createdAt).
  * @returns {Promise<{ success: boolean, payload: object }>} - Result from middleware.
  */
-const sendToA15 = async (data, token) => {
-  await axios
-    .post(" https://9919ae10167c.ngrok-free.app/receive-task", data, {
+
+const sendToA15 = async (data, domain) => {
+  try {
+    // Gumawa ng local axios instance na walang baseURL
+    const instance = axios.create();
+
+    const url = domain.endsWith("/")
+      ? `${domain}receive-task`
+      : `${domain}/receive-task`;
+
+    const response = await instance.post(url, data, {
       headers: {
-        Authorization: `QTracy ${token}`,
+        Authorization: "QTracy",
+        "Content-Type": "application/json",
       },
-    })
-    .then(({ data }) => ({ success: true, payload: data }))
-    .catch((err) => {
-      const message =
-        err?.response?.data?.error || err.message || "Unknown error";
-      throw new Error(`Middleware Error: ${message}`);
     });
+
+    return { success: true, payload: response.data };
+  } catch (err) {
+    const message =
+      err?.response?.data?.error || err.message || "Unknown error";
+    throw new Error(`Middleware Error: ${message}`);
+  }
 };
 
 export default sendToA15;
+
+// const sendToA15 = async (data, domain) => {
+//   await axios
+//     .post(`${domain}/receive-task`, data, {
+//       headers: {
+//         Authorization: `QTracy`,
+//       },
+//     })
+//     .then(({ data }) => ({ success: true, payload: data }))
+//     .catch((err) => {
+//       const message =
+//         err?.response?.data?.error || err.message || "Unknown error";
+//       throw new Error(`Middleware Error: ${message}`);
+//     });
+// };
+
+// export default sendToA15;

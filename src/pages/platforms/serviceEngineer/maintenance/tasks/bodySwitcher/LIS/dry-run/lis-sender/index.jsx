@@ -36,6 +36,7 @@ export default function LIS_SENDER() {
     } = useSelector(({ validator }) => validator),
     [form, setForm] = useState(_form),
     [cluster, setCluster] = useState([]),
+    [domain, setDomain] = useState(""),
     dispatch = useDispatch();
 
   const { section, task, customerId } = work || {};
@@ -54,18 +55,19 @@ export default function LIS_SENDER() {
         section,
         cluster,
         Barcode.getValue(section, customerId, task.pn),
-        form.machine
+        form.machine,
+        domain
       );
-      dispatch(
-        WORK_AREA({
-          baseURL: `/diagnostics/laboratory/result/${section.toLowerCase()}`,
-          token,
-          data: {
-            _id: task._id,
-            workarea: { A15: { t: cluster, ...form } },
-          },
-        })
-      ).then(() => toggle());
+      // dispatch(
+      //   WORK_AREA({
+      //     baseURL: `/diagnostics/laboratory/result/${section.toLowerCase()}`,
+      //     token,
+      //     data: {
+      //       _id: task._id,
+      //       workarea: { A15: { t: cluster, ...form } },
+      //     },
+      //   })
+      // ).then(() => toggle());
     } catch (err) {
       console.error("❌ Error sending to machine:", err);
     }
@@ -142,6 +144,13 @@ export default function LIS_SENDER() {
               </div>
             </div>
           </div>
+          <MDBInput
+            type="text"
+            label="Domain"
+            value={domain}
+            onChange={({ target }) => setDomain(target.value)}
+          />
+
           <MDBBtn
             rounded
             color="primary"
