@@ -31,6 +31,9 @@ import {
   Admission,
   Cases,
 } from "../../../../pages/platforms/frontdesk";
+import RequestForm from "../../../../pages/platforms/frontdesk/requestForm";
+  
+
 
 import {
   Tablestemplate,
@@ -485,6 +488,12 @@ const frontdesk = [
     icon: "tachometer-alt",
     path: "/admission",
     component: Admission,
+  },
+  {
+    name: "RequestForm",
+    icon: "tachometer-alt",
+    path: "/requestform",
+    component: RequestForm,
   },
 ];
 
