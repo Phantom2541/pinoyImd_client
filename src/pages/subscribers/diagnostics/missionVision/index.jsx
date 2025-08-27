@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./style.css";
+import LOGO from "./../../../../assets/aplhamed.png";
 import MISSION from "./../../../../assets/mission.jpg";
 import VISION from "./../../../../assets/vision.jpg";
 import VALUE from "./../../../../assets/value.jpg";
@@ -27,7 +28,7 @@ export default function MissionVision() {
           </div>
           <div>
             <h1>Our Mission</h1>
-            <span>{company.ms}</span>
+            <span>{company.ms || ""}</span>
           </div>
           <div>
             <img src={VISION} alt="Vision" />
@@ -39,9 +40,9 @@ export default function MissionVision() {
           <div>
             <h1>Our Values</h1>
             <ul>
-              {company?.vl?.slice(0, 2).map((value, index) => (
-                <li key={index}>{value}</li>
-              ))}
+              {company?.vl
+                ?.slice(0, 2)
+                .map((value, index) => <li key={index}>{value}</li> || "")}
             </ul>
           </div>
           <div>
@@ -57,9 +58,9 @@ export default function MissionVision() {
         <div className="subscriber-mission-vision-bottom">
           <div>
             <ul>
-              {company?.vl?.slice(3, 5).map((value, index) => (
-                <li key={index}>{value}</li>
-              ))}
+              {company?.vl
+                ?.slice(3, 5)
+                .map((value, index) => <li key={index}>{value}</li> || "")}
             </ul>
           </div>
           <div>
@@ -67,7 +68,7 @@ export default function MissionVision() {
           </div>
           <div>
             <h1>Our Vision</h1>
-            <span>{company.vs}</span>
+            <span>{company.vs || ""}</span>
           </div>
         </div>
       </div>
