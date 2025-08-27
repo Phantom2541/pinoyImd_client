@@ -297,7 +297,6 @@
     "template": 2,
     "purpose": "Evaluates cardiovascular risk by comparing LDL (bad cholesterol) and HDL (good cholesterol) levels."
   },
-
   {
     "id": 20,
     "name": "Creatinine",
