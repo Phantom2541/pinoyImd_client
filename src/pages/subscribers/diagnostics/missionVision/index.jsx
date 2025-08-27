@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./style.css";
-import LOGO from "./../../../../assets/aplhamed.png";
 import MISSION from "./../../../../assets/mission.jpg";
 import VISION from "./../../../../assets/vision.jpg";
 import VALUE from "./../../../../assets/value.jpg";
@@ -17,7 +16,6 @@ export default function MissionVision() {
   }, []);
 
   const logoUrl = `${Cloudinary.getEndpoint()}/companies/${company?.name}/logo`;
-  console.log("company", company);
 
   return (
     <div className="subscriber-mission-vision-section mt-5">
@@ -48,7 +46,7 @@ export default function MissionVision() {
           </div>
           <div>
             <img src={logoUrl} alt="Company Logo" />
-            <span>{company?.name || "AlphaMed"}</span>
+            <span>{company?.name || ""}</span>
           </div>
           <div>
             <h1>Committed to Compassionate Care</h1>
