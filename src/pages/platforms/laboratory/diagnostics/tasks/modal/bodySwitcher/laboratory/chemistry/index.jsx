@@ -16,7 +16,6 @@ export default function Chemistry() {
     const timer = setTimeout(() => {
       const first = inputRefs.current[0];
       if (first && first.offsetParent !== null) {
-        console.log("Focusing delayed input");
         first.focus();
       }
     }, 1000); // try 1s delay temporarily
@@ -26,8 +25,8 @@ export default function Chemistry() {
 
   const handleChange = (target) => {
     const { name, value } = target,
-      _name = Number(name),
-      _value = Number(value);
+      _name = Number(name);
+    let _value = value;
 
     if (_name !== 16)
       return dispatch(
@@ -45,7 +44,6 @@ export default function Chemistry() {
       ldl = chole - (tg / 5 + _value),
       vldl = tg / 5,
       chr = Number((chole / _value).toFixed(2));
-
     dispatch(
       SetTASK({
         form: task?.form,
@@ -109,6 +107,7 @@ export default function Chemistry() {
               <td className="py-1">
                 <input
                   type="number"
+                  step="any" // ✅ allow decimals
                   ref={(el) => (inputRefs.current[index] = el)}
                   style={{
                     // color: referenceColor(Number(value), critical, alert, warn),

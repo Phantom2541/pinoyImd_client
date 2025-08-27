@@ -1,9 +1,12 @@
 /* select design */
 .IDGenerator-setting-select-label {
-  color: #c3c3c3;
+  color: rgba(0, 0, 0, 0.8);
   text-transform: capitalize;
   font-weight: 400;
   font-size: 0.8rem;
+}
+.IDGenerator-setting-select-label.disabled {
+  color: #c3c3c3;
 }
 
 .IDGenerator-setting-select-container {
@@ -24,6 +27,10 @@
 .IDGenerator-setting-select-container.active {
   border-color: #1976d2;
   box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+}
+.IDGenerator-setting-select-container.disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 /* Placeholder o selected value */
@@ -82,7 +89,7 @@
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translate(-105%, -50%);
+  transform: translate(-105%, -40%);
   width: 100%;
   max-width: 300px;
   background-color: #fff;
@@ -92,7 +99,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
-  z-index: 10;
+  z-index: 999999;
 }
 
 .IDGenerator-setting-select-options.inputDesign {
@@ -101,6 +108,11 @@
   max-width: 120px;
   text-align: center;
   border: 1px solid #1e1e1e;
+}
+
+.IDGenerator-setting-select-options.inputDesign.weight {
+  max-width: 200px;
+  text-align: left;
 }
 
 .IDGenerator-setting-select-options.inputDesign ul {
@@ -128,6 +140,29 @@
   padding: 5px 0;
   max-height: 510px;
   overflow: auto;
+
+  /* para gumana sa Firefox din */
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+/* Chrome, Edge, Safari */
+.IDGenerator-setting-select-options ul::-webkit-scrollbar {
+  width: 4px; /* lapad ng scrollbar */
+}
+
+.IDGenerator-setting-select-options ul::-webkit-scrollbar-track {
+  background: transparent; /* background ng track */
+}
+
+.IDGenerator-setting-select-options ul::-webkit-scrollbar-thumb {
+  background-color: #aaa; /* kulay ng thumb */
+  border-radius: 20px; /* bilog effect */
+  border: 2px solid transparent; /* para may konting spacing */
+}
+
+.IDGenerator-setting-select-options ul::-webkit-scrollbar-thumb:hover {
+  background-color: #666; /* hover effect */
 }
 
 .IDGenerator-setting-select-options li {
@@ -158,6 +193,17 @@
   font-size: 0.8rem;
 }
 
+.IDGenerator-setting-input-title {
+  color: black;
+  text-transform: capitalize;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.IDGenerator-setting-input-title.disabled {
+  color: #c3c3c3;
+}
+
 .IDGenerator-setting-input-wrapper {
   display: flex;
   align-items: center;
@@ -168,6 +214,12 @@
   padding: 5px;
   border-radius: 5px;
   overflow: hidden;
+}
+
+.IDGenerator-setting-input-wrapper.disabled {
+  cursor: not-allowed !important;
+  pointer-events: all !important;
+  opacity: 0.6;
 }
 
 .IDGenerator-setting-input-wrapper:focus-within {
@@ -181,6 +233,16 @@
   color: #7a7c9e;
   font-weight: 400;
   font-size: 0.9rem;
+  cursor: ew-resize;
+  transition: color 0.3s ease;
+}
+
+.IDGenerator-setting-label:hover {
+  color: #007bff;
+}
+
+.IDGenerator-setting-label.active {
+  color: #007bff; /* active color while dragging */
 }
 
 .IDGenerator-setting-input {
@@ -204,6 +266,52 @@
   background: white;
   border: 1px solid #e5e7eb;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.IDGenerator-setting-section {
+  position: relative;
+  border: 1px solid #c3c3c3;
+  padding: 25px 15px;
+  padding-bottom: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.IDGenerator-setting-section::before {
+  content: attr(data-label);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(20px, -50%);
+  background: white;
+  color: black;
+  text-transform: capitalize;
+  font-weight: 400;
+  padding: 0 8px;
+}
+
+.IDGenerator-setting-section.disabled,
+.IDGenerator-setting-section.disabled::before {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.IDGenerator-setting-aspectRatio-button {
+  border: none;
+  font-size: 1rem;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+.IDGenerator-setting-aspectRatio-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.IDGenerator-setting-aspectRatio-button:disabled {
+  background-color: #f5f5f5;
+  color: #c3c3c3;
+  cursor: not-allowed;
 }
 
 .IDGenerator-settings-navigation {
@@ -234,14 +342,14 @@
   color: white;
 }
 
-.IDGenerator-setting-reset-button,
+.IDGenerator-setting-reset-button:hover,
 .IDGenerator-settings-save button:hover,
 .IDGenerator-settings-navigation button:hover:first-child,
 .IDGenerator-settings-navigation button:hover:nth-child(2) {
   filter: brightness(1.1);
 }
 
-.IDGenerator-setting-reset-button,
+.IDGenerator-setting-reset-button:active,
 .IDGenerator-settings-save button:active,
 .IDGenerator-settings-navigation button:active:first-child,
 .IDGenerator-settings-navigation button:active:nth-child(2) {

@@ -1,0 +1,28 @@
+.summary-scrollbar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.summary-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 255);
+  border-radius: 4px;
+}
+
+.summary-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* .summaryAnimation {
+  animation: expandHeight 0.4s ease-out forwards;
+  overflow: hidden;
+}
+
+@keyframes expandHeight {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: 100%;
+    opacity: 1;
+  }
+} */

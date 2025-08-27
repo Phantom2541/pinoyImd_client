@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBModal, MDBModalBody, MDBModalHeader, MDBAlert } from "mdbreact";
 import Patient from "./patient";

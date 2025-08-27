@@ -54,7 +54,6 @@ import {
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
 import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
-import GeneratorId from "../../../../pages/templates/generatorID";
 
 const frontdesk = [
   {
@@ -472,12 +471,6 @@ const frontdesk = [
         path: "/templates/subExpired",
         icon: "calendar-alt",
         component: SubExpired,
-      },
-      {
-        name: "Generator ID",
-        path: "/templates/generatorID",
-        icon: "calendar-alt",
-        component: GeneratorId,
       },
     ],
   },
