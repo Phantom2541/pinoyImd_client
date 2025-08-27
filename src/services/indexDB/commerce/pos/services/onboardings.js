@@ -76,8 +76,6 @@ export async function IDB_SAVE(onboarding) {
 
 // Bulk save onboardings
 export async function IDB_BULK_SAVE(onboardings) {
-  if (onboardings.length === 0) return;
-
   return withStore("readwrite", async (store) => {
     for (const onboarding of onboardings) {
       try {

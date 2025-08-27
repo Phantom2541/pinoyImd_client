@@ -78,7 +78,6 @@ export async function IDB_SAVE(deal) {
 
 // Bulk save deals
 export async function IDB_BULK_SAVE(deals) {
-  if (deals.length === 0) return;
   return withStore("readwrite", async (store) => {
     for (const deal of deals) {
       try {

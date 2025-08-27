@@ -17,16 +17,12 @@ import {
   SETHMO,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
-  INSOURCE as BROWSE_SOURCES,
+  INSOURCE,
   SETSOURCES,
+  RESET as SOURCERESET,
 } from "../../../../../../../../services/redux/slices/assets/providers";
-import {
-  IDB_BULK_SAVE as IDB_SAVE_SOURCES,
-  IDB_BROWSE as IDB_BROWSE_SOURCES,
-} from "../../../../../../../../services/indexDB/assets/insources";
 import { capitalize } from "lodash";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
-import { Tracker } from "../../../../../../../../services/utilities";
 const contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
@@ -45,7 +41,7 @@ export default function PosCard() {
     { collections } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
-    // [categorySelected, setCategorySelected] = useState(),
+    [categorySelected, setCategorySelected] = useState(),
     [categories, setCategories] = useState([]),
     [sources, setSources] = useState([]),
     [source, setSource] = useState({}),
@@ -82,33 +78,57 @@ export default function PosCard() {
   }, [category, collections]);
 
   useEffect(() => {
-    const init = async () => {
-      await Tracker.initialize({
-        config: {
-          token,
-          branchId: activePlatform.branchId,
-          trackerKey: "insource",
-          params: {
-            vendors: activePlatform.branchId,
-            status: "approved",
-          },
-        },
-        idb: { BROWSE: IDB_BROWSE_SOURCES, SAVE: IDB_SAVE_SOURCES },
-        redux: {
-          BROWSE: BROWSE_SOURCES,
-          SetCOLLECTIONS: SETSOURCES,
-        },
-      });
-    };
+    if (token && activePlatform.branchId) {
+      const branchId = activePlatform.branchId;
 
-    init();
-  }, [token, activePlatform]);
+      // Check if the source data for the specific branchId is already in localStorage
+      const storedSource = localStorage.getItem(`source_${branchId}`);
+
+      if (storedSource) {
+        // If source data is found in localStorage, use it (parse back to an object)
+        const sourceData = JSON.parse(storedSource);
+
+        // Optionally dispatch the source data to update the store
+        dispatch(SETSOURCES(sourceData));
+      } else {
+        // If no data in localStorage, make the server request
+        dispatch(
+          INSOURCE({
+            token,
+            key: {
+              vendors: activePlatform.branchId,
+              status: "approved",
+            },
+          })
+        )
+          .then(({ payload }) => {
+            // Assuming the response contains the source data in 'payload'
+            const sourceData = payload.payload;
+            // console.log("Fetching source data:", sourceData);
+
+            // Store the fetched data in localStorage for future use
+            localStorage.setItem(
+              `source_${branchId}`,
+              JSON.stringify(sourceData)
+            );
+          })
+          .catch((error) => {
+            console.error("Error fetching source data:", error);
+          });
+      }
+
+      // Cleanup function
+      return () => {
+        dispatch(SOURCERESET());
+      };
+    }
+  }, [token, dispatch, activePlatform, categorySelected]);
 
   const { _id, privilege: userPrivilege = 0 } = customer,
     didSelect = Boolean(_id);
 
   const handleCategory = (category) => {
-    // setCategorySelected(category);
+    setCategorySelected(category);
     setSource({});
     dispatch(RESET_INSOURCE());
     dispatch(SETCATEGORY(category));

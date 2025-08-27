@@ -57,6 +57,7 @@ export async function IDB_SAVE(task) {
       getReq.onsuccess = () => {
         const existing = getReq.result;
         const updated = existing ? { ...existing, ...task } : task;
+
         const putReq = store.put(updated); // add if new, update if exists
         putReq.onsuccess = () => resolve(updated);
         putReq.onerror = () => reject(putReq.error);

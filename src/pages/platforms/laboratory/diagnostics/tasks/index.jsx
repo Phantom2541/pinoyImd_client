@@ -83,7 +83,6 @@ export default function Tasks() {
             token,
             branchId: activePlatform.branchId,
             trackerKey: t.trackerKey,
-            params: { branchId: activePlatform.branchId },
           },
           idb: t.idb,
           redux: t.redux,

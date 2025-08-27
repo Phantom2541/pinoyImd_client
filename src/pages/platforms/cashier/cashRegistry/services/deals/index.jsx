@@ -9,26 +9,15 @@ import TableLoading from "../../../../../../components/tableLoading";
 import { Closing, Category, Payments } from "./summary";
 import { Daily } from "../../../../../../services/redux/slices/finance/journals/payments";
 import {
-  INSOURCE as BROWSE_SOURCES,
+  INSOURCE,
   RESET,
-  SETSOURCES,
+  SetSOURCE,
 } from "../../../../../../services/redux/slices/assets/providers.js";
-
-import {
-  IDB_BULK_SAVE as IDB_SAVE_SOURCES,
-  IDB_BROWSE as IDB_BROWSE_SOURCES,
-} from "../../../../../../services/indexDB/assets/insources";
 import { Denomination } from "../remittances/modal/index.js";
 import {
   SetPHYSICIANS,
-  BROWSE as BROWSE_PHYSICIANS,
+  BROWSE,
 } from "../../../../../../services/redux/slices/assets/persons/physicians.js";
-import {
-  IDB_BULK_SAVE as IDB_PHYSICIANS_SAVE,
-  IDB_BROWSE as IDB_BROWSE_PHYSICIANS,
-} from "../../../../../../services/indexDB/assets/persons/globalPhysicians";
-
-import { Tracker } from "../../../../../../services/utilities/index.js";
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -58,40 +47,52 @@ export default function Deals() {
           },
         })
       );
+      /**
+       * Fetch source provider from the server and store it in localStorage
+       * this data is not slow moving info
+       */
+      const branchId = activePlatform.branchId;
+      const storedSource = localStorage.getItem(`source_${branchId}`);
+
+      if (storedSource) {
+        const sourceData = JSON.parse(storedSource);
+
+        dispatch(SetSOURCE(sourceData));
+      } else {
+        dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
+          .then(({ payload }) => {
+            const sourceData = payload.payload;
+            localStorage.setItem(
+              `source_${branchId}`,
+              JSON.stringify(sourceData)
+            );
+          })
+          .catch((error) => {
+            console.error("Error fetching source data:", error);
+          });
+      }
+
+      return () => {
+        dispatch(RESET());
+      };
     }
   }, [token, dispatch, activePlatform.branchId, auth._id]);
 
-  const trackers = [
-    {
-      key: "insource",
-      idb: { BROWSE: IDB_BROWSE_SOURCES, SAVE: IDB_SAVE_SOURCES },
-      redux: { BROWSE: BROWSE_SOURCES, SetCOLLECTIONS: SETSOURCES },
-      params: { vendors: activePlatform.branchId, status: "approved" },
-    },
-    {
-      key: "physician",
-      idb: { BROWSE: IDB_BROWSE_PHYSICIANS, SAVE: IDB_PHYSICIANS_SAVE },
-      redux: { BROWSE: BROWSE_PHYSICIANS, SetCOLLECTIONS: SetPHYSICIANS },
-    },
-  ];
-
   useEffect(() => {
-    const initAll = async () => {
-      for (const t of trackers) {
-        await Tracker.initialize({
-          config: {
-            token,
-            branchId: activePlatform.branchId,
-            trackerKey: t.key,
-            ...(t.params && { params: t.params }),
-          },
-          idb: t.idb,
-          redux: t.redux,
-        });
-      }
-    };
-    initAll();
-  }, [token, activePlatform]);
+    const physiciansLocal = localStorage.getItem("physicians");
+
+    if (physiciansLocal) {
+      dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
+    } else {
+      dispatch(BROWSE({ token })).then((action) => {
+        const { payload } = action.payload;
+        if (payload) {
+          localStorage.setItem("physicians", JSON.stringify(payload));
+          dispatch(SetPHYSICIANS(payload)); // Optional: set it immediately after fetch
+        }
+      });
+    }
+  }, [token, dispatch]);
 
   return (
     <div className="d-flex" fluid>

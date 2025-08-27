@@ -12,14 +12,9 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import Denominations from "../remittances/modal/denominations";
 import {
-  BROWSE as BROWSE_PHYSICIANS,
+  BROWSE,
   SetPHYSICIANS,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
-import {
-  IDB_BULK_SAVE as IDB_PHYSICIANS_SAVE,
-  IDB_BROWSE as IDB_BROWSE_PHYSICIANS,
-} from "../../../../../../services/indexDB/assets/persons/globalPhysicians";
-import { Tracker } from "../../../../../../services/utilities";
 
 export default function Cashier() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
@@ -72,23 +67,20 @@ export default function Cashier() {
   }, [transaction, isSuccess]);
 
   useEffect(() => {
-    const init = async () => {
-      await Tracker.initialize({
-        config: {
-          token,
-          branchId: activePlatform.branchId,
-          trackerKey: "physician",
-        },
-        idb: { BROWSE: IDB_BROWSE_PHYSICIANS, SAVE: IDB_PHYSICIANS_SAVE },
-        redux: {
-          BROWSE: BROWSE_PHYSICIANS,
-          SetCOLLECTIONS: SetPHYSICIANS,
-        },
-      });
-    };
+    const physiciansLocal = localStorage.getItem("physicians");
 
-    init();
-  }, [token, activePlatform]);
+    if (physiciansLocal) {
+      dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
+    } else {
+      dispatch(BROWSE({ token })).then((action) => {
+        const { payload } = action.payload;
+        if (payload) {
+          localStorage.setItem("physicians", JSON.stringify(payload));
+          dispatch(SetPHYSICIANS(payload)); // Optional: set it immediately after fetch
+        }
+      });
+    }
+  }, [token, dispatch]);
 
   return (
     <>

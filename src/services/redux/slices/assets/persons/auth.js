@@ -288,15 +288,10 @@ export const reduxSlice = createSlice({
           access: [..._access],
           department,
         };
-
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
-        localStorage.setItem(
-          "activePlatform",
-          JSON.stringify(state.activePlatform)
-        );
       })
       .addCase(SETACTIVEPLATFORM.rejected, (state, action) => {
         const { error } = action;
@@ -385,8 +380,6 @@ export const reduxSlice = createSlice({
         state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         fetchTracker.reset();
-        console.log("runninggg reseterrrrr");
-
         indexDB.cleanOldStores();
       })
       .addCase(LOGIN.rejected, (state, action) => {

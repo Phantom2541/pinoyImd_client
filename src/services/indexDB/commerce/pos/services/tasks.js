@@ -108,8 +108,6 @@ export async function IDB_SAVE(task) {
 
 // Bulk save tasks
 export async function IDB_BULK_SAVE(tasks) {
-  if (tasks.length === 0) return;
-
   return withStore("readwrite", async (store) => {
     for (const task of tasks) {
       await new Promise((resolve, reject) => {

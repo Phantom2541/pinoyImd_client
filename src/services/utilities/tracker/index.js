@@ -6,24 +6,20 @@ import {
 } from "../../indexDB/tracker";
 
 function extractActionData(action) {
-  let current = action?.payload;
-
-  while (current && typeof current === "object" && "payload" in current) {
-    current = current.payload;
-  }
-
-  // Kung wala talagang laman, tingnan ang key na 'data'
+  const firstPayload = action?.payload;
+  if (!firstPayload) return null;
+  const lastPayload = firstPayload.payload;
   if (
-    current === undefined ||
-    (Array.isArray(current) && current.length === 0) ||
-    (current &&
-      typeof current === "object" &&
-      Object.keys(current).length === 0)
+    !lastPayload ||
+    (Array.isArray(lastPayload) && lastPayload.length === 0)
   ) {
-    return action?.payload?.data || [];
+    const fallbackKey = Object.keys(firstPayload).find(
+      (key) => key !== "payload" && firstPayload[key]
+    );
+    return fallbackKey ? firstPayload[fallbackKey] : null;
   }
 
-  return current;
+  return lastPayload;
 }
 
 const fetchDatas = async ({
@@ -38,14 +34,22 @@ const fetchDatas = async ({
     SAVE: () => {},
   },
 }) => {
-  const { params = {}, token, trackerKey } = config;
+  const { branchId, token, trackerKey } = config;
   const idbTracker = await IDB_TRACKER_BROWSE();
   const idbDatas = await idb.BROWSE();
   const mdbId = mdbTracker?.[trackerKey]?.id;
   const idbId = idbTracker?.[trackerKey]?.id;
   var shouldFetch = false;
   if (idbDatas.length === 0) shouldFetch = true;
-  else if (mdbId !== idbId) shouldFetch = true;
+  if (mdbId !== idbId) shouldFetch = true;
+  console.log("mbdId", mdbId, "idbId", idbId);
+  console.log("shouldFetch", shouldFetch);
+  console.log("not equal", mdbId !== idbId);
+
+  // const shouldFetchMenus =
+  //   ((!idbTracker.hasOwnProperty(trackerKey) || !idbTracker?._id) &&
+  //     idbDatas.length === 0) ||
+  //   mdbTracker?.[trackerKey]?.id !== idbTracker?.[trackerKey]?.id;
 
   //IF WE HAVE A DATAS IN THE INDEXDB AND WE HAVE A MDBTRACKER GET ALL MENU FROM THE LAST DATA IN THE INDEXDB AND FROM THE MDBTRACKER
   const latestIdbUpdatedAt = idbDatas?.reduce((latest, m) => {
@@ -55,13 +59,14 @@ const fetchDatas = async ({
   if (shouldFetch) {
     const idbTrackerUpdatedAt = idbTracker?.[trackerKey]?.updatedAt || "";
     const mdbTrackerUpdatedAt = mdbTracker?.[trackerKey]?.updatedAt || "";
+
     store
       .dispatch(
         redux.BROWSE({
           token,
           [config?.paramsKey || "key"]: {
+            branchId,
             isTracker: true,
-            ...params,
             ...(idbDatas?.length > 0 && idbId > -1
               ? {
                   startDate: idbTrackerUpdatedAt || mdbTrackerUpdatedAt,
@@ -75,7 +80,6 @@ const fetchDatas = async ({
         })
       )
       .then(async (action) => {
-        console.log("payload", extractActionData(action), trackerKey);
         idb.SAVE(extractActionData(action));
         const menus = await idb.BROWSE();
         store.dispatch(redux?.SetCOLLECTIONS(menus));
@@ -86,6 +90,7 @@ const fetchDatas = async ({
 
   if (mdbTracker?._id && mdbTracker[trackerKey]) {
     IDB_TRACKER_SAVE({
+      ...(idbTracker || {}),
       [trackerKey]: mdbTracker[trackerKey],
       branch: mdbTracker?.branch,
     });
@@ -105,9 +110,9 @@ const getMDB_TRACKER = async (config) => {
   );
   const mdbTracker = action?.payload?.payload || {};
 
-  // if (mdbTracker?._id) {
-  //   localStorage.setItem(`tracker-${branchId}`, JSON.stringify(mdbTracker));
-  // }
+  if (mdbTracker?._id) {
+    localStorage.setItem(`tracker-${branchId}`, JSON.stringify(mdbTracker));
+  }
 
   return mdbTracker;
 };
@@ -146,13 +151,7 @@ const Tracker = {
       BROWSE: () => {},
       SAVE: () => {},
     },
-    config = {
-      branchId: "", // this required is for query of tracker
-      token: "",
-      trackerKey: "",
-      paramsKey: "", //example value:(key,keys,params)
-      params: {}, // additional params if needed for the request
-    },
+    config = { branchId: "", token: "", trackerKey: "", paramsKey: "" },
   }) => {
     const mdbTracker = await getMDB_TRACKER(config);
     await fetchDatas({
