@@ -27,7 +27,7 @@ export default function PE({ task, setTask }) {
     // Get values
     const chole = packages["14"], // Total Cholesterol
       tg = packages["15"], // Triglycerides
-      hdl = _value; // HDL Cholesterol (input)
+      hdl = Number(_value.toFixed(1)); // HDL Cholesterol (input)
 
     // Compute
     const vldl = tg / 5;
@@ -43,7 +43,7 @@ export default function PE({ task, setTask }) {
         17: ldl,
         18: vldl,
         19: chr,
-        20: lhr,
+        0: lhr,
       },
     });
   };
