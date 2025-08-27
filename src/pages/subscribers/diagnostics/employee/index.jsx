@@ -5,6 +5,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { Cloudinary, properFullname } from "../../../../services/utilities";
 import { BROWSE } from "../../../../services/redux/slices/assets/branches";
 import { orderBy } from "lodash";
+import Swal from "sweetalert2";
+
+// ✅ Reusable SocialLink component
+function SocialLink({ url, icon, label }) {
+  const handleClick = (e) => {
+    if (!url) {
+      e.preventDefault();
+      Swal.fire("Oops!", `${label} is not linked.`, "warning");
+    }
+  };
+
+  return (
+    <a href={url || "#"} className="pioneerAvatarLink" onClick={handleClick}>
+      <MDBIcon fab icon={icon} />
+    </a>
+  );
+}
 
 export default function Employees({ match }) {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
@@ -41,14 +58,12 @@ export default function Employees({ match }) {
     if (stored) {
       const parsed = JSON.parse(stored);
 
-      // Use parsed._id directly (not state, which updates async)
       dispatch(
         BROWSE({
           key: { companyId: parsed._id },
         })
       );
     }
-    // empty deps → runs once only on mount
   }, [dispatch]);
 
   const activeBranches = (filtered || []).filter(
@@ -61,7 +76,6 @@ export default function Employees({ match }) {
     ["asc", "asc"]
   );
 
-  // Flatten all personnels across active + sorted branches
   const filteredPersonnels = sortedData.flatMap((branch) => {
     const { personnels = [] } = branch;
     return personnels
@@ -161,7 +175,7 @@ export default function Employees({ match }) {
         >
           {displayedPersonnels.map((person, index) => {
             const { user } = person || {};
-            const { fullName, email } = user || {};
+            const { fullName, email, gm, fb, x } = user || {};
             const logoUrl = `${Cloudinary.getEndpoint()}/users/${encodeURIComponent(
               email
             )}/profile`;
@@ -172,7 +186,7 @@ export default function Employees({ match }) {
                   <img
                     src={logoUrl}
                     onError={(e) => {
-                      e.target.onerror = null; // prevent infinite loop
+                      e.target.onerror = null;
                       e.target.src = DEFAULT;
                     }}
                     alt={email}
@@ -182,15 +196,9 @@ export default function Employees({ match }) {
                   <span>{properFullname(fullName)}</span>
                 </div>
                 <div className="subscriber-pioneers-footer">
-                  <a href="google.com" className="pioneerAvatarLink">
-                    <MDBIcon fab icon="google" />
-                  </a>
-                  <a href="facebook.com" className="pioneerAvatarLink">
-                    <MDBIcon fab icon="facebook-f" />
-                  </a>
-                  <a href="twitter.com" className="pioneerAvatarLink">
-                    <MDBIcon fab icon="twitter" />
-                  </a>
+                  <SocialLink url={gm} icon="google" label="Gmail" />
+                  <SocialLink url={fb} icon="facebook-f" label="Facebook" />
+                  <SocialLink url={x} icon="twitter" label="X(Twitter)" />
                 </div>
               </div>
             );
