@@ -17,28 +17,33 @@ export default function PE({ task, setTask }) {
   const handleChange = (e) => {
     const { name, value } = e.target,
       _name = Number(name),
-      _value = Number(value);
+      _value = Number(value); // HDL input
 
     if (_name !== 16)
       return setTask({
         ...task,
         packages: { ...packages, [name]: _value },
       });
+    // Get values
+    const chole = packages["14"], // Total Cholesterol
+      tg = packages["15"], // Triglycerides
+      hdl = _value; // HDL Cholesterol (input)
 
-    const chole = packages["14"],
-      tg = packages["15"],
-      ldl = chole - (tg / 5 + _value),
-      vldl = tg / 5,
-      chr = Number((chole / _value).toFixed(2));
+    // Compute
+    const vldl = tg / 5;
+    const ldl = chole - hdl - vldl;
+    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
+    const lhr = Number((ldl / hdl).toFixed(2)); // LDL/HDL ratio
 
     setTask({
       ...task,
       packages: {
         ...packages,
-        16: _value,
+        16: hdl,
         17: ldl,
         18: vldl,
         19: chr,
+        20: lhr,
       },
     });
   };

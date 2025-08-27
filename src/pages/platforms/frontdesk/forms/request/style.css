@@ -1,0 +1,26 @@
+.request-form {
+  width: 105mm;
+  height: 148.5mm;
+  border: 1px solid black;
+  padding: 5mm;
+  font-size: 11px;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 4mm;
+}
+
+.field,
+.section {
+  margin-bottom: 3mm;
+}
+
+.footer {
+  position: absolute;
+  bottom: 10mm;
+  width: 100%;
+  text-align: left;
+  font-size: 10px;
+}
