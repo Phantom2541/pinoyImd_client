@@ -3,6 +3,10 @@ import ID from "./id";
 import Setting from "./setting";
 import { useDispatch, useSelector } from "react-redux";
 import { CTBROWSE } from "../../../../../services/redux/slices/assets/branches";
+import {
+  BROWSE,
+  RESET,
+} from "../../../../../services/redux/slices/assets/persons/personnels";
 import { fakeEMP as fakeEMPData } from "./fakeDB";
 import html2canvas from "html2canvas";
 
@@ -20,12 +24,30 @@ export default function IDGenerator() {
 
   const { activePlatform, token } = useSelector(({ auth }) => auth);
   const { ct: branch } = useSelector(({ branches }) => branches);
+  const { filtered } = useSelector(({ personnels }) => personnels);
   const dispatch = useDispatch();
 
   // Fetch branch data
   useEffect(() => {
     dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
   }, [dispatch, token, activePlatform.branchId]);
+
+  useEffect(() => {
+    if (token && activePlatform?.branchId)
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+    return () => dispatch(RESET());
+  }, [token, dispatch, activePlatform]);
+
+  const activeStaff = (filtered || []).filter(
+    (o) => (o.status || "").trim().toLowerCase() === "active"
+  );
+  /*************  ✨ Windsurf Command 🌟  *************/
+  const activeStaffUsers = activeStaff.map((staff) => staff.user);
+  /*******  8274a486-e40f-48fb-ab79-680d5abea3bd  *******/
+
+  console.log("Filtered personnel data:", filtered);
+  console.log("staff", activeStaff);
+  console.log("staff users", activeStaffUsers);
 
   // Setup employee data and placedValues
   useEffect(() => {
