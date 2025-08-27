@@ -30,6 +30,7 @@ import {
   Status,
   Admission,
   Cases,
+  Test,
 } from "../../../../pages/platforms/frontdesk";
 
 import {
@@ -485,6 +486,12 @@ const frontdesk = [
     icon: "tachometer-alt",
     path: "/admission",
     component: Admission,
+  },
+  {
+    name: "Test 1",
+    icon: "tachometer-alt",
+    path: "/Test",
+    // component: Test,
   },
 ];
 

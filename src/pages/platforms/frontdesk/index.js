@@ -1,3 +1,3 @@
-import { Status, Admission, Cases } from "./outSource";
+import { Status, Admission, Cases, Test } from "./outSource";
 
-export { Status, Admission, Cases };
+export { Status, Admission, Cases, Test };
