@@ -10,13 +10,23 @@ export default function MissionVision() {
   const [company, setCompany] = useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("patronCompany");
-    if (stored) {
-      setCompany(JSON.parse(stored));
+    try {
+      const stored = localStorage.getItem("patronCompany");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setCompany(parsed);
+      }
+    } catch (err) {
+      console.error("Failed to parse patronCompany from localStorage", err);
     }
   }, []);
 
-  const logoUrl = `${Cloudinary.getEndpoint()}/companies/${company?.name}/logo`;
+  const logoUrl = company?.name
+    ? `${Cloudinary.getEndpoint()}/companies/${company.name}/logo`
+    : LOGO; // fallback to default logo if no company
+
+  // Safely ensure values list is always an array
+  const values = Array.isArray(company?.vl) ? company.vl : [];
 
   return (
     <div className="subscriber-mission-vision-section mt-5">
@@ -28,7 +38,7 @@ export default function MissionVision() {
           </div>
           <div>
             <h1>Our Mission</h1>
-            <span>{company.ms || ""}</span>
+            <span>{company?.ms || "No mission provided."}</span>
           </div>
           <div>
             <img src={VISION} alt="Vision" />
@@ -40,14 +50,14 @@ export default function MissionVision() {
           <div>
             <h1>Our Values</h1>
             <ul>
-              {company?.vl
-                ?.slice(0, 2)
-                .map((value, index) => <li key={index}>{value}</li> || "")}
+              {values.slice(0, 3).map((value, index) => (
+                <li key={index}>{value || "N/A"}</li>
+              ))}
             </ul>
           </div>
           <div>
             <img src={logoUrl} alt="Company Logo" />
-            <span>{company?.name || ""}</span>
+            <span>{company?.name || "Company"}</span>
           </div>
           <div>
             <h1>Committed to Compassionate Care</h1>
@@ -58,9 +68,9 @@ export default function MissionVision() {
         <div className="subscriber-mission-vision-bottom">
           <div>
             <ul>
-              {company?.vl
-                ?.slice(3, 5)
-                .map((value, index) => <li key={index}>{value}</li> || "")}
+              {values.slice(3, 6).map((value, index) => (
+                <li key={index}>{value || "N/A"}</li>
+              ))}
             </ul>
           </div>
           <div>
@@ -68,7 +78,7 @@ export default function MissionVision() {
           </div>
           <div>
             <h1>Our Vision</h1>
-            <span>{company.vs || ""}</span>
+            <span>{company?.vs || "No vision provided."}</span>
           </div>
         </div>
       </div>
