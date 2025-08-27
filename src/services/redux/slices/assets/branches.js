@@ -46,6 +46,23 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const CTBROWSE = createAsyncThunk(
+  `${url}/ctbrowse`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/ctbrowse`, token, data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const GET_PHYSICIANS = createAsyncThunk(
   `${url}/physicians`,
   ({ token, key }, thunkAPI) => {
@@ -384,6 +401,22 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(CTBROWSE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(CTBROWSE.fulfilled, (state, { payload }) => {
+        state.ct = payload;
+
+        state.isLoading = false;
+      })
+      .addCase(CTBROWSE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

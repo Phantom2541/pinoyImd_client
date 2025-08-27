@@ -14,7 +14,7 @@ import {
   TempGraph,
   PersonnelPrintOut,
   LabTaskPrintout,
-  RadTaskPrintout,
+  RadTaskPrintout, 
   ResecoPrintout,
   HemaLog,
   UrinLog,
@@ -26,6 +26,7 @@ import {
   Remittance,
   Machines,
   DrugTestPrintout,
+  RequestFormPrint,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -54,6 +55,7 @@ export default function App() {
       <Route path="/printout/claimstub" exact component={ClaimStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
       <Route path="/printout/chart" exact component={ChartPrintout} />
+      <Route path="/printout/laboratoryRequestForm" exact component={RequestFormPrint} />
       <Route
         path="/printout/request/outsource"
         exact

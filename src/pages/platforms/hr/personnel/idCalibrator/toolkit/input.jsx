@@ -20,9 +20,13 @@ export default function Input({
   }, [value]);
 
   // 🔹 Drag logic (unchanged)
+  const [isActive, setIsActive] = useState(false);
+
   const handleLabelMouseDown = useCallback(
     (e) => {
       e.preventDefault();
+      setIsActive(true); // ✅ Set active state
+
       const startX = e.clientX;
       const startValue = parseFloat(innerValue) || 0;
       const sensitivity = 0.05;
@@ -41,17 +45,13 @@ export default function Input({
         let newValue = Math.round(startValue + deltaX * sensitivity);
         setInnerValue(newValue);
         onChange({ target: { value: newValue } });
-
-        document.documentElement.style.setProperty(
-          "cursor",
-          "ew-resize",
-          "important"
-        );
       };
 
       const handleMouseUp = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
+
+        setIsActive(false); // ✅ Remove active state
         document.documentElement.style.removeProperty("cursor");
         document.body.style.userSelect = "";
         document.body.style.pointerEvents = "";
@@ -97,9 +97,8 @@ export default function Input({
         {label && (
           <label
             htmlFor={inputId}
-            className="IDGenerator-setting-label"
+            className={`IDGenerator-setting-label ${isActive ? "active" : ""}`}
             onMouseDown={handleLabelMouseDown}
-            style={{ cursor: "ew-resize" }}
           >
             {label}
           </label>

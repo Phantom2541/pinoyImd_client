@@ -32,6 +32,9 @@ import {
   Cases,
   Test,
 } from "../../../../pages/platforms/frontdesk";
+import laboratoryRequestForm from "../../../../pages/platforms/frontdesk/laboratoryRequestForm";
+  
+
 
 import {
   Tablestemplate,
@@ -488,10 +491,10 @@ const frontdesk = [
     component: Admission,
   },
   {
-    name: "Test 1",
+    name: "LaboratoryRequestForm",
     icon: "tachometer-alt",
-    path: "/Test",
-    // component: Test,
+    path: "/requestform",
+    component: laboratoryRequestForm,
   },
 ];
 
