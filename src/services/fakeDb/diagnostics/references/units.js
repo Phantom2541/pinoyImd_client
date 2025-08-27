@@ -27,6 +27,7 @@ const units = [
   "U/mL",
   "UIU/ML",
   "umol/L",
+  "Ratio",
 ];
 
 export default units;
