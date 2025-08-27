@@ -72,14 +72,22 @@ const RequestForm = () => {
 {/* Right Column */}
 <div style={{ flex: 1 }}>
   <div style={{ fontWeight: "bold", marginBottom: "4px" }}>Clinical Chemistry</div>
-  <div style={itemStyle}>[ ] FBS</div>
-  <div style={itemStyle}>[ ] BUN</div>
-  <div style={itemStyle}>[ ] Creatinine</div>
-  <div style={itemStyle}>[ ] Cholesterol</div>
-  <div style={itemStyle}>[ ] Triglycerides</div>
-  <div style={itemStyle}>[ ] Uric Acid</div>
-  <div style={itemStyle}>[ ] SGPT</div>
-  <div style={itemStyle}>[ ] SGOT</div>
+<div>[ ] FBS / RBS</div>
+                      <div>[ ] SGOT / AST</div>
+                      <div>[ ] SGPT / ALT</div>
+                      <div>[ ] Lipid Profile</div>
+                      <div style={{ marginLeft: "20px" }}>[ ] Cholesterol</div>
+                      <div style={{ marginLeft: "20px" }}>[ ] Triglycerides</div>
+                      <div style={{ marginLeft: "20px" }}>[ ] HDL / LDL</div>
+                      <div>[ ] Creatinine</div>
+                      <div>[ ] BUN</div>
+                      <div>[ ] Uric Acid</div>
+                      <div>[ ] Sodium (NA)</div>
+                      <div>[ ] Potassium (K)</div>
+                      <div>[ ] Ionized Calcium (iCA)</div>
+                      <div>[ ] Bilirubin</div>
+                      <div>[ ] HbA1c</div>
+
 
   <br />
   <div style={{ fontWeight: "bold", marginBottom: "4px" }}>Other</div>
