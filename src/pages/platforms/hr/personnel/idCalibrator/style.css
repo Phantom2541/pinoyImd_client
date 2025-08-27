@@ -248,3 +248,83 @@
   color: white;
   mix-blend-mode: difference;
 }
+
+/* id calibrator skeleton */
+.id-calibrator-skeleton-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "leftside rightside"
+    "bottomside bottomside";
+  width: fit-content;
+  margin: auto;
+  gap: 15px;
+  user-select: none;
+  max-width: 1150px;
+}
+
+.id-calibrator-sekeleton-id-preview-wrapper {
+  grid-area: leftside;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.id-calibrator-skeleton-id-preview,
+.id-calibrator-skeleton-settings-panel,
+.id-calibrator-skeleton-buttons {
+  position: relative;
+  overflow: hidden;
+  background: #e0e0e0;
+}
+
+/* Specific sizes */
+.id-calibrator-skeleton-id-preview {
+  width: 3.1875in;
+  height: 5.0625in;
+  border-radius: 5px;
+}
+
+.id-calibrator-skeleton-settings-panel {
+  grid-area: rightside;
+  width: 350px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.id-calibrator-skeleton-buttons {
+  grid-area: bottomside;
+  width: 100%;
+  height: 80px;
+}
+
+/* Shimmer effect */
+.id-calibrator-skeleton-id-preview::after,
+.id-calibrator-skeleton-skeleton-settings-panel::after,
+.id-calibrator-skeleton-buttons::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%; /* start further left for smooth entrance */
+  height: 100%;
+  width: 150%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: id-calibrator-shimmer 1.5s infinite;
+  transform: skewX(-20deg); /* subtle skew for smoother light */
+}
+
+@keyframes id-calibrator-shimmer {
+  100% {
+    left: 100%;
+  }
+}

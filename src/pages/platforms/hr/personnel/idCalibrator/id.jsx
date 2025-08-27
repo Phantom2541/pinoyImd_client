@@ -58,10 +58,7 @@ export default function ID({
 
   // ------------------- Click & Place -------------------
   const handleClickOnImage = (target, e) => {
-    if (!floatingValue) {
-      setSelectedValue(null);
-      return;
-    }
+    if (!floatingValue) return setSelectedValue(null);
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -78,10 +75,10 @@ export default function ID({
       x,
       y,
       target,
-      style: isImage ? { ...defaultImageStyle } : { ...defaultTextStyle }, // 👈 default styles here
+      style: isImage ? { ...defaultImageStyle } : { ...defaultTextStyle },
     };
 
-    setPlacedValues([...placedValues, newPlaced]);
+    setPlacedValues((prev) => [...prev, newPlaced]);
     setSelectedValue({ ...newPlaced, index: placedValues.length, target });
     setFloatingValue(null);
     document.body.style.cursor = "auto";

@@ -23,6 +23,7 @@ export default function IdCalibrator() {
   const [selectedValue, setSelectedValue] = useState(null);
   const [showAllValues, setShowAllValues] = useState(false);
   const [lockAspect, setLockAspect] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const options = ["portrait", "landscape"];
@@ -36,7 +37,10 @@ export default function IdCalibrator() {
   }
 
   useEffect(() => {
-    dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
+    setLoading(true);
+    dispatch(
+      CTBROWSE({ token, data: { _id: activePlatform.branchId } })
+    ).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -51,9 +55,9 @@ export default function IdCalibrator() {
     }
 
     setLayout(ctData.layout || "portrait");
-
     setFrontImage(ctData.cf || null);
     setBackImage(ctData.cb || null);
+    setLoading(false);
 
     const dfp = ctData.dfp || {};
     const newPlaced = [];
@@ -141,6 +145,8 @@ export default function IdCalibrator() {
       dfp,
     };
 
+    console.log("======Saved Data=========");
+    console.log(saveData);
     dispatch(
       UPDATE({
         token,
@@ -261,65 +267,80 @@ export default function IdCalibrator() {
     <div
       className={`id-calibrator-main-container ${layout || "landscape"}`}
       onMouseMove={handleMouseMove}
+      style={{ position: "relative" }}
     >
-      {/* ID Preview */}
-      <ID
-        frontImage={frontImage}
-        backImage={backImage}
-        handleFrontChange={handleFrontChange}
-        handleBackChange={handleBackChange}
-        filteredKeys={filteredKeys}
-        fakeEMP={fakeEMP}
-        layout={layout}
-        placedValues={placedValues}
-        setPlacedValues={setPlacedValues}
-        draggedValue={draggedValue}
-        setDraggedValue={setDraggedValue}
-        floatingValue={floatingValue}
-        setFloatingValue={setFloatingValue}
-        handleDragStart={handleDragStart}
-        handleClickValue={handleClickValue}
-        cursorPos={cursorPos}
-        setCursorPos={setCursorPos}
-        setSelectedSide={setSelectedSide}
-        selectedSide={selectedSide}
-        selectedValue={selectedValue} // 👈 ipasa sa ID
-        setSelectedValue={setSelectedValue} // 👈 ipasa sa ID
-        showAllValues={showAllValues}
-        lockAspect={lockAspect}
-        lockAspectRatio={lockAspectRatio}
-      />
+      {/* Loading overlay */}
+      {loading ? (
+        <div className="id-calibrator-skeleton-wrapper">
+          <div className="id-calibrator-sekeleton-id-preview-wrapper">
+            <div className="id-calibrator-skeleton-id-preview" />
+            <div className="id-calibrator-skeleton-id-preview" />
+          </div>
+          <div className="id-calibrator-skeleton-settings-panel"></div>
+          <div className="id-calibrator-skeleton-buttons"></div>
+        </div>
+      ) : (
+        <>
+          {/* ID Preview */}
+          <ID
+            frontImage={frontImage}
+            backImage={backImage}
+            handleFrontChange={handleFrontChange}
+            handleBackChange={handleBackChange}
+            filteredKeys={filteredKeys}
+            fakeEMP={fakeEMP}
+            layout={layout}
+            placedValues={placedValues}
+            setPlacedValues={setPlacedValues}
+            draggedValue={draggedValue}
+            setDraggedValue={setDraggedValue}
+            floatingValue={floatingValue}
+            setFloatingValue={setFloatingValue}
+            handleDragStart={handleDragStart}
+            handleClickValue={handleClickValue}
+            cursorPos={cursorPos}
+            setCursorPos={setCursorPos}
+            setSelectedSide={setSelectedSide}
+            selectedSide={selectedSide}
+            selectedValue={selectedValue}
+            setSelectedValue={setSelectedValue}
+            showAllValues={showAllValues}
+            lockAspect={lockAspect}
+            lockAspectRatio={lockAspectRatio}
+          />
 
-      {/* Layout Setting */}
-      <Setting
-        layout={layout}
-        setLayout={setLayout}
-        options={options}
-        onReset={handleReset}
-        selectedValue={selectedValue}
-        setSelectedValue={setSelectedValue}
-        onUpdateValueStyle={handleUpdateValueStyle}
-        onSave={onSave}
-        lockAspect={lockAspect}
-        setLockAspect={setLockAspect}
-        lockAspectRatio={lockAspectRatio}
-        placedValues={placedValues}
-      />
+          {/* Layout Setting */}
+          <Setting
+            layout={layout}
+            setLayout={setLayout}
+            options={options}
+            onReset={handleReset}
+            selectedValue={selectedValue}
+            setSelectedValue={setSelectedValue}
+            onUpdateValueStyle={handleUpdateValueStyle}
+            onSave={onSave}
+            lockAspect={lockAspect}
+            setLockAspect={setLockAspect}
+            lockAspectRatio={lockAspectRatio}
+            placedValues={placedValues}
+          />
 
-      {/* Draggable Buttons */}
-      <DraggableButtons
-        fakeEMP={fakeEMP[selectedSide]} // 👈 per side na lang
-        filteredKeys={filteredKeys}
-        placedValues={placedValues}
-        handleDragStart={handleDragStart}
-        handleClickValue={handleClickValue}
-        frontImage={frontImage}
-        backImage={backImage}
-        setShowAllValues={setShowAllValues}
-        showAllValues={showAllValues}
-        setPlacedValues={setPlacedValues}
-        selectedSide={selectedSide}
-      />
+          {/* Draggable Buttons */}
+          <DraggableButtons
+            fakeEMP={fakeEMP[selectedSide]}
+            filteredKeys={filteredKeys}
+            placedValues={placedValues}
+            handleDragStart={handleDragStart}
+            handleClickValue={handleClickValue}
+            frontImage={frontImage}
+            backImage={backImage}
+            setShowAllValues={setShowAllValues}
+            showAllValues={showAllValues}
+            setPlacedValues={setPlacedValues}
+            selectedSide={selectedSide}
+          />
+        </>
+      )}
     </div>
   );
 }
