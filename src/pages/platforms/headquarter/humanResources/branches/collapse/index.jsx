@@ -36,13 +36,19 @@ export default function Body() {
     filtered,
     [
       // 1️⃣ Main branches first
-      (o) => !o.isMain, // false (main) → comes before true (not main)
+      (o) => !o.isMain,
 
       // 2️⃣ Active branches first
-      (o) => o.settings?.status?.trim().toLowerCase() !== "active",
+      (o) =>
+        String(o.settings?.status || "")
+          .trim()
+          .toLowerCase() !== "active",
 
       // 3️⃣ Alphabetical by name
-      (o) => o.name.toLowerCase().trim(),
+      (o) =>
+        String(o.name || "")
+          .toLowerCase()
+          .trim(),
     ],
     ["asc", "asc", "asc"]
   ).slice(startIndex, endIndex);
