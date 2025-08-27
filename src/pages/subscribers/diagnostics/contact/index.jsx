@@ -15,7 +15,6 @@ import { useToasts } from "react-toast-notifications";
 import { useSelector } from "react-redux";
 import {
   Cloudinary,
-  ENDPOINT,
   fullAddress,
   LatitudeAddress,
   mobile,

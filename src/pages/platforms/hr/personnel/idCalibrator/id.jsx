@@ -183,12 +183,12 @@ export default function ID({
     placedValues.map((p, i) => {
       if (p.target !== target) return null; // filter dito, pero retain original index i
 
-      const handleRemove = () => {
-        setPlacedValues((prev) => prev.filter((p2) => p2.id !== p.id));
-        if (selectedValue?.id === p.id) {
-          setSelectedValue(null);
-        }
-      };
+      // const handleRemove = () => {
+      //   setPlacedValues((prev) => prev.filter((p2) => p2.id !== p.id));
+      //   if (selectedValue?.id === p.id) {
+      //     setSelectedValue(null);
+      //   }
+      // };
 
       const isImage =
         typeof p.value === "string" &&

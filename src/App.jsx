@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import "./animations.css";
@@ -14,7 +14,7 @@ import {
   TempGraph,
   PersonnelPrintOut,
   LabTaskPrintout,
-  RadTaskPrintout, 
+  RadTaskPrintout,
   ResecoPrintout,
   HemaLog,
   UrinLog,
@@ -55,7 +55,11 @@ export default function App() {
       <Route path="/printout/claimstub" exact component={ClaimStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
       <Route path="/printout/chart" exact component={ChartPrintout} />
-      <Route path="/printout/laboratoryRequestForm" exact component={RequestFormPrint} />
+      <Route
+        path="/printout/laboratoryRequestForm"
+        exact
+        component={RequestFormPrint}
+      />
       <Route
         path="/printout/request/outsource"
         exact

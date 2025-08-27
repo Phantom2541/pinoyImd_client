@@ -3,7 +3,7 @@ import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 
 export default function Pioneers() {
-  const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
+  // const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
   // const CHANNEY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/channey.jpg`;

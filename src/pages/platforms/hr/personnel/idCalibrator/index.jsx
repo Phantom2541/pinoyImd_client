@@ -41,7 +41,7 @@ export default function IdCalibrator() {
     dispatch(
       CTBROWSE({ token, data: { _id: activePlatform.branchId } })
     ).finally(() => setLoading(false));
-  }, []);
+  }, [activePlatform.branchId, dispatch, token]);
 
   useEffect(() => {
     if (!branch.ct) return;

@@ -4,7 +4,7 @@ import { BROWSE } from "../../../../../../services/redux/slices/assets/companies
 
 export default function MissionVision() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ companies }) => companies),
+    // { filtered } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
   // Initial fetch

@@ -75,14 +75,18 @@ export default function AccessModal() {
     setDuplicateRoles(_roles);
   }, []);
 
-  const removeDuplicate = useCallback((_existingAccess) => {
-    return Access.getByCategory(activePlatform?.branch?.category).filter((c) =>
-      _existingAccess?.every(
-        (existAcc) =>
-          existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
-      )
-    );
-  }, []);
+  const removeDuplicate = useCallback(
+    (_existingAccess) => {
+      return Access.getByCategory(activePlatform?.branch?.category).filter(
+        (c) =>
+          _existingAccess?.every(
+            (existAcc) =>
+              existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
+          )
+      );
+    },
+    [activePlatform?.branch?.category]
+  );
 
   useEffect(() => {
     if (show) {

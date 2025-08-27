@@ -2,9 +2,6 @@ import { useMemo, useState } from "react";
 import {
   MDBAlert,
   MDBTypography,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
   MDBTabContent,
   MDBTabPane,
   MDBIcon,

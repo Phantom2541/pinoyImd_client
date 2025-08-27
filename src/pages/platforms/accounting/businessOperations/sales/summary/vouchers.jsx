@@ -30,7 +30,7 @@ export default function Vouchers() {
 
   useEffect(() => {
     dispatch(SetCASHIER(filterByCashier));
-  }, [filterByCashier]);
+  }, [dispatch, filterByCashier]);
 
   if (!isLoading && filtered.length === 0) return null;
 

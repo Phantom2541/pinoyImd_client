@@ -40,6 +40,8 @@ export default function PlantEnvironment() {
   const [savedImage, setSavedImage] = useState(null);
 
   const handleImageChange = (file, imageUrl) => {
+    console.log("savedImage", savedImage);
+
     setSavedImage(imageUrl);
   };
 

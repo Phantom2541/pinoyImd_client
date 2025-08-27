@@ -13,7 +13,7 @@ const Contracts = {
 const Customer = ({ deal, categoryIndex }) => {
   const {
     pid: customerId,
-    branchId,
+    // branchId,
     client,
     ssx,
     privilege,

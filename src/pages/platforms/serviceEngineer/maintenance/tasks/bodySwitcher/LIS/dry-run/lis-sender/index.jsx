@@ -8,10 +8,7 @@ import {
   MDBBtn,
   MDBSwitch,
 } from "mdbreact";
-import {
-  TOGGLE_WORK_AREA,
-  WORK_AREA,
-} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { TOGGLE_WORK_AREA } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Patient from "./patient.jsx";
 import {
   Barcode,
@@ -28,8 +25,7 @@ const _form = {
   machine: "",
 };
 export default function LIS_SENDER() {
-  const { token } = useSelector(({ auth }) => auth),
-    {
+  const {
       showWorkArea: show,
       work,
       formSubmitted,

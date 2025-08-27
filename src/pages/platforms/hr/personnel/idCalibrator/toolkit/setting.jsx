@@ -70,6 +70,7 @@ export default function Setting({
     style.width && style.height
       ? parseInt(style.width) / parseInt(style.height)
       : 1;
+  console.log("aspectRatio", aspectRatio);
 
   useEffect(() => {
     const handleKeyDown = (e) => {

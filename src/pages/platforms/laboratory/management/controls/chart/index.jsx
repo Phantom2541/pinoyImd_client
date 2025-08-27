@@ -37,7 +37,7 @@ const calculateStats = (data) => {
   return { mean, stdDev };
 };
 
-const LeveyJennings = ({}) => {
+const LeveyJennings = () => {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { filtered, serviceId } = useSelector(({ controls }) => controls);
 

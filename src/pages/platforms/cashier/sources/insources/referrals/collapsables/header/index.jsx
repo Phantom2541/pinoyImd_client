@@ -33,6 +33,7 @@ const Header = ({
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
 
   const _category = categories.find((c) => c.value === contract)?.text;
+  console.log("_category", _category);
 
   return (
     <MDBCollapseHeader

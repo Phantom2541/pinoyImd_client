@@ -25,7 +25,7 @@ export default function Deals() {
         },
       })
     );
-  }, []);
+  }, [activePlatform.branchId, dispatch, token]);
   return (
     <MDBContainer className="d-flex" fluid>
       <div className=" py-1 rounded flex-1 ml-2 px-2">

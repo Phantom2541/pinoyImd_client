@@ -32,7 +32,7 @@ export default function Header({
 
   useEffect(() => {
     dispatch(BROWSE({ token, key: { vId: activePlatform?.branchId } }));
-  }, [activePlatform, token]);
+  }, [activePlatform, dispatch, token]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") onSearch(searchInput);

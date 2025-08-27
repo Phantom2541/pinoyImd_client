@@ -158,7 +158,7 @@ const OCRReader = () => {
       }
 
       // 3. Optionally check for grouped number formats
-      const spaced = line.match(/(?:\d{4}[\s\-]?){2,5}/g);
+      const spaced = line.match(/(?:\d{4}[\s-]?){2,5}/g);
       if (spaced) {
         return cleanNumber(spaced[0]);
       }
@@ -192,6 +192,7 @@ const OCRReader = () => {
 
     return { hmo, number, name };
   };
+  console.log(parseText("sample"));
 
   return (
     <div style={{ padding: 20 }}>

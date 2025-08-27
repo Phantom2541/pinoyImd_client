@@ -1,4 +1,3 @@
-import { MDBIcon } from "mdbreact";
 import React, { useState } from "react";
 
 const Index = ({ handleSearch, isLocal = false }) => {

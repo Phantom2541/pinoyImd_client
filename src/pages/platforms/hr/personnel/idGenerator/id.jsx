@@ -17,6 +17,8 @@ export default function ID({
   const startDrag = useCallback(
     (e, key, x, y) => {
       e.preventDefault();
+      console.log(draggingKey);
+
       setDraggingKey(key);
 
       const startX = e.clientX;
@@ -39,7 +41,7 @@ export default function ID({
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
     },
-    [handleUpdateValue]
+    [draggingKey, handleUpdateValue]
   );
 
   const renderValues = useCallback(
