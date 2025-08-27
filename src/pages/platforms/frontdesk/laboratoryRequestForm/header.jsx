@@ -6,12 +6,11 @@ const Header = () => {
     const { patient, tests } = useSelector(({ requestForm }) => requestForm);
 
     const handlePrintOut = () => {
-        localStorage.setItem("requestForm", JSON.stringify({ patient, tests }));
         window.open(
-            "/printout/request-form",
-            "RequestForm",
-            "top=100px,left=100px,width=1050px,height=750px"
-        );
+      "/printout/laboratoryRequestForm",
+      "RequestForm",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
     };
 
     return (

@@ -31,7 +31,7 @@ import {
   Admission,
   Cases,
 } from "../../../../pages/platforms/frontdesk";
-import RequestForm from "../../../../pages/platforms/frontdesk/requestForm";
+import laboratoryRequestForm from "../../../../pages/platforms/frontdesk/laboratoryRequestForm";
   
 
 
@@ -490,10 +490,10 @@ const frontdesk = [
     component: Admission,
   },
   {
-    name: "RequestForm",
+    name: "LaboratoryRequestForm",
     icon: "tachometer-alt",
     path: "/requestform",
-    component: RequestForm,
+    component: laboratoryRequestForm,
   },
 ];
 
