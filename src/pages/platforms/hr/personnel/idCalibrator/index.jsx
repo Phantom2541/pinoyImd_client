@@ -62,12 +62,14 @@ export default function IdCalibrator() {
 
     setLayout(ctData.layout || "portrait");
 
-    const getImg = (isFront = true) =>
-      `${Cloudinary.getEndpoint()}/${
-        icId?.[isFront ? "front" : "back"] || ""
-      }/companies/${company?.name}/${activePlatform?.branch?.name}/ic/${
-        isFront ? "front" : "back"
-      }`;
+    const getImg = (isFront = true) => {
+      const id = icId?.[isFront ? "front" : "back"];
+      if (!id) return null; // 👉 Walang imgId, wag na bumalik ng kahit ano
+
+      return `${Cloudinary.getEndpoint()}/${id}/companies/${company?.name}/${
+        activePlatform?.branch?.name
+      }/ic/${isFront ? "front" : "back"}`;
+    };
 
     setFrontImage(getImg() || null);
     setBackImage(getImg(false) || null);
@@ -75,19 +77,6 @@ export default function IdCalibrator() {
 
     const dfp = ctData.dfp || {};
     const newPlaced = [];
-
-    // Key mapping
-    // const keyMap = {
-    //   fullName: "emp",
-    //   profile: "img",
-    //   id: "empID",
-    //   "phone number": "pn",
-    //   birthday: "dob",
-    //   guardian: "guardian",
-    //   address: "address",
-    //   department: "department",
-    //   signature: "signature",
-    // };
 
     Object.keys(dfp).forEach((key) => {
       const value =
@@ -382,6 +371,8 @@ export default function IdCalibrator() {
             setLockAspect={setLockAspect}
             lockAspectRatio={lockAspectRatio}
             placedValues={placedValues}
+            frontImage={frontImage}
+            backImage={backImage}
           />
 
           {/* Draggable Buttons */}

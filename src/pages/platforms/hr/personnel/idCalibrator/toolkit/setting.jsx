@@ -17,6 +17,8 @@ export default function Setting({
   lockAspectRatio,
   setSelectedValue,
   placedValues,
+  frontImage,
+  backImage,
 }) {
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
@@ -503,6 +505,17 @@ export default function Setting({
         </div>
       )}
 
+      <div className="IDGenerator-settings-upload">
+        <label
+          className={frontImage ? "active" : ""}
+          htmlFor={`uploadimgfront`}
+        >
+          Change Front Image
+        </label>
+        <label className={backImage ? "active" : ""} htmlFor={`uploadimgback`}>
+          Change Back Image
+        </label>
+      </div>
       {/* Save Button */}
       <div className="IDGenerator-settings-save">
         <button onClick={onSave}>💾 Save</button>
