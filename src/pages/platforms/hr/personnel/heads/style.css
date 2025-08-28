@@ -315,7 +315,7 @@
 .signatories-cropper-body {
   flex: 1;
   position: relative;
-  background: white;
+  background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px;
 }
 
 .signatories-cropper-guide {
@@ -327,6 +327,8 @@
   font-size: 1.4rem;
   font-weight: bold;
   letter-spacing: 0.5px;
+  width: 100%;
+  text-align: center;
 }
 
 /* Green dashed border for crop area */
