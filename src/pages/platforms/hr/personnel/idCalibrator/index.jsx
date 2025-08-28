@@ -71,6 +71,12 @@ export default function IdCalibrator() {
       }/ic/${isFront ? "front" : "back"}`;
     };
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+    console.log("Front Img URL:", getImg(true));
+    console.log("Back Img URL:", getImg(false));
+>>>>>>> Stashed changes
 =======
 
     console.log("Front Img URL:", getImg(true));
