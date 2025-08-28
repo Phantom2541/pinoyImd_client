@@ -275,11 +275,11 @@ export default function Body() {
   };
 
   return (
-    <div className="signatories-section">
+    <div className="signatories-section position-relative">
       <div
         className={`${
           paginatedHeads.length > 0 && "signatories-card-container"
-        } mt-4  ${animateClass}`}
+        } mt-4 ${animateClass}`}
       >
         {paginatedHeads.length > 0 ? (
           paginatedHeads.map(({ _id, department, section, user }, index) => {
@@ -580,27 +580,27 @@ export default function Body() {
             </p>
           </div>
         )}
-        {paginatedHeads.length === 0 ? (
-          ""
-        ) : (
-          <>
-            <button
-              className="signatories-pagination-btnLeft"
-              onClick={prevPage}
-              disabled={currentPage === 1}
-            >
-              <MDBIcon icon="angle-left" />
-            </button>
-            <button
-              className="signatories-pagination-btnRight"
-              onClick={nextPage}
-              disabled={currentPage === totalPages}
-            >
-              <MDBIcon icon="angle-right" />
-            </button>
-          </>
-        )}
       </div>
+      {paginatedHeads.length === 0 ? (
+        ""
+      ) : (
+        <>
+          <button
+            className="signatories-pagination-btnLeft"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            <MDBIcon icon="angle-left" />
+          </button>
+          <button
+            className="signatories-pagination-btnRight"
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+          >
+            <MDBIcon icon="angle-right" />
+          </button>
+        </>
+      )}
     </div>
   );
 }

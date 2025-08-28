@@ -9,8 +9,10 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: min-content;
   gap: 10px;
   width: fit-content;
+  min-height: 645px;
 }
 
 @keyframes signatoriesFadeIn {
@@ -239,16 +241,17 @@
 .signatories-pagination-btnRight {
   position: absolute;
   top: 50%;
+
   transform: translate(0, -50%);
   border: none;
   font-size: 2rem;
   background-color: transparent;
 }
 .signatories-pagination-btnLeft {
-  left: -5%;
+  left: 12%;
 }
 .signatories-pagination-btnRight {
-  right: -5%;
+  right: 12%;
 }
 
 /* .signatories-card-btn-delete {
