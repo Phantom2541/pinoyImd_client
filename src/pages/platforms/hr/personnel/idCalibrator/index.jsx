@@ -70,6 +70,12 @@ export default function IdCalibrator() {
         activePlatform?.branch?.name
       }/ic/${isFront ? "front" : "back"}`;
     };
+<<<<<<< Updated upstream
+=======
+
+    console.log("Front Img URL:", getImg(true));
+    console.log("Back Img URL:", getImg(false));
+>>>>>>> Stashed changes
 
     setFrontImage(getImg() || null);
     setBackImage(getImg(false) || null);
