@@ -46,7 +46,7 @@ export default function ID({
     fontSize: "16px",
     fontFamily: "Arial, sans-serif",
     letterSpacing: "0",
-    FontWeights: "regular",
+    FontWeight: "regular",
   };
 
   const defaultImageStyle = {

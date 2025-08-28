@@ -177,6 +177,29 @@ export const UPLOAD = createAsyncThunk(
   }
 );
 
+export const DESTROY_IMG = createAsyncThunk(
+  `${url}/destroy`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.destroy(
+        "/assets/persons/auth",
+        data,
+        token,
+        "destroy_img"
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
@@ -510,6 +533,22 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.formSubmitted = false;
         state.message = error.message;
+      })
+      .addCase(DESTROY_IMG.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(DESTROY_IMG.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(DESTROY_IMG.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       });
   },
 });

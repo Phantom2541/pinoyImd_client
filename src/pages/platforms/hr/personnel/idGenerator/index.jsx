@@ -27,29 +27,18 @@ export default function IDGenerator() {
   const { filtered } = useSelector(({ personnels }) => personnels);
   const dispatch = useDispatch();
 
-  // Fetch branch data
   useEffect(() => {
-    dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
-  }, [dispatch, token, activePlatform.branchId]);
-
-  useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+    if (token && activePlatform?.branchId) {
+      dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
+      dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+    }
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
+  }, [dispatch, token, activePlatform]);
 
-  const activeStaff = (filtered || []).filter(
-    (o) => (o.status || "").trim().toLowerCase() === "active"
-  );
-  /*************  ✨ Windsurf Command 🌟  *************/
-  const activeStaffUsers = activeStaff.map((staff) => staff.user);
-  /*******  8274a486-e40f-48fb-ab79-680d5abea3bd  *******/
+  const activeStaffUsers = (filtered || [])
+    .filter((o) => (o.status || "").trim().toLowerCase() === "active")
+    .map((o) => o.user);
 
-  console.log("Filtered personnel data:", filtered);
-  console.log("staff", activeStaff);
-  console.log("staff users", activeStaffUsers);
-
-  // Setup employee data and placedValues
   useEffect(() => {
     if (!branch?.ct) return;
 
@@ -65,48 +54,26 @@ export default function IDGenerator() {
     setBackImage(ctData.cb || null);
     setLayout(ctData.layout || "landscape");
 
-    // Clone current employee if not already cloned
+    // Ensure current employee clone exists
     setEmployeeClones((prev) => {
       if (prev[currentIndex]) return prev;
-
       const clone = {
         ...fakeEMPData[currentIndex],
         dfp: { ...(ctData.dfp || {}) },
       };
-
       return { ...prev, [currentIndex]: clone };
     });
 
+    // Build placedValues directly from dfp
     const dataClone = employeeClones[currentIndex] || {
       ...fakeEMPData[currentIndex],
       dfp: { ...(ctData.dfp || {}) },
     };
 
-    const keyMap = {
-      fullName: "emp",
-      profile: "img",
-      id: "empID",
-      "phone number": "pn",
-      birthday: "dob",
-      guardian: "guardian",
-      address: "address",
-      department: "department",
-      signature: "signature",
-      position: "position",
-    };
-
     const newPlacedValues = Object.entries(dataClone.dfp || {}).map(
       ([key, p]) => {
-        const mappedKey = keyMap[key];
         const targetSide = p.target === "front" ? "front" : "back";
-
-        const value =
-          mappedKey &&
-          (dataClone[targetSide]?.[mappedKey] ||
-            dataClone[targetSide === "front" ? "back" : "front"]?.[mappedKey] ||
-            dataClone[mappedKey] ||
-            "");
-
+        const value = dataClone[targetSide]?.[key] || dataClone[key] || "";
         return { key, value, ...p };
       }
     );
@@ -149,7 +116,6 @@ export default function IDGenerator() {
     [currentIndex, selectedKey]
   );
 
-  // Unselect on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -183,7 +149,6 @@ export default function IDGenerator() {
     link.download = `id-front-back-${currentIndex}.png`;
     link.click();
 
-    // Update fakeEMPData
     fakeEMPData[currentIndex] = { ...employeeClones[currentIndex] };
     console.log("Saved employee:", fakeEMPData[currentIndex]);
 
@@ -192,29 +157,24 @@ export default function IDGenerator() {
 
   useEffect(() => {
     const handleShortcuts = (e) => {
-      // Ignore if typing in input/textarea/contenteditable
       const activeEl = document.activeElement;
       if (
         activeEl &&
         (activeEl.tagName === "INPUT" ||
           activeEl.tagName === "TEXTAREA" ||
           activeEl.isContentEditable)
-      ) {
+      )
         return;
-      }
 
-      // 🔹 Ctrl+S should always save
       if ((e.key === "s" || e.key === "S") && e.ctrlKey) {
         e.preventDefault();
         handleSave();
         return;
       }
 
-      // 🔹 Tab to select next element
       if (e.key === "Tab") {
         e.preventDefault();
         if (placedValues.length === 0) return;
-
         const currentIndex = placedValues.findIndex(
           (p) => p.key === selectedKey
         );
@@ -226,11 +186,10 @@ export default function IDGenerator() {
       if (!selectedKey) return;
 
       const step = e.shiftKey ? 10 : 1;
-      let dx = 0;
-      let dy = 0;
+      let dx = 0,
+        dy = 0;
 
       switch (e.key) {
-        // Move position
         case "ArrowUp":
           dy = -step;
           break;
@@ -243,8 +202,6 @@ export default function IDGenerator() {
         case "ArrowRight":
           dx = step;
           break;
-
-        // Font size adjust
         case "[":
           if (e.ctrlKey) {
             e.preventDefault();
@@ -263,8 +220,6 @@ export default function IDGenerator() {
             return;
           }
           break;
-
-        // Previous/Next employee
         case ",":
           e.preventDefault();
           handlePrev();
@@ -273,9 +228,8 @@ export default function IDGenerator() {
           e.preventDefault();
           handleNext();
           return;
-
         default:
-          return;
+          break;
       }
 
       if (dx !== 0 || dy !== 0) {
@@ -306,27 +260,37 @@ export default function IDGenerator() {
   return (
     <div
       className="id-generator-wrapper"
-      style={{ display: "flex", gap: "20px" }}
+      style={{ display: "flex", justifyContent: "center", gap: "20px" }}
       ref={containerRef}
     >
-      <ID
-        frontImage={frontImage}
-        backImage={backImage}
-        layout={layout}
-        placedValues={placedValues}
-        onSelect={setSelectedKey}
-        selectedKey={selectedKey}
-        handleUpdateValue={handleUpdateValue}
-        frontRef={frontWrapperRef}
-        backRef={backWrapperRef}
-      />
-      <Setting
-        selectedValue={placedValues.find((p) => p.key === selectedKey)}
-        onUpdateValue={handleUpdateValue}
-        handlePrev={handlePrev}
-        handleNext={handleNext}
-        handleSave={handleSave}
-      />
+      {!frontImage || !backImage || placedValues.length === 0 ? (
+        <div className="id-generator-skeleton-wrapper">
+          <div className="id-generator-skeleton id-generator-id-front"></div>
+          <div className="id-generator-skeleton id-generator-id-back"></div>
+          <div className="id-generator-skeleton id-generator-settings-panel"></div>
+        </div>
+      ) : (
+        <>
+          <ID
+            frontImage={frontImage}
+            backImage={backImage}
+            layout={layout}
+            placedValues={placedValues}
+            onSelect={setSelectedKey}
+            selectedKey={selectedKey}
+            handleUpdateValue={handleUpdateValue}
+            frontRef={frontWrapperRef}
+            backRef={backWrapperRef}
+          />
+          <Setting
+            selectedValue={placedValues.find((p) => p.key === selectedKey)}
+            onUpdateValue={handleUpdateValue}
+            handlePrev={handlePrev}
+            handleNext={handleNext}
+            handleSave={handleSave}
+          />
+        </>
+      )}
     </div>
   );
 }

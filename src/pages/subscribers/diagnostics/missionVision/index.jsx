@@ -50,9 +50,16 @@ export default function MissionVision() {
           <div>
             <h1>Our Values</h1>
             <ul>
-              {values.slice(0, 3).map((value, index) => (
-                <li key={index}>{value || "N/A"}</li>
-              ))}
+              {values.slice(0, 3).map((value, index) => {
+                if (!value) return <li key={index}>N/A</li>;
+
+                const words = value.split(" ");
+                return (
+                  <li key={index}>
+                    <strong>{words[0]}</strong> {words.slice(1).join(" ")}
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div>
@@ -68,9 +75,16 @@ export default function MissionVision() {
         <div className="subscriber-mission-vision-bottom">
           <div>
             <ul>
-              {values.slice(3, 6).map((value, index) => (
-                <li key={index}>{value || "N/A"}</li>
-              ))}
+              {values.slice(3, 6).map((value, index) => {
+                if (!value) return <li key={index}>N/A</li>;
+
+                const words = value.split(" ");
+                return (
+                  <li key={index}>
+                    <strong>{words[0]}</strong> {words.slice(1).join(" ")}
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div>
