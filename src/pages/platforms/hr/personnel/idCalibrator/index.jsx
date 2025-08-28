@@ -10,6 +10,8 @@ import {
   UPDATE,
   CTBROWSE,
 } from "../../../../../services/redux/slices/assets/branches";
+import { Cloudinary } from "../../../../../services/utilities";
+import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function IdCalibrator() {
   const [frontImage, setFrontImage] = useState(null);
@@ -27,11 +29,10 @@ export default function IdCalibrator() {
 
   const dispatch = useDispatch();
   const options = ["portrait", "landscape"];
-  const { activePlatform, token } = useSelector(({ auth }) => auth);
+  const { activePlatform, token, company } = useSelector(({ auth }) => auth);
   const { ct: branch } = useSelector(({ branches }) => branches);
   try {
     const ctData = branch.ct ? JSON.parse(branch.ct) : null;
-    console.log("ct", ctData);
   } catch (err) {
     console.error("Invalid JSON in branch.ct:", branch.ct, err);
   }
@@ -54,9 +55,19 @@ export default function IdCalibrator() {
       return;
     }
 
+    const { icId = {} } = branch || {};
+
     setLayout(ctData.layout || "portrait");
-    setFrontImage(ctData.cf || null);
-    setBackImage(ctData.cb || null);
+
+    const getImg = (isFront = true) =>
+      `${Cloudinary.getEndpoint()}/${
+        icId?.[isFront ? "front" : "back"] || ""
+      }/companies/${company?.name}/${activePlatform?.branch?.name}/ic/${
+        isFront ? "front" : "back"
+      }`;
+
+    setFrontImage(getImg() || null);
+    setBackImage(getImg(false) || null);
     setLoading(false);
 
     const dfp = ctData.dfp || {};
@@ -152,13 +163,35 @@ export default function IdCalibrator() {
   // ngayon, filter lang per side
   const filteredKeys = Object.keys(fakeEMP[selectedSide] || {});
 
+  const uploadCloudinary = (img, isFront = true) => {
+    const form = Cloudinary.buildFileForm(
+      img,
+      `companies/${company?.name}/${activePlatform?.branch?.name}/ic`,
+      isFront ? "front" : "back"
+    );
+    dispatch(UPLOAD({ data: form, token })).then((upAction) => {
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id: activePlatform.branchId,
+            icId: {
+              ...(branch.icId || {}),
+              [isFront ? "front" : "back"]: upAction.payload.imgId,
+            },
+          },
+        })
+      );
+    });
+  };
+
   const handleFrontChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setFrontImage(reader.result); // Base64 string
+      uploadCloudinary(reader.result, true);
     };
     reader.readAsDataURL(file);
   };
@@ -169,7 +202,7 @@ export default function IdCalibrator() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setBackImage(reader.result); // Base64 string
+      uploadCloudinary(reader.result, false); // Base64 string
     };
     reader.readAsDataURL(file);
   };
