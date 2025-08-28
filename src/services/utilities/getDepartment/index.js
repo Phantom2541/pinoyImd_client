@@ -6,7 +6,7 @@ const departmentMap = {
 };
 const getDepartment = (department = "") => {
   const _department = department?.toLowerCase();
-  return departmentMap[_department];
+  return departmentMap?.[_department] || "";
 };
 
 export default getDepartment;
