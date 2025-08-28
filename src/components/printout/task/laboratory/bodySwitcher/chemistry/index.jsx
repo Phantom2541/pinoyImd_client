@@ -67,11 +67,24 @@ export default function Chemistry({ task, fontSize }) {
             { lo, hi, units } = reference,
             indicators = calculateIndicators(reference, value),
             color = value < lo ? "blue" : value > hi && "red",
-            SIReference = !lo
-              ? `< ${formatToSI(nameUppercase, hi)}`
-              : `${formatToSI(nameUppercase, lo)} - ${formatToSI(
-                  nameUppercase,
-                  hi
+            SI_value = formatToSI(nameUppercase, value),
+            CI_value =
+              parseFloat(value) < 5
+                ? parseFloat(value).toFixed(2) // always 2 decimals if < 5
+                : Number.isInteger(value)
+                ? value // whole number
+                : parseFloat(value).toFixed(1),
+            SI_reference = !lo
+              ? `< ${String(formatToSI(nameUppercase, hi)).replace(
+                  /\.0+$|(\.\d*?)0+$/,
+                  "$1"
+                )}`
+              : `${String(formatToSI(nameUppercase, lo)).replace(
+                  /\.0+$|(\.\d*?)0+$/,
+                  "$1"
+                )} - ${String(formatToSI(nameUppercase, hi)).replace(
+                  /\.0+$|(\.\d*?)0+$/,
+                  "$1"
                 )}`;
 
           return (
@@ -81,26 +94,20 @@ export default function Chemistry({ task, fontSize }) {
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
-                {/* {Number.isInteger(value) ? value?.toFixed(2) : value} */}
-                {parseFloat(value) % 1 === 0
-                  ? value
-                  : (parseFloat(value) * 10) % 10 === 0
-                  ? parseFloat(value).toFixed(1)
-                  : value}
+                {CI_value}
               </td>
               <td className="py-1">
                 {!lo ? `< ${hi}` : `${lo} - ${hi}`} {units}
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
-                {formatToSI(
-                  nameUppercase,
-                  value < 15 ? Number(value).toFixed(2) : value
-                )}
+                {SI_value}
               </td>
               <td style={style} className="py-0">
-                {SIReference}&nbsp;
-                {formatToSI(nameUppercase) || ""}
+                {SI_reference}&nbsp;
+                {Number(SI_value) === Number(CI_value)
+                  ? units
+                  : formatToSI(nameUppercase)}
               </td>
             </tr>
           );
