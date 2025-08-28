@@ -19,7 +19,7 @@ const individual = (
   if (_abbr === "wls") gross = HMO.getSrp(hmoCode, menu?.hmo);
   if (_abbr === "ctr") gross = menu?.[contract];
 
-  let up = (gross * 80) / 100;
+  let up = Math.round((gross * 80) / 100);
   if (membership && category === "mbs" && discountable) {
     const dr = Memberships.getDiscount(membership) || 0;
     const discount = gross * dr;

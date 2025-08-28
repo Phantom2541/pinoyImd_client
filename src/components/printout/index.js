@@ -13,3 +13,4 @@ export { default as Remittance } from "../printout/remittance";
 export { default as Machines } from "./machines";
 export { default as DrugTestPrintout } from "./task/drugtest";
 export { default as Dtr } from "./dtr";
+export { default as RequestFormPrint } from "./laboratoryRequestForm";

@@ -1,5 +1,3 @@
-import capitalize from "../capitalize";
-
 const fullName = (fullname, isComplete = false) => {
   if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
     return "-";

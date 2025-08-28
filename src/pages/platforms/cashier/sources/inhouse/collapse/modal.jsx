@@ -49,7 +49,7 @@ export default function Modal({ show, toggle, selected, branch }) {
     if (show && isRegister) {
       setForm({ register: { ...selected } });
     }
-  }, [show, isRegister]);
+  }, [show, isRegister, selected]);
 
   const { currentMain, found } = findCurrentMain(collections, selected);
   const handleSubmit = (e) => {

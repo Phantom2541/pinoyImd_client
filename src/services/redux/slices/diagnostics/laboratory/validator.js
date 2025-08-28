@@ -51,7 +51,6 @@ const initialState = {
   isSuccess: false,
   print: false,
   isLoading: false,
-  isLoadingHeads: false,
   formSubmitted: false,
   message: "",
 };

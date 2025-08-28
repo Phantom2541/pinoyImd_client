@@ -16,7 +16,7 @@ export default function Cluster({ task, setTask }) {
     if (packages.length !== Object.keys(results).length) {
       setTask({ ...task, results: { ...results, ...expectedResults } });
     }
-  }, [packages, results, setTask]);
+  }, [packages, results, setTask, task]);
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 

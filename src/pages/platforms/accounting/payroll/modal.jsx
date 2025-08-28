@@ -192,7 +192,7 @@ export default function Modal() {
   const dailyRate = selected?.rate?.daily;
 
   const frequency =
-    payCycle === 1 ? "Bi-Monthly" : payCycle == 2 ? "Monthly" : "Quarterly";
+    payCycle === 1 ? "Bi-Monthly" : payCycle === 2 ? "Monthly" : "Quarterly";
   return (
     <MDBModal
       isOpen={showModal}

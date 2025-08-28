@@ -3,7 +3,6 @@ import { MDBTable } from "mdbreact";
 import { Policy } from "../../../../../services/fakeDb";
 import { capitalize } from "lodash";
 import { employment } from "../../../../../services/utilities";
-import { MDBBtn } from "mdbreact";
 import Swal from "sweetalert2";
 import { UPDATE } from "../../../../../services/redux/slices/assets/persons/applicants";
 const Body = () => {

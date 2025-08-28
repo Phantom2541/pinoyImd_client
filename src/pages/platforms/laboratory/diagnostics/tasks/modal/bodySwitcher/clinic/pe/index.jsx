@@ -25,20 +25,26 @@ export default function PE({ task, setTask }) {
         packages: { ...packages, [name]: _value },
       });
 
-    const chole = packages["14"],
-      tg = packages["15"],
-      ldl = chole - (tg / 5 + _value),
-      vldl = tg / 5,
-      chr = Number((chole / _value).toFixed(2));
+    // Get values
+    const chole = packages["14"], // Total Cholesterol
+      tg = packages["15"], // Triglycerides
+      hdl = Number(_value.toFixed(1)); // HDL Cholesterol (input)
+
+    // Compute
+    const vldl = tg / 5;
+    const ldl = chole - hdl - vldl;
+    const lhr = Number((ldl / hdl).toFixed(2)); // LDL/HDL ratio
+    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
 
     setTask({
       ...task,
       packages: {
         ...packages,
-        16: _value,
-        17: ldl,
-        18: vldl,
+        16: hdl,
+        17: ldl.toFixed(1),
+        18: vldl.toFixed(1),
         19: chr,
+        47: lhr,
       },
     });
   };

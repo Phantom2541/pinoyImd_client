@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Policy } from "./../../../../../../services/fakeDb";

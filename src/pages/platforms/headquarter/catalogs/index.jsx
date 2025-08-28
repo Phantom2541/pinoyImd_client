@@ -137,7 +137,7 @@ export default function Stocks() {
     }
 
     return filtered;
-  }, [searchTerm, primarySort, priceSort]);
+  }, [collections, primarySort, priceSort, searchTerm]);
 
   return (
     <div

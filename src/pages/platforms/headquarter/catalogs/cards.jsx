@@ -2,11 +2,7 @@ import React from "react";
 import { MDBIcon } from "mdbreact";
 import { useSelector } from "react-redux";
 
-export default function Cards({
-  currentPage,
-  onPageChange,
-  onCardClick,
-}) {
+export default function Cards({ currentPage, onPageChange, onCardClick }) {
   const { collections } = useSelector(({ products }) => products);
 
   const itemsPerPage = 12;
@@ -16,8 +12,8 @@ export default function Cards({
     indexOfLastItem - itemsPerPage,
     indexOfLastItem
   );
+  console.log("currentItems", currentItems);
   console.log("collections", collections);
-  
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {

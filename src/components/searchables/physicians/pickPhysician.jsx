@@ -97,7 +97,7 @@ const PickPhysician = ({
     return () => {
       debouncedSearch.cancel();
     };
-  }, []);
+  }, [debouncedSearch]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
