@@ -140,7 +140,6 @@
   padding: 5px 0;
   max-height: 510px;
   overflow: auto;
-
   /* para gumana sa Firefox din */
   scrollbar-width: thin;
   scrollbar-color: #888 transparent;
@@ -207,7 +206,6 @@
 .IDGenerator-setting-input-wrapper {
   display: flex;
   align-items: center;
-
   background-color: #f5f5f5;
   width: 100%;
   height: fit-content;
