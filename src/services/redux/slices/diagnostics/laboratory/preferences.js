@@ -118,7 +118,13 @@ export const reduxSlice = createSlice({
       }
     },
     SetPREFERENCES: (state, { payload }) => {
-      state.cluster = state.filtered = state.collections = [...payload];
+      const services = [...Services.collections].map((service) => {
+        const references = payload.filter(
+          ({ serviceId }) => serviceId === service.id
+        );
+        return { ...service, references };
+      });
+      state.cluster = state.filtered = state.collections = [...services];
       state.isLoading = false;
     },
     SetMaxPage: (state, { payload }) => {
