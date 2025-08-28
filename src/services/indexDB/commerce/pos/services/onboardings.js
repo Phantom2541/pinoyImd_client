@@ -80,11 +80,20 @@ export async function IDB_BULK_SAVE(onboardings) {
     for (const onboarding of onboardings) {
       try {
         const getReq = store.get(onboarding._id);
-        const exists = await new Promise((resolve, reject) => {
-          getReq.onsuccess = () => resolve(!!getReq.result);
+
+        const existing = await new Promise((resolve, reject) => {
+          getReq.onsuccess = () => resolve(getReq.result || null);
           getReq.onerror = () => reject(getReq.error);
         });
-        if (!exists) store.add(onboarding);
+
+        if (existing) {
+          // ✅ Merge old + new data
+          const merged = { ...existing, ...onboarding };
+          store.put(merged); // update
+        } else {
+          // ✅ Insert new
+          store.add(onboarding);
+        }
       } catch (err) {
         console.error("IDB_BULK_SAVE error:", err);
       }

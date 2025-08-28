@@ -81,17 +81,20 @@ export async function IDB_BULK_SAVE(deals) {
   return withStore("readwrite", async (store) => {
     for (const deal of deals) {
       try {
-        // subukan i-get muna kung existing
+        // kunin muna kung existing na
         const getReq = store.get(deal._id);
-        const exists = await new Promise((resolve, reject) => {
-          getReq.onsuccess = () => resolve(!!getReq.result);
+        const existing = await new Promise((resolve, reject) => {
+          getReq.onsuccess = () => resolve(getReq.result || null);
           getReq.onerror = () => reject(getReq.error);
         });
 
-        if (!exists) {
-          store.add(deal); // add only kung wala pa
+        if (existing) {
+          // merge: old + new (new overrides old)
+          const merged = { ...existing, ...deal };
+          store.put(merged); // update
+        } else {
+          store.add(deal); // insert
         }
-        // kung exists, skip lang
       } catch (err) {
         console.error("IDB_BULK_SAVE error:", err);
       }

@@ -24,8 +24,8 @@ const fetchTracker = {
     lastFetchCreatedAt: (collections) => {
       if (!collections.length) return new Date();
       return collections.reduce((prev, curr) =>
-        new Date(curr.createdAt) > new Date(prev.createdAt) ? curr : prev
-      )?.createdAt;
+        new Date(curr.updatedAt) > new Date(prev.updatedAt) ? curr : prev
+      )?.updatedAt;
     },
     formattedDate: (_date = null, hasTime = false) => {
       const date = _date ? new Date(_date) : new Date();

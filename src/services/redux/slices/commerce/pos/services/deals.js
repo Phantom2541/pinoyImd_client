@@ -14,6 +14,7 @@ import {
   IDB_BULK_SAVE,
   IDB_UPDATE,
 } from "../../../../../indexDB/commerce/pos/services/deals";
+import { IDB_UPDATE as IDB_UPDATE_ONBOARD } from "../../../../../indexDB/commerce/pos/services/onboardings";
 const url = "commerce/pos/services/deals";
 const today = new Date();
 
@@ -1481,6 +1482,10 @@ export const reduxSlice = createSlice({
         );
         IDB_UPDATE(updatedData);
         socket.emit("send_updated_deal_menus", payload);
+
+        if (fetchTracker.hasLoaded("onboardings")) {
+          IDB_UPDATE_ONBOARD(payload);
+        }
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
