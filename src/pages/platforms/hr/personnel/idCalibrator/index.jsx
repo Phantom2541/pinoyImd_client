@@ -225,21 +225,21 @@ export default function IdCalibrator() {
             },
             token,
           })
-        ).then(() => {
-          dispatch(
-            UPDATE({
-              token,
-              data: {
-                _id: activePlatform.branchId,
-                icId: {
-                  ...icId,
-                  [key]: null,
-                },
-              },
-            })
-          );
-        });
+        );
       });
+
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id: activePlatform.branchId,
+            icId: {
+              front: null,
+              back: null,
+            },
+          },
+        })
+      );
     }
 
     setPlacedValues([]);
