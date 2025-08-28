@@ -62,7 +62,7 @@ export default function Summary() {
   useEffect(() => {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
-
+  console.log("net", gross, discount);
   const checkout = async () => {
     let selected = {
       physicianId: physicianId?.physician || undefined,
