@@ -4,8 +4,8 @@ const departmentMap = {
   radiology: "RAD",
   rad: "RAD",
 };
-const getDepartment = (department) => {
-  const _department = department.toLowerCase();
+const getDepartment = (department = "") => {
+  const _department = department?.toLowerCase();
   return departmentMap[_department];
 };
 
