@@ -63,45 +63,33 @@ export default function IdCalibrator() {
     const newPlaced = [];
 
     // Key mapping
-    const keyMap = {
-      fullName: "emp",
-      profile: "img",
-      id: "empID",
-      "phone number": "pn",
-      birthday: "dob",
-      guardian: "guardian",
-      address: "address",
-      department: "department",
-      signature: "signature",
-    };
+    // const keyMap = {
+    //   fullName: "emp",
+    //   profile: "img",
+    //   id: "empID",
+    //   "phone number": "pn",
+    //   birthday: "dob",
+    //   guardian: "guardian",
+    //   address: "address",
+    //   department: "department",
+    //   signature: "signature",
+    // };
 
-    Object.keys(dfp).forEach((dfpKey) => {
-      const mappedKey = keyMap[dfpKey] || dfpKey;
+    Object.keys(dfp).forEach((key) => {
+      const value =
+        fakeEMP.front[key] !== undefined
+          ? fakeEMP.front[key]
+          : fakeEMP.back[key];
 
-      // Kunin ang value mula sa fakeEMP front/back
-      let value;
-      if (fakeEMP.front[mappedKey] !== undefined) {
-        value = fakeEMP.front[mappedKey];
-      } else if (fakeEMP.back[mappedKey] !== undefined) {
-        value = fakeEMP.back[mappedKey];
-      } else {
-        value = null;
-      }
-
-      // Gamitin ang target na naka-save sa dfp, default sa front kung wala
-      const target =
-        dfp[dfpKey].target ||
-        (fakeEMP.front[mappedKey] !== undefined ? "front" : "back");
-
-      if (value !== null) {
+      if (value !== undefined) {
         newPlaced.push({
           id: Date.now() + Math.random(),
-          key: dfpKey,
+          key, // keep original key
           value,
-          x: dfp[dfpKey].x || 0,
-          y: dfp[dfpKey].y || 0,
-          target, // ✅ dito na gagamitin ang saved target
-          style: { ...dfp[dfpKey] },
+          x: dfp[key].x || 0,
+          y: dfp[key].y || 0,
+          target: dfp[key].target || "front",
+          style: { ...dfp[key] },
         });
       }
     });
@@ -135,7 +123,13 @@ export default function IdCalibrator() {
         if (p.style.border) base.border = p.style.border;
       }
 
-      dfp[p.key] = base;
+      // Determine original key based on p.value
+      const originalKey =
+        Object.keys(fakeEMP.front).find((k) => fakeEMP.front[k] === p.value) ||
+        Object.keys(fakeEMP.back).find((k) => fakeEMP.back[k] === p.value) ||
+        p.key;
+
+      dfp[originalKey] = base;
     });
 
     const saveData = {
