@@ -252,6 +252,7 @@ export default function IdCalibrator() {
         });
       });
     }
+
     setPlacedValues([]);
     setFrontImage(null);
     setBackImage(null);

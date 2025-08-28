@@ -20,6 +20,7 @@ import {
   SAVE,
   UPDATE,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+import EditableSelect from "../../../../../components/customizable/editableSelect";
 
 export default function Modal({
   show,
@@ -240,7 +241,13 @@ export default function Modal({
               />
             </MDBCol>
             <MDBCol md="3">
-              <MDBSelect
+              <EditableSelect
+                collections={References.units}
+                label="Units"
+                className="mt-4 p-1"
+                onChange={(e) => handleChange("units", e)}
+              />
+              {/* <MDBSelect
                 getValue={(e) => handleChange("units", e[0])}
                 className="colorful-select dropdown-primary hidden-md-down"
               >
@@ -252,7 +259,7 @@ export default function Modal({
                     </MDBSelectOption>
                   ))}
                 </MDBSelectOptions>
-              </MDBSelect>
+              </MDBSelect> */}
             </MDBCol>
           </MDBRow>
           <b>
