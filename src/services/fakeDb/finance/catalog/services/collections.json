@@ -2192,7 +2192,7 @@
     "id": 201,
     "name": "Electrocardiogram",
     "abbreviation": "ECG",
-    "department": "CARDIO",
+    "department": "RAD",
     "template": 0,
     "lo_ssx": "Normal sinus rhythm, no abnormalities",
     "hi_ssx": "Arrhythmias, ischemia, infarction, abnormal heart rate",
