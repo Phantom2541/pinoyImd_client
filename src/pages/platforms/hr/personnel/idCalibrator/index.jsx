@@ -11,7 +11,10 @@ import {
   CTBROWSE,
 } from "../../../../../services/redux/slices/assets/branches";
 import { Cloudinary } from "../../../../../services/utilities";
-import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
+import {
+  DESTROY_IMG,
+  UPLOAD,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function IdCalibrator() {
   const [frontImage, setFrontImage] = useState(null);
@@ -221,6 +224,34 @@ export default function IdCalibrator() {
 
   // inside IdCalibrator
   const handleReset = () => {
+    const { icId = {} } = branch;
+    const images = Object.entries(icId).filter(([_, value]) => Boolean(value));
+
+    if (images.length) {
+      images.forEach(([key]) => {
+        dispatch(
+          DESTROY_IMG({
+            data: {
+              path: `companies/${company?.name}/${activePlatform?.branch?.name}/ic/${key}`,
+            },
+            token,
+          })
+        ).then(() => {
+          dispatch(
+            UPDATE({
+              token,
+              data: {
+                _id: activePlatform.branchId,
+                icId: {
+                  ...icId,
+                  [key]: null,
+                },
+              },
+            })
+          );
+        });
+      });
+    }
     setPlacedValues([]);
     setFrontImage(null);
     setBackImage(null);
