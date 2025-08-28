@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -164,8 +164,6 @@ export default function Modal({
   };
 
   const { lo, hi, warn, alert, critical, snug } = form;
-  console.log("preference", preference);
-
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size="lg">
       <MDBModalHeader
@@ -247,19 +245,6 @@ export default function Modal({
                 className="mt-4 p-1"
                 onChange={(e) => handleChange("units", e)}
               />
-              {/* <MDBSelect
-                getValue={(e) => handleChange("units", e[0])}
-                className="colorful-select dropdown-primary hidden-md-down"
-              >
-                <MDBSelectInput selected={willCreate ? "Units" : form.units} />
-                <MDBSelectOptions>
-                  {References.units.map((unit, index) => (
-                    <MDBSelectOption key={`unit-${index}`} value={unit}>
-                      {unit}
-                    </MDBSelectOption>
-                  ))}
-                </MDBSelectOptions>
-              </MDBSelect> */}
             </MDBCol>
           </MDBRow>
           <b>
