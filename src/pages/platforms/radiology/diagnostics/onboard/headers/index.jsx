@@ -36,7 +36,7 @@ export default function Header() {
           key: {
             branchId: activePlatform?.branchId,
             createdAt,
-            department: activePlatform?.department,
+            department: "RAD",
             timezone,
           },
           token,

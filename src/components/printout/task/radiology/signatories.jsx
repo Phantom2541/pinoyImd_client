@@ -23,7 +23,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
       </h5>
       {label}
       <h6>
-        {label !== "Receptionist" &&
+        {label !== "Encoder" &&
           person?.prc &&
           ` PRC License #: ${person?.prc.id}`}
       </h6>
@@ -45,7 +45,7 @@ export default function Signatories({ signatories, form }) {
       <div className="mt-3">
         <div className="d-flex justify-content-between ">
           <Signature person={head} label={title} isHalf />
-          <Signature person={frontdesk} label="Receptionist" isHalf />
+          <Signature person={frontdesk} label="Encoder" isHalf />
         </div>
         {form !== "ecg" && (
           <Signature

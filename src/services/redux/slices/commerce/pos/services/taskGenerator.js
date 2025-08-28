@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, getDepartment } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 
 const url = "commerce/pos/services/deals";
@@ -235,18 +235,20 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
         // filter by department
-        const _collections = payload.map((item, index) => ({
-          ...item,
-          pn: payload.length - index,
-          cart: item?.cart?.filter(({ packages }) =>
-            Services.filterByDepartment(
-              packages,
-              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
-            )
-          ),
-        }));
 
-        state.collections = state.filtered = _collections;
+        const collectionsWithPN = payload
+          .map((item) => ({
+            ...item,
+            cart: item?.cart?.filter(({ packages }) =>
+              Services.filterByDepartment(packages, getDepartment(department))
+            ),
+          }))
+          .filter(({ cart }) => cart?.length)
+          .map((item, index, arr) => ({
+            ...item,
+            pn: arr.length - index,
+          }));
+        state.collections = state.filtered = collectionsWithPN;
 
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
