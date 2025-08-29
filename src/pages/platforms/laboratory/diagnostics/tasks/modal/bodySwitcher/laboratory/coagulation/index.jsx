@@ -17,8 +17,8 @@ const Coagulation = () => {
   return (
     <MDBCardBody>
       <MDBRow>
-        {packages.length > 1 && (
-          <MDBCol size="3" className="mb-2">
+        <MDBCol size="3" className="mb-2">
+          {packages.includes(53) && (
             <MDBBtn
               color="info"
               outline={activeTab === "tab1"}
@@ -27,6 +27,8 @@ const Coagulation = () => {
             >
               Protime
             </MDBBtn>
+          )}
+          {packages.includes(54) && (
             <MDBBtn
               color="secondary"
               outline={activeTab === "tab2"}
@@ -35,8 +37,8 @@ const Coagulation = () => {
             >
               APTT
             </MDBBtn>
-          </MDBCol>
-        )}
+          )}
+        </MDBCol>
         <MDBCol size={packages.length > 1 ? 9 : 12}>
           {activeTab === "tab1" && (
             <Protime pt={pt} setPt={setPt} aptt={aptt} setAptt={setAptt} />
