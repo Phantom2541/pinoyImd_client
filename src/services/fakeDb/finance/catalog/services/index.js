@@ -23,6 +23,9 @@ const Services = {
   },
 
   filterByDepartment: (packages, department) => {
+    console.log(
+      packages.filter((pkg) => Services.find(pkg)?.department === department)
+    );
     return (
       packages
         .filter((pkg) => Services.find(pkg)?.department === department)
