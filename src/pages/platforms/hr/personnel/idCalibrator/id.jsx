@@ -22,6 +22,9 @@ export default function ID({
   showAllValues,
   lockAspect,
   lockAspectRatio,
+  frontLoading,
+  backLoading,
+  editMode,
 }) {
   // const [draggingIndex, setDraggingIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -47,6 +50,7 @@ export default function ID({
     fontFamily: "Arial, sans-serif",
     letterSpacing: "0",
     FontWeight: "regular",
+    borderBottom: "none",
   };
 
   const defaultImageStyle = {
@@ -294,14 +298,14 @@ export default function ID({
       );
     });
 
-  const IDPreview = ({ image, target, handleChange }) => (
+  const IDPreview = ({ image, target, handleChange, loading }) => (
     <div
       className={`id-calibrator-preview ${layout || "landscape"} ${
         selectedSide === target ? "active" : ""
       }`}
       onClick={(e) => handleClickOnImage(target, e)}
     >
-      {!image && (
+      {!image && !loading && (
         <>
           <label
             className="id-calibrator-preview-upload"
@@ -313,7 +317,13 @@ export default function ID({
         </>
       )}
 
-      {image && (
+      {loading && (
+        <div className="id-calibrator-preview-loading">
+          <div className="id-calibrator-preview-loader" />
+        </div>
+      )}
+
+      {image && !loading && (
         <img
           className="id-calibrator-preview-image"
           src={image}
@@ -322,6 +332,7 @@ export default function ID({
           onClick={() => setSelectedSide(target)}
         />
       )}
+
       <PlacedValues target={target} />
       <input
         id={`uploadimg${target}`}
@@ -344,16 +355,22 @@ export default function ID({
         }
       }}
     >
-      <div className={`id-calibrator-preview-wrapper ${layout || "landscape"}`}>
+      <div
+        className={`id-calibrator-preview-wrapper ${layout || "landscape"} ${
+          editMode ? "" : "editMode"
+        }`}
+      >
         <IDPreview
           image={frontImage}
           target="front"
           handleChange={handleFrontChange}
+          loading={frontLoading}
         />
         <IDPreview
           image={backImage}
           target="back"
           handleChange={handleBackChange}
+          loading={backLoading}
         />
       </div>
 
