@@ -22,7 +22,6 @@ const Header = () => {
     filtered = [],
     collections = [],
     filteredPhysicians: physicians = [],
-    vendor,
     source: displaySource,
     physician: displayPhysician,
     isLoading,
@@ -54,8 +53,8 @@ const Header = () => {
         key: {
           branchId: activePlatform.branchId,
           department: activePlatform.department,
-          createdAt: startDate,
-          endDate,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
         },
       })
     );
@@ -84,15 +83,38 @@ const Header = () => {
     .flatMap(({ deals = [] }) => deals.map((d) => Number(d.amount) || 0))
     .reduce((a, b) => a + b, 0);
 
+  const getResecoData = () => {
+    const isMembership = sources.find(
+      ({ _id }) => selectedSource === _id
+    )?.isMembership;
+
+    const gross = filtered
+      .flatMap(({ deals = [] }) => deals.map((d) => Number(d.amount) || 0))
+      .reduce((a, b) => a + b, 0);
+
+    const rebate = !isMembership ? gross * 0.1 : 0;
+
+    return {
+      isMembership,
+      gross,
+      rebate,
+      header: {
+        month: Calendar.Months[month - 1],
+        year,
+        source: displaySource,
+        physician: displayPhysician,
+        gross,
+        rebate,
+        isMembership,
+      },
+    };
+  };
+
   // 🖨️ Print
   const handlePrintOut = () => {
-    const source =
-      sources.find(({ _id }) => String(_id) === String(vendor?._id)) ?? {};
+    const { header } = getResecoData();
     localStorage.setItem("resecos", JSON.stringify(filtered));
-    localStorage.setItem(
-      "header",
-      JSON.stringify({ month: Calendar.Months[month - 1], year, source })
-    );
+    localStorage.setItem("header", JSON.stringify(header));
     window.open(
       "/printout/reseco",
       "Reseco",
@@ -101,14 +123,7 @@ const Header = () => {
   };
   // 📤 Excel Export
   const handleSoftCopy = () => {
-    const isMembership = sources.find(
-      ({ _id }) => selectedSource === _id
-    ).isMembership;
-
-    const gross = filtered
-      .flatMap(({ deals = [] }) => deals.map((d) => Number(d.amount) || 0))
-      ?.reduce((a, b) => a + b, 0);
-    const rebate = !isMembership ? gross * 0.1 : 0;
+    const { gross, rebate, isMembership } = getResecoData();
     ResecoToExcel({
       array: filtered,
       options: {
@@ -120,11 +135,10 @@ const Header = () => {
       },
     });
   };
-
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-2 mx-4 d-flex justify-content-between align-items-center"
     >
       <CalendarPicker
         month={month}
@@ -133,14 +147,16 @@ const Header = () => {
         reset={() => dispatch(ResetDATE())}
       />
       {isLoading && (
-        <>
-          <Loading />
-          <Loading />
-        </>
+        <div style={{ width: "100%" }} className="d-flex justify-content-end ">
+          <div style={{ width: "30rem" }} className="d-flex align-items-center">
+            <Loading />
+            <Loading />
+          </div>
+        </div>
       )}
 
       <div className="d-flex align-items-center ml-2">
-        {!isLoading && (
+        {!isLoading && filtered.length > 0 && (
           <>
             <div
               className="text-right d-flex items-center"
@@ -176,7 +192,6 @@ const Header = () => {
                   ))}
               </select>
 
-              {/* 🔹 Physician Dropdown */}
               <select
                 style={{ width: "100%" }}
                 className="custom-select mr-2"
@@ -199,7 +214,7 @@ const Header = () => {
         <MDBBtn
           color="white"
           rounded
-          disabled={isLoading}
+          disabled={isLoading || filtered.length === 0}
           size="sm"
           className="px-2"
           onClick={handlePrintOut}
@@ -210,7 +225,7 @@ const Header = () => {
           color="white"
           rounded
           size="sm"
-          disabled={isLoading}
+          disabled={isLoading || filtered.length === 0}
           className="px-2"
           onClick={handleSoftCopy}
         >

@@ -41,7 +41,9 @@ const Header = ({ deal, index, totalDeals }) => {
           {categoryName}
         </MDBBadge>
         {source && (
-          <MDBBadge color="warning">{capitalize(source?.name)}</MDBBadge>
+          <MDBBadge color="warning" className="mr-2">
+            {capitalize(source?.name)}
+          </MDBBadge>
         )}
         {/* on the right corner */}
         <span
