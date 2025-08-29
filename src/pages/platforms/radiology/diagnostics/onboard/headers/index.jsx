@@ -76,7 +76,7 @@ export default function Header() {
           {collections.length}-Onboarded
         </span>
       </div>
-
+      <div>RADIOLOGY DEPARTMENT</div>
       <div className="d-flex align-items-center">
         <div className=" d-flex align-items-center mr-4">
           <span className="mr-1 ">Status:</span>
