@@ -235,7 +235,7 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
         // filter by department
-
+        console.log("department", getDepartment(department));
         const collectionsWithPN = payload
           .map((item) => ({
             ...item,
