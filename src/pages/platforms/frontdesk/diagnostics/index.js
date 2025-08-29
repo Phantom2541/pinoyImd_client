@@ -1,3 +1,3 @@
 import Tasks from "./tasks";
-
-export { Tasks };
+import Onboard from "./onboarding";
+export { Tasks, Onboard };

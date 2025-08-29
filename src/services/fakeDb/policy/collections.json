@@ -156,18 +156,18 @@
       },
       {
         "id": 38,
-        "name": "Jr Lms",
-        "display_name": "Jr.Medical Laboratory Scientist"
+        "name": "Jr MLS",
+        "display_name": "Jr. Medical Laboratory Scientist"
       },
       {
         "id": 39,
-        "name": "Lms",
+        "name": "MLS",
         "display_name": "Medical Laboratory Scientist"
       },
       {
         "id": 40,
-        "name": "Sr Lms",
-        "display_name": "Sr.Medical Laboratory Scientist"
+        "name": "Sr MLS",
+        "display_name": "Sr. Medical Laboratory Scientist"
       },
       {
         "id": 41,

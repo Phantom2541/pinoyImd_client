@@ -13,9 +13,10 @@ export default function DraggableButtons({
   setShowAllValues,
   setPlacedValues,
   selectedSide,
+  editMode,
 }) {
   return (
-    <div className="id-calibrator-details">
+    <div className={`id-calibrator-details ${editMode ? "show" : "hide"}`}>
       <span className="id-calibrator-details-title">{selectedSide} :</span>
       {filteredKeys
         .filter((key) =>

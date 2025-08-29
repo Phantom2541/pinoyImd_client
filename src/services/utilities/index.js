@@ -18,6 +18,7 @@ import mobile from "./mobile";
 import contacts from "./contacts";
 import getAge from "./getAge";
 import getDate from "./getDate";
+import getDepartment from "./getDepartment";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
 import { computeGD, allServicesHavePrices } from "./computeGD";
@@ -126,6 +127,7 @@ export {
   getDate,
   getTime,
   getDay,
+  getDepartment,
   contacts,
   dateFormat,
   timeFormat,

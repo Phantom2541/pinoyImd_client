@@ -140,7 +140,6 @@
   padding: 5px 0;
   max-height: 510px;
   overflow: auto;
-
   /* para gumana sa Firefox din */
   scrollbar-width: thin;
   scrollbar-color: #888 transparent;
@@ -207,7 +206,6 @@
 .IDGenerator-setting-input-wrapper {
   display: flex;
   align-items: center;
-
   background-color: #f5f5f5;
   width: 100%;
   height: fit-content;
@@ -266,6 +264,26 @@
   background: white;
   border: 1px solid #e5e7eb;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.id-calibrator-details.hide,
+.IDGenerator-setting-container.hide {
+  visibility: hidden;
+}
+
+.id-calibrator-details.show,
+.IDGenerator-setting-container.show {
+  visibility: visible;
+  animation: isEditMode 0.7s ease;
+}
+
+@keyframes isEditMode {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .IDGenerator-setting-section {
@@ -379,4 +397,40 @@
   background-color: #dc3545;
   color: white;
   padding: 3px 0;
+}
+
+.IDGenerator-settings-upload {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+.IDGenerator-settings-upload label {
+  width: 100%;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  color: black;
+  border: 1px solid #e6e6e6;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 5px 0;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.IDGenerator-settings-upload label.active {
+  display: block;
+}
+
+.IDGenerator-settings-upload label:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.IDGenerator-settings-upload label:active {
+  filter: brightness(0.9);
+  transform: scale(0.99);
 }

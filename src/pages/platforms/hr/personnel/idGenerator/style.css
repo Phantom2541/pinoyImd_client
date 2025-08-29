@@ -20,3 +20,53 @@
   height: 100%;
   object-fit: fill;
 }
+
+/* skeleton.css */
+.id-generator-skeleton-wrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.id-generator-skeleton {
+  background: #e0e0e0;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.id-generator-skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: id-generator-loading 1.2s infinite;
+}
+
+@keyframes id-generator-loading {
+  0% {
+    left: -150px;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.id-generator-id-front,
+.id-generator-id-back {
+  width: 3.1875in;
+  height: 5.0625in;
+}
+
+.id-generator-settings-panel {
+  width: 5.1875in;
+  height: 3.0625in;
+}

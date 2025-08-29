@@ -131,6 +131,8 @@ export default function SideNavigation({
     const fullSidebar = group[platformKey] || [];
     if (platformKey === "laboratory") {
       const role = activePlatform?.role;
+      console.log("role", role);
+
       const filtered = filterSidebarByRole(fullSidebar, role);
       if (JSON.stringify(links) !== JSON.stringify(filtered)) {
         setLinks(filtered);

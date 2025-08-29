@@ -20,6 +20,7 @@ export default function Select({
   useInput = false, // toggle label or input
   showSearch = true, // toggle search bar
   disabled,
+  value,
 }) {
   const [selectedValue, setSelectedValue] = useState(defaultValue);
   const [inputValue, setInputValue] = useState(
@@ -29,6 +30,12 @@ export default function Select({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectActive, setSelectActive] = useState(false);
   const selectRef = useRef(null);
+
+  useEffect(() => {
+    if (value) {
+      setSelectedValue(value);
+    }
+  }, [value]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -56,7 +63,7 @@ export default function Select({
       const value = getValue(option);
       setSelectedValue(option);
       setInputValue(option.value);
-      onSelect(value);
+      onSelect(value, option);
       setSelectActive(false);
       setEditing(false);
     },
@@ -149,7 +156,7 @@ export default function Select({
   return (
     <div
       className="d-flex flex-column align-items-start w-100"
-      style={{ minWidth: "50%" }}
+      style={{ minWidth: "30%" }}
     >
       <span
         className={`IDGenerator-setting-select-label ${

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -13,15 +13,10 @@ import { capitalize } from "../../../../../services/utilities";
 
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { department } = activePlatform;
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { filtered, byStatus, sections, filteredStatus, byGroup } = useSelector(
     ({ validator }) => validator
   );
-  const departmentCode =
-    department?.toLowerCase() === "laboratory"
-      ? "LAB"
-      : activePlatform?.department?.toUpperCase();
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -29,7 +24,7 @@ const Headers = ({ searchKey }) => {
         TASKS({
           token,
           key: {
-            department: [departmentCode],
+            department: ["RAD"],
             branchId: activePlatform?.branchId,
             createdAt: new Date().setHours(0, 0, 0, 0),
           },
@@ -37,7 +32,7 @@ const Headers = ({ searchKey }) => {
       );
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, departmentCode]);
+  }, [token, dispatch, activePlatform]);
 
   return (
     <MDBView
