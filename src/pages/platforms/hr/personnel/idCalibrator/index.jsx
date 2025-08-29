@@ -71,12 +71,6 @@ export default function IdCalibrator() {
       }/ic/${isFront ? "front" : "back"}`;
     };
 
-    // console.log("Front Img URL:", getImg(true));
-    // console.log("Back Img URL:", getImg(false));
-
-    // console.log("Front Img URL:", getImg(true));
-    // console.log("Back Img URL:", getImg(false));
-
     setFrontImage(getImg() || null);
     setBackImage(getImg(false) || null);
     setLoading(false);
@@ -148,8 +142,6 @@ export default function IdCalibrator() {
       dfp,
     };
 
-    console.log("======Saved Data=========");
-    console.log(saveData);
     dispatch(
       UPDATE({
         token,
@@ -218,12 +210,13 @@ export default function IdCalibrator() {
   };
 
   // inside IdCalibrator
-  const handleReset = () => {
+  const handleReset = async () => {
     const { icId = {} } = branch;
     const images = Object.entries(icId).filter(([_, value]) => Boolean(value));
 
-    if (images.length) {
-      images.forEach(([key]) => {
+    // 🔹 Destroy lahat ng images sa Cloudinary
+    await Promise.all(
+      images.map(([key]) =>
         dispatch(
           DESTROY_IMG({
             data: {
@@ -231,32 +224,24 @@ export default function IdCalibrator() {
             },
             token,
           })
-        );
-      });
+        )
+      )
+    );
 
-      dispatch(
-        UPDATE({
-          token,
-          data: {
-            _id: activePlatform.branchId,
-            icId: {
-              front: null,
-              back: null,
-            },
-          },
-        })
-      );
-    }
-
-    setPlacedValues([]);
-    setFrontImage(null);
-    setBackImage(null);
-    setFloatingValue(null);
-    setDraggedValue(null);
-    setCursorPos({ x: 0, y: 0 });
-    // optional: reset layout & side
-    setLayout("portrait");
-    setSelectedSide("front");
+    // 🔹 Isang UPDATE lang for icId + layout + dfp
+    dispatch(
+      UPDATE({
+        token,
+        data: {
+          _id: activePlatform.branchId,
+          icId: { front: null, back: null }, // reset both
+          ct: JSON.stringify({
+            layout: "portrait", // default
+            dfp: {}, // cleared placements
+          }),
+        },
+      })
+    );
   };
 
   const handleUpdateValueStyle = (updates) => {
