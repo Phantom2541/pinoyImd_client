@@ -3547,5 +3547,19 @@
     "specimen": "Serum",
     "template": 6,
     "purpose": "To evaluate for ovarian pathology."
+  },
+  {
+    "id": 370,
+    "name": "Microalbumin Test (Urine)",
+    "abbreviation": "MAU",
+    "lo_ssx": "Low values are usually normal, no symptoms",
+    "hi_ssx": "High values may indicate early kidney damage, often asymptomatic initially",
+    "department": "LAB",
+    "frequency": "Usually yearly for diabetics or hypertensive patients; per physician request",
+    "preference": "Random urine or first morning urine; preferred first morning",
+    "preparation": "No special preparation required; avoid strenuous exercise 24 hrs before test",
+    "specimen": "Urine (spot urine or 24-hour collection)",
+    "template": 6,
+    "purpose": "Detects early kidney damage by measuring small amounts of albumin in urine; important for monitoring diabetics and hypertensive patients"
   }
 ]
