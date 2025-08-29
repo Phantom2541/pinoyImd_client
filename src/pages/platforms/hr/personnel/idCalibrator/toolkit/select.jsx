@@ -156,7 +156,7 @@ export default function Select({
   return (
     <div
       className="d-flex flex-column align-items-start w-100"
-      style={{ minWidth: "50%" }}
+      style={{ minWidth: "30%" }}
     >
       <span
         className={`IDGenerator-setting-select-label ${

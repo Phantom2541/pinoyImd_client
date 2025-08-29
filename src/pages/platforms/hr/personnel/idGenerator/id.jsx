@@ -68,6 +68,7 @@ export default function ID({
             height: p.height || "auto",
             borderRadius: p.borderRadius,
             border: p.border,
+            borderBottom: p.borderBottom,
             opacity: p.opacity ?? 1,
           };
 

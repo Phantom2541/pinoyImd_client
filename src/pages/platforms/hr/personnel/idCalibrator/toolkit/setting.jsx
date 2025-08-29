@@ -19,6 +19,8 @@ export default function Setting({
   placedValues,
   frontImage,
   backImage,
+  editMode,
+  setEditMode,
 }) {
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
@@ -174,7 +176,9 @@ export default function Setting({
   ) || { label: "regular", value: 400, style: "normal" };
 
   return (
-    <div className="IDGenerator-setting-container">
+    <div
+      className={`IDGenerator-setting-container ${editMode ? "show" : "hide"}`}
+    >
       {/* Layout controls */}
       {!personalize && (
         <div
@@ -196,6 +200,13 @@ export default function Setting({
           >
             Reset Template
           </button>
+          <div
+            className={`id-calibrator-edit-button ${editMode ? "" : "hide"}`}
+          >
+            <button onClick={() => setEditMode(false)} className="bg-secondary">
+              Hide Setting
+            </button>
+          </div>
         </div>
       )}
 
@@ -462,7 +473,7 @@ export default function Setting({
             />
             <Input
               type="number"
-              title="Border Bottom"
+              title="Text Underline"
               unit="px"
               label={
                 <input
@@ -489,7 +500,7 @@ export default function Setting({
               value={
                 style.borderBottom
                   ? parseInt(style.borderBottom.split(" ")[0]) // extract px
-                  : 1
+                  : 0
               }
               onChange={(e) =>
                 updateStyle({
@@ -510,15 +521,16 @@ export default function Setting({
           className={frontImage ? "active" : ""}
           htmlFor={`uploadimgfront`}
         >
-          Change Front Image
+          Change Front
         </label>
         <label className={backImage ? "active" : ""} htmlFor={`uploadimgback`}>
-          Change Back Image
+          Change Back
         </label>
       </div>
+
       {/* Save Button */}
       <div className="IDGenerator-settings-save">
-        <button onClick={onSave}>💾 Save</button>
+        <button onClick={onSave}>💾 SAVE</button>
       </div>
     </div>
   );

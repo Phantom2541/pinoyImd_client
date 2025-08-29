@@ -19,6 +19,9 @@ import {
 export default function IdCalibrator() {
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
+  const [frontLoading, setFrontLoading] = useState(false);
+  const [backLoading, setBackLoading] = useState(false);
+
   const [layout, setLayout] = useState("portrait");
   const [draggedValue, setDraggedValue] = useState(null);
   const [floatingValue, setFloatingValue] = useState(null);
@@ -29,6 +32,7 @@ export default function IdCalibrator() {
   const [showAllValues, setShowAllValues] = useState(false);
   const [lockAspect, setLockAspect] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
 
   const dispatch = useDispatch();
   const options = ["portrait", "landscape"];
@@ -96,6 +100,13 @@ export default function IdCalibrator() {
         });
       }
     });
+    console.log("here", branch.ct);
+    // ✅ If branch.ct exists, hide Setting & Buttons initially
+    if (branch.ct && branch.ct.dfp && Object.keys(branch.ct.dfp).length > 0) {
+      setEditMode(true); // may laman ang dfp → edit mode on
+    } else {
+      setEditMode(false); // walang laman ang dfp → edit mode off
+    }
 
     setPlacedValues(newPlaced);
   }, [branch]);
@@ -116,6 +127,8 @@ export default function IdCalibrator() {
         if (p.style.fontStyle) base.fontStyle = p.style.fontStyle;
         if (p.style.letterSpacing)
           base.letterSpacing = parseInt(p.style.letterSpacing);
+        if (p.style.opacity) base.opacity = p.style.opacity;
+        if (p.style.borderBottom) base.borderBottom = p.style.borderBottom;
 
         // ✅ Image styles
         if (p.style.width) base.width = parseInt(p.style.width);
@@ -154,25 +167,44 @@ export default function IdCalibrator() {
   const filteredKeys = Object.keys(fakeEMP[selectedSide] || {});
 
   const uploadCloudinary = (img, isFront = true) => {
+    if (isFront) setFrontLoading(true);
+    else setBackLoading(true);
+
     const form = Cloudinary.buildFileForm(
       img,
       `companies/${company?.name}/${activePlatform?.branch?.name}/ic`,
       isFront ? "front" : "back"
     );
-    dispatch(UPLOAD({ data: form, token })).then((upAction) => {
-      dispatch(
-        UPDATE({
-          token,
-          data: {
-            _id: activePlatform.branchId,
-            icId: {
-              ...(branch.icId || {}),
-              [isFront ? "front" : "back"]: upAction.payload.imgId,
+
+    dispatch(UPLOAD({ data: form, token }))
+      .then((upAction) => {
+        const imgId = upAction.payload.imgId;
+
+        // Update Redux
+        dispatch(
+          UPDATE({
+            token,
+            data: {
+              _id: activePlatform.branchId,
+              icId: {
+                ...(branch.icId || {}),
+                [isFront ? "front" : "back"]: imgId,
+              },
             },
-          },
-        })
-      );
-    });
+          })
+        );
+
+        // ✅ Update local state immediately so preview shows
+        const newImageUrl = `${Cloudinary.getEndpoint()}/${imgId}/companies/${
+          company?.name
+        }/${activePlatform?.branch?.name}/ic/${isFront ? "front" : "back"}`;
+        if (isFront) setFrontImage(newImageUrl);
+        else setBackImage(newImageUrl);
+      })
+      .finally(() => {
+        if (isFront) setFrontLoading(false);
+        else setBackLoading(false);
+      });
   };
 
   const handleFrontChange = (e) => {
@@ -303,30 +335,34 @@ export default function IdCalibrator() {
   };
 
   return (
-    <div
-      className={`id-calibrator-main-container ${layout || "landscape"}`}
-      onMouseMove={handleMouseMove}
-      style={{ position: "relative" }}
-    >
-      {/* Loading overlay */}
+    <>
       {loading ? (
         <div className="id-calibrator-skeleton-wrapper">
           <div className="id-calibrator-sekeleton-id-preview-wrapper">
             <div className="id-calibrator-skeleton-id-preview" />
             <div className="id-calibrator-skeleton-id-preview" />
           </div>
-          <div className="id-calibrator-skeleton-settings-panel"></div>
-          <div className="id-calibrator-skeleton-buttons"></div>
+          <div className="id-calibrator-skeleton-settings-panel" />
+          <div className="id-calibrator-skeleton-buttons" />
         </div>
       ) : (
-        <>
-          {/* ID Preview */}
+        <div
+          className={`id-calibrator-main-container ${layout || "landscape"} ${
+            editMode ? "" : "isEditMode"
+          }`}
+          onMouseMove={
+            floatingValue
+              ? (e) => setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 })
+              : undefined
+          }
+          style={{ position: "relative" }}
+        >
           <ID
             frontImage={frontImage}
             backImage={backImage}
             handleFrontChange={handleFrontChange}
             handleBackChange={handleBackChange}
-            filteredKeys={filteredKeys}
+            filteredKeys={Object.keys(fakeEMP[selectedSide] || {})}
             fakeEMP={fakeEMP}
             layout={layout}
             placedValues={placedValues}
@@ -346,42 +382,59 @@ export default function IdCalibrator() {
             showAllValues={showAllValues}
             lockAspect={lockAspect}
             lockAspectRatio={lockAspectRatio}
+            frontLoading={frontLoading}
+            backLoading={backLoading}
+            editMode={editMode}
           />
 
-          {/* Layout Setting */}
-          <Setting
-            layout={layout}
-            setLayout={setLayout}
-            options={options}
-            onReset={handleReset}
-            selectedValue={selectedValue}
-            setSelectedValue={setSelectedValue}
-            onUpdateValueStyle={handleUpdateValueStyle}
-            onSave={onSave}
-            lockAspect={lockAspect}
-            setLockAspect={setLockAspect}
-            lockAspectRatio={lockAspectRatio}
-            placedValues={placedValues}
-            frontImage={frontImage}
-            backImage={backImage}
-          />
+          {/* ✅ Show Edit button if branch.ct exists and editMode=false */}
+          <div
+            className={`id-calibrator-edit-button ${editMode ? "hide" : ""}`}
+          >
+            <button onClick={() => setEditMode(true)} className="bg-secondary">
+              Show Setting
+            </button>
+          </div>
 
-          {/* Draggable Buttons */}
-          <DraggableButtons
-            fakeEMP={fakeEMP[selectedSide]}
-            filteredKeys={filteredKeys}
-            placedValues={placedValues}
-            handleDragStart={handleDragStart}
-            handleClickValue={handleClickValue}
-            frontImage={frontImage}
-            backImage={backImage}
-            setShowAllValues={setShowAllValues}
-            showAllValues={showAllValues}
-            setPlacedValues={setPlacedValues}
-            selectedSide={selectedSide}
-          />
-        </>
+          {/* ✅ Only show Setting + Buttons if editMode=true */}
+          {editMode && (
+            <>
+              <Setting
+                layout={layout}
+                setLayout={setLayout}
+                options={options}
+                onReset={handleReset}
+                selectedValue={selectedValue}
+                setSelectedValue={setSelectedValue}
+                onUpdateValueStyle={handleUpdateValueStyle}
+                onSave={onSave}
+                lockAspect={lockAspect}
+                setLockAspect={setLockAspect}
+                lockAspectRatio={lockAspectRatio}
+                placedValues={placedValues}
+                frontImage={frontImage}
+                backImage={backImage}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
+              <DraggableButtons
+                fakeEMP={fakeEMP[selectedSide]}
+                filteredKeys={Object.keys(fakeEMP[selectedSide] || {})}
+                placedValues={placedValues}
+                handleDragStart={handleDragStart}
+                handleClickValue={handleClickValue}
+                frontImage={frontImage}
+                backImage={backImage}
+                setShowAllValues={setShowAllValues}
+                showAllValues={showAllValues}
+                setPlacedValues={setPlacedValues}
+                selectedSide={selectedSide}
+                editMode={editMode}
+              />
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 }
