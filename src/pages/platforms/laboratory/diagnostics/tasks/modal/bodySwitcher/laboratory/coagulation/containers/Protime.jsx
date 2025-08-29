@@ -40,9 +40,9 @@ const Protime = () => {
     dispatch(SetTASK({ task: { ...task, pt: _pt }, form: task.form }));
   };
   return (
-    <MDBTable align="middle" hover responsive small className="mt-2" striped>
+    <MDBTable align="middle" responsive small>
       <MDBTableHead>
-        <tr className="text-center border">
+        <tr>
           <th>Name</th>
           <th>Results</th>
           <th style={{ width: 200 }}>Reference</th>
@@ -57,9 +57,12 @@ const Protime = () => {
               icon="user"
               group
               type="number"
-              className="mb-3 "
               name="patient"
               value={pt[0]}
+              style={{
+                fontWeight: 500,
+                color: pt[0] > 13 ? "red" : pt[0] < 11 ? "blue" : "black",
+              }}
               onChange={handlePt}
             />
           </td>
@@ -67,14 +70,17 @@ const Protime = () => {
         </tr>
         <tr className="text-center" key={`coagulation-control`}>
           <td>Control</td>
-          <td>
+          <td className="py-0">
             <MDBInput
               label="Control"
               icon="cog"
               group
+              style={{
+                fontWeight: 500,
+                color: pt[1] > 14.1 ? "red" : pt[1] < 10.7 ? "blue" : "black",
+              }}
               type="number"
               name="control"
-              className="mb-3 "
               value={pt[1]}
               onChange={handlePt}
             />
@@ -83,13 +89,16 @@ const Protime = () => {
         </tr>
         <tr className="text-center" key={`coagulation-control`}>
           <td>INR</td>
-          <td>
+          <td className="py-0">
             <MDBInput
               label="INR"
               icon="cog"
               group
+              style={{
+                fontWeight: 500,
+                color: inr > 1.1 ? "red" : inr < 0.8 ? "blue" : "black",
+              }}
               step="0.01"
-              className="mb-3 "
               value={inr}
               readonly
             />
@@ -98,13 +107,15 @@ const Protime = () => {
         </tr>
         <tr>
           <td>%Activity</td>
-          <td>
+          <td className="py-0">
             <MDBInput
               label="%Activity"
               icon="cog"
+              style={{
+                fontWeight: 500,
+              }}
               group
               step="0.01"
-              className="mb-3 "
               value={`${percent} %`}
               readonly
             />

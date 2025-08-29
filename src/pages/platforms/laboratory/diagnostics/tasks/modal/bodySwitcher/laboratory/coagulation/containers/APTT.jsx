@@ -24,9 +24,9 @@ const Aptt = () => {
     dispatch(SetTASK({ task: { ...task, aptt }, form: task?.form }));
   };
   return (
-    <MDBTable align="middle" hover responsive small className="mt-2" striped>
+    <MDBTable align="middle" responsive small className="mt-n2">
       <MDBTableHead>
-        <tr className="text-center border">
+        <tr>
           <th>Name</th>
           <th>Results</th>
           <th>Reference</th>
@@ -41,6 +41,10 @@ const Aptt = () => {
               icon="user"
               group
               type="number"
+              style={{
+                fontWeight: 500,
+                color: data[0] > 39 ? "red" : data[0] < 24 ? "blue" : "black",
+              }}
               name="patient"
               value={data[0]}
               className="mb-3 "
@@ -57,6 +61,10 @@ const Aptt = () => {
               icon="cog"
               group
               type="number"
+              style={{
+                fontWeight: 500,
+                color: data[1] > 39 ? "red" : data[1] < 24 ? "blue" : "black",
+              }}
               name="control"
               value={data[1]}
               className="mb-3 "

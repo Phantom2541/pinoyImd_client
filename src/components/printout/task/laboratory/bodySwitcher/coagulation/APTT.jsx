@@ -12,7 +12,12 @@ const APTT = ({ aptt = [] }) => {
         return (
           <tr key={index}>
             <td className="py-0">{index == 0 ? "Patient" : "Control"}</td>
-            <td className="py-0 fw-bold text-center">{item}</td>
+            <td
+              className="py-0 fw-bold text-center"
+              style={{ color: item > 39.0 ? "red" : item < 24.0 ? "blue" : "" }}
+            >
+              {item}
+            </td>
             <td className="py-0">{references[index]}</td>
           </tr>
         );
