@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { useSelector, useDispatch } from "react-redux";
 import { SetTASK } from "./../../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Aptt = () => {
-  const { theme } = useSelector(({ auth }) => auth),
-    { params } = useSelector(({ task }) => task),
+  const { task } = useSelector(({ validator }) => validator),
     [data, setData] = useState([0, 0]),
     dispatch = useDispatch();
 
   useEffect(() => {
-    const _aptt = !!params.aptt?.length ? params.aptt : [0, 0];
+    const _aptt = !!task.aptt?.length ? task.aptt : [0, 0];
     setData(_aptt);
-  }, [params]);
+  }, [task]);
 
   const handleAptt = (e) => {
     const { name, value } = e.target;
-    let aptt = [...data];
+    let aptt = [...(data || [])];
     if (name === "patient") {
       aptt[0] = parseFloat(value);
     } else {
       aptt[1] = parseFloat(value);
     }
-    dispatch(SetTASK({ ...params, aptt }));
+    dispatch(SetTASK({ task: { ...task, aptt }, form: task?.form }));
   };
   return (
     <MDBTable align="middle" hover responsive small className="mt-2" striped>

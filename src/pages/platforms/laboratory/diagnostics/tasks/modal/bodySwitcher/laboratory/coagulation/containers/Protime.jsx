@@ -5,39 +5,39 @@ import { SetTASK } from "./../../../../../../../../../../services/redux/slices/d
 
 const Protime = () => {
   const { theme } = useSelector(({ auth }) => auth),
-    { params } = useSelector(({ task }) => task),
-    [inr, setInr] = useState(),
-    [percent, setPercent] = useState(),
+    { task } = useSelector(({ validator }) => validator),
+    [inr, setInr] = useState(0),
+    [percent, setPercent] = useState(0),
     [pt, setPt] = useState([0, 0]),
     dispatch = useDispatch();
 
   useEffect(() => {
-    const _pt = !!params.pt ? params.pt : [0, 0];
+    const _pt = !!task.pt ? task.pt : [0, 0];
     setPt(_pt);
-  }, [params]);
+  }, [task]);
 
   useEffect(() => {
-    if (
-      !!params.pt &&
-      params.pt[0] !== null &&
-      !!params.pt &&
-      params.pt[1] !== null
-    ) {
-      const _inr = params.pt[0] / params.pt[1];
+    if (!!task.pt && task.pt[0] > 0 && task.pt[1] > 0) {
+      const _inr = task.pt[0] / task.pt[1];
       setInr(_inr.toFixed(2));
-      const _per = (params.pt[1] / params.pt[0]) * 100;
+
+      const _per = (task.pt[1] / task.pt[0]) * 100;
       setPercent(_per.toFixed(2));
+    } else {
+      setInr(0);
+      setPercent(0);
     }
-  }, [params]);
+  }, [task]);
+
   const handlePt = (e) => {
     const { name, value } = e.target;
-    let _pt = [...pt];
+    let _pt = [...(pt || [])];
     if (name === "patient") {
       _pt[0] = parseFloat(value);
     } else {
       _pt[1] = parseFloat(value);
     }
-    dispatch(SetTASK({ ...params, pt: _pt }));
+    dispatch(SetTASK({ task: { ...task, pt: _pt }, form: task.form }));
   };
   return (
     <MDBTable align="middle" hover responsive small className="mt-2" striped>

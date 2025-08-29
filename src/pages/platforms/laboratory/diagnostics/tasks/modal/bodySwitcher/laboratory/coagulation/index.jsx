@@ -3,16 +3,12 @@ import { useSelector } from "react-redux";
 import { MDBCardBody, MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Protime, APTT } from "./containers";
 
-@ric darrel
-
 const Coagulation = () => {
-  const packages = useSelector(
-    ({ validator }) => validator.task?.packages || []
-  );
+  const { task } = useSelector(({ validator }) => validator);
   const [pt, setPt] = useState([null, null]);
   const [aptt, setAptt] = useState([null, null]);
   const [activeTab, setActiveTab] = useState("tab1");
-
+  const { packages = [] } = task;
   useEffect(() => {
     packages.includes(53) && setActiveTab("tab1");
     packages.includes(54) && setActiveTab("tab2");
@@ -45,9 +41,9 @@ const Coagulation = () => {
           {activeTab === "tab1" && (
             <Protime pt={pt} setPt={setPt} aptt={aptt} setAptt={setAptt} />
           )}
-          {/* {activeTab === "tab2" && (
+          {activeTab === "tab2" && (
             <APTT pt={pt} setPt={setPt} aptt={aptt} setAptt={setAptt} />
-          )} */}
+          )}
         </MDBCol>
       </MDBRow>
     </MDBCardBody>
