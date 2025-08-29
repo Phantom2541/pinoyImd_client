@@ -235,19 +235,25 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
         // filter by department
-
         const collectionsWithPN = payload
           .map((item) => ({
             ...item,
-            cart: item?.cart?.filter(({ packages }) =>
-              Services.filterByDepartment(packages, getDepartment(department))
-            ),
+            cart: item?.cart
+              ?.map(({ packages, ...rest }) => {
+                const packagesFormatted = Services.filterByDepartment(
+                  packages,
+                  getDepartment(department)
+                );
+                return { packages: packagesFormatted, ...rest };
+              })
+              .filter(({ packages }) => packages?.length > 0),
           }))
-          .filter(({ cart }) => cart?.length)
+          .filter(({ cart }) => cart?.length > 0)
           .map((item, index, arr) => ({
             ...item,
             pn: arr.length - index,
           }));
+
         state.collections = state.filtered = collectionsWithPN;
 
         state.totalPages =

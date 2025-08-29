@@ -13,7 +13,7 @@ export default function DealCollapse() {
   return (
     <MDBCardBody className="pb-0">
       <MDBContainer
-        style={{ minHeight: "500px" }}
+        style={{ minHeight: "320px" }}
         fluid
         className="md-accordion"
       >
@@ -33,7 +33,11 @@ export default function DealCollapse() {
                 physicianId?.fullName?.lname || physicianSTR || "";
               return (
                 <MDBCard key={`deal-${index}`}>
-                  <Header deal={deal} index={index} />
+                  <Header
+                    deal={deal}
+                    index={index}
+                    totalDeals={filteredStatus.length}
+                  />
                   <MDBCollapse
                     id={`collapse-${index}`}
                     isOpen={index === activeCOLAPSE}

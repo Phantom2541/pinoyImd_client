@@ -10,7 +10,6 @@ export default function Modal() {
       ({ validator }) => validator
     ),
     dispatch = useDispatch();
-
   return (
     <MDBModal
       size="lg"

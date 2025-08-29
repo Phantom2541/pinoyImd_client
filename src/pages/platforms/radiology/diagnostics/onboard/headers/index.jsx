@@ -69,14 +69,14 @@ export default function Header() {
   return (
     <MDBView
       cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
           {collections.length}-Onboarded
         </span>
       </div>
-
+      <div>RADIOLOGY DEPARTMENT</div>
       <div className="d-flex align-items-center">
         <div className=" d-flex align-items-center mr-4">
           <span className="mr-1 ">Status:</span>

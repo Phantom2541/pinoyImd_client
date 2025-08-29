@@ -776,7 +776,7 @@
   {
     "id": 55,
     "name": "Antibody Screening",
-    "abbreviation": "ABS",
+    "abbreviation": "ABS Qlty",
     "lo_ssx": "N/A",
     "hi_ssx": "Presence of unexpected antibodies (risk for hemolytic transfusion reaction)",
     "department": "LAB",
@@ -958,7 +958,7 @@
   {
     "id": 68,
     "name": "Human Immunodeficiency Virus 1/2 Screening",
-    "abbreviation": "HIV 1/2",
+    "abbreviation": "HIV 1/2 Qlty",
     "lo_ssx": "Negative (no detectable antibodies or antigen)",
     "hi_ssx": "Positive (requires confirmatory testing: Western blot, ELISA, or NAAT)",
     "department": "LAB",
@@ -972,7 +972,7 @@
   {
     "id": 69,
     "name": "Rapid Plasma Reagin (RPR) / VDRL Screening",
-    "abbreviation": "RPR/VDRL",
+    "abbreviation": "RPR/VDRL Qlty",
     "lo_ssx": "Negative (no syphilis antibodies detected)",
     "hi_ssx": "Positive (suggestive of syphilis; confirmatory testing with FTA-ABS or TPHA required)",
     "department": "LAB",
@@ -986,7 +986,7 @@
   {
     "id": 71,
     "name": "Glucose-6-Phosphate Dehydrogenase Screening",
-    "abbreviation": "G6PD Screening",
+    "abbreviation": "G6PD Qlty",
     "lo_ssx": "Jaundice in newborn, pallor, dark urine, fatigue, shortness of breath",
     "hi_ssx": "Usually asymptomatic (high enzyme activity has no clinical significance)",
     "department": "LAB",
@@ -1014,7 +1014,7 @@
   {
     "id": 77,
     "name": "Dengue DUO (Ag/Ab) Screening",
-    "abbreviation": "Dengue NS1, IgG & IgM",
+    "abbreviation": "Dengue NS1, IgG & IgM Qlty",
     "lo_ssx": "Possible early infection (<24h) or absence of dengue",
     "hi_ssx": "Fever >24h, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding tendencies",
     "department": "LAB",
@@ -1027,8 +1027,8 @@
   },
   {
     "id": 334,
-    "name": "Dengue Antibody Screening (IgG/IgM)",
-    "abbreviation": "Dengue IgG/IgM",
+    "name": "Dengue Antibody (IgG/IgM) Screening",
+    "abbreviation": "Dengue IgG/IgM Qlty",
     "lo_ssx": "Asymptomatic or mild fever, body weakness",
     "hi_ssx": "Fever >24h, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding tendencies",
     "department": "LAB",
@@ -1041,8 +1041,8 @@
   },
   {
     "id": 335,
-    "name": "Dengue Antigen Screening (NS1)",
-    "abbreviation": "Dengue NS1",
+    "name": "Dengue Antigen (NS1) Screening",
+    "abbreviation": "Dengue NS1 Qlty",
     "lo_ssx": "Asymptomatic or mild fever (<24h)",
     "hi_ssx": "Fever >24h, headache, retro-orbital pain, myalgia, arthralgia, rash, bleeding tendencies",
     "department": "LAB",
@@ -1084,7 +1084,7 @@
   {
     "id": 131,
     "name": "Hepatitis A Virus Screening",
-    "abbreviation": "HAV Screening",
+    "abbreviation": "HAV Qlty",
     "lo_ssx": "Asymptomatic or resolved past infection",
     "hi_ssx": "Acute hepatitis: fatigue, fever, abdominal pain, jaundice, dark urine, pale stools",
     "department": "LAB",
@@ -1126,7 +1126,7 @@
   {
     "id": 70,
     "name": "Hepatitis B Surface Antigen Screening",
-    "abbreviation": "HBsAg Screening",
+    "abbreviation": "HBsAg Qlty",
     "lo_ssx": "Negative: no evidence of active infection",
     "hi_ssx": "Positive: may indicate acute or chronic hepatitis B infection (jaundice, fatigue, hepatomegaly)",
     "department": "LAB",
@@ -1168,7 +1168,7 @@
   {
     "id": 97,
     "name": "Hepatitis C Virus Screening",
-    "abbreviation": "HCV Screening",
+    "abbreviation": "HCV Qlty",
     "lo_ssx": "Negative: no evidence of infection",
     "hi_ssx": "Positive: possible chronic HCV infection; symptoms may include fatigue, hepatomegaly, elevated liver enzymes",
     "department": "LAB",
@@ -1617,7 +1617,7 @@
   {
     "id": 107,
     "name": "ANTI-NUCLEATED ANTIGEN screening",
-    "abbreviation": "ANA qlty",
+    "abbreviation": "ANA Qlty",
     "lo_ssx": null,
     "hi_ssx": "Positive result may indicate autoimmune disorders; negative result is normal.",
     "department": "LAB",
@@ -3090,7 +3090,7 @@
   {
     "id": 337,
     "name": "Helicobacter pylori Stool Antigen Screening",
-    "abbreviation": "H. pylori Ag",
+    "abbreviation": "H. pylori Ag Qlty",
     "lo_ssx": "No gastrointestinal symptoms, normal digestion",
     "hi_ssx": "Abdominal pain, gastritis, peptic ulcer symptoms",
     "department": "LAB",
