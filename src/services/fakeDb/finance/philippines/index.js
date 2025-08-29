@@ -19,14 +19,17 @@ const Philippines = {
 
   initialProvince: (rname) => {
     const rid = regions?.find(({ name }) => name === rname).code;
+    console.log("RID:", rid); // 👈 log Region ID
     return provinces?.filter(({ reg_code }) => reg_code === rid)[0].name;
   },
   initialCity: (pname) => {
     const pid = provinces?.find(({ name }) => name === pname).code;
+    console.log("PID:", pid); // 👈 log Province ID
     return cities?.filter(({ prov_code }) => prov_code === Number(pid))[0].name;
   },
   initialBrgy: (cname) => {
     const cid = cities?.find(({ name }) => name === cname).code;
+    console.log("CID:", cid); // 👈 log City/Municipality ID
     return barangays?.filter(({ mun_code }) => mun_code === Number(cid))[0]
       ?.name;
   },
