@@ -1,7 +1,8 @@
 const references = ["11.0-13.0 sec.", "10.7-14.1 sec.", "0.8-1.1 %"];
 
-const Protime = ({ pt = [] }) => {
-  const INR = Number(pt[0] / pt[1]).toFixed(2);
+const Protime = ({ pt = [0, 0] }) => {
+  const value = pt[1] ? pt[0] / pt[1] : 0;
+  const INR = value.toFixed(2);
   return (
     <>
       <tr>
@@ -9,7 +10,7 @@ const Protime = ({ pt = [] }) => {
           Prothrombin Time (PT)
         </td>
       </tr>
-      {pt.map((item, index) => {
+      {pt.map((item = 0, index) => {
         const hi = index == 0 ? 13.0 : 14.1;
         const lo = index == 0 ? 11.0 : 10.7;
         return (
@@ -37,9 +38,9 @@ const Protime = ({ pt = [] }) => {
       </tr>
       <tr>
         <td className="py-0">%Activity</td>
-        <td className="py-0 fw-bold text-center">{`${Number(
-          (pt[1] / pt[0]) * 100
-        ).toFixed(2)} %`}</td>
+        <td className="py-0 fw-bold text-center">
+          {`${pt[0] ? ((pt[1] / pt[0]) * 100).toFixed(2) : 0} %`}
+        </td>
       </tr>
     </>
   );

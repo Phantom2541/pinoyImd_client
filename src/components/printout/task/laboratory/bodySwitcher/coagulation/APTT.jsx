@@ -1,6 +1,6 @@
 const references = ["24-39 sec.", "24-39 sec."];
 
-const APTT = ({ aptt = [] }) => {
+const APTT = ({ aptt = [0, 0] }) => {
   return (
     <>
       <tr>
@@ -8,7 +8,7 @@ const APTT = ({ aptt = [] }) => {
           Activated Partial Thromboplastin Time (aPTT)
         </td>
       </tr>
-      {aptt.map((item, index) => {
+      {aptt.map((item = 0, index) => {
         return (
           <tr key={index}>
             <td className="py-0">{index == 0 ? "Patient" : "Control"}</td>
