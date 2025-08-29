@@ -13,7 +13,7 @@ export default function DealCollapse() {
   return (
     <MDBCardBody className="pb-0">
       <MDBContainer
-        style={{ minHeight: "500px" }}
+        style={{ minHeight: "320px" }}
         fluid
         className="md-accordion"
       >
