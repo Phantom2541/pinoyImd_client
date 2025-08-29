@@ -7,7 +7,7 @@ const Body = () => {
     ({ taskGenerator }) => taskGenerator
   );
 
-  const itemsPerPage = maxPage;
+  const itemsPerPage = maxPage < 6 ? 6 : maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
