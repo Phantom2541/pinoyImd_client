@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import { MDBCardBody, MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Protime, APTT } from "./containers";
 
-@ric darrel
-
 const Coagulation = () => {
   const packages = useSelector(
     ({ validator }) => validator.task?.packages || []
