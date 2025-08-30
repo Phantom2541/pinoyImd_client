@@ -31,37 +31,57 @@ const SOA = () => {
         letterSpacing: "-0.5px",
       }}
     >
-      <div
-        style={{
-          borderTop: "1px solid black",
-          borderLeft: "1px solid black",
-          borderRight: "1px solid black",
-        }}
-      >
-        <div>
-          <div>
-            <Banner
-              company={"Smart Care"}
-              branch={"General Tinio"}
-              className="soa-banner-printout"
-            />
-          </div>
-          <h5 className="text-center mt-2" style={{ fontWeight: 700 }}>
-            {/* Statement Of Account */}
-            STATEMENT OF ACCOUNT
-          </h5>
-        </div>
-        <div
-          className="mt-1"
-          style={{
-            cursor: "default",
-            fontSize: "16px !important",
-          }}
-        >
-          <Header range={range} options={options} total={total} />
-          <Body vouchers={vouchers} />
-        </div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th
+              style={{
+                borderTop: "1px solid black",
+                borderLeft: "1px solid black",
+                borderRight: "1px solid black",
+              }}
+            >
+              <div>
+                <div>
+                  <div>
+                    <Banner
+                      company={"Smart Care"}
+                      branch={"General Tinio"}
+                      className="soa-banner-printout"
+                    />
+                  </div>
+                  <h5 className="text-center mt-2" style={{ fontWeight: 700 }}>
+                    {/* Statement Of Account */}
+                    STATEMENT OF ACCOUNT
+                  </h5>
+                </div>
+                <div
+                  className="mt-1"
+                  style={{
+                    cursor: "default",
+                    fontSize: "16px !important",
+                  }}
+                >
+                  <Header range={range} options={options} total={total} />
+                </div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td
+              style={{
+                borderTop: "1px solid black",
+                borderLeft: "1px solid black",
+                borderRight: "1px solid black",
+              }}
+            >
+              <Body vouchers={vouchers} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <GeneratedBy />
     </div>
   );

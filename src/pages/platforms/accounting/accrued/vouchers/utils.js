@@ -54,8 +54,8 @@ const get = {
   },
   fileName: ({ vendor, cluster, isSource = true, hmo }) => {
     if (isSource) {
-      const { companyId, name, subname } = vendor;
-      const { name: companyName } = companyId;
+      const { companyId = { name: "" }, name, subname } = vendor;
+      const { name: companyName = "" } = companyId || {};
       return `${companyName ? companyName : ""} ${`${
         subname || name
       }`},${get.dateRange({ vendor, cluster, isSource })}`;
@@ -68,8 +68,8 @@ const get = {
     }
   },
   name: (vendor) => {
-    const { companyId, name, subname } = vendor;
-    const { name: companyName } = companyId;
+    const { companyId = {}, name, subname } = vendor;
+    const { name: companyName = "" } = companyId || {};
     return `${companyName ? companyName : ""} ${`${subname || name}`}`;
   },
   due: (vendor) => {
