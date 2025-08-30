@@ -1,6 +1,8 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
 import { ResultInRange } from "./../../../../../../../../../services/fakeDb";
 
@@ -12,7 +14,7 @@ export default function Chemical() {
   const handleSelectChange = (index, value) => {
     const updatedCe = [...ce]; // Create a new array to avoid mutation
     updatedCe[index] = Number(value);
-    
+
     dispatch(SetPARAMS({ key: "ce", value: updatedCe }));
     dispatch(SetTASK({ task: { ...task, ce: updatedCe } }));
   };
@@ -35,12 +37,18 @@ export default function Chemical() {
           <label htmlFor="">{label}</label>
           <select
             value={ce[index] ?? ""}
+            style={{
+              color: !!ce[index] && "red",
+              fontWeight: !!ce[index] && 600,
+            }}
             className="form-control mb-2"
             onChange={(e) => handleSelectChange(index, e.target.value)}
           >
-            <option value="">Select...</option>
+            <option value="" style={{ color: "black" }}>
+              Select...
+            </option>
             {ResultInRange.map((choice, i) => (
-              <option key={i} value={i}>
+              <option key={i} value={i} style={{ color: "black" }}>
                 {choice}
               </option>
             ))}
