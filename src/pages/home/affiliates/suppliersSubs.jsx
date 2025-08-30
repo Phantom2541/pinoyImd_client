@@ -2,9 +2,9 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import logo from "./../../../assets/iMD.png";
+// import logo from "./../../../assets/iMD.png";
 import { useSelector } from "react-redux";
-import { Cloudinary, fullAddress } from "../../../services/utilities";
+import { Cloudinary } from "../../../services/utilities";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 import BgRemover from "../../../components/bgRemover";
 import { MDBAnimation } from "mdbreact";

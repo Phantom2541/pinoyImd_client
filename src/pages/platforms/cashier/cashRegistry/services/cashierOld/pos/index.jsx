@@ -81,7 +81,7 @@ export default function CashRegister() {
 
   const toggleCheckout = () => setDidCheckout(!didCheckout);
   const handlePicker = (selected) => {
-    const { packages } = selected;
+    const { packages = [] } = selected;
     const { soldCart } = deals;
 
     const soldItemsInCart = [...cart].filter(({ referenceId }) =>
@@ -89,11 +89,11 @@ export default function CashRegister() {
     );
 
     const duplicateMenus = soldItemsInCart.filter(
-      ({ packages: soldPackages, overrideBy = "" }) =>
-        soldPackages.every((p) => packages.includes(p) && !overrideBy)
+      ({ packages: soldPackages = [], overrideBy = "" }) =>
+        soldPackages?.every((p) => packages?.includes(p) && !overrideBy)
     );
 
-    const department = Services.getDepartment(selected.packages) || [];
+    const department = Services.getDepartment(selected?.packages) || [];
 
     const {
       cart: _cart,
@@ -104,7 +104,7 @@ export default function CashRegister() {
       cart
     );
     if (stop) return;
-    if (duplicateMenus.length > 0) {
+    if (duplicateMenus?.length > 0 && packages?.length > 0) {
       Swal.fire({
         title: "Duplicate Services Found",
         html: `

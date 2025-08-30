@@ -10,7 +10,7 @@ import {
   SetVALIDATOR,
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
-const Footer = () => {
+const Footer = ({ setShowHC = () => {} }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { success, task } = useSelector(({ validator }) => validator);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,11 +73,6 @@ const Footer = () => {
     });
   };
 
-  const generateHealthyStats = () => {
-    if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
-    else if (task?.form === "Parasitology")
-      dispatch(SetHEALTHY("parasitology"));
-  };
   const handleDisablePost = () => {
     const { signatories = [] } = task;
     const [dr = null, head = null] = signatories;
@@ -105,11 +100,9 @@ const Footer = () => {
       {/* Button Layout */}
       <div className="d-flex justify-content-between align-items-center my-2">
         {/* Left: Healthy Client Button (if applicable) */}
-        {(task.form === "Urinalysis" || task.form === "Parasitology") && (
-          <MDBBtn onClick={generateHealthyStats} color="success">
-            Healthy client
-          </MDBBtn>
-        )}
+        <MDBBtn onClick={() => setShowHC(true)} color="success">
+          Healthy client
+        </MDBBtn>
 
         {/* Right: Save & Post Buttons */}
         <div className="ml-auto">

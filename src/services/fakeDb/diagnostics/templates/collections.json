@@ -16,7 +16,8 @@
       "Compatibility",
       "PAP Smear",
       "Pheripheral Blood Smear",
-      "Drugtest"
+      "Drugtest",
+      "Endocrinology"
     ],
     "codes": [
       "UA",
@@ -39,7 +40,7 @@
     "department": "RAD",
     "label": "Radiology",
     "components": ["ECG", "Ultrasound", "Xray", "2DEcho"],
-    "codes": ["ECG", "US", "XR", "2D"]
+    "codes": ["ECG", "UTZ", "XR", "2D"]
   },
   {
     "department": "CLINIC",

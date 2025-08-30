@@ -57,7 +57,7 @@ import {
 } from "../../../../pages/platforms/cashier/index.js";
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
 import QrCodePage from "../../../../pages/platforms/manager/settings/qrCode/index.jsx";
-
+import Attendance from "../../../../pages/platforms/manager/attendance/index.jsx";
 const ManagerSidebar = [
   {
     name: "Dashboard",
@@ -113,7 +113,7 @@ const ManagerSidebar = [
         title: "Employee daily attendance tracker.",
         path: "/attendances",
         icon: "clock",
-        // component: Calender,
+        component: Attendance,
       },
       {
         name: "Schedule",
@@ -128,6 +128,13 @@ const ManagerSidebar = [
         path: "/staff",
         icon: "user",
         component: Staffs,
+      },
+      {
+        name: "Signatories",
+        title: "List of section signatories.",
+        path: "/signatories",
+        icon: "pen",
+        component: Heads,
       },
       {
         name: "File 201",
@@ -364,20 +371,6 @@ const ManagerSidebar = [
             component: Philhealth,
           },
           {
-            name: "Turn Around Times",
-            title: "Turn around Time for services.",
-            path: "/tat/Services",
-            icon: "clock",
-            component: TatServices,
-          },
-          {
-            name: "Signatories",
-            title: "List of section signatories.",
-            path: "/signatories",
-            icon: "pen",
-            component: Heads,
-          },
-          {
             name: "Q R Code",
             title: "Qr Code for Homepage.",
             path: "/qrCode",
@@ -393,41 +386,44 @@ const ManagerSidebar = [
         children: [
           {
             name: "Outsourcing",
-            title: "External service providers.",
+            title:
+              "Services or tests referred to external labs when not available in-house.",
             path: "/outsourcing",
             icon: "external-link",
             component: Outsources,
           },
           {
             name: "Suppliers",
-            title: "Vendor contact and supply chain.",
+            title:
+              "Vendors providing reagents, equipment, and office supplies.",
             path: "/suppliers",
             icon: "briefcase",
             component: Suppliers,
           },
           {
             name: "Utilities",
-            title: "Utilities used by the organization.",
+            title: "Basic services such as water, electricity, and internet.",
             path: "/utilities",
             icon: "tools",
             component: Utilities,
           },
           {
             name: "Hotlines",
-            title: "Emergency or support hotlines.",
+            title: "Emergency and support contacts (fire, medical, IT).",
             path: "/hotlines",
             icon: "phone",
             component: Hotlines,
           },
           {
             name: "Tie Ups",
-            title: "Affiliate or corporate tie-ups.",
+            title: "Partner companies, HMOs, and schools for contracts or APE.",
             path: "/tieup",
             icon: "handshake",
             component: Tieups,
           },
         ],
       },
+
       {
         name: "Product & Services Setup",
         path: "/product-config",
@@ -439,6 +435,13 @@ const ManagerSidebar = [
             path: "/menus",
             icon: "bars",
             component: Menus,
+          },
+          {
+            name: "Turn Around Times",
+            title: "Turn around Time for services.",
+            path: "/tat/Services",
+            icon: "clock",
+            component: TatServices,
           },
           {
             name: "Services",

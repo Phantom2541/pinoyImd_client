@@ -11,6 +11,8 @@ import Cropper from "react-easy-crop";
 import { generateDownload, resizeImageToCropSize } from "./cropImage";
 import Spinner from "../../spinner";
 import { useSelector } from "react-redux";
+import SUIT from "./../../../assets/attire/suit.png";
+import POLO from "./../../../assets/attire/polo.png";
 
 export default function Modal({
   show,
@@ -29,7 +31,8 @@ export default function Modal({
     [crop, setCrop] = useState({ x: 0, y: 0 }),
     [zoom, setZoom] = useState(1),
     [showWarning, setShowWarning] = useState(false),
-    [fitImg, setFitImg] = useState(false);
+    [fitImg, setFitImg] = useState(false),
+    [attire, setAttire] = useState(null); // ✅ dati boolean, ngayon string/null
 
   useEffect(() => {
     setFitImg(false);
@@ -69,11 +72,72 @@ export default function Modal({
   }, [formSubmitted, isSuccess, show, toggle]);
 
   const handleDownload = async () => {
-    const result = await generateDownload(localImg, ext, croppedArea, isUpload);
-    if (isUpload) {
-      handleUpload(result);
-    }
-    // toggle();
+    if (!croppedArea) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = croppedArea.width;
+    canvas.height = croppedArea.height;
+    const ctx = canvas.getContext("2d");
+
+    const baseImg = new Image();
+    baseImg.crossOrigin = "anonymous";
+    baseImg.src = localImg;
+
+    baseImg.onload = async () => {
+      ctx.drawImage(
+        baseImg,
+        croppedArea.x,
+        croppedArea.y,
+        croppedArea.width,
+        croppedArea.height,
+        0,
+        0,
+        croppedArea.width,
+        croppedArea.height
+      );
+
+      if (attire) {
+        let attireSrc = null;
+        if (attire === "suit") attireSrc = SUIT;
+        if (attire === "polo") attireSrc = POLO;
+
+        if (attireSrc) {
+          const attireImg = new Image();
+          attireImg.src = attireSrc;
+
+          attireImg.onload = () => {
+            const scale = canvas.width / attireImg.width;
+            const newWidth = attireImg.width * scale;
+            const newHeight = attireImg.height * scale;
+
+            const x = (canvas.width - newWidth) / 2;
+            const y = canvas.height - newHeight;
+
+            ctx.drawImage(attireImg, x, y, newWidth, newHeight);
+
+            const result = canvas.toDataURL(`image/${ext}`);
+            if (isUpload) {
+              handleUpload(result);
+            } else {
+              const link = document.createElement("a");
+              link.href = result;
+              link.download = `image.${ext}`;
+              link.click();
+            }
+          };
+        }
+      } else {
+        const result = canvas.toDataURL(`image/${ext}`);
+        if (isUpload) {
+          handleUpload(result);
+        } else {
+          const link = document.createElement("a");
+          link.href = result;
+          link.download = `image.${ext}`;
+          link.click();
+        }
+      }
+    };
   };
 
   const onCropComplete = (_, croppedAreaPixels) => {
@@ -117,8 +181,33 @@ export default function Modal({
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
+            restrictPosition={false}
           />
+          {attire && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%,-50%)",
+                width: cropSize.width,
+                height: cropSize.height,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                zIndex: 5,
+              }}
+            >
+              <img
+                src={attire === "suit" ? SUIT : POLO}
+                alt={attire}
+                style={{ width: "100%" }}
+              />
+            </div>
+          )}
         </div>
+
+        {/* ✅ Fit image options */}
         <div className="d-flex">
           <p className="text-center text-muted mb-3">
             Do you want to <strong>fit the image</strong> to the crop area?
@@ -128,25 +217,79 @@ export default function Modal({
             type="checkbox"
             checked={fitImg}
             onChange={() => setFitImg(!fitImg)}
-            id={"fit-yes"}
+            id="fit-yes"
           />
-          <label htmlFor={`fit-yes`} className="label-table mr-2 ml-1">
+          <label htmlFor="fit-yes" className="label-table mr-2 ml-1">
             Yes
           </label>
           <input
             className="form-check-input"
             type="checkbox"
-            id={"fit-no"}
+            id="fit-no"
             checked={!fitImg}
             onChange={() => setFitImg(!fitImg)}
           />
-          <label htmlFor={`fit-no`} className="label-table">
+          <label htmlFor="fit-no" className="label-table">
             No
           </label>
         </div>
-        {/* {show && (
-          <MDBRangeInput min={1} max={3} value={zoom} getValue={setZoom} />
-        )} */}
+
+        {/* ✅ Attire toggle */}
+        <div className="d-flex align-items-center mb-2">
+          <p className="text-center text-muted mb-0 mr-2">
+            Do you want to change attire?
+          </p>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={!!attire}
+            onChange={() => setAttire(attire ? null : "suit")} // default suit kapag nag Yes
+            id="attire-yes"
+          />
+          <label htmlFor="attire-yes" className="label-table mr-2 ml-1">
+            Yes
+          </label>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="attire-no"
+            checked={!attire}
+            onChange={() => setAttire(null)}
+          />
+          <label htmlFor="attire-no" className="label-table">
+            No
+          </label>
+        </div>
+
+        {/* ✅ Attire choices kapag Yes */}
+        {attire && (
+          <div className="mb-3 ml-4">
+            <p className="text-muted mb-1">Choose attire:</p>
+            <div className="d-flex">
+              <label className="mr-3">
+                <input
+                  type="radio"
+                  name="attire"
+                  value="suit"
+                  checked={attire === "suit"}
+                  onChange={(e) => setAttire(e.target.value)}
+                />{" "}
+                Suit
+              </label>
+              <label className="mr-3">
+                <input
+                  type="radio"
+                  name="attire"
+                  value="polo"
+                  checked={attire === "polo"}
+                  onChange={(e) => setAttire(e.target.value)}
+                />{" "}
+                Polo
+              </label>
+            </div>
+          </div>
+        )}
+
         <div className="text-center">
           <MDBBtn
             onClick={handleDownload}

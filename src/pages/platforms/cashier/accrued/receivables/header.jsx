@@ -11,7 +11,7 @@ import {
 import Search from "../../../../../components/searchables/search";
 import CalendarPicker from "../../../../../components/header/calendars";
 import { SetFILTERED } from "../../../../../services/redux/slices/assets/companies";
-import { properFullname } from "../../../../../services/utilities";
+// import { properFullname } from "../../../../../services/utilities";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);

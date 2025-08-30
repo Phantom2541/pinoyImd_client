@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Select } from "../../../../../components/customizable";
 import {
-  Search,
+  // Search,
   SearchTemplates as Templates,
 } from "../../../../../components/searchables";
 import {

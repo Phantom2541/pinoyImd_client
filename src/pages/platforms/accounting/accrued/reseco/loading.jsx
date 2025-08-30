@@ -2,7 +2,7 @@ import { MDBAnimation, MDBProgress } from "mdbreact";
 
 const Loading = () => {
   return (
-    <div style={{ width: "100%" }} className="mx-1">
+    <div style={{ width: "50%" }} className="mx-1">
       <MDBAnimation>
         <MDBProgress
           animated

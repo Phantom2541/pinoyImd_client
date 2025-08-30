@@ -164,17 +164,19 @@ export default function Vouchers() {
           <MDBCardBody>
             {!isLoading ? (
               menuCensus.length > 0 ? (
-                <ul className="list-group mb-3">
-                  {menuCensus.map(({ _id, abbreviation, count }) => (
-                    <li
-                      key={_id}
-                      className="list-group-item d-flex justify-content-between"
-                    >
-                      <span>{abbreviation}</span>
-                      <strong className="text-primary">{count}</strong>
-                    </li>
-                  ))}
-                </ul>
+                <div style={{ maxHeight: "250px", overflowY: "auto" }}>
+                  <ul className="list-group mb-3">
+                    {menuCensus.map(({ _id, abbreviation, count }) => (
+                      <li
+                        key={_id}
+                        className="list-group-item d-flex justify-content-between py-1"
+                      >
+                        <span>{abbreviation}</span>
+                        <strong className="text-primary">{count}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ) : (
                 <p className="text-muted">No menu items found.</p>
               )
@@ -189,17 +191,21 @@ export default function Vouchers() {
           <MDBCardBody>
             {!isLoading ? (
               Object.keys(serviceCensus).length > 0 ? (
-                <ul className="list-group mb-3">
-                  {Object.entries(serviceCensus).map(([key, count], idx) => (
-                    <li
-                      key={idx}
-                      className="list-group-item d-flex justify-content-between"
-                    >
-                      <span>{Services.getAbbr(key) || `Service #${key}`}</span>
-                      <strong className="text-primary">{count}</strong>
-                    </li>
-                  ))}
-                </ul>
+                <div style={{ maxHeight: "250px", overflowY: "auto" }}>
+                  <ul className="list-group mb-3">
+                    {Object.entries(serviceCensus).map(([key, count], idx) => (
+                      <li
+                        key={idx}
+                        className="list-group-item d-flex justify-content-between py-1"
+                      >
+                        <span>
+                          {Services.getAbbr(key) || `Service #${key}`}
+                        </span>
+                        <strong className="text-primary">{count}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ) : (
                 <p className="text-muted">No services found.</p>
               )

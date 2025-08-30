@@ -19,10 +19,13 @@ import {
 import { Policy } from "./../../../../../../../services/fakeDb";
 import {
   currency,
+  dateFormat,
   removeUndefinedValues,
+  timeFormat,
 } from "./../../../../../../../services/utilities";
 import "./style.css";
 import RollingNumber from "../../../../../../../components/rollingNumber";
+import Swal from "sweetalert2";
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -88,6 +91,24 @@ export default function Modal() {
   const handleSubmit = () => {
     const now = new Date();
     const _floating = removeUndefinedValues(floating);
+    const hasBills = Object.values(_floating?.bills || {}).some(
+      (qty) => qty > 0
+    );
+    const hasCoins = Object.values(_floating?.coins || {}).some(
+      (qty) => qty > 0
+    );
+    if (!hasBills && !hasCoins) {
+      Swal.fire({
+        title: "No Denomination Declared",
+        text: "Please declare at least one bill or coin before submitting.",
+        icon: "warning",
+        confirmButtonText: "Okay",
+        confirmButtonColor: "#3085d6",
+        backdrop: true,
+      });
+      return; // 🚫 Stop submission
+    }
+
     if (!selected?._id) {
       dispatch(
         SAVE({
@@ -103,6 +124,7 @@ export default function Modal() {
             cashier: auth._id,
             branch: activePlatform?.branchId,
             department: Policy.getDepartment(activePlatform.position),
+            rawCreatedAt: `${dateFormat(now)} ${timeFormat(now)}`,
             createdAt: new Date(
               year,
               month - 1,

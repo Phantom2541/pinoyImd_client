@@ -32,18 +32,18 @@ export default function PE({ task, setTask }) {
     // Compute
     const vldl = tg / 5;
     const ldl = chole - hdl - vldl;
-    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
     const lhr = Number((ldl / hdl).toFixed(2)); // LDL/HDL ratio
+    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
 
     setTask({
       ...task,
       packages: {
         ...packages,
         16: hdl,
-        17: ldl,
-        18: vldl,
+        17: ldl.toFixed(1),
+        18: vldl.toFixed(1),
         19: chr,
-        0: lhr,
+        47: lhr,
       },
     });
   };

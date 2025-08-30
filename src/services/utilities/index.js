@@ -18,6 +18,7 @@ import mobile from "./mobile";
 import contacts from "./contacts";
 import getAge from "./getAge";
 import getDate from "./getDate";
+import getDepartment from "./getDepartment";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
 import { computeGD, allServicesHavePrices } from "./computeGD";
@@ -80,7 +81,6 @@ import fetchTracker from "./fetchTracker";
 import Tracker from "./tracker";
 
 const ENDPOINT = "http://localhost:5000";
-
 // const ENDPOINT = window.location.origin;
 
 //
@@ -133,6 +133,7 @@ export {
   getDate,
   getTime,
   getDay,
+  getDepartment,
   contacts,
   dateFormat,
   timeFormat,

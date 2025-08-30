@@ -27,6 +27,8 @@ export default function Modal() {
     dispatch = useDispatch();
 
   // 👇 Update filtered HMO options when modal opens or hmo list updates
+  console.log("collections", collections);
+
   useEffect(() => {
     if (hmo && showModal) {
       const codeList = hmo.map((item) => item.code);
@@ -88,7 +90,7 @@ export default function Modal() {
 
   const handleClose = () => dispatch(TOGGLE());
 
-  const { cp = {}, code } = form;
+  const { cp = {} } = form;
   console.log("form", form);
   console.log("sex", form.sex);
 

@@ -10,6 +10,7 @@ const initialState = {
   formSubmitted: false,
   didSearch: false,
   selected: {},
+  ct: {},
   page: 0,
   isSuccess: false,
   // main loading
@@ -33,6 +34,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const CTBROWSE = createAsyncThunk(
+  `${url}/ctbrowse`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/ctbrowse`, token, data);
     } catch (error) {
       const message =
         (error.response &&
@@ -225,6 +243,78 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetAFFILIATED: (state, { payload }) => {
+      const { isNew = false, physican, branchID, oldMajor } = payload;
+      const updateCollections = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === branchID);
+        const affiliated = [...collections[index].affiliated];
+        if (isNew) {
+          affiliated.unshift(physican);
+          if (oldMajor._id) {
+            //to set isMajor to false
+            const oldMainIndex = collections.findIndex(
+              ({ _id }) => _id === oldMajor.branch
+            );
+            const { affiliated: aff = [] } = collections[oldMainIndex];
+            const afIndex = aff.findIndex(({ _id }) => _id === oldMajor._id);
+            aff[afIndex] = {
+              ...oldMajor,
+              isMajor: false,
+            };
+            collections[oldMainIndex] = {
+              ...collections[oldMainIndex],
+              affiliated: aff,
+            };
+          }
+        } else {
+          const afIndex = affiliated.findIndex(
+            ({ _id }) => _id === physican._id
+          );
+          affiliated.splice(afIndex, 1);
+        }
+        collections[index] = {
+          ...collections[index],
+          affiliated,
+        };
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
+    SetAFFILIATED_MAIN: (state, { payload }) => {
+      const { branchID, physician, currentMainBranch = "" } = payload;
+      const updateCollections = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === branchID);
+        const affiliated = [...collections[index].affiliated];
+        const afIndex = affiliated.findIndex(
+          ({ _id }) => _id === physician._id
+        );
+        affiliated[afIndex] = physician;
+        collections[index] = {
+          ...collections[index],
+          affiliated,
+        };
+
+        if (currentMainBranch) {
+          const mainIndex = collections.findIndex(
+            ({ _id }) => _id === currentMainBranch
+          );
+          const mainAffiliated = [...collections[mainIndex].affiliated];
+          const mainAfIndex = mainAffiliated.findIndex(
+            ({ user }) => user._id === physician?.user?._id
+          );
+          mainAffiliated[mainAfIndex] = {
+            ...mainAffiliated[mainAfIndex],
+            isMajor: false,
+          };
+          collections[mainIndex] = {
+            ...collections[mainIndex],
+            affiliated: mainAffiliated,
+          };
+        }
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
     SetCREATE: (state) => {
       state.selected = {
         department: state.department,
@@ -305,16 +395,28 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload;
+        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
 
-        let totalPAges = Math.floor(payload.length / state.maxPage);
-        if (payload.length % state.maxPage > 0) totalPAges += 1;
-        state.totalPages = totalPAges;
-        if (state.activePage > totalPAges) {
-          state.activePage = totalPAges;
-        }
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(CTBROWSE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(CTBROWSE.fulfilled, (state, { payload }) => {
+        state.ct = payload;
+
+        state.isLoading = false;
+      })
+      .addCase(CTBROWSE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -411,6 +513,7 @@ export const reduxSlice = createSlice({
           updateCollections(state.collections);
           updateCollections(state.filtered);
         }
+        state.ct = payload;
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -583,6 +686,8 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetAFFILIATED,
+  SetAFFILIATED_MAIN,
   SetFILTERED,
   SetSELECTED,
   SetCOLLECTIONS,

@@ -102,6 +102,8 @@ export default function Body() {
         <tr>
           <th>#</th>
           <th>Name</th>
+          <th>Department</th>
+          <th>Position</th>
           <th>Specialization</th>
           <th>Action</th>
         </tr>
@@ -130,6 +132,8 @@ export default function Body() {
                   )}
                 </strong>
               </td>
+              <td>{item?.department || "—"} </td>
+              <td>{item?.position || "—"}</td>
               <td>{item?.specialization || "—"}</td>
               <td>
                 <MDBBtn

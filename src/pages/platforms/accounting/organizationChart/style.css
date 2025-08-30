@@ -190,7 +190,8 @@
   transform: translateY(-50%);
   border: none;
   color: white;
-  width: 35px;
+  font-size: 1.1rem;
+  width: 40px;
   aspect-ratio: 1/1;
   border-radius: 50%;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
@@ -200,7 +201,7 @@
 
 .orgChart-innerCard:hover .orgChart-innerCard-return,
 .orgChart-innerCard:hover .orgChart-innerCard-deleteClone {
-  left: -70%;
+  left: -90%;
 }
 
 .orgChart-innerCard-clone {
@@ -210,7 +211,8 @@
   transform: translateY(-50%);
   border: none;
   color: white;
-  width: 35px;
+  font-size: 1.05rem;
+  width: 40px;
   aspect-ratio: 1/1;
   border-radius: 50%;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
@@ -219,7 +221,7 @@
 }
 
 .orgChart-innerCard:hover .orgChart-innerCard-clone {
-  right: -70%;
+  right: -90%;
 }
 
 .orgChart-innerCard-image {

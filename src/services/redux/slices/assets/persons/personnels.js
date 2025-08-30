@@ -427,6 +427,7 @@ export const reduxSlice = createSlice({
           const bDesignation = String(b?.contract?.designation || "");
           return aDesignation.localeCompare(bDesignation);
         });
+
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -554,8 +555,6 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(EMPLOYEES.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
-
         state.collections = payload.sort((a, b) => {
           const aDesignation = String(a?.contract?.designation || "");
           const bDesignation = String(b?.contract?.designation || "");

@@ -1,6 +1,6 @@
 import { MDBCollapseHeader, MDBBtn } from "mdbreact";
 import { collapse } from "../../../../../../../../services/utilities";
-import { HMO, Memberships } from "../../../../../../../../services/fakeDb";
+import { HMO } from "../../../../../../../../services/fakeDb";
 import EditableSelect from "../../../../../../../../components/customizable/editableSelect";
 import EditableField from "../../../../../../../../components/customizable/editableField";
 import PopOver from "./popOver";

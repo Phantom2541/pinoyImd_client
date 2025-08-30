@@ -357,6 +357,9 @@ export const reduxSlice = createSlice({
     SetHEALTHY: (state, { payload }) => {
       state.task = { ...state.task, ...healthyClient[payload] };
     },
+    SetHEALTHY_RAD: (state, { payload }) => {
+      state.task = { ...state.task, ...payload };
+    },
     SetPrint: (state) => {
       state.print = true;
     },
@@ -514,7 +517,8 @@ export const {
   SetMODAL,
   SetPREFERENCES,
   SetHEADS,
-  SetHEALTHY,
+  SetHEALTHY, //LAB
+  SetHEALTHY_RAD,
   SetVALIDATOR,
   SetMaxPage,
   SetActivePAGE,
@@ -522,6 +526,7 @@ export const {
   TOGGLE_WORK_AREA,
   TOGGLE_RAD_READER,
   RESET,
+
   //this is for LIS  socket to receive realtime result from A15
   RECEIVE_A15,
 } = reduxSlice.actions;

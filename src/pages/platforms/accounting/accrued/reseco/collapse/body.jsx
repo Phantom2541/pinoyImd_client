@@ -1,15 +1,18 @@
-import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from "mdbreact";
 import { currency, fullName } from "../../../../../../services/utilities";
 import { Privileges } from "../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 export default function Collapsable({ deals }) {
-  const { vendor } = useSelector(({ deals }) => deals);
+  const { source, physician } = useSelector(({ deals }) => deals);
+  const haveSource = source !== "All" && source !== "No Source";
+  const showPhysician = haveSource && physician === "All";
+
   return (
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
         <tr>
-          {!vendor?._id && <th>Source</th>}
+          {!haveSource && <th>Source</th>}
+          {showPhysician && <th>Physician</th>}
           <th>Customer</th>
           <th>Category</th>
           <th>Services</th>
@@ -29,17 +32,24 @@ export default function Collapsable({ deals }) {
             source,
             cart = [],
             _id,
+            physicianId = {},
           } = deal;
           return (
             <tr key={_id}>
-              {!vendor?._id && (
+              {!haveSource && (
                 <td>
                   <span className="fw-bold mr-1"> {++index}.</span>
                   {source?.displayname}
                 </td>
               )}
+              {showPhysician && (
+                <td>
+                  <span className="fw-bold mr-1"> {++index}.</span>
+                  {fullName(physicianId?.fullName)}
+                </td>
+              )}
               <td>
-                {source?._id && (
+                {haveSource && !showPhysician && (
                   <span className="fw-bold mr-1"> {++index}.</span>
                 )}
                 {fullName(customerId?.fullName)}

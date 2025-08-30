@@ -16,7 +16,6 @@ export default function Chemistry() {
     const timer = setTimeout(() => {
       const first = inputRefs.current[0];
       if (first && first.offsetParent !== null) {
-        console.log("Focusing delayed input");
         first.focus();
       }
     }, 1000); // try 1s delay temporarily
@@ -26,8 +25,8 @@ export default function Chemistry() {
 
   const handleChange = (target) => {
     const { name, value } = target,
-      _name = Number(name),
-      _value = Number(value);
+      _name = Number(name);
+    let _value = value;
 
     if (_name !== 16)
       return dispatch(
@@ -40,11 +39,16 @@ export default function Chemistry() {
         })
       );
 
-    const chole = packages["14"],
-      tg = packages["15"],
-      ldl = chole - (tg / 5 + _value),
-      vldl = tg / 5,
-      chr = Number((chole / _value).toFixed(2));
+    // Get values
+    const chole = packages["14"], // Total Cholesterol
+      tg = packages["15"], // Triglycerides
+      hdl = Number(_value); // HDL Cholesterol (input)
+
+    // Compute
+    const vldl = tg / 5;
+    const ldl = chole - hdl - vldl;
+    const lhr = Number((ldl / hdl).toFixed(2)); // LDL/HDL ratio
+    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
 
     dispatch(
       SetTASK({
@@ -53,10 +57,11 @@ export default function Chemistry() {
           ...task,
           packages: {
             ...packages,
-            16: _value,
-            17: ldl,
-            18: vldl,
+            16: hdl,
+            17: ldl.toFixed(1),
+            18: vldl.toFixed(1),
             19: chr,
+            47: lhr,
           },
         },
       })
@@ -109,6 +114,7 @@ export default function Chemistry() {
               <td className="py-1">
                 <input
                   type="number"
+                  step="any" // ✅ allow decimals
                   ref={(el) => (inputRefs.current[index] = el)}
                   style={{
                     // color: referenceColor(Number(value), critical, alert, warn),

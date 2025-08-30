@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { SetSELECTED as SetVALIDATOR } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Categories } from "../../../../../../services/fakeDb";
-import { MDBBadge, MDBCollapseHeader, MDBIcon } from "mdbreact";
+import { MDBBadge, MDBCollapseHeader } from "mdbreact";
 import {
   capitalize,
   fullName,
@@ -11,7 +11,7 @@ import {
   sourceColor,
 } from "../../../../../../services/utilities";
 
-const Header = ({ deal, index }) => {
+const Header = ({ deal, index, totalDeals }) => {
   const { maxPage } = useSelector(({ auth }) => auth),
     { activeCOLAPSE, activePage } = useSelector(({ validator }) => validator),
     { customerId, category, source } = deal,
@@ -21,23 +21,33 @@ const Header = ({ deal, index }) => {
       category === "wi"
         ? "Walkin"
         : Categories.find(({ abbr }) => abbr === category)?.name;
-  const allDone = Object.values(deal.diagnostic).every(
-    (section) => section.hasDone === true
-  );
+
+  const allDone = Object.values(deal.diagnostic).every((section) => {
+    if (Array.isArray(section)) {
+      return section.every((item) => item.hasDone === true);
+    } else {
+      return section.hasDone === true;
+    }
+  });
+
+  const displayIndex = totalDeals - ((activePage - 1) * maxPage + index);
   return (
     <div style={{ backgroundColor: allDone ? "rgba(255, 169, 0, 0.3)" : "" }}>
       <MDBCollapseHeader>
-        {(activePage - 1) * maxPage + index + 1}.{" "}
-        {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |
+        {displayIndex}. {getGenderIcon(customerId?.isMale)}{" "}
+        {fullName(customerId?.fullName)} |
         <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
         <MDBBadge color={sourceColor(categoryName)} className="mx-2">
           {categoryName}
         </MDBBadge>
         {source && (
-          <MDBBadge color="warning">{capitalize(source?.name)}</MDBBadge>
+          <MDBBadge color="warning" className="mr-2">
+            {capitalize(source?.name)}
+          </MDBBadge>
         )}
-        {/* on the right corner */}
-        <MDBBadge
+        <span
+          style={{ fontSize: "22px", marginBottom: "-10px" }}
+          title={`View the result history of ${fullName(customerId?.fullName)}`}
           onClick={() => {
             localStorage.setItem(`customerId`, JSON.stringify(customerId));
 
@@ -45,11 +55,9 @@ const Header = ({ deal, index }) => {
               `/frontdesk/diagnostics/reports?patient=${customerId?._id}`
             );
           }}
-          color="info"
-          className="px-2"
         >
-          <MDBIcon icon="eye" />
-        </MDBBadge>
+          👀
+        </span>
         <i
           onClick={() =>
             dispatch(

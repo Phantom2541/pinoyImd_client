@@ -88,13 +88,13 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
         type="target"
         position={Position.Top}
         style={{
-          top: 3,
+          top: -3,
           left: "50%",
           transform: "translateX(-50%)",
           background: "#007bff",
           borderRadius: "50%",
-          width: 18,
-          height: 18,
+          width: 25,
+          height: 25,
           zIndex: 11,
           border: "3px solid white",
         }}
@@ -156,13 +156,13 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
         type="source"
         position={Position.Bottom}
         style={{
-          bottom: 3,
+          bottom: -3,
           left: "50%",
           transform: "translateX(-50%)",
           background: "#007bff",
           borderRadius: "50%",
-          width: 18,
-          height: 18,
+          width: 25,
+          height: 25,
           zIndex: 11,
           border: "3px solid white",
         }}

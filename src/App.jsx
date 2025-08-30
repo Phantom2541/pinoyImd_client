@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import "./animations.css";
@@ -26,6 +26,7 @@ import {
   Remittance,
   Machines,
   DrugTestPrintout,
+  RequestFormPrint,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -54,6 +55,11 @@ export default function App() {
       <Route path="/printout/claimstub" exact component={ClaimStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
       <Route path="/printout/chart" exact component={ChartPrintout} />
+      <Route
+        path="/printout/laboratoryRequestForm"
+        exact
+        component={RequestFormPrint}
+      />
       <Route
         path="/printout/request/outsource"
         exact

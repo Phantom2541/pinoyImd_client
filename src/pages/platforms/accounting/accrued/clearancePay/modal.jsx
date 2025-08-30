@@ -54,7 +54,7 @@ export default function Modal() {
         appearance: "success",
       });
     }
-  }, [isSuccess, formSubmitted, showModal, dispatch, toggle]);
+  }, [isSuccess, formSubmitted, showModal, dispatch, toggle, addToast]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

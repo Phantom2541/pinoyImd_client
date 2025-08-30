@@ -9,8 +9,10 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: min-content;
   gap: 10px;
   width: fit-content;
+  min-height: 645px;
 }
 
 @keyframes signatoriesFadeIn {
@@ -239,16 +241,17 @@
 .signatories-pagination-btnRight {
   position: absolute;
   top: 50%;
+
   transform: translate(0, -50%);
   border: none;
   font-size: 2rem;
   background-color: transparent;
 }
 .signatories-pagination-btnLeft {
-  left: -5%;
+  left: 12%;
 }
 .signatories-pagination-btnRight {
-  right: -5%;
+  right: 12%;
 }
 
 /* .signatories-card-btn-delete {
@@ -315,7 +318,7 @@
 .signatories-cropper-body {
   flex: 1;
   position: relative;
-  background: white;
+  background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px;
 }
 
 .signatories-cropper-guide {
@@ -327,6 +330,8 @@
   font-size: 1.4rem;
   font-weight: bold;
   letter-spacing: 0.5px;
+  width: 100%;
+  text-align: center;
 }
 
 /* Green dashed border for crop area */

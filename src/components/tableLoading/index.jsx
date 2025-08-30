@@ -1,11 +1,10 @@
-import React from "react";
 import { MDBTable, MDBAnimation, MDBProgress } from "mdbreact";
 import "./progress.css";
 const array = new Array(5).fill().map((_, index) => index);
 
-function TableLoading() {
+function TableLoading({ className = "" }) {
   return (
-    <MDBTable>
+    <MDBTable className={className}>
       <tbody>
         {array
           .sort(() => Math.random() - 0.5)

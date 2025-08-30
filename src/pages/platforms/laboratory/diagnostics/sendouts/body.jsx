@@ -61,8 +61,10 @@ const Body = () => {
               status,
               cancelled = [],
               remarks = "",
+              reason = "",
             } = item;
             const { name = "", displayname = "" } = vendor || {};
+            const isDenied = status === "denied";
             const baseOutsource = displayname || name;
 
             const isLast = index === filtered.length - 1;
@@ -71,8 +73,10 @@ const Body = () => {
               <React.Fragment key={index}>
                 <tr ref={isLast ? endOfTableRef : null}>
                   <td>{index + 1}</td>
-                  {!vendorId && <td>{baseOutsource}</td>}
-                  <td>{fullName(pid?.fullName)}</td>
+                  {!vendorId && (
+                    <td style={{ fontWeight: 400 }}>{baseOutsource}</td>
+                  )}
+                  <td style={{ fontWeight: 400 }}>{fullName(pid?.fullName)}</td>
                   <td>
                     {services?.map((id) => {
                       const notProcess = cancelled.includes(id);
@@ -111,8 +115,19 @@ const Body = () => {
                       );
                     })}
                   </td>
-                  <td>{dateFormat(createdAt)}</td>
-                  <td>{capitalize(status)}</td>
+                  <td style={{ fontWeight: 400 }}>{dateFormat(createdAt)}</td>
+                  <td
+                    style={{
+                      fontWeight: 500,
+                      color: isDenied
+                        ? "red"
+                        : status === "done"
+                        ? "green"
+                        : "",
+                    }}
+                  >
+                    {capitalize(status)}
+                  </td>
                   <td>
                     <MDBBtn
                       color="primary"
@@ -124,15 +139,15 @@ const Body = () => {
                     </MDBBtn>
                   </td>
                 </tr>
-                {remarks && (
+                {(remarks || reason) && (
                   <div className="mt-n4 position-absolute">
                     <MDBTypography
-                      noteColor="warning"
+                      noteColor={isDenied ? "danger" : "warning"}
                       className="m-0 p-1"
                       note
                       noteTitle="Remarks: "
                     >
-                      {remarks}
+                      {isDenied ? reason : remarks}
                     </MDBTypography>
                   </div>
                 )}

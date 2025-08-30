@@ -18,6 +18,7 @@ export default function Body({
           <tr>
             <th>#</th>
             <th>Performer</th>
+            <th>Pathologist</th>
             <th>Template</th>
             <th>Services</th>
             <th>Actions</th>

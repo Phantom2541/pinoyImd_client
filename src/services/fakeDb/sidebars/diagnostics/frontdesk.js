@@ -12,11 +12,11 @@ import {
   Miscellaneous,
 } from "../../../../pages/platforms/frontdesk/reports";
 
+import { Reports } from "../../../../pages/platforms/laboratory/diagnostics";
 import {
+  Tasks,
   Onboard,
-  Reports,
-} from "../../../../pages/platforms/laboratory/diagnostics";
-import { Tasks } from "../../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/frontdesk/diagnostics";
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 // import Products from "../../../../pages/platforms/frontdesk/market/products";
 // import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
@@ -31,6 +31,7 @@ import {
   Admission,
   Cases,
 } from "../../../../pages/platforms/frontdesk";
+import laboratoryRequestForm from "../../../../pages/platforms/frontdesk/laboratoryRequestForm";
 
 import {
   Tablestemplate,
@@ -54,7 +55,6 @@ import {
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
 import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
-import GeneratorId from "../../../../pages/templates/generatorID";
 
 const frontdesk = [
   {
@@ -473,12 +473,6 @@ const frontdesk = [
         icon: "calendar-alt",
         component: SubExpired,
       },
-      {
-        name: "Generator ID",
-        path: "/templates/generatorID",
-        icon: "calendar-alt",
-        component: GeneratorId,
-      },
     ],
   },
   {
@@ -492,6 +486,12 @@ const frontdesk = [
     icon: "tachometer-alt",
     path: "/admission",
     component: Admission,
+  },
+  {
+    name: "LaboratoryRequestForm",
+    icon: "tachometer-alt",
+    path: "/requestform",
+    component: laboratoryRequestForm,
   },
 ];
 

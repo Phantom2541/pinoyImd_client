@@ -1,13 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import {
-  MDBBadge,
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-  MDBIcon,
-  MDBView,
-} from "mdbreact";
+import { MDBBadge, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import {
   currency,
   fullName,

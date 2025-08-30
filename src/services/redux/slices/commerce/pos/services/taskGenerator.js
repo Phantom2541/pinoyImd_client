@@ -184,51 +184,20 @@ export const reduxSlice = createSlice({
     },
 
     InsertRealtimeOnboard: (state, { payload }) => {
-      const { department, cart: baseCart = [], ...rest } = payload;
-      const onboarding = {
-        ...rest,
-        cart: baseCart?.filter(({ packages }) =>
-          Services.filterByDepartment(packages, department)
-        ),
-      };
-      //this reducer is for received realtime onboard and set into the filtered and collections
-      if (
-        fetchTracker.hasLoaded("onboardings") &&
-        onboarding?.cart?.length > 0
-      ) {
-        state.collections.unshift(onboarding);
-        state.filtered.unshift(onboarding);
-        IDB_SAVE(onboarding);
-      }
-    },
-
-    UpdateRealtimeOnboard: (state, { payload }) => {
-      const { department, cart: baseCart = [], ...rest } = payload;
-
-      const onboarding = {
-        ...rest,
-        cart: baseCart?.filter(({ packages }) =>
-          Services.filterByDepartment(packages, department)
-        ),
-      };
-
-      if (
-        fetchTracker.hasLoaded("onboardings") &&
-        (baseCart.length === 0 || onboarding?.cart?.length > 0)
-      ) {
-        console.log("update onboarding");
-        const updateCollection = (collections) => {
-          const index = collections.findIndex(
-            (item) => item._id === payload._id
+      const { cart: baseCart = [], department } = payload;
+      const formattedCart = baseCart
+        ?.map(({ packages, ...rest }) => {
+          const packagesFormatted = Services.filterByDepartment(
+            packages,
+            getDepartment(department)
           );
-          if (index > -1) {
-            collections[index] = { ...collections[index], ...payload };
-          }
-        };
-
-        updateCollection(state.collections);
-        updateCollection(state.filtered);
-        IDB_UPDATE(payload);
+          return { packages: packagesFormatted || [], ...rest };
+        })
+        .filter(({ packages }) => packages?.length > 0);
+      //this reducer is for received realtime onboard and set into the filtered and collections
+      if (formattedCart?.length > 0) {
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
       }
     },
 
@@ -314,17 +283,27 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
         // filter by department
-        const _collections = payload.map((item, index) => ({
-          ...item,
-          pn: payload.length - index,
-          cart: item?.cart?.filter(({ packages }) =>
-            Services.filterByDepartment(
-              packages,
-              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
-            )
-          ),
-        }));
-        state.collections = state.filtered = _collections;
+        const collectionsWithPN = payload
+          .map((item) => ({
+            ...item,
+            cart: item?.cart
+              ?.map(({ packages, ...rest }) => {
+                const packagesFormatted = Services.filterByDepartment(
+                  packages,
+                  getDepartment(department)
+                );
+                return { packages: packagesFormatted, ...rest };
+              })
+              .filter(({ packages }) => packages?.length > 0),
+          }))
+          .filter(({ cart }) => cart?.length > 0)
+          .map((item, index, arr) => ({
+            ...item,
+            pn: arr.length - index,
+          }));
+
+        state.collections = state.filtered = collectionsWithPN;
+
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

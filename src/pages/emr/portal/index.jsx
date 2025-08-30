@@ -23,7 +23,7 @@ const Portal = ({ match }) => {
       dispatch(SetAUTH(result.customerId));
       setShow(true);
     }
-  }, [result]);
+  }, [dispatch, result]);
   return (
     <div className="portal-container bg-white">
       <Topbar companyId={companyId} />

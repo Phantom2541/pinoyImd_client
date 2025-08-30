@@ -1,0 +1,440 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&family=Roboto:wght@100;400;700&family=Poppins:wght@100;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.id-calibrator-main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "leftside rightside"
+    "bottomside bottomside";
+  width: fit-content;
+  margin: auto;
+  gap: 15px;
+  user-select: none;
+}
+
+.id-calibrator-main-container.portrait {
+  max-width: 1150px;
+}
+.id-calibrator-main-container.landscape {
+  max-width: 900px;
+  align-items: center;
+}
+
+.id-calibrator-main-container.isEditMode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.id-calibrator-container {
+  grid-area: leftside;
+}
+
+.IDGenerator-setting-container {
+  grid-area: rightside;
+  height: 100%;
+}
+
+.id-calibrator-details {
+  grid-area: bottomside;
+}
+
+.id-calibrator-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: transparent;
+}
+
+.id-calibrator-preview-wrapper.editMode {
+  pointer-events: none;
+}
+
+.id-calibrator-preview-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 15px;
+}
+
+.id-calibrator-preview-wrapper.portrait {
+  flex-direction: row;
+}
+
+.id-calibrator-preview-wrapper.landscape {
+  flex-direction: column;
+}
+
+.id-calibrator-preview {
+  position: relative;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.id-calibrator-preview.portrait {
+  width: 3.1875in;
+  height: 5.0625in;
+}
+
+.id-calibrator-preview.landscape {
+  width: 5.0625in;
+  height: 3.1875in;
+}
+
+.id-calibrator-preview.active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.id-calibrator-preview-upload {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  border: 2px solid rgba(0, 0, 0, 0.6); /* muted black border */
+  color: rgba(0, 0, 0, 0.8); /* off-white text/icon */
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.id-calibrator-preview-upload:hover {
+  border-color: rgba(255, 255, 255, 0.6); /* lighter border on hover */
+  color: #fff; /* solid white for contrast */
+}
+
+.id-calibrator-preview-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #e9e9e9;
+  letter-spacing: 4px;
+
+  /* Embossed / naka-bakat effect */
+  text-shadow: 1px 1px 2px #fff,
+    /* highlight (upper-left light source) */ -1px -1px 2px rgba(0, 0, 0, 0.3); /* shadow (lower-right depth) */
+
+  pointer-events: none; /* para di ma-click, purely design lang */
+  user-select: none; /* di rin mako-copy */
+  opacity: 0.5;
+}
+
+.id-calibrator-preview-upload:hover {
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.id-calibrator-preview-upload.hide {
+  display: none;
+}
+
+.id-calibrator-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  cursor: pointer;
+}
+
+.id-calibrator-details {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 70px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.id-calibrator-details-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.id-calibrator-detail-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8px;
+  max-height: 40px;
+  padding: 8px 14px;
+  border-radius: 5px;
+  color: white;
+  background-color: #0d6efd;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.id-calibrator-detail-value.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.id-calibrator-detail-value.img {
+  padding: 0 0;
+  width: 40px;
+  aspect-ratio: 1/1;
+}
+
+.id-calibrator-detail-value:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.id-calibrator-detail-value img {
+  display: block;
+  height: 30px;
+  width: 30px;
+  object-fit: fill;
+}
+
+.id-calibrator-value-eye {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.id-calibrator-value-eye:hover {
+  color: #0d6efd;
+}
+
+.id-calibrator-detail-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(150%, -80%);
+  cursor: pointer;
+  color: red;
+  opacity: 0;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.id-calibrator-placed-value:hover .id-calibrator-detail-remove {
+  opacity: 1;
+}
+
+.id-calibrator-placed-value.selected {
+  outline: 2px dashed #1976d2;
+  outline-offset: 2px;
+}
+
+.id-calibrator-detail-value.crossed {
+  text-decoration: line-through;
+  background-color: white;
+  box-shadow: none;
+  color: black;
+}
+
+.id-calibrator-detail-value.crossed:hover {
+  background-color: #dc3545;
+  color: white;
+  cursor: pointer;
+}
+.id-calibrator-placed-value.highlight {
+  outline: 2px dashed #dc3545;
+}
+
+.id-calibrator-placed-value-text.highlight {
+  color: white;
+  mix-blend-mode: difference;
+}
+
+/* id calibrator skeleton */
+.id-calibrator-skeleton-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "leftside rightside"
+    "bottomside bottomside";
+  width: fit-content;
+  margin: auto;
+  gap: 15px;
+  user-select: none;
+  max-width: 900px;
+}
+
+.id-calibrator-sekeleton-id-preview-wrapper {
+  grid-area: leftside;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.id-calibrator-skeleton-id-preview,
+.id-calibrator-skeleton-settings-panel,
+.id-calibrator-skeleton-buttons {
+  position: relative;
+  overflow: hidden;
+  background: #e0e0e0;
+}
+
+/* Specific sizes */
+.id-calibrator-skeleton-id-preview {
+  width: 3.1875in;
+  height: 5.0625in;
+  border-radius: 5px;
+}
+
+.id-calibrator-skeleton-settings-panel {
+  grid-area: rightside;
+  width: 350px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.id-calibrator-skeleton-buttons {
+  grid-area: bottomside;
+  width: 100%;
+  height: 80px;
+}
+
+/* Shimmer effect */
+.id-calibrator-skeleton-id-preview::after,
+.id-calibrator-skeleton-skeleton-settings-panel::after,
+.id-calibrator-skeleton-buttons::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%; /* start further left for smooth entrance */
+  height: 100%;
+  width: 150%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: id-calibrator-shimmer 1.5s infinite;
+  transform: skewX(-20deg); /* subtle skew for smoother light */
+}
+
+@keyframes id-calibrator-shimmer {
+  100% {
+    left: 100%;
+  }
+}
+
+.id-calibrator-preview-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* From Uiverse.io by Shoh2008 */
+.id-calibrator-preview-loader {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.id-calibrator-preview-loader:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  transform: rotate(45deg) translate(30%, 40%);
+  background: #2e86de;
+  box-shadow: 32px -34px 0 5px #0097e6;
+  animation: id-calibrator-preview-slide 2s infinite ease-in-out alternate;
+}
+
+.id-calibrator-preview-loader:after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0097e6;
+  transform: rotate(0deg);
+  transform-origin: 35px 145px;
+  animation: id-calibrator-preview-rotate 2s infinite ease-in-out;
+}
+
+@keyframes id-calibrator-preview-slide {
+  0%,
+  100% {
+    bottom: -35px;
+  }
+
+  25%,
+  75% {
+    bottom: -2px;
+  }
+
+  20%,
+  80% {
+    bottom: 2px;
+  }
+}
+
+@keyframes id-calibrator-preview-rotate {
+  0% {
+    transform: rotate(-15deg);
+  }
+
+  25%,
+  75% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(25deg);
+  }
+}
+
+.id-calibrator-edit-button {
+  text-align: center;
+  width: 100%;
+}
+
+.id-calibrator-edit-button.hide {
+  display: none;
+}
+
+.id-calibrator-edit-button button {
+  width: 100%;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 3px 0;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.id-calibrator-edit-button button:active {
+  transform: scale(0.99);
+}

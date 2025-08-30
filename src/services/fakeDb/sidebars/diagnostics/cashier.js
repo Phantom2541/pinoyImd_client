@@ -19,6 +19,7 @@ import {
   Payments,
   // SOA,
   Onboarding,
+  Inhouse,
 } from "../../../../pages/platforms/cashier";
 import {
   Request,
@@ -65,7 +66,8 @@ const cashier = [
         name: "Onboarding",
         path: "/onboarding",
         icon: "sign-in-alt",
-        title: "Pre-Registered Patients & HMO Approvals",
+        title:
+          "Pre-Registered Patients & HMO Approvals → moves to Accrued Vouchers when done",
         component: Onboarding,
       },
     ],
@@ -118,6 +120,13 @@ const cashier = [
         icon: "people-carry",
         title: "External Service Providers (Sendouts)",
         component: Outsources,
+      },
+      {
+        name: "Inhouse",
+        path: "/inhouse",
+        icon: "user-md",
+        title: "Inhouse",
+        component: Inhouse,
       },
       {
         name: "Affiliated Patient Programs",

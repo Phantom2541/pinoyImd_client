@@ -3,6 +3,7 @@ import Dashboard from "../../../../pages/platforms/manager/dashboard/index.jsx";
 import {
   Details,
   Applicants,
+  Banner,
   Tieups,
 } from "../../../../pages/platforms/manager/index.js";
 // } from "../../../../pages/platforms/manager/settings/index.jsx";
@@ -12,7 +13,6 @@ import {
 } from "../../../../pages/platforms/accounting/index.js";
 import UserManual from "../../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../../pages/platforms/manager/purchases/request/index.jsx";
-import Banners from "../../../../pages/platforms/manager/settings/banner/index.jsx";
 import TatServices from "../../../../pages/platforms/manager/commerce/tatServices/index.jsx";
 
 import {
@@ -338,7 +338,7 @@ const ManagerSidebar = [
             title: "Branch branding banners.",
             path: "/banner",
             icon: "image",
-            component: Banners,
+            component: Banner,
           },
           {
             name: "Details",

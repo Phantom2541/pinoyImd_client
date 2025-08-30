@@ -256,41 +256,82 @@ const accreditation = [
     icon: "cogs",
     children: [
       {
-        name: "Temperature",
-        path: "/temperature",
-        component: Temperatures,
+        name: "Monitoring",
+        path: "/monitoring",
         icon: "cogs",
+        children: [
+          {
+            name: "Temperature",
+            path: "/temperature",
+            component: Temperatures,
+            icon: "cogs",
+          },
+          {
+            name: "Quality Control",
+            path: "/qc",
+            component: qualityControls,
+            icon: "cogs",
+          },
+        ],
       },
       {
-        name: "Services Offers",
-        path: "/documents/services",
+        name: "Catalogs",
+        path: "/catalogs",
         icon: "cogs",
+        children: [
+          {
+            name: "Outsorce",
+            title: "Tie up with other laboratories",
+            path: "/outsources",
+            icon: "cogs",
+          },
+          {
+            name: "Menu Pricelist",
+            path: "/pricelist",
+            icon: "cogs",
+          },
+          {
+            name: "Services Statistics report",
+            path: "/statistics",
+            icon: "cogs",
+          },
+        ],
       },
       {
-        name: "Quality Control",
-        path: "/documents/quality",
-        component: qualityControls,
+        name: "P M S",
+        title: "Patient Management System",
+        path: "/pms",
         icon: "cogs",
+        children: [
+          {
+            name: "Machines",
+            path: "/machines",
+            icon: "cogs",
+            component: Machines,
+          },
+          {
+            name: "Preventive Maintenance",
+            path: "/reports",
+            icon: "cogs",
+          },
+        ],
       },
       {
-        name: "Machines",
-        path: "/documents/machines",
+        name: "Log Book",
+        title: "Patient Result Log Book",
+        path: "/logbook",
         icon: "cogs",
-        component: Machines,
-      },
-      {
-        name: "Services Statistics",
-        path: "/documents/statistics",
-        icon: "cogs",
+        children: [
+          {
+            name: "Urinalysis",
+            path: "/urinalysis",
+            icon: "cogs",
+          },
+        ],
       },
       {
         name: "Reagent Inventory",
-        path: "/documents/reagents",
-        icon: "cogs",
-      },
-      {
-        name: "Preventive Maintenance",
-        path: "/documents/maintenance",
+        path: "/reagents",
         icon: "cogs",
       },
     ],

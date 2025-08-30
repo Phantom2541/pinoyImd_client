@@ -37,7 +37,12 @@ const laboratory = [
     path: "/bulettin",
     title: "News and Updates",
     component: Bulletin,
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+    allowedFor: [
+      "Jr. Medical Laboratory Scientist",
+      "Medical Laboratory Scientist",
+      "Sr. Medical Laboratory Scientist",
+      "Chief MLS",
+    ],
   },
   {
     name: "Schedules",
@@ -51,7 +56,12 @@ const laboratory = [
     path: "/lab/sales",
     icon: "chart-line",
     title: "Daily income and collection tracking",
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+    allowedFor: [
+      "Jr. Medical Laboratory Scientist",
+      "Medical Laboratory Scientist",
+      "Sr. Medical Laboratory Scientist",
+      "Chief MLS",
+    ],
     children: [
       {
         name: "Sales Report",
@@ -75,7 +85,12 @@ const laboratory = [
         icon: "sign-in-alt",
         title: "Pre-Registered Patients & HMO Approvals",
         component: Onboarding,
-        allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+        allowedFor: [
+          "Jr. Medical Laboratory Scientist",
+          "Medical Laboratory Scientist",
+          "Sr. Medical Laboratory Scientist",
+          "Chief MLS",
+        ],
       },
       {
         name: "Sendout",
@@ -83,7 +98,12 @@ const laboratory = [
         icon: "truck-loading",
         title: "Sendout Patients to Partner Clinics",
         component: Sendouts,
-        allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+        allowedFor: [
+          "Jr. Medical Laboratory Scientist",
+          "Medical Laboratory Scientist",
+          "Sr. Medical Laboratory Scientist",
+          "Chief MLS",
+        ],
       },
       {
         name: "medical mission",
@@ -91,7 +111,12 @@ const laboratory = [
         icon: "ambulance",
         title: "medical team operations for outreach clinics.",
         component: Quest,
-        allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+        allowedFor: [
+          "Jr. Medical Laboratory Scientist",
+          "Medical Laboratory Scientist",
+          "Sr. Medical Laboratory Scientist",
+          "Chief MLS",
+        ],
       },
     ],
   },
@@ -127,7 +152,12 @@ const laboratory = [
     path: "/lab/inventory",
     icon: "boxes",
     title: "Manage lab supplies and reagents",
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+    allowedFor: [
+      "Jr. Medical Laboratory Scientist",
+      "Medical Laboratory Scientist",
+      "Sr. Medical Laboratory Scientist",
+      "Chief MLS",
+    ],
     children: [
       {
         name: "Reagents",
@@ -148,7 +178,7 @@ const laboratory = [
     path: "/lab/requests-management",
     icon: "file-signature",
     title: "Manage supply and maintenance requests",
-    allowedFor: ["Senior MedTech", "Chief MLS"],
+    allowedFor: ["Sr. Medical Laboratory Scientist", "Chief MLS"],
     children: [
       {
         name: "Product Request",
@@ -169,7 +199,12 @@ const laboratory = [
     path: "/lab/schedule",
     icon: "calendar-alt",
     title: "Staff scheduling and attendance",
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+    allowedFor: [
+      "Jr. Medical Laboratory Scientist",
+      "Medical Laboratory Scientist",
+      "Sr. Medical Laboratory Scientist",
+      "Chief MLS",
+    ],
     children: [
       {
         name: "Attendance",
@@ -184,7 +219,7 @@ const laboratory = [
         path: "/scheduler",
         icon: "calendar-check",
         component: Scheduler,
-        allowedFor: ["Senior MedTech", "Chief MLS"],
+        allowedFor: ["Sr. Medical Laboratory Scientist", "Chief MLS"],
       },
       {
         name: "Signatories",
@@ -192,7 +227,7 @@ const laboratory = [
         path: "/signatories",
         icon: "pen",
         component: Heads,
-        allowedFor: ["Senior MedTech", "Chief MLS"],
+        allowedFor: ["Sr. Medical Laboratory Scientist", "Chief MLS"],
       },
       {
         name: "Mobile Clinic (Quest)",
@@ -222,7 +257,7 @@ const laboratory = [
     path: "/lab/services",
     icon: "file-medical-alt",
     title: "Service pricing and reference values",
-    allowedFor: ["Senior MedTech", "Chief MLS"],
+    allowedFor: ["Sr. Medical Laboratory Scientist", "Chief MLS"],
     children: [
       {
         name: "Service Prices",
@@ -243,7 +278,7 @@ const laboratory = [
     path: "/offers",
     icon: "list",
     title: "Masterlists for services, products, and consumables",
-    allowedFor: ["Senior MedTech", "Chief MLS"],
+    allowedFor: ["Sr. Medical Laboratory Scientist", "Chief MLS"],
     children: [
       {
         name: "Menus",
@@ -371,7 +406,7 @@ const laboratory = [
     path: "/lab/reports",
     icon: "file-medical",
     title: "Summary and detailed reports",
-    allowedFor: ["Senior MedTech", "Chief MLS"],
+    allowedFor: ["Sr. Medical Laboratory Scientist", "Chief MLS"],
     children: [
       {
         name: "Daily Summary",
@@ -392,7 +427,13 @@ const laboratory = [
     path: "/lab/working-area",
     icon: "microscope",
     title: "Access different lab working sections",
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS", "Frontdesk"], // optional if role-filtered
+    allowedFor: [
+      "Jr. Medical Laboratory Scientist",
+      "Medical Laboratory Scientist",
+      "Sr. Medical Laboratory Scientist",
+      "Chief MLS",
+      "Frontdesk",
+    ], // optional if role-filtered
     component: WorkingArea,
     // children: [
     //   {

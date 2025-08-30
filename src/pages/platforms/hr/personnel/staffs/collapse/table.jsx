@@ -63,6 +63,7 @@ export default function CollapseTable({
   employment,
   staff,
   rate,
+  hasSchedule,
   contribution,
   _id,
   onSubmit,
@@ -91,6 +92,7 @@ export default function CollapseTable({
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
       employmentDesignation: employment?.designation || "",
+      hasSchedule: hasSchedule || false,
       rateMonthly: rate?.monthly || 0,
       rateCola: rate?.cola || 0,
       rateDaily: rate?.daily || 0,
@@ -98,7 +100,7 @@ export default function CollapseTable({
       contributionPi: contribution?.pi || 0,
       contributionSss: contribution?.sss || 0,
     });
-  }, [reset, contribution, rate, employment]);
+  }, [reset, contribution, rate, employment, hasSchedule]);
 
   useEffect(() => {
     resetData();
@@ -152,13 +154,12 @@ export default function CollapseTable({
     watch("employmentDepartment") ||
     Policy.getDepartment(employment?.designation);
   const isHonorarium = employment?.soe === "Honorarium";
-
   return (
     <>
       <MDBRow>
         {/* Employment */}
         <MDBCol md={"4"}>
-          <h5>Employment</h5>
+          <h5>Employment Contract Details</h5>
           <hr />
           <EditableField
             label="Hours of Service"
@@ -180,7 +181,6 @@ export default function CollapseTable({
               }`}
             />
           </EditableField>
-
           <EditableField
             label="Status of Employment"
             fieldName="employmentSoe"
@@ -205,7 +205,6 @@ export default function CollapseTable({
               <option value="Honorarium">Honorarium</option>
             </select>
           </EditableField>
-
           <EditableField
             label="Department"
             fieldName="employmentDepartment"
@@ -265,7 +264,6 @@ export default function CollapseTable({
               ))}
             </select>
           </EditableField>
-
           <EditableField
             label="Payment Cycle"
             fieldName="employmentPc"
@@ -304,16 +302,16 @@ export default function CollapseTable({
             ...(!isHonorarium
               ? [
                   {
-                    label: "Monthly Rate",
+                    label: "Monthly",
                     name: "rateMonthly",
                     value: rate?.monthly,
                   },
-                  { label: "COLA", name: "rateCola", value: rate?.cola },
                   {
-                    label: "Daily Rate",
+                    label: "Daily",
                     name: "rateDaily",
                     value: rate?.daily,
                   },
+                  { label: "COLA", name: "rateCola", value: rate?.cola },
                 ]
               : [
                   {
@@ -345,6 +343,30 @@ export default function CollapseTable({
               />
             </EditableField>
           ))}
+
+          <EditableField
+            label="Schedule"
+            fieldName="hasSchedule"
+            {...{
+              editField,
+              setEditField,
+              errors,
+              saveField,
+              handleCancel,
+              value: hasSchedule ? "Included" : "Excluded",
+            }}
+          >
+            <select
+              {...register("hasSchedule")}
+              className={`form-control form-control-sm ${
+                errors.hasSchedule ? "is-invalid" : ""
+              }`}
+              defaultValue={hasSchedule ? "true" : "false"}
+            >
+              <option value="true">Included</option>
+              <option value="false">Excluded</option>
+            </select>
+          </EditableField>
         </MDBCol>
 
         {/* Contributions */}

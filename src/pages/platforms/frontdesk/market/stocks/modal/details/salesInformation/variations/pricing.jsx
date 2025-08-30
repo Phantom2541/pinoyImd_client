@@ -1,7 +1,8 @@
 import { MDBInput, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import { useState } from "react";
+import validate from "../../../validate";
 
-const Pricing = ({ variants, setVariants = () => {} }) => {
+const Pricing = ({ variants, setVariants = () => {}, isDuplicate = false }) => {
   const { types = [], prices = {} } = variants || {};
   const [option1Focus, setOption1Focus] = useState(-1);
   const [option2Focus, setOption2Focus] = useState(-1);
@@ -15,7 +16,12 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
     setOption2Focus(op2);
   };
 
+  // 🔎 Validation before allowing changes
+
   const handleChange = (primaryKey, option, value, secondaryKey) => {
+    // ✅ run validation before allowing edits
+    if (!validate.pricing(isDuplicate, variants)) return;
+
     let _prices = { ...prices };
 
     if (secondaryKey) {
@@ -47,10 +53,12 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
 
   const handleValue = (primary, option, secondary) => {
     if (secondary) {
-      return prices?.[primary]?.[secondary]?.[option] ?? "0";
+      return prices?.[primary]?.[secondary]?.[option] ?? "";
     }
-    return prices?.[primary]?.[option] ?? "0";
+    return prices?.[primary]?.[option] ?? "";
   };
+
+  console.log("variants", variants.prices);
 
   return (
     <div
@@ -66,7 +74,7 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
           position: "absolute",
           top: "-12px",
           left: "15px",
-          background: "#fff", // same as container background
+          background: "#fff",
           padding: "0 5px",
           color: "gray",
         }}
@@ -83,10 +91,10 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
                 </th>
               ))}
               <th>
-                <span className="ml-3">Price</span>
+                <span className="ml-3">Cost</span>
               </th>
               <th>
-                <span className="ml-3">Cost</span>
+                <span className="ml-3">Price</span>
               </th>
               <th>
                 <span className="ml-3">Stock</span>
@@ -127,10 +135,11 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
                         <td key={field}>
                           <div className="px-3 mr-1">
                             <MDBInput
+                              required
                               className="m-0 p-1 mt-n4 mb-n4"
                               label={fieldIndex <= 1 ? "₱" : ""}
                               value={String(
-                                handleValue(option1, field, option2) || "0"
+                                handleValue(option1, field, option2) || ""
                               )}
                               onChange={(e) =>
                                 handleChange(
@@ -166,7 +175,8 @@ const Pricing = ({ variants, setVariants = () => {} }) => {
                         <div className="px-3 mr-1">
                           <MDBInput
                             className="m-0 p-1 mt-n4 mb-n4"
-                            value={String(handleValue(option1, field) || "0")}
+                            required
+                            value={String(handleValue(option1, field) || "")}
                             onChange={(e) =>
                               handleChange(
                                 option1,

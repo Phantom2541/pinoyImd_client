@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-
-// ADD THIS LINE ✅
 import cases from "./slices/commerce/pos/services/cases";
+import requestForm from "./slices/requestForm/requestForm";
 
 // ASSETS
 import {
@@ -25,7 +24,7 @@ import { dragDrop, table } from "./slices/reusable";
 import {
   menus,
   services,
-  products, // <- dito na naka-import products mula commerce folder
+  products,
   productGenerics,
   pos,
   sales,
@@ -77,8 +76,7 @@ import {
   generics,
   mentainance,
   attendances,
-} from "./slices/market"; // <-- dito wala na yung products
-
+} from "./slices/market";
 // LIABILITY
 import { access, liabilities } from "./slices/liability";
 
@@ -133,7 +131,7 @@ const store = configureStore({
     providers,
     controls,
     assurances,
-    products, // <- dito sa reducer register products mula commerce
+    products,
     xray,
     ultrasound,
     ecg,

@@ -14,6 +14,8 @@ const Header = () => {
     ({ attendances }) => attendances
   );
   const dispatch = useDispatch();
+  console.log("collections", collections);
+  
 
   const handlePrintOut = () => {
     localStorage.setItem("attendances", JSON.stringify(collections));
@@ -37,19 +39,12 @@ const Header = () => {
     );
   }, [token, dispatch, activePlatform, month, year]);
 
-  // ✅ Check for July and June records
-  const hasJulyRecord = collections.some((item) => {
+  const hasRecordForCurrentMonth = collections.some((item) => {
     const date = new Date(item.createdAt);
-    return date.getMonth() === 6; // July (0-based index)
+    return date.getMonth() === month - 1 && date.getFullYear() === year;
   });
 
-  const hasJuneRecord = collections.some((item) => {
-    const date = new Date(item.createdAt);
-    return date.getMonth() === 5; // June
-  });
-
-  // ✅ Show button logic
-  const showPrintButton = hasJulyRecord || (month === 6 && hasJuneRecord);
+  const showPrintButton = hasRecordForCurrentMonth;
 
   return (
     <div style={{ position: "relative" }}>
@@ -57,7 +52,6 @@ const Header = () => {
         cascade
         className="gradient-card-header blue-gradient py-2 d-flex justify-content-between align-items-center"
       >
-        {/* Left: Calendar */}
         <div className="d-flex align-items-center">
           <CalendarPicker
             month={month}
@@ -66,8 +60,6 @@ const Header = () => {
             reset={() => dispatch(ResetDATE())}
           />
         </div>
-
-        {/* Center: Absolutely Centered Title */}
         <div
           className="white-text text-nowrap text-center"
           style={{

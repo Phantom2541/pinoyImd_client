@@ -45,6 +45,7 @@ export default function PosCard() {
     [categories, setCategories] = useState([]),
     [sources, setSources] = useState([]),
     [source, setSource] = useState({}),
+    [srcCIndex, setSrcCIndex] = useState(""), //Source Category Index
     dispatch = useDispatch(),
     history = useHistory();
 
@@ -70,11 +71,14 @@ export default function PosCard() {
       "mc",
       "prm",
       "sc",
+      "sr",
     ].includes(abbr)
       ? "rfr"
       : abbr;
     const _sources = collections?.filter(({ category }) => category === _abbr);
+    const scIndex = Categories.findIndex(({ abbr }) => abbr === _abbr);
     setSources(_sources);
+    setSrcCIndex(scIndex);
   }, [category, collections]);
 
   useEffect(() => {
@@ -155,7 +159,6 @@ export default function PosCard() {
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 
-  const categoryHasSource = [12, 7, 8].includes(category);
   const hasSources = sources?.length > 0;
   return (
     <>
@@ -215,28 +218,22 @@ export default function PosCard() {
         <div className="patient-form mt-2">
           <span>Source</span>
           <select
-            disabled={!didSelect || !categoryHasSource}
+            disabled={!didSelect}
             onClick={() => {
-              if (!hasSources && categoryHasSource)
+              if (!hasSources)
                 history.push(
                   `/cashier/sources/insources/${Categories[
-                    category
+                    srcCIndex
                   ]?.name?.toLowerCase()}`
                 );
             }}
-            className={
-              !hasSources && categoryHasSource
-                ? "text-primary cursor-pointer"
-                : ""
-            }
+            className={!hasSources ? "text-primary cursor-pointer" : ""}
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">
-              {categoryHasSource
-                ? !hasSources
-                  ? `No ${Categories[category].name}. Click to register.`
-                  : "None"
-                : "Set category to (Membership,Contract,Referrals) first."}
+              {!hasSources
+                ? `No ${Categories[srcCIndex]?.name}. Click to register.`
+                : "None"}
             </option>
             {sources?.map(({ _id, clients }) => (
               <option key={_id} value={_id}>

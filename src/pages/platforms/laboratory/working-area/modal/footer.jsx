@@ -52,6 +52,46 @@ const Footer = () => {
       physicians.find(({ user }) => user === _user)
     );
 
+  const missingSignatoriesChecker = (head, dr) => {
+    const { form } = task;
+
+    if (!head || !dr) {
+      let message = "";
+
+      if (!head && !dr) {
+        message = `
+          <span style="font-size:16px;">⚠️ <strong style="color:#d9534f;">No Medical Laboratory Scientist 👩‍⚕️ and Pathologist 🧑‍⚕️ have been assigned</strong> for the <em>${form}</em> section.</span><br><br>
+          <span style="color:#555;">🧾 <strong>Results have been saved</strong>, but you need to <strong>declare both signatories in the Signatories section</strong> before printing.</span><br><br>
+          <span style="color:#555;">🔹 Once assigned in Signatories, return to this patient and click the <strong style="color:#3085d6;">Post</strong> button again to print.</span>
+          `;
+      } else if (!head) {
+        message = `
+          <span style="font-size:16px;">⚠️ <strong style="color:#d9534f;">No Medical Laboratory Scientist 👩‍⚕️ has been assigned</strong> for the <em>${form}</em> section.</span><br><br>
+          <span style="color:#555;">🧾 <strong>Results have been saved</strong>, but you need to <strong>declare a Medical Laboratory Scientist in the Signatories section</strong> before printing.</span><br><br>
+          <span style="color:#555;">🔹 Once assigned in Signatories, return to this patient and click the <strong style="color:#3085d6;">Post</strong> button again to print.</span>
+          `;
+      } else if (!dr) {
+        message = `
+          <span style="font-size:16px;">⚠️ <strong style="color:#d9534f;">No Pathologist 🧑‍⚕️ has been assigned</strong> for the <em>${form}</em> section.</span><br><br>
+          <span style="color:#555;">🧾 <strong>Results have been saved</strong>, but you need to <strong>declare a Pathologist in the Signatories section</strong> before printing.</span><br><br>
+          <span style="color:#555;">🔹 Once assigned in Signatories, return to this patient and click the <strong style="color:#3085d6;">Post</strong> button again to print.</span>
+          `;
+      }
+
+      return Swal.fire({
+        icon: "warning",
+        title: `<span style="color:#d9534f; font-family:'Segoe UI', sans-serif; font-weight:600;">Incomplete Signatories</span>`,
+        html: `<div style="text-align:left; line-height:1.6; font-size:15px; font-family:'Segoe UI', sans-serif; color:#333;">${message}</div>`,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+        background: "#ffffff",
+        iconColor: "#f0ad4e",
+        width: 480,
+        padding: "1.75rem",
+        showCloseButton: true,
+      });
+    }
+  };
   const handleSave = (hasDone) => {
     const { form } = task;
 
@@ -77,14 +117,14 @@ const Footer = () => {
             ...rest,
             hasDone,
             department,
-            signatories: [head, dr, auth._id],
+            signatories: [head || null, dr || null, auth._id],
           };
         })()
       : {
           ...task,
           hasDone,
           department,
-          signatories: [head, dr, auth._id],
+          signatories: [head || null, dr || null, auth._id],
         };
     setIsLoading(true);
     dispatch(
@@ -96,6 +136,7 @@ const Footer = () => {
       setIsLoading(false);
       dispatch(SetVALIDATOR(payload?.item || payload?.payload));
       dispatch(SetMODAL(false));
+      missingSignatoriesChecker(head, dr);
     });
   };
 

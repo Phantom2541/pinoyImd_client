@@ -2,8 +2,26 @@ import React, { useEffect, useState } from "react";
 import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { COMPANY } from "../../../../services/redux/slices/assets/persons/personnels";
-import { ENDPOINT } from "../../../../services/utilities";
+import { Cloudinary, properFullname } from "../../../../services/utilities";
+import { BROWSE } from "../../../../services/redux/slices/assets/branches";
+import { orderBy } from "lodash";
+import Swal from "sweetalert2";
+
+// ✅ Reusable SocialLink component
+function SocialLink({ url, icon, label }) {
+  const handleClick = (e) => {
+    if (!url) {
+      e.preventDefault();
+      Swal.fire("Oops!", `${label} is not linked.`, "warning");
+    }
+  };
+
+  return (
+    <a href={url || "#"} className="pioneerAvatarLink" onClick={handleClick}>
+      <MDBIcon fab icon={icon} />
+    </a>
+  );
+}
 
 export default function Employees({ match }) {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
@@ -33,16 +51,40 @@ export default function Employees({ match }) {
   const cardsPerRow = getCardsPerRow();
   const CARDS_PER_PAGE = cardsPerRow * 2;
 
-  const { company } = useSelector(({ personnels }) => personnels);
-  const allPersonnels = company.flatMap((branch) => branch.personnels);
-  const totalPersonnel = allPersonnels.length;
-  const totalPages = Math.ceil(totalPersonnel / CARDS_PER_PAGE);
+  const { filtered } = useSelector(({ branches }) => branches);
 
   useEffect(() => {
-    if (match) {
-      dispatch(COMPANY({ params: match.params }));
+    const stored = localStorage.getItem("patronCompany");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+
+      dispatch(
+        BROWSE({
+          key: { companyId: parsed._id },
+        })
+      );
     }
-  }, [dispatch, match]);
+  }, [dispatch]);
+
+  const activeBranches = (filtered || []).filter(
+    (o) => (o.settings?.status || "").trim().toLowerCase() === "active"
+  );
+
+  const sortedData = orderBy(
+    activeBranches,
+    [(o) => !o.isMain, (o) => o.name?.toLowerCase().trim()],
+    ["asc", "asc"]
+  );
+
+  const filteredPersonnels = sortedData.flatMap((branch) => {
+    const { personnels = [] } = branch;
+    return personnels
+      .map((p, index) => ({ ...p, index }))
+      .filter((p) => p.status?.toLowerCase() === "active");
+  });
+
+  const totalPersonnel = (filteredPersonnels || []).length;
+  const totalPages = Math.max(1, Math.ceil(totalPersonnel / CARDS_PER_PAGE));
 
   const handleNext = () => {
     if (currentPage < totalPages - 1) {
@@ -83,10 +125,11 @@ export default function Employees({ match }) {
     return () => clearInterval(interval);
   }, [isHovered, totalPages]);
 
-  const displayedPersonnels = allPersonnels.slice(
+  const displayedPersonnels = filteredPersonnels.slice(
     currentPage * CARDS_PER_PAGE,
     (currentPage + 1) * CARDS_PER_PAGE
   );
+
   return (
     <section className=" subscriber-pioneers-section">
       <MDBAnimation reveal type="fadeIn" duration="1000ms">
@@ -132,36 +175,30 @@ export default function Employees({ match }) {
         >
           {displayedPersonnels.map((person, index) => {
             const { user } = person || {};
-            const { fullName, email } = user || {};
-            const { fname, lname, mname, postnominal } = fullName || {};
-            const _fullName = `${fname} ${mname} ${lname}`.toLowerCase();
+            const { fullName, email, gm, fb, x } = user || {};
+            const logoUrl = `${Cloudinary.getEndpoint()}/users/${encodeURIComponent(
+              email
+            )}/profile`;
 
             return (
               <div className="subscriber-pioneers-card" key={index}>
                 <div className="subscriber-pioneers-card-header">
                   <img
-                    src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                    src={logoUrl}
                     onError={(e) => {
-                      e.target.onerror = null; // prevent infinite loop
+                      e.target.onerror = null;
                       e.target.src = DEFAULT;
                     }}
                     alt={email}
                   />
                 </div>
                 <div className="subscriber-pioneers-card-body">
-                  <span>{_fullName}</span>
-                  <p>{postnominal ?? ""}</p>
+                  <span>{properFullname(fullName)}</span>
                 </div>
                 <div className="subscriber-pioneers-footer">
-                  <a href="google.com" className="pioneerAvatarLink">
-                    <MDBIcon fab icon="google" />
-                  </a>
-                  <a href="facebook.com" className="pioneerAvatarLink">
-                    <MDBIcon fab icon="facebook-f" />
-                  </a>
-                  <a href="twitter.com" className="pioneerAvatarLink">
-                    <MDBIcon fab icon="twitter" />
-                  </a>
+                  <SocialLink url={gm} icon="google" label="Gmail" />
+                  <SocialLink url={fb} icon="facebook-f" label="Facebook" />
+                  <SocialLink url={x} icon="twitter" label="X(Twitter)" />
                 </div>
               </div>
             );

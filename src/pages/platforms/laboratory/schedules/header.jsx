@@ -28,7 +28,7 @@ const Header = () => {
         token,
         params: {
           branchId: activePlatform?.branchId,
-          designations,
+          designations: [...designations, 42],
           bannedStats,
         },
       })

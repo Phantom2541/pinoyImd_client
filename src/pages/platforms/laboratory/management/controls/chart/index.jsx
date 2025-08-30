@@ -14,6 +14,7 @@ import {
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import { Cloudinary, FailedBanner } from "../../../../../../services/utilities";
+import { Services } from "../../../../../../services/fakeDb";
 
 // Register the required components
 Chart.register(
@@ -36,9 +37,9 @@ const calculateStats = (data) => {
   return { mean, stdDev };
 };
 
-const LeveyJennings = ({ title }) => {
+const LeveyJennings = () => {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered } = useSelector(({ controls }) => controls);
+  const { filtered, serviceId } = useSelector(({ controls }) => controls);
 
   const [hi, setHi] = useState([]);
   const [norm, setNorm] = useState([]);
@@ -60,6 +61,8 @@ const LeveyJennings = ({ title }) => {
       )
     );
   }, [filtered]);
+
+  const title = serviceId ? Services.getName(serviceId) : "";
 
   const printChart = () => {
     if (!chartRef.current) return;
@@ -186,7 +189,7 @@ const LeveyJennings = ({ title }) => {
       legend: { labels: { color: "#7e8591", font: { size: 14 } } },
       title: {
         display: true,
-        text: title || "Levey-Jennings Control Chart",
+        text: `${title ? title + " - " : ""}CONTROL CHART` || "CONTROL CHART",
         font: { size: 16 },
         color: "#333",
       },

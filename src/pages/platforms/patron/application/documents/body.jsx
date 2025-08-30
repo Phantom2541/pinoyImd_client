@@ -1,13 +1,36 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { Policy } from "../../../../../services/fakeDb";
 import { capitalize } from "lodash";
 import { employment } from "../../../../../services/utilities";
-
+import Swal from "sweetalert2";
+import { UPDATE } from "../../../../../services/redux/slices/assets/persons/applicants";
 const Body = () => {
   const { collections, activePage, maxPage } = useSelector(
     ({ personnels }) => personnels
   );
+  const { token } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
+
+  const reApply = (data) => {
+    Swal.fire({
+      title: "Do you want to re-apply on this company?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "yes",
+      denyButtonText: `edit details`,
+      denyButtonColor: "orange",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        dispatch(
+          UPDATE({ token, data: { _id: data._id, status: "petition" } })
+        );
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -26,6 +49,7 @@ const Body = () => {
           <th>Position</th>
           <th title="Status of Employment">SOE</th>
           <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -66,6 +90,21 @@ const Body = () => {
                 ></span>
                 <span style={{ fontWeight: 500 }}>{capitalize(status)}</span>
                 {haveReason && <span className="d-block mt-n1">{remarks}</span>}
+              </td>
+              <td>
+                <button
+                  style={{
+                    color: "white",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                    textTransform: "capitalize",
+                    border: "none",
+                  }}
+                  className="bg-primary"
+                  onClick={() => reApply(app)}
+                >
+                  Re-apply
+                </button>
               </td>
             </tr>
           );

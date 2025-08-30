@@ -8,13 +8,7 @@ const individual = (
   hmoCode,
   contract
 ) => {
-  const {
-    isPromo,
-    promo = 0,
-    discountable: disc = false, //old key for discountabel
-    hasDiscount = false,
-  } = menu;
-  const discountable = disc || hasDiscount;
+  const { isPromo = false, promo = 0, discountable = false } = menu;
   const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(category)
     ? "opd"
     : category;
@@ -25,7 +19,8 @@ const individual = (
   if (_abbr === "wls") gross = HMO.getSrp(hmoCode, menu?.hmo);
   if (_abbr === "ctr") gross = menu?.[contract];
 
-  let up = (gross * 80) / 100;
+  let up = Math.round((gross * 80) / 100);
+
   if (membership && category === "mbs" && discountable) {
     const dr = Memberships.getDiscount(membership) || 0;
     const discount = gross * dr;

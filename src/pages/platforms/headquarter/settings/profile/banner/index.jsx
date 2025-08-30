@@ -19,7 +19,6 @@ import {
 import { useToasts } from "react-toast-notifications";
 import {
   Cloudinary,
-  ENDPOINT,
   fullName,
   getAge,
 } from "../../../../../../services/utilities";

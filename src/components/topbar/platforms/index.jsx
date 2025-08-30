@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -87,18 +87,18 @@ export default function Platforms() {
             <MDBDropdownItem
               key={index}
               onClick={(e) => {
-                // if (isDisabled) {
-                //   e.preventDefault(); // prevent default action
-                //   e.stopPropagation(); // stop from closing dropdown
-                //   return;
-                // }
+                if (isDisabled) {
+                  e.preventDefault(); // prevent default action
+                  e.stopPropagation(); // stop from closing dropdown
+                  return;
+                }
                 handlePlatform(platform);
               }}
-              // style={{
-              //   color: isDisabled ? "#aaa" : "#212529",
-              //   pointerEvents: isDisabled ? "none" : "auto",
-              //   cursor: isDisabled ? "not-allowed" : "pointer",
-              // }}
+              style={{
+                color: isDisabled ? "#aaa" : "#212529",
+                pointerEvents: isDisabled ? "none" : "auto",
+                cursor: isDisabled ? "not-allowed" : "pointer",
+              }}
             >
               {capitalize(platform)}
             </MDBDropdownItem>
