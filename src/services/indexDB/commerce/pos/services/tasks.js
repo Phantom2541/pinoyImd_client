@@ -112,15 +112,22 @@ export async function IDB_BULK_SAVE(tasks) {
     for (const task of tasks) {
       await new Promise((resolve, reject) => {
         const getReq = store.get(task._id);
+
         getReq.onsuccess = () => {
-          if (!getReq.result) {
+          const existing = getReq.result;
+          if (existing) {
+            // merge old + new
+            const merged = { ...existing, ...task };
+            const putReq = store.put(merged);
+            putReq.onsuccess = () => resolve();
+            putReq.onerror = () => reject(putReq.error);
+          } else {
             const addReq = store.add(task);
             addReq.onsuccess = () => resolve();
             addReq.onerror = () => reject(addReq.error);
-          } else {
-            resolve();
           }
         };
+
         getReq.onerror = () => reject(getReq.error);
       });
     }

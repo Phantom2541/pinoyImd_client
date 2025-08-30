@@ -321,10 +321,16 @@ export const reduxSlice = createSlice({
         }
         state.sourceId = "";
         state.message = success;
-        state.transaction = payload;
+        // state.transaction = payload;
         state.ssx = "";
         state.isSuccess = true;
         state.formSubmitted = false;
+        localStorage.setItem("claimStub", JSON.stringify(payload));
+        window.open(
+          "/printout/claimstub",
+          "Claim Stub",
+          "top=100px,left=100px,width=550px,height=750px"
+        );
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;

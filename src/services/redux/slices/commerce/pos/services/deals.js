@@ -373,13 +373,20 @@ export const DENY_ONBOARDING = createAsyncThunk(
  */
 export const LABRESULT = createAsyncThunk(
   `${url}/results`,
-  ({ token, data }, thunkAPI) => {
+  async ({ token, data }, thunkAPI) => {
     try {
       // \diagnostics\laboratory\result\miscellaneous
       const department = ["Laboratory", "Radiology"].includes(data.department)
         ? data.department
         : "clinic";
-      return axioKit.save(
+      // Update deal's `updatedAt` so offline users get the latest deal upon login
+      await axioKit.update(
+        url,
+        { _id: data._id, updatedAt: new Date().toISOString() },
+        token,
+        "update_updatedAt"
+      );
+      return await axioKit.save(
         `diagnostics/${department.toLowerCase()}/result/${data.form.toLowerCase()}`,
         data,
         token

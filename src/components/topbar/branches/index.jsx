@@ -7,7 +7,7 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { capitalize } from "../../../services/utilities";
+import { capitalize, fetchTracker } from "../../../services/utilities";
 import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth.js";
 
 export default function Branches() {
@@ -37,7 +37,7 @@ export default function Branches() {
         platform: "patron",
       },
     };
-
+    fetchTracker.reset();
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 

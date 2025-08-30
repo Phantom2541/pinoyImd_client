@@ -302,8 +302,7 @@ export const reduxSlice = createSlice({
 
         const { contract = { designation: -1 } } = branch || {};
         const department = Policy.getDepartment(contract.designation) || {};
-
-        state.activePlatform = {
+        const activePlatform = {
           branch,
           position: contract.designation,
           branchId: payload.activePlatform.branchId,
@@ -311,10 +310,19 @@ export const reduxSlice = createSlice({
           access: [..._access],
           department,
         };
+
+        state.activePlatform = activePlatform;
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
+        localStorage.setItem(
+          "activePlatform",
+          JSON.stringify({
+            ...JSON.parse(localStorage.getItem("activePlatform" || "{}")),
+            ...activePlatform,
+          })
+        );
       })
       .addCase(SETACTIVEPLATFORM.rejected, (state, action) => {
         const { error } = action;

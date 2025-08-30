@@ -3,7 +3,6 @@ import {
   axioKit,
   cartByDept,
   fetchTracker,
-  getDepartment,
   socket,
 } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
@@ -11,6 +10,7 @@ import {
   IDB_BROWSE,
   IDB_BULK_SAVE,
   IDB_UPDATE,
+  IDB_SAVE,
 } from "../../../../../indexDB/commerce/pos/services/onboardings";
 
 import { IDB_SAVE as IDB_SAVE_TASK } from "../../../../../indexDB/commerce/pos/services/tasks";
@@ -144,7 +144,6 @@ export const reduxSlice = createSlice({
     },
     SetCOLLECTIONS: (state, { payload }) => {
       const { department, onboardings = [] } = payload;
-      console.log("onboardings", onboardings);
       state.collections = state.filtered = onboardings
         .map((item, index) => ({
           ...item,
@@ -188,18 +187,19 @@ export const reduxSlice = createSlice({
       const { cart: baseCart = [], department } = payload;
       const formattedCart = cartByDept(baseCart, department);
       //this reducer is for received realtime onboard and set into the filtered and collections
-      if (formattedCart?.length > 0) {
+      if (formattedCart?.length > 0 && fetchTracker.hasLoaded("onboardings")) {
         const _payload = {
           ...payload,
           cart: formattedCart,
         };
         state.collections.unshift(_payload);
         state.filtered.unshift(_payload);
+        IDB_SAVE(_payload);
       }
     },
     UpdateRealtimeOnboard: (state, { payload }) => {
       const { department, cart: baseCart = [], ...rest } = payload;
-
+      console.log("runninggggg updated realtime onboard");
       const onboarding = {
         ...rest,
         ...(baseCart.length > 0 && {
