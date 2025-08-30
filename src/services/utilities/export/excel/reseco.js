@@ -82,13 +82,6 @@ const set = {
       right: { style: "thin" },
       bottom: { style: "thin" },
     };
-    // worksheet.mergeCells("A1:N1");
-    // const title = worksheet.getCell("D1");
-    // title.value = "STATEMENT OF ACCOUNT";
-    // title.font = { bold: true, size: 22 };
-    // title.border = border;
-    // title.alignment = { horizontal: "center" };
-
     const generateCell = (mergeCell, label, value, position = "left") => {
       worksheet.mergeCells(mergeCell);
       const startCell = mergeCell.split(":")[0];
@@ -161,7 +154,7 @@ const set = {
       const headers = [
         { text: "Customer", space: 4 },
         { text: "Category" },
-        { text: "Services" },
+        { text: "Menus" },
         { text: "Amount" },
         { text: "Discount" },
         { text: "Privillege" },

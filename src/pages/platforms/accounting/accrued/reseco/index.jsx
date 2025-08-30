@@ -12,7 +12,7 @@ const Index = () => {
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3">
         <Header />
-        {isLoading ? <TableLoading /> : <Body />}
+        {isLoading ? <TableLoading className="mt-4" /> : <Body />}
         <Footer />
       </MDBCard>
     </MDBAnimation>
