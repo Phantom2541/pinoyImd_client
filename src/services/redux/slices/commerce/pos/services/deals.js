@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
+  cartByDept,
   dateFormat,
   fetchTracker,
   fullName,
@@ -1481,11 +1482,26 @@ export const reduxSlice = createSlice({
         const updatedData = JSON.parse(
           JSON.stringify({ ...state.collections[index] })
         );
+        //update the indexDB deals
         IDB_UPDATE(updatedData);
+
+        //send updated deal in realtime to another client
         socket.emit("send_updated_deal_menus", payload);
 
-        if (fetchTracker.hasLoaded("onboardings")) {
-          IDB_UPDATE_ONBOARD(payload);
+        const { department = "" } = JSON.parse(
+          localStorage.getItem("activePlatform") || "{}"
+        );
+
+        const _payload = {
+          ...payload,
+          cart: cartByDept(payload.cart, department),
+        };
+        //update onboardings indexDB
+        if (
+          fetchTracker.hasLoaded("onboardings") &&
+          _payload?.cart?.length > 0
+        ) {
+          IDB_UPDATE_ONBOARD(_payload);
         }
         state.message = success;
         state.isSuccess = true;

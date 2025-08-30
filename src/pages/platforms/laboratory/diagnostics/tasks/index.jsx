@@ -19,7 +19,6 @@ import {
 import {
   BROWSE as BROWSE_PREFERENCES,
   SetPREFERENCES,
-  RESET as PREFRESET,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 import {
   IDB_BROWSE as IDB_BROWSE_PREFERENCES,
@@ -35,7 +34,6 @@ import {
 } from "../../../../../services/indexDB/assets/persons/physicians";
 import {
   BROWSE as BROWSE_PHYSICIANS,
-  RESET as PHYRESET,
   SetPHYSICIANS,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
+  cartByDept,
   fetchTracker,
   getDepartment,
   socket,
@@ -143,16 +144,12 @@ export const reduxSlice = createSlice({
     },
     SetCOLLECTIONS: (state, { payload }) => {
       const { department, onboardings = [] } = payload;
+      console.log("onboardings", onboardings);
       state.collections = state.filtered = onboardings
         .map((item, index) => ({
           ...item,
           pn: onboardings.length - index,
-          cart: item?.cart?.filter(({ packages }) =>
-            Services.filterByDepartment(
-              packages,
-              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
-            )
-          ),
+          cart: cartByDept(item.cart, department),
         }))
         .filter(({ cart }) => cart?.length > 0);
       state.totalPages =
@@ -189,19 +186,43 @@ export const reduxSlice = createSlice({
 
     InsertRealtimeOnboard: (state, { payload }) => {
       const { cart: baseCart = [], department } = payload;
-      const formattedCart = baseCart
-        ?.map(({ packages, ...rest }) => {
-          const packagesFormatted = Services.filterByDepartment(
-            packages,
-            getDepartment(department)
-          );
-          return { packages: packagesFormatted || [], ...rest };
-        })
-        .filter(({ packages }) => packages?.length > 0);
+      const formattedCart = cartByDept(baseCart, department);
       //this reducer is for received realtime onboard and set into the filtered and collections
       if (formattedCart?.length > 0) {
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
+        const _payload = {
+          ...payload,
+          cart: formattedCart,
+        };
+        state.collections.unshift(_payload);
+        state.filtered.unshift(_payload);
+      }
+    },
+    UpdateRealtimeOnboard: (state, { payload }) => {
+      const { department, cart: baseCart = [], ...rest } = payload;
+
+      const onboarding = {
+        ...rest,
+        ...(baseCart.length > 0 && {
+          cart: cartByDept(baseCart, department),
+        }),
+      };
+
+      if (
+        fetchTracker.hasLoaded("onboardings") &&
+        (baseCart.length === 0 || onboarding?.cart?.length > 0)
+      ) {
+        const updateCollection = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          if (index > -1) {
+            collections[index] = { ...collections[index], ...onboarding };
+          }
+        };
+
+        updateCollection(state.collections);
+        updateCollection(state.filtered);
+        IDB_UPDATE(onboarding);
       }
     },
 
@@ -290,15 +311,7 @@ export const reduxSlice = createSlice({
         const collectionsWithPN = payload
           .map((item) => ({
             ...item,
-            cart: item?.cart
-              ?.map(({ packages, ...rest }) => {
-                const packagesFormatted = Services.filterByDepartment(
-                  packages,
-                  getDepartment(department)
-                );
-                return { packages: packagesFormatted, ...rest };
-              })
-              .filter(({ packages }) => packages?.length > 0),
+            cart: cartByDept(item.cart, department),
           }))
           .filter(({ cart }) => cart?.length > 0)
           .map((item, index, arr) => ({

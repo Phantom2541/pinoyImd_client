@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
+  cartByDept,
   fetchTracker,
   getAge,
   socket,
@@ -297,18 +298,11 @@ export const reduxSlice = createSlice({
         //formatted the cart, filter base on the department
         const onboarding = {
           ...dealForOnboard,
-          department,
-          cart: dealForOnboard?.cart?.filter(({ packages }) =>
-            Services.filterByDepartment(
-              packages,
-              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
-            )
-          ),
+          cart: cartByDept(dealForOnboard.cart, department),
         };
 
         if (fakeDB) {
           //this is realtime send it to the onboarding but not in sender side
-          console.log("sendddd onboarding");
           socket.emit("send_onboard", dealForOnboard);
         }
         //same scenario in onboardings

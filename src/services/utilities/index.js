@@ -59,6 +59,9 @@ import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
 import Barcode from "./barcode";
 import Cloudinary from "./cloudinary";
+
+//filter the cart by department
+import cartByDept from "./cartByDept";
 //Google Drive
 import gDrive from "./gDrive";
 // Clear's Cache
@@ -183,4 +186,5 @@ export {
   Logo,
   fetchTracker,
   Tracker,
+  cartByDept,
 };

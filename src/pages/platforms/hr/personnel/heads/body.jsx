@@ -17,6 +17,7 @@ import {
   UPDATE_INFO,
   UPLOAD,
 } from "../../../../../services/redux/slices/assets/persons/auth";
+import { UPDATE as UPDATE_TRACKER } from "../../../../../services/redux/slices/tracker";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
 import { Templates } from "../../../../../services/fakeDb";
 import Cropper from "react-easy-crop";
@@ -32,6 +33,7 @@ export default function Body() {
   const [zoom, setZoom] = useState(1);
   const [currentUpload, setCurrentUpload] = useState(null); // { email, _id }
   const {
+      activePlatform,
       token,
       formSubmitted: fsAuth,
       isSuccess: isAuth,
@@ -120,6 +122,16 @@ export default function Body() {
         const { payload: info } = payload;
         const { _id, prc } = info;
         dispatch(SetPRC({ userId: _id, prc }));
+        dispatch(
+          UPDATE_TRACKER({
+            token,
+            data: {
+              branch: activePlatform.branchId,
+              trackerKey: "head",
+              updatedAt: info.updatedAt,
+            },
+          })
+        );
       }
     );
   };

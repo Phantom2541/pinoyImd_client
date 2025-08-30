@@ -23,8 +23,26 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
+export const UPDATE = createAsyncThunk(
+  `tracker/${url}/update`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
-  name: url,
+  name: `tracker`,
   initialState,
   reducers: {
     RESET: (state) => {
@@ -48,21 +66,24 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.rejected, (state, action) => {
         state.message = action.error.message;
         state.isLoading = false;
+      })
+      .addCase(UPDATE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE.fulfilled, (state, action) => {
+        state.tracker = action.payload;
+        state.isLoading = false;
+      })
+
+      .addCase(UPDATE.rejected, (state, action) => {
+        state.message = action.error.message;
+        state.isLoading = false;
       });
   },
 });
 
-export const {
-  RESET,
-  UPDATEACCESS,
-  SetSELECTED,
-  SetCREDENTIAL,
-  SetREQUIREMENTS,
-  ToggleAccessModal,
-  ToggleViewCredential,
-  SetFilteredApplicants,
-  SetMaxPage,
-  setActivePage,
-} = reduxSlice.actions;
+export const { RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
