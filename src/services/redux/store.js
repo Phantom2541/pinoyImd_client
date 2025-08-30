@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cases from "./slices/commerce/pos/services/cases";
-import requestForm from "./slices/requestForm/requestForm";
 
 // ASSETS
 import {

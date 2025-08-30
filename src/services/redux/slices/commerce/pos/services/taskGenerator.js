@@ -1,10 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, fetchTracker, socket } from "../../../../../utilities";
+import {
+  axioKit,
+  fetchTracker,
+  getDepartment,
+  socket,
+} from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 import {
   IDB_BROWSE,
   IDB_BULK_SAVE,
-  IDB_SAVE,
   IDB_UPDATE,
 } from "../../../../../indexDB/commerce/pos/services/onboardings";
 
