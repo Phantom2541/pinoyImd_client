@@ -19,7 +19,9 @@ import {
 import { Policy } from "./../../../../../../../services/fakeDb";
 import {
   currency,
+  dateFormat,
   removeUndefinedValues,
+  timeFormat,
 } from "./../../../../../../../services/utilities";
 import "./style.css";
 import RollingNumber from "../../../../../../../components/rollingNumber";
@@ -122,6 +124,7 @@ export default function Modal() {
             cashier: auth._id,
             branch: activePlatform?.branchId,
             department: Policy.getDepartment(activePlatform.position),
+            rawCreatedAt: `${dateFormat(now)} ${timeFormat(now)}`,
             createdAt: new Date(
               year,
               month - 1,

@@ -213,7 +213,7 @@ export default function Modal() {
         {
           dept: department,
           by: auth._id,
-          at: new Date().toLocaleString(),
+          at: new Date().toISOString(),
         },
       ],
       forms,
