@@ -74,8 +74,8 @@ import MenusToPDF from "./export/pdf/menus";
 //status
 import employment from "../fakeDb/employment";
 
-// const ENDPOINT = "http://localhost:5000";
-const ENDPOINT = window.location.origin;
+const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = window.location.origin;
 
 //
 // endpoint ni kuya kevin
