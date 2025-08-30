@@ -9,7 +9,7 @@ import {
 
 const Physical = ({ physical, style }) => {
   const [color, transparency, sg, pH] = physical;
-
+  console.log(physical);
   return (
     <MDBTable bordered>
       <MDBTableHead>

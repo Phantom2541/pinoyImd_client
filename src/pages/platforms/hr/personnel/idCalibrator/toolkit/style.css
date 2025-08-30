@@ -266,6 +266,26 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
+.id-calibrator-details.hide,
+.IDGenerator-setting-container.hide {
+  visibility: hidden;
+}
+
+.id-calibrator-details.show,
+.IDGenerator-setting-container.show {
+  visibility: visible;
+  animation: isEditMode 0.7s ease;
+}
+
+@keyframes isEditMode {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .IDGenerator-setting-section {
   position: relative;
   border: 1px solid #c3c3c3;
@@ -389,14 +409,16 @@
 .IDGenerator-settings-upload label {
   width: 100%;
   border-radius: 5px;
-  background-color: #007bff;
-  color: white;
+  background-color: #f5f5f5;
+  color: black;
+  border: 1px solid #e6e6e6;
   font-size: 1rem;
   font-weight: 400;
   padding: 5px 0;
   text-align: center;
   cursor: pointer;
   display: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .IDGenerator-settings-upload label.active {
@@ -404,7 +426,8 @@
 }
 
 .IDGenerator-settings-upload label:hover {
-  filter: brightness(1.1);
+  background-color: #007bff;
+  color: white;
 }
 
 .IDGenerator-settings-upload label:active {

@@ -37,6 +37,8 @@ import Roles from "./roles";
 import HMO from "./hmo";
 import Quotes from "./quotes";
 import ValidID from "./validID";
+//RAD HEALTHY CLIENT CHOICES
+import RadHC from "./diagnostics/radiology";
 
 export {
   Suffixes,
@@ -74,4 +76,5 @@ export {
   Quotes,
   ValidID,
   Duty,
+  RadHC,
 };

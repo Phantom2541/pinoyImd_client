@@ -23,10 +23,8 @@ const Services = {
   },
 
   filterByDepartment: (packages, department) => {
-    return (
-      packages
-        .filter((pkg) => Services.find(pkg)?.department === department)
-        .map((id) => Services.find(id)).length > 0
+    return packages.filter(
+      (pkg) => Services.find(pkg)?.department === department
     );
   },
 

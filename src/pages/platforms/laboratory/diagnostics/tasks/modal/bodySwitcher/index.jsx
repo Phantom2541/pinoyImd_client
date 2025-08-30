@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import {
   Hematology,
-  Electrolyte,
   Urinalysis,
   Compatibility,
   Chemistry,
@@ -33,9 +32,7 @@ const componentMap = {
   Analysis,
   Bacteriology,
   Compatibility,
-  Electrolyte,
   Pbs,
-  // Clinic
   PE,
   MC,
 };

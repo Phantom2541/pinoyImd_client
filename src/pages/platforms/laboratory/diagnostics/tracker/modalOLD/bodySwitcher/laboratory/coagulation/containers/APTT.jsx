@@ -7,7 +7,6 @@ const Aptt = () => {
   const { task } = useSelector(({ validator }) => validator),
     [data, setData] = useState([0, 0]),
     dispatch = useDispatch();
-  console.log("task", task);
 
   useEffect(() => {
     const _aptt = !!task.aptt?.length ? task.aptt : [0, 0];
@@ -23,7 +22,10 @@ const Aptt = () => {
       aptt[1] = parseFloat(value);
     }
     dispatch(
-      SetTASK({ form: task?.form, task: { ...task, aptt, form: task?.form } })
+      SetTASK({
+        form: task?.form,
+        task: { ...task, aptt, form: task?.form, form: task?.form },
+      })
     );
   };
   return (

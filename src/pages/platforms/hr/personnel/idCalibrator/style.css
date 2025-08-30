@@ -22,6 +22,12 @@
   align-items: center;
 }
 
+.id-calibrator-main-container.isEditMode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .id-calibrator-container {
   grid-area: leftside;
 }
@@ -41,6 +47,10 @@
   align-items: flex-start;
   gap: 20px;
   background-color: transparent;
+}
+
+.id-calibrator-preview-wrapper.editMode {
+  pointer-events: none;
 }
 
 .id-calibrator-preview-wrapper {
@@ -261,7 +271,7 @@
   margin: auto;
   gap: 15px;
   user-select: none;
-  max-width: 1150px;
+  max-width: 900px;
 }
 
 .id-calibrator-sekeleton-id-preview-wrapper {
@@ -327,4 +337,104 @@
   100% {
     left: 100%;
   }
+}
+
+.id-calibrator-preview-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* From Uiverse.io by Shoh2008 */
+.id-calibrator-preview-loader {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.id-calibrator-preview-loader:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 40px;
+  transform: rotate(45deg) translate(30%, 40%);
+  background: #2e86de;
+  box-shadow: 32px -34px 0 5px #0097e6;
+  animation: id-calibrator-preview-slide 2s infinite ease-in-out alternate;
+}
+
+.id-calibrator-preview-loader:after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0097e6;
+  transform: rotate(0deg);
+  transform-origin: 35px 145px;
+  animation: id-calibrator-preview-rotate 2s infinite ease-in-out;
+}
+
+@keyframes id-calibrator-preview-slide {
+  0%,
+  100% {
+    bottom: -35px;
+  }
+
+  25%,
+  75% {
+    bottom: -2px;
+  }
+
+  20%,
+  80% {
+    bottom: 2px;
+  }
+}
+
+@keyframes id-calibrator-preview-rotate {
+  0% {
+    transform: rotate(-15deg);
+  }
+
+  25%,
+  75% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(25deg);
+  }
+}
+
+.id-calibrator-edit-button {
+  text-align: center;
+  width: 100%;
+}
+
+.id-calibrator-edit-button.hide {
+  display: none;
+}
+
+.id-calibrator-edit-button button {
+  width: 100%;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 3px 0;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.id-calibrator-edit-button button:active {
+  transform: scale(0.99);
 }

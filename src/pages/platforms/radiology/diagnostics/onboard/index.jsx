@@ -16,7 +16,7 @@ import GenerateTask from "./generateTask/index.jsx";
 import Footer from "./footer.jsx";
 // import Printout from "./printout";
 
-export default function Sales() {
+export default function Onboarding() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ taskGenerator }) => taskGenerator),
     dispatch = useDispatch();

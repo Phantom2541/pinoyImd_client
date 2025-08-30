@@ -20,6 +20,7 @@ const individual = (
   if (_abbr === "ctr") gross = menu?.[contract];
 
   let up = Math.round((gross * 80) / 100);
+
   if (membership && category === "mbs" && discountable) {
     const dr = Memberships.getDiscount(membership) || 0;
     const discount = gross * dr;
