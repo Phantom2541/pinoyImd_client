@@ -8,6 +8,7 @@
   { "name": "ISABELA", "reg_code": 2, "code": 231, "abbrev": "ISB" },
   { "name": "NUEVA VIZCAYA", "reg_code": 2, "code": 250, "abbrev": "NV" },
   { "name": "QUIRINO", "reg_code": 2, "code": 257, "abbrev": "QUI" },
+
   { "name": "BATAAN", "reg_code": 3, "code": 308, "abbrev": "BTA" },
   { "name": "BULACAN", "reg_code": 3, "code": 314, "abbrev": "BUC" },
   { "name": "NUEVA ECIJA", "reg_code": 3, "code": 349, "abbrev": "NE" },
@@ -15,6 +16,7 @@
   { "name": "TARLAC", "reg_code": 3, "code": 369, "abbrev": "TAR" },
   { "name": "ZAMBALES", "reg_code": 3, "code": 371, "abbrev": "ZMB" },
   { "name": "AURORA", "reg_code": 3, "code": 377, "abbrev": "AUR" },
+
   { "name": "BATANGAS", "reg_code": 4, "code": 410, "abbrev": "BGS" },
   { "name": "CAVITE", "reg_code": 4, "code": 421, "abbrev": "CVT" },
   { "name": "LAGUNA", "reg_code": 4, "code": 434, "abbrev": "LGN" },
