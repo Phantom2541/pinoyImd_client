@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import dragAndDrop from "../../../../../../../../../assets/drag-and-drop.png";
 import { Services } from "../../../../../../../../../services/fakeDb";
 import { BROWSE } from "../../../../../../../../../services/indexDB/commerce/market/machines";
-import Swal from "sweetalert2";
 
 const Case = ({ cluster, form, setCluster = () => {}, setForm = () => {} }) => {
   const { work, showWorkArea: show } = useSelector(
@@ -47,6 +46,7 @@ const Case = ({ cluster, form, setCluster = () => {}, setForm = () => {} }) => {
       const _servicesWithoutCode = _services.filter(
         (id) => !servicesWithCode.includes(id)
       );
+      console.log("serviceWithoutCode", serviceWithoutCode);
 
       setServicesWithoutCode(_servicesWithoutCode);
       setCluster(servicesWithCode);
@@ -55,7 +55,7 @@ const Case = ({ cluster, form, setCluster = () => {}, setForm = () => {} }) => {
     if (show) {
       fetchIndexDB();
     }
-  }, [show, task, setCluster, form.machine]);
+  }, [show, task, setCluster, form.machine, serviceWithoutCode]);
 
   const handleDragStart = (e, item, fromList) => {
     const dragPreview = document.createElement("div");

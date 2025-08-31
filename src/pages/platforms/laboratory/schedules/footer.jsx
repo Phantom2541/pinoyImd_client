@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import SIGNATURE from "../../../../assets/templateSampleSignature.png";
 import { Cloudinary, properFullname } from "../../../../services/utilities";
 import utils from "./utils";
 //41=Chief LMS //42 Pathologist

@@ -28,7 +28,7 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(BROWSE({ token, key: { companyId: company._id } }));
-  }, [token, company]);
+  }, [token, company, dispatch]);
 
   return (
     <MDBView

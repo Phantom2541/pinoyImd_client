@@ -19,11 +19,7 @@ import {
 } from "../../../../pages/platforms/cashier";
 
 import { Tieups } from "../../../../pages/platforms/manager/settings";
-import {
-  Logo,
-  Tagline,
-  Description,
-} from "../../../../pages/platforms/headquarter/settings";
+import { Description } from "../../../../pages/platforms/headquarter/settings";
 
 // import ProcurmentEquipments from "../../../../pages/platforms/procurement/equipments";
 import { Branches } from "../../../../pages/platforms/headquarter/humanResources";

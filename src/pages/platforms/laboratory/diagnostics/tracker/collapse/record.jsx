@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";

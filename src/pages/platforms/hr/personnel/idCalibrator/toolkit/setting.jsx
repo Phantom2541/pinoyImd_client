@@ -17,6 +17,10 @@ export default function Setting({
   lockAspectRatio,
   setSelectedValue,
   placedValues,
+  frontImage,
+  backImage,
+  editMode,
+  setEditMode,
 }) {
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
@@ -70,6 +74,7 @@ export default function Setting({
     style.width && style.height
       ? parseInt(style.width) / parseInt(style.height)
       : 1;
+  console.log("aspectRatio", aspectRatio);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -158,8 +163,22 @@ export default function Setting({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedValue, placedValues, updateStyle]);
 
+  const weightOptions = Object.entries(FontWeights).map(([key, value]) =>
+    typeof value === "object"
+      ? { label: key, value: value.weight, style: value.style }
+      : { label: key, value, style: "normal" }
+  );
+
+  const currentWeight = parseInt(style.fontWeight, 10) || 400;
+
+  const selectedOption = weightOptions.find(
+    (o) => o.value === currentWeight
+  ) || { label: "regular", value: 400, style: "normal" };
+
   return (
-    <div className="IDGenerator-setting-container">
+    <div
+      className={`IDGenerator-setting-container ${editMode ? "show" : "hide"}`}
+    >
       {/* Layout controls */}
       {!personalize && (
         <div
@@ -181,6 +200,13 @@ export default function Setting({
           >
             Reset Template
           </button>
+          <div
+            className={`id-calibrator-edit-button ${editMode ? "" : "hide"}`}
+          >
+            <button onClick={() => setEditMode(false)} className="bg-secondary">
+              Hide Setting
+            </button>
+          </div>
         </div>
       )}
 
@@ -335,14 +361,18 @@ export default function Setting({
               label: key,
               value,
             }))}
+            value={{
+              label:
+                Object.keys(Fonts).find(
+                  (key) => Fonts[key] === style.fontFamily
+                ) || "inter",
+              value: style.fontFamily || Fonts.inter,
+            }}
             getLabel={(option) => option.label}
             getValue={(option) => option.value}
-            getStyle={(option) => ({ fontFamily: option.value })}
-            showSearch={true} // optional, may search
-            onSelect={(val) => {
-              // kung nag-type, val ay string ng font value
-              updateStyle({ fontFamily: val });
-            }}
+            getStyle={(option) => ({ fontFamily: option?.value })}
+            showSearch
+            onSelect={(val) => updateStyle({ fontFamily: val })}
           />
 
           <div
@@ -352,43 +382,36 @@ export default function Setting({
             <Select
               label="Font Size"
               options={FontSizes.map((size) => ({
-                label: `${size}px`, // display lang sa UI
-                value: size, // numeric value para sa style
+                label: `${size}px`,
+                value: size,
               }))}
+              value={{
+                label: `${parseInt(style.fontSize) || 16}px`,
+                value: parseInt(style.fontSize) || 16,
+              }}
               getLabel={(option) => option.label}
               getValue={(option) => option.value}
-              useInput={true} // para puwede rin mag-type
-              showSearch={false} // kung ayaw mo ng search bar
-              onSelect={(val) => {
-                // numeric value na lang ang pinapasa
-                updateStyle({ fontSize: val });
-              }}
+              useInput
+              showSearch={false}
+              onSelect={(val) => updateStyle({ fontSize: `${val}px` })}
             />
+
             <Select
               label="Font Weight"
-              options={Object.entries(FontWeights).map(([key, value]) => {
-                if (typeof value === "object") {
-                  return {
-                    label: key,
-                    value: value.weight,
-                    style: value.style,
-                  };
-                }
-                return { label: key, value, style: "normal" };
-              })}
-              getLabel={(option) => option.label}
-              getValue={(option) => option}
+              options={weightOptions}
+              value={selectedOption} // <-- controlled na tama
+              getLabel={(option) => option?.label || String(option)}
+              getValue={(option) => option.value}
               getStyle={(option) => ({
                 fontWeight: option?.value,
                 fontStyle: option?.style || "normal",
               })}
-              onSelect={(option) => {
+              onSelect={(val, option) =>
                 updateStyle({
-                  fontWeight: option.value,
-                  fontStyle: option.style,
-                });
-              }}
-              showSearch={false}
+                  fontWeight: val,
+                  fontStyle: option?.style || "normal",
+                })
+              }
             />
           </div>
 
@@ -429,12 +452,85 @@ export default function Setting({
               }
             />
           </div>
+          <div
+            className="d-flex align-items-center mt-2"
+            style={{ gap: "5px" }}
+          >
+            <Input
+              type="number"
+              title="Opacity"
+              label={<MDBIcon fas icon="adjust" />}
+              value={style.opacity !== undefined ? style.opacity * 100 : 100} // 1 → 100%
+              min={0}
+              max={100}
+              step={5}
+              unit="%"
+              onChange={(e) => {
+                const raw = parseFloat(e.target.value) || 0;
+                const val = Math.min(100, Math.max(0, raw)); // clamp 0–100
+                updateStyle({ opacity: val / 100 }); // 100% → 1
+              }}
+            />
+            <Input
+              type="number"
+              title="Text Underline"
+              unit="px"
+              label={
+                <input
+                  type="color"
+                  value={
+                    style.borderBottom
+                      ? style.borderBottom.split(" ")[2] // extract color
+                      : "#000000"
+                  }
+                  onChange={(e) =>
+                    updateStyle({
+                      borderBottom: `${
+                        parseInt(style.borderBottom?.split(" ")[0]) || 1
+                      }px solid ${e.target.value}`,
+                    })
+                  }
+                  style={{
+                    border: "none",
+                    background: "transparent",
+                    cursor: "pointer",
+                  }}
+                />
+              }
+              value={
+                style.borderBottom
+                  ? parseInt(style.borderBottom.split(" ")[0]) // extract px
+                  : 0
+              }
+              onChange={(e) =>
+                updateStyle({
+                  borderBottom: `${e.target.value}px solid ${
+                    style.borderBottom
+                      ? style.borderBottom.split(" ")[2]
+                      : "#000000"
+                  }`,
+                })
+              }
+            />
+          </div>
         </div>
       )}
 
+      <div className="IDGenerator-settings-upload">
+        <label
+          className={frontImage ? "active" : ""}
+          htmlFor={`uploadimgfront`}
+        >
+          Change Front
+        </label>
+        <label className={backImage ? "active" : ""} htmlFor={`uploadimgback`}>
+          Change Back
+        </label>
+      </div>
+
       {/* Save Button */}
       <div className="IDGenerator-settings-save">
-        <button onClick={onSave}>💾 Save</button>
+        <button onClick={onSave}>💾 SAVE</button>
       </div>
     </div>
   );

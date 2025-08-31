@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { debounce, get } from "lodash";
+import { debounce } from "lodash";
 import {
   GETPATIENTS,
   SetCOLLECTIONS,

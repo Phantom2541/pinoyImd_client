@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -21,6 +21,7 @@ export default function Platforms() {
 
   useEffect(() => {
     const platforms = activePlatform?.access || [];
+    console.log(platforms);
     const uniqueSorted = Array.from(new Set([...platforms, "patron"])).sort(
       (a, b) => a.localeCompare(b)
     );

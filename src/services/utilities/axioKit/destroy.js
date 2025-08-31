@@ -8,10 +8,10 @@ import axios from "axios";
  * @param {string} token - Authorization Token.
  * @returns {{ success: boolean, payload: Array<any>|object }} - The result object containing success and payload.
  */
-const destroy = async (entity, data, token) =>
+const destroy = async (entity, data, token, endpoint = "destroy") =>
   await axios({
     method: "delete",
-    url: `${entity}/destroy`,
+    url: `${entity}/${endpoint}`,
     headers: {
       Authorization: `QTracy ${token}`,
     },

@@ -14,7 +14,7 @@ export default function Cart({ cartItems, setCartItems }) {
     if (JSON.stringify(updated) !== JSON.stringify(cartItems)) {
       setCartItems(updated);
     }
-  }, []);
+  }, [cartItems, setCartItems]);
 
   // === Helpers ===
   const updateQuantity = (id, delta) => {

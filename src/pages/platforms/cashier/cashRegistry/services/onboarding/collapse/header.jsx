@@ -1,6 +1,6 @@
 import React from "react";
-import { MDBBadge, MDBBtn, MDBIcon } from "mdbreact";
-import { useSelector } from "react-redux";
+import { MDBBtn, MDBIcon } from "mdbreact";
+// import { useSelector } from "react-redux";
 import {
   dateFormat,
   fullName,

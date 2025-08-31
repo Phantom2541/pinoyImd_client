@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import {
   MicroscopicInRange,

@@ -21,6 +21,7 @@ import EditableSelect from "../../../../../components/customizable/editableSelec
 import { Templates } from "../../../../../services/fakeDb";
 import Cropper from "react-easy-crop";
 import { createPortal } from "react-dom";
+import { removeBackground } from "../../../../../components/backgroundRemover";
 
 export default function Body() {
   const [showCropper, setShowCropper] = useState(false);
@@ -151,19 +152,24 @@ export default function Body() {
     addToast(message, { appearance: "success" });
   };
 
-  const handleSignature = (e, email, _id) => {
+  const handleSignature = async (e, email, _id) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    // reset input para ma-trigger kahit same file i-upload ulit
     e.target.value = "";
 
     if (file.type === "image/png") {
       const reader = new FileReader();
-      reader.onload = () => {
-        setSelectedImage(reader.result);
-        setShowCropper(true);
-        setCurrentUpload({ email, _id });
+      reader.onloadend = async () => {
+        try {
+          // dito na aalisin background bago ipasa kay Cropper
+          const transparentImage = await removeBackground(reader.result, 60);
+          setSelectedImage(transparentImage);
+          setShowCropper(true);
+          setCurrentUpload({ email, _id });
+        } catch (err) {
+          console.error("Background removal failed:", err);
+          addToast("Failed to remove background", { appearance: "error" });
+        }
       };
       reader.readAsDataURL(file);
     } else {
@@ -211,16 +217,15 @@ export default function Body() {
   };
 
   const getCroppedImg = (imageSrc, crop) => {
-    const image = new Image();
-    image.src = imageSrc;
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
     return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
       image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
         canvas.width = crop.width;
         canvas.height = crop.height;
+
         ctx.drawImage(
           image,
           crop.x,
@@ -232,10 +237,10 @@ export default function Body() {
           crop.width,
           crop.height
         );
+
         resolve(canvas.toDataURL("image/png"));
       };
       image.onerror = (err) => reject(err);
-      handleCloseCropper();
     });
   };
 
@@ -245,8 +250,8 @@ export default function Body() {
         selectedImage,
         croppedAreaPixels
       );
-      const { email, _id } = currentUpload;
 
+      const { email, _id } = currentUpload;
       const formData = Cloudinary.buildFileForm(
         croppedImage,
         `users/${email}`,
@@ -261,21 +266,20 @@ export default function Body() {
         );
         setImageErrors((prev) => ({ ...prev, [email]: false }));
       });
+
+      handleCloseCropper();
     } catch (err) {
       console.error(err);
       addToast("Failed to crop image!", { appearance: "error" });
     }
-
-    // reset at isara ang modal
-    handleCloseCropper();
   };
 
   return (
-    <div className="signatories-section">
+    <div className="signatories-section position-relative">
       <div
         className={`${
           paginatedHeads.length > 0 && "signatories-card-container"
-        } mt-4  ${animateClass}`}
+        } mt-4 ${animateClass}`}
       >
         {paginatedHeads.length > 0 ? (
           paginatedHeads.map(({ _id, department, section, user }, index) => {
@@ -576,27 +580,27 @@ export default function Body() {
             </p>
           </div>
         )}
-        {paginatedHeads.length === 0 ? (
-          ""
-        ) : (
-          <>
-            <button
-              className="signatories-pagination-btnLeft"
-              onClick={prevPage}
-              disabled={currentPage === 1}
-            >
-              <MDBIcon icon="angle-left" />
-            </button>
-            <button
-              className="signatories-pagination-btnRight"
-              onClick={nextPage}
-              disabled={currentPage === totalPages}
-            >
-              <MDBIcon icon="angle-right" />
-            </button>
-          </>
-        )}
       </div>
+      {paginatedHeads.length === 0 ? (
+        ""
+      ) : (
+        <>
+          <button
+            className="signatories-pagination-btnLeft"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            <MDBIcon icon="angle-left" />
+          </button>
+          <button
+            className="signatories-pagination-btnRight"
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+          >
+            <MDBIcon icon="angle-right" />
+          </button>
+        </>
+      )}
     </div>
   );
 }

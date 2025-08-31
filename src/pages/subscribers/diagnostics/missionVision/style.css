@@ -54,7 +54,7 @@
 .subscriber-mission-vision-bottom div:nth-child(3) {
   background-color: rgba(18, 102, 241, 1);
   color: white;
-  padding: 40px;
+  padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -62,7 +62,7 @@
 .subscriber-mission-vision-top div:nth-child(2) {
   background-color: white;
   color: black;
-  padding: 40px;
+  padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -116,12 +116,7 @@
 }
 
 .subscriber-mission-vision-bottom div:first-child {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-size: 1.2rem;
-  font-weight: 500;
+  padding: 10px 20px;
 }
 
 .subscriber-mission-vision-top > div,
@@ -134,4 +129,16 @@
 .subscriber-mission-vision-middle > div:hover,
 .subscriber-mission-vision-bottom > div:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.subscriber-mission-vision-bottom div:first-child ul,
+.subscriber-mission-vision-middle div ul {
+  list-style-type: none;
+  padding: 0; /* optional, para mawala yung default indentation */
+  margin: 0; /* optional, para mawala yung default margin */
+  font-size: 1rem;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

@@ -606,51 +606,52 @@ export const reduxSlice = createSlice({
     },
     SetFilterBySourceAndPhysician: (state, { payload }) => {
       const { source, physician } = payload;
-      let filtered = state.collections;
-      // Filter by physician if not 'all'
-      if (physician !== "all") {
+      let filtered = [...state.collections];
+
+      /** ---------- PHYSICIAN FILTER ---------- **/
+      if (physician && physician !== "all") {
         if (physician === "NoPhysician") {
-          state.physician = "No Physician";
           filtered = filtered.filter(({ physicianId }) => !physicianId?._id);
+          state.physician = "No Physician";
         } else {
           filtered = filtered.filter(
             ({ physicianId }) => physicianId?._id === physician
           );
-          state.physician = state.physicians.find(
-            ({ _id }) => _id === physician
-          )?.fullName;
+          state.physician =
+            state.physicians.find(({ _id }) => _id === physician)?.fullName ||
+            "";
         }
       } else {
         state.physician = "All";
       }
 
-      // Filter by source
-      if (source === "NoSource") {
-        const noSource = filtered.filter(({ source }) => !source);
-        state.filteredPhysicians = getPhysicians(noSource);
-        filtered = noSource;
-        state.vendor = "noSource";
-        state.source = "No Source";
-      } else if (source !== "all") {
-        const foundDeals = filtered.filter(
-          ({ source: src }) => src?._id === source
-        );
-        //to get all physicians in collections because the filtered is already filtered by physician
-        const dealsWithoutPhysicians = state.collections.filter(
-          ({ source: src }) => src?._id === source
-        );
-        filtered = foundDeals;
-        state.filteredPhysicians = getPhysicians(dealsWithoutPhysicians);
+      /** ---------- SOURCE FILTER ---------- **/
+      if (source && source !== "all") {
+        if (source === "NoSource") {
+          filtered = filtered.filter(({ source: src }) => !src?._id);
+          state.source = "No Source";
+          state.vendor = "noSource";
+          state.filteredPhysicians = getPhysicians(filtered);
+        } else {
+          filtered = filtered.filter(({ source: src }) => src?._id === source);
 
-        //for displaying of header in filter
-        state.vendor = source;
-        const { displayname } = state.sources.find(({ _id }) => _id === source);
-        state.source = displayname;
+          // kahit na physician ang filter, kunin pa rin lahat ng physicians sa source na ito
+          const dealsFromSource = state.collections.filter(
+            ({ source: src }) => src?._id === source
+          );
+          state.filteredPhysicians = getPhysicians(dealsFromSource);
+
+          state.vendor = source;
+          state.source =
+            state.sources.find(({ _id }) => _id === source)?.displayname || "";
+        }
       } else {
-        state.filteredPhysicians = state.physicians;
-        state.vendor = {};
         state.source = "All";
+        state.vendor = {};
+        state.filteredPhysicians = state.physicians;
       }
+
+      /** ---------- FINAL RESULT ---------- **/
       arrangeDealsByDate(state, filtered);
     },
     SetFilterByOUTSOURCE: (state, { payload }) => {

@@ -18,7 +18,7 @@ import {
   TOGGLE,
 } from "../../../../../services/redux/slices/assets/providers";
 
-import { identity, isEqual } from "lodash";
+import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 
@@ -27,7 +27,7 @@ export default function Modal() {
     { showModal, selected, willCreate, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
-    { collections } = useSelector(({ branches }) => branches),
+    // { collections } = useSelector(({ branches }) => branches),
     { collections: companies } = useSelector(({ companies }) => companies),
     [company, setCompany] = useState([]),
     [branches, setBranches] = useState([]),
@@ -38,6 +38,8 @@ export default function Modal() {
   //Listener
   useEffect(() => {
     if (showModal) {
+      console.log(company);
+
       setForm({
         ...selected,
         userId: auth._id,
@@ -48,7 +50,7 @@ export default function Modal() {
         isRegister: true,
       });
     }
-  }, [showModal, selected, auth, activePlatform]);
+  }, [showModal, selected, auth, activePlatform, company]);
 
   useEffect(() => {
     if (showModal && !formSubmitted && isSuccess) {

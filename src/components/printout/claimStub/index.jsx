@@ -60,7 +60,7 @@ const Stub = ({ sale, companyId }) => {
       fullName = {},
       address = {},
       email = "",
-      verified = false,
+      // verified = false,
     } = customer || {};
 
   return (

@@ -10,10 +10,18 @@ import {
   UPDATE,
   CTBROWSE,
 } from "../../../../../services/redux/slices/assets/branches";
+import { Cloudinary } from "../../../../../services/utilities";
+import {
+  DESTROY_IMG,
+  UPLOAD,
+} from "../../../../../services/redux/slices/assets/persons/auth";
+import { useToasts } from "react-toast-notifications";
 
 export default function IdCalibrator() {
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
+  const [frontLoading, setFrontLoading] = useState(false);
+  const [backLoading, setBackLoading] = useState(false);
   const [layout, setLayout] = useState("portrait");
   const [draggedValue, setDraggedValue] = useState(null);
   const [floatingValue, setFloatingValue] = useState(null);
@@ -24,14 +32,14 @@ export default function IdCalibrator() {
   const [showAllValues, setShowAllValues] = useState(false);
   const [lockAspect, setLockAspect] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [editMode, setEditMode] = useState(false);
+  const { addToast } = useToasts();
   const dispatch = useDispatch();
   const options = ["portrait", "landscape"];
-  const { activePlatform, token } = useSelector(({ auth }) => auth);
+  const { activePlatform, token, company } = useSelector(({ auth }) => auth);
   const { ct: branch } = useSelector(({ branches }) => branches);
   try {
     const ctData = branch.ct ? JSON.parse(branch.ct) : null;
-    console.log("ct", ctData);
   } catch (err) {
     console.error("Invalid JSON in branch.ct:", branch.ct, err);
   }
@@ -41,7 +49,7 @@ export default function IdCalibrator() {
     dispatch(
       CTBROWSE({ token, data: { _id: activePlatform.branchId } })
     ).finally(() => setLoading(false));
-  }, []);
+  }, [activePlatform.branchId, dispatch, token]);
 
   useEffect(() => {
     if (!branch.ct) return;
@@ -54,60 +62,58 @@ export default function IdCalibrator() {
       return;
     }
 
+    const { icId = {} } = branch || {};
+
     setLayout(ctData.layout || "portrait");
-    setFrontImage(ctData.cf || null);
-    setBackImage(ctData.cb || null);
+
+    const getImg = (isFront = true) => {
+      const id = icId?.[isFront ? "front" : "back"];
+      if (!id) return null; // 👉 Walang imgId, wag na bumalik ng kahit ano
+
+      return `${Cloudinary.getEndpoint()}/${id}/companies/${company?.name}/${
+        activePlatform?.branch?.name
+      }/ic/${isFront ? "front" : "back"}`;
+    };
+
+    setFrontImage(getImg() || null);
+    setBackImage(getImg(false) || null);
     setLoading(false);
 
     const dfp = ctData.dfp || {};
     const newPlaced = [];
 
-    // Key mapping
-    const keyMap = {
-      fullName: "emp",
-      profile: "img",
-      id: "empID",
-      "phone number": "pn",
-      birthday: "dob",
-      guardian: "guardian",
-      address: "address",
-      department: "department",
-      signature: "signature",
-    };
+    Object.keys(dfp).forEach((key) => {
+      const value =
+        fakeEMP.front[key] !== undefined
+          ? fakeEMP.front[key]
+          : fakeEMP.back[key];
 
-    Object.keys(dfp).forEach((dfpKey) => {
-      const mappedKey = keyMap[dfpKey] || dfpKey;
-
-      // Kunin ang value mula sa fakeEMP front/back
-      let value;
-      if (fakeEMP.front[mappedKey] !== undefined) {
-        value = fakeEMP.front[mappedKey];
-      } else if (fakeEMP.back[mappedKey] !== undefined) {
-        value = fakeEMP.back[mappedKey];
-      } else {
-        value = null;
-      }
-
-      // Gamitin ang target na naka-save sa dfp, default sa front kung wala
-      const target =
-        dfp[dfpKey].target ||
-        (fakeEMP.front[mappedKey] !== undefined ? "front" : "back");
-
-      if (value !== null) {
+      if (value !== undefined) {
         newPlaced.push({
           id: Date.now() + Math.random(),
-          key: dfpKey,
+          key, // keep original key
           value,
-          x: dfp[dfpKey].x || 0,
-          y: dfp[dfpKey].y || 0,
-          target, // ✅ dito na gagamitin ang saved target
-          style: { ...dfp[dfpKey] },
+          x: dfp[key].x || 0,
+          y: dfp[key].y || 0,
+          target: dfp[key].target || "front",
+          style: { ...dfp[key] },
         });
       }
     });
+    // ✅ If branch.ct exists, hide Setting & Buttons initially
+    if (branch.ct && branch.ct.dfp && Object.keys(branch.ct.dfp).length > 0) {
+      setEditMode(false); // may laman ang dfp → edit mode on
+    } else {
+      setEditMode(true); // walang laman ang dfp → edit mode off
+    }
 
     setPlacedValues(newPlaced);
-  }, [branch]);
+  }, [
+    branch,
+    activePlatform.branchId,
+    company?.name,
+    activePlatform?.branch?.name,
+  ]);
 
   // 🔹 Eto yung onSave arrow function
   const onSave = () => {
@@ -115,9 +121,7 @@ export default function IdCalibrator() {
 
     placedValues.forEach((p) => {
       const base = { x: p.x, y: p.y, target: p.target };
-
       if (p.style) {
-        // ✅ Text styles
         if (p.style.fontFamily) base.fontFamily = p.style.fontFamily;
         if (p.style.fontSize) base.fontSize = parseInt(p.style.fontSize);
         if (p.style.color) base.color = p.style.color;
@@ -125,8 +129,9 @@ export default function IdCalibrator() {
         if (p.style.fontStyle) base.fontStyle = p.style.fontStyle;
         if (p.style.letterSpacing)
           base.letterSpacing = parseInt(p.style.letterSpacing);
+        if (p.style.opacity) base.opacity = p.style.opacity;
+        if (p.style.borderBottom) base.borderBottom = p.style.borderBottom;
 
-        // ✅ Image styles
         if (p.style.width) base.width = parseInt(p.style.width);
         if (p.style.height) base.height = parseInt(p.style.height);
         if (p.style.borderRadius)
@@ -135,7 +140,12 @@ export default function IdCalibrator() {
         if (p.style.border) base.border = p.style.border;
       }
 
-      dfp[p.key] = base;
+      const originalKey =
+        Object.keys(fakeEMP.front).find((k) => fakeEMP.front[k] === p.value) ||
+        Object.keys(fakeEMP.back).find((k) => fakeEMP.back[k] === p.value) ||
+        p.key;
+
+      dfp[originalKey] = base;
     });
 
     const saveData = {
@@ -145,18 +155,60 @@ export default function IdCalibrator() {
       dfp,
     };
 
-    console.log("======Saved Data=========");
-    console.log(saveData);
     dispatch(
       UPDATE({
         token,
         data: { _id: activePlatform.branchId, ct: JSON.stringify(saveData) },
       })
-    );
+    )
+      .then(() => {
+        addToast("ID layout saved successfully!", { appearance: "success" });
+      })
+      .catch(() => {
+        addToast("Failed to save ID layout.", { appearance: "error" });
+      });
   };
 
-  // ngayon, filter lang per side
-  const filteredKeys = Object.keys(fakeEMP[selectedSide] || {});
+  const uploadCloudinary = (img, isFront = true) => {
+    if (isFront) setFrontLoading(true);
+    else setBackLoading(true);
+
+    const form = Cloudinary.buildFileForm(
+      img,
+      `companies/${company?.name}/${activePlatform?.branch?.name}/ic`,
+      isFront ? "front" : "back"
+    );
+
+    dispatch(UPLOAD({ data: form, token }))
+      .then((upAction) => {
+        const imgId = upAction.payload.imgId;
+
+        // Update Redux
+        dispatch(
+          UPDATE({
+            token,
+            data: {
+              _id: activePlatform.branchId,
+              icId: {
+                ...(branch.icId || {}),
+                [isFront ? "front" : "back"]: imgId,
+              },
+            },
+          })
+        );
+
+        // ✅ Update local state immediately so preview shows
+        const newImageUrl = `${Cloudinary.getEndpoint()}/${imgId}/companies/${
+          company?.name
+        }/${activePlatform?.branch?.name}/ic/${isFront ? "front" : "back"}`;
+        if (isFront) setFrontImage(newImageUrl);
+        else setBackImage(newImageUrl);
+      })
+      .finally(() => {
+        if (isFront) setFrontLoading(false);
+        else setBackLoading(false);
+      });
+  };
 
   const handleFrontChange = (e) => {
     const file = e.target.files[0];
@@ -164,7 +216,7 @@ export default function IdCalibrator() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setFrontImage(reader.result); // Base64 string
+      uploadCloudinary(reader.result, true);
     };
     reader.readAsDataURL(file);
   };
@@ -175,7 +227,7 @@ export default function IdCalibrator() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setBackImage(reader.result); // Base64 string
+      uploadCloudinary(reader.result, false); // Base64 string
     };
     reader.readAsDataURL(file);
   };
@@ -193,16 +245,38 @@ export default function IdCalibrator() {
   };
 
   // inside IdCalibrator
-  const handleReset = () => {
-    setPlacedValues([]);
-    setFrontImage(null);
-    setBackImage(null);
-    setFloatingValue(null);
-    setDraggedValue(null);
-    setCursorPos({ x: 0, y: 0 });
-    // optional: reset layout & side
-    setLayout("portrait");
-    setSelectedSide("front");
+  const handleReset = async () => {
+    const { icId = {} } = branch;
+    const images = Object.entries(icId).filter(([_, value]) => Boolean(value));
+
+    // 🔹 Destroy lahat ng images sa Cloudinary
+    await Promise.all(
+      images.map(([key]) =>
+        dispatch(
+          DESTROY_IMG({
+            data: {
+              path: `companies/${company?.name}/${activePlatform?.branch?.name}/ic/${key}`,
+            },
+            token,
+          })
+        )
+      )
+    );
+
+    // 🔹 Isang UPDATE lang for icId + layout + dfp
+    dispatch(
+      UPDATE({
+        token,
+        data: {
+          _id: activePlatform.branchId,
+          icId: { front: null, back: null }, // reset both
+          ct: JSON.stringify({
+            layout: "portrait", // default
+            dfp: {}, // cleared placements
+          }),
+        },
+      })
+    );
   };
 
   const handleUpdateValueStyle = (updates) => {
@@ -264,30 +338,34 @@ export default function IdCalibrator() {
   };
 
   return (
-    <div
-      className={`id-calibrator-main-container ${layout || "landscape"}`}
-      onMouseMove={handleMouseMove}
-      style={{ position: "relative" }}
-    >
-      {/* Loading overlay */}
+    <>
       {loading ? (
         <div className="id-calibrator-skeleton-wrapper">
           <div className="id-calibrator-sekeleton-id-preview-wrapper">
             <div className="id-calibrator-skeleton-id-preview" />
             <div className="id-calibrator-skeleton-id-preview" />
           </div>
-          <div className="id-calibrator-skeleton-settings-panel"></div>
-          <div className="id-calibrator-skeleton-buttons"></div>
+          <div className="id-calibrator-skeleton-settings-panel" />
+          <div className="id-calibrator-skeleton-buttons" />
         </div>
       ) : (
-        <>
-          {/* ID Preview */}
+        <div
+          className={`id-calibrator-main-container ${layout || "landscape"} ${
+            editMode ? "" : "isEditMode"
+          }`}
+          onMouseMove={
+            floatingValue
+              ? (e) => setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 })
+              : undefined
+          }
+          style={{ position: "relative" }}
+        >
           <ID
             frontImage={frontImage}
             backImage={backImage}
             handleFrontChange={handleFrontChange}
             handleBackChange={handleBackChange}
-            filteredKeys={filteredKeys}
+            filteredKeys={Object.keys(fakeEMP[selectedSide] || {})}
             fakeEMP={fakeEMP}
             layout={layout}
             placedValues={placedValues}
@@ -307,40 +385,59 @@ export default function IdCalibrator() {
             showAllValues={showAllValues}
             lockAspect={lockAspect}
             lockAspectRatio={lockAspectRatio}
+            frontLoading={frontLoading}
+            backLoading={backLoading}
+            editMode={editMode}
           />
 
-          {/* Layout Setting */}
-          <Setting
-            layout={layout}
-            setLayout={setLayout}
-            options={options}
-            onReset={handleReset}
-            selectedValue={selectedValue}
-            setSelectedValue={setSelectedValue}
-            onUpdateValueStyle={handleUpdateValueStyle}
-            onSave={onSave}
-            lockAspect={lockAspect}
-            setLockAspect={setLockAspect}
-            lockAspectRatio={lockAspectRatio}
-            placedValues={placedValues}
-          />
+          {/* ✅ Show Edit button if branch.ct exists and editMode=false */}
+          <div
+            className={`id-calibrator-edit-button ${editMode ? "hide" : ""}`}
+          >
+            <button onClick={() => setEditMode(true)} className="bg-secondary">
+              Show Setting
+            </button>
+          </div>
 
-          {/* Draggable Buttons */}
-          <DraggableButtons
-            fakeEMP={fakeEMP[selectedSide]}
-            filteredKeys={filteredKeys}
-            placedValues={placedValues}
-            handleDragStart={handleDragStart}
-            handleClickValue={handleClickValue}
-            frontImage={frontImage}
-            backImage={backImage}
-            setShowAllValues={setShowAllValues}
-            showAllValues={showAllValues}
-            setPlacedValues={setPlacedValues}
-            selectedSide={selectedSide}
-          />
-        </>
+          {/* ✅ Only show Setting + Buttons if editMode=true */}
+          {editMode && (
+            <>
+              <Setting
+                layout={layout}
+                setLayout={setLayout}
+                options={options}
+                onReset={handleReset}
+                selectedValue={selectedValue}
+                setSelectedValue={setSelectedValue}
+                onUpdateValueStyle={handleUpdateValueStyle}
+                onSave={onSave}
+                lockAspect={lockAspect}
+                setLockAspect={setLockAspect}
+                lockAspectRatio={lockAspectRatio}
+                placedValues={placedValues}
+                frontImage={frontImage}
+                backImage={backImage}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
+              <DraggableButtons
+                fakeEMP={fakeEMP[selectedSide]}
+                filteredKeys={Object.keys(fakeEMP[selectedSide] || {})}
+                placedValues={placedValues}
+                handleDragStart={handleDragStart}
+                handleClickValue={handleClickValue}
+                frontImage={frontImage}
+                backImage={backImage}
+                setShowAllValues={setShowAllValues}
+                showAllValues={showAllValues}
+                setPlacedValues={setPlacedValues}
+                selectedSide={selectedSide}
+                editMode={editMode}
+              />
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 }

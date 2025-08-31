@@ -1,72 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { MDBBadge, MDBTable } from "mdbreact";
 import { currency, fullName } from "../../../services/utilities";
-import { Services } from "../../../services/fakeDb";
-
-const Body = () => {
-  const [resecos, setResecos] = useState([]);
-
-  useEffect(() => {
-    setResecos(JSON.parse(localStorage.getItem("resecos")));
-  }, []);
-
+import { Privileges } from "../../../services/fakeDb";
+import "./index.css";
+const Body = ({ isMembership, resecos = [] }) => {
   return (
-    <MDBTable responsive hover bordered>
+    <table responsive bordered small className="reseco-table-printOut">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Patient</th>
-          <th>Services</th>
+          <th>Customer</th>
+          <th>Category</th>
+          <th>Menus</th>
           <th>Amount</th>
-          <th>Physician</th>
+          <th>Discount</th>
+          <th>Privellege</th>
+          <th>Rebate</th>
         </tr>
       </thead>
       <tbody>
         {resecos?.map((item, index) => {
-          const { deals, date } = item;
+          const { deals, date, time } = item;
+          const totalAmount = deals.reduce((acc, item) => acc + item.amount, 0);
           const _deals = deals.map((deal, i) => {
-            const { customerId, amount, cart, physicianId } = deal;
+            const { customerId, amount, cart, category, discount, privilege } =
+              deal;
+
+            const services = cart
+              .map(({ abbreviation }) => abbreviation)
+              .join(",    ");
             return (
               <tr key={index}>
-                <td key={index}>{i + 1}</td>
-                <td>{fullName(customerId?.fullName)}</td>
                 <td>
-                  {cart.map(({ packages }) =>
-                    packages.map((id) => (
-                      <MDBBadge key={id} className="mr-1" color="primary">
-                        {Services.getAbbr(id)}
-                      </MDBBadge>
-                    ))
-                  )}
+                  {i + 1}. {fullName(customerId?.fullName)}
+                </td>
+                <td>{category}</td>
+
+                <td>
+                  <span>{services}</span>
                 </td>
                 <td>{currency.format(amount)}</td>
-                <td>{fullName(physicianId?.fullName)}</td>
+                <td>{discount ? currency.format(discount) : ""}</td>
+                <td>{Privileges[privilege]}</td>
+                <td>₱{Number(!isMembership ? amount * 0.1 : 0).toFixed(2)}</td>
               </tr>
             );
           });
           return (
             <>
               <tr>
-                <td colSpan={4}>{date}</td>
+                <td colSpan={7} className="bg-light fw-bold">
+                  {date} {time} | {currency.format(totalAmount)}
+                </td>
               </tr>
               {_deals}
             </>
           );
         })}
-        <tr>
-          <td colSpan={3}>Total</td>
-          <td colSpan={2}>
-            <h4>
-              {currency.format(
-                resecos
-                  ?.flatMap(({ deals }) => deals.map((item) => item.amount))
-                  .reduce((acc, item) => acc + item, 0)
-              )}
-            </h4>
-          </td>
-        </tr>
       </tbody>
-    </MDBTable>
+    </table>
   );
 };
 

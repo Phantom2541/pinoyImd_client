@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MDBAnimation, MDBBadge, MDBBtn, MDBCol, MDBIcon } from "mdbreact";
+import { MDBBadge, MDBBtn, MDBCol, MDBIcon } from "mdbreact";
 import DataTable from "../../../../../../../components/dataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";

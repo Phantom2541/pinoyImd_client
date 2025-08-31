@@ -55,14 +55,14 @@ export default function Summary() {
       hmo,
       contract
     ),
-    amount = (gross || 0) - (discount || 0),
+    amount = (gross || 0) - (Math.round(discount) || 0),
     { abbr = undefined } = Categories[category],
     providedPaymentOptions = Payments[abbr];
-  console.log("gross", gross);
+
   useEffect(() => {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
-
+  console.log("net", gross, discount);
   const checkout = async () => {
     let selected = {
       physicianId: physicianId?.physician || undefined,

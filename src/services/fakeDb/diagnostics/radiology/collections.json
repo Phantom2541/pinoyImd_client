@@ -1,138 +1,223 @@
 [
   {
     "code": 1,
+    "modality": "X-ray",
     "name": "CHEST",
-    "position": ["AP", "PA"],
-    "description": "No abnormal pulmonary densities seen./nThe heart is normal in size.Aorta is unremarkable.Hemidiaphragms, costophrenic sulci and the visualized bones are intact.",
+    "position": ["PA", "AP", "Lateral", "Oblique", "Decubitus"],
+    "description": "No abnormal pulmonary densities seen.\nThe heart is normal in size.Aorta is unremarkable.Hemidiaphragms, costophrenic sulci and the visualized bones are intact.",
     "impression": "Normal chest findings."
   },
   {
     "code": 2,
+    "modality": "X-ray",
     "name": "Skull",
-    "position": ["AP", "Lat"],
-    "description": "No fracture nor dislocation seen in the visualized bones.Paranasal sinuses and mastoid process are well aerated.No bone mass lesion noted.Soft tissue is unremarkable.",
-    "impression": "Normal findings of skull."
+    "position": [
+      "AP",
+      "Lateral",
+      "Towne's View",
+      "Waters View",
+      "Caldwell View",
+      "Submentovertical (SMV)"
+    ],
+    "description": "No fracture nor dislocation seen in the visualized bones. Paranasal sinuses and mastoid process are well aerated. No bone mass lesion noted. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the skull."
   },
   {
     "code": 3,
+    "modality": "X-ray",
     "name": "Thoracic Cage",
+    "position": ["AP", "Lateral", "Oblique"],
     "description": "No fracture nor dislocation seen in the visualized thoracic spine and ribs. Soft tissue is unremarkable.",
-    "impression": "Normal findings of thoracic cage."
+    "impression": "Normal findings of the thoracic cage."
   },
   {
     "code": 4,
+    "modality": "X-ray",
     "name": "Pelvis",
-    "description": "No fracture nor dislocation seen in the visualized bones.Soft tissue is unremarkable.",
-    "impression": "Normal findings of the Pelvis."
+    "position": ["AP", "Lateral"],
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the pelvis."
   },
   {
     "code": 5,
-    "name": "Shoulder/Forearm",
-    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
-    "impression": "Normal findings of the shoulder/forearm."
+    "modality": "X-ray",
+    "name": "Shoulder",
+    "position": ["AP", "Lateral", "Axillary", "Scapular Y"],
+    "description": "No fracture nor dislocation seen in the visualized shoulder bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the shoulder."
   },
   {
     "code": 6,
+    "modality": "X-ray",
+    "name": "Forearm",
+    "position": ["AP", "Lateral"],
+    "description": "No fracture nor dislocation seen in the visualized forearm bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the forearm."
+  },
+  {
+    "code": 7,
+    "modality": "X-ray",
     "name": "Abdomen",
+    "position": ["AP"],
     "description": "Examination shows the intestinal gas patterns to be within normal limits. The rest of the visualized visceral and osseous structures are unremarkable.",
     "impression": "Negative radiograph of the Abdomen."
   },
   {
-    "code": 7,
+    "code": 8,
+    "modality": "X-ray",
     "name": "Mandible",
+    "position": ["AP", "Lat"],
     "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
     "impression": "Normal findings of the Mandible."
   },
   {
-    "code": 8,
+    "code": 9,
+    "modality": "X-ray",
     "name": "Lumbo-Sacral",
-    "description": "The Spine Curvature is unremarkable. No fracture, scoliosis nor spondylolisthesis seen. Disc spaces and vertebral bodies are well maintained. Soft tissue is unremarkable. ",
+    "position": ["AP", "Lat"],
+    "description": "The spine curvature is unremarkable. No fracture, scoliosis nor spondylolisthesis seen. Disc spaces and vertebral bodies are well maintained. Soft tissue is unremarkable.",
     "impression": "Normal findings of the lumbar and lumbosacral spine."
   },
   {
-    "code": 9,
-    "name": "Knee OR (LOWER EXTREMETIES)",
-    "position": ["Right", "Left"],
+    "code": 10,
+    "modality": "X-ray",
+    "name": "Knee (Lower Extremities)",
+    "position": ["AP-Right", "Lat-Right", "AP-Left", "Lat-Left"],
     "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
-    "impression": "Normal findings of the ? knee."
+    "impression": "Normal findings of the knees."
   },
   {
     "code": 11,
-    "name": "Paranasal ",
-    "description": "Examination shows the paranasal to be well aerated and developed. Nasal septum is at the midline. The rest of the visualized osseous structures are unremarkable.",
-    "impression": ""
+    "modality": "X-ray",
+    "name": "Paranasal Sinuses",
+    "description": "Examination shows the paranasal sinuses to be well aerated and developed. Nasal septum is at the midline. The rest of the visualized osseous structures are unremarkable.",
+    "impression": "Normal paranasal sinus study."
   },
   {
     "code": 12,
-    "name": "Temporomandibular Joint",
-    "description": "Examination show no abnormal findings in the visualized osseous structures of the temporomandibular joint. Good condyle movements are seen in the open and close mouth views. ",
+    "modality": "X-ray",
+    "name": "Temporomandibular Joint (TMJ)",
+    "description": "Examination shows no abnormal findings in the visualized osseous structures of the temporomandibular joint. Good condyle movements are seen in the open and close mouth views.",
     "impression": "Negative temporomandibular joint study."
   },
   {
     "code": 13,
+    "modality": "X-ray",
     "name": "Thoracic Spine",
     "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
     "impression": "Normal findings of the thoracic spine."
   },
   {
     "code": 14,
-    "name": "Thoracolumbar",
-    "description": "Thoracolumbar spine curvature is unremarkable.The disc spaces are maintained. No fracture nor spondylolisthesis seen.Soft tissue is unremarkable.",
+    "modality": "X-ray",
+    "name": "Thoracolumbar Spine",
+    "description": "Thoracolumbar spine curvature is unremarkable. The disc spaces are maintained. No fracture nor spondylolisthesis seen. Soft tissue is unremarkable.",
     "impression": "Normal findings of the thoracolumbar spine."
   },
   {
     "code": 15,
+    "modality": "X-ray",
     "name": "Cervical Spine",
-    "description": "The spine curvature is unremarkable.The disc spaces are maintained.No fracture nor subluxation seen.Soft tissue is unremarkable.",
-    "impression": "Normal findings of cervical spine."
+    "description": "The spine curvature is unremarkable. The disc spaces are maintained. No fracture nor subluxation seen. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the cervical spine."
   },
   {
     "code": 16,
+    "modality": "X-ray",
     "name": "Water’s View",
-    "description": "Examination shows the paranasal to be well aerated and developed.Nasal septum is at the midline.The rest of the visualized osseous structures are unremarkable.",
-    "impression": "Normal findings of the water’s view."
+    "position": ["Occipitomental"],
+    "description": "Examination shows the paranasal sinuses to be well aerated and developed. Nasal septum is at the midline. The rest of the visualized osseous structures are unremarkable.",
+    "impression": "Normal radiographic findings of the Water’s view."
   },
   {
     "code": 17,
-    "name": "Hip OR (LOWER EXTREMETIES)",
+    "modality": "X-ray",
+    "name": "Hip (Lower Extremities)",
     "position": ["Right", "Left"],
     "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
-    "impression": "Normal findings of the ? hip."
+    "impression": "Normal radiographic findings of the hip."
   },
   {
     "code": 18,
+    "modality": "X-ray",
     "name": "Femur",
+    "position": ["AP", "Lateral"],
     "description": "The visualized femoral shaft and adjacent soft tissues are unremarkable. No evidence of fracture, lytic or blastic lesion. Cortical outline and trabecular pattern are intact. Hip and knee joint spaces are preserved.",
     "impression": "Normal radiographic findings of the femur."
   },
   {
     "code": 19,
+    "modality": "X-ray",
     "name": "Sternum",
+    "position": ["PA", "Lateral"],
     "description": "The sternum is intact. No evidence of fracture, lytic lesion, or abnormal calcification. The cortical margins and trabecular pattern appear normal. The adjacent soft tissues are unremarkable.",
     "impression": "Normal radiographic findings of the sternum."
   },
   {
     "code": 20,
+    "modality": "X-ray",
     "name": "Clavicle",
+    "position": ["AP", "Axial"],
     "description": "The clavicle is intact with normal alignment. No evidence of fracture, dislocation, or lytic/blastic lesion. The acromioclavicular and sternoclavicular joints are preserved. Surrounding soft tissues are unremarkable.",
     "impression": "Normal radiographic findings of the clavicle."
   },
   {
     "code": 21,
+    "modality": "X-ray",
     "name": "Elbow",
+    "position": ["AP", "Lat"],
     "description": "The bones of the elbow joint are intact and normally aligned. No fracture, dislocation, or lytic/blastic lesion seen. The joint space is preserved. No joint effusion or soft tissue abnormality noted.",
     "impression": "Normal radiographic findings of the elbow."
   },
   {
     "code": 22,
+    "modality": "X-ray",
     "name": "Leg",
+    "position": ["AP", "Lat"],
     "description": "The tibia and fibula are intact and normally aligned. No evidence of fracture, lytic or blastic lesion. The cortical and trabecular bone structures are preserved. Visualized knee and ankle joints are unremarkable. Surrounding soft tissues appear normal.",
     "impression": "Normal radiographic findings of the leg."
   },
   {
     "code": 23,
+    "modality": "X-ray",
     "name": "Ankle",
+    "position": ["AP", "Lat"],
     "description": "The bones of the ankle joint, including the tibia, fibula, and talus, are intact and properly aligned. No evidence of fracture, dislocation, or lytic/blastic lesions. The joint space is well-preserved with no sign of effusion. Surrounding soft tissues are unremarkable.",
     "impression": "Normal radiographic findings of the ankle."
+  },
+  {
+    "code": 24,
+    "modality": "utz",
+    "name": "Ultrasound (Whole Abdomen)",
+    "description": "Liver, gallbladder, pancreas, spleen, kidneys, and urinary bladder are within normal sonographic limits. No focal lesion, mass, stone, or abnormal fluid collection seen.",
+    "impression": "Unremarkable whole abdominal ultrasound."
+  },
+  {
+    "code": 25,
+    "modality": "utz",
+    "name": "Ultrasound (Pelvis)",
+    "description": "Uterus, ovaries, prostate, and urinary bladder appear normal in size, shape, and echotexture. No mass, cyst, or abnormal fluid collection identified.",
+    "impression": "Unremarkable pelvic ultrasound."
+  },
+  {
+    "code": 26,
+    "modality": "utz",
+    "name": "Ultrasound (Breast)",
+    "description": "Breast parenchyma is within normal echogenicity. No discrete solid or cystic mass, abnormal calcification, or ductal dilatation seen.",
+    "impression": "Negative breast ultrasound study."
+  },
+  {
+    "code": 27,
+    "modality": "ecg",
+    "name": "ECG (Electrocardiogram)",
+    "description": "Normal sinus rhythm. Normal heart rate, axis, intervals, and waveforms. No evidence of ischemia, infarction, arrhythmia, or conduction abnormality.",
+    "impression": "Normal ECG findings."
+  },
+  {
+    "code": 28,
+    "modality": "mam",
+    "name": "Mammography",
+    "description": "No abnormal masses, calcifications, or abnormal fluid collection seen.",
+    "impression": "Negative mammography findings."
   }
 ]

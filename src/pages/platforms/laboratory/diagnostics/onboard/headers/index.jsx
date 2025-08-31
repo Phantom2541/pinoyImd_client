@@ -10,7 +10,10 @@ import {
   InsertRealtimeOnboard,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 import Search from "../../../../../../components/searchables/search.jsx";
-import { socket } from "../../../../../../services/utilities/index.js";
+import {
+  getDepartment,
+  socket,
+} from "../../../../../../services/utilities/index.js";
 import { useToasts } from "react-toast-notifications";
 
 export default function Header() {
@@ -51,10 +54,16 @@ export default function Header() {
 
   useEffect(() => {
     socket.on("received_onboard", (data) => {
-      const { branchId, department } = activePlatform;
-      if (data?.branchId === branchId && data?.department === department) {
+      const { branchId } = activePlatform;
+      if (data?.branchId === branchId) {
         const pn = collections.length + 1;
-        dispatch(InsertRealtimeOnboard({ ...data, pn }));
+        dispatch(
+          InsertRealtimeOnboard({
+            ...data,
+            pn,
+            department: getDepartment(activePlatform?.department),
+          })
+        );
         addToast(`New patient onboarded. No. ${pn}`, {
           appearance: "success",
         });
@@ -69,13 +78,14 @@ export default function Header() {
   return (
     <MDBView
       cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
           {collections.length}-Onboarded
         </span>
       </div>
+      <div className="ml-n5">LABORATORY DEPARTMENT</div>
 
       <div className="d-flex align-items-center">
         <div className=" d-flex align-items-center mr-4">
