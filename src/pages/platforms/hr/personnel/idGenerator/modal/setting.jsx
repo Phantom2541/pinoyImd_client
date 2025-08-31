@@ -157,7 +157,7 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
             /> */}
           </div>
 
-          <Input
+          {/* <Input
             type="number"
             title="Opacity"
             label={<MDBIcon fas icon="adjust" />}
@@ -172,7 +172,7 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
                 opacity: Math.min(1, Math.max(0, e.target.value / 100)),
               })
             }
-          />
+          /> */}
         </div>
       )}
 
