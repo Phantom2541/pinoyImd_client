@@ -1,8 +1,10 @@
 .signatories-section {
-  width: 100%;
+  width: fit-content;
+
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: auto;
 }
 
 .signatories-card-container {
@@ -248,10 +250,10 @@
   background-color: transparent;
 }
 .signatories-pagination-btnLeft {
-  left: 12%;
+  left: -6%;
 }
 .signatories-pagination-btnRight {
-  right: 12%;
+  right: -6%;
 }
 
 /* .signatories-card-btn-delete {

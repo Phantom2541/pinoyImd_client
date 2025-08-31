@@ -45,7 +45,7 @@ export default function Routes() {
   const renderSidebars = () => {
     const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
     const sidebar = platformPrefix
-      ? group[platform?.toLowerCase()?.replace(/\s+/g, "_")]
+      ? group[platform?.toLowerCase()?.replace(/\s+/g, "_").replace(/_/g, "")]
       : Sidebars.patron;
 
     if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
