@@ -36,6 +36,7 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((staff, index) => {
           const { front, back } = staff;
+          
           const { img, emp, empID, position, department } = front;
           const { address, guardian, pn, signature } = back;
           return (
