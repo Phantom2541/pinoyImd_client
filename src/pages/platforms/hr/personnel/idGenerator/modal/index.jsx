@@ -4,10 +4,9 @@ import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
 import {
   TOGGLE,
   NEXT,
-  SAVE,
+  UPDATE,
 } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import html2canvas from "html2canvas";
-
 import ID from "./id";
 import Setting from "./setting";
 
@@ -26,6 +25,8 @@ export default function Modal() {
     { ct: branch } = useSelector(({ branches }) => branches),
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+
+  console.log("selected", selected);
 
   useEffect(() => {
     if (!branch?.ct || !selected) return;
@@ -63,29 +64,38 @@ export default function Modal() {
       setBackImage(cbBase64);
       setLayout(ctData.layout || "landscape");
 
-      // Build placedValues directly from dfp + selected
-      const dataClone = {
-        ...selected,
-        dfp: { ...(ctData.dfp || {}) },
-      };
-
-      const newPlacedValues = Object.entries(dataClone.dfp || {}).map(
-        ([key, p]) => {
-          // priority: target from dfp
-          let value = dataClone[p.target]?.[key];
-
-          // fallback kung wala sa target
-          if (value === undefined || value === "") {
-            value =
-              dataClone.front?.[key] ||
-              dataClone.back?.[key] ||
-              dataClone[key] ||
-              "";
-          }
-
-          return { key, value, ...p };
+      // --- parse dfp from selected kung meron ---
+      let selectedDfp = {};
+      if (selected?.dfp) {
+        try {
+          selectedDfp = JSON.parse(selected.dfp);
+        } catch (err) {
+          console.error("Invalid JSON in selected.dfp:", selected.dfp, err);
         }
-      );
+      }
+
+      // --- priority: selected.dfp > ctData.dfp ---
+      const mergedDfp =
+        Object.keys(selectedDfp).length > 0 ? selectedDfp : ctData.dfp || {};
+
+      // Build placedValues
+      const dataClone = { ...selected, dfp: mergedDfp };
+
+      const newPlacedValues = Object.entries(mergedDfp).map(([key, p]) => {
+        // priority: target from dfp
+        let value = dataClone[p.target]?.[key];
+
+        // fallback kung wala sa target
+        if (value === undefined || value === "") {
+          value =
+            dataClone.front?.[key] ||
+            dataClone.back?.[key] ||
+            dataClone[key] ||
+            "";
+        }
+
+        return { key, value, ...p };
+      });
 
       setPlacedValues(newPlacedValues);
     }
@@ -177,12 +187,12 @@ export default function Modal() {
       return acc;
     }, {});
     dispatch(
-      SAVE({
+      UPDATE({
         token,
-        data: { user: selected._id, dfp: JSON.stringify(dfp) },
+        data: { _id: selected._id, dfp: JSON.stringify(dfp) },
       })
     );
-
+    console.log("saved dfp", selected._id, dfp);
     dispatch(NEXT(activeIndex + 1));
   }, [placedValues, dispatch, token, selected, activeIndex]);
 

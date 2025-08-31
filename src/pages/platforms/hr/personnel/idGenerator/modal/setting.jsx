@@ -21,7 +21,9 @@ const toHex = (color) => {
 };
 
 export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
-  const { activeIndex } = useSelector(({ personnels }) => personnels);
+  const { activeIndex, collections } = useSelector(
+    ({ personnels }) => personnels
+  );
   const [lockAspect, setLockAspect] = useState(false);
   const dispatch = useDispatch();
 
@@ -270,8 +272,15 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
       )}
 
       <div className="IDGenerator-settings-navigation">
-        <button onClick={handlePrev}>Prev</button>
-        <button onClick={handleNext}>Next</button>
+        <button onClick={handlePrev} disabled={activeIndex === 0}>
+          Prev
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={activeIndex >= collections.length - 1}
+        >
+          Next
+        </button>
       </div>
 
       <div className="IDGenerator-settings-save">

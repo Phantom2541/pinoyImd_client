@@ -501,6 +501,7 @@ export const reduxSlice = createSlice({
           const position = Policy.getPositions(staff.contract.designation),
             department = Policy.getDepartment(staff.contract.designation);
           const pn = mobile(staff.user.mobile);
+
           return {
             _id: staff._id,
             front: {
@@ -512,11 +513,18 @@ export const reduxSlice = createSlice({
             },
             back: {
               signature: Signature,
-              dob: staff.user.dob,
+              dob: new Date(staff.user.dob)
+                .toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+                .replace(" ", ", "),
               address: billingAddress(staff.user.address),
               guardian,
               pn,
             },
+            dfp: staff.dfp,
           };
         });
 
