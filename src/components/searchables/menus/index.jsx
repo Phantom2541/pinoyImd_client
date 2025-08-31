@@ -53,6 +53,9 @@ export default function Search({
           token,
           branchId: activePlatform.branchId,
           trackerKey: "menu",
+          params: {
+            branchId: activePlatform.branchId,
+          },
         },
         idb: { BROWSE: IDB_MENUS_BROWSE, SAVE: IDB_MENUS_SAVE },
         redux: {
