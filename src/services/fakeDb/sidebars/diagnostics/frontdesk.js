@@ -55,7 +55,6 @@ import {
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
 import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
-import IdCalibrator from "../../../../pages/platforms/hr/personnel/idCalibrator";
 
 const frontdesk = [
   {
@@ -493,12 +492,6 @@ const frontdesk = [
     icon: "tachometer-alt",
     path: "/requestform",
     component: laboratoryRequestForm,
-  },
-  {
-    name: "ID Calibrator",
-    icon: "tachometer-alt",
-    path: "/idCalibrator",
-    component: IdCalibrator,
   },
 ];
 

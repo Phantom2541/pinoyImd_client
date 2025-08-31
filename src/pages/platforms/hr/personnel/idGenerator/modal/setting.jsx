@@ -39,8 +39,6 @@ export default function Setting({
     (selectedValue.value.startsWith("data:image/") ||
       /\.(png|jpe?g|gif)$/i.test(selectedValue.value));
 
-  console.log(isComplete);
-
   const handleNext = () => dispatch(NEXT(activeIndex + 1));
   const handlePrev = () => dispatch(PREV(activeIndex - 1));
 
