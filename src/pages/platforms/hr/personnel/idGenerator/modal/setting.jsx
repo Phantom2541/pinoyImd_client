@@ -25,12 +25,16 @@ export default function Setting({
   onUpdateValue,
   handleSave,
   isComplete,
+  frontImage,
+  backImage,
 }) {
   const { activeIndex, collections } = useSelector(
     ({ personnels }) => personnels
   );
   const [lockAspect, setLockAspect] = useState(false);
   const dispatch = useDispatch();
+
+  console.log(collections);
 
   const isDisabled = !selectedValue;
   const style = selectedValue || {};
@@ -57,7 +61,11 @@ export default function Setting({
   };
 
   return (
-    <div className="IDGenerator-setting-container">
+    <div
+      className={`IDGenerator-setting-container ${
+        frontImage && backImage ? "" : "disabled"
+      }`}
+    >
       {isImage && (
         <div className="IDGenerator-setting-section">
           <div className="d-flex align-items-end" style={{ gap: "5px" }}>

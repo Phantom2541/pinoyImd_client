@@ -339,6 +339,8 @@ export default function Modal() {
             onUpdateValue={handleUpdateValue}
             handleSave={handleSave}
             isComplete={isComplete}
+            frontImage={frontImage}
+            backImage={backImage}
           />
         </div>
       </MDBModalBody>
