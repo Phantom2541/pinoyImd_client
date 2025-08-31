@@ -20,7 +20,12 @@ const toHex = (color) => {
   return ctx.fillStyle;
 };
 
-export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
+export default function Setting({
+  selectedValue,
+  onUpdateValue,
+  handleSave,
+  isComplete,
+}) {
   const { activeIndex, collections } = useSelector(
     ({ personnels }) => personnels
   );
@@ -183,6 +188,7 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
           className={`IDGenerator-setting-section ${
             isDisabled ? "disabled" : ""
           }`}
+          data-label={`${selectedValue?.key || ""} setting`}
         >
           {/* <Select
             label="Font Family"
@@ -201,17 +207,21 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
             className="d-flex align-items-center mt-2"
             style={{ gap: "5px" }}
           >
-            <Select
-              label="Font Size"
-              options={FontSizes.map((size) => ({
-                label: `${size}px`,
-                value: size,
-              }))}
-              getLabel={(opt) => opt.label}
-              getValue={(opt) => opt.value}
-              useInput
+            <Input
+              type="number"
+              title="Font Size"
+              label={<MDBIcon fas icon="text-width" />}
+              value={style.fontSize}
+              min={14}
+              max={25}
+              step={1}
+              unit="px"
               disabled={isDisabled}
-              onSelect={(val) => updateStyle({ fontSize: val })}
+              onChange={(e) =>
+                updateStyle({
+                  fontSize: parseInt(e.target.value, 10) || 0,
+                })
+              }
             />
             {/* <Select
               label="Font Weight"
@@ -284,7 +294,9 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
       </div>
 
       <div className="IDGenerator-settings-save">
-        <button onClick={handleSave}>💾 Save</button>
+        <button onClick={handleSave}>
+          {isComplete ? "💾 SAVE" : "📤 POST"}
+        </button>
       </div>
     </div>
   );
