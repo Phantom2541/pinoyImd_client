@@ -483,15 +483,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(IDGENERATOR.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        console.log("kevin", payload);
         state.collections = state.filtered = payload.map((staff) => {
           const Avatar = `/users/${staff.user.email}/profile.jpg`;
           const Signature = `/users/${staff.user.email}/signature.png`;
-          const empName = fullName(
+          const empName = `${staff.user.title || ""} ${fullName(
             staff.user.fullName,
             false,
             true
-          ).toLowerCase();
+          )
+            .toLowerCase()
+            .replace(/\b\w/g, (c) => c.toUpperCase())}`;
           const guardian = fullName(
             staff.user?.guardian?.fullName,
             false,

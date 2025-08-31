@@ -1,6 +1,4 @@
 const fullName = (fullname, isComplete = false, isProper = false) => {
-  console.log("fullname", fullname);
-
   if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
     return "-";
 
