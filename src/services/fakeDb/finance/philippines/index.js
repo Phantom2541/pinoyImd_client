@@ -3,28 +3,55 @@ import provinces from "./provinces.json";
 import cities from "./city-mun.json";
 import barangays from "./barangays.json";
 
-// const initial = [regions, provinces, cities, barangays];
+const adressLevels = [regions, provinces, cities, barangays];
 
+const filter = (lvl, codeKey, code) => {
+  return (
+    adressLevels[lvl]
+      ?.filter((address) => address[codeKey] === code)
+      .sort((a, b) => a.name.localeCompare(b.name)) || []
+  );
+};
+
+const getName = (collections, value) => {
+  return collections.some(({ name }) => name === value)
+    ? value
+    : collections[0]?.name;
+};
 const Philippines = {
   Regions: regions,
-  Provinces: (_name) => {
-    console.log("Provinces name :", _name);
+  initial: (address, notInclude) => {
+    const { region = regions[2].name, province = "", city = "" } = address;
+    const provinces = Philippines.Provinces(region);
+    const provinceName = getName(provinces, province);
+    const cities = Philippines.Cities(provinceName);
+    const cityName = getName(cities, city);
+    const barangays = Philippines.Barangays(cityName);
 
-    const region = regions?.find(({ name }) => name === _name);
+    const defaultAddress = {
+      region,
+      province: provinceName,
+      city: cityName,
+      barangay: barangays[0]?.name,
+    };
 
-    console.log("Provinces region :", region);
-    return provinces
-      ?.filter(({ reg_code }) => reg_code === region.code)
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const hierarchy = ["region", "province", "city", "barangay"];
+    return hierarchy
+      .slice(hierarchy.indexOf(notInclude) + 1)
+      .reduce((obj, key) => ({ ...obj, [key]: defaultAddress[key] }), {});
   },
-  Cities: (province) =>
-    cities
-      ?.filter(({ prov_code }) => prov_code === province.code)
-      .sort((a, b) => a.name.localeCompare(b.name)),
-  Barangays: (code) =>
-    barangays
-      ?.filter(({ mun_code }) => mun_code === code)
-      .sort((a, b) => a.name.localeCompare(b.name)),
+  Provinces: (_name) => {
+    const region = regions?.find(({ name }) => name === _name);
+    return filter(1, "reg_code", region?.code);
+  },
+  Cities: (province) => {
+    const prov_code = provinces?.find(({ name }) => name === province)?.code;
+    return filter(2, "prov_code", prov_code);
+  },
+  Barangays: (city) => {
+    const mun_code = cities?.find(({ name }) => name === city)?.code;
+    return filter(3, "mun_code", mun_code);
+  },
 };
 
 export default Philippines;
