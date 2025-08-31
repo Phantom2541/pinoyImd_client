@@ -119,7 +119,6 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            {menu?.branchId?._id === activePlatform.branchId && (
               <MDBBtn
                 title="Modal"
                 rounded
@@ -134,12 +133,7 @@ export default function CollapseTable({ menu }) {
               >
                 <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
               </MDBBtn>
-            )}
-            {Array.isArray(obj?.signatories) &&
-              obj.signatories.length >= 2 &&
-              obj?.signatories[0] &&
-              obj?.signatories[1] &&
-              obj?.hasDone && (
+            
                 <MDBBtn
                   rounded
                   onClick={() => {
@@ -161,7 +155,7 @@ export default function CollapseTable({ menu }) {
                 >
                   <MDBIcon icon="print" />
                 </MDBBtn>
-              )}
+              
           </MDBBtnGroup>
         </td>
       </tr>

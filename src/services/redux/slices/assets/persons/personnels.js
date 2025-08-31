@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
   fullName,
-  properFullname,
   billingAddress,
   mobile,
 } from "../../../../utilities";

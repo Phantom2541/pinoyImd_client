@@ -29,28 +29,16 @@ export default function Header() {
    *  4. with in 7 days
    */
   useEffect(() => {
-    if (patientId) {
       dispatch(
         TRACKER({
           token,
           key: {
-            customerId: patientId,
+            customerId: "636d37e0187c30ab0f611ce4",   
             department: activePlatform?.department,
           },
         })
       );
-      dispatch(SetPatient(JSON.parse(localStorage.getItem("customerId"))));
-    } else if (_id && activePlatform?.branchId) {
-      dispatch(
-        TRACKER({
-          token,
-          key: {
-            customerId: _id,
-            department: activePlatform?.department,
-          },
-        })
-      );
-    }
+   
   }, [_id, activePlatform, dispatch, token, patientId]);
 
   const selectPatient = (user) => {
@@ -64,10 +52,9 @@ export default function Header() {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <span className="mb-0">
-        {_id ? fullName(fullname) : "Tracker"} | &nbsp;
-        {_id && getAge(dob)}
+        Form Template
       </span>
-      {!patientId && <SearchUser setPatient={selectPatient} />}
+      {/* {!patientId && <SearchUser setPatient={selectPatient} />} */}
     </MDBView>
   );
 }
