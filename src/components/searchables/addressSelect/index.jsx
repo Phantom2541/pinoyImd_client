@@ -1,52 +1,94 @@
+import { useState, useEffect } from "react";
 import { Philippines } from "../../../services/fakeDb";
 import { MDBCol, MDBRow } from "mdbreact";
 import EditableSelect from "../../customizable/editableSelect";
 
 export default function AddressSelect({
-  // disabledAllExceptSelected = false,
   handleChange = () => {},
   required = false,
   address = { region: "", province: "", city: "", barangay: "" },
-  // size = "3",
   label = "Address Information",
   isPOS = true,
 }) {
+  console.log("initial address", address);
+
+  const [provObj, setProvObj] = useState({});
+  const [munObj, setMunObj] = useState({});
+  const [ProvinceCollections, setProvinceCollections] = useState([]);
+  const [CityCollections, setCityCollections] = useState([]);
+  const [BrgyCollections, setBrgyCollections] = useState([]);
+
+  // ✅ preload collections when editing or when address already has values
+  useEffect(() => {
+    if (address?.region) {
+      console.log("useEffect region :", address);
+      const _Provinces = Philippines.Provinces(address?.region);
+      const _Cities = Philippines.Cities(_Provinces[0]);
+      const _Brgys = Philippines.Barangays(_Cities[0].code);
+      setProvinceCollections(_Provinces);
+      setCityCollections(_Cities);
+      setBrgyCollections(_Brgys);
+    }
+  }, [address.region]);
+
+  useEffect(() => {
+    if (provObj.code) {
+      const _Cities = Philippines.Cities(provObj);
+      const _Brgys = Philippines.Barangays(_Cities[0].code);
+      setCityCollections(_Cities);
+      setBrgyCollections(_Brgys);
+    }
+  }, [provObj]);
+
+  useEffect(() => {
+    if (munObj) {
+      const _Brgys = Philippines.Barangays(munObj.code);
+      setBrgyCollections(_Brgys);
+    }
+  }, [munObj]);
+
   const handleAddress = (key, value) => {
     const _address = { ...address };
-    console.log("key", key);
-    switch (key) {
-      case "region":
-        _address.region = value;
-        _address.province = Philippines.initialProvince(value);
-        const city = Philippines.initialCity(_address.province);
-        _address.city = city;
-        break;
 
-      case "province":
-        _address.province = value;
-        const cityCode = Philippines.initialCity(value);
-        _address.city = cityCode;
-        break;
-      case "city":
-        _address.city = value;
-        const brgy = Philippines.initialBrgy(value);
-        _address.barangay = brgy;
-        break;
+    if (key === "region") {
+      _address.region = value;
+      console.log("handleAddress region :", value);
+      const _Provinces = Philippines.Provinces(value);
+      const _Cities = Philippines.Cities(_Provinces[0]);
+      const _Brgys = Philippines.Barangays(_Cities[0].code);
 
-      default:
-        _address[key] = value;
-        break;
+      _address.province = _Provinces[0]?.name || "";
+      _address.city = _Cities[0]?.name || "";
+      _address.barangay = _Brgys[0]?.name || "";
+    } else if (key === "province") {
+      _address.province = value;
+      const _Province = ProvinceCollections.find(({ name }) => name === value);
+      console.log("Province", _Province);
+
+      const _Cities = Philippines.Cities(_Province);
+      const _Brgys = Philippines.Barangays(_Cities[0].code);
+
+      _address.city = _Cities[0]?.name || "";
+      _address.barangay = _Brgys[0]?.name || "";
+      setProvObj(_Province);
+      setMunObj(_Cities[0]);
+    } else if (key === "city") {
+      _address.city = value;
+      const _city = CityCollections.find(({ name }) => name === value);
+      const _Brgys = Philippines.Barangays(_city.code);
+      _address.barangay = _Brgys[0]?.name || "";
+      setMunObj(_city);
+    } else {
+      _address[key] = value;
     }
 
     handleChange("address", _address);
   };
 
-  console.log("address", address);
   return (
     <>
       {isPOS ? (
         <>
-          {" "}
           <div className="patient-form">
             <span>Region</span>
             <select
@@ -54,6 +96,7 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("region", target.value)}
             >
+              <option value="">-- Select Region --</option>
               {Philippines.Regions?.map(({ name }) => (
                 <option key={`${label}-reg-${name}`} value={name}>
                   {name}
@@ -61,6 +104,7 @@ export default function AddressSelect({
               ))}
             </select>
           </div>
+
           <div className="patient-form mt-1">
             <span>Province</span>
             <select
@@ -68,13 +112,15 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("province", target.value)}
             >
-              {Philippines.Provinces(address?.region)?.map(({ name }) => (
+              <option value="">-- Select Province --</option>
+              {ProvinceCollections?.map(({ name }) => (
                 <option key={`${label}-prov-${name}`} value={name}>
                   {name}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="patient-form mt-1">
             <span>City/Municipality</span>
             <select
@@ -82,13 +128,15 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("city", target.value)}
             >
-              {Philippines.Cities(address.province)?.map(({ name }) => (
+              <option value="">-- Select City/Municipality --</option>
+              {CityCollections?.map(({ name }) => (
                 <option key={`${label}-city-${name}`} value={name}>
                   {name}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="patient-form mt-1">
             <span>Barangay</span>
             <select
@@ -96,7 +144,8 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("barangay", target.value)}
             >
-              {Philippines.Barangays(address.city)?.map(({ name }) => (
+              <option value="">-- Select Barangay --</option>
+              {BrgyCollections?.map(({ name }) => (
                 <option key={`${label}-brgy-${name}`} value={name}>
                   {name}
                 </option>
@@ -113,37 +162,40 @@ export default function AddressSelect({
                 collections={Philippines.Regions}
                 isCapitalize={false}
                 preValue={address.region}
-                onChange={(e) => handleAddress("region", e)}
+                onChange={(value) => handleAddress("region", value)}
                 label="Region"
                 keyForValue="name"
                 keyForText="name"
               />
             </MDBCol>
+
             <MDBCol>
               <EditableSelect
-                collections={Philippines.Provinces(address.region)}
+                collections={ProvinceCollections}
                 preValue={address.province}
-                onChange={(e) => handleAddress("province", e)}
+                onChange={(value) => handleAddress("province", value)}
                 label="Province"
                 keyForValue="name"
                 keyForText="name"
               />
             </MDBCol>
+
             <MDBCol>
               <EditableSelect
-                collections={Philippines.Cities(address.province)}
+                collections={CityCollections}
                 preValue={address.city}
-                onChange={(e) => handleAddress("city", e)}
+                onChange={(value) => handleAddress("city", value)}
                 label="City/Municipality"
                 keyForValue="name"
                 keyForText="name"
               />
             </MDBCol>
+
             <MDBCol>
               <EditableSelect
-                collections={Philippines.Barangays(address.city)}
+                collections={BrgyCollections}
                 preValue={address.barangay}
-                onChange={(e) => handleAddress("barangay", e)}
+                onChange={(value) => handleAddress("barangay", value)}
                 label="Barangay"
                 keyForValue="name"
                 keyForText="name"
