@@ -277,6 +277,11 @@
   animation: isEditMode 0.7s ease;
 }
 
+.IDGenerator-setting-container.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 @keyframes isEditMode {
   from {
     opacity: 0;
@@ -393,6 +398,11 @@
   background-color: #28a745;
   color: white;
   padding: 5px 0;
+}
+
+.IDGenerator-settings-save button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .IDGenerator-setting-reset-button {

@@ -197,7 +197,16 @@ export default function ID({
               </>
             ) : (
               <div className="id-generator-noFrontAndBackImage">
-                No {side} image
+                <i
+                  className="fas fa-info-circle text-warning"
+                  style={{ fontSize: "20px", color: "#888" }}
+                ></i>
+                <span>{side} template not found.</span>
+                <span>
+                  Please upload the required template in the
+                  <br />
+                  <strong> ID Calibrator</strong>.
+                </span>
               </div>
             )}
           </div>
