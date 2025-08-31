@@ -45,15 +45,18 @@ export default function Routes() {
   const renderSidebars = () => {
     const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
     const sidebar = platformPrefix
-      ? group[platform?.toLowerCase()?.replace(/\s+/g, "_")]
+      ? group[platform?.toLowerCase()?.replace(/\s+/g, "_").replace(/_/g, "")]
       : Sidebars.patron;
 
     if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
     const sideBars = [];
 
+    console.log("group", group);
+
     sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
       const fullPath = `${platformPrefix ? platformPrefix : "/patron"}${path}`;
+      console.log(fullPath);
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
         c.children.forEach((child, i) => {
