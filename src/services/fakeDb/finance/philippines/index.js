@@ -3,36 +3,28 @@ import provinces from "./provinces.json";
 import cities from "./city-mun.json";
 import barangays from "./barangays.json";
 
-const initial = [regions, provinces, cities, barangays];
-
-const filter = (index, key, value) => {
-  const address = initial[index - 1]?.find(({ name }) => name === value) || "";
-  if (!address) return [];
-  return initial[index]?.filter((i) => i[key] === address.code);
-};
+// const initial = [regions, provinces, cities, barangays];
 
 const Philippines = {
   Regions: regions,
-  Provinces: (name) => filter(1, "reg_code", name),
-  Cities: (name) => filter(2, "prov_code", name),
-  Barangays: (name) => filter(3, "mun_code", name),
+  Provinces: (_name) => {
+    console.log("Provinces name :", _name);
 
-  initialProvince: (rname) => {
-    const rid = regions?.find(({ name }) => name === rname).code;
-    console.log("RID:", rid); // 👈 log Region ID
-    return provinces?.filter(({ reg_code }) => reg_code === rid)[0].name;
+    const region = regions?.find(({ name }) => name === _name);
+
+    console.log("Provinces region :", region);
+    return provinces
+      ?.filter(({ reg_code }) => reg_code === region.code)
+      .sort((a, b) => a.name.localeCompare(b.name));
   },
-  initialCity: (pname) => {
-    const pid = provinces?.find(({ name }) => name === pname).code;
-    console.log("PID:", pid); // 👈 log Province ID
-    return cities?.filter(({ prov_code }) => prov_code === Number(pid))[0].name;
-  },
-  initialBrgy: (cname) => {
-    const cid = cities?.find(({ name }) => name === cname).code;
-    console.log("CID:", cid); // 👈 log City/Municipality ID
-    return barangays?.filter(({ mun_code }) => mun_code === Number(cid))[0]
-      ?.name;
-  },
+  Cities: (province) =>
+    cities
+      ?.filter(({ prov_code }) => prov_code === province.code)
+      .sort((a, b) => a.name.localeCompare(b.name)),
+  Barangays: (code) =>
+    barangays
+      ?.filter(({ mun_code }) => mun_code === code)
+      .sort((a, b) => a.name.localeCompare(b.name)),
 };
 
 export default Philippines;

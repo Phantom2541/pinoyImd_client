@@ -66,7 +66,6 @@ const Details = ({
       <AddressSelect
         address={form.address}
         isPOS={false}
-        label="Address"
         handleChange={(key, value) => setForm({ ...form, [key]: value })}
       />
       <MDBRow>
