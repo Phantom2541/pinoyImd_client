@@ -1152,9 +1152,9 @@ export const reduxSlice = createSlice({
           collections[index] = {
             ...collections[index],
             amount,
-            discount, // Ensure discount is also updated
-            deletedAt, // Keep track of deletion status
-            authorizedBy, // Keep track of deletion status
+            discount,
+            deletedAt,
+            authorizedBy,
           };
         };
         updateCollections(state.collections);
