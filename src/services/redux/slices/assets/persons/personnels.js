@@ -493,9 +493,11 @@ export const reduxSlice = createSlice({
           )
             .toLowerCase()
             .replace(/\b\w/g, (c) => c.toUpperCase())}`;
-          const guardian = fullName(staff.user?.guardian?.fullName, false, true)
-            .toLowerCase()
-            .replace(/\b\w/g, (c) => c.toUpperCase());
+          const guardian = fullName(
+            staff.user?.guardian?.fullName,
+            false,
+            true
+          );
           const position = Policy.getPositions(staff.contract.designation),
             department = Policy.getDepartment(staff.contract.designation);
           const pn = mobile(staff.user.mobile);

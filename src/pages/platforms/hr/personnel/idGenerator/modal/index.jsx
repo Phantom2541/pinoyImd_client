@@ -204,20 +204,30 @@ export default function Modal() {
         return;
       }
 
-      // 🔁 Tab = cycle next element
+      // 🔁 Tab = cycle next element (skip img/signature)
       if (e.key === "Tab") {
         e.preventDefault();
-        if (placedValues.length === 0) return;
-        const currentIndex = placedValues.findIndex(
+        const selectableValues = placedValues.filter(
+          (p) => p.key !== "img" && p.key !== "signature"
+        );
+        if (selectableValues.length === 0) return;
+
+        const currentIndex = selectableValues.findIndex(
           (p) => p.key === selectedKey
         );
         const nextIndex =
-          currentIndex === -1 ? 0 : (currentIndex + 1) % placedValues.length;
-        setSelectedKey(placedValues[nextIndex].key);
+          currentIndex === -1
+            ? 0
+            : (currentIndex + 1) % selectableValues.length;
+
+        setSelectedKey(selectableValues[nextIndex].key);
         return;
       }
 
       if (!selectedKey) return;
+
+      // 🚫 Skip movement if selected is img or signature
+      if (selectedKey === "img" || selectedKey === "signature") return;
 
       const step = e.shiftKey ? 10 : 1;
       let dx = 0,
