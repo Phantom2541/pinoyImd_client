@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 import { fakeEMP } from "./fakeDB";
+import { use } from "react";
 
 export default function ID({
-  frontImage,
+  // frontImage,
   backImage,
   handleFrontChange,
   handleBackChange,
@@ -26,6 +28,7 @@ export default function ID({
   backLoading,
   editMode,
 }) {
+  const { frontImage } = useSelector(({ idCalibrator }) => idCalibrator);
   // const [draggingIndex, setDraggingIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);

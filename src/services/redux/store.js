@@ -24,7 +24,7 @@ import { dragDrop, table } from "./slices/reusable";
 import {
   menus,
   services,
-  products, 
+  products,
   productGenerics,
   pos,
   sales,
@@ -83,6 +83,7 @@ import { access, liabilities } from "./slices/liability";
 // OTHER
 import portal from "./slices/emr/portal";
 import { quest } from "./slices/diagnostics";
+import { idCalibrator, idGenerator } from "./slices/idCard";
 
 const store = configureStore({
   reducer: {
@@ -146,6 +147,8 @@ const store = configureStore({
     orgChart,
     cases,
     requestForm,
+    idCalibrator,
+    idGenerator,
   },
   devTools: true,
 });
