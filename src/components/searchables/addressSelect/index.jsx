@@ -76,11 +76,13 @@ export default function AddressSelect({
               onChange={({ target }) => handleAddress("barangay", target.value)}
             >
               <option value="">-- Select Barangay --</option>
-              {Philippines.Barangays(address.city)?.map(({ name }) => (
-                <option key={`${label}-brgy-${name}`} value={name}>
-                  {name}
-                </option>
-              ))}
+              {Philippines.Barangays(address?.city, address?.province)?.map(
+                ({ name }) => (
+                  <option key={`${label}-brgy-${name}`} value={name}>
+                    {name}
+                  </option>
+                )
+              )}
             </select>
           </div>
         </>
@@ -127,7 +129,10 @@ export default function AddressSelect({
 
             <MDBCol>
               <EditableSelect
-                collections={Philippines.Barangays(address.city)}
+                collections={Philippines.Barangays(
+                  address.city,
+                  address?.province
+                )}
                 preValue={address.barangay}
                 _key={address.barangay}
                 onChange={(value) => handleAddress("barangay", value)}

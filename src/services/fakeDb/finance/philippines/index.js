@@ -26,7 +26,7 @@ const Philippines = {
     const provinceName = getName(provinces, province);
     const cities = Philippines.Cities(provinceName);
     const cityName = getName(cities, city);
-    const barangays = Philippines.Barangays(cityName);
+    const barangays = Philippines.Barangays(cityName, provinceName);
 
     const defaultAddress = {
       region,
@@ -48,8 +48,11 @@ const Philippines = {
     const prov_code = provinces?.find(({ name }) => name === province)?.code;
     return filter(2, "prov_code", prov_code);
   },
-  Barangays: (city) => {
-    const mun_code = cities?.find(({ name }) => name === city)?.code;
+  Barangays: (city, province) => {
+    const prov_code = provinces?.find(({ name }) => name === province)?.code;
+    const mun_code = cities?.find(
+      ({ name, prov_code: pcode }) => name === city && prov_code === pcode
+    )?.code;
     return filter(3, "mun_code", mun_code);
   },
 };
