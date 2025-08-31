@@ -25,10 +25,6 @@ const Body = () => {
     const [key] = Object.keys(val);
     const value = val[key];
 
-    console.log("data", data);
-
-    console.log("selected", { id, key, value });
-
     // If already selected, toggle off
     if (selected?._id === id) {
       setSelected({});

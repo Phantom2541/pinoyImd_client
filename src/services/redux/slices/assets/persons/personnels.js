@@ -1,5 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import {
+  axioKit,
+  fullName,
+  properFullname,
+  billingAddress,
+  mobile,
+} from "../../../../utilities";
+import { Policy } from "../../../../fakeDb";
 
 const url = "assets/persons/personnels";
 const today = new Date();
@@ -29,6 +36,7 @@ const initialState = {
   message: "",
   showModal: false,
   selected: {},
+  activeIndex: 0,
   willCreate: false,
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
@@ -46,6 +54,26 @@ export const BROWSE = createAsyncThunk(
   ({ token, branchId, status }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, { branchId, status });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const IDGENERATOR = createAsyncThunk(
+  `${url}/idGenerator`,
+  ({ token, branchId, status }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/idGenerator`, token, {
+        branchId,
+        status,
+      });
     } catch (error) {
       const message =
         (error.response &&
@@ -361,8 +389,18 @@ export const reduxSlice = createSlice({
     setYear: (state, action) => {
       state.year = Number(action.payload);
     },
-    TOGGLE: (state) => {
+    TOGGLE: (state, { payload }) => {
       state.showModal = !state.showModal;
+      state.selected = state.collections[payload];
+      state.activeIndex = payload;
+    },
+    NEXT: (state, { payload }) => {
+      state.selected = state.collections[payload];
+      state.activeIndex = payload;
+    },
+    PREV: (state, { payload }) => {
+      state.selected = state.collections[payload];
+      state.activeIndex = payload;
     },
     RESET: (state, data) => {
       state.isSuccess = false;
@@ -434,6 +472,59 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(IDGENERATOR.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(IDGENERATOR.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        console.log("kevin", payload);
+        state.collections = state.filtered = payload.map((staff) => {
+          const Avatar = `/users/${staff.user.email}/profile.jpg`;
+          const Signature = `/users/${staff.user.email}/signature.png`;
+          const empName = fullName(
+            staff.user.fullName,
+            false,
+            true
+          ).toLowerCase();
+          const guardian = fullName(
+            staff.user?.guardian?.fullName,
+            false,
+            true
+          );
+          const position = Policy.getPositions(staff.contract.designation),
+            department = Policy.getDepartment(staff.contract.designation);
+          const pn = mobile(staff.user.mobile);
+          return {
+            _id: staff._id,
+            front: {
+              empID: staff.id,
+              img: Avatar,
+              emp: empName,
+              position,
+              department,
+            },
+            back: {
+              signature: Signature,
+              dob: staff.user.dob,
+              address: billingAddress(staff.user.address),
+              guardian,
+              pn,
+            },
+          };
+        });
+
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isLoading = false;
+      })
+      .addCase(IDGENERATOR.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -628,6 +719,8 @@ export const {
   SetActivePAGE,
   SetMaxPage,
   TOGGLE,
+  NEXT,
+  PREV,
   RESET,
   ResetDATE,
   SetMONTH,

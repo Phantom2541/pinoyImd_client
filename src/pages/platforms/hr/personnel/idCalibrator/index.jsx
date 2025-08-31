@@ -15,13 +15,13 @@ import {
   DESTROY_IMG,
   UPLOAD,
 } from "../../../../../services/redux/slices/assets/persons/auth";
+import { useToasts } from "react-toast-notifications";
 
 export default function IdCalibrator() {
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
   const [frontLoading, setFrontLoading] = useState(false);
   const [backLoading, setBackLoading] = useState(false);
-
   const [layout, setLayout] = useState("portrait");
   const [draggedValue, setDraggedValue] = useState(null);
   const [floatingValue, setFloatingValue] = useState(null);
@@ -33,7 +33,7 @@ export default function IdCalibrator() {
   const [lockAspect, setLockAspect] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-
+  const { addToast } = useToasts();
   const dispatch = useDispatch();
   const options = ["portrait", "landscape"];
   const { activePlatform, token, company } = useSelector(({ auth }) => auth);
@@ -100,16 +100,20 @@ export default function IdCalibrator() {
         });
       }
     });
-    console.log("here", branch.ct);
     // ✅ If branch.ct exists, hide Setting & Buttons initially
     if (branch.ct && branch.ct.dfp && Object.keys(branch.ct.dfp).length > 0) {
-      setEditMode(true); // may laman ang dfp → edit mode on
+      setEditMode(false); // may laman ang dfp → edit mode on
     } else {
-      setEditMode(false); // walang laman ang dfp → edit mode off
+      setEditMode(true); // walang laman ang dfp → edit mode off
     }
 
     setPlacedValues(newPlaced);
-  }, [branch]);
+  }, [
+    branch,
+    activePlatform.branchId,
+    company?.name,
+    activePlatform?.branch?.name,
+  ]);
 
   // 🔹 Eto yung onSave arrow function
   const onSave = () => {
@@ -117,9 +121,7 @@ export default function IdCalibrator() {
 
     placedValues.forEach((p) => {
       const base = { x: p.x, y: p.y, target: p.target };
-
       if (p.style) {
-        // ✅ Text styles
         if (p.style.fontFamily) base.fontFamily = p.style.fontFamily;
         if (p.style.fontSize) base.fontSize = parseInt(p.style.fontSize);
         if (p.style.color) base.color = p.style.color;
@@ -130,7 +132,6 @@ export default function IdCalibrator() {
         if (p.style.opacity) base.opacity = p.style.opacity;
         if (p.style.borderBottom) base.borderBottom = p.style.borderBottom;
 
-        // ✅ Image styles
         if (p.style.width) base.width = parseInt(p.style.width);
         if (p.style.height) base.height = parseInt(p.style.height);
         if (p.style.borderRadius)
@@ -139,7 +140,6 @@ export default function IdCalibrator() {
         if (p.style.border) base.border = p.style.border;
       }
 
-      // Determine original key based on p.value
       const originalKey =
         Object.keys(fakeEMP.front).find((k) => fakeEMP.front[k] === p.value) ||
         Object.keys(fakeEMP.back).find((k) => fakeEMP.back[k] === p.value) ||
@@ -160,11 +160,14 @@ export default function IdCalibrator() {
         token,
         data: { _id: activePlatform.branchId, ct: JSON.stringify(saveData) },
       })
-    );
+    )
+      .then(() => {
+        addToast("ID layout saved successfully!", { appearance: "success" });
+      })
+      .catch(() => {
+        addToast("Failed to save ID layout.", { appearance: "error" });
+      });
   };
-
-  // ngayon, filter lang per side
-  const filteredKeys = Object.keys(fakeEMP[selectedSide] || {});
 
   const uploadCloudinary = (img, isFront = true) => {
     if (isFront) setFrontLoading(true);

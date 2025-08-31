@@ -5,6 +5,14 @@
   gap: 10px;
 }
 
+.id-generator-container.portrait {
+  flex-direction: row;
+}
+
+.id-generator-container.landscape {
+  flex-direction: column;
+}
+
 .id-generator-preview-wrapper {
   position: relative;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -13,6 +21,16 @@
   overflow: hidden;
   width: 3.1875in;
   height: 5.0625in;
+}
+
+.id-generator-preview-wrapper.portrait {
+  width: 3.1875in;
+  height: 5.0625in;
+}
+
+.id-generator-preview-wrapper.landscape {
+  width: 5.0625in;
+  height: 3.1875in;
 }
 
 .id-generator-preview {
