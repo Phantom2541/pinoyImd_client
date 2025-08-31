@@ -1,4 +1,3 @@
-import React from "react";
 import {
   currency,
   fullName,
@@ -8,6 +7,7 @@ import {
 import { Privileges, Services } from "../../../services/fakeDb";
 
 const Body = ({ vouchers }) => {
+  var baseIndex = 1;
   return (
     <>
       {vouchers.map((voucher, index) => (
@@ -21,8 +21,10 @@ const Body = ({ vouchers }) => {
             key={index}
             className="d-flex align-items-center justify-content-between text-white "
           >
-            <span className="ml-1">{voucher.date}</span>
-            <span className="mr-1">
+            <span className="ml-1" style={{ fontSize: "15px" }}>
+              {voucher.date}
+            </span>
+            <span className="mr-1" style={{ fontSize: "15px" }}>
               (
               {currency.format(
                 voucher?.deals.reduce((sum, deal) => sum + deal.amount, 0)
@@ -63,7 +65,7 @@ const Body = ({ vouchers }) => {
                     key={index}
                   >
                     <td style={{ fontWeight: "bold", width: "30%" }}>
-                      {index + 1}.{" "}
+                      {baseIndex++}.{" "}
                       <strong className="ml-1">
                         {getGenderIcon(customerId?.isMale)}{" "}
                         {fullName(customerId?.fullName)} |{" "}

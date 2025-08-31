@@ -33,7 +33,7 @@ const hpfs = [
   "> 100/hpf",
 ];
 
-const bacterias = ["+1", "+2", "+3", "+4"];
+// const bacterias = ["+1", "+2", "+3", "+4"];
 const cells = ["RARE", "FEW", "MODERATE", "PLENTY"];
 
 export default function Microscopic() {
@@ -91,7 +91,7 @@ export default function Microscopic() {
       {/* Bacteria - RADIO */}
       <MDBCol md="6">
         <label className="font-weight-bold">Bacteria</label>
-        {bacterias.map((label, index) => (
+        {cells.map((label, index) => (
           <div className="form-check" key={`bacteria-radio-${index}`}>
             <input
               className="form-check-input"

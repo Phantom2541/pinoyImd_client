@@ -3,10 +3,16 @@ import {
   Fonts,
   FontSizes,
   FontWeights,
-} from "./../idCalibrator/toolkit/fontStyle";
+} from "../../idCalibrator/toolkit/fontStyle";
+import { useSelector } from "react-redux";
 import { MDBIcon } from "mdbreact";
-import Input from "./../idCalibrator/toolkit/input";
-import Select from "./../idCalibrator/toolkit/select";
+import Input from "../../idCalibrator/toolkit/input";
+import Select from "../../idCalibrator/toolkit/select";
+import { useDispatch } from "react-redux";
+import {
+  NEXT,
+  PREV,
+} from "../../../../../../services/redux/slices/assets/persons/personnels";
 
 const toHex = (color) => {
   const ctx = document.createElement("canvas").getContext("2d");
@@ -14,19 +20,22 @@ const toHex = (color) => {
   return ctx.fillStyle;
 };
 
-export default function Setting({
-  selectedValue,
-  onUpdateValue,
-  handlePrev,
-  handleNext,
-  handleSave,
-}) {
+export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
+  const { activeIndex, collections } = useSelector(
+    ({ personnels }) => personnels
+  );
   const [lockAspect, setLockAspect] = useState(false);
+  const dispatch = useDispatch();
 
   const isDisabled = !selectedValue;
   const style = selectedValue || {};
   const isImage =
-    selectedValue?.key === "profile" || selectedValue?.key === "signature";
+    typeof selectedValue?.value === "string" &&
+    (selectedValue.value.startsWith("data:image/") ||
+      /\.(png|jpe?g|gif)$/i.test(selectedValue.value));
+
+  const handleNext = () => dispatch(NEXT(activeIndex + 1));
+  const handlePrev = () => dispatch(PREV(activeIndex - 1));
 
   const updateStyle = useCallback(
     (newStyle) => {
@@ -115,7 +124,7 @@ export default function Setting({
                 updateStyle({ borderRadius: `${e.target.value}%` })
               }
             />
-            <Input
+            {/* <Input
               type="number"
               title="Border"
               unit="px"
@@ -147,10 +156,10 @@ export default function Setting({
                   }`,
                 })
               }
-            />
+            /> */}
           </div>
 
-          <Input
+          {/* <Input
             type="number"
             title="Opacity"
             label={<MDBIcon fas icon="adjust" />}
@@ -165,7 +174,7 @@ export default function Setting({
                 opacity: Math.min(1, Math.max(0, e.target.value / 100)),
               })
             }
-          />
+          /> */}
         </div>
       )}
 
@@ -175,7 +184,7 @@ export default function Setting({
             isDisabled ? "disabled" : ""
           }`}
         >
-          <Select
+          {/* <Select
             label="Font Family"
             options={Object.entries(Fonts).map(([key, value]) => ({
               label: key,
@@ -187,7 +196,7 @@ export default function Setting({
             showSearch
             disabled={isDisabled}
             onSelect={(val) => updateStyle({ fontFamily: val })}
-          />
+          /> */}
           <div
             className="d-flex align-items-center mt-2"
             style={{ gap: "5px" }}
@@ -204,7 +213,7 @@ export default function Setting({
               disabled={isDisabled}
               onSelect={(val) => updateStyle({ fontSize: val })}
             />
-            <Select
+            {/* <Select
               label="Font Weight"
               options={Object.entries(FontWeights).map(([key, val]) =>
                 typeof val === "object"
@@ -221,13 +230,13 @@ export default function Setting({
               onSelect={(opt) =>
                 updateStyle({ fontWeight: opt.value, fontStyle: opt.style })
               }
-            />
+            /> */}
           </div>
           <div
             className="d-flex align-items-center mt-2"
             style={{ gap: "5px" }}
           >
-            <Input
+            {/* <Input
               type="text"
               title="Font Color"
               label={
@@ -246,7 +255,7 @@ export default function Setting({
               value={style.color || ""}
               disabled={isDisabled}
               onChange={(e) => updateStyle({ color: e.target.value })}
-            />
+            /> */}
             <Input
               type="number"
               title="Letter Spacing"
@@ -263,8 +272,15 @@ export default function Setting({
       )}
 
       <div className="IDGenerator-settings-navigation">
-        <button onClick={handlePrev}>Prev</button>
-        <button onClick={handleNext}>Next</button>
+        <button onClick={handlePrev} disabled={activeIndex === 0}>
+          Prev
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={activeIndex >= collections.length - 1}
+        >
+          Next
+        </button>
       </div>
 
       <div className="IDGenerator-settings-save">
