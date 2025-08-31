@@ -26,8 +26,6 @@ export default function Modal() {
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  console.log("selected", selected);
-
   useEffect(() => {
     if (!branch?.ct || !selected) return;
 
@@ -131,9 +129,37 @@ export default function Modal() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Check kung kompleto ang lahat ng value
+  const isComplete = placedValues.every((p) => {
+    if (["img", "signature"].includes(p.key)) return true;
+    const val = (p?.value ?? "").toString().trim();
+    return val && val !== "-";
+  });
+
   const handleSave = useCallback(async () => {
     if (!frontWrapperRef.current || !backWrapperRef.current) return;
 
+    // Collect dfp (styles lang)
+    const dfp = placedValues.reduce((acc, { key, value, ...styles }) => {
+      acc[key] = styles;
+      return acc;
+    }, {});
+
+    // --- Always save dfp to DB ---
+    dispatch(
+      UPDATE({
+        token,
+        data: { _id: selected._id, dfp: JSON.stringify(dfp) },
+      })
+    );
+
+    if (!isComplete) {
+      // ❌ Incomplete: save lang sa DB, walang download
+      dispatch(NEXT(activeIndex + 1));
+      return;
+    }
+
+    // ✅ Complete: proceed with rendering + download
     const options = { backgroundColor: null, scale: 2 };
 
     // Render canvases
@@ -154,7 +180,6 @@ export default function Modal() {
     const frontName = `${empNo}-${dept}-front.png`;
     const backName = `${empNo}-${dept}-back.png`;
 
-    // --- File System Access API ---
     try {
       // Save FRONT
       const frontHandle = await window.showSaveFilePicker({
@@ -181,20 +206,8 @@ export default function Modal() {
       console.error("Save cancelled or failed:", err);
     }
 
-    // Save styles to DB
-    const dfp = placedValues.reduce((acc, { key, value, ...styles }) => {
-      acc[key] = styles;
-      return acc;
-    }, {});
-    dispatch(
-      UPDATE({
-        token,
-        data: { _id: selected._id, dfp: JSON.stringify(dfp) },
-      })
-    );
-    console.log("saved dfp", selected._id, dfp);
     dispatch(NEXT(activeIndex + 1));
-  }, [placedValues, dispatch, token, selected, activeIndex]);
+  }, [placedValues, dispatch, token, selected, activeIndex, isComplete]);
 
   useEffect(() => {
     const handleShortcuts = (e) => {
@@ -325,6 +338,7 @@ export default function Modal() {
             selectedValue={placedValues.find((p) => p.key === selectedKey)}
             onUpdateValue={handleUpdateValue}
             handleSave={handleSave}
+            isComplete={isComplete}
           />
         </div>
       </MDBModalBody>
