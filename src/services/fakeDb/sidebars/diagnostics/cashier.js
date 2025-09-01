@@ -179,7 +179,7 @@ const cashier = [
       },
       {
         name: "Hotlines",
-        path: "/hotlines",
+        path: "/hotlines/bread",
         icon: "phone-alt",
         title: "Emergency & Support Hotlines",
         component: Hotlines,
