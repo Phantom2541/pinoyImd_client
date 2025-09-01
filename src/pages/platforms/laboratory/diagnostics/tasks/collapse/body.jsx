@@ -13,7 +13,7 @@ export default function Body({
   const { activePlatform } = useSelector(({ auth }) => auth);
   return (
     <MDBCardBody className="pt-0">
-      <MDBTable small hover responsive>
+      <MDBTable small responsive>
         <thead>
           <tr>
             <th>#</th>
