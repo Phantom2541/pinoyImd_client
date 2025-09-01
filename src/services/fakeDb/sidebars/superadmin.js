@@ -33,7 +33,6 @@ const admin = [
     icon: "code-branch",
     component: FormTemplate,
   },
-
   {
     name: "Users",
     path: "/users",

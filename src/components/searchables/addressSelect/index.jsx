@@ -20,12 +20,14 @@ export default function AddressSelect({
 
   // ✅ preload collections when editing or when address already has values
   useEffect(() => {
-    if (address?.region) {
+    if (address.region) {
       console.log("useEffect region :", address);
       const _Provinces = Philippines.Provinces(address?.region);
+      setProvinceCollections(_Provinces);
+
       const _Cities = Philippines.Cities(_Provinces[0]);
       const _Brgys = Philippines.Barangays(_Cities[0].code);
-      setProvinceCollections(_Provinces);
+
       setCityCollections(_Cities);
       setBrgyCollections(_Brgys);
     }

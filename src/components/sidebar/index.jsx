@@ -18,7 +18,7 @@ import {
   // isImageValid,
 } from "../../services/utilities";
 import "./style.css";
-import BgRemover from "../bgRemover";
+import { BgRemover } from "../../components/images/index";
 const diagnostics = [
   "diagnostic",
   "clinic",

@@ -8,7 +8,7 @@ import {
   SetCOMPANY,
 } from "./../../../../../services/redux/slices/assets/persons/auth";
 import { FailedLogo } from "./../../../../../services/utilities";
-import ImageCropper from "../../../../../components/images/imageCropper";
+import ImageCropper from "../../../../../components/images/cropper";
 
 export default function Logo() {
   const { company, token, isLoading } = useSelector(({ auth }) => auth);

@@ -28,7 +28,7 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/assets/persons/auth";
 import { FailedBanner } from "../../../../../../services/utilities";
-import ImageCropper from "../../../../../../components/images/imageCropper";
+import ImageCropper from "../../../../../../components/images/cropper";
 import { BROWSE } from "../../../../../../services/redux/slices/assets/branches";
 import "./style.css";
 import { orderBy } from "lodash";
