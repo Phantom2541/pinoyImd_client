@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
@@ -12,11 +12,8 @@ import PriceList from "./pricelist";
 
 const Index = () => {
   const { token } = useSelector(({ auth }) => auth);
-  const { isLoading, records } = useSelector(({ providers }) => providers); // ← assuming you have providers.records from Redux
+  const { isLoading } = useSelector(({ providers }) => providers); // ← assuming you have providers.records from Redux
   const dispatch = useDispatch();
-
-  // ✅ ADD THIS: filtered state
-  const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
     if (token) dispatch(BROWSE({ token }));
@@ -26,20 +23,12 @@ const Index = () => {
     dispatch(BROWSE_COMPANIES({ token }));
   }, [token, dispatch]);
 
-  // ✅ Set filtered when new records arrive
-  useEffect(() => {
-    if (records) setFiltered(records);
-  }, [records]);
-
   return (
     <>
       <MDBAnimation type="bounceInDown">
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-          {/* ✅ pass setFiltered and records to Header */}
-          <Header collections={records} setFiltered={setFiltered} />
-          <MDBCardBody>
-            {isLoading ? <TableLoading /> : <Body data={filtered} />}
-          </MDBCardBody>
+          <Header />
+          <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
           <Footer />
         </MDBCard>
       </MDBAnimation>

@@ -1,7 +1,6 @@
 import Bulletin from "../../../../pages/platforms/cashier/bulletin";
 import {
   Cashier,
-  Contract,
   Deals,
   Menus,
   Services,
@@ -86,6 +85,13 @@ const cashier = [
         component: Payables,
       },
       {
+        name: "Petty Cash Vouchers",
+        path: "/payments/petty-vouchers",
+        icon: "file-invoice-dollar",
+        title:
+          "Small disbursements for minor expenses (transport, meals, allowances)",
+      },
+      {
         name: "Payments",
         path: "/payments",
         icon: "money-check-alt",
@@ -100,10 +106,10 @@ const cashier = [
         component: Receivables,
       },
       {
-        name: "Vouchers",
-        path: "/vouchers",
+        name: "Service Credit Vouchers",
+        path: "/cashier/service-vouchers",
         icon: "receipt",
-        title: "Monthly Vouchers for Referrals (Cashier only)",
+        title: "Recorded Monthly Vouchers for Referrals (Cashier only)",
         component: Vouchers,
       },
     ],
@@ -118,15 +124,8 @@ const cashier = [
         name: "Outsources",
         path: "/outsources",
         icon: "people-carry",
-        title: "External Service Providers (Sendouts)",
+        title: "External Service Providers (Sendout)",
         component: Outsources,
-      },
-      {
-        name: "Inhouse",
-        path: "/inhouse",
-        icon: "user-md",
-        title: "Inhouse",
-        component: Inhouse,
       },
       {
         name: "Affiliated Patient Programs",
@@ -142,18 +141,18 @@ const cashier = [
             component: Wellness,
           },
           {
+            name: "Inhouse",
+            path: "/inhouse",
+            icon: "user-md",
+            title: "list of inhouse providers (Branches)",
+            component: Inhouse,
+          },
+          {
             name: "Membership Privileges",
             path: "/membership",
             icon: "id-card-alt",
             title: "Members with Discounted Rates",
             component: Membership,
-          },
-          {
-            name: "Contracted Rates",
-            path: "/contract",
-            icon: "file-signature",
-            title: "Special Pricing Agreements",
-            component: Contract,
           },
           {
             name: "Referral Sources",

@@ -89,8 +89,19 @@ const Body = () => {
       ) : (
         <div className="text-center p-5">
           <MDBIcon far icon="sad-tear" size="3x" className="text-muted mb-3" />
-          <h4 className="fw-bold text-muted">No Results Found</h4>
-          <p className="text-muted">Try searching with another keyword</p>
+          <h5 className="font-weight-bold mb-3">No In-House Source Found</h5>
+          <p className="mb-2">
+            You currently don't have any registered in-house source.
+          </p>
+          <p className="text-muted">
+            In-House Sources refer to patients coming directly from our own
+            physicians or other departments within the clinic/hospital.
+            <br />
+            <br />
+            Declaring in-house sources helps us properly track referrals, ensure
+            accurate reporting, and recognize the contributions of our internal
+            medical team.
+          </p>
         </div>
       )}
     </MDBCardBody>

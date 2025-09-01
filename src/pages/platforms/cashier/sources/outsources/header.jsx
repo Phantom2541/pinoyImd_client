@@ -10,7 +10,7 @@ import {
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ providers }) => providers);
+  const { collections, filtered } = useSelector(({ providers }) => providers);
   const dispatch = useDispatch();
 
   // Load outsources initially
@@ -34,7 +34,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections?.length} Outsources
+          {filtered?.length} Outsources
         </span>
       </div>
       <div>
