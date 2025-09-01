@@ -1,7 +1,7 @@
 import Philhealth from "./philhealth";
 import Outsources from "./outsources";
 import Utilities from "./utilities";
-import Hotlines from "./hotlines";
+import { Hotlines, HotlinesPoster } from "./hotlines";
 import Suppliers from "./suppliers";
 import Contract from "./insources/contract";
 import Wellness from "./insources/wellness";
@@ -15,6 +15,7 @@ export {
   Outsources,
   Utilities,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
   Wellness,
   Contract,

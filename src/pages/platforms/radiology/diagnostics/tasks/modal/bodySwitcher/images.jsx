@@ -1,8 +1,8 @@
 import { MDBBtn, MDBIcon, MDBTabPane } from "mdbreact";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
-import { fullName, gDrive } from "../../../../../../../../services/utilities";
+import { SetTASK } from "../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { fullName, gDrive } from "../../../../../../../services/utilities";
 import Swal from "sweetalert2";
 
 const Images = () => {

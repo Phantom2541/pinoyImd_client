@@ -2773,24 +2773,23 @@
   },
   {
     "id": 260,
-    "name": "2D Echocardiography with Doppler",
+    "name": "2D Echocardiography (Plain)",
     "abbreviation": "2DEcho",
     "department": "RAD",
     "template": 3,
     "lo_ssx": "Normal cardiac structure and function",
-    "hi_ssx": "Valvular disease, heart failure, abnormal flow patterns",
-    "purpose": "To evaluate cardiac structure and function."
+    "hi_ssx": "Cardiomegaly, wall motion abnormalities, decreased ejection fraction",
+    "purpose": "To evaluate cardiac structure, chamber size, wall motion, and overall function."
   },
-
   {
     "id": 261,
-    "name": "2D Echo with Color Flow Mapping",
-    "abbreviation": "2DEcho CFM",
+    "name": "2D Echocardiography with Color Flow Doppler Study (CFDS)",
+    "abbreviation": "2DEcho CFDS",
     "department": "RAD",
     "template": 3,
     "lo_ssx": "Normal cardiac chambers, valves, and flow patterns",
-    "hi_ssx": "Valve regurgitation, stenosis, abnormal shunts, heart failure",
-    "purpose": "To evaluate cardiac chambers, valves, and flow patterns."
+    "hi_ssx": "Valve regurgitation, stenosis, shunts, abnormal blood flow patterns, heart failure",
+    "purpose": "To evaluate cardiac chambers, valves, and blood flow dynamics using Doppler and color mapping."
   },
   {
     "id": 262,

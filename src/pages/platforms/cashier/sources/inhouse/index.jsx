@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import TableLoading from "../../../../../components/tableLoading";
 const Inhouse = () => {
   const { isLoading = false } = useSelector(({ branches }) => branches);
+
   return (
     <MDBCard narrow>
       <Header />

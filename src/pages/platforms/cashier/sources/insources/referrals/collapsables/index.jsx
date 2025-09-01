@@ -164,61 +164,82 @@ export default function MenuCollapse() {
       }}
       fluid
     >
-      {paginatedData?.length > 0 ? (
-        paginatedData?.map((insource, index) => {
-          const { clients, _id } = insource;
-          const isGhost = clients?._id ? false : true;
-          const affiliated = clients?.affiliated || [];
-
-          return (
-            <MDBCard
-              key={`staffs-${index}`}
-              style={{
-                boxShadow: "0px 0px 0px 0px",
-                backgroundColor: "white",
-              }}
-            >
-              <Header
-                index={index}
-                setActiveId={setActiveId}
-                activeId={activeId}
-                didHoverId={didHoverId}
-                setDidHoverId={setDidHoverId}
-                setSelected={setSelected}
-                registerGhostCompany={registerGhostCompany}
-                insource={insource}
-              />
-              <MDBCollapse
-                id={`collapse-${index}`}
-                className="mb-2 border border-black"
-                isOpen={index === activeId && !isGhost}
-              >
-                <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
-                  <span>Physician List</span>
-                  <div className="d-flex align-items-center">
-                    <span>Tag Physician</span>
-                    <Search
-                      clientID={clients?._id}
-                      setPhysician={handleTag}
-                      setRegister={handleRegister}
-                    />
-                  </div>
-                </div>
-                <MDBCardBody className="pt-2">
-                  <CollapseTable
-                    affiliated={affiliated}
-                    providerId={_id}
-                    BranchId={clients?._id}
-                  />
-                </MDBCardBody>
-              </MDBCollapse>
-            </MDBCard>
-          );
-        })
-      ) : (
-        <p className="text-center">No record.</p>
+      {(!paginatedData || paginatedData.length === 0) && (
+        <div
+          className="alert alert-warning text-center fw-bold mb-3"
+          role="alert"
+        >
+          <h4>
+            ⚠️ Reminder: No <u>Referral Company</u> has been declared yet.
+          </h4>
+          <br />
+          Declaring a referral company is important because it identifies the
+          clinic, doctor, or institution that referred the patient.
+          <br />
+          <br />
+          This ensures:
+          <br />• Accurate information is shown on patient result forms
+          <br />• Proper tracking of patient referrals
+          <br />• Stronger partnerships with referring clinics or doctors
+          <br />• Compliance with audit and regulatory requirements
+          <br /> <br /> This is the list of <u>Referral Companies</u> — the
+          clinics, doctors, or institutions where our patients came from.
+          <br />
+          Declaring them ensures the correct source is shown in result forms and
+          helps us track referrals properly. ✅
+        </div>
       )}
-      {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
+
+      {paginatedData?.map((insource, index) => {
+        const { clients, _id } = insource;
+        const isGhost = clients?._id ? false : true;
+        const affiliated = clients?.affiliated || [];
+
+        return (
+          <MDBCard
+            key={`staffs-${index}`}
+            style={{
+              boxShadow: "0px 0px 0px 0px",
+              backgroundColor: "white",
+            }}
+          >
+            <Header
+              index={index}
+              setActiveId={setActiveId}
+              activeId={activeId}
+              didHoverId={didHoverId}
+              setDidHoverId={setDidHoverId}
+              setSelected={setSelected}
+              registerGhostCompany={registerGhostCompany}
+              insource={insource}
+            />
+            <MDBCollapse
+              id={`collapse-${index}`}
+              className="mb-2 border border-black"
+              isOpen={index === activeId && !isGhost}
+            >
+              <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
+                <span>Physician List</span>
+                <div className="d-flex align-items-center">
+                  <span>Tag Physician</span>
+                  <Search
+                    clientID={clients?._id}
+                    setPhysician={handleTag}
+                    setRegister={handleRegister}
+                  />
+                </div>
+              </div>
+              <MDBCardBody className="pt-2">
+                <CollapseTable
+                  affiliated={affiliated}
+                  providerId={_id}
+                  BranchId={clients?._id}
+                />
+              </MDBCardBody>
+            </MDBCollapse>
+          </MDBCard>
+        );
+      })}
     </MDBContainer>
   );
 }

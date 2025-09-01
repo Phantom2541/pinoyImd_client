@@ -30,10 +30,17 @@ function NoInsourceMessage() {
           companies.
         </p>
         <p className="text-muted">
-          To get started, please declare at least one membership source — like a
-          loyalty member or affiliated company. This ensures physicians are
-          properly assigned and members receive the correct discounts and
-          benefits.
+          Membership Sources are the companies, organizations, or groups we
+          directly support (insource).
+          <br />
+          <br />
+          <b>
+            Only patients from these sources are eligible for vouchers,
+            discounts, and exclusive benefits.
+          </b>
+          <br />
+          <br />
+          Please declare at least one to activate membership privileges.
         </p>
       </MDBCardBody>
     </MDBCard>

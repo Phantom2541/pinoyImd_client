@@ -6,7 +6,7 @@ import {
   ContentState,
 } from "draft-js";
 import { useDispatch, useSelector } from "react-redux";
-import { DocxEditor } from "../../../../../../../../../components/docx/index.js";
+import { DocxEditor } from "../../../../../../../../components/docx/index.js";
 import {
   MDBCard,
   MDBCardBody,
@@ -16,8 +16,8 @@ import {
   MDBTabContent,
   MDBTabPane,
 } from "mdbreact";
-import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import { Services } from "../../../../../../../../../services/fakeDb/index.js";
+import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { Services } from "../../../../../../../../services/fakeDb/index.js";
 
 export default function Xray() {
   const dispatch = useDispatch();

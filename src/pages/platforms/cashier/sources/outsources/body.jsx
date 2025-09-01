@@ -18,12 +18,13 @@ const Body = () => {
     ),
     { platform } = activePlatform,
     dispatch = useDispatch();
-  console.log("filtered", filtered);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
+
   const handleEdit = (provider) => dispatch(SetSELECTED(provider));
+
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -39,6 +40,7 @@ const Body = () => {
       }
     });
   };
+
   const handlePriceList = (data) => dispatch(SetPricelist(data));
 
   const itemsPerPage = maxPage;
@@ -47,91 +49,106 @@ const Body = () => {
   const paginatedData = filtered?.slice(startIndex, endIndex);
 
   return (
-    <MDBTable responsive hover>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Company</th>
-          <th>Branch</th>
-          <th>Address</th>
-          <th>Contract</th>
-          <th>Credit</th>
-          <th>Cutoff</th>
-          <th>Due Date</th>
-          <th>Status</th>
-          {platform !== "cashier" && <th className="text-center">Action</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {paginatedData?.map((provider, index) => {
-          const {
-              vendors = {},
-              status = "",
-              credit,
-              cutoff,
-              category = "",
-              contract,
-              due,
-            } = provider,
-            { displayname, address, companyId, name } = vendors;
-          const isGhost = category === "ghost";
-          return (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{companyId?.name}</td>
-              <td className={isGhost && "text-primary"}>
-                {isGhost && "👻"} {displayname || name}
-              </td>
-              <td>
-                {address && typeof address === "object"
-                  ? billingAddress(address)
-                  : "-"}
-              </td>
-              <td>
-                {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
-              </td>
-              <td>{currency.format(credit)}</td>
-              <td>{cutoff || "-"}</td>
-              <td>{due}</td>
-              <td>{capitalize(status)}</td>
-              {platform !== "cashier" && (
-                <td className="text-center" style={{ width: "200px" }}>
-                  <MDBBtnGroup>
-                    {status === "pending" && (
+    <>
+      {(!paginatedData || paginatedData.length === 0) && (
+        <div
+          className="alert alert-warning text-center fw-bold mb-3"
+          role="alert"
+        >
+          ⚠️ Reminder: No <u>Send-out Company</u> has been declared yet. It is
+          important to declare one so that specimens can be properly sent out to
+          the right laboratory or partner facility. This ensures smooth
+          tracking, correct billing, and compliance with future audit
+          requirements. ✅
+        </div>
+      )}
+
+      <MDBTable responsive hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th>Branch</th>
+            <th>Address</th>
+            <th>Contract</th>
+            <th>Credit</th>
+            <th>Cutoff</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            {platform !== "cashier" && <th className="text-center">Action</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedData?.map((provider, index) => {
+            const {
+                vendors = {},
+                status = "",
+                credit,
+                cutoff,
+                category = "",
+                contract,
+                due,
+              } = provider,
+              { displayname, address, companyId, name } = vendors;
+            const isGhost = category === "ghost";
+            return (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{companyId?.name || "-"}</td>
+                <td className={isGhost ? "text-primary" : ""}>
+                  {isGhost && "👻"} {displayname || name}
+                </td>
+                <td>
+                  {address && typeof address === "object"
+                    ? billingAddress(address)
+                    : "-"}
+                </td>
+                <td>
+                  {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
+                </td>
+                <td>{currency.format(credit)}</td>
+                <td>{cutoff || "-"}</td>
+                <td>{due}</td>
+                <td>{capitalize(status)}</td>
+                {platform !== "cashier" && (
+                  <td className="text-center" style={{ width: "200px" }}>
+                    <MDBBtnGroup>
+                      {status === "pending" && (
+                        <MDBBtn
+                          size="sm"
+                          rounded
+                          color="primary"
+                          onClick={() => handleEdit(provider)}
+                        >
+                          <MDBIcon icon="pencil-alt" />
+                        </MDBBtn>
+                      )}
                       <MDBBtn
+                        onClick={() => handlePriceList(provider)}
                         size="sm"
                         rounded
-                        color="primary"
-                        onClick={() => handleEdit(provider)}
+                        color="success"
+                        title="Price list"
                       >
-                        <MDBIcon icon="pencil-alt" />
+                        <MDBIcon icon="file-invoice-dollar" />
                       </MDBBtn>
-                    )}
-                    <MDBBtn
-                      onClick={() => handlePriceList(provider)}
-                      size="sm"
-                      rounded
-                      color="success"
-                      title="Price list"
-                    >
-                      <MDBIcon icon="file-invoice-dollar" />
-                    </MDBBtn>
-                    <MDBBtn
-                      onClick={() => handleDelete(provider._id)}
-                      size="sm"
-                      rounded
-                      color="danger"
-                    >
-                      <MDBIcon icon="trash" />
-                    </MDBBtn>
-                  </MDBBtnGroup>
-                </td>
-              )}
-            </tr>
-          );
-        })}
-      </tbody>
-    </MDBTable>
+                      <MDBBtn
+                        onClick={() => handleDelete(provider._id)}
+                        size="sm"
+                        rounded
+                        color="danger"
+                      >
+                        <MDBIcon icon="trash" />
+                      </MDBBtn>
+                    </MDBBtnGroup>
+                  </td>
+                )}
+              </tr>
+            );
+          })}
+        </tbody>
+      </MDBTable>
+    </>
   );
 };
 

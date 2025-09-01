@@ -12,6 +12,26 @@ import {
 import { Services, Menus } from "../../../../pages/platforms/accounting";
 import IdCalibrator from "../../../../pages/platforms/hr/personnel/idCalibrator";
 import IdGenerator from "../../../../pages/platforms/hr/personnel/idGenerator";
+import { Admission, Cases } from "../../../../pages/platforms/frontdesk";
+import {
+  Tablestemplate,
+  Collapsable,
+  Calendar,
+  DragDrop,
+  Search,
+  Cards,
+  Loader,
+  InputSearch,
+  // QrCodePage,
+  HMOCapture,
+} from "../../../../pages/templates";
+import {
+  ImageMagnifier,
+  ImageDragAndDrop,
+  ImageText,
+} from "../../../../components/images";
+import DrugTest from "../../../../pages/templates/drugTest";
+import SubExpired from "../../../../pages/templates/subExpired";
 
 const humanresources = [
   {
@@ -145,6 +165,116 @@ const humanresources = [
         path: "/finance/services",
         icon: "tools",
         component: Services,
+      },
+    ],
+  },
+  {
+    name: "Templates",
+    path: "/templates",
+    icon: "list",
+    id: "frontdesk-templates",
+    children: [
+      {
+        name: "Tables",
+        path: "/templates/tables",
+        icon: "list",
+        component: Tablestemplate,
+      },
+      {
+        name: "Collapsables",
+        path: "/templates/collapsables",
+        icon: "align-justify",
+        component: Collapsable,
+      },
+      {
+        name: "Calendars",
+        path: "/templates/calendars",
+        icon: "calendar-alt",
+        component: Calendar,
+      },
+      {
+        name: "DragDrop",
+        path: "/templates/dragdrop",
+        icon: "drag",
+        component: DragDrop,
+      },
+      {
+        name: "Search",
+        path: "/templates/search",
+        icon: "search",
+        component: Search,
+      },
+      {
+        name: "Image Drag and Drop",
+        path: "/templates/image",
+        icon: "calendar-alt",
+        component: ImageDragAndDrop,
+      },
+      {
+        name: "Cards",
+        path: "/templates/cards",
+        icon: "card",
+        component: Cards,
+      },
+      {
+        name: "Schedule",
+        path: "/templates/schedule",
+        icon: "calendar-alt",
+        component: Schedule,
+      },
+      {
+        name: "Loader",
+        path: "/templates/loader",
+        icon: "calendar-alt",
+        component: Loader,
+      },
+      {
+        name: "InputSearch",
+        path: "/templates/inputSearch",
+        icon: "calendar-alt",
+        component: InputSearch,
+      },
+      {
+        name: "OCR",
+        path: "/templates/imgText",
+        icon: "calendar-alt",
+        component: ImageText,
+      },
+      {
+        name: "Image Magnifier",
+        path: "/templates/imageMagnifier",
+        icon: "calendar-alt",
+        component: ImageMagnifier,
+      },
+      {
+        name: "HMO Capture",
+        path: "/templates/camera",
+        icon: "calendar-alt",
+        component: HMOCapture,
+      },
+      {
+        name: "Drug Test",
+        path: "/templates/drugTest",
+        icon: "calendar-alt",
+        component: DrugTest,
+      },
+      {
+        name: "Sub Expired",
+        path: "/templates/subExpired",
+        icon: "calendar-alt",
+        component: SubExpired,
+      },
+      {
+        name: "Cases",
+        icon: "tachometer-alt",
+        path: "/cases",
+        component: Cases,
+      },
+      {
+        name: "Admission",
+        icon: "tachometer-alt",
+        path: "/admission",
+        component: Admission,
       },
     ],
   },

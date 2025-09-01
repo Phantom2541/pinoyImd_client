@@ -7,7 +7,7 @@ import machines from "../../../pages/platforms/SuperAdmin/commerce/assets/machin
 import PasswordReseter from "../../../pages/platforms/SuperAdmin/passwordReseter";
 import FormTemplate from "../../../pages/platforms/SuperAdmin/formTemplate";
 
-const admin = [
+const superadmin = [
   {
     name: "Dashboard",
     title: "Overview of platform activity.",
@@ -93,4 +93,4 @@ const admin = [
   },
 ];
 
-export default admin;
+export default superadmin;

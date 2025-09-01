@@ -12,6 +12,16 @@ import {
   Menus,
   Services,
 } from "../../../../pages/platforms/accounting";
+import {
+  Membership,
+  Outsources,
+  Utilities,
+  Wellness,
+  Referrals,
+  Hotlines,
+  Suppliers,
+  Inhouse,
+} from "../../../../pages/platforms/cashier";
 import OrgChart from "../../../../pages/platforms/accounting/organizationChart";
 
 const accounting = [
@@ -89,6 +99,78 @@ const accounting = [
         path: "/clearance-pay",
         icon: "file-export",
         component: ClearancePay,
+      },
+    ],
+  },
+  {
+    name: "Sources",
+    path: "/sources",
+    icon: "building",
+    title: "Outsources & Insources",
+    children: [
+      {
+        name: "Outsources",
+        path: "/outsources",
+        icon: "people-carry",
+        title: "External Service Providers (Sendouts)",
+        component: Outsources,
+      },
+      {
+        name: "Affiliated Patient Programs",
+        path: "/insources",
+        icon: "hand-holding-heart",
+        title: "Patient Sources with Discounts or Privileges",
+        children: [
+          {
+            name: "H M O Wellness",
+            path: "/wellness",
+            icon: "briefcase-medical",
+            title: "Partner Companies with HMO Coverage",
+            component: Wellness,
+          },
+          {
+            name: "Inhouse",
+            path: "/inhouse",
+            icon: "user-md",
+            title: "list of inhouse providers (Branches)",
+            component: Inhouse,
+          },
+          {
+            name: "Membership Privileges",
+            path: "/membership",
+            icon: "id-card-alt",
+            title: "Members with Discounted Rates",
+            component: Membership,
+          },
+          {
+            name: "Referral Sources",
+            path: "/referrals",
+            icon: "paper-plane",
+            title: "Clinics or Doctors Who Referred Patients",
+            component: Referrals,
+          },
+        ],
+      },
+      {
+        name: "Suppliers",
+        path: "/suppliers",
+        icon: "boxes",
+        title: "Suppliers for Goods & Services",
+        component: Suppliers,
+      },
+      {
+        name: "Utilities",
+        path: "/utilities",
+        icon: "plug",
+        title: "Utilities & Support Services",
+        component: Utilities,
+      },
+      {
+        name: "Hotlines",
+        path: "/hotlines",
+        icon: "phone-alt",
+        title: "Emergency & Support Hotlines",
+        component: Hotlines,
       },
     ],
   },
