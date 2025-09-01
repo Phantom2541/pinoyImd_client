@@ -3,50 +3,23 @@ import { MDBCol, MDBRow } from "mdbreact";
 import EditableSelect from "../../customizable/editableSelect";
 
 export default function AddressSelect({
-  // disabledAllExceptSelected = false,
   handleChange = () => {},
   required = false,
   address = { region: "", province: "", city: "", barangay: "" },
-  // size = "3",
   label = "Address Information",
   isPOS = true,
 }) {
   const handleAddress = (key, value) => {
-    const _address = { ...address };
-    console.log("key", key);
-    switch (key) {
-      case "region":
-        _address.region = value;
-        _address.province = Philippines.initialProvince(value);
-        const city = Philippines.initialCity(_address.province);
-        _address.city = city;
-        break;
-
-      case "province":
-        _address.province = value;
-        const cityCode = Philippines.initialCity(value);
-        _address.city = cityCode;
-        break;
-      case "city":
-        _address.city = value;
-        const brgy = Philippines.initialBrgy(value);
-        _address.barangay = brgy;
-        break;
-
-      default:
-        _address[key] = value;
-        break;
-    }
-
+    var _address = { ...address };
+    _address[key] = value;
+    _address = { ..._address, ...Philippines.initial(_address, key) };
     handleChange("address", _address);
   };
 
-  console.log("address", address);
   return (
     <>
       {isPOS ? (
         <>
-          {" "}
           <div className="patient-form">
             <span>Region</span>
             <select
@@ -54,6 +27,7 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("region", target.value)}
             >
+              <option value="">-- Select Region --</option>
               {Philippines.Regions?.map(({ name }) => (
                 <option key={`${label}-reg-${name}`} value={name}>
                   {name}
@@ -61,6 +35,7 @@ export default function AddressSelect({
               ))}
             </select>
           </div>
+
           <div className="patient-form mt-1">
             <span>Province</span>
             <select
@@ -68,13 +43,15 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("province", target.value)}
             >
-              {Philippines.Provinces(address?.region)?.map(({ name }) => (
+              <option value="">-- Select Province --</option>
+              {Philippines.Provinces(address.region)?.map(({ name }) => (
                 <option key={`${label}-prov-${name}`} value={name}>
                   {name}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="patient-form mt-1">
             <span>City/Municipality</span>
             <select
@@ -82,6 +59,7 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("city", target.value)}
             >
+              <option value="">-- Select City/Municipality --</option>
               {Philippines.Cities(address.province)?.map(({ name }) => (
                 <option key={`${label}-city-${name}`} value={name}>
                   {name}
@@ -89,6 +67,7 @@ export default function AddressSelect({
               ))}
             </select>
           </div>
+
           <div className="patient-form mt-1">
             <span>Barangay</span>
             <select
@@ -96,11 +75,14 @@ export default function AddressSelect({
               required={required}
               onChange={({ target }) => handleAddress("barangay", target.value)}
             >
-              {Philippines.Barangays(address.city)?.map(({ name }) => (
-                <option key={`${label}-brgy-${name}`} value={name}>
-                  {name}
-                </option>
-              ))}
+              <option value="">-- Select Barangay --</option>
+              {Philippines.Barangays(address?.city, address?.province)?.map(
+                ({ name }) => (
+                  <option key={`${label}-brgy-${name}`} value={name}>
+                    {name}
+                  </option>
+                )
+              )}
             </select>
           </div>
         </>
@@ -113,37 +95,47 @@ export default function AddressSelect({
                 collections={Philippines.Regions}
                 isCapitalize={false}
                 preValue={address.region}
-                onChange={(e) => handleAddress("region", e)}
+                _key={address.region}
+                onChange={(value) => handleAddress("region", value)}
                 label="Region"
                 keyForValue="name"
                 keyForText="name"
               />
             </MDBCol>
+
             <MDBCol>
               <EditableSelect
                 collections={Philippines.Provinces(address.region)}
                 preValue={address.province}
-                onChange={(e) => handleAddress("province", e)}
+                _key={address.province}
+                onChange={(value) => handleAddress("province", value)}
                 label="Province"
                 keyForValue="name"
                 keyForText="name"
               />
             </MDBCol>
+
             <MDBCol>
               <EditableSelect
                 collections={Philippines.Cities(address.province)}
                 preValue={address.city}
-                onChange={(e) => handleAddress("city", e)}
+                _key={address.city}
+                onChange={(value) => handleAddress("city", value)}
                 label="City/Municipality"
                 keyForValue="name"
                 keyForText="name"
               />
             </MDBCol>
+
             <MDBCol>
               <EditableSelect
-                collections={Philippines.Barangays(address.city)}
+                collections={Philippines.Barangays(
+                  address.city,
+                  address?.province
+                )}
                 preValue={address.barangay}
-                onChange={(e) => handleAddress("barangay", e)}
+                _key={address.barangay}
+                onChange={(value) => handleAddress("barangay", value)}
                 label="Barangay"
                 keyForValue="name"
                 keyForText="name"

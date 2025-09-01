@@ -111,6 +111,12 @@
   color: #fff; /* solid white for contrast */
 }
 
+.id-calibrator-preview-upload.disabled {
+  pointer-events: none; /* totally hindi na clickable */
+  opacity: 0.5; /* faded effect */
+  cursor: not-allowed;
+}
+
 .id-calibrator-preview-label {
   position: absolute;
   top: 50%;

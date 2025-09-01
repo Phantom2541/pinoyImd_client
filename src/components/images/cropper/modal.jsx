@@ -8,11 +8,18 @@ import {
   MDBAlert,
 } from "mdbreact";
 import Cropper from "react-easy-crop";
-import { generateDownload, resizeImageToCropSize } from "./cropImage";
+import { resizeImageToCropSize } from "./cropImage";
 import Spinner from "../../spinner";
 import { useSelector } from "react-redux";
 import SUIT from "./../../../assets/attire/suit.png";
 import POLO from "./../../../assets/attire/polo.png";
+import POLO_TSHIRT from "./../../../assets/attire/polo-tshirt.png";
+
+const ATTIRE_OPTIONS = [
+  { key: "suit", label: "Suit", src: SUIT },
+  { key: "polo", label: "Polo", src: POLO },
+  { key: "polo-tshirt", label: "Polo T-Shirt", src: POLO_TSHIRT },
+];
 
 export default function Modal({
   show,
@@ -25,50 +32,43 @@ export default function Modal({
   handleUpload,
   cropSize = { width: 170, height: 170 },
 }) {
-  const { formSubmitted, isSuccess } = useSelector(({ auth }) => auth),
-    [localImg, setLocalImg] = useState(null),
-    [croppedArea, setCroppedArea] = useState(null),
-    [crop, setCrop] = useState({ x: 0, y: 0 }),
-    [zoom, setZoom] = useState(1),
-    [showWarning, setShowWarning] = useState(false),
-    [fitImg, setFitImg] = useState(false),
-    [attire, setAttire] = useState(null); // ✅ dati boolean, ngayon string/null
+  const { formSubmitted, isSuccess } = useSelector(({ auth }) => auth);
 
-  useEffect(() => {
-    setFitImg(false);
-  }, [show]);
+  const [localImg, setLocalImg] = useState(null);
+  const [croppedArea, setCroppedArea] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [showWarning, setShowWarning] = useState(false);
+  const [fitImg, setFitImg] = useState(false);
+  const [attire, setAttire] = useState(null);
 
+  // Reset fitImg when modal opens
+  useEffect(() => setFitImg(false), [show]);
+
+  // Check image dimensions for warning
   useEffect(() => {
     if (img) {
       const image = new Image();
       image.src = img;
       image.onload = () => {
-        if (image.width < cropSize.width || image.height < cropSize.height) {
-          setShowWarning(true);
-        } else {
-          setShowWarning(false);
-        }
+        setShowWarning(
+          image.width < cropSize.width || image.height < cropSize.height
+        );
       };
     }
   }, [img, cropSize]);
 
+  // Resize image if fitImg
   useEffect(() => {
-    const fetchData = async () => {
-      if (fitImg) {
-        const resizedImg = await resizeImageToCropSize(img, cropSize);
-        setLocalImg(resizedImg);
-      } else {
-        setLocalImg(img);
-      }
+    const fetchImg = async () => {
+      setLocalImg(fitImg ? await resizeImageToCropSize(img, cropSize) : img);
     };
-
-    fetchData();
+    fetchImg();
   }, [fitImg, img, cropSize]);
 
+  // Close modal after successful form submission
   useEffect(() => {
-    if (show && !formSubmitted && isSuccess) {
-      toggle();
-    }
+    if (show && !formSubmitted && isSuccess) toggle();
   }, [formSubmitted, isSuccess, show, toggle]);
 
   const handleDownload = async () => {
@@ -83,7 +83,9 @@ export default function Modal({
     baseImg.crossOrigin = "anonymous";
     baseImg.src = localImg;
 
-    baseImg.onload = async () => {
+    baseImg.onload = () => {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(
         baseImg,
         croppedArea.x,
@@ -96,53 +98,44 @@ export default function Modal({
         croppedArea.height
       );
 
-      if (attire) {
-        let attireSrc = null;
-        if (attire === "suit") attireSrc = SUIT;
-        if (attire === "polo") attireSrc = POLO;
+      const drawAttire = () => {
+        if (!attire) return false;
+        const attireObj = ATTIRE_OPTIONS.find((a) => a.key === attire);
+        if (!attireObj) return false;
 
-        if (attireSrc) {
-          const attireImg = new Image();
-          attireImg.src = attireSrc;
+        const attireImg = new Image();
+        attireImg.src = attireObj.src;
 
-          attireImg.onload = () => {
-            const scale = canvas.width / attireImg.width;
-            const newWidth = attireImg.width * scale;
-            const newHeight = attireImg.height * scale;
+        attireImg.onload = () => {
+          const scale = canvas.width / attireImg.width;
+          const newWidth = attireImg.width * scale;
+          const newHeight = attireImg.height * scale;
+          const x = (canvas.width - newWidth) / 2;
+          const y = canvas.height - newHeight;
 
-            const x = (canvas.width - newWidth) / 2;
-            const y = canvas.height - newHeight;
+          ctx.drawImage(attireImg, x, y, newWidth, newHeight);
+          finishDownload();
+        };
+        return true;
+      };
 
-            ctx.drawImage(attireImg, x, y, newWidth, newHeight);
-
-            const result = canvas.toDataURL(`image/${ext}`);
-            if (isUpload) {
-              handleUpload(result);
-            } else {
-              const link = document.createElement("a");
-              link.href = result;
-              link.download = `image.${ext}`;
-              link.click();
-            }
-          };
-        }
-      } else {
+      const finishDownload = () => {
         const result = canvas.toDataURL(`image/${ext}`);
-        if (isUpload) {
-          handleUpload(result);
-        } else {
+        if (isUpload) handleUpload(result);
+        else {
           const link = document.createElement("a");
           link.href = result;
           link.download = `image.${ext}`;
           link.click();
         }
-      }
+      };
+
+      if (!drawAttire()) finishDownload();
     };
   };
 
-  const onCropComplete = (_, croppedAreaPixels) => {
+  const onCropComplete = (_, croppedAreaPixels) =>
     setCroppedArea(croppedAreaPixels);
-  };
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size={modalSize}>
@@ -155,13 +148,12 @@ export default function Modal({
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         {showWarning && (
-          <MDBAlert color="warning" className={`text-center py-2 `}>
+          <MDBAlert color="warning" className="text-center py-2">
             ⚠️ The uploaded image is smaller than the crop size (
             {cropSize.width}×{cropSize.height}). This may cause the final
             cropped image to look blurry or stretched.
           </MDBAlert>
         )}
-
         <p className="text-center text-muted small mb-2">
           📐 Crop area size:{" "}
           <strong>
@@ -199,15 +191,14 @@ export default function Modal({
               }}
             >
               <img
-                src={attire === "suit" ? SUIT : POLO}
+                src={ATTIRE_OPTIONS.find((a) => a.key === attire)?.src}
                 alt={attire}
                 style={{ width: "100%" }}
               />
             </div>
           )}
         </div>
-
-        {/* ✅ Fit image options */}
+        {/* Fit image options */}
         <div className="d-flex">
           <p className="text-center text-muted mb-3">
             Do you want to <strong>fit the image</strong> to the crop area?
@@ -233,8 +224,7 @@ export default function Modal({
             No
           </label>
         </div>
-
-        {/* ✅ Attire toggle */}
+        {/* Single checkbox for attire toggle */}
         <div className="d-flex align-items-center mb-2">
           <p className="text-center text-muted mb-0 mr-2">
             Do you want to change attire?
@@ -243,53 +233,32 @@ export default function Modal({
             className="form-check-input"
             type="checkbox"
             checked={!!attire}
-            onChange={() => setAttire(attire ? null : "suit")} // default suit kapag nag Yes
-            id="attire-yes"
+            onChange={() => setAttire(attire ? null : "suit")}
+            id="attire-toggle"
           />
-          <label htmlFor="attire-yes" className="label-table mr-2 ml-1">
+          <label htmlFor="attire-toggle" className="label-table ml-1">
             Yes
           </label>
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id="attire-no"
-            checked={!attire}
-            onChange={() => setAttire(null)}
-          />
-          <label htmlFor="attire-no" className="label-table">
-            No
-          </label>
         </div>
-
-        {/* ✅ Attire choices kapag Yes */}
+        {/* Attire selection buttons */}
         {attire && (
           <div className="mb-3 ml-4">
             <p className="text-muted mb-1">Choose attire:</p>
             <div className="d-flex">
-              <label className="mr-3">
-                <input
-                  type="radio"
-                  name="attire"
-                  value="suit"
-                  checked={attire === "suit"}
-                  onChange={(e) => setAttire(e.target.value)}
-                />{" "}
-                Suit
-              </label>
-              <label className="mr-3">
-                <input
-                  type="radio"
-                  name="attire"
-                  value="polo"
-                  checked={attire === "polo"}
-                  onChange={(e) => setAttire(e.target.value)}
-                />{" "}
-                Polo
-              </label>
+              {ATTIRE_OPTIONS.map((a) => (
+                <MDBBtn
+                  key={a.key}
+                  color={attire === a.key ? "primary" : "light"}
+                  size="sm"
+                  className="mr-2"
+                  onClick={() => setAttire(a.key)}
+                >
+                  {a.label}
+                </MDBBtn>
+              ))}
             </div>
           </div>
         )}
-
         <div className="text-center">
           <MDBBtn
             onClick={handleDownload}

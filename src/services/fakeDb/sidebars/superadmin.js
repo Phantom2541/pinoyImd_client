@@ -5,6 +5,7 @@ import Products from "../../../pages/platforms/SuperAdmin/commerce/supplies/prod
 import generics from "../../../pages/platforms/SuperAdmin/commerce/medicines/generics";
 import machines from "../../../pages/platforms/SuperAdmin/commerce/assets/machines";
 import PasswordReseter from "../../../pages/platforms/SuperAdmin/passwordReseter";
+import FormTemplate from "../../../pages/platforms/SuperAdmin/formTemplate";
 
 const admin = [
   {
@@ -25,6 +26,12 @@ const admin = [
     path: "/super/admin/hmos",
     icon: "code-branch",
     component: HealthCard,
+  },
+  {
+    name: "Form Template",
+    path: "/super/admin/form",
+    icon: "code-branch",
+    component: FormTemplate,
   },
   {
     name: "Users",

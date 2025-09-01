@@ -1,8 +1,8 @@
-const fullName = (fullname, isComplete = false) => {
+const fullName = (fullname, isComplete = false, isProper = false) => {
   if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
     return "-";
 
-  const { fname, mname = "", lname, suffix = "" } = fullname;
+  const { fname, mname = "", lname, suffix = "", title = "" } = fullname;
 
   let middleName = mname || "";
 
@@ -15,6 +15,9 @@ const fullName = (fullname, isComplete = false) => {
 
   const suffixPart = suffix && suffix !== "NONE" ? ` ${suffix}` : "";
   const middlePart = mname ? ` y ${middleName}` : "";
+
+  if (isProper)
+    return `${title} ${fname.toUpperCase()} ${middleName} ${lname.toUpperCase()}${suffixPart?.toUpperCase()}`;
 
   return `${lname.toUpperCase()}, ${fname.toUpperCase()}${suffixPart?.toUpperCase()}${middlePart}`;
 };

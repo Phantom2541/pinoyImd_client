@@ -125,7 +125,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="code-branch" className="mr-2" />
-        Add a Company
+        Register Company
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBStepper className="m-0 p-0 mt-n4">

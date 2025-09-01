@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 
 export default function Input({
   label,
-  type = "number",
   title,
   value,
   onChange,
@@ -10,22 +9,28 @@ export default function Input({
   min,
   max,
   step,
-  unit, // 🔹 new prop: "px" | "%" | undefined
+  unit, // "px" | "%" | undefined
 }) {
-  const [innerValue, setInnerValue] = useState(value || 0);
+  const [innerValue, setInnerValue] = useState(value || "");
   const [focused, setFocused] = useState(false);
-
-  useEffect(() => {
-    setInnerValue(value || 0);
-  }, [value]);
-
-  // 🔹 Drag logic (unchanged)
   const [isActive, setIsActive] = useState(false);
 
+  useEffect(() => {
+    setInnerValue(value ?? "");
+  }, [value]);
+
+  // Clamp helper
+  const clamp = (val) => {
+    if (min != null && val < min) return min;
+    if (max != null && val > max) return max;
+    return val;
+  };
+
+  // 🔹 Drag logic
   const handleLabelMouseDown = useCallback(
     (e) => {
       e.preventDefault();
-      setIsActive(true); // ✅ Set active state
+      setIsActive(true);
 
       const startX = e.clientX;
       const startValue = parseFloat(innerValue) || 0;
@@ -43,6 +48,7 @@ export default function Input({
       const handleMouseMove = (moveEvent) => {
         const deltaX = moveEvent.clientX - startX;
         let newValue = Math.round(startValue + deltaX * sensitivity);
+        newValue = clamp(newValue); // ✅ clamp only here
         setInnerValue(newValue);
         onChange({ target: { value: newValue } });
       };
@@ -50,8 +56,7 @@ export default function Input({
       const handleMouseUp = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
-
-        setIsActive(false); // ✅ Remove active state
+        setIsActive(false);
         document.documentElement.style.removeProperty("cursor");
         document.body.style.userSelect = "";
         document.body.style.pointerEvents = "";
@@ -60,23 +65,23 @@ export default function Input({
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     },
-    [innerValue, onChange]
+    [innerValue, onChange, min, max]
   );
 
   const inputId = title
     ? title.replace(/\s+/g, "-").toLowerCase()
-    : `input-${type}`;
+    : `input-number`;
 
-  // 🔹 Format display value based on focus + unit
+  // Display with unit
   const formatValue = () => {
-    if (!unit) return innerValue; // no unit → plain
-    return focused ? innerValue : `${innerValue}${unit}`;
+    if (focused) return innerValue;
+    if (innerValue === "" || isNaN(innerValue)) return "";
+    return unit ? `${innerValue}${unit}` : innerValue;
   };
 
-  // 🔹 Parse raw input (strip unit if needed)
-  const parseValue = (val) => {
-    return parseFloat(String(val).replace(unit || "", "")) || 0;
-  };
+  // Parse input
+  const parseValue = (val) =>
+    parseFloat(String(val).replace(unit || "", "")) || 0;
 
   return (
     <div className="IDGenerator-setting-input-container">
@@ -106,23 +111,22 @@ export default function Input({
         <input
           id={inputId}
           className="IDGenerator-setting-input"
-          type="text" // text para pwede maglagay ng "px"/"%"
+          type="text" // kailangan text para gumana ang unit
           value={formatValue()}
           onFocus={() => setFocused(true)}
           onBlur={(e) => {
             setFocused(false);
             const raw = parseValue(e.target.value);
-            let clamped = Math.min(max ?? raw, Math.max(min ?? raw, raw));
+            const clamped = clamp(raw);
             setInnerValue(clamped);
             onChange({ target: { value: clamped } });
           }}
           onChange={(e) => {
+            // 👉 dito walang clamp para pwede burahin kahit min
             const raw = parseValue(e.target.value);
-            setInnerValue(raw);
+            setInnerValue(e.target.value); // allow temporary string
             onChange({ target: { value: raw } });
           }}
-          min={min}
-          max={max}
           step={step}
           disabled={disabled}
         />

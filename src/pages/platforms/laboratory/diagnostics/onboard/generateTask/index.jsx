@@ -208,12 +208,13 @@ export default function Modal() {
     const data = {
       _id,
       ssx,
+      status: "onProcess",
       rendered: [
         ...deal.rendered,
         {
           dept: department,
           by: auth._id,
-          at: new Date().toLocaleString(),
+          at: new Date().toISOString(),
         },
       ],
       forms,

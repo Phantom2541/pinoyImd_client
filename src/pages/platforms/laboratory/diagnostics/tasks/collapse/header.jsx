@@ -22,17 +22,14 @@ const Header = ({ deal, index, totalDeals }) => {
         ? "Walkin"
         : Categories.find(({ abbr }) => abbr === category)?.name;
 
-  const allDone = Object.values(deal.diagnostic).every((section) => {
-    if (Array.isArray(section)) {
-      return section.every((item) => item.hasDone === true);
-    } else {
-      return section.hasDone === true;
-    }
-  });
-
   const displayIndex = totalDeals - ((activePage - 1) * maxPage + index);
   return (
-    <div style={{ backgroundColor: allDone ? "rgba(255, 169, 0, 0.3)" : "" }}>
+    <div
+      style={{
+        backgroundColor:
+          deal?.status !== "done" ? "rgba(246, 211, 135, 0.2)" : "",
+      }}
+    >
       <MDBCollapseHeader>
         {displayIndex}. {getGenderIcon(customerId?.isMale)}{" "}
         {fullName(customerId?.fullName)} |

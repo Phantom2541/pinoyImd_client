@@ -3,10 +3,16 @@ import {
   Fonts,
   FontSizes,
   FontWeights,
-} from "./../idCalibrator/toolkit/fontStyle";
+} from "../../idCalibrator/toolkit/fontStyle";
+import { useSelector } from "react-redux";
 import { MDBIcon } from "mdbreact";
-import Input from "./../idCalibrator/toolkit/input";
-import Select from "./../idCalibrator/toolkit/select";
+import Input from "../../idCalibrator/toolkit/input";
+import Select from "../../idCalibrator/toolkit/select";
+import { useDispatch } from "react-redux";
+import {
+  NEXT,
+  PREV,
+} from "../../../../../../services/redux/slices/assets/persons/personnels";
 
 const toHex = (color) => {
   const ctx = document.createElement("canvas").getContext("2d");
@@ -17,16 +23,28 @@ const toHex = (color) => {
 export default function Setting({
   selectedValue,
   onUpdateValue,
-  handlePrev,
-  handleNext,
   handleSave,
+  isComplete,
+  frontImage,
+  backImage,
 }) {
+  const { activeIndex, collections } = useSelector(
+    ({ personnels }) => personnels
+  );
   const [lockAspect, setLockAspect] = useState(false);
+  const dispatch = useDispatch();
+
+  console.log(collections);
 
   const isDisabled = !selectedValue;
   const style = selectedValue || {};
   const isImage =
-    selectedValue?.key === "profile" || selectedValue?.key === "signature";
+    typeof selectedValue?.value === "string" &&
+    (selectedValue.value.startsWith("data:image/") ||
+      /\.(png|jpe?g|gif)$/i.test(selectedValue.value));
+
+  const handleNext = () => dispatch(NEXT(activeIndex + 1));
+  const handlePrev = () => dispatch(PREV(activeIndex - 1));
 
   const updateStyle = useCallback(
     (newStyle) => {
@@ -43,7 +61,11 @@ export default function Setting({
   };
 
   return (
-    <div className="IDGenerator-setting-container">
+    <div
+      className={`IDGenerator-setting-container ${
+        frontImage && backImage ? "" : "disabled"
+      }`}
+    >
       {isImage && (
         <div className="IDGenerator-setting-section">
           <div className="d-flex align-items-end" style={{ gap: "5px" }}>
@@ -115,7 +137,7 @@ export default function Setting({
                 updateStyle({ borderRadius: `${e.target.value}%` })
               }
             />
-            <Input
+            {/* <Input
               type="number"
               title="Border"
               unit="px"
@@ -147,10 +169,10 @@ export default function Setting({
                   }`,
                 })
               }
-            />
+            /> */}
           </div>
 
-          <Input
+          {/* <Input
             type="number"
             title="Opacity"
             label={<MDBIcon fas icon="adjust" />}
@@ -165,7 +187,7 @@ export default function Setting({
                 opacity: Math.min(1, Math.max(0, e.target.value / 100)),
               })
             }
-          />
+          /> */}
         </div>
       )}
 
@@ -174,8 +196,9 @@ export default function Setting({
           className={`IDGenerator-setting-section ${
             isDisabled ? "disabled" : ""
           }`}
+          data-label={`${selectedValue?.key || ""} setting`}
         >
-          <Select
+          {/* <Select
             label="Font Family"
             options={Object.entries(Fonts).map(([key, value]) => ({
               label: key,
@@ -187,24 +210,28 @@ export default function Setting({
             showSearch
             disabled={isDisabled}
             onSelect={(val) => updateStyle({ fontFamily: val })}
-          />
+          /> */}
           <div
             className="d-flex align-items-center mt-2"
             style={{ gap: "5px" }}
           >
-            <Select
-              label="Font Size"
-              options={FontSizes.map((size) => ({
-                label: `${size}px`,
-                value: size,
-              }))}
-              getLabel={(opt) => opt.label}
-              getValue={(opt) => opt.value}
-              useInput
+            <Input
+              type="number"
+              title="Font Size"
+              label={<MDBIcon fas icon="text-width" />}
+              value={style.fontSize}
+              min={14}
+              max={25}
+              step={1}
+              unit="px"
               disabled={isDisabled}
-              onSelect={(val) => updateStyle({ fontSize: val })}
+              onChange={(e) =>
+                updateStyle({
+                  fontSize: parseInt(e.target.value, 10) || 0,
+                })
+              }
             />
-            <Select
+            {/* <Select
               label="Font Weight"
               options={Object.entries(FontWeights).map(([key, val]) =>
                 typeof val === "object"
@@ -221,13 +248,13 @@ export default function Setting({
               onSelect={(opt) =>
                 updateStyle({ fontWeight: opt.value, fontStyle: opt.style })
               }
-            />
+            /> */}
           </div>
           <div
             className="d-flex align-items-center mt-2"
             style={{ gap: "5px" }}
           >
-            <Input
+            {/* <Input
               type="text"
               title="Font Color"
               label={
@@ -246,7 +273,7 @@ export default function Setting({
               value={style.color || ""}
               disabled={isDisabled}
               onChange={(e) => updateStyle({ color: e.target.value })}
-            />
+            /> */}
             <Input
               type="number"
               title="Letter Spacing"
@@ -263,12 +290,21 @@ export default function Setting({
       )}
 
       <div className="IDGenerator-settings-navigation">
-        <button onClick={handlePrev}>Prev</button>
-        <button onClick={handleNext}>Next</button>
+        <button onClick={handlePrev} disabled={activeIndex === 0}>
+          Prev
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={activeIndex >= collections.length - 1}
+        >
+          Next
+        </button>
       </div>
 
       <div className="IDGenerator-settings-save">
-        <button onClick={handleSave}>💾 Save</button>
+        <button onClick={handleSave}>
+          {isComplete ? "💾 SAVE" : "📤 POST"}
+        </button>
       </div>
     </div>
   );

@@ -10,7 +10,10 @@ import {
   InsertRealtimeOnboard,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 import Search from "../../../../../../components/searchables/search.jsx";
-import { socket } from "../../../../../../services/utilities/index.js";
+import {
+  getDepartment,
+  socket,
+} from "../../../../../../services/utilities/index.js";
 import { useToasts } from "react-toast-notifications";
 
 export default function Header() {
@@ -51,10 +54,16 @@ export default function Header() {
 
   useEffect(() => {
     socket.on("received_onboard", (data) => {
-      const { branchId, department } = activePlatform;
-      if (data?.branchId === branchId && data?.department === department) {
+      const { branchId } = activePlatform;
+      if (data?.branchId === branchId) {
         const pn = collections.length + 1;
-        dispatch(InsertRealtimeOnboard({ ...data, pn }));
+        dispatch(
+          InsertRealtimeOnboard({
+            ...data,
+            pn,
+            department: getDepartment(activePlatform?.department),
+          })
+        );
         addToast(`New patient onboarded. No. ${pn}`, {
           appearance: "success",
         });

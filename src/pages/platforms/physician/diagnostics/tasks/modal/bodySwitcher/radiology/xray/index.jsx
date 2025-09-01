@@ -13,7 +13,7 @@ import {
 } from "mdbreact";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
-import ImgMagnifier from "../../../../../../../../../components/images/imageMagnifier/imgMagnifier.jsx";
+import ImgMagnifier from "../../../../../../../../../components/images/magnifier/imgMagnifier.jsx";
 import { gDrive } from "../../../../../../../../../services/utilities/index.js";
 
 export default function Xray() {

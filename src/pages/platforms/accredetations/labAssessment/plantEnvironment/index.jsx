@@ -4,7 +4,7 @@ import "./style.css";
 import { useState } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import ImageDragAndDrop from "../../../../../components/images/imageDragAndDrop/dragNdroping";
+import ImageDragAndDrop from "../../../../../components/images/dragAndDrop/dragNdroping";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 

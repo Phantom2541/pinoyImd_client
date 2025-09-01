@@ -353,13 +353,19 @@ export const DENY_ONBOARDING = createAsyncThunk(
  */
 export const LABRESULT = createAsyncThunk(
   `${url}/results`,
-  ({ token, data }, thunkAPI) => {
+  async ({ token, data, status }, thunkAPI) => {
     try {
       // \diagnostics\laboratory\result\miscellaneous
+      await axioKit.update(
+        url,
+        { status, _id: data?.dealId || data?._id },
+        token,
+        "update_status"
+      );
       const department = ["Laboratory", "Radiology"].includes(data.department)
         ? data.department
         : "clinic";
-      return axioKit.save(
+      return await axioKit.save(
         `diagnostics/${department.toLowerCase()}/result/${data.form.toLowerCase()}`,
         data,
         token

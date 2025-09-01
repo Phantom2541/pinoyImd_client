@@ -176,8 +176,6 @@ export const reduxSlice = createSlice({
       }
     },
     SetVALIDATOR: (state, { payload }) => {
-      console.log("payload", payload);
-
       const form = capitalize(payload?.form);
       const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
@@ -189,18 +187,16 @@ export const reduxSlice = createSlice({
         forms.findIndex((item) => item?._id === payload?._id);
 
       const updateCollection = (collections, index) => {
-        if (index > -1) {
-          if (identifier === "_id") {
-            collections[index].diagnostic[form] = payload;
-          } else {
-            const formIndex = findFormIndex(
-              collections[index].diagnostic[form]
-            );
-            if (formIndex > -1) {
-              collections[index].diagnostic[form][formIndex] = payload;
-            }
-          }
+        if (index < 0) return;
+        var updated = { ...collections[index], status: payload.status };
+        if (identifier === "_id") {
+          updated.diagnostic[form] = payload;
+        } else {
+          const formIndex = findFormIndex(updated.diagnostic[form]);
+          if (formIndex > -1) updated.diagnostic[form][formIndex] = payload;
         }
+        if (updated._id === state.selected._id) state.selected = updated;
+        collections[index] = updated;
       };
 
       updateCollection(state.collections, findIndex(state.collections));

@@ -263,7 +263,7 @@
   { "name": "BALAGTAS (BIGAA)", "prov_code": 314, "code": 31402 },
   { "name": "BALIUAG", "prov_code": 314, "code": 31403 },
   { "name": "BOCAUE", "prov_code": 314, "code": 31404 },
-  { "name": "BULACAN", "prov_code": 314, "code": 31405 },
+  { "name": "BULAKAN", "prov_code": 314, "code": 31405 },
   { "name": "BUSTOS", "prov_code": 314, "code": 31406 },
   { "name": "CALUMPIT", "prov_code": 314, "code": 31407 },
   { "name": "GUIGUINTO", "prov_code": 314, "code": 31408 },
@@ -290,6 +290,8 @@
   { "name": "SAN MIGUEL", "prov_code": 314, "code": 31421 },
   { "name": "SAN RAFAEL", "prov_code": 314, "code": 31422 },
   { "name": "SANTA MARIA", "prov_code": 314, "code": 31423 },
+  { "name": "Doña Remedios Trinidad", "prov_code": 314, "code": 31424 },
+
   { "name": "ALIAGA", "prov_code": 349, "code": 34901 },
   { "name": "BONGABON", "prov_code": 349, "code": 34902 },
   { "name": "CABANATUAN CITY", "prov_code": 349, "code": 34903 },
@@ -318,6 +320,8 @@
   { "name": "LICAB", "prov_code": 349, "code": 34914 },
   { "name": "LLANERA", "prov_code": 349, "code": 34915 },
   { "name": "LUPAO", "prov_code": 349, "code": 34916 },
+  { "name": "Science City of Muñoz", "prov_code": 349, "code": 34917 },
+
   { "name": "NAMPICUAN", "prov_code": 349, "code": 34918 },
   {
     "name": "PALAYAN CITY (Capital)",
@@ -411,6 +415,7 @@
   { "name": "DIPACULAO", "prov_code": 377, "code": 37706 },
   { "name": "MARIA AURORA", "prov_code": 377, "code": 37707 },
   { "name": "SAN LUIS", "prov_code": 377, "code": 37708 },
+
   { "name": "AGONCILLO", "prov_code": 410, "code": 41001 },
   { "name": "ALITAGTAG", "prov_code": 410, "code": 41002 },
   { "name": "BALAYAN", "prov_code": 410, "code": 41003 },

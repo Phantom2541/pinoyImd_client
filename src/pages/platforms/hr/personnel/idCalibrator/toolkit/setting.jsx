@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setLayout,
+  setSelectedValue,
+  setLockAspect,
+  setEditMode,
+} from "../../../../../../services/redux/slices/idCard/calibrator";
 import { Fonts, FontSizes, FontWeights } from "./fontStyle";
 import { MDBIcon } from "mdbreact";
 import Input from "./input";
 import Select from "./select";
 
+const options = ["portrait", "landscape"];
+
 export default function Setting({
-  setLayout,
-  options,
   isPersonalize = false,
   onReset,
-  selectedValue,
   onUpdateValueStyle,
   onSave,
-  lockAspect,
-  setLockAspect,
+
   lockAspectRatio,
-  setSelectedValue,
   placedValues,
-  frontImage,
-  backImage,
-  editMode,
-  setEditMode,
 }) {
+  const { frontImage, backImage, selectedValue, lockAspect, editMode } =
+      useSelector(({ idCalibrator }) => idCalibrator),
+    dispatch = useDispatch();
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
 
@@ -139,7 +142,7 @@ export default function Setting({
       // Aspect Ratio Lock
       if (e.ctrlKey && e.key.toLowerCase() === "l") {
         e.preventDefault();
-        if (!imgDisabled) setLockAspect((prev) => !prev);
+        if (!imgDisabled) dispatch(setLockAspect(!lockAspect));
       }
 
       // 🔹 Tab navigation
@@ -150,7 +153,9 @@ export default function Setting({
           (v) => v.id === selectedValue.id
         );
         const nextIndex = (currentIndex + 1) % allValues.length;
-        setSelectedValue({ ...allValues[nextIndex], index: nextIndex });
+        dispatch(
+          setSelectedValue({ ...allValues[nextIndex], index: nextIndex })
+        );
         return; // tapos na dito
       }
 
@@ -189,7 +194,7 @@ export default function Setting({
             label="Layout"
             options={options}
             defaultValue={options[0]}
-            onSelect={(val) => setLayout(val)}
+            onSelect={(val) => dispatch(setLayout(val))}
             getLabel={(option) => option}
             getValue={(option) => option}
             showSearch={false}
@@ -203,7 +208,10 @@ export default function Setting({
           <div
             className={`id-calibrator-edit-button ${editMode ? "" : "hide"}`}
           >
-            <button onClick={() => setEditMode(false)} className="bg-secondary">
+            <button
+              onClick={() => dispatch(setEditMode(false))}
+              className="bg-secondary"
+            >
               Hide Setting
             </button>
           </div>
@@ -269,7 +277,7 @@ export default function Setting({
                 lockAspect ? "active" : ""
               }`}
               title="Lock Aspect Ratio"
-              onClick={() => setLockAspect((prev) => !prev)}
+              onClick={() => dispatch(setLockAspect(!lockAspect))}
               disabled={imgDisabled}
             >
               <MDBIcon fas icon="expand" />
