@@ -21,6 +21,11 @@ import {
   Onboarding,
   Inhouse,
 } from "../../../../pages/platforms/cashier";
+import {
+  Request,
+  Clearance,
+  Certification,
+} from "../../../../pages/platforms/frontdesk/forms";
 
 const cashier = [
   {
@@ -215,21 +220,21 @@ const cashier = [
         path: "/request",
         icon: "file-medical",
         title: "Physician's Order Form template",
-        // component: Request,
+        component: Request,
       },
       {
         name: "MEDICAL EXAMINATION CLEARANCE",
         path: "/clearance",
         icon: "file",
         title: "Medical Examination Clearance template",
-        // component: Clearance,
+        component: Clearance,
       },
       {
         name: "PHYSICAL EXAMINATION REPORT",
         path: "/certification",
         icon: "file",
         title: "Physical Examination Report template",
-        // component: Certification,
+        component: Certification,
       },
     ],
   },

@@ -26,34 +26,15 @@ import { Menus, Services } from "../../../../pages/platforms/cashier";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
 import { Billings } from "../../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../../pages/platforms/cashier";
+import { Status } from "../../../../pages/platforms/frontdesk";
 import {
-  Status,
-  Admission,
-  Cases,
-} from "../../../../pages/platforms/frontdesk";
-import laboratoryRequestForm from "../../../../pages/platforms/frontdesk/laboratoryRequestForm";
+  Request,
+  Clearance,
+  Certification,
+} from "../../../../pages/platforms/frontdesk/forms";
 
-import {
-  Tablestemplate,
-  Collapsable,
-  Calendar,
-  DragDrop,
-  Search,
-  Cards,
-  Schedule,
-  Loader,
-  InputSearch,
-  // QrCodePage,
-  HMOCapture,
-} from "../../../../pages/templates";
 import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
-import {
-  ImageMagnifier,
-  ImageDragAndDrop,
-  ImageText,
-} from "../../../../components/images";
-import DrugTest from "../../../../pages/templates/drugTest";
-import SubExpired from "../../../../pages/templates/subExpired";
+
 import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
 
 const frontdesk = [
@@ -246,8 +227,8 @@ const frontdesk = [
     ],
   },
   {
-    name: "Reports",
-    path: "/reports",
+    name: "Logbook Results",
+    path: "/results",
     icon: "file-alt",
     children: [
       {
@@ -327,6 +308,13 @@ const frontdesk = [
         // component: MriComponent, // add your component here
         allowedFor: ["Radiology"],
       },
+      {
+        name: "2DEcho",
+        path: "/radiology/mri",
+        icon: "user-md",
+        // component: MriComponent, // add your component here
+        allowedFor: ["Radiology"],
+      },
     ],
   },
   {
@@ -378,120 +366,33 @@ const frontdesk = [
     ],
   },
   {
-    name: "Templates",
-    path: "/templates",
-    icon: "list",
-    id: "frontdesk-templates",
+    name: "Request Form Templates",
+    path: "/forms",
+    icon: "clipboard-list",
+    title: "downloadable forms",
     children: [
       {
-        name: "Tables",
-        path: "/templates/tables",
-        icon: "list",
-        component: Tablestemplate,
+        name: "Physician's Order Form",
+        path: "/request",
+        icon: "file-medical",
+        title: "Physician's Order Form template",
+        component: Request,
       },
       {
-        name: "Collapsables",
-        path: "/templates/collapsables",
-        icon: "align-justify",
-        component: Collapsable,
+        name: "MEDICAL EXAMINATION CLEARANCE",
+        path: "/clearance",
+        icon: "file",
+        title: "Medical Examination Clearance template",
+        component: Clearance,
       },
       {
-        name: "Calendars",
-        path: "/templates/calendars",
-        icon: "calendar-alt",
-        component: Calendar,
-      },
-      {
-        name: "DragDrop",
-        path: "/templates/dragdrop",
-        icon: "drag",
-        component: DragDrop,
-      },
-      {
-        name: "Search",
-        path: "/templates/search",
-        icon: "search",
-        component: Search,
-      },
-      {
-        name: "Image Drag and Drop",
-        path: "/templates/image",
-        icon: "calendar-alt",
-        component: ImageDragAndDrop,
-      },
-      {
-        name: "Cards",
-        path: "/templates/cards",
-        icon: "card",
-        component: Cards,
-      },
-      {
-        name: "Schedule",
-        path: "/templates/schedule",
-        icon: "calendar-alt",
-        component: Schedule,
-      },
-      {
-        name: "Loader",
-        path: "/templates/loader",
-        icon: "calendar-alt",
-        component: Loader,
-      },
-      {
-        name: "InputSearch",
-        path: "/templates/inputSearch",
-        icon: "calendar-alt",
-        component: InputSearch,
-      },
-      {
-        name: "OCR",
-        path: "/templates/imgText",
-        icon: "calendar-alt",
-        component: ImageText,
-      },
-      {
-        name: "Image Magnifier",
-        path: "/templates/imageMagnifier",
-        icon: "calendar-alt",
-        component: ImageMagnifier,
-      },
-      {
-        name: "HMO Capture",
-        path: "/templates/camera",
-        icon: "calendar-alt",
-        component: HMOCapture,
-      },
-      {
-        name: "Drug Test",
-        path: "/templates/drugTest",
-        icon: "calendar-alt",
-        component: DrugTest,
-      },
-      {
-        name: "Sub Expired",
-        path: "/templates/subExpired",
-        icon: "calendar-alt",
-        component: SubExpired,
+        name: "PHYSICAL EXAMINATION REPORT",
+        path: "/certification",
+        icon: "file",
+        title: "Physical Examination Report template",
+        component: Certification,
       },
     ],
-  },
-  {
-    name: "Cases",
-    icon: "tachometer-alt",
-    path: "/cases",
-    component: Cases,
-  },
-  {
-    name: "Admission",
-    icon: "tachometer-alt",
-    path: "/admission",
-    component: Admission,
-  },
-  {
-    name: "LaboratoryRequestForm",
-    icon: "tachometer-alt",
-    path: "/requestform",
-    component: laboratoryRequestForm,
   },
 ];
 
