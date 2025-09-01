@@ -6,7 +6,7 @@ import {
   SetSELECTED,
   DESTROY,
   RESET,
-} from "../../../../../services/redux/slices/assets/providers";
+} from "../../../../../../services/redux/slices/assets/providers";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),

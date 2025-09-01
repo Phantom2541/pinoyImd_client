@@ -11,6 +11,7 @@ import {
   Referrals,
   Remittances,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
   Payables,
   Receivables,
@@ -181,7 +182,7 @@ const cashier = [
         name: "Hotlines",
         path: "/hotlines/bread",
         icon: "phone-alt",
-        title: "Emergency & Support Hotlines",
+        title: "Emergency Hotlines",
         component: Hotlines,
       },
     ],
@@ -241,7 +242,8 @@ const cashier = [
     name: "Hotlines",
     path: "/hotlines",
     icon: "phone-alt",
-    title: "Emergency & Support Hotlines",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 
