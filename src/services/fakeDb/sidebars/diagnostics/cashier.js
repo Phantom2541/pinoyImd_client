@@ -204,6 +204,35 @@ const cashier = [
       },
     ],
   },
+  {
+    name: "Request Form",
+    path: "/forms",
+    icon: "clipboard-list",
+    title: "downloadable forms",
+    children: [
+      {
+        name: "Physician's Order Form",
+        path: "/request",
+        icon: "file-medical",
+        title: "Physician's Order Form template",
+        // component: Request,
+      },
+      {
+        name: "MEDICAL EXAMINATION CLEARANCE",
+        path: "/clearance",
+        icon: "file",
+        title: "Medical Examination Clearance template",
+        // component: Clearance,
+      },
+      {
+        name: "PHYSICAL EXAMINATION REPORT",
+        path: "/certification",
+        icon: "file",
+        title: "Physical Examination Report template",
+        // component: Certification,
+      },
+    ],
+  },
 ];
 
 export default cashier;
