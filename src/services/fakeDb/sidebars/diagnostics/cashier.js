@@ -237,6 +237,12 @@ const cashier = [
       },
     ],
   },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency & Support Hotlines",
+  },
 ];
 
 export default cashier;
