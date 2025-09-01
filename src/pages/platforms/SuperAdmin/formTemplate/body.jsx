@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { MDBTypography } from "mdbreact";
 import Collapse from "./collapse";
 
 export default function Body() {
@@ -13,19 +12,6 @@ export default function Body() {
     setPatients([...collections]);
   }, [collections]);
 
-  if (!patient?._id)
-    return (
-      <MDBTypography note noteColor="info" className="">
-        Look for a patient first.
-      </MDBTypography>
-    );
-
-  if (!collections.length)
-    return (
-      <MDBTypography note noteColor="warning" className="">
-        This patient has no records.
-      </MDBTypography>
-    );
 
   return (
     <>

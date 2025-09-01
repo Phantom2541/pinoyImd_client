@@ -214,7 +214,6 @@ export default function EditableSelect({
                   );
                   return "";
                 }
-
                 return (
                   <MDBSelectOption
                     key={`${label}-${index}`}

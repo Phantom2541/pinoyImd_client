@@ -129,6 +129,7 @@ export default function ID({
                 p.key === selectedKey && !isFixed
                   ? "2px dashed #007bff"
                   : "none",
+              textAlign: "center",
             },
           };
 
@@ -175,21 +176,42 @@ export default function ID({
       onClick={() => onSelect(null)}
       style={{ position: "relative" }}
     >
-      {["front", "back"].map((side) => (
-        <div
-          key={side}
-          className={`id-generator-preview-wrapper ${layout}`}
-          style={{ position: "relative" }}
-          ref={side === "front" ? frontRef : backRef}
-        >
-          <img
-            className="id-generator-preview"
-            src={side === "front" ? frontImage : backImage}
-            alt={side}
-          />
-          {renderValues(side)}
-        </div>
-      ))}
+      {["front", "back"].map((side) => {
+        const hasImage = side === "front" ? frontImage : backImage;
+
+        return (
+          <div
+            key={side}
+            className={`id-generator-preview-wrapper ${layout}`}
+            style={{ position: "relative" }}
+            ref={side === "front" ? frontRef : backRef}
+          >
+            {hasImage ? (
+              <>
+                <img
+                  className="id-generator-preview"
+                  src={hasImage}
+                  alt={side}
+                />
+                {renderValues(side)}
+              </>
+            ) : (
+              <div className="id-generator-noFrontAndBackImage">
+                <i
+                  className="fas fa-info-circle text-warning"
+                  style={{ fontSize: "20px", color: "#888" }}
+                ></i>
+                <span>{side} template not found.</span>
+                <span>
+                  Please upload the required template in the
+                  <br />
+                  <strong> ID Calibrator</strong>.
+                </span>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

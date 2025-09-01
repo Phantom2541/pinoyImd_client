@@ -6,6 +6,7 @@ import axios from "axios";
  * @param {string} entity - Base route of the API.
  * @param {Array<any>|object} data - Information that will be stored in the database.
  * @param {string} token - Authorization Token.
+ * @param {string} endpoint - Override default endpoint.
  * @returns {{ success: boolean, payload: Array<any>|object }} - The result object containing success and payload.
  */
 const update = async (entity, data, token, endpoint = "update") =>

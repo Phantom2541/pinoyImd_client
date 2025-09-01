@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Philippines } from "../../../services/fakeDb";
 import { MDBCol, MDBRow } from "mdbreact";
 import EditableSelect from "../../customizable/editableSelect";
@@ -10,80 +9,10 @@ export default function AddressSelect({
   label = "Address Information",
   isPOS = true,
 }) {
-  console.log("initial address", address);
-
-  const [provObj, setProvObj] = useState({});
-  const [munObj, setMunObj] = useState({});
-  const [ProvinceCollections, setProvinceCollections] = useState([]);
-  const [CityCollections, setCityCollections] = useState([]);
-  const [BrgyCollections, setBrgyCollections] = useState([]);
-
-  // ✅ preload collections when editing or when address already has values
-  useEffect(() => {
-    if (address.region) {
-      console.log("useEffect region :", address);
-      const _Provinces = Philippines.Provinces(address?.region);
-      setProvinceCollections(_Provinces);
-
-      const _Cities = Philippines.Cities(_Provinces[0]);
-      const _Brgys = Philippines.Barangays(_Cities[0].code);
-
-      setCityCollections(_Cities);
-      setBrgyCollections(_Brgys);
-    }
-  }, [address.region]);
-
-  useEffect(() => {
-    if (provObj.code) {
-      const _Cities = Philippines.Cities(provObj);
-      const _Brgys = Philippines.Barangays(_Cities[0].code);
-      setCityCollections(_Cities);
-      setBrgyCollections(_Brgys);
-    }
-  }, [provObj]);
-
-  useEffect(() => {
-    if (munObj) {
-      const _Brgys = Philippines.Barangays(munObj.code);
-      setBrgyCollections(_Brgys);
-    }
-  }, [munObj]);
-
   const handleAddress = (key, value) => {
-    const _address = { ...address };
-
-    if (key === "region") {
-      _address.region = value;
-      console.log("handleAddress region :", value);
-      const _Provinces = Philippines.Provinces(value);
-      const _Cities = Philippines.Cities(_Provinces[0]);
-      const _Brgys = Philippines.Barangays(_Cities[0].code);
-
-      _address.province = _Provinces[0]?.name || "";
-      _address.city = _Cities[0]?.name || "";
-      _address.barangay = _Brgys[0]?.name || "";
-    } else if (key === "province") {
-      _address.province = value;
-      const _Province = ProvinceCollections.find(({ name }) => name === value);
-      console.log("Province", _Province);
-
-      const _Cities = Philippines.Cities(_Province);
-      const _Brgys = Philippines.Barangays(_Cities[0].code);
-
-      _address.city = _Cities[0]?.name || "";
-      _address.barangay = _Brgys[0]?.name || "";
-      setProvObj(_Province);
-      setMunObj(_Cities[0]);
-    } else if (key === "city") {
-      _address.city = value;
-      const _city = CityCollections.find(({ name }) => name === value);
-      const _Brgys = Philippines.Barangays(_city.code);
-      _address.barangay = _Brgys[0]?.name || "";
-      setMunObj(_city);
-    } else {
-      _address[key] = value;
-    }
-
+    var _address = { ...address };
+    _address[key] = value;
+    _address = { ..._address, ...Philippines.initial(_address, key) };
     handleChange("address", _address);
   };
 
@@ -115,7 +44,7 @@ export default function AddressSelect({
               onChange={({ target }) => handleAddress("province", target.value)}
             >
               <option value="">-- Select Province --</option>
-              {ProvinceCollections?.map(({ name }) => (
+              {Philippines.Provinces(address.region)?.map(({ name }) => (
                 <option key={`${label}-prov-${name}`} value={name}>
                   {name}
                 </option>
@@ -131,7 +60,7 @@ export default function AddressSelect({
               onChange={({ target }) => handleAddress("city", target.value)}
             >
               <option value="">-- Select City/Municipality --</option>
-              {CityCollections?.map(({ name }) => (
+              {Philippines.Cities(address.province)?.map(({ name }) => (
                 <option key={`${label}-city-${name}`} value={name}>
                   {name}
                 </option>
@@ -147,11 +76,13 @@ export default function AddressSelect({
               onChange={({ target }) => handleAddress("barangay", target.value)}
             >
               <option value="">-- Select Barangay --</option>
-              {BrgyCollections?.map(({ name }) => (
-                <option key={`${label}-brgy-${name}`} value={name}>
-                  {name}
-                </option>
-              ))}
+              {Philippines.Barangays(address?.city, address?.province)?.map(
+                ({ name }) => (
+                  <option key={`${label}-brgy-${name}`} value={name}>
+                    {name}
+                  </option>
+                )
+              )}
             </select>
           </div>
         </>
@@ -164,6 +95,7 @@ export default function AddressSelect({
                 collections={Philippines.Regions}
                 isCapitalize={false}
                 preValue={address.region}
+                _key={address.region}
                 onChange={(value) => handleAddress("region", value)}
                 label="Region"
                 keyForValue="name"
@@ -173,8 +105,9 @@ export default function AddressSelect({
 
             <MDBCol>
               <EditableSelect
-                collections={ProvinceCollections}
+                collections={Philippines.Provinces(address.region)}
                 preValue={address.province}
+                _key={address.province}
                 onChange={(value) => handleAddress("province", value)}
                 label="Province"
                 keyForValue="name"
@@ -184,8 +117,9 @@ export default function AddressSelect({
 
             <MDBCol>
               <EditableSelect
-                collections={CityCollections}
+                collections={Philippines.Cities(address.province)}
                 preValue={address.city}
+                _key={address.city}
                 onChange={(value) => handleAddress("city", value)}
                 label="City/Municipality"
                 keyForValue="name"
@@ -195,8 +129,12 @@ export default function AddressSelect({
 
             <MDBCol>
               <EditableSelect
-                collections={BrgyCollections}
+                collections={Philippines.Barangays(
+                  address.city,
+                  address?.province
+                )}
                 preValue={address.barangay}
+                _key={address.barangay}
                 onChange={(value) => handleAddress("barangay", value)}
                 label="Barangay"
                 keyForValue="name"

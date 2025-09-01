@@ -51,12 +51,9 @@ export default function Routes() {
     if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
     const sideBars = [];
 
-    console.log("group", group);
-
     sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
       const fullPath = `${platformPrefix ? platformPrefix : "/patron"}${path}`;
-      console.log(fullPath);
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
         c.children.forEach((child, i) => {

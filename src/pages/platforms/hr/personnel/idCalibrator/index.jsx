@@ -17,8 +17,14 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/auth";
 import { useToasts } from "react-toast-notifications";
 
+import { setFrontImage } from "../../../../../services/redux/slices/idCard/calibrator";
+
 export default function IdCalibrator() {
-  const [frontImage, setFrontImage] = useState(null);
+  const { activePlatform, token, company } = useSelector(({ auth }) => auth);
+  const { ct: branch } = useSelector(({ branches }) => branches);
+  const { frontImage } = useSelector(({ idCalibrator }) => idCalibrator),
+    dispatch = useDispatch();
+
   const [backImage, setBackImage] = useState(null);
   const [frontLoading, setFrontLoading] = useState(false);
   const [backLoading, setBackLoading] = useState(false);
@@ -34,10 +40,9 @@ export default function IdCalibrator() {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const { addToast } = useToasts();
-  const dispatch = useDispatch();
+
   const options = ["portrait", "landscape"];
-  const { activePlatform, token, company } = useSelector(({ auth }) => auth);
-  const { ct: branch } = useSelector(({ branches }) => branches);
+
   try {
     const ctData = branch.ct ? JSON.parse(branch.ct) : null;
   } catch (err) {
@@ -75,7 +80,7 @@ export default function IdCalibrator() {
       }/ic/${isFront ? "front" : "back"}`;
     };
 
-    setFrontImage(getImg() || null);
+    dispatch(setFrontImage(getImg() || null));
     setBackImage(getImg(false) || null);
     setLoading(false);
 
@@ -113,6 +118,7 @@ export default function IdCalibrator() {
     activePlatform.branchId,
     company?.name,
     activePlatform?.branch?.name,
+    dispatch,
   ]);
 
   // 🔹 Eto yung onSave arrow function
@@ -201,7 +207,7 @@ export default function IdCalibrator() {
         const newImageUrl = `${Cloudinary.getEndpoint()}/${imgId}/companies/${
           company?.name
         }/${activePlatform?.branch?.name}/ic/${isFront ? "front" : "back"}`;
-        if (isFront) setFrontImage(newImageUrl);
+        if (isFront) dispatch(setFrontImage(newImageUrl));
         else setBackImage(newImageUrl);
       })
       .finally(() => {
@@ -361,7 +367,7 @@ export default function IdCalibrator() {
           style={{ position: "relative" }}
         >
           <ID
-            frontImage={frontImage}
+            // frontImage={frontImage}
             backImage={backImage}
             handleFrontChange={handleFrontChange}
             handleBackChange={handleBackChange}

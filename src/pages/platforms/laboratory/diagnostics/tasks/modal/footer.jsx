@@ -12,7 +12,9 @@ import {
 
 const Footer = () => {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-  const { success, task, heads } = useSelector(({ validator }) => validator);
+  const { success, task, heads, selected } = useSelector(
+    ({ validator }) => validator
+  );
   const [isLoading, setIsLoading] = useState(false);
   const { collections: physicians } = useSelector(
     ({ physicians }) => physicians
@@ -93,6 +95,13 @@ const Footer = () => {
     }
   };
 
+  const hasDoneChecker = (_id = "") => {
+    const diagnostics = Object.values(selected?.diagnostic)
+      .flat(Infinity)
+      .filter((item) => item._id !== _id);
+    return diagnostics.every(({ hasDone = false }) => hasDone);
+  };
+
   const handleSave = (hasDone) => {
     const { form } = task;
 
@@ -127,16 +136,20 @@ const Footer = () => {
           department,
           signatories: [head || null, dr || null, auth._id || null],
         };
-    setIsLoading(true);
 
+    const allDiagHasDone = hasDoneChecker(data?._id) && hasDone;
+    const status = allDiagHasDone ? "done" : "onProcess";
+    setIsLoading(true);
     dispatch(
       LABRESULT({
         token,
         data,
+        status,
       })
     ).then(({ payload }) => {
+      const basePayload = payload?.item || payload?.payload;
       setIsLoading(false);
-      dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+      dispatch(SetVALIDATOR({ ...basePayload, status }));
       dispatch(SetMODAL(false));
       missingSignatoriesChecker(head, dr);
     });

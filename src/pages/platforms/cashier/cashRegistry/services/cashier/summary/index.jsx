@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MDBBtn } from "mdbreact";
 import {
   allServicesHavePrices,
@@ -62,7 +62,6 @@ export default function Summary() {
   useEffect(() => {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
-  console.log("net", gross, discount);
   const checkout = async () => {
     let selected = {
       physicianId: physicianId?.physician || undefined,
@@ -84,6 +83,7 @@ export default function Summary() {
       customer,
       cashier: auth?.fullName,
       isPrint: true,
+      status: "pending",
       cart: cart.map((menu) => {
         const {
             description,
