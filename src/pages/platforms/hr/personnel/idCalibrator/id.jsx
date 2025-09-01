@@ -1,34 +1,37 @@
 import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setFloatingValue,
+  setCursorPos,
+  setSelectedSide,
+  setSelectedValue,
+} from "../../../../../services/redux/slices/idCard/calibrator";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 import { fakeEMP } from "./fakeDB";
-import { use } from "react";
 
 export default function ID({
-  // frontImage,
-  backImage,
   handleFrontChange,
   handleBackChange,
-  layout,
   placedValues,
   setPlacedValues,
-  floatingValue,
-  setFloatingValue,
-  cursorPos,
-  setCursorPos,
-  setSelectedSide,
-  selectedSide,
-  setSelectedValue,
-  selectedValue,
-  showAllValues,
-  lockAspect,
   lockAspectRatio,
-  frontLoading,
-  backLoading,
-  editMode,
 }) {
-  const { frontImage } = useSelector(({ idCalibrator }) => idCalibrator);
+  const {
+      frontImage,
+      backImage,
+      frontLoading,
+      backLoading,
+      floatingValue,
+      cursorPos,
+      selectedSide,
+      selectedValue,
+      showAllValues,
+      lockAspect,
+      layout,
+      editMode,
+    } = useSelector(({ idCalibrator }) => idCalibrator),
+    dispatch = useDispatch();
   // const [draggingIndex, setDraggingIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);
@@ -65,7 +68,7 @@ export default function ID({
 
   // ------------------- Click & Place -------------------
   const handleClickOnImage = (target, e) => {
-    if (!floatingValue) return setSelectedValue(null);
+    if (!floatingValue) return dispatch(setSelectedValue(null));
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -86,8 +89,10 @@ export default function ID({
     };
 
     setPlacedValues((prev) => [...prev, newPlaced]);
-    setSelectedValue({ ...newPlaced, index: placedValues.length, target });
-    setFloatingValue(null);
+    dispatch(
+      setSelectedValue({ ...newPlaced, index: placedValues.length, target })
+    );
+    dispatch(setFloatingValue(null));
     document.body.style.cursor = "auto";
   };
 
@@ -121,6 +126,7 @@ export default function ID({
         driver
       );
 
+      // update local placedValues
       setPlacedValues((prev) =>
         prev.map((p, idx) =>
           idx === i && p.target === target
@@ -129,11 +135,14 @@ export default function ID({
         )
       );
 
+      // update Redux selectedValue (direct payload)
       if (selectedValue?.index === i && selectedValue.target === target) {
-        setSelectedValue((prev) => ({
-          ...prev,
-          style: { ...prev.style, width, height },
-        }));
+        dispatch(
+          setSelectedValue({
+            ...selectedValue,
+            style: { ...selectedValue.style, width, height },
+          })
+        );
       }
     };
 
@@ -148,7 +157,7 @@ export default function ID({
 
   const handleMouseMove = (e) => {
     if (floatingValue) {
-      setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 });
+      dispatch(setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 }));
     }
 
     if (dragging) {
@@ -173,11 +182,19 @@ export default function ID({
         )
       );
 
-      setSelectedValue((prev) =>
-        prev && prev.index === dragging.index && prev.target === dragging.target
-          ? { ...prev, x, y }
-          : prev
-      );
+      // ✅ update Redux selectedValue ng tama
+      if (
+        selectedValue?.index === dragging.index &&
+        selectedValue?.target === dragging.target
+      ) {
+        dispatch(
+          setSelectedValue({
+            ...selectedValue,
+            x,
+            y,
+          })
+        );
+      }
     }
   };
 
@@ -189,13 +206,6 @@ export default function ID({
   const PlacedValues = ({ target }) =>
     placedValues.map((p, i) => {
       if (p.target !== target) return null; // filter dito, pero retain original index i
-
-      // const handleRemove = () => {
-      //   setPlacedValues((prev) => prev.filter((p2) => p2.id !== p.id));
-      //   if (selectedValue?.id === p.id) {
-      //     setSelectedValue(null);
-      //   }
-      // };
 
       const isImage =
         typeof p.value === "string" &&
@@ -209,7 +219,7 @@ export default function ID({
         // 👆 parentElement = yung IDPreview wrapper
 
         setDragging({ index: i, target, rect }); // store rect kasama sa dragging
-        setSelectedValue({ ...p, index: i, target });
+        dispatch(setSelectedValue({ ...p, index: i, target }));
         setDragOffset({
           x: e.clientX - rect.left - p.x,
           y: e.clientY - rect.top - p.y,
@@ -290,7 +300,7 @@ export default function ID({
                 prev.filter((item) => item.id !== p.id)
               );
               if (selectedValue?.id === p.id) {
-                setSelectedValue(null);
+                dispatch(setSelectedValue(null));
               }
             }}
             style={{ marginLeft: "4px", cursor: "pointer" }}
@@ -301,18 +311,20 @@ export default function ID({
       );
     });
 
-  const IDPreview = ({ image, target, handleChange, loading }) => (
+  const IDPreview = ({ image, target, handleChange, loading, disabled }) => (
     <div
       className={`id-calibrator-preview ${layout || "landscape"} ${
         selectedSide === target ? "active" : ""
-      }`}
-      onClick={(e) => handleClickOnImage(target, e)}
+      } ${disabled ? "disabled" : ""}`}
+      onClick={(e) => !disabled && handleClickOnImage(target, e)}
     >
       {!image && !loading && (
         <>
           <label
-            className="id-calibrator-preview-upload"
-            htmlFor={`uploadimg${target}`}
+            className={`id-calibrator-preview-upload ${
+              disabled ? "disabled" : ""
+            }`}
+            htmlFor={!disabled ? `uploadimg${target}` : undefined}
           >
             <MDBIcon icon="plus" />
           </label>
@@ -332,16 +344,18 @@ export default function ID({
           src={image}
           alt={`${target} ID Preview`}
           draggable={false}
-          onClick={() => setSelectedSide(target)}
+          onClick={() => !disabled && dispatch(setSelectedSide(target))}
         />
       )}
 
       <PlacedValues target={target} />
+
       <input
         id={`uploadimg${target}`}
         type="file"
         hidden
         onChange={handleChange}
+        disabled={disabled} // ✅ disabled lang kapag loading yung kabilang side
       />
     </div>
   );
@@ -354,7 +368,7 @@ export default function ID({
       onMouseUp={handleMouseUp}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
-          setSelectedValue(null);
+          dispatch(setSelectedValue(null));
         }
       }}
     >
@@ -368,12 +382,14 @@ export default function ID({
           target="front"
           handleChange={handleFrontChange}
           loading={frontLoading}
+          disabled={backLoading}
         />
         <IDPreview
           image={backImage}
           target="back"
           handleChange={handleBackChange}
           loading={backLoading}
+          disabled={frontLoading}
         />
       </div>
 

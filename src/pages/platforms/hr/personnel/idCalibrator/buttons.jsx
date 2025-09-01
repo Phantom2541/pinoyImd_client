@@ -1,5 +1,7 @@
-import { MDBIcon } from "mdbreact";
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setShowAllValues } from "../../../../../services/redux/slices/idCard/calibrator";
+import { MDBIcon } from "mdbreact";
 
 export default function DraggableButtons({
   fakeEMP,
@@ -7,14 +9,12 @@ export default function DraggableButtons({
   placedValues,
   handleDragStart,
   handleClickValue,
-  frontImage,
-  backImage,
-  showAllValues,
-  setShowAllValues,
+
   setPlacedValues,
-  selectedSide,
-  editMode,
 }) {
+  const { frontImage, backImage, selectedSide, showAllValues, editMode } =
+      useSelector(({ idCalibrator }) => idCalibrator),
+    dispatch = useDispatch();
   return (
     <div className={`id-calibrator-details ${editMode ? "show" : "hide"}`}>
       <span className="id-calibrator-details-title">{selectedSide} :</span>
@@ -56,7 +56,7 @@ export default function DraggableButtons({
 
       <span
         className="id-calibrator-value-eye"
-        onClick={() => setShowAllValues((prev) => !prev)}
+        onClick={() => dispatch(setShowAllValues(!showAllValues))}
       >
         <MDBIcon far icon={showAllValues ? "eye-slash" : "eye"} />
       </span>
