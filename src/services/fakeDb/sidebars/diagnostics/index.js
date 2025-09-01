@@ -1,7 +1,7 @@
 import patron from "./patron";
 import manager from "./manager";
 import accreditation from "./accreditation";
-import admin from "./admin";
+import admissions from "./admissions";
 import accounting from "./accounting";
 import carpentry from "./carpentry";
 import cashier from "./cashier";
@@ -29,7 +29,7 @@ const diagnostics = {
   cashier,
   clinical,
   carpentry,
-  admin,
+  admissions,
   accounting,
   accreditation,
   manager,
