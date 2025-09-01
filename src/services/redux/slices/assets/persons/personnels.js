@@ -497,8 +497,8 @@ export const reduxSlice = createSlice({
             false,
             true
           );
-          const position = Policy.getPositions(staff.contract.designation),
-            department = Policy.getDepartment(staff.contract.designation);
+          const position = Policy.getPositions(staff.contract?.designation),
+            department = Policy.getDepartment(staff.contract?.designation);
           const pn = mobile(staff.user.mobile);
 
           return {

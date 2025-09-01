@@ -10,7 +10,7 @@ import {
 } from "../../../../../../services/utilities";
 import { Quotes } from "../../../../../../services/fakeDb";
 import { MDBAnimation } from "mdbreact";
-import ImageDragAndDrop from "../../../../../../components/images/imageDragAndDrop/dragNdroping";
+import ImageDragAndDrop from "../../../../../../components/images/dragAndDrop/dragNdroping";
 import EditableField from "../../../../../../components/customizable/editableField";
 
 export default function Doctors() {

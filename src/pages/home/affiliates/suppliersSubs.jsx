@@ -6,7 +6,7 @@ import "swiper/css";
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../services/utilities";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
-import BgRemover from "../../../components/bgRemover";
+import { BgRemover } from "../../../components/images/index";
 import { MDBAnimation } from "mdbreact";
 
 export default function SuppliersSubs() {

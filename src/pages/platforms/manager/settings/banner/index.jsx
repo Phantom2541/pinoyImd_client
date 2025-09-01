@@ -29,7 +29,7 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/auth";
 import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import { FailedBanner } from "../../../../../services/utilities";
-import ImageCropper from "../../../../../components/images/imageCropper";
+import ImageCropper from "../../../../../components/images/cropper";
 
 const array = new Array(5).fill().map((_, index) => index);
 

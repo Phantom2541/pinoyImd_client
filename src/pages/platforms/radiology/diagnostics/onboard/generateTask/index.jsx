@@ -204,6 +204,7 @@ export default function Modal() {
     const data = {
       _id,
       ssx,
+      status: "onProcess",
       rendered: [
         ...deal.rendered,
         {

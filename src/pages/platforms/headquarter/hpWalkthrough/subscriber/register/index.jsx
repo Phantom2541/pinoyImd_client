@@ -25,7 +25,7 @@ import REGISTRATIONIMG from "./../../../../../../assets/homePageRegistrationImg.
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import EditableField from "../../../../../../components/customizable/editableField";
-import ImageDragAndDrop from "../../../../../../components/images/imageDragAndDrop/dragNdroping";
+import ImageDragAndDrop from "../../../../../../components/images/dragAndDrop/dragNdroping";
 
 const slides = [
   {
