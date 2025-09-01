@@ -72,17 +72,6 @@ export default function Modal() {
       "inhouse",
       JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
     );
-    // localStorage.setItem(
-    //   "outsource_request",
-    //   JSON.stringify({
-    //     deal: { ...deal, ssx },
-    //     sentOut,
-    //     isRad: department === "RAD",
-    //     outsources: outsource,
-    //   })
-    // );
-    // localStorage.setItem("ssx", JSON.stringify(ssx));
-
     const deptIndexMap = {
       LAB: 0,
       RAD: 1,

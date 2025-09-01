@@ -3,7 +3,7 @@ import { Services } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 
-const radiology = ["ecg", "xray", "ultrasound", "utz"];
+const radiology = ["ecg", "xray", "2decho", "utz", "fibroscan", "ctscan"];
 
 export default function CollapseTable({ menu }) {
   const { collections } = useSelector(({ preferences }) => preferences);

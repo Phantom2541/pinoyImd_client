@@ -39,8 +39,15 @@
   {
     "department": "RAD",
     "label": "Radiology",
-    "components": ["ECG", "Ultrasound", "Xray", "2DEcho"],
-    "codes": ["ECG", "US", "XR", "2D"]
+    "components": [
+      "ECG",
+      "Ultrasound",
+      "Xray",
+      "2DEcho",
+      "CTscan",
+      "Fibroscan"
+    ],
+    "codes": ["ECG", "UTZ", "XR", "2DE", "CTs", "FBs"]
   },
   {
     "department": "CLINIC",
