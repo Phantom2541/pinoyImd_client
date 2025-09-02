@@ -1,0 +1,151 @@
+.hotline-global-container {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  z-index: 9999;
+}
+
+.hotline-global-modal-open {
+  border: none;
+  background-color: transparent;
+  color: #474747;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.hotline-global-modal-open:hover {
+  color: #1266f1;
+}
+
+.hotline-global-modal-open span {
+  font-size: 0.7rem;
+  margin-right: 5px;
+}
+
+.hotline-global-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+}
+.hotline-global-modal.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hotlines-global-modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(100%, -100%);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.hotlines-global-modal-content {
+  background-color: #fff;
+  border-radius: 5px;
+  border-top-right-radius: 35px;
+  width: 100%;
+  min-width: 700px;
+  max-width: 1000px;
+  height: fit-content;
+  position: relative;
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hotline-global-modal.open .hotlines-global-modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.hotlines-global-list-header {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 2rem;
+  padding: 0 10px;
+  padding-right: 5px;
+  background-color: #fece2e;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  border-top-right-radius: 35px;
+  border-bottom-right-radius: 35px;
+}
+
+.hotlines-global-list-header span:nth-child(2) {
+  background-color: #06174f;
+  color: #fece2e;
+  width: 60px;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.hotlines-global-list-container {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.hotlines-global-list {
+  width: calc(50% - 20px);
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ccc;
+}
+
+.hotlines-global-list label {
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  color: #1266f1;
+}
+
+.hotlines-global-list div {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  width: 100%;
+}
+
+.hotlines-global-list div span {
+  font-weight: 400;
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+  font-size: 0.95rem;
+  color: #474747;
+}
+
+.hotlines-global-list div span:nth-child(2) {
+  flex: 1; /* sakupin natitirang space */
+  min-width: 0; /* payagan mag-shrink */
+  overflow: hidden; /* itago lumampas */
+  white-space: nowrap; /* isang linya lang */
+  text-overflow: ellipsis; /* maglagay ng ... */
+  display: block;
+}

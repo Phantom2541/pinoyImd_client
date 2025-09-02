@@ -7,10 +7,10 @@ import {
   fullName as nameFormatter,
 } from "./../../../../../../services/utilities";
 
-export default function Patient() {
+export default function Patient({ patient }) {
   const { customerId } =
     useSelector(({ validator }) => validator.selected) || {};
-  const { fullName = {}, isMale, dob } = customerId || {};
+  const { fullName = {}, isMale, dob } = patient || {};
   return (
     <>
       {getGenderIcon(isMale)}
