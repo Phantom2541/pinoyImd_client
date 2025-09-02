@@ -2,75 +2,71 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBIcon } from "mdbreact";
 import ReactDOM from "react-dom";
-import Swal from "sweetalert2";
-import {
-  SetSELECTED,
-  DESTROY,
-  RESET,
-} from "../../../../../../services/redux/slices/assets/providers";
-import FireStation from "./../../../../../../assets/hotline/fire.jpg";
+import { RESET } from "../../../../../../services/redux/slices/assets/providers";
+import FIRE from "./../../../../../../assets/hotline/fire.jpg";
+import POLICE from "./../../../../../../assets/hotline/police.jpg";
+import AMBULANCE from "./../../../../../../assets/hotline/ambulance.jpeg";
+import HOSPITAL from "./../../../../../../assets/hotline/hospital.jpg";
+import REDCROSS from "./../../../../../../assets/hotline/redcross.jpg";
+import BARANGAY from "./../../../../../../assets/hotline/barangay.jpg";
 import "./style.css";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
+    { filtered, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
     dispatch = useDispatch(),
     [showModal, setShowModal] = useState(false),
     [selectedHotline, setSelectedHotline] = useState(null);
+  const [direction, setDirection] = useState("");
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 6; // ilang items per page
+  const totalPages = Math.ceil((filtered?.length || 0) / itemsPerPage);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
 
-  const handleEdit = (hotlines) => {
-    dispatch(SetSELECTED(hotlines));
-    //console.log("SetSelected service :", service);
-  };
-
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
-    });
-  };
-
   function formatPhoneNumber(num) {
-    // alisin lahat ng hindi digits
     let digits = num.replace(/\D/g, "");
-
-    // kung nagsisimula sa 0, palitan ng +63
     if (digits.startsWith("0")) {
       digits = "+63" + digits.substring(1);
     }
-
-    // i-format: +63 927 342 2159
     return digits.replace(
       /(\+63)(\d{3})(\d{3})(\d{4})/,
       (_, p1, p2, p3, p4) => `${p1} ${p2} ${p3} ${p4}`
     );
   }
 
-  const itemsPerPage = maxPage; // Number of items per page
-  const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const stationImages = {
+    "Fire Station": FIRE,
+    "Police Station": POLICE,
+    "Ambulance (EMS)": AMBULANCE,
+    Hospital: HOSPITAL,
+    "Red Cross": REDCROSS,
+    "Barangay Hall": BARANGAY,
+  };
+
+  // slice data per page
+  const paginatedData = filtered?.slice(
+    currentPage * itemsPerPage,
+    currentPage * itemsPerPage + itemsPerPage
+  );
+
   return (
     <div className="hotline-poster-container">
       {paginatedData?.map((hotline, index) => {
         const { _id, displayname, number, address } = hotline;
         return (
-          <div key={`${index}-${_id}`} className="hotline-poster-card">
+          <div
+            key={`${index}-${_id}`}
+            className={`hotline-poster-card fade-in ${
+              direction === "right" ? "from-right" : "from-left"
+            }`}
+          >
             <div className="hotline-poster-title">
               <span>
                 <MDBIcon fas icon="phone-alt" />
@@ -82,7 +78,7 @@ const Body = () => {
               <img
                 alt=""
                 title="Click to View QR Code"
-                src={FireStation}
+                src={stationImages[displayname] || FIRE}
                 onClick={() => {
                   setSelectedHotline(hotline);
                   setShowModal(true);
@@ -93,6 +89,33 @@ const Body = () => {
           </div>
         );
       })}
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <>
+          <button
+            className="hotline-arrow-btn left"
+            onClick={() => {
+              setDirection("left");
+              setCurrentPage((prev) => prev - 1);
+            }}
+            disabled={currentPage === 0}
+          >
+            <MDBIcon fas icon="chevron-left" />
+          </button>
+
+          <button
+            className="hotline-arrow-btn right"
+            onClick={() => {
+              setDirection("right");
+              setCurrentPage((prev) => prev + 1);
+            }}
+            disabled={currentPage === totalPages - 1}
+          >
+            <MDBIcon fas icon="chevron-right" />
+          </button>
+        </>
+      )}
 
       {/* Modal overlay */}
       {showModal &&
@@ -110,7 +133,6 @@ const Body = () => {
                 <span>
                   <MDBIcon fas icon="phone-alt" />
                 </span>
-
                 <span>
                   {formatPhoneNumber(selectedHotline.number) || "No number"}
                 </span>
