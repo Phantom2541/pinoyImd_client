@@ -1,0 +1,209 @@
+.laboratoryRequestForm-banner {
+  width: 100%;
+  max-height: 50px;
+  object-fit: fill;
+}
+
+.report-container {
+  width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  background: #fff; /* white background */
+  padding: 20px;
+  border: 1px solid #aaa;
+}
+
+/* Titles */
+.report-title {
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 10px 0;
+  text-decoration: underline;
+}
+
+/* Tables */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #000;
+  padding: 4px;
+}
+
+.report-table input[type="text"] {
+  width: 95%;
+  border: none;
+  border-bottom: 1px solid #000;
+  outline: none;
+}
+
+/* Form Rows */
+.form-row {
+  display: flex;
+  flex-wrap: wrap; /* wrap if too long */
+  gap: 12px; /* space between labels */
+  margin-bottom: 10px;
+}
+
+.form-row label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Form 1 Rows */
+.form-1row {
+  display: block; /* stack children vertically */
+  margin-bottom: 10px;
+}
+
+.form-1row label {
+  display: block; /* each label on its own line */
+  margin-bottom: 8px; /* spacing between rows */
+}
+
+.short-line {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 30px; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.form-row input {
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  font-size: 14px;
+  padding: 2px 4px;
+  min-width: 100px;
+}
+
+.form-1row input {
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  font-size: 14px;
+  padding: 2px 4px;
+  min-width: 500px;
+}
+
+/* Full width field */
+.full-width input {
+  width: 100%;
+}
+
+/* Sections */
+.section {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin: 0;
+}
+
+.section p {
+  margin: 5px 0;
+}
+
+.section input[type="text"] {
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  width: 60%;
+}
+
+/* Exam line */
+.exam-line {
+  margin-top: 5px;
+}
+
+/* Gender */
+.gender-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gender-label span {
+  margin-left: 10px;
+}
+
+/* Split section (Particulars + Ancillary) */
+.split-section {
+  display: flex;
+  gap: 10px;
+}
+
+.particulars {
+  flex: 2;
+}
+
+.ancillary {
+  flex: 1;
+}
+
+.center {
+  text-align: center;
+}
+
+.ancillary td:first-child {
+  width: 50%;
+}
+
+.ancillary td:last-child {
+  width: 50%;
+  text-align: center;
+}
+
+/* Signature */
+.signature {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.sig-line {
+  border-top: 1px solid #000;
+  width: 50%;
+  margin: 20px auto 5px auto;
+}
+
+/* Certification lines */
+.cert-row {
+  margin: 8px 0;
+}
+
+.cert-row label {
+  display: inline-block;
+}
+
+.cert-row .specify {
+  margin-left: 140px; /* adjust this value until it sits under "Class" */
+  margin-top: 4px;
+}
+
+.line {
+  display: inline-block;
+  min-width: 120px; /* adjust width */
+  border-bottom: 1px solid black;
+  margin-right: 8px;
+}
+
+.specify {
+  margin-left: 25px; /* indent under the radio button */
+  font-style: italic;
+}
+
+/* ✅ Fix: Certification rows stacked vertically */
+.section.certification {
+  display: block;
+  margin-top: 10px;
+}

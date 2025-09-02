@@ -1,283 +1,334 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import "./reportCertificate.css";
+import { Cloudinary } from "../../../../../services/utilities";
 
-export default function PhysicalExaminationReport() {
+export default function MedicalExaminationClearance() {
+  const { activePlatform = {} } = useSelector(({ auth }) => auth);
+
+  const companyName = activePlatform?.branch?.companyId?.name;
+  const branchName = activePlatform?.branch?.name;
+
+  const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+    companyName
+  )}//${encodeURIComponent(branchName)}/banner`;
   const [form, setForm] = useState({});
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-2xl shadow-md">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        PHYSICAL EXAMINATION REPORT
-      </h1>
-
-      {/* Personal Info */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <InputField label="Name" name="name" handleChange={handleChange} />
-        <div className="grid grid-cols-3 gap-2">
-          <InputField label="Age" name="age" handleChange={handleChange} />
-          <div>
-            <label className="block font-semibold">Gender:</label>
-            <div className="flex gap-4">
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Male"
-                  onChange={handleChange}
-                />{" "}
-                Male
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Female"
-                  onChange={handleChange}
-                />{" "}
-                Female
-              </label>
-            </div>
-          </div>
-        </div>
+    <div className="report-container">
+      <th colSpan={6}>
+        <img
+          src={BannerURL}
+          alt="Banner"
+          className="laboratoryRequestForm-banner"
+        />
+      </th>
+      <div className="report-title">PHYSICAL EXAMINATION CLEARANCE</div>
+      {/* Row 1 */}
+      <div className="form-row">
+        <label>
+          Name:
+          <input type="text" name="name" onChange={handleChange} />
+        </label>
+        <label>
+          Age:
+          <input type="text" name="age" onChange={handleChange} />
+        </label>
+        <label className="gender-label">
+          Gender:
+          <span>
+            <input
+              type="radio"
+              name="gender"
+              value="Male"
+              onChange={handleChange}
+            />{" "}
+            ( ) Male
+          </span>
+          <span>
+            <input
+              type="radio"
+              name="gender"
+              value="Female"
+              onChange={handleChange}
+            />{" "}
+            ( ) Female
+          </span>
+        </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <InputField
-          label="Resident Address"
-          name="address"
-          handleChange={handleChange}
-        />
-        <InputField
-          label="Civil Status"
-          name="civilStatus"
-          handleChange={handleChange}
-        />
+      {/* Row 2 */}
+      <div className="form-row">
+        <label>
+          Resident Address:
+          <input type="text" name="address" onChange={handleChange} />
+        </label>
+        <label>
+          Civil Status:
+          <input type="text" name="civilStatus" onChange={handleChange} />
+        </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <InputField
-          label="Company Name"
-          name="company"
-          handleChange={handleChange}
-        />
-        <InputField
-          label="Date Examined"
-          name="dateExamined"
-          type="date"
-          handleChange={handleChange}
-        />
+      {/* Row 3 */}
+      <div className="form-row">
+        <label className="full-width">
+          Company Name:
+          <input type="text" name="company" onChange={handleChange} />
+        </label>
+        <label>
+          Date Examined:
+          <input type="text" name="dateExamined" onChange={handleChange} />
+        </label>
       </div>
 
-      <div className="mb-4">
-        <label className="block font-semibold">Nature of Examination:</label>
-        <div className="flex gap-6">
-          {["Annual PE", "Pre-Employment", "Medical Examination"].map((opt) => (
-            <label key={opt}>
-              <input type="checkbox" name={opt} onChange={handleChange} /> {opt}
-            </label>
-          ))}
-        </div>
+      <div className="section exam-line">
+        <span>Nature of Examination:</span>
+        <label>
+          <input type="checkbox" name="Annual PE" onChange={handleChange} />{" "}
+          Annual PE
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            name="Pre-Employment"
+            onChange={handleChange}
+          />{" "}
+          Pre-Employment
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            name="Medical Examination"
+            onChange={handleChange}
+          />{" "}
+          Medical Examination
+        </label>
       </div>
 
-      {/* General Appearance + Vitals */}
-      <InputField
-        label="General Appearance"
-        name="generalAppearance"
-        handleChange={handleChange}
-      />
+      {/* Row 3 */}
+      <div className="form-1row">
+        {/* <label className="full-width"> */}
+        General Appearance:
+        <input type="text" name="appearance" onChange={handleChange} />
+        {/* </label> */}
+      </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-4 mt-2">
-        <InputField label="Height" name="height" handleChange={handleChange} />
-        <InputField label="Weight" name="weight" handleChange={handleChange} />
-        <InputField
-          label="Temperature"
-          name="temperature"
-          handleChange={handleChange}
-        />
-        <InputField label="BP" name="bp" handleChange={handleChange} />
-        <InputField
-          label="Pulse Rate"
-          name="pulseRate"
-          handleChange={handleChange}
-        />
-        <InputField
-          label="Resp. Rate"
-          name="respRate"
-          handleChange={handleChange}
-        />
+      {/* Vitals */}
+      <div className="form-row">
+        {[
+          { label: "Height", name: "height" },
+          { label: "Weight", name: "weight" },
+          { label: "Temp", name: "temperature" },
+          { label: "BP", name: "bp" },
+          { label: "Pulse Rate", name: "pulseRate" },
+          { label: "Resp. Rate", name: "respRate" },
+        ].map(({ label, name }) => (
+          <label key={name}>
+            {label}:
+            <input
+              type="text"
+              name={name}
+              onChange={handleChange}
+              className="short-line"
+            />
+          </label>
+        ))}
       </div>
 
       {/* Vision */}
-      <h2 className="font-bold mt-4 mb-2">Vision</h2>
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <InputField label="OD" name="od" handleChange={handleChange} />
-        <InputField label="OS" name="os" handleChange={handleChange} />
-        <InputField
-          label="Color Perception"
-          name="colorPerception"
-          handleChange={handleChange}
-        />
-      </div>
-
-      {/* Histories */}
-      <InputField
-        label="Past Medical History"
-        name="pmhx"
-        handleChange={handleChange}
-      />
-      <InputField
-        label="Family History"
-        name="fmhx"
-        handleChange={handleChange}
-      />
-      <InputField
-        label="Personal/Social History"
-        name="pshx"
-        handleChange={handleChange}
-      />
-      <InputField
-        label="Review of System"
-        name="ros"
-        handleChange={handleChange}
-      />
-
-      {/* Review of System Table */}
-      <h2 className="font-bold mt-6 mb-2">Particulars</h2>
-      <table className="w-full border mb-4 text-sm">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-2">Particular</th>
-            <th className="border p-2">Normal</th>
-            <th className="border p-2">Abnormal</th>
-            <th className="border p-2">Findings</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            "Head and Scalp",
-            "Eyes and Ears",
-            "Nose and Sinuses",
-            "Mouth,Teeth,& Tongue",
-            "Throat, Pharynx",
-            "Neck nodes, Thyroid & Vess",
-            "Chest and Lungs",
-            "Breast",
-            "Heart",
-            "Abdomen",
-            "Anus, Rectum, and Genitals",
-            "Skin and Glands",
-            "Extremities",
-            "Reflexes",
-          ].map((part) => (
-            <tr key={part}>
-              <td className="border p-2 font-medium">{part}</td>
-              <td className="border p-2 text-center">
-                <input
-                  type="checkbox"
-                  name={`${part}-normal`}
-                  onChange={handleChange}
-                />
-              </td>
-              <td className="border p-2 text-center">
-                <input
-                  type="checkbox"
-                  name={`${part}-abnormal`}
-                  onChange={handleChange}
-                />
-              </td>
-              <td className="border p-2">
-                <input
-                  type="text"
-                  name={`${part}-findings`}
-                  onChange={handleChange}
-                  className="w-full border p-1 rounded"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Ancillary Procedures */}
-      <h2 className="font-bold mt-6 mb-2">ANCILLARY PROCEDURES</h2>
-      <div className="grid grid-cols-2 gap-2 mb-4">
+      <div className="form-row">
         {[
-          "Chest X-ray",
-          "Urinalysis",
-          "Stool Examination",
-          "CBC",
-          "FBS",
-          "ECG",
-          "HbsAg",
-          "Pregnancy Test",
-          "Drug Test",
-          "Special Procedures",
-        ].map((test) => (
-          <label key={test} className="flex items-center gap-2">
-            <input type="checkbox" name={test} onChange={handleChange} /> {test}
+          { label: "OD:", name: "od" },
+          { label: "OS:", name: "os" },
+          { label: "Color Perception:", name: "colorPerception" },
+        ].map(({ label, name }) => (
+          <label key={name}>
+            {label}:
+            <input
+              type="text"
+              name={name}
+              onChange={handleChange}
+              className="short-line"
+            />
           </label>
         ))}
+      </div>
+
+      {/* Past History */}
+      <div className="form-1row">
+        {[
+          { label: "Past Medical History:", name: "pmhx" },
+          { label: "Family History:", name: "fmhx" },
+          { label: " Personal/Social History:", name: "pshx" },
+          { label: "Review of System:", name: "ros" },
+        ].map(({ label, name }) => (
+          <label key={name}>
+            {label}:
+            <input
+              type="text"
+              name={name}
+              onChange={handleChange}
+              className="line"
+            />
+          </label>
+        ))}
+      </div>
+
+      {/* Particulars + Ancillary */}
+      <div className="split-section">
+        <table className="report-table particulars">
+          <thead>
+            <tr>
+              <th>Particular</th>
+              <th>Normal</th>
+              <th>Abnormal</th>
+              <th>Findings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              "Head and Scalp",
+              "Eyes and Ears",
+              "Nose and Sinuses",
+              "Mouth, Teeth & Tongue",
+              "Throat, Pharynx",
+              "Neck, Thyroid, Vessels",
+              "Chest and Lungs",
+              "Breast",
+              "Heart",
+              "Abdomen",
+              "Anus/Rectum/Genitals",
+              "Skin and Glands",
+              "Extremities",
+              "Reflexes",
+            ].map((p) => (
+              <tr key={p}>
+                <td>{p}</td>
+                <td className="center">
+                  <input
+                    type="checkbox"
+                    name={`${p}-normal`}
+                    onChange={handleChange}
+                  />
+                </td>
+                <td className="center">
+                  <input
+                    type="checkbox"
+                    name={`${p}-abnormal`}
+                    onChange={handleChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name={`${p}-findings`}
+                    onChange={handleChange}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <table className="report-table ancillary">
+          <thead>
+            <tr>
+              <th colSpan={2}>ANCILLARY PROCEDURES</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              "Chest X-ray",
+              "Urinalysis",
+              "Stool Examination",
+              "CBC",
+              "FBS",
+              "ECG",
+              "HbsAg",
+              "Pregnancy Test",
+              "Drug Test",
+              "Special Procedures",
+            ].map((t) => (
+              <tr key={t}>
+                <td style={{ width: "50%" }}>{t}</td>
+                <td style={{ width: "50%" }} className="center">
+                  <input type="checkbox" name={t} onChange={handleChange} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Certification */}
-      <h2 className="font-bold mt-6 mb-2">CERTIFICATION</h2>
-      <div className="mb-4">
+      <div className="section certification">
+        <h3 className="report-title">CERTIFICATION</h3>
+
         {[
-          "CLASS - A: Medically Fit for Employment",
-          "CLASS - B: Medically Fit but with Minimal Findings.",
-          "CLASS - C: With Obvious Defect but Maybe Employed at Management's Discretion",
-          "CLASS - D: Medically Unfit for Employment.",
-        ].map((c) => (
-          <label key={c} className="block mb-2">
-            <input
-              type="radio"
-              name="certification"
-              value={c}
-              onChange={handleChange}
-            />{" "}
-            {c}
-          </label>
+          {
+            label: "Class A",
+            text: "Medically Fit for Employment",
+          },
+          {
+            label: "Class B",
+            text: "Medically Fit but with Minimal Findings",
+            specify: true,
+          },
+          {
+            label: "Class C",
+            text: "With Obvious Defect but Maybe Employed at Management's Discretion",
+          },
+          {
+            label: "Class D",
+            text: "Medically Unfit for Employment",
+            specify: true,
+          },
+        ].map(({ label, text, specify }) => (
+          <div className="cert-row" key={label}>
+            <label>
+              <input
+                type="radio"
+                name="certification"
+                value={`${label}: ${text}`}
+                onChange={handleChange}
+              />
+              <span className="line"></span> {label}: {text}
+            </label>
+            {specify && (
+              <div className="specify">Specify: ___________________</div>
+            )}
+          </div>
         ))}
       </div>
-      <InputField label="Specify" name="specify" handleChange={handleChange} />
 
       {/* Recommendation & Remarks */}
-      <InputField
-        label="Recommendation"
-        name="recommendation"
-        handleChange={handleChange}
-      />
-      <InputField label="Remarks" name="remarks" handleChange={handleChange} />
+      <div className="section">
+        <p>
+          Recommendation:
+          <input type="text" name="recommendation" onChange={handleChange} />
+        </p>
+      </div>
+      <div className="section">
+        <p>
+          Remarks: <input type="text" name="remarks" onChange={handleChange} />
+        </p>
+      </div>
 
       {/* Signature */}
-      <div className="mt-6 text-center">
-        <p className="mb-2">~~ CERTIFICATION ~~</p>
-        <p className="italic">(Patient’s Name over Signature)</p>
-        <p className="font-semibold">Medical Examiner</p>
-        <InputField
-          label="Contact Number"
-          name="contactNumber"
-          handleChange={handleChange}
-        />
+      <div className="signature">
+        <div className="sig-line"></div>
+        <p>(Patient’s Name over Signature)</p>
+        <div className="sig-line"></div>
+        <p>Medical Examiner</p>
       </div>
-    </div>
-  );
-}
-
-function InputField({ label, name, handleChange, type = "text" }) {
-  return (
-    <div className="mb-4">
-      <label className="block font-semibold">{label}</label>
-      <input
-        type={type}
-        name={name}
-        onChange={handleChange}
-        className="border p-2 w-full rounded"
-      />
     </div>
   );
 }
