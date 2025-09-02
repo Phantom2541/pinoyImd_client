@@ -45,74 +45,98 @@ const Body = () => {
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
-    <MDBTable responsive hover bordered>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th className="text-center">Billing Day</th>
-          <th className="text-center">Due Date</th>
-          <th>Number</th>
-          <th>Address</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {paginatedData?.map((utilities, index) => {
-          const { _id, displayname, cutoff, abbr, number, address, due } =
-            utilities;
-          return (
-            <tr key={`${index}-${_id}`}>
-              <td>{index + startIndex + 1}</td>
-              <td style={{ fontWeight: 400 }}>
-                <div>{displayname}</div>
-                <div className="text">
-                  {abbr ? (
-                    // If not editing, show the abbreviation as a badge
-                    <MDBBadge
-                      title="Click me to update"
-                      className="cursor-pointer"
+    <>
+      {(!paginatedData || paginatedData.length === 0) && (
+        <div
+          className="alert alert-warning text-center fw-bold mb-3"
+          role="alert"
+        >
+          <h3>
+            <b>⚠️ Reminder:</b> No <u>Utility Provider</u> has been declared
+            yet.
+          </h3>
+          <br />
+          <br />
+          Please register the companies where you pay your bills such as
+          <b>Meralco (electricity), Maynilad (water), PLDT/Globe (internet),</b>
+          and other providers.
+          <br />
+          <br />
+          <i>
+            This ensures accurate tracking of expenses, proper allocation, and
+            smooth financial reporting. ✅
+          </i>
+        </div>
+      )}
+      <MDBTable responsive hover bordered>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th className="text-center">Billing Day</th>
+            <th className="text-center">Due Date</th>
+            <th>Number</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedData?.map((utilities, index) => {
+            const { _id, displayname, cutoff, abbr, number, address, due } =
+              utilities;
+            return (
+              <tr key={`${index}-${_id}`}>
+                <td>{index + startIndex + 1}</td>
+                <td style={{ fontWeight: 400 }}>
+                  <div>{displayname}</div>
+                  <div className="text">
+                    {abbr ? (
+                      // If not editing, show the abbreviation as a badge
+                      <MDBBadge
+                        title="Click me to update"
+                        className="cursor-pointer"
+                      >
+                        {abbr}
+                      </MDBBadge>
+                    ) : (
+                      <p className="mb-0">No abbreviation</p>
+                    )}
+                  </div>
+                </td>
+                <td className="text-center" style={{ fontWeight: 400 }}>
+                  {cutoff}
+                </td>
+                <td className="text-center" style={{ fontWeight: 400 }}>
+                  {due}
+                </td>
+                <td>{number} </td>
+                <td>{address}</td>
+                <td className="text-center">
+                  <MDBBtnGroup>
+                    <MDBBtn
+                      size="sm"
+                      rounded
+                      color="primary"
+                      onClick={() => handleEdit(utilities)} // Ensure setSelected is used
                     >
-                      {abbr}
-                    </MDBBadge>
-                  ) : (
-                    <p className="mb-0">No abbreviation</p>
-                  )}
-                </div>
-              </td>
-              <td className="text-center" style={{ fontWeight: 400 }}>
-                {cutoff}
-              </td>
-              <td className="text-center" style={{ fontWeight: 400 }}>
-                {due}
-              </td>
-              <td>{number} </td>
-              <td>{address}</td>
-              <td className="text-center">
-                <MDBBtnGroup>
-                  <MDBBtn
-                    size="sm"
-                    rounded
-                    color="primary"
-                    onClick={() => handleEdit(utilities)} // Ensure setSelected is used
-                  >
-                    <MDBIcon icon="pencil-alt" />
-                  </MDBBtn>
-                  <MDBBtn
-                    onClick={() => handleDelete(utilities._id)}
-                    size="sm"
-                    rounded
-                    color="danger"
-                  >
-                    <MDBIcon icon="trash" />
-                  </MDBBtn>
-                </MDBBtnGroup>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </MDBTable>
+                      <MDBIcon icon="pencil-alt" />
+                    </MDBBtn>
+                    <MDBBtn
+                      onClick={() => handleDelete(utilities._id)}
+                      size="sm"
+                      rounded
+                      color="danger"
+                    >
+                      <MDBIcon icon="trash" />
+                    </MDBBtn>
+                  </MDBBtnGroup>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </MDBTable>
+    </>
   );
 };
 
