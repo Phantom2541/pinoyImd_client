@@ -5,7 +5,7 @@ import { Cloudinary } from "../../../../../services/utilities";
 const RequestForm = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
 
-  const companyName = activePlatform?.company?.name;
+  const companyName = activePlatform?.branch?.companyId?.name;
   const branchName = activePlatform?.branch?.name;
 
   const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
@@ -32,7 +32,7 @@ const RequestForm = () => {
     //     border: "1px solid #000",
     //   }}
     // >
-    <table className="{ width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: 8px; }">
+    <table className="laboratoryRequestForm-printout-table">
       <thead>
         <tr>
           <th colSpan={3}>

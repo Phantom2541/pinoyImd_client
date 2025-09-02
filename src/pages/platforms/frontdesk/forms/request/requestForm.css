@@ -9,8 +9,8 @@
 
 /* card sized ~1/4 A4 */
 .requestform-card {
-  width: 105mm; /* 1/4 A4 width */
-  height: 148.5mm; /* 1/4 A4 height */
+  width: 500px; /* 1/4 A4 width */
+  height: 790px; /* 1/4 A4 height */
   background: #fff;
   border: 1px solid #999;
   border-radius: 6px;

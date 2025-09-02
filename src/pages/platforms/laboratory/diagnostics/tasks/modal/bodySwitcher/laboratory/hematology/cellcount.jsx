@@ -56,6 +56,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       }
     }
   };
+  console.log(selected);
 
   return (
     <MDBTable hover responsive className="mb-0">
