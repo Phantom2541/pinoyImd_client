@@ -12,11 +12,6 @@ const Body = () => {
     ),
     dispatch = useDispatch();
 
-  
-
- 
-
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -55,7 +50,7 @@ const Body = () => {
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>
-              
+
               <td>{specimen}</td>
               <td>
                 <MDBBtnGroup>
