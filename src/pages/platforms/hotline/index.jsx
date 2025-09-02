@@ -54,11 +54,11 @@ export default function Hotline() {
                   <label>{displayname || "Police Station"}</label>
                   <div>
                     <span>
-                      <MDBIcon icon="phone-alt" />{" "}
+                      <MDBIcon icon="phone-alt" />
                       {number || "+63 912 345 6789"}
                     </span>
                     <span title={address}>
-                      <MDBIcon fas icon="map-marker-alt" />{" "}
+                      <MDBIcon fas icon="map-marker-alt" className="mr-2" />
                       {address || "Poblacion Central G.T"}
                     </span>
                   </div>
