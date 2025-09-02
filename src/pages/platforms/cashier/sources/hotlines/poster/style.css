@@ -1,71 +1,190 @@
-/* Container */
-.hotline-list {
+.hotline-poster-container {
+  position: relative;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 20px;
+  min-height: 670px;
 }
 
-/* Card */
-.hotline-card {
-  padding: 1rem 1.7rem;
-  width: fit-content;
-  min-width: 300px;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2); /* tanggalin shadow if may default si MDB */
-}
-
-/* Header row */
-.hotline-header {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-/* Title */
-.hotline-title {
-  color: var(--mdb-primary, #0d6efd); /* fallback sa MDB primary */
-  font-weight: bold !important;
-  margin-bottom: 0;
-}
-
-/* Badge */
-.hotline-badge {
-  cursor: pointer;
-  box-shadow: none !important;
-}
-
-.hotline-badge:hover {
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Hotline info rows */
-.hotline-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-top: 5px;
-  font-weight: 500 !important;
-  text-transform: capitalize;
-}
-
-/* Icons */
-.hotline-icon {
-  width: 15px;
-}
-
-.hotline-delete {
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: none;
+.hotline-poster-card {
+  background-color: #e53935;
   color: white;
-  font-size: 0.9rem;
-  border-bottom-left-radius: 100%;
-  padding-left: 10px;
-  padding-bottom: 5px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  padding: 20px;
+  padding-bottom: 40px;
+  width: 100%;
+  min-width: 350px;
+  max-width: 430px;
+  height: 100%;
+  max-height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.hotline-card:hover .hotline-delete {
+.hotline-poster-card.fade-in {
   opacity: 1;
+}
+
+.hotline-poster-card.from-right {
+  transform: translateX(30px); /* galing kanan */
+}
+
+.hotline-poster-card.from-left {
+  transform: translateX(-30px); /* galing kaliwa */
+}
+
+.hotline-poster-card.fade-in.from-right,
+.hotline-poster-card.fade-in.from-left {
+  transform: translateX(0);
+}
+
+.hotline-poster-card.active {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(2);
+  transform-origin: center center;
+  z-index: 999999;
+  max-height: 380px;
+}
+
+.hotline-poster-title {
+  height: 35px;
+  background-color: white;
+  color: #e53935;
+  padding-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.hotline-poster-title span:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  background-color: #e53935;
+  color: white;
+  border: 5px solid white;
+}
+
+.hotline-poster-title span:nth-child(2) {
+  font-size: 2.2rem;
+  line-height: 1.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.hotline-poster-number {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-style: italic;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.hotline-poster-address {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hotline-poster-address img {
+  width: 250px;
+  height: 180px;
+  clip-path: polygon(8% 0, 100% 0%, 92% 100%, 0% 100%);
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: filter 0.3s ease;
+}
+
+.hotline-poster-address.active img {
+  clip-path: none;
+  object-fit: contain;
+  box-shadow: none;
+  padding: 5px;
+  background-color: white;
+  width: fit-content;
+  height: fit-content;
+  border: 2px solid black;
+}
+
+.hotline-poster-address img:hover {
+  filter: brightness(0.8);
+}
+
+.hotline-poster-address span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(10%, 50%);
+  background-color: white;
+  color: #e53935;
+  border: 5px solid #e53935;
+  padding: 5px 10px;
+  text-transform: capitalize;
+  font-weight: 400;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+}
+
+.hotline-poster-address.active span {
+  position: static;
+  transform: translate(0, 0);
+}
+
+.hotline-poster-description {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+.hotline-poster-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.hotline-arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+.hotline-arrow-btn.left {
+  left: 30px;
+}
+
+.hotline-arrow-btn.right {
+  right: 30px;
 }

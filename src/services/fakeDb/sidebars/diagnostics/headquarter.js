@@ -15,6 +15,7 @@ import {
   Outsources,
   Utilities,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
 } from "../../../../pages/platforms/cashier";
 
@@ -356,6 +357,13 @@ const headquarter = [
     icon: "credit-card",
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

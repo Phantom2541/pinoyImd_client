@@ -11,6 +11,7 @@ import {
   Ecg,
   Miscellaneous,
 } from "../../../../pages/platforms/frontdesk/reports";
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 import { Reports } from "../../../../pages/platforms/laboratory/diagnostics";
 import {
@@ -393,6 +394,13 @@ const frontdesk = [
         component: Certification,
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

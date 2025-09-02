@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SetTASK } from "../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { fullName, gDrive } from "../../../../../../../services/utilities";
 import Swal from "sweetalert2";
+import EditableSelect from "../../../../../../../components/customizable/editableSelect";
 
 const Images = () => {
   const { task, heads } = useSelector(({ validator }) => validator);
@@ -65,6 +66,7 @@ const Images = () => {
         encoder,
       ],
     };
+    console.log("updatedTask", updatedTask, value);
     dispatch(
       SetTASK({
         task: updatedTask,
@@ -74,56 +76,44 @@ const Images = () => {
   };
   return (
     <MDBTabPane tabId="images">
-      <div className="mt-3">
-        <div className="d-flex  mb-2">
-          <label className="w-100 ">
-            <span className="d-block text-left grey-text">Technician:</span>
-            <select
-              className="form-control"
-              value={head?._id}
-              onChange={(e) =>
-                handleChange(e.target.value === "" ? null : e.target.value)
-              }
-            >
-              <option value={""}>Choose a technician</option>
-              {heads
+      <div className="mt-5">
+        <div className="d-flex  mb-2 w-100 mt-3">
+          <div className="w-100 text-left mr-3">
+            <EditableSelect
+              className="w-100"
+              parentClassName="w-100"
+              collections={heads
                 .filter(
                   ({ section }) =>
                     section.toLowerCase() === task?.form.toLowerCase()
                 )
-                .map(({ user }) => (
-                  <option key={user._id} value={user._id}>
-                    {fullName(user.fullName)}
-                  </option>
-                ))}
-            </select>
-          </label>
-          <label className="w-100 ml-3">
-            <span className="d-block text-left grey-text">
-              Sonologist/Radiologist:
-            </span>
-            <select
-              className="form-control"
-              value={dr?._id}
-              onChange={(e) =>
-                handleChange(
-                  e.target.value === "" ? null : e.target.value,
-                  false
-                )
-              }
-            >
-              <option value="">Choose a Sonologist/Radiologist</option>
-              {physicians
+                .map(({ user }) => ({
+                  fullName: fullName(user.fullName),
+                  _id: user._id,
+                }))}
+              keyForText="fullName"
+              keyForValue="_id"
+              label="Technician"
+              onChange={(value) => handleChange(value)}
+            />
+          </div>
+          <div className="text-left w-100 ml-3">
+            <EditableSelect
+              collections={physicians
                 .filter(
                   ({ specialization }) => specialization === "Radiologist"
                 )
-                .map(({ user }) => (
-                  <option key={user._id} value={user._id}>
-                    {fullName(user.fullName)}
-                  </option>
-                ))}
-            </select>
-          </label>
+                .map(({ user }) => ({
+                  fullName: fullName(user.fullName),
+                  _id: user._id,
+                }))}
+              keyForText="fullName"
+              parentClassName="w-100"
+              keyForValue="_id"
+              label=" Sonologist/Radiologist:"
+              onChange={(value) => handleChange(value, false)}
+            />
+          </div>
         </div>
         {!task?.fileId ? (
           <div className="d-flex align-items-center mt-3">

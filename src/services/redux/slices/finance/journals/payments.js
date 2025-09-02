@@ -256,8 +256,10 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.pending, (state) => {
         state.formSubmitted = true;
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
         state.collections.unshift(payload);
+        arrangePaymentsByDate(state, state.collections);
         state.isSuccess = true;
         state.formSubmitted = false;
       })

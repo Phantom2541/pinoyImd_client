@@ -1,3 +1,5 @@
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+
 const carpentry = [
   {
     name: "POS", // Transactions || Point Of Sales
@@ -73,6 +75,13 @@ const carpentry = [
         icon: "tools",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

@@ -9,6 +9,8 @@ import {
   Heads,
   Applicants,
 } from "../../../../pages/platforms/hr";
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+
 import { Services, Menus } from "../../../../pages/platforms/accounting";
 import IdCalibrator from "../../../../pages/platforms/hr/personnel/idCalibrator";
 import IdGenerator from "../../../../pages/platforms/hr/personnel/idGenerator";
@@ -277,6 +279,13 @@ const humanresources = [
         component: Admission,
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

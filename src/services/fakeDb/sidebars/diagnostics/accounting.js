@@ -19,6 +19,7 @@ import {
   Wellness,
   Referrals,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
   Inhouse,
 } from "../../../../pages/platforms/cashier";
@@ -201,6 +202,13 @@ const accounting = [
     icon: "sitemap",
     path: "/organizationChart",
     component: OrgChart,
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

@@ -1,3 +1,5 @@
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+
 const utility = [
   {
     name: "Housekeeper", // Transactions || Point Of Sales
@@ -45,6 +47,13 @@ const utility = [
         icon: "cogs",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

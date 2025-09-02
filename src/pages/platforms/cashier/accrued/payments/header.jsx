@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBIcon, MDBView } from "mdbreact";
 import {
   RESET,
   BROWSE,
@@ -9,7 +9,7 @@ import {
 import CalendarPicker from "../../../../../components/header/calendars";
 import { currency } from "../../../../../services/utilities";
 
-export default function TopHeader() {
+export default function TopHeader({ setShow = () => {} }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year, collections } = useSelector(({ payments }) => payments),
     [total, setTotal] = useState(0),
@@ -46,7 +46,7 @@ export default function TopHeader() {
       cascade
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+      <div className="d-flex justify-items-center">
         <CalendarPicker
           month={month}
           year={year}
@@ -54,9 +54,19 @@ export default function TopHeader() {
           reset={() => dispatch(RESET())}
         />
       </div>
-      <span className="white-text mx-3 text-nowrap mt-0">
-        PAYMENTS ({currency.format(total)}){" "}
-      </span>
+      <div>
+        <span className="white-text  text-nowrap mt-0 mr-2">
+          PAYMENTS ({currency.format(total)}){" "}
+        </span>
+        <button
+          onClick={() => setShow(true)}
+          size="sm"
+          // color="white"
+          className="search-add-btn ml-2"
+        >
+          <MDBIcon icon="plus" />
+        </button>
+      </div>
     </MDBView>
   );
 }

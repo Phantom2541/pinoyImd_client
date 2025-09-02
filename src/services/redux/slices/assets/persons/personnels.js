@@ -313,10 +313,15 @@ export const reduxSlice = createSlice({
       state.filtered.unshift(payment);
     },
     SetPAYROLL: (state, { payload }) => {
-      const index = state?.collections?.findIndex(
-        ({ user }) => user?._id === payload?.particular
-      );
-      state.collections[index]?.payroll.push(payload);
+      const updateCollections = (collections) => {
+        const index = collections?.findIndex(
+          ({ user }) => user?._id === payload?.particular
+        );
+        collections[index]?.payroll.push(payload);
+      };
+
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
     },
     SETOnHotSEAT: (state, { payload }) => {
       // set default values
@@ -355,6 +360,8 @@ export const reduxSlice = createSlice({
     },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
+      state.totalPages = Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
     },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
@@ -599,7 +606,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(PAYROLL.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = state.filtered = payload;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

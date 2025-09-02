@@ -1,96 +1,158 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  MDBBtn,
-  MDBBtnGroup,
-  MDBIcon,
-  MDBTable,
-  MDBBadge,
-  MDBCard,
-} from "mdbreact";
-import Swal from "sweetalert2";
-import {
-  SetSELECTED,
-  DESTROY,
-  RESET,
-} from "../../../../../../services/redux/slices/assets/providers";
+import { MDBIcon } from "mdbreact";
+import ReactDOM from "react-dom";
+import { RESET } from "../../../../../../services/redux/slices/assets/providers";
+import FIRE from "./../../../../../../assets/hotline/fire.jpg";
+import POLICE from "./../../../../../../assets/hotline/police.jpg";
+import AMBULANCE from "./../../../../../../assets/hotline/ambulance.jpeg";
+import HOSPITAL from "./../../../../../../assets/hotline/hospital.jpg";
+import REDCROSS from "./../../../../../../assets/hotline/redcross.jpg";
+import BARANGAY from "./../../../../../../assets/hotline/barangay.jpg";
 import "./style.css";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
+    { filtered, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    [showModal, setShowModal] = useState(false),
+    [selectedHotline, setSelectedHotline] = useState(null);
+  const [direction, setDirection] = useState("");
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 6; // ilang items per page
+  const totalPages = Math.ceil((filtered?.length || 0) / itemsPerPage);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
 
-  const handleEdit = (hotlines) => {
-    dispatch(SetSELECTED(hotlines));
-    //console.log("SetSelected service :", service);
+  function formatPhoneNumber(num) {
+    let digits = num.replace(/\D/g, "");
+    if (digits.startsWith("0")) {
+      digits = "+63" + digits.substring(1);
+    }
+    return digits.replace(
+      /(\+63)(\d{3})(\d{3})(\d{4})/,
+      (_, p1, p2, p3, p4) => `${p1} ${p2} ${p3} ${p4}`
+    );
+  }
+
+  const stationImages = {
+    "Fire Station": FIRE,
+    "Police Station": POLICE,
+    "Ambulance (EMS)": AMBULANCE,
+    Hospital: HOSPITAL,
+    "Red Cross": REDCROSS,
+    "Barangay Hall": BARANGAY,
   };
 
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
-    });
-  };
+  // slice data per page
+  const paginatedData = filtered?.slice(
+    currentPage * itemsPerPage,
+    currentPage * itemsPerPage + itemsPerPage
+  );
 
-  const itemsPerPage = maxPage; // Number of items per page
-  const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
   return (
-    <div className="hotline-list">
-      {paginatedData?.map((hotlines, index) => {
-        const { _id, abbr, displayname, number, address } = hotlines;
-
+    <div className="hotline-poster-container">
+      {paginatedData?.map((hotline, index) => {
+        const { _id, displayname, number, address } = hotline;
         return (
-          <MDBCard key={`${index}-${_id}`} className="hotline-card">
-            {/* Header */}
-            <div className="hotline-header">
-              <h2 className="hotline-title">{displayname}</h2>
-
-              {abbr ? (
-                <MDBBadge title="Click me to update" className="hotline-badge">
-                  {abbr}
-                </MDBBadge>
-              ) : (
-                <MDBBadge color="secondary" className="hotline-badge">
-                  N/A
-                </MDBBadge>
-              )}
+          <div
+            key={`${index}-${_id}`}
+            className={`hotline-poster-card fade-in ${
+              direction === "right" ? "from-right" : "from-left"
+            }`}
+          >
+            <div className="hotline-poster-title">
+              <span>
+                <MDBIcon fas icon="phone-alt" />
+              </span>
+              <span> {formatPhoneNumber(number) || "No number"}</span>
             </div>
-
-            {/* Number */}
-            <h6 className="hotline-info">
-              <MDBIcon fas icon="phone-alt" className="hotline-icon" />
-              {number || "No number"}
-            </h6>
-
-            {/* Address */}
-            <h6 className="hotline-info">
-              <MDBIcon fas icon="map-marker-alt" className="hotline-icon" />
-              {address || "No address"}
-            </h6>
-            <button className="hotline-delete bg-danger" onClick={handleDelete}>
-              <MDBIcon fas icon="trash-alt" />
-            </button>
-          </MDBCard>
+            <span className="hotline-poster-number">{displayname}</span>
+            <div className="hotline-poster-address">
+              <img
+                alt=""
+                title="Click to View QR Code"
+                src={stationImages[displayname] || FIRE}
+                onClick={() => {
+                  setSelectedHotline(hotline);
+                  setShowModal(true);
+                }}
+              />
+              <span title={address}>{address || "No address"}</span>
+            </div>
+          </div>
         );
       })}
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <>
+          <button
+            className="hotline-arrow-btn left"
+            onClick={() => {
+              setDirection("left");
+              setCurrentPage((prev) => prev - 1);
+            }}
+            disabled={currentPage === 0}
+          >
+            <MDBIcon fas icon="chevron-left" />
+          </button>
+
+          <button
+            className="hotline-arrow-btn right"
+            onClick={() => {
+              setDirection("right");
+              setCurrentPage((prev) => prev + 1);
+            }}
+            disabled={currentPage === totalPages - 1}
+          >
+            <MDBIcon fas icon="chevron-right" />
+          </button>
+        </>
+      )}
+
+      {/* Modal overlay */}
+      {showModal &&
+        selectedHotline &&
+        ReactDOM.createPortal(
+          <div
+            className="hotline-poster-mask"
+            onClick={() => setShowModal(false)}
+          >
+            <div
+              className="hotline-poster-card active"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="hotline-poster-title">
+                <span>
+                  <MDBIcon fas icon="phone-alt" />
+                </span>
+                <span>
+                  {formatPhoneNumber(selectedHotline.number) || "No number"}
+                </span>
+              </div>
+              <span className="hotline-poster-number">
+                {selectedHotline.displayname}
+              </span>
+              <div className="hotline-poster-address active">
+                <img
+                  alt=""
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=tel:${formatPhoneNumber(
+                    selectedHotline.number
+                  )}`}
+                />
+                <span>{selectedHotline.address || "No address"}</span>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

@@ -27,6 +27,7 @@ import {
   Machines,
   DrugTestPrintout,
   RequestFormPrint,
+  RequestClearancePrint,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -59,6 +60,11 @@ export default function App() {
         path="/printout/laboratoryRequestForm"
         exact
         component={RequestFormPrint}
+      />
+      <Route
+        path="/printout/laboratoryClearanceRequestForm"
+        exact
+        component={RequestClearancePrint}
       />
       <Route
         path="/printout/request/outsource"
