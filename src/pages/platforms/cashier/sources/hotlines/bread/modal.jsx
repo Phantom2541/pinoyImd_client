@@ -89,6 +89,15 @@ export default function Modal() {
       [key]: value,
     });
 
+  const stations = [
+    "Police Station",
+    "Fire Station",
+    "Ambulance (EMS)",
+    "Hospital",
+    "Barangay Hall",
+    "Red Cross",
+  ];
+
   return (
     <MDBModal isOpen={showModal} toggle={toggle} backdrop size="sm">
       <MDBModalHeader
@@ -101,12 +110,20 @@ export default function Modal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           {/* Input fields */}
-          <MDBInput
-            label="Name"
-            value={form?.displayname}
-            required
-            onChange={({ target }) => handleChange("displayname", target.value)}
-          />
+          <div className="d-flex flex-column">
+            {stations.map((option, index) => (
+              <MDBInput
+                key={index}
+                type="radio" // ✅ radio instead of checkbox
+                id={`station-${index}`} // unique id
+                name="displayname" // ✅ same name for all radios
+                value={option}
+                label={option}
+                checked={form?.displayname === option} // single value only
+                onChange={() => handleChange("displayname", option)}
+              />
+            ))}
+          </div>
           <MDBInput
             label="Abbreviation"
             value={form?.abbr}
