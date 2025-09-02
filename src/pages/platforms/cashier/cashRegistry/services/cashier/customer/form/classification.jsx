@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBBadge, MDBTypography } from "mdbreact";
+import { MDBBadge, MDBBtn, MDBTypography } from "mdbreact";
 import { useHistory } from "react-router";
 import {
   Categories,
@@ -21,6 +21,7 @@ import {
   SETSOURCES,
   RESET as SOURCERESET,
 } from "../../../../../../../../services/redux/slices/assets/providers";
+import { BROWSE as BROWSE_BRANCHES } from "../../../../../../../../services/redux/slices/assets/branches";
 import { capitalize } from "lodash";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
 const contracts = {
@@ -39,13 +40,12 @@ export default function PosCard() {
       isSuccess,
     } = useSelector(({ pos }) => pos),
     { collections } = useSelector(({ providers }) => providers),
+    { collections: inhouse } = useSelector(({ branches }) => branches),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
-    [categorySelected, setCategorySelected] = useState(),
     [categories, setCategories] = useState([]),
-    [sources, setSources] = useState([]),
     [source, setSource] = useState({}),
-    [srcCIndex, setSrcCIndex] = useState(""), //Source Category Index
+    [scType, setScType] = useState("rfr"), //Source Type
     dispatch = useDispatch(),
     history = useHistory();
 
@@ -60,26 +60,8 @@ export default function PosCard() {
   }, []);
 
   useEffect(() => {
-    const { abbr } = Categories[category];
-    const _abbr = [
-      "wi",
-      "opd",
-      "er",
-      "cw",
-      "pw",
-      "bp",
-      "mc",
-      "prm",
-      "sc",
-      "sr",
-    ].includes(abbr)
-      ? "rfr"
-      : abbr;
-    const _sources = collections?.filter(({ category }) => category === _abbr);
-    const scIndex = Categories.findIndex(({ abbr }) => abbr === _abbr);
-    setSources(_sources);
-    setSrcCIndex(scIndex);
-  }, [category, collections]);
+    dispatch(BROWSE_BRANCHES({ token, key: { companyId: company?._id } }));
+  }, [company, dispatch, token]);
 
   useEffect(() => {
     if (token && activePlatform.branchId) {
@@ -126,39 +108,83 @@ export default function PosCard() {
         dispatch(SOURCERESET());
       };
     }
-  }, [token, dispatch, activePlatform, categorySelected]);
+  }, [token, dispatch, activePlatform]);
 
   const { _id, privilege: userPrivilege = 0 } = customer,
     didSelect = Boolean(_id);
 
   const handleCategory = (category) => {
-    setCategorySelected(category);
+    const { abbr } = Categories[category];
+    const _abbr = [
+      "wi",
+      "opd",
+      "er",
+      "cw",
+      "pw",
+      "bp",
+      "mc",
+      "prm",
+      "sc",
+      "sr",
+    ].includes(abbr)
+      ? "rfr"
+      : abbr;
+    setScType(_abbr);
     setSource({});
     dispatch(RESET_INSOURCE());
     dispatch(SETCATEGORY(category));
   };
   const handlePrivilege = (privilege) => dispatch(SETPRIVILEGE(privilege));
+
+  const isInhouse = scType === "inhouse";
+  //filter the sources by source type
+  const _sources = collections?.filter(({ category }) => category === scType);
+  //if inhouse set the branches to sources if not get the filtered sources
+  const sources = isInhouse
+    ? inhouse.filter(({ _id }) => _id !== branch?._id)
+    : _sources;
+
+  const getPhysicians = (_id) => {
+    if (!_id) return [];
+
+    const branch = sources?.find(
+      (source) => source._id.toString() === _id.toString()
+    );
+    return isInhouse ? branch?.affiliated : branch?.clients?.affiliated;
+  };
   const handleSource = (_id) => {
-    const _physicians =
-      sources?.find((source) => source._id.toString() === _id.toString())
-        ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
-    setPhysicians(_physicians); // Update the physicians list based on the filtered data
+    setPhysicians(getPhysicians(_id)); // Update the physicians list based on the filtered data
     // Dispatch the selected source
     // if membership is not null
 
     handlePhysician(""); // reset the selected pyhisican if change the source
 
-    // if ([5, 6, 7].includes(category)) {
-    //   dispatch(FIND({ token, key: { _id } }));
-    // }
-    const _source = sources?.find((source) => source?._id.toString() === _id);
-    const { membership = "", contract = "", clients } = _source || {};
+    const _source = _id
+      ? sources?.find((source) => source?._id.toString() === _id)
+      : {};
+
+    const {
+      membership = "",
+      contract = "",
+      clients,
+      _id: scID = "",
+    } = _source || {};
+
     setSource(_source);
     dispatch(RESET_INSOURCE());
-    dispatch(SETSOURCE({ _id: clients?._id, membership, contract }));
+    dispatch(
+      SETSOURCE({
+        _id: isInhouse ? scID : clients?._id,
+        membership,
+        contract,
+      })
+    );
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
+  const getCIndex = (abbr) =>
+    Categories.findIndex(({ abbr: name }) => name === abbr);
 
+  const srcCIndex = getCIndex(scType);
   const hasSources = sources?.length > 0;
   return (
     <>
@@ -215,16 +241,48 @@ export default function PosCard() {
             })}
           </select>
         </div>
-        <div className="patient-form mt-2">
+        <div className="mt-2 d-flex align-items-center">
+          <span style={{ fontSize: "0.9rem", fontWeight: 400 }}>
+            Source Type:
+          </span>
+          <div className="d-flex align-items-center ">
+            {[
+              { text: "Referral", value: "rfr" },
+              { text: "Inhouse", value: "inhouse" },
+              { text: "Contract", value: "ctr" },
+              { text: "Membership", value: "mbs" },
+            ].map(({ text, value }, index) => (
+              <MDBBtn
+                disabled={!didSelect}
+                size="sm"
+                className={`px-2 py-${scType === value ? "2" : "1"}`}
+                outline={scType !== value}
+                color="info"
+                key={index}
+                onClick={() => {
+                  const aIndex = getCIndex(value);
+                  handleCategory(aIndex > -1 ? aIndex : 0);
+                  setScType(value);
+                  dispatch(RESET_INSOURCE());
+                }}
+              >
+                {text}
+              </MDBBtn>
+            ))}
+          </div>
+        </div>
+        <div className="patient-form ">
           <span>Source</span>
           <select
             disabled={!didSelect}
             onClick={() => {
               if (!hasSources)
                 history.push(
-                  `/cashier/sources/insources/${Categories[
-                    srcCIndex
-                  ]?.name?.toLowerCase()}`
+                  `/cashier/sources/insources/${
+                    !isInhouse
+                      ? Categories[srcCIndex]?.name?.toLowerCase()
+                      : "inhouse"
+                  }`
                 );
             }}
             className={!hasSources ? "text-primary cursor-pointer" : ""}
@@ -232,14 +290,21 @@ export default function PosCard() {
           >
             <option value="">
               {!hasSources
-                ? `No ${Categories[srcCIndex]?.name}. Click to register.`
+                ? `No ${
+                    isInhouse ? "Inhouse" : Categories[srcCIndex]?.name
+                  }. Click to register.`
                 : "None"}
             </option>
-            {sources?.map(({ _id, clients }) => (
-              <option key={_id} value={_id}>
-                {clients?.displayname}
-              </option>
-            ))}
+            {sources?.map(({ _id, clients, name = "", displayname = "" }) => {
+              const baseBranch = isInhouse
+                ? displayname || name
+                : clients?.displayname;
+              return (
+                <option key={_id} value={_id}>
+                  {baseBranch}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="patient-form mt-2">
@@ -255,7 +320,7 @@ export default function PosCard() {
               </select>
             </>
           )}
-          {category === 7 && sourceId && (
+          {category === 7 && sourceId && scType === "mbs" && (
             <span>
               Membership :
               <MDBBadge
@@ -291,7 +356,10 @@ export default function PosCard() {
             onChange={(value) =>
               handlePhysician({
                 ...value,
-                source: { _id: source?._id, branch: source?.clients?._id },
+                source: {
+                  _id: source?._id,
+                  branch: isInhouse ? source?._id : source?.clients?._id,
+                },
               })
             }
             formSubmitted={formSubmitted}
