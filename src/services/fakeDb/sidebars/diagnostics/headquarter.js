@@ -26,6 +26,8 @@ import { Branches } from "../../../../pages/platforms/headquarter/humanResources
 import PatientCategories from "../../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../../pages/platforms/headquarter/dashboard";
 import hpWalkthrough from "../../../../pages/platforms/headquarter/hpWalkthrough";
+import FormTemplate from "../../../../pages/platforms/SuperAdmin/formTemplate";
+
 const headquarter = [
   {
     name: "Dashboard",
@@ -341,6 +343,12 @@ const headquarter = [
         title: "Shifts and task assignments",
       },
     ],
+  },
+  {
+    name: "Form Template",
+    path: "/super/admin/form",
+    icon: "code-branch",
+    component: FormTemplate,
   },
   {
     name: "Walkthrough",

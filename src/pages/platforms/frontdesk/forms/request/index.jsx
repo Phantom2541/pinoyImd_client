@@ -1,16 +1,20 @@
 import React from "react";
+import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
+import "./requestForm.css"; // import the css
 
 export default function RequestForm() {
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-white border-2 border-black shadow-lg">
-
-      {/* Patient Info Section */}
-      <Header />
-
-      {/* Tests Section */}
-      <Body />
-    </div>
+    <>
+      <MDBAnimation type="bounceInDown">
+        <MDBCard narrow className="pb-3 mt-3" style={{ minHeight: "600px" }}>
+          <Header />
+          <MDBCardBody>
+            <Body />
+          </MDBCardBody>
+        </MDBCard>
+      </MDBAnimation>
+    </>
   );
 }

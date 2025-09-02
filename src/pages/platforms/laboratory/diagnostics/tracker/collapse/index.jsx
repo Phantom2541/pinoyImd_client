@@ -10,6 +10,7 @@ export default function TasksCollapse({
   isActive,
   didHoverID,
   setDidHoverID,
+  index,
 }) {
   const { _id } = task;
 
@@ -17,6 +18,7 @@ export default function TasksCollapse({
     <MDBCard style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}>
       <TaskHeader
         task={task}
+        index={index}
         number={number}
         activeCollapse={activeCollapse}
         didHoverID={didHoverID}
