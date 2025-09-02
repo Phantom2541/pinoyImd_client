@@ -1,0 +1,71 @@
+/* Container */
+.hotline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Card */
+.hotline-card {
+  padding: 1rem 1.7rem;
+  width: fit-content;
+  min-width: 300px;
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2); /* tanggalin shadow if may default si MDB */
+}
+
+/* Header row */
+.hotline-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Title */
+.hotline-title {
+  color: var(--mdb-primary, #0d6efd); /* fallback sa MDB primary */
+  font-weight: bold !important;
+  margin-bottom: 0;
+}
+
+/* Badge */
+.hotline-badge {
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+.hotline-badge:hover {
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Hotline info rows */
+.hotline-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 5px;
+  font-weight: 500 !important;
+  text-transform: capitalize;
+}
+
+/* Icons */
+.hotline-icon {
+  width: 15px;
+}
+
+.hotline-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  color: white;
+  font-size: 0.9rem;
+  border-bottom-left-radius: 100%;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hotline-card:hover .hotline-delete {
+  opacity: 1;
+}
