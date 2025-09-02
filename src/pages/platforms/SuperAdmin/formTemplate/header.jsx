@@ -29,16 +29,14 @@ export default function Header() {
    *  4. with in 7 days
    */
   useEffect(() => {
-      dispatch(
-        TRACKER({
-          token,
-          key: {
-            customerId: "636d37e0187c30ab0f611ce4",   
-            department: activePlatform?.department,
-          },
-        })
-      );
-   
+    dispatch(
+      TRACKER({
+        token,
+        key: {
+          customerId: "636d37e0187c30ab0f611ce4",
+        },
+      })
+    );
   }, [_id, activePlatform, dispatch, token, patientId]);
 
   const selectPatient = (user) => {
@@ -51,9 +49,7 @@ export default function Header() {
       cascade
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <span className="mb-0">
-        Form Template
-      </span>
+      <span className="mb-0">Form Template</span>
       {/* {!patientId && <SearchUser setPatient={selectPatient} />} */}
     </MDBView>
   );
