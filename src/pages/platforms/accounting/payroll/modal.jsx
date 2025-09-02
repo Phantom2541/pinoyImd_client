@@ -31,6 +31,16 @@ const _form = {
     },
     special: 0, // this if for number of present days
   },
+  late: {
+    no: 0,
+    mins: 0,
+    deduc: 0,
+  },
+  underTime: {
+    no: 0,
+    mins: 0,
+    deduc: 0,
+  },
   overtime: 0,
   nightShift: 0,
   bonus: 0,
@@ -89,9 +99,11 @@ export default function Modal() {
           Number(form?.loan) +
           selected?.contribution?.ph +
           selected?.contribution?.sss +
-          selected?.contribution?.pi
+          selected?.contribution?.pi +
+          form.late.deduc +
+          form.underTime.deduc
       );
-      const { rate = {} } = selected;
+      const { rate = {} } = selected || {};
       const { daily, cola, monthly } = rate;
       const { holiday } = form;
       const { regular, special } = holiday;
@@ -144,6 +156,8 @@ export default function Modal() {
         ph: selected?.contribution?.ph,
         sss: selected?.contribution?.sss,
         pi: selected?.contribution?.pi,
+        late: form.late,
+        underTime: form.underTime,
         total: totDeduc,
       },
       earn: {
@@ -179,14 +193,14 @@ export default function Modal() {
 
   // use for direct values like strings and numbers
   const handleValue = (key) =>
-    willCreate ? form[key] : form[key] || selected[key];
+    willCreate ? form?.[key] : form?.[key] || selected?.[key];
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
   const handleClose = () => dispatch(TOGGLE());
-  const { contract = {} } = selected;
+  const { contract = {} } = selected || {};
   const designation = Policy.getPosition(Number(contract?.designation));
 
-  const { holiday = {} } = form;
+  const { holiday = {}, late = {}, underTime = {} } = form;
   const { regular = {}, special = 0 } = holiday;
   const hourlyRate = selected?.rate?.daily / 8;
   const dailyRate = selected?.rate?.daily;
@@ -407,13 +421,82 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Phil. Health
+                Late
               </td>
               <td
-                className="border border-dark p-1 text-right"
+                className="border border-dark p-1 "
                 style={{ fontWeight: 400 }}
               >
-                {currency.format(selected?.contribution?.ph)}
+                <div>
+                  <div className="d-flex align-items-center">
+                    <span
+                      className="text-nowrap"
+                      style={{ marginRight: "4.3rem" }}
+                    >
+                      No.:
+                    </span>
+                    <input
+                      className="form-control"
+                      placeholder="Enter here.."
+                      value={String(late?.no || "")}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          late: {
+                            ...late,
+                            no: Number(target.value),
+                          },
+                        })
+                      }
+                      style={{
+                        height: "1.5rem",
+                        fontSize: "0.9rem",
+                      }}
+                    />
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <span className="text-nowrap mr-1">Total Minutes:</span>
+                    <input
+                      className="form-control my-1"
+                      placeholder="Enter here.."
+                      value={String(late?.mins || "")}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          late: {
+                            ...late,
+                            mins: Number(target.value),
+                          },
+                        })
+                      }
+                      style={{
+                        height: "1.5rem",
+                        fontSize: "0.9rem",
+                      }}
+                    />
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <span className="text-nowrap mr-1">Deduction (₱):</span>
+                    <input
+                      className="form-control"
+                      placeholder="Enter here.."
+                      value={String(late?.deduc || "")}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          late: {
+                            ...late,
+                            deduc: Number(target.value),
+                          },
+                        })
+                      }
+                      style={{
+                        height: "1.5rem",
+                        fontSize: "0.9rem",
+                      }}
+                    />
+                  </div>
+                </div>
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
@@ -452,13 +535,82 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                SSS
+                Undertime
               </td>
               <td
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency.format(selected?.contribution?.sss)}
+                <div>
+                  <div className="d-flex align-items-center">
+                    <span
+                      className="text-nowrap"
+                      style={{ marginRight: "4.3rem" }}
+                    >
+                      No.:
+                    </span>
+                    <input
+                      className="form-control"
+                      placeholder="Enter here.."
+                      value={String(underTime?.no || "")}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          underTime: {
+                            ...underTime,
+                            no: Number(target.value),
+                          },
+                        })
+                      }
+                      style={{
+                        height: "1.5rem",
+                        fontSize: "0.9rem",
+                      }}
+                    />
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <span className="text-nowrap mr-1">Total Minutes:</span>
+                    <input
+                      className="form-control my-1"
+                      placeholder="Enter here.."
+                      value={String(underTime?.mins || "")}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          underTime: {
+                            ...underTime,
+                            mins: Number(target.value),
+                          },
+                        })
+                      }
+                      style={{
+                        height: "1.5rem",
+                        fontSize: "0.9rem",
+                      }}
+                    />
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <span className="text-nowrap mr-1">Deduction (₱):</span>
+                    <input
+                      className="form-control"
+                      placeholder="Enter here.."
+                      value={String(underTime?.deduc || "")}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          underTime: {
+                            ...underTime,
+                            deduc: Number(target.value),
+                          },
+                        })
+                      }
+                      style={{
+                        height: "1.5rem",
+                        fontSize: "0.9rem",
+                      }}
+                    />
+                  </div>
+                </div>
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
@@ -495,7 +647,7 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Pag-ibig
+                Phil. Health
               </td>
               <td
                 className="border border-dark text-right p-1"
@@ -537,11 +689,15 @@ export default function Modal() {
               <td
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
-              ></td>
+              >
+                SSS
+              </td>
               <td
                 className="border border-dark text-right"
                 style={{ fontWeight: 400 }}
-              ></td>
+              >
+                {currency.format(selected?.contribution?.sss)}
+              </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
               <td
@@ -567,11 +723,15 @@ export default function Modal() {
               <td
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
-              ></td>
+              >
+                Pag-ibig
+              </td>
               <td
                 className="border border-dark text-right"
                 style={{ fontWeight: 400 }}
-              ></td>
+              >
+                {currency.format(selected?.contribution?.pi)}{" "}
+              </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
               <td

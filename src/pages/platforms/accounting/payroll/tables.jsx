@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
+import { MDBTable, MDBBtnGroup, MDBBtn, MDBIcon } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 
 import {
@@ -21,7 +21,7 @@ import Swal from "sweetalert2";
 const Body = () => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     {
-      collections,
+      filtered: collections,
       message,
       isSuccess,
       maxPage,
@@ -190,7 +190,7 @@ const Body = () => {
 
   return (
     <>
-      <MDBTable responsive hover bordered>
+      <MDBTable responsive bordered small>
         <thead>
           <tr>
             <th rowSpan="2">#</th>
@@ -209,68 +209,108 @@ const Body = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((personnel, index) => {
-            const { user, contract, rate, payroll } = personnel;
-            const designation = Policy.getPosition(
-              Number(contract?.designation)
-            );
+          {paginatedData.length > 0 ? (
+            paginatedData.map((personnel, index) => {
+              const { user, contract, rate, payroll } = personnel;
+              const designation = Policy.getPosition(
+                Number(contract?.designation)
+              );
 
-            const akinsenas = payroll?.find(
-              ({ createdAt, breakdown }) =>
-                getMonth(createdAt) === month - 1 && breakdown?.isAquincena
-            );
-            const katapusan = payroll?.find(({ createdAt, breakdown }) => {
-              const day = getDay(createdAt);
-              const pc = Number(contract?.pc);
-              const isSameMonth = getMonth(createdAt) === month - 1;
+              const akinsenas = payroll?.find(
+                ({ createdAt, breakdown }) =>
+                  getMonth(createdAt) === month - 1 && breakdown?.isAquincena
+              );
+              const katapusan = payroll?.find(({ createdAt, breakdown }) => {
+                const day = getDay(createdAt);
+                const pc = Number(contract?.pc);
+                const isSameMonth = getMonth(createdAt) === month - 1;
 
-              return pc === 1
-                ? day > 15 && !breakdown?.isAquincena && isSameMonth
-                : pc === 2
-                ? day <= 31 && isSameMonth
-                : canBePaidThisQuarter(payroll);
-            });
+                return pc === 1
+                  ? day > 15 && !breakdown?.isAquincena && isSameMonth
+                  : pc === 2
+                  ? day <= 31 && isSameMonth
+                  : canBePaidThisQuarter(payroll);
+              });
 
-            return (
-              <tr key={`payroll-${index + 1}`}>
-                <td>{index + 1}.</td>
-                <td>
-                  <p className="fw-bold mb-1 text-capitalize">
-                    {capitalize(fullName(user.fullName))}
-                  </p>
-                  <p className="text-muted mb-0">
-                    {designation?.toUpperCase()} |{" "}
-                    {contract?.soe?.toUpperCase()}
-                  </p>
-                </td>
-                <td>
-                  <p className="fw-bold mb-1 text-capitalize">
-                    monthly:{currency.format(rate?.monthly)}
-                  </p>
-                  <p className="text-muted mb-0">
-                    Daily: {currency.format(rate?.daily)}
-                  </p>
-                </td>
-                <td>
-                  <p className="fw-bold mb-1 text-capitalize">
-                    {currency.format(rate?.cola)}
-                  </p>
-                </td>
-                {Number(contract?.pc) === 1 && (
-                  <td className="text-center">
-                    {akinsenas ? (
+              return (
+                <tr key={`payroll-${index + 1}`}>
+                  <td>{index + 1}.</td>
+                  <td>
+                    <p className="fw-bold mb-1 text-capitalize">
+                      {capitalize(fullName(user.fullName))}
+                    </p>
+                    <p className="text-muted mb-0">
+                      {designation?.toUpperCase()} |{" "}
+                      {contract?.soe?.toUpperCase()}
+                    </p>
+                  </td>
+                  <td>
+                    <p className="mb-1 text-capitalize">
+                      <span className="fw-bold mr-1">monthly:</span>
+                      {currency.format(rate?.monthly)}
+                    </p>
+                    <p className="mb-0">
+                      <span className="fw-bold mr-1">Daily:</span>{" "}
+                      {currency.format(rate?.daily)}
+                    </p>
+                  </td>
+                  <td>
+                    <p className="fw-bold mb-1 text-capitalize">
+                      {currency.format(rate?.cola)}
+                    </p>
+                  </td>
+                  {Number(contract?.pc) === 1 && (
+                    <td className="text-center">
+                      {akinsenas ? (
+                        <MDBBtnGroup className="shadow-0">
+                          <MDBBtn
+                            onClick={() =>
+                              handlePayslip({
+                                ...personnel,
+                                breakdown: akinsenas?.breakdown,
+                                datePaid: akinsenas?.createdAt,
+                              })
+                            }
+                            color="warning"
+                            size="sm"
+                            title="View Payslip."
+                          >
+                            Payslip
+                          </MDBBtn>
+                        </MDBBtnGroup>
+                      ) : (
+                        <MDBBtnGroup className="shadow-0">
+                          <MDBBtn
+                            onClick={() =>
+                              handlePAYROLL({ ...personnel, isAquincena: true })
+                            }
+                            color="success"
+                            size="sm"
+                            title="Create Payroll"
+                          >
+                            Payroll
+                          </MDBBtn>
+                        </MDBBtnGroup>
+                      )}
+                    </td>
+                  )}
+                  <td
+                    className="text-center"
+                    colSpan={Number(contract?.pc) === 1 ? 1 : 2}
+                  >
+                    {katapusan ? (
                       <MDBBtnGroup className="shadow-0">
                         <MDBBtn
                           onClick={() =>
                             handlePayslip({
                               ...personnel,
-                              breakdown: akinsenas?.breakdown,
-                              datePaid: akinsenas?.createdAt,
+                              breakdown: katapusan?.breakdown,
+                              datePaid: katapusan?.createdAt,
                             })
                           }
                           color="warning"
                           size="sm"
-                          title="View Payslip."
+                          title="Untag this branch."
                         >
                           Payslip
                         </MDBBtn>
@@ -278,56 +318,27 @@ const Body = () => {
                     ) : (
                       <MDBBtnGroup className="shadow-0">
                         <MDBBtn
-                          onClick={() =>
-                            handlePAYROLL({ ...personnel, isAquincena: true })
-                          }
+                          onClick={() => handlePAYROLL(personnel)}
                           color="success"
                           size="sm"
-                          title="Create Payroll"
+                          title="Untag this branch."
                         >
                           Payroll
                         </MDBBtn>
                       </MDBBtnGroup>
                     )}
                   </td>
-                )}
-                <td
-                  className="text-center"
-                  colSpan={Number(contract?.pc) === 1 ? 1 : 2}
-                >
-                  {katapusan ? (
-                    <MDBBtnGroup className="shadow-0">
-                      <MDBBtn
-                        onClick={() =>
-                          handlePayslip({
-                            ...personnel,
-                            breakdown: katapusan?.breakdown,
-                            datePaid: katapusan?.createdAt,
-                          })
-                        }
-                        color="warning"
-                        size="sm"
-                        title="Untag this branch."
-                      >
-                        Payslip
-                      </MDBBtn>
-                    </MDBBtnGroup>
-                  ) : (
-                    <MDBBtnGroup className="shadow-0">
-                      <MDBBtn
-                        onClick={() => handlePAYROLL(personnel)}
-                        color="success"
-                        size="sm"
-                        title="Untag this branch."
-                      >
-                        Payroll
-                      </MDBBtn>
-                    </MDBBtnGroup>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={6} className="text-center fw-bold">
+                <MDBIcon icon="search-minus" /> No Personnel found. try another
+                keywords
+              </td>
+            </tr>
+          )}
         </tbody>
       </MDBTable>
       <div className="d-flex align-items-center justify-content-between">
