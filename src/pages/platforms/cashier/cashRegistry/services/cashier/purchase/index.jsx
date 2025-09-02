@@ -179,7 +179,7 @@ export default function Menus({ patronPresent }) {
     }
   };
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-
+  console.log("membership", membership);
   return (
     <>
       <div className="menus-table-container">
