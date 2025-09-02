@@ -20,7 +20,6 @@ const individual = (
   if (_abbr === "ctr") gross = menu?.[contract];
 
   let up = Math.round((gross * 80) / 100);
-
   if (isPromo) {
     return {
       gross,
