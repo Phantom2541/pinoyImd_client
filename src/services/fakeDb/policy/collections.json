@@ -196,14 +196,14 @@
         "display_name": "Frontdesk"
       },
       {
+        "id": 45,
+        "name": "Echo tech",
+        "display_name": "Echo technician"
+      },
+      {
         "id": 44,
         "name": "Ass Tech",
         "display_name": "Assistant Technician"
-      },
-      {
-        "id": 45,
-        "name": "Sonographer",
-        "display_name": "Sonographer"
       },
       {
         "id": 46,
@@ -217,11 +217,21 @@
       },
       {
         "id": 48,
+        "name": "Sonographer",
+        "display_name": "Sonographer"
+      },
+      {
+        "id": 48,
+        "name": "Sonographer",
+        "display_name": "Sonographer"
+      },
+      {
+        "id": 49,
         "name": "Radiologist",
         "display_name": "Radiologist"
       },
       {
-        "id": 49,
+        "id": 50,
         "name": "Chief Radio",
         "display_name": "Chief Radiologist"
       }
@@ -232,32 +242,32 @@
     "code": "NUR",
     "positions": [
       {
-        "id": 50,
+        "id": 52,
         "name": "Midwife",
         "display_name": "Midwife"
       },
       {
-        "id": 51,
+        "id": 53,
         "name": "Nurse Aide",
         "display_name": "Nursing Aide"
       },
       {
-        "id": 52,
+        "id": 54,
         "name": "Nurse",
         "display_name": "Nurse"
       },
       {
-        "id": 53,
+        "id": 55,
         "name": "Head Nurse",
         "display_name": "Head Nurse"
       },
       {
-        "id": 54,
+        "id": 56,
         "name": "Nurse Supervisor",
         "display_name": "Nurse Supervisor"
       },
       {
-        "id": 55,
+        "id": 57,
         "name": "Chief Nurse",
         "display_name": "Chief Nurse"
       }
@@ -563,6 +573,18 @@
         "name": "Field Coordinator",
         "display_name": "Field Coordinator",
         "description": "Coordinates on-site service activities and client support for vendor-related operations."
+      }
+    ]
+  },
+  {
+    "department": "Cardiology Department",
+    "code": "CD",
+    "positions": [
+      {
+        "id": 126,
+        "name": "Cardiologist",
+        "display_name": "Cardiologist ",
+        "description": "a physician specializing in the diagnosis and treatment of heart diseases."
       }
     ]
   }
