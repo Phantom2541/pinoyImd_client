@@ -1,15 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
-import BANNER from "./../../../assets/banner.png";
+import { useEffect, useRef, useState } from "react";
+import { Cloudinary } from "../../../services/utilities";
+import { useSelector } from "react-redux";
 
 const RequestFormPrint4x = () => {
+  const { activePlatform = {} } = useSelector(({ auth }) => auth);
+  console.log("activePlatform", activePlatform);
+
+  let obj;
+  if (typeof activePlatform === "string") {
+    obj = JSON.parse(activePlatform);
+  } else {
+    obj = activePlatform;
+  }
+
+  const companyName = obj?.company?.name;
+  const branchName = obj?.branch?.name;
+
   const [readyToPrint, setReadyToPrint] = useState(false);
   const containerRef = useRef(null);
   const itemStyle = { marginBottom: "4px" };
+  const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+    companyName
+  )}//${encodeURIComponent(branchName)}/banner`;
 
   // Preload banner
   useEffect(() => {
     const img = new Image();
-    img.src = BANNER;
+    img.src = BannerURL;
     img.onload = () => setReadyToPrint(true);
   }, []);
 
@@ -26,7 +43,7 @@ const RequestFormPrint4x = () => {
         <tr>
           <th colSpan={3}>
             <img
-              src={BANNER}
+              src={BannerURL}
               alt="Banner"
               className="laboratoryRequestForm-printout-banner"
             />

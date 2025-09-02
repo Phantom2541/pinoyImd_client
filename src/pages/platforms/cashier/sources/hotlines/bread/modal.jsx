@@ -12,12 +12,12 @@ import {
   SAVE,
   UPDATE,
   TOGGLE,
-} from "./../../../../../services/redux/slices/assets/providers";
+} from "../../../../../../services/redux/slices/assets/providers";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import { removeUndefinedValues } from "../../../../../services/utilities";
-import Spinner from "../../../../../components/spinner";
+import { removeUndefinedValues } from "../../../../../../services/utilities";
+import Spinner from "../../../../../../components/spinner";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),

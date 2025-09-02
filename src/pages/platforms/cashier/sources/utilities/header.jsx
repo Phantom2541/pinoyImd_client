@@ -32,20 +32,28 @@ const Header = () => {
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+      {/* Left - Count */}
+      <div>
         <span className="white-text mx-3 text-nowrap mt-0">
           {filtered.length} Utilities
         </span>
       </div>
-      <div>
-        <div className="text-right d-flex items-center">
-          <Search
-            collections={collections}
-            setFiltered={handleFiltered}
-            handleAdd={handleAdd}
-            reset={() => dispatch(ResetFILTER())}
-          />
-        </div>
+
+      {/* Center - Title */}
+      <div className="flex-grow-1 text-center">
+        <span className="white-text font-weight-bold">
+          Utilities & Service Providers
+        </span>
+      </div>
+
+      {/* Right - Search */}
+      <div className="text-right d-flex items-center">
+        <Search
+          collections={collections}
+          setFiltered={handleFiltered}
+          handleAdd={handleAdd}
+          reset={() => dispatch(ResetFILTER())}
+        />
       </div>
     </MDBView>
   );

@@ -17,7 +17,7 @@ import {
   IMAGE,
   UPLOAD,
 } from "../../../../../../../../services/redux/slices/assets/persons/auth";
-import ImageCropper from "../../../../../../../../components/images/imageCropper";
+import ImageCropper from "../../../../../../../../components/images/cropper";
 
 export default function ProfileImage({ task, setTask }) {
   const [file, setFile] = useState(null),

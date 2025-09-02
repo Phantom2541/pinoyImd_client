@@ -6,7 +6,7 @@ import {
   MissionVision,
 } from "../../../../pages/platforms/accredetations/index";
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
-
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 const accreditation = [
   {
     name: "Dashboard",
@@ -335,6 +335,13 @@ const accreditation = [
         icon: "cogs",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

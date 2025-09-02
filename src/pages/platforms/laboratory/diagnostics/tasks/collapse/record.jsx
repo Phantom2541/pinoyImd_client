@@ -64,6 +64,9 @@ const Tasks = ({ key, form, obj, index, customer }) => {
   const handleEntry = () => dispatch(SetTASK({ task }));
 
   const isEmptyEntry = _packages.length === 0;
+
+  const done =
+    !!signatories.length && signatories[0] && signatories[1] && hasDone;
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
       <td>{index}</td>
@@ -104,28 +107,25 @@ const Tasks = ({ key, form, obj, index, customer }) => {
             <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
           </MDBBtn>
 
-          {!!signatories.length &&
-            signatories[0] &&
-            signatories[1] &&
-            hasDone && (
-              <MDBBtn
-                onClick={() => {
-                  const selectedTask = {
-                    ...task,
-                    branchId: activePlatform?.branch,
-                    services: _packages,
-                    signatories,
-                    isPrint: true,
-                  };
-                  handleLabPrint(selectedTask);
-                }}
-                color="warning"
-                size="sm"
-                className="py-1 px-2 m-0"
-              >
-                <MDBIcon icon="print" />
-              </MDBBtn>
-            )}
+          {done && (
+            <MDBBtn
+              onClick={() => {
+                const selectedTask = {
+                  ...task,
+                  branchId: activePlatform?.branch,
+                  services: _packages,
+                  signatories,
+                  isPrint: true,
+                };
+                handleLabPrint(selectedTask);
+              }}
+              color="warning"
+              size="sm"
+              className="py-1 px-2 m-0"
+            >
+              <MDBIcon icon="print" />
+            </MDBBtn>
+          )}
         </MDBBtnGroup>
       </td>
     </tr>

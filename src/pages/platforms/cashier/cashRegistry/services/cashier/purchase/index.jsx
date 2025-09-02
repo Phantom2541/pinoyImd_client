@@ -159,12 +159,15 @@ export default function Menus({ patronPresent }) {
   const handleADDtoCart = (selected) => {
     const { packages = [] } = selected;
 
-    const duplicateMenus = cart.filter(({ packages: sp = [] }) =>
-      sp?.every((p) => packages?.includes(p))
+    const duplicateMenus = cart.filter(
+      ({ packages: sp = [] }) =>
+        sp?.every((p) => packages?.includes(p)) && sp?.length > 0
     );
     const servicesExisting = cart.find(
       ({ packages: sp = [] }) =>
-        packages?.some((p) => sp?.includes(p)) && sp?.length > packages?.length
+        packages?.some((p) => sp?.includes(p)) &&
+        sp?.length > packages?.length &&
+        sp?.length > 0
     );
 
     if (duplicateMenus.length > 0 && packages?.length > 0) {
@@ -176,7 +179,7 @@ export default function Menus({ patronPresent }) {
     }
   };
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-
+  console.log("membership", membership);
   return (
     <>
       <div className="menus-table-container">

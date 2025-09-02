@@ -9,17 +9,16 @@ import {
   MDBTabContent,
   MDBTabPane,
 } from "mdbreact";
-import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import { Services } from "../../../../../../../../../services/fakeDb/index.js";
+import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { Services } from "../../../../../../../../services/fakeDb/index.js";
 import Images from "../images.jsx";
 
-export default function Xray() {
+export default function TwoDEcho() {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
 
   const [description, setDescription] = useState("");
   const [impression, setImpression] = useState("");
-
   const [activeTab, setActiveTab] = useState("images");
 
   const descTimeout = useRef(null);

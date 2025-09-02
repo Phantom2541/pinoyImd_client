@@ -1,5 +1,10 @@
 import { useSelector } from "react-redux";
-import { Xray, Ecg, Ultrasound } from "./radiology";
+import Ultrasound from "./ultrasound";
+import Ecg from "./ecg";
+import Xray from "./xray";
+import TwoDEcho from "./2decho";
+import CTscan from "./ctscan";
+import Fibroscan from "./fibroscan";
 
 const Blank = () => {
   const { form } = useSelector(({ validator }) => validator.task);
@@ -10,6 +15,9 @@ const componentMap = {
   Xray,
   Ecg,
   Ultrasound,
+  TwoDEcho,
+  CTscan,
+  Fibroscan,
 };
 
 export default function BodySwitcher() {

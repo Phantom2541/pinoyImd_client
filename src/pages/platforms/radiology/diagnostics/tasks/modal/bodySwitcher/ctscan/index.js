@@ -9,11 +9,11 @@ import {
   MDBTabContent,
   MDBTabPane,
 } from "mdbreact";
-import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import { Services } from "../../../../../../../../../services/fakeDb/index.js";
+import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { Services } from "../../../../../../../../services/fakeDb/index.js";
 import Images from "../images.jsx";
 
-export default function Ultrasounds() {
+export default function CTscan() {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
 

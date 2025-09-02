@@ -6,6 +6,7 @@ import {
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const clinical = [
   {
@@ -103,6 +104,13 @@ const clinical = [
         path: "/clinical/merchandise/stocks",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

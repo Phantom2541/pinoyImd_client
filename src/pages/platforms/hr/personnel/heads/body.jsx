@@ -11,7 +11,7 @@ import { fullName, Cloudinary } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
-import ImageDragAndDrop from "../../../../../components/images/imageDragAndDrop/dragNdroping";
+import { ImageDragAndDrop } from "../../../../../components/images";
 import EditableField from "../../../../../components/customizable/editableField";
 import {
   UPDATE_INFO,
@@ -21,7 +21,7 @@ import EditableSelect from "../../../../../components/customizable/editableSelec
 import { Templates } from "../../../../../services/fakeDb";
 import Cropper from "react-easy-crop";
 import { createPortal } from "react-dom";
-import { removeBackground } from "../../../../../components/backgroundRemover";
+import { removeBackground } from "../../../../../components/images/backgroundRemover";
 
 export default function Body() {
   const [showCropper, setShowCropper] = useState(false);

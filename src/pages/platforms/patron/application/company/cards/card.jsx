@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MDBMask, MDBIcon, MDBCol } from "mdbreact";
 import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
 import ApplicationModal from "./modal";
-import BgRemover from "./../../../../../../components/bgRemover";
+import BgRemover from "../../../../../../components/images/bgRemover";
 
 import StarRating from "../star";
 import "./../style.css";

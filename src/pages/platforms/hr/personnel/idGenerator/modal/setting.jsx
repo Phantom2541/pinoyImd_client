@@ -20,10 +20,21 @@ const toHex = (color) => {
   return ctx.fillStyle;
 };
 
-export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
-  const { activeIndex } = useSelector(({ personnels }) => personnels);
+export default function Setting({
+  selectedValue,
+  onUpdateValue,
+  handleSave,
+  isComplete,
+  frontImage,
+  backImage,
+}) {
+  const { activeIndex, collections } = useSelector(
+    ({ personnels }) => personnels
+  );
   const [lockAspect, setLockAspect] = useState(false);
   const dispatch = useDispatch();
+
+  console.log(collections);
 
   const isDisabled = !selectedValue;
   const style = selectedValue || {};
@@ -50,7 +61,11 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
   };
 
   return (
-    <div className="IDGenerator-setting-container">
+    <div
+      className={`IDGenerator-setting-container ${
+        frontImage && backImage ? "" : "disabled"
+      }`}
+    >
       {isImage && (
         <div className="IDGenerator-setting-section">
           <div className="d-flex align-items-end" style={{ gap: "5px" }}>
@@ -157,7 +172,7 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
             /> */}
           </div>
 
-          <Input
+          {/* <Input
             type="number"
             title="Opacity"
             label={<MDBIcon fas icon="adjust" />}
@@ -172,7 +187,7 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
                 opacity: Math.min(1, Math.max(0, e.target.value / 100)),
               })
             }
-          />
+          /> */}
         </div>
       )}
 
@@ -181,6 +196,7 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
           className={`IDGenerator-setting-section ${
             isDisabled ? "disabled" : ""
           }`}
+          data-label={`${selectedValue?.key || ""} setting`}
         >
           {/* <Select
             label="Font Family"
@@ -199,17 +215,21 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
             className="d-flex align-items-center mt-2"
             style={{ gap: "5px" }}
           >
-            <Select
-              label="Font Size"
-              options={FontSizes.map((size) => ({
-                label: `${size}px`,
-                value: size,
-              }))}
-              getLabel={(opt) => opt.label}
-              getValue={(opt) => opt.value}
-              useInput
+            <Input
+              type="number"
+              title="Font Size"
+              label={<MDBIcon fas icon="text-width" />}
+              value={style.fontSize}
+              min={14}
+              max={25}
+              step={1}
+              unit="px"
               disabled={isDisabled}
-              onSelect={(val) => updateStyle({ fontSize: val })}
+              onChange={(e) =>
+                updateStyle({
+                  fontSize: parseInt(e.target.value, 10) || 0,
+                })
+              }
             />
             {/* <Select
               label="Font Weight"
@@ -270,12 +290,21 @@ export default function Setting({ selectedValue, onUpdateValue, handleSave }) {
       )}
 
       <div className="IDGenerator-settings-navigation">
-        <button onClick={handlePrev}>Prev</button>
-        <button onClick={handleNext}>Next</button>
+        <button onClick={handlePrev} disabled={activeIndex === 0}>
+          Prev
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={activeIndex >= collections.length - 1}
+        >
+          Next
+        </button>
       </div>
 
       <div className="IDGenerator-settings-save">
-        <button onClick={handleSave}>💾 Save</button>
+        <button onClick={handleSave}>
+          {isComplete ? "💾 SAVE" : "📤 POST"}
+        </button>
       </div>
     </div>
   );

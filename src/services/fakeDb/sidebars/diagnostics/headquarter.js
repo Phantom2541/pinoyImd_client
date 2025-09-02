@@ -15,6 +15,7 @@ import {
   Outsources,
   Utilities,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
 } from "../../../../pages/platforms/cashier";
 
@@ -26,6 +27,8 @@ import { Branches } from "../../../../pages/platforms/headquarter/humanResources
 import PatientCategories from "../../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../../pages/platforms/headquarter/dashboard";
 import hpWalkthrough from "../../../../pages/platforms/headquarter/hpWalkthrough";
+import FormTemplate from "../../../../pages/platforms/SuperAdmin/formTemplate";
+
 const headquarter = [
   {
     name: "Dashboard",
@@ -343,11 +346,24 @@ const headquarter = [
     ],
   },
   {
+    name: "Form Template",
+    path: "/super/admin/form",
+    icon: "code-branch",
+    component: FormTemplate,
+  },
+  {
     name: "Walkthrough",
     path: "/hpWalkthrough",
     icon: "credit-card",
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

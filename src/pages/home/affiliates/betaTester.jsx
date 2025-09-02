@@ -4,7 +4,7 @@ import "swiper/css";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 import { Cloudinary } from "../../../services/utilities";
 import { useSelector } from "react-redux";
-import BgRemover from "../../../components/bgRemover";
+import { BgRemover } from "../../../components/images/index";
 import { MDBAnimation } from "mdbreact";
 
 export default function BetaTester() {

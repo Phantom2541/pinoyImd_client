@@ -4,6 +4,7 @@ import {
   Reports,
 } from "../../../../pages/platforms/radiology/diagnostics";
 import { Menus, Services } from "../../../../pages/platforms/cashier";
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const radiology = [
   {
@@ -90,6 +91,13 @@ const radiology = [
         icon: "cogs",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

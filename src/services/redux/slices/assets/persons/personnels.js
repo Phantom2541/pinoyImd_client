@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
   fullName,
-  properFullname,
   billingAddress,
   mobile,
 } from "../../../../utilities";
@@ -483,23 +482,25 @@ export const reduxSlice = createSlice({
       })
       .addCase(IDGENERATOR.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        console.log("kevin", payload);
         state.collections = state.filtered = payload.map((staff) => {
           const Avatar = `/users/${staff.user.email}/profile.jpg`;
           const Signature = `/users/${staff.user.email}/signature.png`;
-          const empName = fullName(
+          const empName = `${staff.user.title || ""} ${fullName(
             staff.user.fullName,
             false,
             true
-          ).toLowerCase();
+          )
+            .toLowerCase()
+            .replace(/\b\w/g, (c) => c.toUpperCase())}`;
           const guardian = fullName(
             staff.user?.guardian?.fullName,
             false,
             true
           );
-          const position = Policy.getPositions(staff.contract.designation),
-            department = Policy.getDepartment(staff.contract.designation);
+          const position = Policy.getPositions(staff.contract?.designation),
+            department = Policy.getDepartment(staff.contract?.designation);
           const pn = mobile(staff.user.mobile);
+
           return {
             _id: staff._id,
             front: {
@@ -511,11 +512,18 @@ export const reduxSlice = createSlice({
             },
             back: {
               signature: Signature,
-              dob: staff.user.dob,
+              dob: new Date(staff.user.dob)
+                .toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+                .replace(" ", ", "),
               address: billingAddress(staff.user.address),
               guardian,
               pn,
             },
+            dfp: staff.dfp,
           };
         });
 

@@ -18,7 +18,8 @@ import {
   // isImageValid,
 } from "../../services/utilities";
 import "./style.css";
-import BgRemover from "../bgRemover";
+import { BgRemover } from "../../components/images/index";
+import Hotline from "../../pages/platforms/hotline";
 const diagnostics = [
   "diagnostic",
   "clinic",
@@ -76,41 +77,6 @@ export default function SideNavigation({
       }));
   }, []);
 
-  // ✅ Guarded company logo and href loader
-  // useEffect(() => {
-  //   const platformKey = activePlatform?.platform?.toLowerCase();
-
-  //   // let newLogo = FailedLogo;
-  //   let newHref = "/patron/bulletin";
-
-  //   if (platformKey === "patron" && !isLoading) {
-  //     const patronCompany = JSON.parse(localStorage.getItem("patronCompany"));
-  //     if (patronCompany?.name) {
-  //       const url = `${ENDPOINT}/public/companies/${
-  //         patronCompany.name
-  //       }/logo.png?${new Date().getTime()}`;
-  //       isImageValid(url, (valid) => {
-  //         if (valid && url !== logo) setLogo(url);
-  //       });
-  //     }
-  //   } else if (company?.name && platformKey && !isLoading) {
-  //     const url = `${ENDPOINT}/public/companies/${
-  //       company.name
-  //     }/profile/logo.png?${new Date().getTime()}`;
-  //     isImageValid(url, (valid) => {
-  //       if (valid && url !== logo) setLogo(url);
-  //     });
-
-  //     newHref = `/${platformKey}/${
-  //       ["manager", "headquarter"].includes(platformKey)
-  //         ? "dashboard"
-  //         : "bulletin"
-  //     }`;
-  //   }
-
-  //   if (newHref !== href) setHref(newHref);
-  // }, [company, activePlatform, isLoading, href, logo]);
-
   // ✅ Guarded sidebar loader with platform/role filtering
   const normalizePlatform = (platform) =>
     platform?.toLowerCase().replace(/\s/g, "_");
@@ -128,11 +94,9 @@ export default function SideNavigation({
 
     group.superadmin = Sidebars.superadmin;
     group.patron = Sidebars.patron;
-    const fullSidebar = group[platformKey] || [];
+    const fullSidebar = group[platformKey?.replace(/_/g, "")] || [];
     if (platformKey === "laboratory") {
       const role = activePlatform?.role;
-      console.log("role", role);
-
       const filtered = filterSidebarByRole(fullSidebar, role);
       if (JSON.stringify(links) !== JSON.stringify(filtered)) {
         setLinks(filtered);
@@ -225,14 +189,6 @@ export default function SideNavigation({
       >
         {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
-          {/* <img
-            src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
-              company?.name
-            }/logo.png`}
-            onError={(e) => (e.target.src = FailedLogo)}
-            alt="Company Logo"
-            style={{ width: "65px", aspectRatio: "1/1" }}
-          /> */}
           <BgRemover
             src={`${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
               company?.name
@@ -284,7 +240,17 @@ export default function SideNavigation({
                 </div>
               ))}
         </MDBSideNavNav>
+        {/* <button
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            left: "10px",
+          }}
+        >
+          Hotline <MDBIcon fas icon="phone-volume" />
+        </button> */}
       </MDBSideNav>
+      <Hotline />
     </div>
   );
 }

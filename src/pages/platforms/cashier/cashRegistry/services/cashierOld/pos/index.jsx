@@ -90,7 +90,9 @@ export default function CashRegister() {
 
     const duplicateMenus = soldItemsInCart.filter(
       ({ packages: soldPackages = [], overrideBy = "" }) =>
-        soldPackages?.every((p) => packages?.includes(p) && !overrideBy)
+        soldPackages?.every(
+          (p) => packages?.includes(p) && soldPackages.length > 0 && !overrideBy
+        )
     );
 
     const department = Services.getDepartment(selected?.packages) || [];

@@ -190,7 +190,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
                   handleObjChange("address", "city", e.target.value)
                 }
                 icon="kaaba"
-                label="City/Municipality"
+                label="City/Municipality xxxx"
                 required
               />
             </MDBCol>

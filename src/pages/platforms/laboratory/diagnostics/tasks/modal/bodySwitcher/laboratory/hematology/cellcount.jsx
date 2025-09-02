@@ -56,6 +56,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       }
     }
   };
+  console.log(selected);
 
   return (
     <MDBTable hover responsive className="mb-0">
@@ -69,9 +70,15 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       <tbody>
         {(!!cc.length ? cc : [0, 0, 0, 0]).map((cell, index) => {
           const { lo, hi, unit } =
-            Preferences[selected.customerId.isMale ? "Male" : "Female"][
-              Abbreviation[index]
-            ];
+            Preferences[
+              selected.customerId
+                ? selected.customerId?.isMale
+                  ? "Male"
+                  : "Female"
+                : selected.patient?.isMale
+                ? "Male"
+                : "Female"
+            ][Abbreviation[index]];
           let color = "";
           if (!isNaN(cell)) {
             if (cell < lo) color = "blue";

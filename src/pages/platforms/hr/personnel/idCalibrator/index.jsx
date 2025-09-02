@@ -17,27 +17,36 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/auth";
 import { useToasts } from "react-toast-notifications";
 
+import {
+  setFrontImage,
+  setBackImage,
+  setFrontLoading,
+  setBackLoading,
+  setLayout,
+  setFloatingValue,
+  setCursorPos,
+  setSelectedValue,
+  setLoading,
+  setEditMode,
+} from "../../../../../services/redux/slices/idCard/calibrator";
+
 export default function IdCalibrator() {
-  const [frontImage, setFrontImage] = useState(null);
-  const [backImage, setBackImage] = useState(null);
-  const [frontLoading, setFrontLoading] = useState(false);
-  const [backLoading, setBackLoading] = useState(false);
-  const [layout, setLayout] = useState("portrait");
-  const [draggedValue, setDraggedValue] = useState(null);
-  const [floatingValue, setFloatingValue] = useState(null);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [placedValues, setPlacedValues] = useState([]);
-  const [selectedSide, setSelectedSide] = useState("front"); // 👈 bago
-  const [selectedValue, setSelectedValue] = useState(null);
-  const [showAllValues, setShowAllValues] = useState(false);
-  const [lockAspect, setLockAspect] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [editMode, setEditMode] = useState(false);
-  const { addToast } = useToasts();
-  const dispatch = useDispatch();
-  const options = ["portrait", "landscape"];
   const { activePlatform, token, company } = useSelector(({ auth }) => auth);
   const { ct: branch } = useSelector(({ branches }) => branches);
+  const {
+      frontImage,
+      backImage,
+      layout,
+      floatingValue,
+      selectedSide,
+      selectedValue,
+      loading,
+      editMode,
+    } = useSelector(({ idCalibrator }) => idCalibrator),
+    dispatch = useDispatch();
+  const [placedValues, setPlacedValues] = useState([]);
+  const { addToast } = useToasts();
+
   try {
     const ctData = branch.ct ? JSON.parse(branch.ct) : null;
   } catch (err) {
@@ -45,10 +54,10 @@ export default function IdCalibrator() {
   }
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(setLoading(true));
     dispatch(
       CTBROWSE({ token, data: { _id: activePlatform.branchId } })
-    ).finally(() => setLoading(false));
+    ).finally(() => dispatch(setLoading(false)));
   }, [activePlatform.branchId, dispatch, token]);
 
   useEffect(() => {
@@ -64,7 +73,7 @@ export default function IdCalibrator() {
 
     const { icId = {} } = branch || {};
 
-    setLayout(ctData.layout || "portrait");
+    dispatch(setLayout(ctData.layout || "portrait"));
 
     const getImg = (isFront = true) => {
       const id = icId?.[isFront ? "front" : "back"];
@@ -75,9 +84,9 @@ export default function IdCalibrator() {
       }/ic/${isFront ? "front" : "back"}`;
     };
 
-    setFrontImage(getImg() || null);
-    setBackImage(getImg(false) || null);
-    setLoading(false);
+    dispatch(setFrontImage(getImg() || null));
+    dispatch(setBackImage(getImg(false) || null));
+    dispatch(setLoading(false));
 
     const dfp = ctData.dfp || {};
     const newPlaced = [];
@@ -102,9 +111,9 @@ export default function IdCalibrator() {
     });
     // ✅ If branch.ct exists, hide Setting & Buttons initially
     if (branch.ct && branch.ct.dfp && Object.keys(branch.ct.dfp).length > 0) {
-      setEditMode(false); // may laman ang dfp → edit mode on
+      dispatch(setEditMode(false)); // may laman ang dfp → edit mode on
     } else {
-      setEditMode(true); // walang laman ang dfp → edit mode off
+      dispatch(setEditMode(true)); // walang laman ang dfp → edit mode off
     }
 
     setPlacedValues(newPlaced);
@@ -113,6 +122,7 @@ export default function IdCalibrator() {
     activePlatform.branchId,
     company?.name,
     activePlatform?.branch?.name,
+    dispatch,
   ]);
 
   // 🔹 Eto yung onSave arrow function
@@ -170,8 +180,8 @@ export default function IdCalibrator() {
   };
 
   const uploadCloudinary = (img, isFront = true) => {
-    if (isFront) setFrontLoading(true);
-    else setBackLoading(true);
+    if (isFront) dispatch(setFrontLoading(true));
+    else dispatch(setBackLoading(true));
 
     const form = Cloudinary.buildFileForm(
       img,
@@ -201,12 +211,12 @@ export default function IdCalibrator() {
         const newImageUrl = `${Cloudinary.getEndpoint()}/${imgId}/companies/${
           company?.name
         }/${activePlatform?.branch?.name}/ic/${isFront ? "front" : "back"}`;
-        if (isFront) setFrontImage(newImageUrl);
-        else setBackImage(newImageUrl);
+        if (isFront) dispatch(setFrontImage(newImageUrl));
+        else dispatch(setBackImage(newImageUrl));
       })
       .finally(() => {
-        if (isFront) setFrontLoading(false);
-        else setBackLoading(false);
+        if (isFront) dispatch(setFrontLoading(false));
+        else dispatch(setBackLoading(false));
       });
   };
 
@@ -236,7 +246,7 @@ export default function IdCalibrator() {
     e.dataTransfer.setData("text/plain", value);
 
   const handleClickValue = (value) => {
-    setFloatingValue(value);
+    dispatch(setFloatingValue(value));
     document.body.style.cursor = "none";
   };
 
@@ -298,16 +308,13 @@ export default function IdCalibrator() {
       })
     );
 
-    setSelectedValue((prev) => {
-      if (!prev) return prev;
-      const { x, y, ...rest } = updates;
-      return {
-        ...prev,
-        x: x !== undefined ? x : prev.x,
-        y: y !== undefined ? y : prev.y,
-        style: { ...prev.style, ...rest },
-      };
-    });
+    dispatch(
+      setSelectedValue({
+        ...selectedValue,
+        ...updates,
+        style: { ...selectedValue.style, ...updates },
+      })
+    );
   };
 
   const lockAspectRatio = (
@@ -355,46 +362,34 @@ export default function IdCalibrator() {
           }`}
           onMouseMove={
             floatingValue
-              ? (e) => setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 })
+              ? (e) =>
+                  dispatch(
+                    setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 })
+                  )
               : undefined
           }
           style={{ position: "relative" }}
         >
           <ID
-            frontImage={frontImage}
-            backImage={backImage}
             handleFrontChange={handleFrontChange}
             handleBackChange={handleBackChange}
             filteredKeys={Object.keys(fakeEMP[selectedSide] || {})}
             fakeEMP={fakeEMP}
-            layout={layout}
             placedValues={placedValues}
             setPlacedValues={setPlacedValues}
-            draggedValue={draggedValue}
-            setDraggedValue={setDraggedValue}
-            floatingValue={floatingValue}
-            setFloatingValue={setFloatingValue}
             handleDragStart={handleDragStart}
             handleClickValue={handleClickValue}
-            cursorPos={cursorPos}
-            setCursorPos={setCursorPos}
-            setSelectedSide={setSelectedSide}
-            selectedSide={selectedSide}
-            selectedValue={selectedValue}
-            setSelectedValue={setSelectedValue}
-            showAllValues={showAllValues}
-            lockAspect={lockAspect}
             lockAspectRatio={lockAspectRatio}
-            frontLoading={frontLoading}
-            backLoading={backLoading}
-            editMode={editMode}
           />
 
           {/* ✅ Show Edit button if branch.ct exists and editMode=false */}
           <div
             className={`id-calibrator-edit-button ${editMode ? "hide" : ""}`}
           >
-            <button onClick={() => setEditMode(true)} className="bg-secondary">
+            <button
+              onClick={() => dispatch(setEditMode(true))}
+              className="bg-secondary"
+            >
               Show Setting
             </button>
           </div>
@@ -403,22 +398,11 @@ export default function IdCalibrator() {
           {editMode && (
             <>
               <Setting
-                layout={layout}
-                setLayout={setLayout}
-                options={options}
                 onReset={handleReset}
-                selectedValue={selectedValue}
-                setSelectedValue={setSelectedValue}
                 onUpdateValueStyle={handleUpdateValueStyle}
                 onSave={onSave}
-                lockAspect={lockAspect}
-                setLockAspect={setLockAspect}
                 lockAspectRatio={lockAspectRatio}
                 placedValues={placedValues}
-                frontImage={frontImage}
-                backImage={backImage}
-                editMode={editMode}
-                setEditMode={setEditMode}
               />
               <DraggableButtons
                 fakeEMP={fakeEMP[selectedSide]}
@@ -426,13 +410,7 @@ export default function IdCalibrator() {
                 placedValues={placedValues}
                 handleDragStart={handleDragStart}
                 handleClickValue={handleClickValue}
-                frontImage={frontImage}
-                backImage={backImage}
-                setShowAllValues={setShowAllValues}
-                showAllValues={showAllValues}
                 setPlacedValues={setPlacedValues}
-                selectedSide={selectedSide}
-                editMode={editMode}
               />
             </>
           )}

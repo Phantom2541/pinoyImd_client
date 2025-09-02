@@ -4,10 +4,9 @@ import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
 import {
   TOGGLE,
   NEXT,
-  SAVE,
+  UPDATE,
 } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import html2canvas from "html2canvas";
-
 import ID from "./id";
 import Setting from "./setting";
 
@@ -63,29 +62,38 @@ export default function Modal() {
       setBackImage(cbBase64);
       setLayout(ctData.layout || "landscape");
 
-      // Build placedValues directly from dfp + selected
-      const dataClone = {
-        ...selected,
-        dfp: { ...(ctData.dfp || {}) },
-      };
-
-      const newPlacedValues = Object.entries(dataClone.dfp || {}).map(
-        ([key, p]) => {
-          // priority: target from dfp
-          let value = dataClone[p.target]?.[key];
-
-          // fallback kung wala sa target
-          if (value === undefined || value === "") {
-            value =
-              dataClone.front?.[key] ||
-              dataClone.back?.[key] ||
-              dataClone[key] ||
-              "";
-          }
-
-          return { key, value, ...p };
+      // --- parse dfp from selected kung meron ---
+      let selectedDfp = {};
+      if (selected?.dfp) {
+        try {
+          selectedDfp = JSON.parse(selected.dfp);
+        } catch (err) {
+          console.error("Invalid JSON in selected.dfp:", selected.dfp, err);
         }
-      );
+      }
+
+      // --- priority: selected.dfp > ctData.dfp ---
+      const mergedDfp =
+        Object.keys(selectedDfp).length > 0 ? selectedDfp : ctData.dfp || {};
+
+      // Build placedValues
+      const dataClone = { ...selected, dfp: mergedDfp };
+
+      const newPlacedValues = Object.entries(mergedDfp).map(([key, p]) => {
+        // priority: target from dfp
+        let value = dataClone[p.target]?.[key];
+
+        // fallback kung wala sa target
+        if (value === undefined || value === "") {
+          value =
+            dataClone.front?.[key] ||
+            dataClone.back?.[key] ||
+            dataClone[key] ||
+            "";
+        }
+
+        return { key, value, ...p };
+      });
 
       setPlacedValues(newPlacedValues);
     }
@@ -121,9 +129,37 @@ export default function Modal() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Check kung kompleto ang lahat ng value
+  const isComplete = placedValues.every((p) => {
+    if (["img", "signature"].includes(p.key)) return true;
+    const val = (p?.value ?? "").toString().trim();
+    return val && val !== "-";
+  });
+
   const handleSave = useCallback(async () => {
     if (!frontWrapperRef.current || !backWrapperRef.current) return;
 
+    // Collect dfp (styles lang)
+    const dfp = placedValues.reduce((acc, { key, value, ...styles }) => {
+      acc[key] = styles;
+      return acc;
+    }, {});
+
+    // --- Always save dfp to DB ---
+    dispatch(
+      UPDATE({
+        token,
+        data: { _id: selected._id, dfp: JSON.stringify(dfp) },
+      })
+    );
+
+    if (!isComplete) {
+      // ❌ Incomplete: save lang sa DB, walang download
+      dispatch(NEXT(activeIndex + 1));
+      return;
+    }
+
+    // ✅ Complete: proceed with rendering + download
     const options = { backgroundColor: null, scale: 2 };
 
     // Render canvases
@@ -144,7 +180,6 @@ export default function Modal() {
     const frontName = `${empNo}-${dept}-front.png`;
     const backName = `${empNo}-${dept}-back.png`;
 
-    // --- File System Access API ---
     try {
       // Save FRONT
       const frontHandle = await window.showSaveFilePicker({
@@ -171,20 +206,8 @@ export default function Modal() {
       console.error("Save cancelled or failed:", err);
     }
 
-    // Save styles to DB
-    const dfp = placedValues.reduce((acc, { key, value, ...styles }) => {
-      acc[key] = styles;
-      return acc;
-    }, {});
-    dispatch(
-      SAVE({
-        token,
-        data: { user: selected._id, dfp: JSON.stringify(dfp) },
-      })
-    );
-
     dispatch(NEXT(activeIndex + 1));
-  }, [placedValues, dispatch, token, selected, activeIndex]);
+  }, [placedValues, dispatch, token, selected, activeIndex, isComplete]);
 
   useEffect(() => {
     const handleShortcuts = (e) => {
@@ -204,20 +227,30 @@ export default function Modal() {
         return;
       }
 
-      // 🔁 Tab = cycle next element
+      // 🔁 Tab = cycle next element (skip img/signature)
       if (e.key === "Tab") {
         e.preventDefault();
-        if (placedValues.length === 0) return;
-        const currentIndex = placedValues.findIndex(
+        const selectableValues = placedValues.filter(
+          (p) => p.key !== "img" && p.key !== "signature"
+        );
+        if (selectableValues.length === 0) return;
+
+        const currentIndex = selectableValues.findIndex(
           (p) => p.key === selectedKey
         );
         const nextIndex =
-          currentIndex === -1 ? 0 : (currentIndex + 1) % placedValues.length;
-        setSelectedKey(placedValues[nextIndex].key);
+          currentIndex === -1
+            ? 0
+            : (currentIndex + 1) % selectableValues.length;
+
+        setSelectedKey(selectableValues[nextIndex].key);
         return;
       }
 
       if (!selectedKey) return;
+
+      // 🚫 Skip movement if selected is img or signature
+      if (selectedKey === "img" || selectedKey === "signature") return;
 
       const step = e.shiftKey ? 10 : 1;
       let dx = 0,
@@ -305,6 +338,9 @@ export default function Modal() {
             selectedValue={placedValues.find((p) => p.key === selectedKey)}
             onUpdateValue={handleUpdateValue}
             handleSave={handleSave}
+            isComplete={isComplete}
+            frontImage={frontImage}
+            backImage={backImage}
           />
         </div>
       </MDBModalBody>

@@ -12,7 +12,7 @@ import {
 
 const Footer = ({ setShowHC = () => {} }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { success, task } = useSelector(({ validator }) => validator);
+  const { success, task, selected } = useSelector(({ validator }) => validator);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const department = activePlatform?.department;
@@ -37,6 +37,12 @@ const Footer = ({ setShowHC = () => {} }) => {
 
     handleSave(hasDone);
   };
+  const hasDoneChecker = (_id = "") => {
+    const diagnostics = Object.values(selected?.diagnostic)
+      .flat(Infinity)
+      .filter((item) => item._id !== _id);
+    return diagnostics.every(({ hasDone = false }) => hasDone);
+  };
 
   const handleSave = (hasDone) => {
     const { form } = task;
@@ -60,16 +66,20 @@ const Footer = ({ setShowHC = () => {} }) => {
           hasDone,
           department,
         };
+    const allDiagHasDone = hasDoneChecker(data?._id) && hasDone;
+    const status = allDiagHasDone ? "done" : "onProcess";
     setIsLoading(true);
     dispatch(
       LABRESULT({
         token,
         data,
+        status,
       })
     ).then(({ payload }) => {
-      setIsLoading(false);
-      dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+      const basePayload = payload?.item || payload?.payload;
+      dispatch(SetVALIDATOR({ ...basePayload, status }));
       dispatch(SetMODAL(false));
+      setIsLoading(false);
     });
   };
 

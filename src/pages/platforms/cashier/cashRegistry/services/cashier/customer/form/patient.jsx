@@ -48,7 +48,7 @@ export default function Patient({
             region: address?.region || "",
             province: address?.province || "",
             city: address?.city || "",
-            barangay: "",
+            barangay: address?.barangay || "",
             street: "",
           };
 

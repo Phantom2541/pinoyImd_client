@@ -8,7 +8,7 @@ const individual = (
   hmoCode,
   contract
 ) => {
-  const { isPromo = false, promo = 0, discountable = false } = menu;
+  const { onPromo: isPromo = false, promo = 0, discountable = false } = menu;
   const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(category)
     ? "opd"
     : category;
@@ -20,6 +20,15 @@ const individual = (
   if (_abbr === "ctr") gross = menu?.[contract];
 
   let up = Math.round((gross * 80) / 100);
+  if (isPromo) {
+    return {
+      gross,
+      up: promo,
+      discount: gross - promo,
+      color: "danger",
+      title: "Promo",
+    };
+  }
 
   if (membership && category === "mbs" && discountable) {
     const dr = Memberships.getDiscount(membership) || 0;
@@ -41,17 +50,6 @@ const individual = (
       discount: gross - up,
       color: "primary",
       title: "Special Price",
-    };
-  }
-
-  if (privilege === 5 && !isWellness) {
-    up = promo > 0 ? promo : up;
-    return {
-      gross,
-      up,
-      discount: gross - up,
-      color: "info",
-      title: "Special Discount",
     };
   }
 
