@@ -2,22 +2,15 @@ import { capitalize } from "../../../../../services/utilities";
 import { Services, Templates } from "../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import LabModal from "../../../laboratory/diagnostics/tasks/modal";
-import RadModal from "../../../radiology/diagnostics/tasks/modal";
+import Modal from "../../../laboratory/diagnostics/tasks/modal";
 import { SetTASK } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
-import { useState } from "react";
 
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ preferences }) => preferences);
   const dispatch = useDispatch();
-
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const department = menu?.department?.[0];
 
-  // ---------- Print functions ----------
   const handleLabPrint = (task) => {
     const _task = {
       ...task,
@@ -66,22 +59,10 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  // ---------- Modal handling ----------
-  const handleModalOpen = (task) => {
-    setSelectedTask(task);
-    setIsModalOpen(true);
-    dispatch(SetTASK({ task }));
-  };
-
-  const handleModalClose = () => {
-    setSelectedTask(null);
-    setIsModalOpen(false);
-  };
-
-  // ---------- Individual row ----------
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
     const departmentName = Templates.findByComponentName(form)?.department;
 
+    // ✅ Safe _packages handling
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
       : obj?.packages
@@ -102,6 +83,10 @@ export default function CollapseTable({ menu }) {
       department: departmentName,
       miscIndex,
       packages: obj?.packages,
+    };
+
+    const handleModal = () => {
+      dispatch(SetTASK({ task }));
     };
 
     return (
@@ -134,11 +119,10 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            {/* Modal Button */}
             <MDBBtn
-              title="Open Modal"
+              title="Modal"
               rounded
-              onClick={() => handleModalOpen(task)}
+              onClick={handleModal}
               color={obj?.hasDone ? "info" : "primary"}
               size="sm"
               className="py-1 px-3 m-0"
@@ -146,7 +130,6 @@ export default function CollapseTable({ menu }) {
               <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
             </MDBBtn>
 
-            {/* Print Button */}
             {Array.isArray(obj?.signatories) &&
               obj.signatories.length >= 2 &&
               obj?.hasDone && (
@@ -217,22 +200,7 @@ export default function CollapseTable({ menu }) {
           )}
         </tbody>
       </MDBTable>
-
-      {/* Dynamic Modal */}
-      {selectedTask?.department === "Laboratory" && (
-        <LabModal
-          task={selectedTask}
-          show={isModalOpen}
-          toggle={handleModalClose}
-        />
-      )}
-      {selectedTask?.department === "Radiology" && (
-        <RadModal
-          task={selectedTask}
-          show={isModalOpen}
-          toggle={handleModalClose}
-        />
-      )}
+      <Modal />
     </>
   );
 }
