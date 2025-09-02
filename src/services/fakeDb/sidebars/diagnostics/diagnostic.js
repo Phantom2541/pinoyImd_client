@@ -1,3 +1,5 @@
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+
 const diagnostic = [
   {
     name: "Dashboard",
@@ -84,6 +86,13 @@ const diagnostic = [
         path: "/offers/stocks",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

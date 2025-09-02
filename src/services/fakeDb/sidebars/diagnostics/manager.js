@@ -51,6 +51,7 @@ import {
   Outsources,
   Utilities,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
 } from "../../../../pages/platforms/cashier/index.js";
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
@@ -480,6 +481,13 @@ const ManagerSidebar = [
     icon: "book",
     path: "/user/manual",
     component: UserManual,
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

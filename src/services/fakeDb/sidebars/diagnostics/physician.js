@@ -13,6 +13,7 @@ import DailyTasks from "../../../../pages/platforms/physician/diagnostics/tasks"
 // import ImagingResults from "../../../pages/platforms/physician/imagingResults";
 // import Notifications from "../../../pages/platforms/physician/notifications";
 // import Referrals from "../../../pages/platforms/physician/referrals";
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const physician = [
   {
@@ -174,6 +175,13 @@ const physician = [
     icon: "bell",
     path: "/notifications",
     title: "Receive reminders and system alerts",
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 
