@@ -1,6 +1,4 @@
-import React from "react";
 import { currency } from "../../../../../../../services/utilities";
-// import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 
 const Header = ({ title, index, activeId, sum }) => {
   return (

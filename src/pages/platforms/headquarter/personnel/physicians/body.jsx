@@ -34,7 +34,6 @@ export default function Body() {
     setTieups(filtered);
   }, [filtered, isSuccess, closeModal]);
   console.log("filtered", filtered);
-  console.log("bodycollections", collections);
 
   //Trigger for update
   const handleDelete = (item) => {

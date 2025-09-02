@@ -19,6 +19,7 @@ import {
 } from "../../services/utilities";
 import "./style.css";
 import { BgRemover } from "../../components/images/index";
+import Hotline from "../../pages/platforms/hotline";
 const diagnostics = [
   "diagnostic",
   "clinic",
@@ -239,7 +240,17 @@ export default function SideNavigation({
                 </div>
               ))}
         </MDBSideNavNav>
+        {/* <button
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            left: "10px",
+          }}
+        >
+          Hotline <MDBIcon fas icon="phone-volume" />
+        </button> */}
       </MDBSideNav>
+      <Hotline />
     </div>
   );
 }

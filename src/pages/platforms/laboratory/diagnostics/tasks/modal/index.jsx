@@ -10,6 +10,9 @@ export default function Modal() {
       ({ validator }) => validator
     ),
     dispatch = useDispatch();
+  console.log("tasssssssk", task);
+  console.log("selected", selected);
+
   return (
     <MDBModal
       size="lg"
@@ -21,7 +24,7 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE("task"))}
         className="light-blue darken-3 white-text"
       >
-        <Patient patient={selected?.customerId} />
+        <Patient patient={task?.customerId} />
       </MDBModalHeader>
       <MDBModalBody className="mb-0 text-center">
         <MDBAlert

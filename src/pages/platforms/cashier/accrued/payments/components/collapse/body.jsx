@@ -6,6 +6,7 @@ import {
   dateFormat,
   fullName,
 } from "../../../../../../../services/utilities";
+import util from "../../../payables/util";
 
 export default function Collapsable({ deals = [] }) {
   return (
@@ -19,17 +20,24 @@ export default function Collapsable({ deals = [] }) {
       </MDBTableHead>
       <MDBTableBody>
         {deals?.map((deal, index) => {
-          const { payableId, amount, fsId, remarks, createdAt, category } =
-            deal;
+          const {
+            payableId,
+            amount,
+            fsId,
+            remarks,
+            createdAt,
+            category,
+            particular: par,
+            supplier: supp,
+          } = deal;
+
+          const particular = payableId?.particular || par;
+          const supplier = payableId?.supplier || supp;
 
           return (
             <tr key={index}>
               <td>
-                <h6>
-                  {payableId?.supplier
-                    ? payableId?.supplier?.displayname
-                    : fullName(payableId?.particular?.fullName)}
-                </h6>
+                <h6>{util.getVendorOrParticular(particular, supplier)}</h6>
               </td>
               <td>
                 <h6>

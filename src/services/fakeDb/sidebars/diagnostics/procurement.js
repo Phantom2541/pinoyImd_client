@@ -1,3 +1,5 @@
+import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+
 const procurement = [
   {
     name: "Bulletin Board",
@@ -162,6 +164,13 @@ const procurement = [
         title: "Manage supplier information, contacts, and supply history.",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

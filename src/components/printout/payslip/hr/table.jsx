@@ -10,6 +10,16 @@ export default function Table() {
   const { regular = { present: 0, absent: 0 }, special = 0 } = holiday;
   const { present = 0, absent = 0 } = regular || {};
   const hourlyRate = rate.daily / 8;
+  const { late = {}, underTime = {} } = deduction;
+
+  const lateUnderTimeShow = (obj) => {
+    const { deduc = "", mins = "", no = "" } = obj;
+    return `${no ? `(${no})` : ""} ${no && deduc ? " x " : ""} ${
+      mins ? `${mins} minutes` : ""
+    } ${
+      deduc ? ` ${deduc || mins ? " = " : ""} ${currency.format(deduc)}` : ""
+    }`;
+  };
 
   return (
     <div>
@@ -101,13 +111,13 @@ export default function Table() {
               </div>
             </td>
             <td className="py-0   px-1 " style={{ verticalAlign: "middle" }}>
-              Phil. Health
+              Late
             </td>
             <td
               className="py-0   px-1  text-right"
               style={{ verticalAlign: "middle" }}
             >
-              {currency.format(deduction?.ph)}
+              {lateUnderTimeShow(late)}
             </td>
           </tr>
           <tr>
@@ -122,9 +132,9 @@ export default function Table() {
                 "-"
               )}
             </td>
-            <td className="py-0   px-1 ">SSS</td>
+            <td className="py-0   px-1 ">Under Time</td>
             <td className="py-0 text-right   px-1 ">
-              {currency.format(deduction?.sss)}{" "}
+              {lateUnderTimeShow(underTime)}
             </td>
           </tr>
           <tr>
@@ -139,10 +149,10 @@ export default function Table() {
                 "-"
               )}
             </td>
-            <td className="py-0   px-1 ">Pag-ibig</td>
+            <td className="py-0   px-1 ">Phil. Health</td>
+
             <td className="py-0 text-right   px-1 ">
-              {" "}
-              {currency.format(deduction?.pi)}{" "}
+              {currency.format(deduction?.ph)}{" "}
             </td>
           </tr>
           <tr>
@@ -157,8 +167,10 @@ export default function Table() {
                 "-"
               )}
             </td>
-            <td className="py-0  px-1  "></td>
-            <td className="py-0   px-1 "> </td>
+            <td className="py-0  px-1  ">SSS</td>
+            <td className="py-0   px-1 text-right">
+              {currency.format(deduction?.sss)}{" "}
+            </td>
           </tr>
           <tr>
             <td className="py-0   px-1 ">Bonus</td>
@@ -166,8 +178,10 @@ export default function Table() {
               {" "}
               {currency.format(earn?.bonus)}{" "}
             </td>
-            <td className="py-0   px-1 "></td>
-            <td className="py-0   px-1 "> </td>
+            <td className="py-0   px-1 ">Pag-ibig</td>
+            <td className="py-0   px-1 text-right">
+              {currency.format(deduction?.pi)}{" "}
+            </td>
           </tr>
           <tr>
             <td className="py-0   px-1 ">Gross Earnings :</td>

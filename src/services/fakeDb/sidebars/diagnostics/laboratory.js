@@ -16,9 +16,11 @@ import {
   Wellness,
   Referrals,
   Hotlines,
+  HotlinesPoster,
   Suppliers,
   Onboarding,
 } from "../../../../pages/platforms/cashier";
+
 import {
   Assurance,
   Controls,
@@ -496,6 +498,13 @@ const laboratory = [
         title: "System settings and configuration",
       },
     ],
+  },
+  {
+    name: "Hotlines",
+    path: "/hotlines",
+    icon: "phone-alt",
+    title: "Emergency Hotlines Poster",
+    component: HotlinesPoster,
   },
 ];
 

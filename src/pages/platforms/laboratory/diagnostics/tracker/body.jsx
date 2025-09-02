@@ -36,6 +36,7 @@ export default function Body() {
           didHoverID={didHoverID}
           setDidHoverID={setDidHoverID}
           number={index + 1}
+          index={index}
           setActiveCollapse={setActiveCollapse}
           activeCollapse={activeCollapse}
           isActive={activeCollapse === task?._id}
