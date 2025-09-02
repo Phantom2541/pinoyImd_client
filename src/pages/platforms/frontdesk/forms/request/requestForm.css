@@ -1,0 +1,38 @@
+.requestform-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  min-width: 100%;
+  background: #f3f4f6; /* light gray */
+}
+
+/* card sized ~1/4 A4 */
+.requestform-card {
+  width: 105mm; /* 1/4 A4 width */
+  height: 148.5mm; /* 1/4 A4 height */
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.requestform-header {
+  border-bottom: 1px solid #ccc;
+  padding: 12px;
+  background: #f9f9f9;
+}
+
+.requestform-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+.laboratoryRequestForm-banner {
+  width: 100%;
+  max-height: 50px;
+  object-fit: fill;
+}
