@@ -309,7 +309,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "preference": "equal"
+    "preference": "gender"
   },
   {
     "id": 21,
