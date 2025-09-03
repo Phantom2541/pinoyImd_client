@@ -15,6 +15,7 @@ import {
   SETSSX,
   RESET_INSOURCE,
   SETHMO,
+  SetCH,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
@@ -24,6 +25,7 @@ import {
 import { BROWSE as BROWSE_BRANCHES } from "../../../../../../../../services/redux/slices/assets/branches";
 import { capitalize } from "lodash";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
+import { CardHolders } from "../../../../../../../../services/fakeDb/finance";
 const contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
@@ -38,6 +40,7 @@ export default function PosCard() {
       sourceId,
       formSubmitted,
       isSuccess,
+      ch,
     } = useSelector(({ pos }) => pos),
     { collections } = useSelector(({ providers }) => providers),
     { collections: inhouse } = useSelector(({ branches }) => branches),
@@ -184,7 +187,11 @@ export default function PosCard() {
   const getCIndex = (abbr) =>
     Categories.findIndex(({ abbr: name }) => name === abbr);
 
-  const srcCIndex = getCIndex(scType);
+  const getCHIndex = (abbr) =>
+    CardHolders.findIndex(({ abbr: name }) => name === abbr);
+  const srcEndPoint =
+    Categories[getCIndex(scType)]?.name ||
+    CardHolders[getCHIndex(scType)]?.name;
   const hasSources = sources?.length > 0;
   return (
     <>
@@ -232,7 +239,7 @@ export default function PosCard() {
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
             {[0, ...categories]?.map((c, index) => {
-              const { name = "", color = "" } = Categories[c];
+              const { name = "", color = "" } = Categories[c] || {};
               return (
                 <option value={c} key={`category-${index}`} style={{ color }}>
                   {name}
@@ -241,7 +248,46 @@ export default function PosCard() {
             })}
           </select>
         </div>
-        <div className="mt-2 d-flex align-items-center">
+        <div className="patient-form mt-2">
+          <span>Card Holder</span>
+          <select
+            disabled={!didSelect}
+            value={ch}
+            onChange={({ target }) => {
+              const value = target.value;
+              const haveSource = ["mbs", "ctr"].includes(value);
+              if (haveSource) {
+                setScType(value);
+              }
+              dispatch(SetCH(target.value));
+            }}
+          >
+            <option value={""}>None</option>
+            {CardHolders?.map(({ name = "", abbr = "", color = "" }, index) => {
+              return (
+                <option
+                  value={abbr}
+                  key={`category-${index}`}
+                  style={{ color }}
+                >
+                  {name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        {ch === "wls" && (
+          <div className="patient-form mt-2">
+            <span>Card Type:</span>
+            <select onChange={({ target }) => dispatch(SETHMO(target.value))}>
+              <option value={""}>None</option>
+              {company?.hmo?.map(({ code }) => (
+                <option value={code}>{HMO.getName(code)}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        <div className="mt-2">
           <span style={{ fontSize: "0.9rem", fontWeight: 400 }}>
             Source Type:
           </span>
@@ -260,8 +306,13 @@ export default function PosCard() {
                 color="info"
                 key={index}
                 onClick={() => {
-                  const aIndex = getCIndex(value);
-                  handleCategory(aIndex > -1 ? aIndex : 0);
+                  const chIndex = getCHIndex(value);
+                  if (chIndex > -1) {
+                    dispatch(SetCH(CardHolders[chIndex].abbr));
+                  } else {
+                    dispatch(SetCH(""));
+                  }
+                  // handleCategory(aIndex > -1 ? aIndex : 0);
                   setScType(value);
                   dispatch(RESET_INSOURCE());
                 }}
@@ -279,9 +330,7 @@ export default function PosCard() {
               if (!hasSources)
                 history.push(
                   `/cashier/sources/insources/${
-                    !isInhouse
-                      ? Categories[srcCIndex]?.name?.toLowerCase()
-                      : "inhouse"
+                    !isInhouse ? srcEndPoint?.toLowerCase() : "inhouse"
                   }`
                 );
             }}
@@ -291,7 +340,7 @@ export default function PosCard() {
             <option value="">
               {!hasSources
                 ? `No ${
-                    isInhouse ? "Inhouse" : Categories[srcCIndex]?.name
+                    isInhouse ? "Inhouse" : srcEndPoint
                   }. Click to register.`
                 : "None"}
             </option>
@@ -309,17 +358,7 @@ export default function PosCard() {
         </div>
         <div className="patient-form mt-2">
           {/* // wls */}
-          {category === 6 && (
-            <>
-              <span>Card:</span>
-              <select onChange={({ target }) => dispatch(SETHMO(target.value))}>
-                <option value={""}>None</option>
-                {company?.hmo?.map(({ code }) => (
-                  <option value={code}>{HMO.getName(code)}</option>
-                ))}
-              </select>
-            </>
-          )}
+
           {category === 7 && sourceId && scType === "mbs" && (
             <span>
               Membership :

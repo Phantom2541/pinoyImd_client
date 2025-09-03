@@ -34,6 +34,7 @@ const defaultCustomer = {
     barangay: "",
     street: "",
   },
+  ch: "", //Card Holder
   dob: "",
   isMale: false,
   mobile: "",
@@ -154,6 +155,9 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCH: (state, { payload }) => {
+      state.ch = payload;
+    },
     SETMENUS: (state, { payload }) => {
       state.menus = [...payload];
       localStorage.setItem("menus", JSON.stringify(payload));
@@ -307,6 +311,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCH,
   SETSSX,
   SETCART,
   SETMENUS,

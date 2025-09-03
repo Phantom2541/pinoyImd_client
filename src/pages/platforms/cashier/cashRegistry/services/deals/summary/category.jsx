@@ -37,15 +37,23 @@ export default function Payments() {
     };
 
     collections?.forEach((item) => {
-      const { payment, amount, category } = item;
-      totals[payment] = (totals[payment] || 0) + amount;
+      const { payment, amount, refNo = { amount: 0 }, ch } = item;
+      const isMixed = payment === "mixed";
+      const baseAmount = isMixed ? refNo?.amount : amount;
+      const totalsKey = isMixed ? "voucher" : payment;
+      totals[totalsKey] = (totals[totalsKey] || 0) + baseAmount;
+
+      if (isMixed) {
+        const mixedCash = amount - refNo?.amount;
+        totals.cash = (totals.cash || 0) + (mixedCash || 0);
+      }
 
       if (
-        payment === "voucher" &&
-        category &&
-        summary.hasOwnProperty(category)
+        (payment === "voucher" || isMixed) &&
+        ch &&
+        summary.hasOwnProperty(ch)
       ) {
-        summary[category] += amount;
+        summary[ch] += baseAmount;
       }
     });
 

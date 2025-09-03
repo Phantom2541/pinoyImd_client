@@ -40,6 +40,7 @@ export default function Summary() {
       hmo,
       contract,
       formSubmitted = false,
+      ch,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [delayedShowCash, setDelayedShowCash] = useState(false),
@@ -55,11 +56,12 @@ export default function Summary() {
       privilege,
       membership,
       hmo,
-      contract
+      contract,
+      ch
     ),
     amount = (gross || 0) - (Math.round(discount) || 0),
     { abbr = undefined } = Categories[category],
-    providedPaymentOptions = Payments[abbr];
+    providedPaymentOptions = Payments[ch ? ch : abbr];
 
   const showCash =
     payment === "cash" ||
@@ -68,8 +70,8 @@ export default function Summary() {
   const isMixed = payment === "mixed";
 
   useEffect(() => {
-    setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
-  }, [abbr]);
+    setPayment(["mbs", "wls", "ctr"].includes(ch) ? "voucher" : "cash");
+  }, [ch]);
 
   useEffect(() => {
     let timer;
@@ -97,11 +99,15 @@ export default function Summary() {
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
       payment,
-      refNo,
+      refNo: {
+        ...refNo,
+        amount: refNo.amount > amount ? amount : refNo.amount,
+      },
       hmo,
       cash,
       amount,
       discount,
+      ch,
       isPickup,
       department,
       privilege,
@@ -123,7 +129,9 @@ export default function Summary() {
             category,
             privilege,
             membership,
-            hmo
+            hmo,
+            contract,
+            ch
           );
 
         return {
@@ -171,6 +179,7 @@ export default function Summary() {
       );
 
       dispatch(SETCART());
+      setRefNo({ number: "", amount: 0 });
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {
       addToast("Transaction failed", { appearance: "error" });
@@ -183,8 +192,43 @@ export default function Summary() {
     }
   };
 
+  const showAlert = (title, text) => {
+    return Swal.fire({
+      title,
+      text,
+      icon: "warning",
+      confirmButtonText: "Got it",
+      confirmButtonColor: "#4CAF50",
+      background: "#ffffff",
+      backdrop: `rgba(0,0,0,0.4)`,
+      allowOutsideClick: false,
+    });
+  };
+
   const handleCheckout = async (e) => {
     e.preventDefault();
+
+    if (ch === "ctr" && !sourceId) {
+      return showAlert(
+        "Source Needed",
+        "Please select a source for the Card Holder contract before continuing."
+      );
+    }
+
+    if (ch === "mbs" && !sourceId) {
+      return showAlert(
+        "Source Needed",
+        "Please select a source for the Card Holder Membership before continuing."
+      );
+    }
+
+    if (ch === "wls" && !hmo) {
+      return showAlert(
+        "Card Type Needed",
+        "Please select a card type for the HMO Card Holder before continuing."
+      );
+    }
+
     if (!allServicesHavePrices(cart, category, hmo)) {
       Swal.fire({
         title: "Service Validator?",

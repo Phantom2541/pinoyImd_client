@@ -14,9 +14,8 @@ import {
 import Swal from "sweetalert2";
 
 export default function Menus({ patronPresent }) {
-  const { category, privilege, cart, membership, hmo, contract } = useSelector(
-      ({ pos }) => pos
-    ),
+  const { category, privilege, cart, membership, hmo, contract, ch } =
+      useSelector(({ pos }) => pos),
     { customer } = useSelector(({ pos }) => pos),
     dispatch = useDispatch();
 
@@ -219,7 +218,8 @@ export default function Menus({ patronPresent }) {
                 privilege,
                 membership,
                 hmo,
-                contract
+                contract,
+                ch
               );
 
               return (
