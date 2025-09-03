@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../services/utilities";
 
-const MedicalClearanceForm = () => {
+const MedicalClearanceFormPrint = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
 
   const companyName = activePlatform?.company?.name;
@@ -14,16 +14,10 @@ const MedicalClearanceForm = () => {
 
   const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
 
-  const cellStyle = {
-    border: "1px solid #000",
-    padding: "6px",
-    fontSize: "1rem",
-    fontWeight: "bold",
-  };
-
-  const handlePrint = () => {
+  // 🔹 Auto open print dialog
+  useEffect(() => {
     window.print();
-  };
+  }, []);
 
   const renderTable = () => (
     <table
@@ -51,27 +45,9 @@ const MedicalClearanceForm = () => {
               fontSize: "1rem",
               textAlign: "center",
               padding: "6px",
-              position: "relative",
             }}
           >
             MEDICAL EXAMINATION CLEARANCE
-            <button
-              onClick={handlePrint}
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "5px",
-                padding: "4px 10px",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-              className="no-print"
-            >
-              Print
-            </button>
           </th>
         </tr>
       </thead>
@@ -97,7 +73,7 @@ const MedicalClearanceForm = () => {
           </td>
         </tr>
 
-        {/* Histories (4 columns) */}
+        {/* Histories */}
         <tr>
           <td colSpan={4} style={{ border: "1px solid #000", padding: "10px" }}>
             <div style={{ display: "flex", gap: "20px" }}>
@@ -162,9 +138,43 @@ const MedicalClearanceForm = () => {
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
-      <div className="medicalClearanceForm-grid d-flex justify-content-center align-items-center">
-        <div className="medicalClearanceForm-copy">{renderTable()}</div>
+      <div className="medicalClearanceForm-grid">
+        {/* First copy */}
+        {renderTable()}
+
+        {/* Divider line */}
+        <hr className="divider" />
+
+        {/* Second copy */}
+        {renderTable()}
       </div>
+
+      {/* CSS */}
+      <style>
+        {`
+          @media print {
+            @page {
+              size: A4;
+              margin: 12mm;
+            }
+            .divider {
+              border: none;
+              border-top: 1px dashed #000;
+              margin: 12px 0;
+            }
+            .medicalClearanceForm-grid {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              height: 100vh; /* hatiin buong page */
+            }
+            .medicalClearanceForm-grid table {
+              flex: 1;
+              margin: 0;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };
@@ -182,4 +192,4 @@ const Section = ({ title, items, itemStyle }) => (
   </div>
 );
 
-export default MedicalClearanceForm;
+export default MedicalClearanceFormPrint;
