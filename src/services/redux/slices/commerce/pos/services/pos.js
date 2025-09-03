@@ -34,7 +34,14 @@ const defaultCustomer = {
     barangay: "",
     street: "",
   },
-  ch: "", //Card Holder
+  cardHolder: {
+    type: "",
+    company: {
+      name: "",
+      ref: "",
+    },
+  },
+
   dob: "",
   isMale: false,
   mobile: "",
@@ -156,7 +163,7 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetCH: (state, { payload }) => {
-      state.ch = payload;
+      state.cardHolder = payload;
     },
     SETMENUS: (state, { payload }) => {
       state.menus = [...payload];
@@ -214,10 +221,7 @@ export const reduxSlice = createSlice({
       state.physicianId = payload;
     },
     SETSOURCE: (state, { payload }) => {
-      const { _id, membership, contract } = payload;
-      state.sourceId = _id;
-      state.membership = membership;
-      state.contract = contract;
+      state.sourceId = payload;
     },
     OVERRIDE_CART: (state, { payload }) => {
       state.cart = payload;
@@ -260,9 +264,6 @@ export const reduxSlice = createSlice({
     },
     RESET_INSOURCE: (state) => {
       state.sourceId = null;
-      state.membership = null;
-      state.hmo = null;
-      state.contract = null;
     },
   },
   extraReducers: (builder) => {

@@ -40,7 +40,7 @@ export default function Summary() {
       hmo,
       contract,
       formSubmitted = false,
-      ch,
+      cardHolder,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [delayedShowCash, setDelayedShowCash] = useState(false),
@@ -54,14 +54,12 @@ export default function Summary() {
       cart,
       category,
       privilege,
-      membership,
-      hmo,
-      contract,
-      ch
+      cardHolder
     ),
     amount = (gross || 0) - (Math.round(discount) || 0),
     { abbr = undefined } = Categories[category],
-    providedPaymentOptions = Payments[ch ? ch : abbr];
+    providedPaymentOptions =
+      Payments[cardHolder?.type ? cardHolder?.type : abbr];
 
   const showCash =
     payment === "cash" ||
@@ -70,8 +68,10 @@ export default function Summary() {
   const isMixed = payment === "mixed";
 
   useEffect(() => {
-    setPayment(["mbs", "wls", "ctr"].includes(ch) ? "voucher" : "cash");
-  }, [ch]);
+    setPayment(
+      ["mbs", "wls", "ctr"].includes(cardHolder?.type) ? "voucher" : "cash"
+    );
+  }, [cardHolder]);
 
   useEffect(() => {
     let timer;
@@ -107,7 +107,6 @@ export default function Summary() {
       cash,
       amount,
       discount,
-      ch,
       isPickup,
       department,
       privilege,
@@ -115,6 +114,7 @@ export default function Summary() {
       cashier: auth?.fullName,
       isPrint: true,
       status: "pending",
+      ...(cardHolder?.type && { cardHolder }),
       cart: cart.map((menu) => {
         const {
             description,
@@ -128,10 +128,7 @@ export default function Summary() {
             menu,
             category,
             privilege,
-            membership,
-            hmo,
-            contract,
-            ch
+            cardHolder
           );
 
         return {
@@ -207,22 +204,23 @@ export default function Summary() {
 
   const handleCheckout = async (e) => {
     e.preventDefault();
-
-    if (ch === "ctr" && !sourceId) {
+    const { type = "", company = { name: "", ref: "" } } = cardHolder;
+    const { name = "", ref = "" } = company;
+    if (type === "ctr" && !ref) {
       return showAlert(
         "Source Needed",
         "Please select a source for the Card Holder contract before continuing."
       );
     }
 
-    if (ch === "mbs" && !sourceId) {
+    if (type === "mbs" && !ref) {
       return showAlert(
         "Source Needed",
         "Please select a source for the Card Holder Membership before continuing."
       );
     }
 
-    if (ch === "wls" && !hmo) {
+    if (type === "wls" && !name) {
       return showAlert(
         "Card Type Needed",
         "Please select a card type for the HMO Card Holder before continuing."

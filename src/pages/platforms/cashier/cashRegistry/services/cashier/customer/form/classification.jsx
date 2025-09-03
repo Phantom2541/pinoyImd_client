@@ -26,6 +26,7 @@ import { BROWSE as BROWSE_BRANCHES } from "../../../../../../../../services/redu
 import { capitalize } from "lodash";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
 import { CardHolders } from "../../../../../../../../services/fakeDb/finance";
+import CardCompany from "./cardCompany";
 const contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
@@ -141,7 +142,9 @@ export default function PosCard() {
 
   const isInhouse = scType === "inhouse";
   //filter the sources by source type
-  const _sources = collections?.filter(({ category }) => category === scType);
+  const _sources = [...collections]?.filter(
+    ({ category }) => category === scType
+  );
   //if inhouse set the branches to sources if not get the filtered sources
   const sources = isInhouse
     ? inhouse.filter(({ _id }) => _id !== branch?._id)
@@ -166,22 +169,10 @@ export default function PosCard() {
       ? sources?.find((source) => source?._id.toString() === _id)
       : {};
 
-    const {
-      membership = "",
-      contract = "",
-      clients,
-      _id: scID = "",
-    } = _source || {};
-
+    const { clients, _id: scID = "" } = _source || {};
     setSource(_source);
     dispatch(RESET_INSOURCE());
-    dispatch(
-      SETSOURCE({
-        _id: isInhouse ? scID : clients?._id,
-        membership,
-        contract,
-      })
-    );
+    dispatch(SETSOURCE(isInhouse ? scID : clients?._id));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
   const getCIndex = (abbr) =>
@@ -259,7 +250,7 @@ export default function PosCard() {
               if (haveSource) {
                 setScType(value);
               }
-              dispatch(SetCH(target.value));
+              dispatch(SetCH({ type: target.value }));
             }}
           >
             <option value={""}>None</option>
@@ -276,17 +267,7 @@ export default function PosCard() {
             })}
           </select>
         </div>
-        {ch === "wls" && (
-          <div className="patient-form mt-2">
-            <span>Card Type:</span>
-            <select onChange={({ target }) => dispatch(SETHMO(target.value))}>
-              <option value={""}>None</option>
-              {company?.hmo?.map(({ code }) => (
-                <option value={code}>{HMO.getName(code)}</option>
-              ))}
-            </select>
-          </div>
-        )}
+        <CardCompany />
         <div className="mt-2">
           <span style={{ fontSize: "0.9rem", fontWeight: 400 }}>
             Source Type:
@@ -306,13 +287,6 @@ export default function PosCard() {
                 color="info"
                 key={index}
                 onClick={() => {
-                  const chIndex = getCHIndex(value);
-                  if (chIndex > -1) {
-                    dispatch(SetCH(CardHolders[chIndex].abbr));
-                  } else {
-                    dispatch(SetCH(""));
-                  }
-                  // handleCategory(aIndex > -1 ? aIndex : 0);
                   setScType(value);
                   dispatch(RESET_INSOURCE());
                 }}
