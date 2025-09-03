@@ -53,26 +53,25 @@ const MedicalClearanceFormPrint = () => {
       </thead>
       <tbody>
         {/* Patient Info */}
-        <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Requesting Company: _____________________________ &nbsp;&nbsp;&nbsp;
-            Date: _________________________________
-          </td>
-        </tr>
+      <tr>
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+              Requesting Company: _________________________________________ &nbsp;&nbsp;&nbsp;
+              Date: _______________________________
+            </td>
+          </tr>
 
-        <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+          <tr>
+              <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
             Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
-            _______ &nbsp;&nbsp;&nbsp; Civil Status: _______________
+            _______ &nbsp;&nbsp;&nbsp;Civil Status: __________________________
           </td>
         </tr>
 
         <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Home Address: _______________________________________________________________________________________________
+        <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Home Address: ____________________________________________________________________________________
           </td>
-        </tr>
-
+          </tr>
         {/* Histories */}
         <tr>
           <td colSpan={4} style={{ border: "1px solid #000", padding: "10px" }}>

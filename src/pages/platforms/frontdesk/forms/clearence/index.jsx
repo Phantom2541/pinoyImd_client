@@ -90,21 +90,21 @@ const MedicalClearanceForm = () => {
           {/* Patient Info */}
           <tr>
             <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-              Requesting Company: _____________________________ &nbsp;&nbsp;&nbsp;
-              Date: ________________________________
+              Requesting Company: _________________________________________ &nbsp;&nbsp;&nbsp;
+              Date: _______________________________
             </td>
           </tr>
 
           <tr>
               <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
             Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
-            _______ &nbsp;&nbsp;&nbsp; Civil Status: _______________
+            _______ &nbsp;&nbsp;&nbsp;Civil Status: __________________________
           </td>
         </tr>
 
         <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Home Address: _______________________________________________________________________________________________
+        <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Home Address: ____________________________________________________________________________________
           </td>
           </tr>
 
