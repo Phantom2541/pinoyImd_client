@@ -99,11 +99,6 @@ export default function Summary() {
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
       payment,
-      refNo: {
-        ...refNo,
-        amount: refNo.amount > amount ? amount : refNo.amount,
-      },
-      hmo,
       cash,
       amount,
       discount,
@@ -115,6 +110,12 @@ export default function Summary() {
       isPrint: true,
       status: "pending",
       ...(cardHolder?.type && { cardHolder }),
+      ...(refNo.amount > 0 && {
+        refNo: {
+          ...refNo,
+          amount: refNo.amount > amount ? amount : refNo.amount,
+        },
+      }),
       cart: cart.map((menu) => {
         const {
             description,
