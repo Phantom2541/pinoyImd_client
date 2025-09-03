@@ -45,9 +45,10 @@
       "Xray",
       "2DEcho",
       "CTscan",
-      "Fibroscan"
+      "Fibroscan",
+      "MRI"
     ],
-    "codes": ["ECG", "UTZ", "XR", "2DE", "CTs", "FBs"]
+    "codes": ["ECG", "UTZ", "XR", "2DE", "CTs", "FBs", "MRI"]
   },
   {
     "department": "CLINIC",

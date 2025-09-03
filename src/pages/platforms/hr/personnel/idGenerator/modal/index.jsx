@@ -6,6 +6,8 @@ import {
   NEXT,
   UPDATE,
 } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import { UPLOAD as UPLOADFBIMG } from "../../../../../../services/redux/slices/assets/persons/auth";
+import { Cloudinary } from "../../../../../../services/utilities";
 import html2canvas from "html2canvas";
 import ID from "./id";
 import Setting from "./setting";
@@ -23,7 +25,7 @@ export default function Modal() {
       ({ personnels }) => personnels
     ),
     { ct: branch } = useSelector(({ branches }) => branches),
-    { token } = useSelector(({ auth }) => auth),
+    { token, company, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -139,13 +141,13 @@ export default function Modal() {
   const handleSave = useCallback(async () => {
     if (!frontWrapperRef.current || !backWrapperRef.current) return;
 
-    // Collect dfp (styles lang)
+    // Collect dfp (styles only)
     const dfp = placedValues.reduce((acc, { key, value, ...styles }) => {
       acc[key] = styles;
       return acc;
     }, {});
 
-    // --- Always save dfp to DB ---
+    // Always save dfp to DB
     dispatch(
       UPDATE({
         token,
@@ -154,59 +156,60 @@ export default function Modal() {
     );
 
     if (!isComplete) {
-      // ❌ Incomplete: save lang sa DB, walang download
       dispatch(NEXT(activeIndex + 1));
       return;
     }
 
-    // ✅ Complete: proceed with rendering + download
     const options = { backgroundColor: null, scale: 2 };
-
-    // Render canvases
     const frontCanvas = await html2canvas(frontWrapperRef.current, options);
     const backCanvas = await html2canvas(backWrapperRef.current, options);
 
-    // Convert to blob
-    const frontBlob = await new Promise((resolve) =>
-      frontCanvas.toBlob(resolve, "image/png", 1.0)
+    const spacing = 25;
+    const combinedWidth = frontCanvas.width + spacing + backCanvas.width;
+    const combinedHeight = Math.max(frontCanvas.height, backCanvas.height);
+
+    const combinedCanvas = document.createElement("canvas");
+    combinedCanvas.width = combinedWidth;
+    combinedCanvas.height = combinedHeight;
+
+    const ctx = combinedCanvas.getContext("2d");
+    ctx.drawImage(frontCanvas, 0, 0);
+    ctx.drawImage(backCanvas, frontCanvas.width + spacing, 0);
+
+    // Convert to Blob
+    const combinedBlob = await new Promise((resolve) =>
+      combinedCanvas.toBlob(resolve, "image/png", 1.0)
     );
-    const backBlob = await new Promise((resolve) =>
-      backCanvas.toBlob(resolve, "image/png", 1.0)
-    );
 
-    // Generate filenames
-    const empNo = selected?.front?.emp || "No Name";
-    const dept = selected?.front?.department || "No Department";
-    const frontName = `${empNo}-${dept}-front.png`;
-    const backName = `${empNo}-${dept}-back.png`;
+    // Convert Blob to Base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64data = reader.result;
 
-    try {
-      // Save FRONT
-      const frontHandle = await window.showSaveFilePicker({
-        suggestedName: frontName,
-        types: [
-          { description: "PNG Image", accept: { "image/png": [".png"] } },
-        ],
-      });
-      const frontWritable = await frontHandle.createWritable();
-      await frontWritable.write(frontBlob);
-      await frontWritable.close();
+      // Generate folder & filename
+      const empNo = selected?.front?.emp || "NoEmp";
+      const dob = selected?.front?.dob
+        ? selected.front.dob.replace(/-/g, "")
+        : "NoDOB";
+      const today = new Date().toISOString().split("T")[0].replace(/-/g, "");
+      const filename = `${empNo}_${dob}_${today}`;
 
-      // Save BACK
-      const backHandle = await window.showSaveFilePicker({
-        suggestedName: backName,
-        types: [
-          { description: "PNG Image", accept: { "image/png": [".png"] } },
-        ],
-      });
-      const backWritable = await backHandle.createWritable();
-      await backWritable.write(backBlob);
-      await backWritable.close();
-    } catch (err) {
-      console.error("Save cancelled or failed:", err);
-    }
+      const folderPath = `companies/${company?.name}/${activePlatform?.branch?.name}/ic/generatedID`; // dito lalagay yung image
 
-    dispatch(NEXT(activeIndex + 1));
+      // Upload to Cloudinary
+      const form = Cloudinary.buildFileForm(base64data, folderPath, filename);
+
+      dispatch(UPLOADFBIMG({ data: form, token }))
+        .then((res) => {
+          const imgId = res.payload.imgId;
+          console.log("Uploaded image ID:", imgId);
+          // Optional: pwede i-update sa DB para may link sa employee
+        })
+        .catch((err) => console.error("Upload failed:", err))
+        .finally(() => dispatch(NEXT(activeIndex + 1)));
+    };
+
+    reader.readAsDataURL(combinedBlob);
   }, [placedValues, dispatch, token, selected, activeIndex, isComplete]);
 
   useEffect(() => {

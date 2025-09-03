@@ -14,18 +14,41 @@ const MedicalClearanceForm = () => {
 
   const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
 
-  const handlePrint = () => {
-    window.print();
+ const handlePrint = () => {
+    window.open(
+      "/printout/laboratoryClearanceRequestForm",
+      "RequestForm",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
   };
-
+    
   return (
     <div
       style={{
         fontFamily: "Arial, sans-serif",
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
+      {/* Header with Print Button (hidden on print) */}
+      <div className="no-print" style={{ marginBottom: "12px" }}>
+        <button
+          onClick={handlePrint}
+          style={{
+            padding: "6px 12px",
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Print
+        </button>
+      </div>
+
+      {/* Clearance Form */}
       <table
         style={{
           width: "100%",
@@ -56,58 +79,31 @@ const MedicalClearanceForm = () => {
                 fontSize: "1rem",
                 textAlign: "center",
                 padding: "6px",
-                position: "relative",
                 border: "1px solid #000",
               }}
             >
               MEDICAL EXAMINATION CLEARANCE
-              <button
-                onClick={handlePrint}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "5px",
-                  padding: "4px 10px",
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-                className="no-print"
-              >
-                Print
-              </button>
             </th>
           </tr>
         </thead>
         <tbody>
           {/* Patient Info */}
           <tr>
-            <td
-              colSpan={4}
-              style={{ padding: "6px 10px", fontSize: "0.9rem" }}
-            >
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
               Requesting Company: _____________________________ &nbsp;&nbsp;&nbsp;
               Date: _____________________________
             </td>
           </tr>
 
           <tr>
-            <td
-              colSpan={4}
-              style={{ padding: "6px 10px", fontSize: "0.9rem" }}
-            >
-              Name: ____________________________________ &nbsp;&nbsp;&nbsp;
-              Age/Sex: _______ &nbsp;&nbsp;&nbsp; Civil Status: _______
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+              Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
+              _______ &nbsp;&nbsp;&nbsp; Civil Status: _______
             </td>
           </tr>
 
           <tr>
-            <td
-              colSpan={4}
-              style={{ padding: "6px 10px", fontSize: "0.9rem" }}
-            >
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
               Home Address: _________________________________________________
             </td>
           </tr>
