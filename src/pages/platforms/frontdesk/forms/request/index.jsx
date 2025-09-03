@@ -1,20 +1,27 @@
 import React from "react";
-import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
+import { MDBAnimation, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
 import "./requestForm.css"; // import the css
 
 export default function RequestForm() {
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center", // horizontal center
+        alignItems: "center", // vertical center
+        minHeight: "100vh", // take full screen height
+      }}
+    >
       <MDBAnimation type="bounceInDown">
-        <MDBCard narrow className="pb-3 mt-3" style={{ minHeight: "600px" }}>
-          <Header />
+        <Header />
+        <div className="requestform-card">
           <MDBCardBody>
             <Body />
           </MDBCardBody>
-        </MDBCard>
+        </div>
       </MDBAnimation>
-    </>
+    </div>
   );
 }

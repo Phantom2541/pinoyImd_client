@@ -15,14 +15,8 @@ const Header = () => {
 
   return (
     <div className="d-flex justify-content-center">
-      <MDBBtn
-        size="sm"
-        rounded
-        color="info"
-        onClick={handlePrintOut}
-        className="no-print"
-      >
-        <MDBIcon icon="print" />
+      <MDBBtn size="md" color="primary" onClick={handlePrintOut}>
+        Print
       </MDBBtn>
     </div>
   );
