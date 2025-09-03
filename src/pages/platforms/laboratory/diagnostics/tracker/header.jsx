@@ -35,7 +35,7 @@ export default function Header() {
           token,
           key: {
             customerId: patientId,
-            department: activePlatform?.department,
+            // department: activePlatform?.department,
           },
         })
       );
@@ -46,7 +46,7 @@ export default function Header() {
           token,
           key: {
             customerId: _id,
-            department: activePlatform?.department,
+            // department: activePlatform?.department,
           },
         })
       );

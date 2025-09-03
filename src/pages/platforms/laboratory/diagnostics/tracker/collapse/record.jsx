@@ -93,8 +93,6 @@ export default function CollapseTable({ menu }) {
 
     const handleModal = () => {
       task.customerId = task.patient;
-      console.log("task", task);
-
       dispatch(SetTASK({ task }));
     };
 

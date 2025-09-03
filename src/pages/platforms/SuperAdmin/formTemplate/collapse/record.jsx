@@ -6,25 +6,18 @@ import Modal from "../../../laboratory/diagnostics/tasks/modal";
 import { SetTASK } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 export default function CollapseTable({ menu }) {
-  const { activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ preferences }) => preferences),
-    // [showModal, setShowModal] = useState(false),
-    dispatch = useDispatch(),
-    department = menu?.department[0];
-
-  // const toggleModal = () => setShowModal(!showModal);
+  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ preferences }) => preferences);
+  const dispatch = useDispatch();
+  const department = menu?.department?.[0];
 
   const handleLabPrint = (task) => {
     const _task = {
       ...task,
       signatories: Array.isArray(task?.signatories)
-        ? task.signatories.map((s, i) => ({
-            ...s,
-            withSignature: (i === 0 || i === 1) && true,
-          }))
+        ? task.signatories.map((s, i) => ({ ...s, withSignature: i < 2 }))
         : undefined,
     };
-    console.log("_task", _task);
 
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem(
@@ -33,16 +26,15 @@ export default function CollapseTable({ menu }) {
     );
 
     const URL = `${window.location.origin}/printout/laboratory/task`;
-    const title = `Laboratory Task Printout`;
     const features = "top=100px,left=100px,width=794px,height=1123px";
 
     setTimeout(() => {
-      const printWindow = window.open(URL, title, features);
-      if (printWindow) {
-        printWindow.focus();
-      } else {
-        console.warn("Popup blocked or failed to open.");
-      }
+      const printWindow = window.open(
+        URL,
+        "Laboratory Task Printout",
+        features
+      );
+      printWindow?.focus();
     }, 100);
   };
 
@@ -50,17 +42,16 @@ export default function CollapseTable({ menu }) {
     const _task = {
       ...task,
       signatories: Array.isArray(task?.signatories)
-        ? task.signatories.map((s, i) => ({
-            ...s,
-            withSignature: (i === 0 || i === 1) && true,
-          }))
+        ? task.signatories.map((s, i) => ({ ...s, withSignature: i < 2 }))
         : undefined,
     };
-    const services = Services.find(task.services);
+
+    const services = Services.find(task.services) || [];
     localStorage.setItem(
       "taskPrintout",
       JSON.stringify({ ..._task, services })
     );
+
     window.open(
       "/printout/radiology/task",
       "Radiology Task Printout",
@@ -69,24 +60,27 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
-    const department = Templates.findByComponentName(form)?.department;
+    const departmentName = Templates.findByComponentName(form)?.department;
 
+    // ✅ Safe _packages handling
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
-      : Object.keys(obj?.packages || {}).map(Number);
+      : obj?.packages
+      ? [obj.packages]
+      : [];
 
     const task = {
       ...obj,
-      key: `${form}-${index}`,
+      key: `${form}-${index}-${miscIndex}`,
       form,
-      generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
-      patient: customerId,
-      source: source || {},
+      generateHealthyClient: ["Urinalysis", "Parasitology"].includes(form),
+      patient: menu?.customerId,
+      source: menu?.source || {},
       hasDone: obj?.hasDone,
-      category,
-      _id: _id,
+      category: menu?.category,
+      _id: menu?._id,
       remarks: obj?.remarks,
-      department,
+      department: departmentName,
       miscIndex,
       packages: obj?.packages,
     };
@@ -98,7 +92,7 @@ export default function CollapseTable({ menu }) {
     return (
       <tr key={task.key}>
         <td className="fw-bold">
-          {capitalize(department)}
+          {capitalize(departmentName)}
           {obj?.hasDone && (
             <MDBBadge color="success" className="ml-2">
               Done
@@ -107,45 +101,53 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>{capitalize(form)}</td>
         <td>
-          {Services.whereIn(_packages).map(({ abbreviation }, index) => (
-            <MDBBadge
-              pill
-              key={`${task.key}-service-${index}`}
-              className="pt-1"
-            >
-              {abbreviation}
+          {_packages.length === 0 ? (
+            <MDBBadge color="danger" pill>
+              No services
             </MDBBadge>
-          ))}
+          ) : (
+            Services.whereIn(_packages)?.map(({ abbreviation }, idx) => (
+              <MDBBadge
+                key={`${task.key}-service-${idx}`}
+                pill
+                className="pt-1"
+              >
+                {abbreviation}
+              </MDBBadge>
+            ))
+          )}
         </td>
         <td>
           <MDBBtnGroup>
-              <MDBBtn
-                title="Modal"
-                rounded
-                onClick={() => {
-                  console.log("task", task);
+            <MDBBtn
+              title="Modal"
+              rounded
+              onClick={handleModal}
+              color={obj?.hasDone ? "info" : "primary"}
+              size="sm"
+              className="py-1 px-3 m-0"
+            >
+              <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
+            </MDBBtn>
 
-                  handleModal(task);
-                }}
-                color={obj?.hasDone ? "info" : "primary"}
-                size="sm"
-                className="py-1 px-3 m-0"
-              >
-                <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
-              </MDBBtn>
-            
+            {Array.isArray(obj?.signatories) &&
+              obj.signatories.length >= 2 &&
+              obj?.hasDone && (
                 <MDBBtn
                   rounded
                   onClick={() => {
                     const selected = {
                       ...task,
                       branchId: menu?.branchId,
-                      referral,
+                      referral:
+                        menu?.physicianId?.fullName?.lname ||
+                        menu?.physicianSTR ||
+                        "",
                       services: _packages,
                       signatories: obj?.signatories,
                       isPrint: true,
                     };
-                    activePlatform.department === "Laboratory"
+                    activePlatform?.department === "Laboratory"
                       ? handleLabPrint(selected)
                       : handleRadPrint(selected);
                   }}
@@ -155,23 +157,15 @@ export default function CollapseTable({ menu }) {
                 >
                   <MDBIcon icon="print" />
                 </MDBBtn>
-              
+              )}
           </MDBBtnGroup>
         </td>
       </tr>
     );
   };
 
-  const {
-    customerId,
-    physicianId,
-    source,
-    category,
-    _id,
-    diagnostic,
-    physicianSTR,
-  } = menu;
-  const referral = physicianId?.fullName?.lname || physicianSTR || "";
+  const diagnostic = menu?.diagnostic;
+
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
@@ -185,20 +179,17 @@ export default function CollapseTable({ menu }) {
         </thead>
         <tbody>
           {diagnostic ? (
-            Object.keys(diagnostic)?.map((key, index) => {
+            Object.keys(diagnostic).map((key, index) => {
               const rawEntry = diagnostic[key];
-              const entry = { ...rawEntry, key };
               if (Array.isArray(rawEntry))
                 return rawEntry.map((result, i) =>
-                  handleIndividual(
-                    key.toLowerCase(),
-                    result,
-                    index,
-                    i,
-                    rawEntry.length > 1
-                  )
+                  handleIndividual(key.toLowerCase(), result, index, i)
                 );
-              return handleIndividual(key.toLowerCase(), entry, index);
+              return handleIndividual(
+                key.toLowerCase(),
+                { ...rawEntry, key },
+                index
+              );
             })
           ) : (
             <tr>
