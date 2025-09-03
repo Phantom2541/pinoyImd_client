@@ -42,6 +42,8 @@ export default function Summary() {
       formSubmitted = false,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
+    [delayedShowCash, setDelayedShowCash] = useState(false),
+    [refNo, setRefNo] = useState({ number: "", amount: 0 }),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
     { addToast } = useToasts(),
@@ -59,9 +61,31 @@ export default function Summary() {
     { abbr = undefined } = Categories[category],
     providedPaymentOptions = Payments[abbr];
 
+  const showCash =
+    payment === "cash" ||
+    (payment === "mixed" && refNo.amount && amount > refNo.amount);
+
+  const isMixed = payment === "mixed";
+
   useEffect(() => {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
+
+  useEffect(() => {
+    let timer;
+
+    if (isMixed && showCash) {
+      // clear muna bago mag start ulit
+      timer = setTimeout(() => {
+        setDelayedShowCash(true);
+      }, 500);
+    } else {
+      setDelayedShowCash(showCash); // agad mag false
+    }
+
+    return () => clearTimeout(timer); // clear kapag nagbago dependencies
+  }, [isMixed, showCash, refNo.amount, amount]);
+
   const checkout = async () => {
     let selected = {
       physicianId: physicianId?.physician || undefined,
@@ -73,6 +97,7 @@ export default function Summary() {
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
       payment,
+      refNo,
       hmo,
       cash,
       amount,
@@ -226,7 +251,7 @@ export default function Summary() {
               >
                 {providedPaymentOptions?.map((payment, index) => (
                   <option key={`${abbr}-${index}`} value={payment}>
-                    {capitalize(payment)}
+                    {capitalize(payment === "mixed" ? "Split Bill" : payment)}
                   </option>
                 ))}
               </select>
@@ -234,16 +259,63 @@ export default function Summary() {
           </tr>
           <tr>
             <td colSpan="2">
-              {["cash", "downpayment"].includes(payment) && abbr !== "wls" ? (
-                <input
-                  type="number"
-                  min={amount}
-                  value={String(cash)}
-                  onChange={({ target }) => setCash(Number(target.value))}
-                  placeholder="Amount in Peso"
-                  required
-                  name="amount"
-                />
+              {["cash", "mixed", "downpayment"].includes(payment) &&
+              abbr !== "wls" ? (
+                <>
+                  {isMixed && (
+                    <>
+                      <input
+                        type="string"
+                        min={amount}
+                        value={refNo.number}
+                        onChange={({ target }) =>
+                          setRefNo({ ...refNo, number: target.value })
+                        }
+                        placeholder="Reference No."
+                        required
+                        name="ref"
+                        title="Reference No."
+                      />
+                      <input
+                        type="number"
+                        value={String(refNo.amount || "")}
+                        onChange={({ target }) =>
+                          setRefNo({ ...refNo, amount: Number(target.value) })
+                        }
+                        placeholder="Voucher Amount"
+                        required
+                        name="refAmount"
+                        title="Voucher Amount"
+                      />
+                    </>
+                  )}
+                  {delayedShowCash ? (
+                    <input
+                      type="number"
+                      min={isMixed ? amount - refNo.amount : amount}
+                      value={String(cash || "")}
+                      onChange={({ target }) => setCash(Number(target.value))}
+                      placeholder={
+                        isMixed
+                          ? `Cash out Bill ${currency.format(
+                              amount - refNo.amount
+                            )}`
+                          : "Amount in Peso"
+                      }
+                      required
+                      title={
+                        isMixed
+                          ? `Cash out Bill ${currency.format(
+                              amount - refNo.amount
+                            )}`
+                          : "Amount in Peso"
+                      }
+                      name="amount"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </>
               ) : (
                 <span>No cash input needed</span>
               )}

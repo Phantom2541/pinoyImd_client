@@ -309,7 +309,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "preference": "equal"
+    "preference": "gender"
   },
   {
     "id": 21,
@@ -3558,7 +3558,49 @@
     "preference": "Random urine or first morning urine; preferred first morning",
     "preparation": "No special preparation required; avoid strenuous exercise 24 hrs before test",
     "specimen": "Urine (spot urine or 24-hour collection)",
-    "template": 6,
+    "template": 4,
     "purpose": "Detects early kidney damage by measuring small amounts of albumin in urine; important for monitoring diabetics and hypertensive patients"
+  },
+  {
+    "id": 371,
+    "name": "X-ray Scoliosis Series",
+    "abbreviation": "XR-Scoliosis",
+    "lo_ssx": "Normal spinal alignment without evidence of curvature.",
+    "hi_ssx": "Abnormal lateral curvature of the spine; Cobb angle > 10° indicates scoliosis.",
+    "department": "RAD",
+    "frequency": "As requested by physician",
+    "preference": "Equal (no gender preference)",
+    "preparation": "Remove metallic objects; wear hospital gown; patient should stand upright for full spine imaging.",
+    "specimen": "Radiographic image (spine)",
+    "template": 2,
+    "purpose": "To evaluate and measure spinal curvature, monitor progression of scoliosis, and assess treatment outcomes."
+  },
+  {
+    "id": 372,
+    "name": "X-ray Coccyx AP/L",
+    "abbreviation": "XR-Coccyx",
+    "lo_ssx": "Normal coccyx alignment without fracture or dislocation.",
+    "hi_ssx": "Evidence of fracture, dislocation, or abnormal angulation of the coccyx.",
+    "department": "RAD",
+    "frequency": "As requested by physician",
+    "preference": "Equal (no gender preference)",
+    "preparation": "Remove metallic objects near pelvic area; patient positioned supine and lateral for imaging.",
+    "specimen": "Radiographic image (coccyx)",
+    "template": 2,
+    "purpose": "To evaluate coccygeal pain, trauma, or suspected fractures/dislocations."
+  },
+  {
+    "id": 373,
+    "name": "X-ray Cervical Spine (C-spine) AP/L/O",
+    "abbreviation": "XR-C-spine",
+    "lo_ssx": "Normal cervical alignment, intact vertebrae, and preserved disc spaces.",
+    "hi_ssx": "Evidence of fracture, dislocation, degenerative changes, or abnormal curvature.",
+    "department": "RAD",
+    "frequency": "As requested by physician",
+    "preference": "Equal (no gender preference)",
+    "preparation": "Remove metallic objects around head and neck; patient positioned for AP, lateral, and oblique views.",
+    "specimen": "Radiographic image (cervical spine)",
+    "template": 2,
+    "purpose": "To assess cervical spine alignment, detect fractures, degenerative changes, or evaluate trauma and chronic neck pain."
   }
 ]

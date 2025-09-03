@@ -22,6 +22,11 @@ const componentMap = {
 
 export default function BodySwitcher() {
   const { task } = useSelector(({ validator }) => validator);
-  const Component = componentMap[task.form] || Blank;
+
+  let Component = "";
+  if (task.form === "2DEcho") {
+    return <TwoDEcho />;
+  }
+  Component = componentMap[task.form] || Blank;
   return <Component />;
 }
