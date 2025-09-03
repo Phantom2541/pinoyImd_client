@@ -35,7 +35,7 @@ export const Hematology = async ({ task, form, result }) => {
   const { patient, cc, dc, rci, apc, troupe, signatories } = task;
   const { Preferences, Abbreviation, Title } = Cellcount;
   const isMale = patient.isMale ? "Male" : "Female";
-  const imageBase64 = await utils.getImage();
+  const imageBase64 = await utils.getImage(result);
 
   const tableSection = (titleRow, rows) => [
     [
@@ -71,7 +71,7 @@ export const Hematology = async ({ task, form, result }) => {
   cellCountRows.push([
     "APC",
     {
-      text: apc.toString(),
+      text: apc?.toString(),
       alignment: "center",
       bold: true,
       color: apc < 150 ? "blue" : apc > 450 ? "red" : undefined,
@@ -245,9 +245,6 @@ export const Hematology = async ({ task, form, result }) => {
       fontSize: 10,
     },
   };
-
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`Hematology Result - ${new Date().toLocaleDateString()}.pdf`);
+  utils.download(docDefinition, "Hematology");
 };
 export default Hematology;
