@@ -53,7 +53,7 @@ export const Hematology = async ({ task, form, result }) => {
       color = _cell < lo ? "blue" : _cell > hi ? "red" : undefined;
 
     return [
-      { text: Title[index] },
+      { text: Title[index] || "" },
       {
         text: _cell.toFixed(_cell < 20 ? 2 : 0).toString(),
         alignment: "center",
@@ -80,8 +80,8 @@ export const Hematology = async ({ task, form, result }) => {
   ]);
 
   const diffCountRows = Object.values(dc).map((val, idx) => {
-    const category = Diffcount.Category[idx];
-    const { lo, hi } = Cellcount.Preferences.differentials[category];
+    const category = Diffcount.Category[idx] || "";
+    const { lo, hi } = Cellcount?.Preferences?.differentials[category] || "";
     const color = val < lo ? "blue" : val > hi ? "red" : undefined;
     return [
       category,
@@ -97,7 +97,7 @@ export const Hematology = async ({ task, form, result }) => {
 
   const rciRows = rci.map((val, idx) => {
     const category = RCI.Category[idx];
-    const { lo, hi, unit } = Cellcount.Preferences.rci[category];
+    const { lo, hi, unit } = Cellcount?.Preferences?.rci[category];
     const color = val < lo ? "blue" : val > hi ? "red" : undefined;
     return [
       category,
