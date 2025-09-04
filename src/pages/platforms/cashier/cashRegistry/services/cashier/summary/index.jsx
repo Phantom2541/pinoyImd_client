@@ -65,7 +65,7 @@ export default function Summary() {
       privilege,
       cardHolder
     ),
-    amount = (gross || 0) - (Math.round(discount) || 0),
+    amount = Math.round((gross || 0) - (discount || 0)),
     { abbr = undefined } = Categories[category],
     providedPaymentOptions =
       Payments[cardHolder?.type ? cardHolder?.type : abbr];
@@ -323,7 +323,7 @@ export default function Summary() {
                       {
                         label: "Credit Covered",
                         key: "amount",
-                        ph: "Voucher Amount",
+                        ph: "Credit Covered",
                       },
                     ]
                   : []),
@@ -353,9 +353,7 @@ export default function Summary() {
           )}
           {isMixed ? (
             <tr>
-              <td style={{ fontSize: "0.8rem", color: "red" }}>
-                Patient Payable
-              </td>
+              <td style={{ fontSize: "0.8rem" }}>Patient Payable</td>
               <td className="p-0">
                 <select
                   value={refNo.pp}
@@ -392,18 +390,14 @@ export default function Summary() {
                   onChange={({ target }) => setCash(Number(target.value))}
                   placeholder={
                     isMixed
-                      ? `Cash out Bill ${currency.format(
-                          amount - refNo.amount
-                        )}`
-                      : "Amount in Peso"
+                      ? `Amount ${currency.format(amount - refNo.amount)}`
+                      : "Amount"
                   }
                   required
                   title={
                     isMixed
-                      ? `Cash out Bill ${currency.format(
-                          amount - refNo.amount
-                        )}`
-                      : "Amount in Peso"
+                      ? `Amount ${currency.format(amount - refNo.amount)}`
+                      : "Amount "
                   }
                   name="amount"
                 />

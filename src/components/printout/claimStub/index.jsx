@@ -6,6 +6,7 @@ import {
   currency,
   ENDPOINT,
   mobile,
+  fullName as nameFormatter,
 } from "../../../services/utilities";
 import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
@@ -63,7 +64,7 @@ const Stub = ({ sale, companyId }) => {
       email = "",
       // verified = false,
     } = customer || {};
-
+  const { careOf = {} } = refNo || {};
   const isMixed = payment === "mixed";
   const cashOut = amount - refNo?.amount || 0;
   const hasCashOut = cashOut > 0 && isMixed;
@@ -202,7 +203,13 @@ const Stub = ({ sale, companyId }) => {
       {isMixed && (
         <>
           <Hr />
-          <Text title="Reference No." value={`#${refNo.number}`} />
+          <Text title="Tracking No." value={`#${refNo.number}`} />
+          {careOf?.user?._id && (
+            <>
+              <Hr />
+              <Text title="C/O" value={nameFormatter(careOf?.user?.fullName)} />
+            </>
+          )}
         </>
       )}
       <Hr />

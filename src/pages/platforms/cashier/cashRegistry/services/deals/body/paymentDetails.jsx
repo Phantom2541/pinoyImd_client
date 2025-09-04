@@ -1,5 +1,7 @@
 import {
+  currency,
   dateFormat,
+  fullName,
   paymentMethod,
 } from "../../../../../../../services/utilities";
 
@@ -9,9 +11,13 @@ const PaymentDetails = ({ deal = {} }) => {
 
   const arrangePayment = () => {
     if (payment === "mixed") {
+      const { careOf = {} } = refNo;
       const _cash = amount - refNo?.amount;
       return [
         { method: "mixed", amount: refNo?.amount },
+        ...(careOf?.user?._id
+          ? [{ method: "care", name: fullName(careOf?.user?.fullName) }]
+          : []),
         ...(_cash > 0
           ? [
               { method: "cash", amount: _cash },
@@ -35,7 +41,10 @@ const PaymentDetails = ({ deal = {} }) => {
       }}
     >
       {arrangePayment().map(
-        ({ method: type, amount, chequeNo, clearDate, createdAt }, i) => (
+        (
+          { method: type, amount, name = "", chequeNo, clearDate, createdAt },
+          i
+        ) => (
           <div
             key={`breakdown-${type}-${i}`}
             style={{
@@ -69,7 +78,7 @@ const PaymentDetails = ({ deal = {} }) => {
               <span
                 style={{ fontSize: type === "tendered" ? "0.6rem" : "0.85rem" }}
               >
-                ₱{amount.toLocaleString()}
+                {name ? name : currency.format(amount)}
               </span>
               <span
                 style={{
