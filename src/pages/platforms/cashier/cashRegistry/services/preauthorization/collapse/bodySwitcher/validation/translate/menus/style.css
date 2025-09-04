@@ -1,0 +1,81 @@
+.menus-translate-table {
+  width: 100%;
+  border-radius: 10px;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+}
+
+.menus-translate-table th,
+.menus-translate-table td {
+  border: 2px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+.menus-translate-table th {
+  background-color: hsl(0, 0%, 35%);
+  color: white;
+}
+
+.menus-translate-table td {
+  font-weight: 450;
+  font-size: 0.9rem;
+}
+
+/* Hover on entire row */
+.menus-translate-table tbody tr:hover td {
+  background-color: rgba(255, 53, 71, 1);
+  color: white;
+  border-color: rgba(255, 53, 71, 1);
+}
+
+.menus-translate-button-delete {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  border: none;
+  background-color: rgba(255, 53, 71, 1);
+  color: white;
+  padding: 4px 6px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+.menus-translate-table tr:hover .menus-translate-button-delete {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Empty state row */
+.menus-translate-table tr .menus-translate-empty {
+  background-color: #fff;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.menus-translate-table tr:hover .menus-translate-empty {
+  background-color: white;
+  color: rgba(0, 0, 0, 0.4);
+  border-color: black;
+}
+
+.menus-translate-table tr .menus-translate-empty {
+  background-color: #fff;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.menus-translate-table tr:hover .menus-translate-empty {
+  background-color: white;
+  color: rgba(0, 0, 0, 0.4);
+  border-color: black;
+}
