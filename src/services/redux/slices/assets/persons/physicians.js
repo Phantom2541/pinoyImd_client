@@ -6,6 +6,7 @@ const url = "assets/persons/physicians";
 const initialState = {
   collections: [],
   filtered: [],
+  searchResults: [],
   isSuccess: false,
   isLoading: false,
   formSubmitted: false,
@@ -310,7 +311,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SEARCH.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.searchResults = payload;
         state.isLoading = false;
       })
       .addCase(SEARCH.rejected, (state, action) => {
