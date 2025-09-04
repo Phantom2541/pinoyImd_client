@@ -298,7 +298,28 @@ export default function Summary() {
               </select>
             </td>
           </tr>
-          <tr>
+          {[
+            { label: "Tracking No.", key: "number" },
+            { label: "Voucher ₱", key: "amount" },
+          ].map(({ label, key }, index) => (
+            <tr>
+              <td style={{ fontSize: "1.1rem" }}>{label}</td>
+              <td className="p-0">
+                <input
+                  type={index === 1 ? "number" : "string"}
+                  value={String(refNo[key] || "")}
+                  onChange={({ target }) =>
+                    setRefNo({ ...refNo, [key]: target.value })
+                  }
+                  placeholder={"Enter here..."}
+                  required
+                  name={key}
+                  title={label}
+                />
+              </td>
+            </tr>
+          ))}
+          {/* <tr>
             <td colSpan="2">
               {["cash", "mixed", "downpayment"].includes(payment) &&
               abbr !== "wls" ? (
@@ -361,7 +382,7 @@ export default function Summary() {
                 <span>No cash input needed</span>
               )}
             </td>
-          </tr>
+          </tr> */}
           <tr>
             <td colSpan="2" className="td-skip" />
           </tr>

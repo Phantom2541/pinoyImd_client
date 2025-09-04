@@ -39,8 +39,9 @@ export default function Hotline() {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
 
-  function formatPhoneNumber(num) {
-    let digits = num.replace(/\D/g, "");
+  function formatPhoneNumber(num = "") {
+    if (!num) return "";
+    let digits = num?.replace(/\D/g, "");
     if (digits.startsWith("0")) {
       digits = "+63" + digits.substring(1);
     }
