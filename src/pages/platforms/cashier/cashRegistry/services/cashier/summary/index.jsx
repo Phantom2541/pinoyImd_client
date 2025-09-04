@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBInput } from "mdbreact";
 import {
   allServicesHavePrices,
   capitalize,
@@ -36,14 +36,18 @@ export default function Summary() {
       ssx,
       authorizedBy,
       department,
-      membership,
       hmo,
-      contract,
       formSubmitted = false,
+      cardHolder,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [delayedShowCash, setDelayedShowCash] = useState(false),
-    [refNo, setRefNo] = useState({ number: "", amount: 0 }),
+    [refNo, setRefNo] = useState({
+      number: "",
+      amount: 0,
+      type: "cash",
+      ref: "", // reference by personnel,stockholder,physician
+    }),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
     { addToast } = useToasts(),
@@ -53,13 +57,12 @@ export default function Summary() {
       cart,
       category,
       privilege,
-      membership,
-      hmo,
-      contract
+      cardHolder
     ),
     amount = (gross || 0) - (Math.round(discount) || 0),
     { abbr = undefined } = Categories[category],
-    providedPaymentOptions = Payments[abbr];
+    providedPaymentOptions =
+      Payments[cardHolder?.type ? cardHolder?.type : abbr];
 
   const showCash =
     payment === "cash" ||
@@ -68,8 +71,10 @@ export default function Summary() {
   const isMixed = payment === "mixed";
 
   useEffect(() => {
-    setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
-  }, [abbr]);
+    setPayment(
+      ["mbs", "wls", "ctr"].includes(cardHolder?.type) ? "voucher" : "cash"
+    );
+  }, [cardHolder]);
 
   useEffect(() => {
     let timer;
@@ -97,8 +102,6 @@ export default function Summary() {
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
       payment,
-      refNo,
-      hmo,
       cash,
       amount,
       discount,
@@ -109,6 +112,13 @@ export default function Summary() {
       cashier: auth?.fullName,
       isPrint: true,
       status: "pending",
+      ...(cardHolder?.type && { cardHolder }),
+      ...(refNo?.amount > 0 && {
+        refNo: {
+          ...refNo,
+          amount: refNo.amount > amount ? amount : refNo.amount,
+        },
+      }),
       cart: cart.map((menu) => {
         const {
             description,
@@ -122,8 +132,7 @@ export default function Summary() {
             menu,
             category,
             privilege,
-            membership,
-            hmo
+            cardHolder
           );
 
         return {
@@ -171,6 +180,7 @@ export default function Summary() {
       );
 
       dispatch(SETCART());
+      setRefNo({ number: "", amount: 0 });
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {
       addToast("Transaction failed", { appearance: "error" });
@@ -183,8 +193,44 @@ export default function Summary() {
     }
   };
 
+  const showAlert = (title, text) => {
+    return Swal.fire({
+      title,
+      text,
+      icon: "warning",
+      confirmButtonText: "Got it",
+      confirmButtonColor: "#4CAF50",
+      background: "#ffffff",
+      backdrop: `rgba(0,0,0,0.4)`,
+      allowOutsideClick: false,
+    });
+  };
+
   const handleCheckout = async (e) => {
     e.preventDefault();
+    const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
+    const { name = "", ref = "" } = company || {};
+    if (type === "ctr" && !ref) {
+      return showAlert(
+        "Source Needed",
+        "Please select a source for the Card Holder contract before continuing."
+      );
+    }
+
+    if (type === "mbs" && !ref) {
+      return showAlert(
+        "Source Needed",
+        "Please select a source for the Card Holder Membership before continuing."
+      );
+    }
+
+    if (type === "wls" && !name) {
+      return showAlert(
+        "Card Type Needed",
+        "Please select a card type for the HMO Card Holder before continuing."
+      );
+    }
+
     if (!allServicesHavePrices(cart, category, hmo)) {
       Swal.fire({
         title: "Service Validator?",
@@ -216,7 +262,7 @@ export default function Summary() {
         </thead>
         <tbody>
           <tr>
-            <td>Gross Amount</td>
+            <td style={{ fontSize: "1rem" }}>Gross Amount</td>
             <td className="table-price">
               <div className="d-flex justify-content-end">
                 <RollingNumber value={gross} duration={1000} />
@@ -225,7 +271,7 @@ export default function Summary() {
             {/* <td className="table-price">{currency.format(gross)}</td> */}
           </tr>
           <tr>
-            <td>Discount</td>
+            <td style={{ fontSize: "1rem" }}>Discount</td>
             <td className="table-price">
               <div className="d-flex justify-content-end">
                 <RollingNumber value={discount} duration={1000} />
@@ -234,7 +280,7 @@ export default function Summary() {
             {/* <td className="table-price">{currency.format(discount)}</td> */}
           </tr>
           <tr>
-            <td>Net Amount</td>
+            <td style={{ fontSize: "1rem" }}>Net Amount</td>
             <td className="table-price">
               <div className="d-flex justify-content-end">
                 <RollingNumber value={amount} duration={1000} />
@@ -243,7 +289,7 @@ export default function Summary() {
             {/* <td className="table-price">{currency.format(amount)}</td> */}
           </tr>
           <tr>
-            <td>Payment</td>
+            <td style={{ fontSize: "1rem" }}>Payment</td>
             <td className="p-0">
               <select
                 value={payment}
@@ -257,7 +303,75 @@ export default function Summary() {
               </select>
             </td>
           </tr>
+          {/* {[
+            { label: "Tracking No.", key: "number" },
+            { label: "Voucher ₱", key: "amount", ph: "Voucher Amount" },
+          ].map(({ label, key, ph = "" }, index) => (
+            <tr>
+              <td style={{ fontSize: "1rem" }}>{label}</td>
+              <td className="p-0 m-0">
+                <input
+                  type={index === 1 ? "number" : "string"}
+                  value={String(refNo[key] || "")}
+                  onChange={({ target }) =>
+                    setRefNo({ ...refNo, [key]: target.value })
+                  }
+                  placeholder={ph ? ph : label}
+                  required
+                  name={key}
+                  title={label}
+                />
+              </td>
+            </tr>
+          ))}
           <tr>
+            <td style={{ fontSize: "1rem" }}>Type</td>
+            <td className="p-0">
+              <select
+                value={refNo.type}
+                onChange={({ target }) =>
+                  setRefNo({ ...refNo, type: target.value })
+                }
+              >
+                <option value="cash">Cash</option>
+                <option value="credit">Credit</option>
+              </select>
+            </td>
+          </tr> */}
+
+          {delayedShowCash ? (
+            <tr>
+              <td style={{ fontSize: "1rem" }}>Amount ₱</td>
+              <td className="p-0">
+                <input
+                  type="number"
+                  min={isMixed ? amount - refNo.amount : amount}
+                  value={String(cash || "")}
+                  onChange={({ target }) => setCash(Number(target.value))}
+                  placeholder={
+                    isMixed
+                      ? `Cash out Bill ${currency.format(
+                          amount - refNo.amount
+                        )}`
+                      : "Amount in Peso"
+                  }
+                  required
+                  title={
+                    isMixed
+                      ? `Cash out Bill ${currency.format(
+                          amount - refNo.amount
+                        )}`
+                      : "Amount in Peso"
+                  }
+                  name="amount"
+                />
+              </td>
+            </tr>
+          ) : (
+            ""
+          )}
+
+          {/* <tr>
             <td colSpan="2">
               {["cash", "mixed", "downpayment"].includes(payment) &&
               abbr !== "wls" ? (
@@ -320,10 +434,10 @@ export default function Summary() {
                 <span>No cash input needed</span>
               )}
             </td>
-          </tr>
-          <tr>
+          </tr> */}
+          {/* <tr>
             <td colSpan="2" className="td-skip" />
-          </tr>
+          </tr> */}
           <tr>
             <td className="p-0">
               <button

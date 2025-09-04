@@ -130,7 +130,7 @@ export default function Register({ handleFlip, flipped }) {
                       </div>
                       <div className="subscriber-image-container-style">
                         <img
-                          src={`https://drive.google.com/thumbnail?id=${slide.image}`}
+                          src={`https://drive.google.com/thumbnail?id=${slide.image}&sz=w1000`}
                           alt={`Slide ${i + 1}`}
                         />
                       </div>

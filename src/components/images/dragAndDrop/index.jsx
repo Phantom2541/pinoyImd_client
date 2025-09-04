@@ -12,8 +12,8 @@ export default function ParentComponent() {
   console.log("savedImage", savedImage);
 
   return (
-    <div style={{ width: "400px", height: "230px" }}>
-      <ImageDragAndDrop img={logo} savedImg={handleImageChange} />
-    </div>
+    // <div style={{ width: "100%", height: "230px" }}>
+    <ImageDragAndDrop img={logo} savedImg={handleImageChange} />
+    // </div>
   );
 }

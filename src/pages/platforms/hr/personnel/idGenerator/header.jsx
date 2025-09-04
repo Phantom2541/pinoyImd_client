@@ -1,9 +1,8 @@
 import { useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBBtn, MDBView } from "mdbreact";
 // import { Select } from "../../../components/customizable";
 const Header = () => {
   const { filtered } = useSelector(({ personnels }) => personnels); //
-
   // const handleComponent = (value) => {
   //   setComponent(value);
 
@@ -22,16 +21,10 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div>
-          {/* <Select
-            className="m-1 mt-2 mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-            label="Select Component"
-          /> */}
+        <div className="id-generator-prinout-btn">
+          <MDBBtn size="sm" color="primary">
+            <i class="fas fa-print" /> <span>Print</span>
+          </MDBBtn>
         </div>
       </div>
     </MDBView>

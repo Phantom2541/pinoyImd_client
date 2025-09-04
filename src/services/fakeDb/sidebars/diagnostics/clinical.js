@@ -105,13 +105,13 @@ const clinical = [
       },
     ],
   },
-  {
-    name: "Hotlines",
-    path: "/hotlines",
-    icon: "phone-alt",
-    title: "Emergency Hotlines Poster",
-    component: HotlinesPoster,
-  },
+  // {
+  //   name: "Hotlines",
+  //   path: "/hotlines",
+  //   icon: "phone-alt",
+  //   title: "Emergency Hotlines Poster",
+  //   component: HotlinesPoster,
+  // },
 ];
 
 export default clinical;

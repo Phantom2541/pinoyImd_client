@@ -14,9 +14,12 @@ import {
 import Swal from "sweetalert2";
 
 export default function Menus({ patronPresent }) {
-  const { category, privilege, cart, membership, hmo, contract } = useSelector(
-      ({ pos }) => pos
-    ),
+  const {
+      category,
+      privilege,
+      cart,
+      cardHolder = {},
+    } = useSelector(({ pos }) => pos),
     { customer } = useSelector(({ pos }) => pos),
     dispatch = useDispatch();
 
@@ -179,7 +182,6 @@ export default function Menus({ patronPresent }) {
     }
   };
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-  console.log("membership", membership);
   return (
     <>
       <div className="menus-table-container">
@@ -213,14 +215,7 @@ export default function Menus({ patronPresent }) {
                 up = 0,
                 title = "",
                 color = "",
-              } = computeGD(
-                item,
-                category,
-                privilege,
-                membership,
-                hmo,
-                contract
-              );
+              } = computeGD(item, category, privilege, cardHolder);
 
               return (
                 <tr key={_id}>

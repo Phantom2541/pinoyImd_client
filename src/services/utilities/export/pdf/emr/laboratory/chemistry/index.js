@@ -12,7 +12,7 @@ pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 export const Chemistry = async ({ task, form, result }) => {
   const { packages, services, patient, signatories } = task;
 
-  const imageBase64 = await utils.getImage();
+  const imageBase64 = await utils.getImage(result);
 
   const [head, dr] = signatories;
   const headSig = await utils.getSignature(head.email);
@@ -187,9 +187,7 @@ export const Chemistry = async ({ task, form, result }) => {
     },
   };
 
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`Chemistry Result - ${new Date().toLocaleDateString()}.pdf`);
+  utils.download(docDefinition, "Chemistry");
 };
 
 export default Chemistry;

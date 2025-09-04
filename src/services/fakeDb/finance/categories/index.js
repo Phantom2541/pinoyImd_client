@@ -13,9 +13,9 @@ const Categories = [
     type: "outpatient",
   },
   // Corporate/Wellness
-  { abbr: "wls", name: "Wellness", color: "orange", type: "corporate" },
-  { abbr: "mbs", name: "Membership", color: "orange", type: "corporate" },
-  { abbr: "ctr", name: "Contract", color: "orange", type: "corporate" },
+  // { abbr: "wls", name: "Wellness", color: "orange", type: "corporate" },
+  // { abbr: "mbs", name: "Membership", color: "orange", type: "corporate" },
+  // { abbr: "ctr", name: "Contract", color: "orange", type: "corporate" },
   // Permits/Clearance
   { abbr: "bp", name: "Business Permit", color: "red", type: "clearance" },
   { abbr: "mc", name: "Medical Clearance", color: "red", type: "clearance" },

@@ -12,10 +12,11 @@ import BARANGAY from "./../../../../../../assets/hotline/barangay.jpg";
 import "./style.css";
 
 const Body = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { filtered, isSuccess, formSubmitted } = useSelector(
-      ({ providers }) => providers
-    ),
+  const {
+      filtered = [],
+      isSuccess,
+      formSubmitted,
+    } = useSelector(({ providers }) => providers),
     dispatch = useDispatch(),
     [showModal, setShowModal] = useState(false),
     [selectedHotline, setSelectedHotline] = useState(null);
@@ -30,12 +31,13 @@ const Body = () => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
 
-  function formatPhoneNumber(num) {
-    let digits = num.replace(/\D/g, "");
-    if (digits.startsWith("0")) {
+  function formatPhoneNumber(num = "") {
+    if (!num) return "";
+    let digits = num?.replace(/\D/g, "");
+    if (digits?.startsWith("0")) {
       digits = "+63" + digits.substring(1);
     }
-    return digits.replace(
+    return digits?.replace(
       /(\+63)(\d{3})(\d{3})(\d{4})/,
       (_, p1, p2, p3, p4) => `${p1} ${p2} ${p3} ${p4}`
     );
@@ -71,7 +73,7 @@ const Body = () => {
               <span>
                 <MDBIcon fas icon="phone-alt" />
               </span>
-              <span> {formatPhoneNumber(number) || "No number"}</span>
+              <span> {formatPhoneNumber(number || "") || "No number"}</span>
             </div>
             <span className="hotline-poster-number">{displayname}</span>
             <div className="hotline-poster-address">

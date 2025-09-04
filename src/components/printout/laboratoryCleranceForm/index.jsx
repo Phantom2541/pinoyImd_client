@@ -34,7 +34,7 @@ const MedicalClearanceFormPrint = () => {
             <img
               src={BannerURL}
               alt="Banner"
-              style={{ maxHeight: "80px", margin: "auto", display: "block" }}
+              style={{ maxHeight: "100px", width:"100%", margin: "auto", display: "block", objectFit:"cover" }}
             />
           </th>
         </tr>
@@ -53,26 +53,25 @@ const MedicalClearanceFormPrint = () => {
       </thead>
       <tbody>
         {/* Patient Info */}
-        <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Requesting Company: _____________________________ &nbsp;&nbsp;&nbsp;
-            Date: _____________________________
-          </td>
-        </tr>
+      <tr>
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+              Requesting Company: _________________________________________ &nbsp;&nbsp;&nbsp;
+              Date: _______________________________
+            </td>
+          </tr>
 
-        <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+          <tr>
+              <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
             Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
-            _______ &nbsp;&nbsp;&nbsp; Civil Status: _______
+            _______ &nbsp;&nbsp;&nbsp;Civil Status: __________________________
           </td>
         </tr>
 
         <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Home Address: _________________________________________________
+        <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Home Address: ____________________________________________________________________________________
           </td>
-        </tr>
-
+          </tr>
         {/* Histories */}
         <tr>
           <td colSpan={4} style={{ border: "1px solid #000", padding: "10px" }}>
@@ -120,18 +119,30 @@ const MedicalClearanceFormPrint = () => {
             </div>
           </td>
         </tr>
+     {/* Vital Signs */}
+<tr>
+  <td
+    colSpan={4}
+    style={{
+      padding: "10px",
+      fontSize: "0.9rem",
+      border: "1px solid #000",
+    }}
+  >
+    <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
+      VITAL SIGNS
+    </div>
+    <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
+      <span style={{ fontWeight: "bold" }}>BP:</span> ______ mmHg &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>PR/HR:</span> ______ bpm &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>RR:</span> ______ cpm &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>Temp:</span> ______ °C &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>Ht:</span> ______ cm &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>Wt:</span> ______ kg
+    </div>
+  </td>
+</tr>
 
-        {/* Vital Signs */}
-        <tr>
-          <td colSpan={4} style={{ padding: "10px", fontSize: "0.9rem" }}>
-            <b>VITAL SIGNS</b>
-            <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
-              BP: ______ mmHg &nbsp;&nbsp;&nbsp; PR/HR: ______ bpm
-              &nbsp;&nbsp;&nbsp; RR: ______ cpm &nbsp;&nbsp;&nbsp; Temp: ______ °C
-              &nbsp;&nbsp;&nbsp; Ht: ______ cm &nbsp;&nbsp;&nbsp; Wt: ______ kg
-            </div>
-          </td>
-        </tr>
       </tbody>
     </table>
   );
