@@ -5,6 +5,7 @@ import {
   setSelectedValue,
   setLockAspect,
   setEditMode,
+  setCode,
 } from "../../../../../../services/redux/slices/idCard/calibrator";
 import { Fonts, FontSizes, FontWeights } from "./fontStyle";
 import { MDBIcon } from "mdbreact";
@@ -22,11 +23,13 @@ export default function Setting({
   lockAspectRatio,
   placedValues,
 }) {
-  const { frontImage, backImage, selectedValue, lockAspect, editMode } =
+  const { frontImage, backImage, selectedValue, lockAspect, editMode, code } =
       useSelector(({ idCalibrator }) => idCalibrator),
     dispatch = useDispatch();
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
+
+  console.log("CODE", code);
 
   useEffect(() => {
     setPersonalize(isPersonalize);
@@ -534,6 +537,11 @@ export default function Setting({
         <label className={backImage ? "active" : ""} htmlFor={`uploadimgback`}>
           Change Back
         </label>
+      </div>
+
+      <div className="IDGenerator-settings-qr-barcode">
+        <button onClick={() => dispatch(setCode("qr"))}>QR Code</button>
+        <button onClick={() => dispatch(setCode("bar"))}>Bar Code</button>
       </div>
 
       {/* Save Button */}
