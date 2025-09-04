@@ -95,21 +95,23 @@ export default function Deals() {
   }, [token, dispatch]);
 
   return (
-    <div className="d-flex" fluid>
-      <div className="rounded flex-1 ml-2 px-2">
-        <MDBCard narrow>
-          <Header />
-          <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-          <Footer />
-        </MDBCard>
-        <CashRegister />
+    <>
+      <div className="d-flex" fluid>
+        <div className="rounded flex-1 ml-2 px-2">
+          <MDBCard narrow>
+            <Header />
+            <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
+            <Footer />
+          </MDBCard>
+          <CashRegister />
+        </div>
+        <div style={{ width: "300px", marginLeft: "10px" }}>
+          <Category />
+          {filtered.length > 0 && <Payments />}
+          <Closing />
+        </div>
+        <Denomination />
       </div>
-      <div style={{ width: "300px", marginLeft: "10px" }}>
-        <Category />
-        {filtered.length > 0 && <Payments />}
-        <Closing />
-      </div>
-      <Denomination />
-    </div>
+    </>
   );
 }
