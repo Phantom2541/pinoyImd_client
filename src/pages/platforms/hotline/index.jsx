@@ -68,7 +68,7 @@ export default function Hotline() {
     function handleResize() {
       if (window.innerWidth < 640) {
         setItemsPerPage(2); // mobile
-      } else if (window.innerWidth < 1400) {
+      } else if (window.innerWidth < 1540) {
         setItemsPerPage(4); // tablet
       } else {
         setItemsPerPage(6); // desktop
