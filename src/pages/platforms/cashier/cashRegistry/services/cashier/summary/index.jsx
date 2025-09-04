@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBInput } from "mdbreact";
 import {
   allServicesHavePrices,
   capitalize,
@@ -298,20 +298,20 @@ export default function Summary() {
               </select>
             </td>
           </tr>
-          {[
+          {/* {[
             { label: "Tracking No.", key: "number" },
-            { label: "Voucher ₱", key: "amount" },
-          ].map(({ label, key }, index) => (
+            { label: "Voucher ₱", key: "amount", ph: "Voucher Amount" },
+          ].map(({ label, key, ph = "" }, index) => (
             <tr>
-              <td style={{ fontSize: "1.1rem" }}>{label}</td>
-              <td className="p-0">
+              <td style={{ fontSize: "1rem" }}>{label}</td>
+              <td className="p-0 m-0">
                 <input
                   type={index === 1 ? "number" : "string"}
                   value={String(refNo[key] || "")}
                   onChange={({ target }) =>
                     setRefNo({ ...refNo, [key]: target.value })
                   }
-                  placeholder={"Enter here..."}
+                  placeholder={ph ? ph : label}
                   required
                   name={key}
                   title={label}
@@ -319,6 +319,48 @@ export default function Summary() {
               </td>
             </tr>
           ))}
+          <tr>
+            <td>Type</td>
+            <td className="p-0">
+              <select>
+                <option value="cash">Cash</option>
+                <option value="credit">Credit</option>
+              </select>
+            </td>
+          </tr> */}
+
+          {delayedShowCash ? (
+            <tr>
+              <td>Amount ₱</td>
+              <td className="p-0">
+                <input
+                  type="number"
+                  min={isMixed ? amount - refNo.amount : amount}
+                  value={String(cash || "")}
+                  onChange={({ target }) => setCash(Number(target.value))}
+                  placeholder={
+                    isMixed
+                      ? `Cash out Bill ${currency.format(
+                          amount - refNo.amount
+                        )}`
+                      : "Amount in Peso"
+                  }
+                  required
+                  title={
+                    isMixed
+                      ? `Cash out Bill ${currency.format(
+                          amount - refNo.amount
+                        )}`
+                      : "Amount in Peso"
+                  }
+                  name="amount"
+                />
+              </td>
+            </tr>
+          ) : (
+            ""
+          )}
+
           {/* <tr>
             <td colSpan="2">
               {["cash", "mixed", "downpayment"].includes(payment) &&
@@ -383,9 +425,9 @@ export default function Summary() {
               )}
             </td>
           </tr> */}
-          <tr>
+          {/* <tr>
             <td colSpan="2" className="td-skip" />
-          </tr>
+          </tr> */}
           <tr>
             <td className="p-0">
               <button
