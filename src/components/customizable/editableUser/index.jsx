@@ -12,20 +12,41 @@ import Results from "./results";
 import { useToasts } from "react-toast-notifications";
 
 /**
- * Editable User Component
- * This component is use to select a user and the result will be display in a tag
- * @param {function} onSave - function will be called when a user is click the check icon
- * and this function will be return userID
- * @param {function} setUserId - function will be called when a select a user
- * and this function will be return userID
- * @param {object} user - this props is required if isToggle is false and make sure this user props is we have a key property
- * and make sure the value of key is unique
- * @param {boolean} isToggle - if false= editable mode else toggle mode
- * @param {string} placeHolder - the placeholder of the input
- * @param {boolean} formSubmitted - this props is required if isToggle is false to auto close the input
- * @param {boolean} isSuccess - isSuccess updated
- * @returns {JSX.Element}
+ * EditableUser Component
+ *
+ * This component allows selecting and displaying a user with two modes:
+ * - Toggle Mode (isToggle = true)
+ * - Editable Mode (isToggle = false)
+ *
+ * @param {function} onSave - Callback triggered when the check icon is clicked in Editable Mode.
+ *                            Returns the selected user ID.
+ *                            (Required if isToggle is false)
+ *
+ * @param {function} setUserId - Callback triggered when a user is selected in Toggle Mode.
+ *                               Returns the selected user ID.
+ *                               (Required if isToggle is true)
+ *
+ * @param {object} user - User object shown by default in Editable Mode.
+ *                        Must contain a unique `key` property.
+ *                        (Required if isToggle is false)
+ *
+ * @param {boolean} isToggle - Determines the mode.
+ *                             false = Editable Mode (default)
+ *                             true  = Toggle Mode
+ *
+ * @param {string} placeHolder - Input placeholder text for searching users.
+ *
+ * @param {boolean} formSubmitted - Works together with `isSuccess` in Editable Mode
+ *                                  to auto-close the input after submission.
+ *                                  (Required only if isToggle is false)
+ *
+ * @param {boolean} isSuccess - Works together with `formSubmitted` in Editable Mode
+ *                              to auto-close the input after submission.
+ *                              (Required only if isToggle is false)
+ *
+ * @returns {JSX.Element} The rendered EditableUser component.
  */
+
 const EditableUser = ({
   onSave = () => {},
   setUserId = () => {},
