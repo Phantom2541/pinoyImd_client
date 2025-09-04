@@ -5,7 +5,6 @@ import {
   setSelectedValue,
   setLockAspect,
   setEditMode,
-  setCode,
 } from "../../../../../../services/redux/slices/idCard/calibrator";
 import { Fonts, FontSizes, FontWeights } from "./fontStyle";
 import { MDBIcon } from "mdbreact";
@@ -23,13 +22,11 @@ export default function Setting({
   lockAspectRatio,
   placedValues,
 }) {
-  const { frontImage, backImage, selectedValue, lockAspect, editMode, code } =
+  const { frontImage, backImage, selectedValue, lockAspect, editMode } =
       useSelector(({ idCalibrator }) => idCalibrator),
     dispatch = useDispatch();
   const [personalize, setPersonalize] = useState(false);
   const [lastSelectedType, setLastSelectedType] = useState(null);
-
-  console.log("CODE", code);
 
   useEffect(() => {
     setPersonalize(isPersonalize);
@@ -75,12 +72,6 @@ export default function Setting({
     ctx.fillStyle = color;
     return ctx.fillStyle; // browser auto-converts to rgb/hex
   }
-
-  const aspectRatio =
-    style.width && style.height
-      ? parseInt(style.width) / parseInt(style.height)
-      : 1;
-  console.log("aspectRatio", aspectRatio);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -339,22 +330,40 @@ export default function Setting({
               }
             />
           </div>
-          <Input
-            type="number"
-            title="Opacity"
-            label={<MDBIcon fas icon="adjust" />}
-            value={style.opacity !== undefined ? style.opacity * 100 : 100} // 1 → 100%
-            min={0}
-            max={100}
-            step={5}
-            unit="%"
-            disabled={imgDisabled}
-            onChange={(e) => {
-              const raw = parseFloat(e.target.value) || 0;
-              const val = Math.min(100, Math.max(0, raw)); // clamp 0–100
-              updateStyle({ opacity: val / 100 }); // 100% → 1
-            }}
-          />
+          <div className="d-flex align-items-center" style={{ gap: "5px" }}>
+            <Input
+              type="number"
+              title="Opacity"
+              label={<MDBIcon fas icon="adjust" />}
+              value={style.opacity !== undefined ? style.opacity * 100 : 100} // 1 → 100%
+              min={0}
+              max={100}
+              step={5}
+              unit="%"
+              disabled={imgDisabled}
+              onChange={(e) => {
+                const raw = parseFloat(e.target.value) || 0;
+                const val = Math.min(100, Math.max(0, raw)); // clamp 0–100
+                updateStyle({ opacity: val / 100 }); // 100% → 1
+              }}
+            />
+            <Input
+              type="number"
+              title="Rotate"
+              unit="°"
+              label={<i class="fas fa-rotate"></i>}
+              value={
+                style.transform
+                  ? parseInt(style.transform.replace(/[^0-9\-]/g, "")) // extract degrees
+                  : 0
+              }
+              disabled={imgDisabled}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10) || 0;
+                updateStyle({ transform: `rotate(${val}deg)` });
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -537,11 +546,6 @@ export default function Setting({
         <label className={backImage ? "active" : ""} htmlFor={`uploadimgback`}>
           Change Back
         </label>
-      </div>
-
-      <div className="IDGenerator-settings-qr-barcode">
-        <button onClick={() => dispatch(setCode("qr"))}>QR Code</button>
-        <button onClick={() => dispatch(setCode("bar"))}>Bar Code</button>
       </div>
 
       {/* Save Button */}
