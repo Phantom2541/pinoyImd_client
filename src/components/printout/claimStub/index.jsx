@@ -55,6 +55,7 @@ const Stub = ({ sale, companyId }) => {
       discount = 0,
       cashier = {},
       cart = [],
+      refNo = {},
     } = sale,
     {
       fullName = {},
@@ -63,6 +64,9 @@ const Stub = ({ sale, companyId }) => {
       // verified = false,
     } = customer || {};
 
+  const isMixed = payment === "mixed";
+  const cashOut = amount - refNo?.amount || 0;
+  const hasCashOut = cashOut > 0 && isMixed;
   return (
     <div
       style={{
@@ -170,14 +174,36 @@ const Stub = ({ sale, companyId }) => {
         </>
       )}
       <Hr />
+      {hasCashOut && (
+        <Text title={"Voucher"} value={currency.format(refNo.amount)} />
+      )}
       <Text
-        title={capitalize(payment === "cash" ? "Tendered" : payment)}
+        title={capitalize(
+          payment === "cash" || hasCashOut
+            ? "Tendered"
+            : payment === "mixed"
+            ? "voucher"
+            : payment
+        )}
         value={
-          payment === "cash" ? currency.format(cash) : currency.format(amount)
+          payment === "cash" || hasCashOut
+            ? currency.format(cash)
+            : currency.format(amount)
         }
       />
-      {payment === "cash" && (
-        <Text title="Change" value={currency.format(cash - amount)} />
+      {(payment === "cash" || hasCashOut) && (
+        <Text
+          title="Change"
+          value={currency.format(
+            hasCashOut > 0 ? refNo.amount + cash - amount : cash - amount
+          )}
+        />
+      )}
+      {isMixed && (
+        <>
+          <Hr />
+          <Text title="Reference No." value={`#${refNo.number}`} />
+        </>
       )}
       <Hr />
       <Text

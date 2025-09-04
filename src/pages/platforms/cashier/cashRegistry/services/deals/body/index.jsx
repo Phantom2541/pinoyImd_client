@@ -19,6 +19,7 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
 import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
+import PaymentDetails from "./paymentDetails";
 import "./style.css";
 const Tables = () => {
   const { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
@@ -191,9 +192,6 @@ const Tables = () => {
         <tbody>
           {paginatedData.length > 0 ? (
             paginatedData?.map((deal, index) => {
-              const { img, text, style } = paymentMethod?.getImage(
-                deal.payment
-              );
               const isMatch = (key) =>
                 selected?._id === deal?._id && selected.updatedKey === key;
               const { source = {} } = deal || [];
@@ -450,8 +448,15 @@ const Tables = () => {
                           </button>
                         </div>
                       )}
-
                       <div
+                        style={{
+                          opacity: index === didHoverID ? 0 : 1,
+                          height: index === didHoverID ? "1rem" : "auto",
+                        }}
+                      >
+                        <PaymentDetails deal={deal} />
+                      </div>
+                      {/* <div
                         className="d-flex align-items-center flex-column"
                         style={{ opacity: index === didHoverID ? 0 : 1 }}
                       >
@@ -483,7 +488,7 @@ const Tables = () => {
                         >
                           {currency.format(deal.cash)}
                         </h6>
-                      </div>
+                      </div> */}
                     </>
                   </td>
                 </tr>

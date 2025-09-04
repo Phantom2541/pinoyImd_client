@@ -8,3 +8,4 @@ export { default as Privileges } from "./privileges";
 export { default as Suffixes } from "./suffixes";
 export { default as Categories } from "./categories";
 export { default as Memberships } from "./memberships";
+export { default as CardHolders } from "./cardHolders";

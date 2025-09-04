@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../services/utilities";
 
-const MedicalClearanceForm = () => {
+const MedicalClearanceFormPrint = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
 
   const companyName = activePlatform?.company?.name;
@@ -14,16 +14,10 @@ const MedicalClearanceForm = () => {
 
   const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
 
-  const cellStyle = {
-    border: "1px solid #000",
-    padding: "6px",
-    fontSize: "1rem",
-    fontWeight: "bold",
-  };
-
-  const handlePrint = () => {
+  // 🔹 Auto open print dialog
+  useEffect(() => {
     window.print();
-  };
+  }, []);
 
   const renderTable = () => (
     <table
@@ -40,7 +34,7 @@ const MedicalClearanceForm = () => {
             <img
               src={BannerURL}
               alt="Banner"
-              style={{ maxHeight: "80px", margin: "auto", display: "block" }}
+              style={{ maxHeight: "100px", width:"100%", margin: "auto", display: "block", objectFit:"cover" }}
             />
           </th>
         </tr>
@@ -51,53 +45,34 @@ const MedicalClearanceForm = () => {
               fontSize: "1rem",
               textAlign: "center",
               padding: "6px",
-              position: "relative",
             }}
           >
             MEDICAL EXAMINATION CLEARANCE
-            <button
-              onClick={handlePrint}
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "5px",
-                padding: "4px 10px",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-              className="no-print"
-            >
-              Print
-            </button>
           </th>
         </tr>
       </thead>
       <tbody>
         {/* Patient Info */}
-        <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Requesting Company: _____________________________ &nbsp;&nbsp;&nbsp;
-            Date: _____________________________
-          </td>
-        </tr>
+      <tr>
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+              Requesting Company: _________________________________________ &nbsp;&nbsp;&nbsp;
+              Date: _______________________________
+            </td>
+          </tr>
 
-        <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+          <tr>
+              <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
             Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
-            _______ &nbsp;&nbsp;&nbsp; Civil Status: _______
+            _______ &nbsp;&nbsp;&nbsp;Civil Status: __________________________
           </td>
         </tr>
 
         <tr>
-          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Home Address: _________________________________________________
+        <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Home Address: ____________________________________________________________________________________
           </td>
-        </tr>
-
-        {/* Histories (4 columns) */}
+          </tr>
+        {/* Histories */}
         <tr>
           <td colSpan={4} style={{ border: "1px solid #000", padding: "10px" }}>
             <div style={{ display: "flex", gap: "20px" }}>
@@ -144,27 +119,73 @@ const MedicalClearanceForm = () => {
             </div>
           </td>
         </tr>
+     {/* Vital Signs */}
+<tr>
+  <td
+    colSpan={4}
+    style={{
+      padding: "10px",
+      fontSize: "0.9rem",
+      border: "1px solid #000",
+    }}
+  >
+    <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
+      VITAL SIGNS
+    </div>
+    <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
+      <span style={{ fontWeight: "bold" }}>BP:</span> ______ mmHg &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>PR/HR:</span> ______ bpm &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>RR:</span> ______ cpm &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>Temp:</span> ______ °C &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>Ht:</span> ______ cm &nbsp;&nbsp;&nbsp; 
+      <span style={{ fontWeight: "bold" }}>Wt:</span> ______ kg
+    </div>
+  </td>
+</tr>
 
-        {/* Vital Signs */}
-        <tr>
-          <td colSpan={4} style={{ padding: "10px", fontSize: "0.9rem" }}>
-            <b>VITAL SIGNS</b>
-            <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
-              BP: ______ mmHg &nbsp;&nbsp;&nbsp; PR/HR: ______ bpm
-              &nbsp;&nbsp;&nbsp; RR: ______ cpm &nbsp;&nbsp;&nbsp; Temp: ______ °C
-              &nbsp;&nbsp;&nbsp; Ht: ______ cm &nbsp;&nbsp;&nbsp; Wt: ______ kg
-            </div>
-          </td>
-        </tr>
       </tbody>
     </table>
   );
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
-      <div className="medicalClearanceForm-grid d-flex justify-content-center align-items-center">
-        <div className="medicalClearanceForm-copy">{renderTable()}</div>
+      <div className="medicalClearanceForm-grid">
+        {/* First copy */}
+        {renderTable()}
+
+        {/* Divider line */}
+        <hr className="divider" />
+
+        {/* Second copy */}
+        {renderTable()}
       </div>
+
+      {/* CSS */}
+      <style>
+        {`
+          @media print {
+            @page {
+              size: A4;
+              margin: 12mm;
+            }
+            .divider {
+              border: none;
+              border-top: 1px dashed #000;
+              margin: 12px 0;
+            }
+            .medicalClearanceForm-grid {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              height: 100vh; /* hatiin buong page */
+            }
+            .medicalClearanceForm-grid table {
+              flex: 1;
+              margin: 0;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };
@@ -182,4 +203,4 @@ const Section = ({ title, items, itemStyle }) => (
   </div>
 );
 
-export default MedicalClearanceForm;
+export default MedicalClearanceFormPrint;

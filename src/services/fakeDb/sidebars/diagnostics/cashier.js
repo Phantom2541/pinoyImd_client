@@ -20,6 +20,7 @@ import {
   // SOA,
   Onboarding,
   Inhouse,
+  Contract,
 } from "../../../../pages/platforms/cashier";
 import {
   Request,
@@ -161,6 +162,13 @@ const cashier = [
             icon: "paper-plane",
             title: "Clinics or Doctors Who Referred Patients",
             component: Referrals,
+          },
+          {
+            name: "Contract",
+            path: "/contract",
+            icon: "paper-plane",
+            title: "Clinics or Doctors Who Referred Patients",
+            component: Contract,
           },
         ],
       },

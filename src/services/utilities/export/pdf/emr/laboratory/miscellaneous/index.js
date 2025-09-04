@@ -8,14 +8,13 @@ pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 export const Miscellaneous = async ({ task, form, result }) => {
   const { signatories, packages = [], specimen } = task;
   const { method, kit, lot, expiry } = task?.troupe || {};
-  const imageBase64 = await utils.getImage();
+  const imageBase64 = await utils.getImage(result);
 
   const [head, dr] = signatories;
   const headSig = await utils.getSignature(head.email);
   const drSig = await utils.getSignature(dr.email);
   const imgLogo = await utils.getLogo();
   const QrCode = await utils.generateQrCODE(result);
-  console.log("packages", packages);
   const docDefinition = {
     pageSize: "A4",
     pageMargins: [10, 59, 10, 60],
@@ -208,9 +207,7 @@ export const Miscellaneous = async ({ task, form, result }) => {
     },
   };
 
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`Miscellaneous Result - ${new Date().toLocaleDateString()}.pdf`);
+  utils.download(docDefinition, "Miscellaneous");
 };
 
 export default Miscellaneous;

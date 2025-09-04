@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../../../services/utilities";
+import { MDBBtn } from "mdbreact";
 
 const MedicalClearanceForm = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
@@ -15,7 +16,11 @@ const MedicalClearanceForm = () => {
   const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
 
   const handlePrint = () => {
-    window.print();
+    window.open(
+      "/printout/laboratoryClearanceRequestForm",
+      "RequestForm",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
   };
 
   return (
@@ -23,9 +28,18 @@ const MedicalClearanceForm = () => {
       style={{
         fontFamily: "Arial, sans-serif",
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
+      {/* Header with Print Button (hidden on print) */}
+      <div className="no-print" style={{ marginBottom: "12px" }}>
+        <MDBBtn size="md" color="primary" onClick={handlePrint}>
+          Print
+        </MDBBtn>
+      </div>
+
+      {/* Clearance Form */}
       <table
         style={{
           width: "100%",
@@ -56,59 +70,34 @@ const MedicalClearanceForm = () => {
                 fontSize: "1rem",
                 textAlign: "center",
                 padding: "6px",
-                position: "relative",
                 border: "1px solid #000",
               }}
             >
               MEDICAL EXAMINATION CLEARANCE
-              <button
-                onClick={handlePrint}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "5px",
-                  padding: "4px 10px",
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-                className="no-print"
-              >
-                Print
-              </button>
             </th>
           </tr>
         </thead>
         <tbody>
           {/* Patient Info */}
           <tr>
-            <td
-              colSpan={4}
-              style={{ padding: "6px 10px", fontSize: "0.9rem" }}
-            >
-              Requesting Company: _____________________________ &nbsp;&nbsp;&nbsp;
-              Date: _____________________________
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+              Requesting Company: _________________________________________
+              &nbsp;&nbsp;&nbsp; Date: _______________________________
             </td>
           </tr>
 
           <tr>
-            <td
-              colSpan={4}
-              style={{ padding: "6px 10px", fontSize: "0.9rem" }}
-            >
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
               Name: ____________________________________ &nbsp;&nbsp;&nbsp;
-              Age/Sex: _______ &nbsp;&nbsp;&nbsp; Civil Status: _______
+              Age/Sex: _______ &nbsp;&nbsp;&nbsp;Civil Status:
+              __________________________
             </td>
           </tr>
 
           <tr>
-            <td
-              colSpan={4}
-              style={{ padding: "6px 10px", fontSize: "0.9rem" }}
-            >
-              Home Address: _________________________________________________
+            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+              Home Address:
+              ____________________________________________________________________________________
             </td>
           </tr>
 
@@ -194,11 +183,27 @@ const MedicalClearanceForm = () => {
                 border: "1px solid #000",
               }}
             >
-              <b>VITAL SIGNS</b>
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  marginBottom: "8px",
+                }}
+              >
+                VITAL SIGNS
+              </div>
               <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
-                BP: ______ mmHg &nbsp;&nbsp;&nbsp; PR/HR: ______ bpm
-                &nbsp;&nbsp;&nbsp; RR: ______ cpm &nbsp;&nbsp;&nbsp; Temp: ______ °C
-                &nbsp;&nbsp;&nbsp; Ht: ______ cm &nbsp;&nbsp;&nbsp; Wt: ______ kg
+                <span style={{ fontWeight: "bold" }}>BP:</span> ______ mmHg
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontWeight: "bold" }}>PR/HR:</span> ______ bpm
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontWeight: "bold" }}>RR:</span> ______ cpm
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontWeight: "bold" }}>Temp:</span> ______ °C
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontWeight: "bold" }}>Ht:</span> ______ cm
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontWeight: "bold" }}>Wt:</span> ______ kg
               </div>
             </td>
           </tr>

@@ -1,16 +1,23 @@
 const Payments = {
-  wi: ["cash", "gcash", "cheque", "voucher", "downpayment", "Split Bill"],
-  opd: ["cash", "gcash", "cheque", "voucher", "Split Bill"],
+  wi: [
+    "cash",
+    "gcash",
+    "cheque",
+    "voucher",
+    "downpayment",
+    "mixed", //Split Bill
+  ],
+  opd: ["cash", "gcash", "cheque", "voucher", "mixed"],
   er: ["cash", "gcash", "cheque", "voucher", "downpayment"], // Credit: Note Receivable
   cw: ["cash", "gcash", "cheque", "voucher"], // credit: Note Receivable
   pw: ["cash", "gcash", "cheque", "voucher"],
   sw: ["cash", "gcash", "cheque", "voucher"],
-  bp: ["cash", "gcash", "Split Bill"], // cash & Gcash
-  mc: ["cash", "gcash", "Split Bill"],
-  sc: ["cash", "gcash", "Split Bill"],
-  mbs: ["cash", "gcash", "voucher", "Split Bill"], // v 5% and up discount from srp
-  ctr: ["voucher"],
-  wls: ["voucher", "Split Bill"],
+  bp: ["cash", "gcash", "mixed"], // cash & Gcash
+  mc: ["cash", "gcash", "mixed"],
+  sc: ["cash", "gcash", "mixed"],
+  mbs: ["cash", "gcash", "voucher", "mixed"], // v 5% and up discount from srp
+  ctr: ["voucher", "mixed"],
+  wls: ["voucher", "mixed"],
   promo: ["cash", "gcash", "cheque"],
 };
 
@@ -31,3 +38,4 @@ export default Payments;
 // ctr: contract
 // wls: wellness (health maintenance organization and Philhealth)
 // promo: promotion
+// mixed: split bill

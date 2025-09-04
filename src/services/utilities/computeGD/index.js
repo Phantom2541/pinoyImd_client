@@ -1,23 +1,16 @@
 import { Categories, HMO, Memberships } from "../../fakeDb";
 
-const individual = (
-  menu,
-  category,
-  privilege,
-  membership,
-  hmoCode,
-  contract
-) => {
+const individual = (menu, category, privilege, cardHolder) => {
   const { onPromo: isPromo = false, promo = 0, discountable = false } = menu;
   const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(category)
     ? "opd"
     : category;
 
   var gross = menu[_abbr];
-
-  const isWellness = _abbr === "wls";
-  if (_abbr === "wls") gross = HMO.getSrp(hmoCode, menu?.hmo);
-  if (_abbr === "ctr") gross = menu?.[contract];
+  const { type = "", company = {}, tier = "" } = cardHolder || {};
+  const isWellness = type === "wls";
+  if (type === "wls") gross = HMO.getSrp(company.name, menu?.hmo);
+  if (type === "ctr") gross = menu?.[tier];
 
   let up = Math.round((gross * 80) / 100);
   if (isPromo) {
@@ -30,8 +23,8 @@ const individual = (
     };
   }
 
-  if (membership && category === "mbs" && discountable) {
-    const dr = Memberships.getDiscount(membership) || 0;
+  if (type && type === "mbs" && discountable) {
+    const dr = Memberships.getDiscount(tier) || 0;
     const discount = gross * dr;
     up = gross - discount;
     return {
@@ -82,21 +75,14 @@ const individual = (
   };
 };
 
-const computeGD = (
-  menu,
-  categoryIndex,
-  privilege,
-  membership,
-  hmoCode,
-  contract
-) => {
+const computeGD = (menu, categoryIndex, privilege, cardHolder) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
   // console.log("category", category);
 
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
   if (!Array.isArray(menu))
-    return individual(menu, abbr, privilege, membership, hmoCode, contract);
+    return individual(menu, abbr, privilege, cardHolder);
 
   const accumulator = {
     gross: 0,
@@ -108,9 +94,7 @@ const computeGD = (
       item,
       abbr,
       privilege,
-      membership,
-      hmoCode,
-      contract
+      cardHolder
     );
     accumulator.gross += gross;
     accumulator.discount += discount;

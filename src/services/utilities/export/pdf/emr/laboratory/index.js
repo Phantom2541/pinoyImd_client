@@ -5,7 +5,6 @@ import Parasitology from "./parasitology";
 import Urinalysis from "./urinalysis";
 
 const Laboratory = async ({ form, task, result }) => {
-  console.log("form", form, task);
   try {
     switch (form) {
       case "Hematology":

@@ -1,0 +1,317 @@
+.report-container {
+  width: 900px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  background: #fff; /* white background */
+  padding: 20px;
+  /* border: 1px solid #aaa; */
+}
+
+.top-physical-container {
+  width: 600px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  background: #fff;
+  padding: 0;
+  gap: 0;
+  margin-bottom: 10px;
+}
+
+.laboratoryRequestForm-banner {
+  width: 100%;
+  max-height: 110px;
+  object-fit: fill;
+}
+
+/* Titles */
+.report-title {
+  text-align: center;
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  margin: 10px 0;
+  text-decoration: underline;
+  /* letter-spacing: 15px; */
+}
+
+.report-title-certification {
+  text-align: center;
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  margin: 10px 0;
+  letter-spacing: 15px;
+}
+
+/* Tables */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #000;
+  padding: 0px;
+  padding-left: 5px;
+}
+
+.report-table input[type="text"] {
+  width: 95%;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+}
+
+/* pe row */
+.pe-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.pe-row label {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.pe-row input[type="text"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 50px;
+  margin-left: 4px;
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text2"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 100%; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text3"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 150px; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text4"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 310px; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text5"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 352px; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text6"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 335px; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text7"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 77%; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-row input[type="text8"] {
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid black;
+  width: 100px; /* shorter underline */
+  margin-left: 4px; /* space after label */
+  outline: none;
+  text-align: center;
+}
+
+.pe-column {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 6px; /* vertical spacing */
+}
+
+.pe-column label {
+  display: flex;
+}
+
+.pe-column label span {
+  white-space: nowrap;
+}
+
+.pe-column input[type="text"] {
+  border: none;
+  border-bottom: 1px solid #000; /* underline only */
+  outline: none;
+  padding: 2px 4px;
+  width: 75%; /* stretch to column width */
+  box-sizing: border-box;
+}
+
+.pe-column input[type="text1"] {
+  border: none;
+  border-bottom: 1px solid #000; /* underline only */
+  outline: none;
+  padding: 2px 4px;
+  width: 100%; /* stretch to column width */
+  box-sizing: border-box;
+}
+
+/* Full width field */
+.full-width input {
+  width: 100%;
+}
+
+/* Sections */
+.section {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin: 0;
+}
+
+.section p {
+  margin: 5px 0;
+}
+
+.section input[type="text"] {
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  width: 60%;
+}
+
+/* Exam line */
+.exam-line {
+  margin-top: 5px;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Split section (Particulars + Ancillary) */
+.split-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.particulars {
+  flex: 2;
+}
+
+.ancillary {
+  flex: 1;
+}
+
+.center {
+  text-align: center;
+}
+
+.ancillary td:first-child {
+  width: 50%;
+}
+
+.ancillary td:last-child {
+  width: 50%;
+  text-align: center;
+}
+
+/* Signature */
+.signature {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.sig-line {
+  border-top: 1px solid #000;
+  width: 100%;
+  margin: 20px auto 5px auto;
+}
+
+/* Certification lines */
+.cert-row {
+  margin: -5px 0;
+}
+
+.cert-row label {
+  display: inline-block;
+}
+
+.cert-row .specify {
+  margin-left: 140px; /* adjust this value until it sits under "Class" */
+  /* margin-top: 4px; */
+}
+
+.line {
+  display: inline-block;
+  min-width: 120px; /* adjust width */
+  border-bottom: 1px solid black;
+  margin-right: 8px;
+}
+
+.specify {
+  margin-left: 25px; /* indent under the radio button */
+  font-style: italic;
+  font-size: 0.7rem;
+}
+
+/* ✅ Fix: Certification rows stacked vertically */
+.section.certification {
+  display: block;
+  margin: auto;
+  width: 650px;
+}
+
+.recommendationRemarks {
+  display: flex;
+  flex-direction: column;
+}
+
+/* @media print {
+  .report-table,
+  .report-table th,
+  .report-table td {
+    border: 1px solid #000 !important;
+    border-collapse: collapse !important;
+  }
+
+  .report-table th,
+  .report-table td {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+} */
