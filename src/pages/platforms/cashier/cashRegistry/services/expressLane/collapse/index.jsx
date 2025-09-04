@@ -28,7 +28,15 @@ export default function Body() {
   const [didHoverId, setDidHoverId] = useState(-1);
 
   const renderNoData = () => (
-    <div className="text-center text-muted py-4">No Onboarding available</div>
+    <div className="text-center text-muted py-4">
+      <h3 className="text-muted"> No Express Lane Requests Available</h3>
+      <p className="mt-2 small">
+        Express Lane is our fast-track process for patients who reserved online
+        or submitted HMO/Contract inquiries ahead of time.
+        <br /> This allows us to secure approvals before your visit, so you can
+        proceed directly to the cashier without delays.
+      </p>
+    </div>
   );
 
   const renderData = () =>

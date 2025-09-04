@@ -20,27 +20,26 @@ import Swal from "sweetalert2";
 import CollapseTable from "./table";
 import Header from "./header";
 
-function NoInsourceMessage() {
+function NoRegisteredMessage() {
   return (
     <MDBCard className="text-center my-4">
       <MDBCardBody>
         <h5 className="font-weight-bold mb-3">No Membership Source Found</h5>
         <p className="mb-2">
-          You currently don't have any registered membership source or client
-          companies.
+          You currently don't have any registered membership source.
         </p>
         <p className="text-muted">
-          Membership Sources are the companies, organizations, or groups we
-          directly support (insource).
+          <b>Membership</b> – Standard program for patients from affiliated
+          companies, organizations, or groups.
+          <br />
+          <br />• Entitled to <b>percentage-based discounts</b> and exclusive
+          perks.
+          <br />• Payment is on a <b>cash basis</b> only.
+          <br />• <b>SOA is not applicable</b>.
           <br />
           <br />
-          <b>
-            Only patients from these sources are eligible for vouchers,
-            discounts, and exclusive benefits.
-          </b>
-          <br />
-          <br />
-          Please declare at least one to activate membership privileges.
+          Please declare at least one membership source to activate membership
+          privileges.
         </p>
       </MDBCardBody>
     </MDBCard>
@@ -293,7 +292,7 @@ export default function MenuCollapse() {
           );
         })
       ) : (
-        <NoInsourceMessage />
+        <NoRegisteredMessage />
       )}
     </MDBContainer>
   );

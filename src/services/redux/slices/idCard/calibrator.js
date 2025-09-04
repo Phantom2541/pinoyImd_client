@@ -17,7 +17,6 @@ const initialState = {
   lockAspect: false,
   loading: true,
   editMode: false,
-  code: "",
 };
 // database query
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
@@ -73,9 +72,6 @@ export const reduxSlice = createSlice({
     setEditMode: (state, { payload }) => {
       state.editMode = payload;
     },
-    setCode: (state, { payload }) => {
-      state.code = payload;
-    },
   },
 
   extraReducers: (builder) => {
@@ -113,7 +109,6 @@ export const {
   setLockAspect,
   setLoading,
   setEditMode,
-  setCode,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

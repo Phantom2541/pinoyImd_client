@@ -148,6 +148,7 @@ export default function IdCalibrator() {
           base.borderRadius = parseInt(p.style.borderRadius);
         if (p.style.opacity !== undefined) base.opacity = p.style.opacity;
         if (p.style.border) base.border = p.style.border;
+        if (p.style.transform) base.transform = p.style.transform;
       }
 
       const originalKey =
@@ -157,6 +158,8 @@ export default function IdCalibrator() {
 
       dfp[originalKey] = base;
     });
+
+    console.log("dfp", dfp);
 
     const saveData = {
       layout,

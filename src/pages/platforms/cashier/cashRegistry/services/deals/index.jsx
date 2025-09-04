@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CashRegister from "../cashierOld/pos";
+import CashRegister from "../cashierBackup/pos";
 import { MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";

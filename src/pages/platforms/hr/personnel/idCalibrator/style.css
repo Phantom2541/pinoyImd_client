@@ -241,7 +241,7 @@
 
 .id-calibrator-placed-value.selected {
   outline: 2px dashed #1976d2;
-  outline-offset: 2px;
+  outline-offset: 5px;
 }
 
 .id-calibrator-detail-value.crossed {

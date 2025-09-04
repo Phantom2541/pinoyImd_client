@@ -83,8 +83,9 @@ export default function Modal({ show, toggle = () => {} }) {
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
+        title="Small disbursements for minor expenses (transport, meals, allowances)"
       >
-        Payment
+        Petty Cash Vouchers
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSave}>
