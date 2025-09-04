@@ -42,7 +42,12 @@ export default function Summary() {
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [delayedShowCash, setDelayedShowCash] = useState(false),
-    [refNo, setRefNo] = useState({ number: "", amount: 0 }),
+    [refNo, setRefNo] = useState({
+      number: "",
+      amount: 0,
+      type: "cash",
+      ref: "", // reference by personnel,stockholder,physician
+    }),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
     { addToast } = useToasts(),
@@ -108,7 +113,7 @@ export default function Summary() {
       isPrint: true,
       status: "pending",
       ...(cardHolder?.type && { cardHolder }),
-      ...(refNo.amount > 0 && {
+      ...(refNo?.amount > 0 && {
         refNo: {
           ...refNo,
           amount: refNo.amount > amount ? amount : refNo.amount,
@@ -203,8 +208,8 @@ export default function Summary() {
 
   const handleCheckout = async (e) => {
     e.preventDefault();
-    const { type = "", company = { name: "", ref: "" } } = cardHolder;
-    const { name = "", ref = "" } = company;
+    const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
+    const { name = "", ref = "" } = company || {};
     if (type === "ctr" && !ref) {
       return showAlert(
         "Source Needed",
@@ -257,7 +262,7 @@ export default function Summary() {
         </thead>
         <tbody>
           <tr>
-            <td>Gross Amount</td>
+            <td style={{ fontSize: "1rem" }}>Gross Amount</td>
             <td className="table-price">
               <div className="d-flex justify-content-end">
                 <RollingNumber value={gross} duration={1000} />
@@ -266,7 +271,7 @@ export default function Summary() {
             {/* <td className="table-price">{currency.format(gross)}</td> */}
           </tr>
           <tr>
-            <td>Discount</td>
+            <td style={{ fontSize: "1rem" }}>Discount</td>
             <td className="table-price">
               <div className="d-flex justify-content-end">
                 <RollingNumber value={discount} duration={1000} />
@@ -275,7 +280,7 @@ export default function Summary() {
             {/* <td className="table-price">{currency.format(discount)}</td> */}
           </tr>
           <tr>
-            <td>Net Amount</td>
+            <td style={{ fontSize: "1rem" }}>Net Amount</td>
             <td className="table-price">
               <div className="d-flex justify-content-end">
                 <RollingNumber value={amount} duration={1000} />
@@ -284,7 +289,7 @@ export default function Summary() {
             {/* <td className="table-price">{currency.format(amount)}</td> */}
           </tr>
           <tr>
-            <td>Payment</td>
+            <td style={{ fontSize: "1rem" }}>Payment</td>
             <td className="p-0">
               <select
                 value={payment}
@@ -320,9 +325,14 @@ export default function Summary() {
             </tr>
           ))}
           <tr>
-            <td>Type</td>
+            <td style={{ fontSize: "1rem" }}>Type</td>
             <td className="p-0">
-              <select>
+              <select
+                value={refNo.type}
+                onChange={({ target }) =>
+                  setRefNo({ ...refNo, type: target.value })
+                }
+              >
                 <option value="cash">Cash</option>
                 <option value="credit">Credit</option>
               </select>
@@ -331,7 +341,7 @@ export default function Summary() {
 
           {delayedShowCash ? (
             <tr>
-              <td>Amount ₱</td>
+              <td style={{ fontSize: "1rem" }}>Amount ₱</td>
               <td className="p-0">
                 <input
                   type="number"
