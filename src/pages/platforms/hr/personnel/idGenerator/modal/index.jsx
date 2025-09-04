@@ -6,11 +6,13 @@ import {
   NEXT,
   UPDATE,
 } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import { UPDATE as UPDATEBRANCH } from "../../../../../../services/redux/slices/assets/branches";
 import { UPLOAD as UPLOADFBIMG } from "../../../../../../services/redux/slices/assets/persons/auth";
 import { Cloudinary } from "../../../../../../services/utilities";
 import html2canvas from "html2canvas";
 import ID from "./id";
 import Setting from "./setting";
+import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
   const [frontImage, setFrontImage] = useState(null),
@@ -26,7 +28,15 @@ export default function Modal() {
     ),
     { ct: branch } = useSelector(({ branches }) => branches),
     { token, company, activePlatform } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    { addToast } = useToasts(),
+    selectedRef = useRef(selected);
+  console.log("branch", branch);
+
+  // Sync ref sa latest selected
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   useEffect(() => {
     if (!branch?.ct || !selected) return;
@@ -138,6 +148,7 @@ export default function Modal() {
     return val && val !== "-";
   });
 
+  // --- Updated handleSave ---
   const handleSave = useCallback(async () => {
     if (!frontWrapperRef.current || !backWrapperRef.current) return;
 
@@ -147,18 +158,41 @@ export default function Modal() {
       return acc;
     }, {});
 
-    // Always save dfp to DB
-    dispatch(
-      UPDATE({
-        token,
-        data: { _id: selected._id, dfp: JSON.stringify(dfp) },
-      })
-    );
+    const currentSelected = selectedRef.current;
+
+    if (!currentSelected?._id) {
+      console.error("Cannot save: selected record is undefined or missing _id");
+      addToast("Cannot save: selected record is undefined or missing _id", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+      return;
+    }
+
+    try {
+      await dispatch(
+        UPDATE({
+          token,
+          data: { _id: currentSelected._id, dfp: JSON.stringify(dfp) },
+        })
+      );
+      addToast("DFP saved to DB!", {
+        appearance: "success",
+        autoDismiss: true,
+      });
+      console.log("DFP saved for ID:", currentSelected._id);
+    } catch (err) {
+      console.error("DFP save failed:", err);
+      addToast("DFP save failed!", { appearance: "error", autoDismiss: true });
+      return;
+    }
 
     if (!isComplete) {
       dispatch(NEXT(activeIndex + 1));
       return;
     }
+
+    addToast("Generating canvas...", { appearance: "info", autoDismiss: true });
 
     const options = { backgroundColor: null, scale: 2 };
     const frontCanvas = await html2canvas(frontWrapperRef.current, options);
@@ -176,6 +210,11 @@ export default function Modal() {
     ctx.drawImage(frontCanvas, 0, 0);
     ctx.drawImage(backCanvas, frontCanvas.width + spacing, 0);
 
+    addToast("Uploading image to Cloudinary...", {
+      appearance: "info",
+      autoDismiss: true,
+    });
+
     // Convert to Blob
     const combinedBlob = await new Promise((resolve) =>
       combinedCanvas.toBlob(resolve, "image/png", 1.0)
@@ -186,31 +225,64 @@ export default function Modal() {
     reader.onloadend = async () => {
       const base64data = reader.result;
 
-      // Generate folder & filename
-      const empNo = selected?.front?.emp || "NoEmp";
-      const dob = selected?.front?.dob
-        ? selected.front.dob.replace(/-/g, "")
+      const empNo = currentSelected?.front?.emp || "NoEmp";
+      const dob = currentSelected?.back?.dob
+        ? currentSelected.back.dob
         : "NoDOB";
-      const today = new Date().toISOString().split("T")[0].replace(/-/g, "");
-      const filename = `${empNo}_${dob}_${today}`;
+      // const dob = dobRaw.replace(/,/g, "");
+      const filenameRaw = `${empNo}-${dob}`;
+      const filename = filenameRaw.replace(/\s+/g, "");
 
-      const folderPath = `companies/${company?.name}/${activePlatform?.branch?.name}/ic/generatedID`; // dito lalagay yung image
+      console.log("filename", filename);
 
-      // Upload to Cloudinary
+      const folderPath = `companies/${company?.name}/${activePlatform?.branch?.name}/ic/generatedID`;
+
       const form = Cloudinary.buildFileForm(base64data, folderPath, filename);
 
-      dispatch(UPLOADFBIMG({ data: form, token }))
-        .then((res) => {
-          const imgId = res.payload.imgId;
-          console.log("Uploaded image ID:", imgId);
-          // Optional: pwede i-update sa DB para may link sa employee
-        })
-        .catch((err) => console.error("Upload failed:", err))
-        .finally(() => dispatch(NEXT(activeIndex + 1)));
+      try {
+        const res = await dispatch(UPLOADFBIMG({ data: form, token }));
+        const imgId = res.payload.imgId;
+
+        // Update the branch with the new image ID
+        await dispatch(
+          UPDATEBRANCH({
+            token,
+            data: {
+              _id: activePlatform.branchId, // branch to update
+              icgId: imgId,
+            }, // only updating the icgId field
+          })
+        );
+        console.log("form", form);
+        console.log("res", res);
+
+        console.log("Uploaded image ID:", imgId);
+        addToast("Image uploaded successfully!", {
+          appearance: "success",
+          autoDismiss: true,
+        });
+      } catch (err) {
+        console.error("Upload failed:", err);
+        addToast("Image upload failed!", {
+          appearance: "error",
+          autoDismiss: true,
+        });
+      } finally {
+        dispatch(NEXT(activeIndex + 1));
+      }
     };
 
     reader.readAsDataURL(combinedBlob);
-  }, [placedValues, dispatch, token, selected, activeIndex, isComplete]);
+  }, [
+    placedValues,
+    dispatch,
+    token,
+    activeIndex,
+    isComplete,
+    addToast,
+    activePlatform,
+    company,
+  ]);
 
   useEffect(() => {
     const handleShortcuts = (e) => {
