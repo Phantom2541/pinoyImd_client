@@ -548,6 +548,7 @@ export const reduxSlice = createSlice({
               address: billingAddress(staff.user.address),
               guardian,
               pn,
+              link: "google.com",
             },
             dfp: staff.dfp,
           };

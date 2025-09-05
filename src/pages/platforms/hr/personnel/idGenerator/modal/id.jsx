@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Cloudinary } from "../../../../../../services/utilities";
 import "./style.css";
-import { transform } from "lodash";
+import QrCodeGenerator from "../../../../../../components/qrCode";
 
 export default function ID({
   frontImage,
@@ -94,7 +94,7 @@ export default function ID({
             (p.value.startsWith("data:image/") ||
               /\.(png|jpe?g|gif)$/i.test(p.value));
 
-          const isFixed = p.key === "img" || p.key === "signature"; // ❌ not draggable/selectable
+          const isFixed = p.key === "img" || p.key === "signature";
           const pos = { x: p.x, y: p.y };
 
           const commonProps = {
@@ -135,38 +135,33 @@ export default function ID({
             },
           };
 
-          // ✅ convert img/signature to base64 if still URL
-          if (
-            isFixed &&
-            typeof p.value === "string" &&
-            !p.value.startsWith("data:image/")
-          ) {
-            fetch(`${Cloudinary.getEndpoint()}/${p.value}`)
-              .then((res) => res.blob())
-              .then((blob) => {
-                const reader = new FileReader();
-                reader.onloadend = () =>
-                  handleUpdateValue({ value: reader.result }, p.key);
-                reader.readAsDataURL(blob);
-              })
-              .catch((err) =>
-                console.error("❌ Failed to convert", p.key, err)
-              );
+          // ✅ QR code render
+          if (p.key === "qr" && p.value) {
+            console.log(p.value);
+            return (
+              <div {...commonProps}>
+                <QrCodeGenerator value={p.value} size={p.width || 50} />
+              </div>
+            );
           }
 
-          return isImage ? (
-            <img
-              {...commonProps}
-              src={
-                p.value.startsWith("data:image/")
-                  ? p.value
-                  : `${Cloudinary.getEndpoint()}/${p.value}`
-              }
-              alt={p.key}
-            />
-          ) : (
-            <div {...commonProps}>{p.value}</div>
-          );
+          // ✅ image/signature render
+          if (isImage) {
+            return (
+              <img
+                {...commonProps}
+                src={
+                  p.value.startsWith("data:image/")
+                    ? p.value
+                    : `${Cloudinary.getEndpoint()}/${p.value}`
+                }
+                alt={p.key}
+              />
+            );
+          }
+
+          // ✅ text render (default)
+          return <div {...commonProps}>{p.value}</div>;
         }),
     [placedValues, selectedKey, onSelect, startDrag, handleUpdateValue]
   );

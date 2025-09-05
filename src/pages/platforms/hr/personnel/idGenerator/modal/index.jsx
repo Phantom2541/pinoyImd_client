@@ -93,16 +93,26 @@ export default function Modal() {
       const dataClone = { ...selected, dfp: mergedDfp };
 
       const newPlacedValues = Object.entries(mergedDfp).map(([key, p]) => {
-        // priority: target from dfp
-        let value = dataClone[p.target]?.[key];
+        let value;
 
-        // fallback kung wala sa target
-        if (value === undefined || value === "") {
+        // 🔹 Special case: QR or BAR → gamitin ang `link`
+        if (key === "qr" || key === "bar") {
           value =
-            dataClone.front?.[key] ||
-            dataClone.back?.[key] ||
-            dataClone[key] ||
+            selected?.back?.link ||
+            selected?.front?.link ||
+            selected?.link ||
             "";
+        } else {
+          // Normal case
+          value = dataClone[p.target]?.[key];
+
+          if (value === undefined || value === "") {
+            value =
+              dataClone.front?.[key] ||
+              dataClone.back?.[key] ||
+              dataClone[key] ||
+              "";
+          }
         }
 
         return { key, value, ...p };
@@ -399,7 +409,6 @@ export default function Modal() {
           style={{ display: "flex", justifyContent: "center", gap: "20px" }}
           ref={containerRef}
         >
-          <QrCodeGenerator value="asdfasdfasdf" size={50} />
           <ID
             frontImage={frontImage}
             backImage={backImage}
