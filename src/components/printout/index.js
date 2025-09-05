@@ -16,3 +16,4 @@ export { default as Dtr } from "./dtr";
 export { default as RequestFormPrint } from "./laboratoryRequestForm";
 export { default as RequestClearancePrint } from "./laboratoryCleranceForm";
 export { default as MedicalExaminationClearance } from "./certificate";
+export { default as MenuPriceList } from "./menuPricelist";

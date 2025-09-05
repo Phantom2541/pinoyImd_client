@@ -1,3 +1,4 @@
+import { Component } from "react";
 import {
   Staffs,
   qualityControls,
@@ -7,6 +8,8 @@ import {
 } from "../../../../pages/platforms/accredetations/index";
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
 import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+import  MenuPriceList  from "../../../../pages/platforms/accredetations/document/catalogs/MenuPriceList";
+
 const accreditation = [
   {
     name: "Dashboard",
@@ -286,9 +289,10 @@ const accreditation = [
             icon: "cogs",
           },
           {
-            name: "Menu Pricelist",
+            name: "MenuPriceList",
             path: "/pricelist",
             icon: "cogs",
+            component: MenuPriceList,
           },
           {
             name: "Services Statistics report",

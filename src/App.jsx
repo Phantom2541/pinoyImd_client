@@ -29,6 +29,7 @@ import {
   RequestFormPrint,
   RequestClearancePrint,
   MedicalExaminationClearance,
+  MenuPriceList,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -76,6 +77,11 @@ export default function App() {
         path="/printout/request/outsource"
         exact
         component={RequestOutSource}
+      />
+      <Route
+        path="/printout/MenuPriceList"
+        exact
+        component={MenuPriceList}
       />
       <Route path="/printout/temperature/graph" exact component={TempGraph} />
 
