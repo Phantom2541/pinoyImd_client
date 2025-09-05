@@ -11,7 +11,7 @@ import {
 } from "../../../../../../services/utilities";
 import { capitalize } from "lodash";
 import { Categories } from "../../../../../../services/fakeDb";
-import CashRegister from "../../services/cashierOld/pos";
+import CashRegister from "../../services/cashierBackup/pos";
 
 import {
   MDBCard,

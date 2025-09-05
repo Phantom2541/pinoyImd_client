@@ -1,5 +1,7 @@
 import Avatar from "../../../../../assets/defaultPF.jpg";
 import Signature from "../../../../../assets/templateSampleSignature.png";
+import QR from "../../../../../assets/qrCode.png";
+import BAR from "../../../../../assets/barCode.png";
 
 export const fakeEMP = {
   front: {
@@ -15,6 +17,8 @@ export const fakeEMP = {
     address: "Sta. Mesa, Manila",
     guardian: "Jose Dela Cruz",
     pn: "+63 912 345 6789",
+    qr: QR,
+    bar: BAR,
   },
   layout: "portrait",
   // cardFront

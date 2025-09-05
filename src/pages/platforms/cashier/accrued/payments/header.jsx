@@ -64,7 +64,7 @@ export default function TopHeader({ setShow = () => {} }) {
           // color="white"
           className="search-add-btn ml-2"
         >
-          <MDBIcon icon="plus" />
+          <MDBIcon icon="plus" title="Petty Cash Vouchers" />
         </button>
       </div>
     </MDBView>

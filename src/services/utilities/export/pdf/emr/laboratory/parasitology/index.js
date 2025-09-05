@@ -97,7 +97,7 @@ const microscopicCountRows = (me) => {
 export const Parasitology = async ({ task, form, result }) => {
   const { pe, ce, me, signatories } = task;
 
-  const imageBase64 = await utils.getImage();
+  const imageBase64 = await utils.getImage(result);
   const [head, dr] = signatories;
   const headSig = await utils.getSignature(head.email);
   const drSig = await utils.getSignature(dr.email);
@@ -202,10 +202,7 @@ export const Parasitology = async ({ task, form, result }) => {
       fontSize: 10,
     },
   };
-
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`Parasitology Result - ${new Date().toLocaleDateString()}.pdf`);
+  utils.download(docDefinition, "Parasitology");
 };
 
 export default Parasitology;

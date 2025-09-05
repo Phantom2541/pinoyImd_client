@@ -14,6 +14,7 @@ import {
 } from "../../../../pages/platforms/accounting";
 import {
   Membership,
+  Contract,
   Outsources,
   Utilities,
   Wellness,
@@ -144,6 +145,13 @@ const accounting = [
             component: Membership,
           },
           {
+            name: "Contract",
+            path: "/contract",
+            icon: "paper-plane",
+            title: "Clinics or Doctors Who Referred Patients",
+            component: Contract,
+          },
+          {
             name: "Referral Sources",
             path: "/referrals",
             icon: "paper-plane",
@@ -203,13 +211,13 @@ const accounting = [
     path: "/organizationChart",
     component: OrgChart,
   },
-  {
-    name: "Hotlines",
-    path: "/hotlines",
-    icon: "phone-alt",
-    title: "Emergency Hotlines Poster",
-    component: HotlinesPoster,
-  },
+  // {
+  //   name: "Hotlines",
+  //   path: "/hotlines",
+  //   icon: "phone-alt",
+  //   title: "Emergency Hotlines Poster",
+  //   component: HotlinesPoster,
+  // },
 ];
 
 export default accounting;

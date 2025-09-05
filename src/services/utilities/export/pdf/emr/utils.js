@@ -2,6 +2,9 @@ import { Cloudinary, ENDPOINT, properFullname } from "../../..";
 import logo from "../../../../../assets/iMD.png";
 import QRCode from "qrcode";
 import getAge from "../../../getAge";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 
 const toBase64 = (url) =>
   fetch(url)
@@ -33,13 +36,14 @@ const getBase64Image = (url) => {
   });
 };
 
-const image = async () => {
-  const { branch } = JSON.parse(localStorage.getItem("activePlatform"));
-  const { companyId } = branch;
+const image = async (result) => {
+  const { branchId = {} } = result;
+  const { name, companyId = {} } = branchId;
+
   return await getBase64Image(
-    `${Cloudinary.getEndpoint()}/companies/${companyId?.name}/${
-      branch?.name
-    }/banner.png`
+    `${Cloudinary.getEndpoint()}/companies/${
+      companyId?.name
+    }/${name}/banner.png`
   );
 };
 const signature = async (email) => {
@@ -383,7 +387,7 @@ const utils = {
       coagulation: "#f44336",
     }[String(form).toLowerCase()] || "#d1e5fd"),
 
-  getImage: async () => await image(),
+  getImage: async (result) => await image(result),
   getSignature: async (email) => {
     try {
       const sig = await signature(email);
@@ -399,6 +403,30 @@ const utils = {
       `${ENDPOINT}/emr/portal/${result?.branchId?.companyId?._id}/${result?._id}`,
       { width: 300 }
     ),
+
+  download: (docDefinition, fileName = "document.pdf") => {
+    pdfMake.createPdf(docDefinition).getBlob((blob) => {
+      // Default filename kung wala kang pinasa
+      const safeFileName = `${fileName} Result - ${new Date().toLocaleDateString()}.pdf`;
+
+      // ✅ For old IE/Edge Legacy support (optional na kung modern browsers lang target mo)
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(blob, safeFileName);
+      } else {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = safeFileName;
+
+        // dapat part ng user click flow para gumana sa mobile
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // cleanup
+        URL.revokeObjectURL(link.href);
+      }
+    });
+  },
 };
 
 export default utils;

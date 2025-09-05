@@ -34,6 +34,14 @@ const defaultCustomer = {
     barangay: "",
     street: "",
   },
+  cardHolder: {
+    type: "",
+    company: {
+      name: "",
+      ref: "",
+    },
+  },
+
   dob: "",
   isMale: false,
   mobile: "",
@@ -154,6 +162,9 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCH: (state, { payload }) => {
+      state.cardHolder = payload;
+    },
     SETMENUS: (state, { payload }) => {
       state.menus = [...payload];
       localStorage.setItem("menus", JSON.stringify(payload));
@@ -210,10 +221,7 @@ export const reduxSlice = createSlice({
       state.physicianId = payload;
     },
     SETSOURCE: (state, { payload }) => {
-      const { _id, membership, contract } = payload;
-      state.sourceId = _id;
-      state.membership = membership;
-      state.contract = contract;
+      state.sourceId = payload;
     },
     OVERRIDE_CART: (state, { payload }) => {
       state.cart = payload;
@@ -256,9 +264,15 @@ export const reduxSlice = createSlice({
     },
     RESET_INSOURCE: (state) => {
       state.sourceId = null;
-      state.membership = null;
-      state.hmo = null;
-      state.contract = null;
+    },
+    RESET_CARDHOLDER: (state) => {
+      state.cardHolder = {
+        type: "",
+        company: {
+          name: "",
+          ref: "",
+        },
+      };
     },
   },
   extraReducers: (builder) => {
@@ -307,6 +321,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCH,
   SETSSX,
   SETCART,
   SETMENUS,
@@ -327,6 +342,7 @@ export const {
   OVERRIDE_CART,
   RESET,
   RESET_INSOURCE,
+  RESET_CARDHOLDER,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

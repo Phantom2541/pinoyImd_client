@@ -25,7 +25,7 @@ const gDrive = {
       };
     }
   },
-  view: (fileId) => `https://drive.google.com/thumbnail?id=${fileId}`,
+  view: (fileId) => `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
 };
 
 export default gDrive;

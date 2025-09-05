@@ -78,20 +78,41 @@ export default function ID({
       typeof floatingValue === "string" &&
       floatingValue.match(/\.(jpeg|jpg|gif|png|svg)$/i);
 
-    const newPlaced = {
-      id: Date.now(),
-      key: valueToKeyMap[floatingValue] || floatingValue,
-      value: floatingValue,
-      x,
-      y,
-      target,
-      style: isImage ? { ...defaultImageStyle } : { ...defaultTextStyle },
-    };
-
-    setPlacedValues((prev) => [...prev, newPlaced]);
-    dispatch(
-      setSelectedValue({ ...newPlaced, index: placedValues.length, target })
+    // 🔹 Hanapin kung QR o Bar gamit fakeEMP
+    let key = Object.keys(fakeEMP.front).find(
+      (k) => fakeEMP.front[k] === floatingValue
     );
+    if (!key) {
+      key = Object.keys(fakeEMP.back).find(
+        (k) => fakeEMP.back[k] === floatingValue
+      );
+    }
+
+    // fallback kung wala
+    if (!key) key = floatingValue;
+
+    setPlacedValues((prev) => {
+      let filtered = prev;
+
+      if (key === "qr") {
+        filtered = prev.filter((p) => p.key !== "bar"); // remove barcode if exists
+      } else if (key === "bar") {
+        filtered = prev.filter((p) => p.key !== "qr"); // remove QR if exists
+      }
+
+      const newPlaced = {
+        id: Date.now(),
+        key,
+        value: floatingValue,
+        x,
+        y,
+        target,
+        style: isImage ? { ...defaultImageStyle } : { ...defaultTextStyle },
+      };
+
+      return [...filtered, newPlaced];
+    });
+
     dispatch(setFloatingValue(null));
     document.body.style.cursor = "auto";
   };
@@ -240,7 +261,7 @@ export default function ID({
             position: "absolute",
             userSelect: "none",
             cursor: "grab",
-            ...p.style,
+            ...p.style, // rotation at iba pa dito lang
           }}
           onMouseDown={handleMouseDown}
           onClick={(e) => e.stopPropagation()}
@@ -259,8 +280,12 @@ export default function ID({
                 alt="placed"
                 draggable={false}
                 style={{
-                  ...p.style,
+                  width: "100%",
+                  height: "100%",
                   objectFit: "fill",
+                  borderRadius: p.style.borderRadius,
+                  opacity: p.style.opacity,
+                  border: p.style.border,
                 }}
               />
               {/* Resize handle */}

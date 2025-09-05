@@ -1,0 +1,26 @@
+.flipped-id {
+  transform: rotateY(180deg);
+}
+
+/* You can place this in your CSS or inside <style> tag if using styled-components or inline <style jsx> */
+
+.validation-group {
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.validation-group.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.question-button {
+  transition: transform 0.3s ease;
+}
+
+.question-button.shift {
+  transform: translateY(-10px);
+}

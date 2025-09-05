@@ -15,7 +15,7 @@ import {
 } from "../../../../../../../services/utilities";
 // import Search from "../../../../../../services/utilities/search";
 import { Categories, Services } from "../../../../../../../services/fakeDb";
-import "./../../cashierOld/style.css";
+import "./../../cashierBackup/style.css";
 
 export default function CashierMenu({ handlePicker }) {
   const [menus, setMenus] = useState([]),

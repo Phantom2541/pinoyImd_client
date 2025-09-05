@@ -19,6 +19,7 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
 import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
+import PaymentDetails from "./paymentDetails";
 import "./style.css";
 const Tables = () => {
   const { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
@@ -191,9 +192,6 @@ const Tables = () => {
         <tbody>
           {paginatedData.length > 0 ? (
             paginatedData?.map((deal, index) => {
-              const { img, text, style } = paymentMethod?.getImage(
-                deal.payment
-              );
               const isMatch = (key) =>
                 selected?._id === deal?._id && selected.updatedKey === key;
               const { source = {} } = deal || [];
@@ -450,39 +448,13 @@ const Tables = () => {
                           </button>
                         </div>
                       )}
-
                       <div
-                        className="d-flex align-items-center flex-column"
-                        style={{ opacity: index === didHoverID ? 0 : 1 }}
+                        style={{
+                          opacity: index === didHoverID ? 0 : 1,
+                          height: index === didHoverID ? "1rem" : "auto",
+                        }}
                       >
-                        <div className="d-flex align-items-center">
-                          <h6
-                            className="mt-2"
-                            style={{ fontWeight: 600 }}
-                            title="Amount"
-                          >
-                            {currency.format(deal.amount)}
-                          </h6>
-
-                          <img
-                            src={img}
-                            alt={text}
-                            className="ml-1"
-                            title={text}
-                            style={{
-                              ...style,
-                            }}
-                          />
-                        </div>
-                        <h6
-                          title="Cash"
-                          style={{
-                            opacity: index === didHoverID ? 0 : 1,
-                            fontSize: "0.7rem",
-                          }}
-                        >
-                          {currency.format(deal.cash)}
-                        </h6>
+                        <PaymentDetails deal={deal} />
                       </div>
                     </>
                   </td>

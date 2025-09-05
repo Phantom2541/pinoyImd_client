@@ -176,13 +176,13 @@ const physician = [
     path: "/notifications",
     title: "Receive reminders and system alerts",
   },
-  {
-    name: "Hotlines",
-    path: "/hotlines",
-    icon: "phone-alt",
-    title: "Emergency Hotlines Poster",
-    component: HotlinesPoster,
-  },
+  // {
+  //   name: "Hotlines",
+  //   path: "/hotlines",
+  //   icon: "phone-alt",
+  //   title: "Emergency Hotlines Poster",
+  //   component: HotlinesPoster,
+  // },
 ];
 
 export default physician;

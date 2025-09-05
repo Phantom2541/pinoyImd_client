@@ -4,6 +4,8 @@ import {
   Deals,
   Menus,
   Services,
+  Inhouse,
+  Contract,
   Membership,
   Outsources,
   Utilities,
@@ -19,8 +21,7 @@ import {
   Payments,
   // SOA,
   Onboarding,
-  Inhouse,
-  Contract,
+  Preauthorization,
 } from "../../../../pages/platforms/cashier";
 import {
   Request,
@@ -64,11 +65,19 @@ const cashier = [
         component: Remittances,
       },
       {
-        name: "Onboarding",
+        name: "Pre-Authorization",
+        path: "/authorization",
+        icon: "check-circle",
+        title:
+          "Letter of Authorization (LOA))/Pre-Registered Patients & HMO Approvals → moves to cashier Onboarding when done",
+        component: Preauthorization,
+      },
+      {
+        name: "No Express Charge",
         path: "/onboarding",
         icon: "sign-in-alt",
         title:
-          "Pre-Registered Patients & HMO Approvals → moves to Accrued Vouchers when done",
+          "Pre-charged → moves to Accrued Vouchers/frontdesk onboarding when done",
         component: Onboarding,
       },
     ],
@@ -86,13 +95,13 @@ const cashier = [
         title: "Outstanding Payments to Suppliers & Utilities",
         component: Payables,
       },
-      {
-        name: "Petty Cash Vouchers",
-        path: "/payments/petty-vouchers",
-        icon: "file-invoice-dollar",
-        title:
-          "Small disbursements for minor expenses (transport, meals, allowances)",
-      },
+      // {
+      //   name: "Petty Cash Vouchers",
+      //   path: "/payments/petty-vouchers",
+      //   icon: "file-invoice-dollar",
+      //   title:
+      //     "Small disbursements for minor expenses (transport, meals, allowances)",
+      // },
       {
         name: "Payments",
         path: "/payments",
@@ -157,18 +166,18 @@ const cashier = [
             component: Membership,
           },
           {
-            name: "Referral Sources",
-            path: "/referrals",
-            icon: "paper-plane",
-            title: "Clinics or Doctors Who Referred Patients",
-            component: Referrals,
-          },
-          {
             name: "Contract",
             path: "/contract",
             icon: "paper-plane",
             title: "Clinics or Doctors Who Referred Patients",
             component: Contract,
+          },
+          {
+            name: "Referral Sources",
+            path: "/referrals",
+            icon: "paper-plane",
+            title: "Clinics or Doctors Who Referred Patients",
+            component: Referrals,
           },
         ],
       },
@@ -246,13 +255,13 @@ const cashier = [
       },
     ],
   },
-  {
-    name: "Hotlines",
-    path: "/hotlines",
-    icon: "phone-alt",
-    title: "Emergency Hotlines Poster",
-    component: HotlinesPoster,
-  },
+  // {
+  //   name: "Hotlines",
+  //   path: "/hotlines",
+  //   icon: "phone-alt",
+  //   title: "Emergency Hotlines Poster",
+  //   component: HotlinesPoster,
+  // },
 ];
 
 export default cashier;

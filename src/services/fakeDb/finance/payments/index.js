@@ -16,7 +16,7 @@ const Payments = {
   mc: ["cash", "gcash", "mixed"],
   sc: ["cash", "gcash", "mixed"],
   mbs: ["cash", "gcash", "voucher", "mixed"], // v 5% and up discount from srp
-  ctr: ["voucher"],
+  ctr: ["voucher", "mixed"],
   wls: ["voucher", "mixed"],
   promo: ["cash", "gcash", "cheque"],
 };

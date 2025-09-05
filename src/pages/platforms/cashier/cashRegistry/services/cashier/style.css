@@ -215,7 +215,7 @@
   position: relative;
 }
 
-.menus-table:hover .menus-up {
+.menus-table tr:hover .menus-up {
   color: green;
   display: none;
 }
@@ -231,7 +231,7 @@
   height: 100%;
 }
 
-.menus-table:hover .menus-button-delete {
+.menus-table tr:hover .menus-button-delete {
   display: block;
 }
 

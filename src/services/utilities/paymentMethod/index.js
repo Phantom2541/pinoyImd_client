@@ -4,6 +4,8 @@ import gcash from "../../../assets/paymentMethods/gcash-edited.png";
 import cheque from "../../../assets/paymentMethods/cheque.png";
 import voucher from "../../../assets/paymentMethods/voucher.png";
 import downpayment from "../../../assets/paymentMethods/downpayment.png";
+import tendered from "../../../assets/tendered.png";
+import care from "../../../assets/paymentMethods/care.png";
 const paymentMethods = [
   {
     text: "Cash",
@@ -30,6 +32,16 @@ const paymentMethods = [
     text: "Downpayment",
     img: downpayment,
     style: { height: "1.5rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
+  },
+  {
+    text: "Tendered",
+    img: tendered,
+    style: { height: "1.2rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
+  },
+  {
+    text: "Care",
+    img: care,
+    style: { height: "1.2rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
   },
 ];
 

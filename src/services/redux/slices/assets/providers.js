@@ -31,6 +31,7 @@ const contractCategories = [
 ];
 const initialState = {
   collections: [],
+  hotlines: [],
   categories: categories,
   contractCategories,
   paginated: [],
@@ -371,6 +372,7 @@ export const reduxSlice = createSlice({
       state.page = payload;
     },
     SETSOURCES: (state, { payload }) => {
+      console.log("payload", payload);
       state.collections = payload;
     },
     /**
@@ -448,8 +450,6 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
-
         state.collections = state.filtered = payload.payload;
         const { page, maxPage } = state;
         if (payload.length > 0) {
@@ -611,7 +611,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(FILTERBYCATEGORY.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.collections = state.filtered = payload;
+        state.hotlines = state.filtered = payload;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

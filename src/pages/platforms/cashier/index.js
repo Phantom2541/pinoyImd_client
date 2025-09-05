@@ -1,4 +1,11 @@
-import { Cashier, Deals, Sales, Remittances, Onboarding } from "./cashRegistry";
+import {
+  Cashier,
+  Deals,
+  Sales,
+  Remittances,
+  Onboarding,
+  Preauthorization,
+} from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import {
   Philhealth,
@@ -28,6 +35,7 @@ export {
   Deals,
   Sales,
   Onboarding,
+  Preauthorization,
   Remittances,
   Menus,
   Services,

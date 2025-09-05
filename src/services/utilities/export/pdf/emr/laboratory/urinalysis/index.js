@@ -116,7 +116,7 @@ const microscopicCountRows = (me) => {
 export const Urinalysis = async ({ task, form, result }) => {
   const { pe, ce, me, signatories } = task;
 
-  const imageBase64 = await utils.getImage();
+  const imageBase64 = await utils.getImage(result);
 
   const [head, dr] = signatories;
   const headSig = await utils.getSignature(head.email);
@@ -231,9 +231,7 @@ export const Urinalysis = async ({ task, form, result }) => {
     },
   };
 
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`Urinalysis Result - ${new Date().toLocaleDateString()}.pdf`);
+  utils.download(docDefinition, "Urinalysis");
 };
 
 export default Urinalysis;
