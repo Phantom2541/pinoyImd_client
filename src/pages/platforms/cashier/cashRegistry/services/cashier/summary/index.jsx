@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
   RESET,
+  RESET_CARDHOLDER,
   RESET_INSOURCE,
   SAVE,
   SETCART,
@@ -23,6 +24,17 @@ import Spinner from "../../../../../../../components/spinner";
 import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/assets/providers";
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import RollingNumber from "../../../../../../../components/rollingNumber";
+import Credit from "./credit";
+
+const _refNo = {
+  number: "",
+  amount: 0,
+  pp: "cash", //cash or credit patient Payable
+  careOf: {
+    category: "employee",
+    user: "",
+  },
+};
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -41,13 +53,7 @@ export default function Summary() {
       cardHolder,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
-    [delayedShowCash, setDelayedShowCash] = useState(false),
-    [refNo, setRefNo] = useState({
-      number: "",
-      amount: 0,
-      type: "cash",
-      ref: "", // reference by personnel,stockholder,physician
-    }),
+    [refNo, setRefNo] = useState(_refNo),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
     { addToast } = useToasts(),
@@ -59,14 +65,10 @@ export default function Summary() {
       privilege,
       cardHolder
     ),
-    amount = (gross || 0) - (Math.round(discount) || 0),
+    amount = Math.round((gross || 0) - (discount || 0)),
     { abbr = undefined } = Categories[category],
     providedPaymentOptions =
       Payments[cardHolder?.type ? cardHolder?.type : abbr];
-
-  const showCash =
-    payment === "cash" ||
-    (payment === "mixed" && refNo.amount && amount > refNo.amount);
 
   const isMixed = payment === "mixed";
 
@@ -76,22 +78,15 @@ export default function Summary() {
     );
   }, [cardHolder]);
 
-  useEffect(() => {
-    let timer;
-
-    if (isMixed && showCash) {
-      // clear muna bago mag start ulit
-      timer = setTimeout(() => {
-        setDelayedShowCash(true);
-      }, 500);
-    } else {
-      setDelayedShowCash(showCash); // agad mag false
-    }
-
-    return () => clearTimeout(timer); // clear kapag nagbago dependencies
-  }, [isMixed, showCash, refNo.amount, amount]);
-
+  console.log("refNo", refNo);
   const checkout = async () => {
+    const { careOf, pp, amount: rAmount, ...rest } = refNo;
+
+    const baseRefNo = {
+      ...rest,
+      amount: pp === "co" ? amount : rAmount > amount ? amount : rAmount,
+      ...(pp === "co" && { careOf }),
+    };
     let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
@@ -113,11 +108,8 @@ export default function Summary() {
       isPrint: true,
       status: "pending",
       ...(cardHolder?.type && { cardHolder }),
-      ...(refNo?.amount > 0 && {
-        refNo: {
-          ...refNo,
-          amount: refNo.amount > amount ? amount : refNo.amount,
-        },
+      ...(baseRefNo?.amount > 0 && {
+        refNo: baseRefNo,
       }),
       cart: cart.map((menu) => {
         const {
@@ -178,9 +170,9 @@ export default function Summary() {
           }
         }
       );
-
+      dispatch(RESET_CARDHOLDER());
       dispatch(SETCART());
-      setRefNo({ number: "", amount: 0 });
+      setRefNo(_refNo);
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {
       addToast("Transaction failed", { appearance: "error" });
@@ -193,9 +185,9 @@ export default function Summary() {
     }
   };
 
-  const showAlert = (title, text) => {
+  const showAlert = (text) => {
     return Swal.fire({
-      title,
+      title: "Company Card Needed",
       text,
       icon: "warning",
       confirmButtonText: "Got it",
@@ -210,24 +202,40 @@ export default function Summary() {
     e.preventDefault();
     const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
     const { name = "", ref = "" } = company || {};
+    const { careOf = {}, pp = "" } = refNo;
+
+    if (pp === "co" && !careOf.user) {
+      const category = {
+        bm: "Board Member",
+        employee: "Employee",
+        physician: "Physician",
+      };
+      return Swal.fire({
+        icon: "warning",
+        title: `${category[careOf.category]} Required`,
+        text: `Please select a ${
+          category[careOf.category]
+        } who will take care of this credit transaction.`,
+        confirmButtonText: "Got it",
+        confirmButtonColor: "#3085d6",
+        backdrop: true,
+      });
+    }
     if (type === "ctr" && !ref) {
       return showAlert(
-        "Source Needed",
-        "Please select a source for the Card Holder contract before continuing."
+        "Please select a company card for the Card Holder contract before continuing."
       );
     }
 
     if (type === "mbs" && !ref) {
       return showAlert(
-        "Source Needed",
-        "Please select a source for the Card Holder Membership before continuing."
+        "Please select a company card  for the Card Holder Membership before continuing."
       );
     }
 
     if (type === "wls" && !name) {
       return showAlert(
-        "Card Type Needed",
-        "Please select a card type for the HMO Card Holder before continuing."
+        "Please select a company card  for the HMO Card Holder before continuing."
       );
     }
 
@@ -293,7 +301,10 @@ export default function Summary() {
             <td className="p-0">
               <select
                 value={payment}
-                onChange={({ target }) => setPayment(target.value)}
+                onChange={({ target }) => {
+                  setPayment(target.value);
+                  setRefNo(_refNo);
+                }}
               >
                 {providedPaymentOptions?.map((payment, index) => (
                   <option key={`${abbr}-${index}`} value={payment}>
@@ -303,43 +314,72 @@ export default function Summary() {
               </select>
             </td>
           </tr>
-          {/* {[
-            { label: "Tracking No.", key: "number" },
-            { label: "Voucher ₱", key: "amount", ph: "Voucher Amount" },
-          ].map(({ label, key, ph = "" }, index) => (
+          {isMixed && (
+            <>
+              {[
+                { label: "Tracking No.", key: "number" },
+                ...(refNo.pp === "cash"
+                  ? [
+                      {
+                        label: "Credit Covered",
+                        key: "amount",
+                        ph: "Credit Covered",
+                      },
+                    ]
+                  : []),
+              ].map(({ label, key, ph = "" }, index) => (
+                <tr>
+                  <td style={{ fontSize: "0.8rem" }}>{label}</td>
+                  <td className="p-0 m-0">
+                    <input
+                      type={index === 1 ? "number" : "string"}
+                      value={String(refNo[key] || "")}
+                      onChange={({ target }) =>
+                        setRefNo({
+                          ...refNo,
+                          [key]:
+                            index === 1 ? Number(target.value) : target.value,
+                        })
+                      }
+                      placeholder={ph ? ph : label}
+                      required
+                      name={key}
+                      title={label}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
+          {isMixed ? (
             <tr>
-              <td style={{ fontSize: "1rem" }}>{label}</td>
-              <td className="p-0 m-0">
-                <input
-                  type={index === 1 ? "number" : "string"}
-                  value={String(refNo[key] || "")}
+              <td style={{ fontSize: "0.8rem" }}>Patient Payable</td>
+              <td className="p-0">
+                <select
+                  value={refNo.pp}
                   onChange={({ target }) =>
-                    setRefNo({ ...refNo, [key]: target.value })
+                    setRefNo({ ...refNo, pp: target.value })
                   }
-                  placeholder={ph ? ph : label}
-                  required
-                  name={key}
-                  title={label}
-                />
+                >
+                  <option value="cash">Cash</option>
+                  <option value="co">Care Of</option>
+                </select>
               </td>
             </tr>
-          ))}
-          <tr>
-            <td style={{ fontSize: "1rem" }}>Type</td>
-            <td className="p-0">
-              <select
-                value={refNo.type}
-                onChange={({ target }) =>
-                  setRefNo({ ...refNo, type: target.value })
-                }
-              >
-                <option value="cash">Cash</option>
-                <option value="credit">Credit</option>
-              </select>
-            </td>
-          </tr> */}
+          ) : (
+            ""
+          )}
 
-          {delayedShowCash ? (
+          <Credit
+            refNo={refNo}
+            setRefNo={setRefNo}
+            isMixed={isMixed}
+            amount={amount}
+          />
+
+          {["cash", "mixed", "downpayment"].includes(payment) &&
+          refNo.pp === "cash" &&
+          refNo.amount < amount ? (
             <tr>
               <td style={{ fontSize: "1rem" }}>Amount ₱</td>
               <td className="p-0">
@@ -350,18 +390,14 @@ export default function Summary() {
                   onChange={({ target }) => setCash(Number(target.value))}
                   placeholder={
                     isMixed
-                      ? `Cash out Bill ${currency.format(
-                          amount - refNo.amount
-                        )}`
-                      : "Amount in Peso"
+                      ? `Amount ${currency.format(amount - refNo.amount)}`
+                      : "Amount"
                   }
                   required
                   title={
                     isMixed
-                      ? `Cash out Bill ${currency.format(
-                          amount - refNo.amount
-                        )}`
-                      : "Amount in Peso"
+                      ? `Amount ${currency.format(amount - refNo.amount)}`
+                      : "Amount "
                   }
                   name="amount"
                 />
@@ -371,73 +407,9 @@ export default function Summary() {
             ""
           )}
 
-          {/* <tr>
-            <td colSpan="2">
-              {["cash", "mixed", "downpayment"].includes(payment) &&
-              abbr !== "wls" ? (
-                <>
-                  {isMixed && (
-                    <>
-                      <input
-                        type="string"
-                        min={amount}
-                        value={refNo.number}
-                        onChange={({ target }) =>
-                          setRefNo({ ...refNo, number: target.value })
-                        }
-                        placeholder="Reference No."
-                        required
-                        name="ref"
-                        title="Reference No."
-                      />
-                      <input
-                        type="number"
-                        value={String(refNo.amount || "")}
-                        onChange={({ target }) =>
-                          setRefNo({ ...refNo, amount: Number(target.value) })
-                        }
-                        placeholder="Voucher Amount"
-                        required
-                        name="refAmount"
-                        title="Voucher Amount"
-                      />
-                    </>
-                  )}
-                  {delayedShowCash ? (
-                    <input
-                      type="number"
-                      min={isMixed ? amount - refNo.amount : amount}
-                      value={String(cash || "")}
-                      onChange={({ target }) => setCash(Number(target.value))}
-                      placeholder={
-                        isMixed
-                          ? `Cash out Bill ${currency.format(
-                              amount - refNo.amount
-                            )}`
-                          : "Amount in Peso"
-                      }
-                      required
-                      title={
-                        isMixed
-                          ? `Cash out Bill ${currency.format(
-                              amount - refNo.amount
-                            )}`
-                          : "Amount in Peso"
-                      }
-                      name="amount"
-                    />
-                  ) : (
-                    ""
-                  )}
-                </>
-              ) : (
-                <span>No cash input needed</span>
-              )}
-            </td>
-          </tr> */}
-          {/* <tr>
+          <tr>
             <td colSpan="2" className="td-skip" />
-          </tr> */}
+          </tr>
           <tr>
             <td className="p-0">
               <button

@@ -24,7 +24,9 @@ export default function MedicalExaminationClearance() {
   };
 
   useEffect(() => {
-    window.print();
+    setTimeout(() => {
+      window.print();
+    }, 3000);
   }, []);
 
   return (

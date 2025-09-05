@@ -265,6 +265,15 @@ export const reduxSlice = createSlice({
     RESET_INSOURCE: (state) => {
       state.sourceId = null;
     },
+    RESET_CARDHOLDER: (state) => {
+      state.cardHolder = {
+        type: "",
+        company: {
+          name: "",
+          ref: "",
+        },
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -333,6 +342,7 @@ export const {
   OVERRIDE_CART,
   RESET,
   RESET_INSOURCE,
+  RESET_CARDHOLDER,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

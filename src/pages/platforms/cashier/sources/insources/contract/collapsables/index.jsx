@@ -216,6 +216,31 @@ export default function MenuCollapse() {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = insources?.slice(startIndex, endIndex); // Get only items for the active page
+
+  function NoRegisteredMessage() {
+    return (
+      <MDBCard className="text-center my-4">
+        <MDBCardBody>
+          <h5 className="font-weight-bold mb-3">No Contract Source Found</h5>
+          <p className="mb-2">
+            You currently don't have any registered contract source.
+          </p>
+          <p className="text-muted">
+            <b>Contract</b> – Special corporate arrangement with more flexible
+            terms.
+            <br />
+            <br />• Allows <b>open/custom pricing</b>.
+            <br />• Clients may avail of <b>credit line/utang terms</b>.
+            <br />• <b>SOA generation is enabled</b> for billing and collection.
+            <br />
+            <br />
+            Please declare at least one contract source to activate corporate
+            billing features.
+          </p>
+        </MDBCardBody>
+      </MDBCard>
+    );
+  }
   return (
     <MDBContainer
       style={{
@@ -281,9 +306,8 @@ export default function MenuCollapse() {
           );
         })
       ) : (
-        <p className="text-center">No record.</p>
+        <NoRegisteredMessage />
       )}
-      {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
     </MDBContainer>
   );
 }

@@ -456,39 +456,6 @@ const Tables = () => {
                       >
                         <PaymentDetails deal={deal} />
                       </div>
-                      {/* <div
-                        className="d-flex align-items-center flex-column"
-                        style={{ opacity: index === didHoverID ? 0 : 1 }}
-                      >
-                        <div className="d-flex align-items-center">
-                          <h6
-                            className="mt-2"
-                            style={{ fontWeight: 600 }}
-                            title="Amount"
-                          >
-                            {currency.format(deal.amount)}
-                          </h6>
-
-                          <img
-                            src={img}
-                            alt={text}
-                            className="ml-1"
-                            title={text}
-                            style={{
-                              ...style,
-                            }}
-                          />
-                        </div>
-                        <h6
-                          title="Cash"
-                          style={{
-                            opacity: index === didHoverID ? 0 : 1,
-                            fontSize: "0.7rem",
-                          }}
-                        >
-                          {currency.format(deal.cash)}
-                        </h6>
-                      </div> */}
                     </>
                   </td>
                 </tr>

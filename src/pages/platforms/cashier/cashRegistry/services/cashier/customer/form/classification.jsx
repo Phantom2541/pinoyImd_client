@@ -4,7 +4,6 @@ import { MDBBadge, MDBBtn, MDBTypography } from "mdbreact";
 import { useHistory } from "react-router";
 import {
   Categories,
-  HMO,
   Privileges,
 } from "../../../../../../../../services/fakeDb";
 import {
@@ -14,7 +13,6 @@ import {
   SETSOURCE,
   SETSSX,
   RESET_INSOURCE,
-  SETHMO,
   SetCH,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
@@ -41,7 +39,7 @@ export default function PosCard() {
       sourceId,
       formSubmitted,
       isSuccess,
-      ch,
+      cardHolder,
     } = useSelector(({ pos }) => pos),
     { collections } = useSelector(({ providers }) => providers),
     { collections: inhouse } = useSelector(({ branches }) => branches),
@@ -55,7 +53,6 @@ export default function PosCard() {
 
   const { branch = {} } = activePlatform;
   const { companyId: company = {} } = branch || {};
-
   useEffect(() => {
     const fakeDB = localStorage.getItem("activePlatform");
     if (fakeDB) {
@@ -243,7 +240,7 @@ export default function PosCard() {
           <span>Card Holder</span>
           <select
             disabled={!didSelect}
-            value={ch}
+            value={cardHolder?.type}
             onChange={({ target }) => {
               const value = target.value;
               const haveSource = ["mbs", "ctr"].includes(value);

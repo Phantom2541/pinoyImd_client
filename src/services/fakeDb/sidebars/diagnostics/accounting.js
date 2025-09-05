@@ -14,6 +14,7 @@ import {
 } from "../../../../pages/platforms/accounting";
 import {
   Membership,
+  Contract,
   Outsources,
   Utilities,
   Wellness,
@@ -142,6 +143,13 @@ const accounting = [
             icon: "id-card-alt",
             title: "Members with Discounted Rates",
             component: Membership,
+          },
+          {
+            name: "Contract",
+            path: "/contract",
+            icon: "paper-plane",
+            title: "Clinics or Doctors Who Referred Patients",
+            component: Contract,
           },
           {
             name: "Referral Sources",

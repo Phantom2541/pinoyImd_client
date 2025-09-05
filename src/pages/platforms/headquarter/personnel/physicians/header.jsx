@@ -8,6 +8,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import { Search } from "../../../../../components/searchables";
+import { CTBROWSE } from "../../../../../services/redux/slices/assets/branches";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
@@ -20,6 +21,7 @@ const Header = () => {
   useEffect(() => {
     if (token && activePlatform?.branchId)
       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
+    dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
 
     return () => dispatch(RESET());
   }, [token, activePlatform, isSucscess, dispatch]);
