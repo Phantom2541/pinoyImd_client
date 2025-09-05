@@ -54,7 +54,7 @@ export const reduxSlice = createSlice({
         const staff = rest;
 
         const Avatar = `/users/${staff.user.email}/profile.jpg`;
-        const Signature = `/users/${staff.user.email}/signature.png`;
+        const Signature = `${staff?.user?.sid}/users/${staff.user.email}/signature.png`;
         const empName = `${staff.user.title || ""} ${fullName(
           staff.user.fullName,
           false,
