@@ -158,9 +158,7 @@ export default function IdCalibrator() {
 
       dfp[originalKey] = base;
     });
-
     console.log("dfp", dfp);
-
     const saveData = {
       layout,
       cf: frontImage || "",

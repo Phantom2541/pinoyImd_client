@@ -177,6 +177,7 @@ const EditableField = ({
             ...displayStyle,
             whiteSpace: type === "textarea" ? "pre-wrap" : "normal",
             wordBreak: "break-word",
+            width: "fit-content",
           }}
           onClick={() => {
             window.dispatchEvent(
@@ -186,7 +187,7 @@ const EditableField = ({
             );
             setEditedData({ ...fieldData, editingKey: keyForValue });
           }}
-          className={`cursor-pointer ${classNameTxt}`}
+          className={`cursor-pointer editableFied-text ${classNameTxt}`}
         >
           {formattedText}
         </Tag>

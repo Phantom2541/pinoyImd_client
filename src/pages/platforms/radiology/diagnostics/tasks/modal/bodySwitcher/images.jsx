@@ -152,12 +152,18 @@ const Images = () => {
 
             {/* Container with maxHeight and scroll */}
             <div style={{ maxHeight: "16rem", overflow: "auto" }}>
-              <img
-                alt="Ecg"
-                src={gDrive.view(task.fileId)}
-                className="w-100 rounded shadow-sm"
-                style={{ display: "block" }}
-              />
+              <a
+                href={gDrive.view(task.fileId)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  alt="Ecg"
+                  src={gDrive.view(task.fileId)}
+                  className="w-100 rounded shadow-sm"
+                  style={{ display: "block", cursor: "pointer" }}
+                />
+              </a>
             </div>
           </div>
         )}

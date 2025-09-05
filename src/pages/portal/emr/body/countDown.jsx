@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCOUNTDOWN_COMPLETED } from "../../../../services/redux/slices/emr/portal";
+import { SetCOUNTDOWN_COMPLETED } from "../../../../services/redux/slices/portal/emr";
 import "./style.css";
 
 const ONE_HOUR_PROCESS_SERVICES = ["URINALYSIS", "HEMATOLOGY", "FECALYSIS"];
@@ -11,7 +11,7 @@ const CountDown = () => {
       activeType,
       rendered,
       forms,
-    } = useSelector(({ portal }) => portal),
+    } = useSelector(({ emr }) => emr),
     [secondsLeft, setSecondsLeft] = useState(null),
     [hasExpected, setHasExpected] = useState(false),
     [expected, setExpected] = useState(""),

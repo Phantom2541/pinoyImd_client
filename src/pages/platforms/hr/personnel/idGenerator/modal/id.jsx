@@ -1,6 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { Cloudinary } from "../../../../../../services/utilities";
+import { Cloudinary, ENDPOINT } from "../../../../../../services/utilities";
 import "./style.css";
+import QrCodeGenerator from "../../../../../../components/qrCode";
+import { useSelector } from "react-redux";
+import BarCodeGenerator from "../../../../../../components/barCode";
 
 export default function ID({
   frontImage,
@@ -13,6 +16,7 @@ export default function ID({
   backRef,
   layout,
 }) {
+  const { company } = useSelector(({ auth }) => auth);
   const [draggingKey, setDraggingKey] = useState(null);
   const containerRef = useRef(null);
   const [base64Cache, setBase64Cache] = useState({}); // cache for img & signature
@@ -34,6 +38,8 @@ export default function ID({
       return url; // fallback
     }
   };
+
+  console.log("plaacedValues", placedValues, selectedKey);
 
   // 🔧 pre-convert only img & signature values
   useEffect(() => {
@@ -93,7 +99,7 @@ export default function ID({
             (p.value.startsWith("data:image/") ||
               /\.(png|jpe?g|gif)$/i.test(p.value));
 
-          const isFixed = p.key === "img" || p.key === "signature"; // ❌ not draggable/selectable
+          const isFixed = p.key === "img" || p.key === "signature";
           const pos = { x: p.x, y: p.y };
 
           const commonProps = {
@@ -124,6 +130,7 @@ export default function ID({
               borderRadius: p.borderRadius,
               border: p.border,
               borderBottom: p.borderBottom,
+              transform: p.transform,
               opacity: p.opacity ?? 1,
               outline:
                 p.key === selectedKey && !isFixed
@@ -133,38 +140,52 @@ export default function ID({
             },
           };
 
-          // ✅ convert img/signature to base64 if still URL
-          if (
-            isFixed &&
-            typeof p.value === "string" &&
-            !p.value.startsWith("data:image/")
-          ) {
-            fetch(`${Cloudinary.getEndpoint()}/${p.value}`)
-              .then((res) => res.blob())
-              .then((blob) => {
-                const reader = new FileReader();
-                reader.onloadend = () =>
-                  handleUpdateValue({ value: reader.result }, p.key);
-                reader.readAsDataURL(blob);
-              })
-              .catch((err) =>
-                console.error("❌ Failed to convert", p.key, err)
-              );
+          // ✅ QR code render
+          if (p.key === "qr" && p.value) {
+            return (
+              <div {...commonProps}>
+                <QrCodeGenerator
+                  value={`${ENDPOINT}/icard/portal/${company?._id}/${p.value}`}
+                  size={p.width || 50}
+                />
+              </div>
+            );
           }
 
-          return isImage ? (
-            <img
-              {...commonProps}
-              src={
-                p.value.startsWith("data:image/")
-                  ? p.value
-                  : `${Cloudinary.getEndpoint()}/${p.value}`
-              }
-              alt={p.key}
-            />
-          ) : (
-            <div {...commonProps}>{p.value}</div>
-          );
+          // ✅ QR code render
+          if (p.key === "bar" && p.value) {
+            console.log(
+              "barcode",
+              `${ENDPOINT}/icard/portal/${company?._id}/${p.value}`
+            );
+            return (
+              <div {...commonProps}>
+                <BarCodeGenerator
+                  value={`${ENDPOINT}/icard/portal/${company?._id}/${p.value}`}
+                  width={p.width || 50}
+                  height={p.height || 50}
+                />
+              </div>
+            );
+          }
+
+          // ✅ image/signature render
+          if (isImage) {
+            return (
+              <img
+                {...commonProps}
+                src={
+                  p.value.startsWith("data:image/")
+                    ? p.value
+                    : `${Cloudinary.getEndpoint()}/${p.value}`
+                }
+                alt={p.key}
+              />
+            );
+          }
+
+          // ✅ text render (default)
+          return <div {...commonProps}>{p.value}</div>;
         }),
     [placedValues, selectedKey, onSelect, startDrag, handleUpdateValue]
   );

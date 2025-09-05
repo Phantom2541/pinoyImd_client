@@ -66,6 +66,15 @@ export default function Setting({
     }
   };
 
+  // inside Setting component
+  const isQR = selectedValue?.key === "qr";
+
+  useEffect(() => {
+    if (isQR) {
+      dispatch(setLockAspect(true)); // auto lock kapag QR
+    }
+  }, [isQR, dispatch]);
+
   // 🔹 Converts any CSS color (e.g. "blue", "rgb(255,0,0)") to hex (#RRGGBB)
   function toHex(color) {
     const ctx = document.createElement("canvas").getContext("2d");
@@ -271,8 +280,10 @@ export default function Setting({
                 lockAspect ? "active" : ""
               }`}
               title="Lock Aspect Ratio"
-              onClick={() => dispatch(setLockAspect(!lockAspect))}
-              disabled={imgDisabled}
+              onClick={() => {
+                if (!isQR) dispatch(setLockAspect(!lockAspect));
+              }}
+              disabled={imgDisabled || isQR} // 🚫 bawal i-off kapag QR
             >
               <MDBIcon fas icon="expand" />
             </button>

@@ -31,7 +31,8 @@ export default function Modal() {
     dispatch = useDispatch(),
     { addToast } = useToasts(),
     selectedRef = useRef(selected);
-  console.log("branch", branch);
+
+  console.log("branch", branch?.ct);
 
   // Sync ref sa latest selected
   useEffect(() => {
@@ -92,16 +93,26 @@ export default function Modal() {
       const dataClone = { ...selected, dfp: mergedDfp };
 
       const newPlacedValues = Object.entries(mergedDfp).map(([key, p]) => {
-        // priority: target from dfp
-        let value = dataClone[p.target]?.[key];
+        let value;
 
-        // fallback kung wala sa target
-        if (value === undefined || value === "") {
+        // 🔹 Special case: QR or BAR → gamitin ang `link`
+        if (key === "qr" || key === "bar") {
           value =
-            dataClone.front?.[key] ||
-            dataClone.back?.[key] ||
-            dataClone[key] ||
+            selected?.back?.link ||
+            selected?.front?.link ||
+            selected?.link ||
             "";
+        } else {
+          // Normal case
+          value = dataClone[p.target]?.[key];
+
+          if (value === undefined || value === "") {
+            value =
+              dataClone.front?.[key] ||
+              dataClone.back?.[key] ||
+              dataClone[key] ||
+              "";
+          }
         }
 
         return { key, value, ...p };
@@ -233,8 +244,6 @@ export default function Modal() {
       const filenameRaw = `${empNo}-${dob}`;
       const filename = filenameRaw.replace(/\s+/g, "");
 
-      console.log("filename", filename);
-
       const folderPath = `companies/${company?.name}/${activePlatform?.branch?.name}/ic/generatedID`;
 
       const form = Cloudinary.buildFileForm(base64data, folderPath, filename);
@@ -253,10 +262,7 @@ export default function Modal() {
             }, // only updating the icgId field
           })
         );
-        console.log("form", form);
-        console.log("res", res);
 
-        console.log("Uploaded image ID:", imgId);
         addToast("Image uploaded successfully!", {
           appearance: "success",
           autoDismiss: true,
