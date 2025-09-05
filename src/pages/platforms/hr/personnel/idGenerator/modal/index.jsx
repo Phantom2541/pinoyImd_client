@@ -13,6 +13,7 @@ import html2canvas from "html2canvas";
 import ID from "./id";
 import Setting from "./setting";
 import { useToasts } from "react-toast-notifications";
+import QrCodeGenerator from "../../../../../../components/qrCode";
 
 export default function Modal() {
   const [frontImage, setFrontImage] = useState(null),
@@ -398,6 +399,7 @@ export default function Modal() {
           style={{ display: "flex", justifyContent: "center", gap: "20px" }}
           ref={containerRef}
         >
+          <QrCodeGenerator value="asdfasdfasdf" size={50} />
           <ID
             frontImage={frontImage}
             backImage={backImage}
