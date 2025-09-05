@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import Topbar from "./topbar";
 import Body from "./body";
 import { useDispatch, useSelector } from "react-redux";
-import { BROWSE } from "../../../services/redux/slices/emr/portal";
+import { BROWSE } from "../../../services/redux/slices/portal/emr";
 import Footer from "./footer";
 import "./style.css";
 import Login from "../../home/login";
 import { SetAUTH } from "../../../services/redux/slices/assets/persons/auth";
 
-const Portal = ({ match }) => {
+const EMR = ({ match }) => {
   const { dealId, companyId } = match.params,
-    { result } = useSelector(({ portal }) => portal),
+    { result } = useSelector(({ emr }) => emr),
     [show, setShow] = useState(false),
     dispatch = useDispatch();
   useEffect(() => {
@@ -36,4 +36,4 @@ const Portal = ({ match }) => {
   );
 };
 
-export default Portal;
+export default EMR;

@@ -81,10 +81,10 @@ import {
 import { access, liabilities } from "./slices/liability";
 
 // OTHER
-import portal from "./slices/emr/portal";
 import { quest } from "./slices/diagnostics";
 import { idCalibrator, idGenerator } from "./slices/idCard";
-
+import emr from "./slices/portal/emr";
+import icard from "./slices/portal/icard";
 const store = configureStore({
   reducer: {
     duties,
@@ -140,7 +140,7 @@ const store = configureStore({
     generics,
     mentainance,
     quest,
-    portal,
+
     dragDrop,
     table,
     miscellaneous,
@@ -149,6 +149,9 @@ const store = configureStore({
     requestForm,
     idCalibrator,
     idGenerator,
+    //portal
+    emr,
+    icard,
   },
   devTools: true,
 });

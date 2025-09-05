@@ -7,7 +7,7 @@ import {
 import Loading from "../loading";
 
 const Header = () => {
-  const { result, isLoading, rendered } = useSelector(({ portal }) => portal);
+  const { result, isLoading, rendered } = useSelector(({ emr }) => emr);
   const { customerId = {}, branchId, createdAt } = result;
   const { address, dob, fullName, isMale } = customerId;
   const { name, companyId } = branchId || {};

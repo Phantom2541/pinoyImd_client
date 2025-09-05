@@ -15,7 +15,7 @@ import BodySwitcher from "./bodySwitcher";
 import { useDispatch, useSelector } from "react-redux";
 import CountDown from "./countDown";
 import Header from "./header";
-import { SetACTIVE_TYPE } from "../../../../services/redux/slices/emr/portal";
+import { SetACTIVE_TYPE } from "../../../../services/redux/slices/portal/emr";
 import "./style.css";
 import Loading from "./loading";
 import { Services } from "../../../../services/fakeDb";
@@ -29,7 +29,7 @@ const Body = () => {
       hasRender = false,
       activeType = "",
       isLoading = false,
-    } = useSelector(({ portal }) => portal),
+    } = useSelector(({ emr }) => emr),
     [isExporting, setIsExporting] = useState(false),
     dispatch = useDispatch();
   const { diagnostic = {}, department = [] } = result;
