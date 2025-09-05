@@ -1,0 +1,28 @@
+.icard-front-back-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: auto;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+}
+
+.icard-front-preview,
+.icard-back-preview {
+  width: 3.1875in;
+  height: 5.0625in;
+  background-color: green;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.icard-front-preview img,
+.icard-back-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}

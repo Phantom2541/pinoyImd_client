@@ -3,6 +3,7 @@ import { Cloudinary, ENDPOINT } from "../../../../../../services/utilities";
 import "./style.css";
 import QrCodeGenerator from "../../../../../../components/qrCode";
 import { useSelector } from "react-redux";
+import BarCodeGenerator from "../../../../../../components/barCode";
 
 export default function ID({
   frontImage,
@@ -146,6 +147,23 @@ export default function ID({
                 <QrCodeGenerator
                   value={`${ENDPOINT}/icard/portal/${company?._id}/${p.value}`}
                   size={p.width || 50}
+                />
+              </div>
+            );
+          }
+
+          // ✅ QR code render
+          if (p.key === "bar" && p.value) {
+            console.log(
+              "barcode",
+              `${ENDPOINT}/icard/portal/${company?._id}/${p.value}`
+            );
+            return (
+              <div {...commonProps}>
+                <BarCodeGenerator
+                  value={`${ENDPOINT}/icard/portal/${company?._id}/${p.value}`}
+                  width={p.width || 50}
+                  height={p.height || 50}
                 />
               </div>
             );
