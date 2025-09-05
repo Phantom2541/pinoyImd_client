@@ -13,6 +13,7 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/personnels";
 import EditableField from "../../../../../components/customizable/editableField";
 import { Policy } from "../../../../../services/fakeDb";
+import QrCodeGenerator from "../../../../../components/qrCode";
 
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
@@ -70,6 +71,7 @@ const Body = () => {
           address: billingAddress(staff.user.address),
           guardian,
           pn,
+          qrCode: <QrCodeGenerator value="asdfasdfdasfasdfasdf" size={50} />,
         },
         dfp: staff.dfp,
       };
