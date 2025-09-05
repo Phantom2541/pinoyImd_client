@@ -1,10 +1,12 @@
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
-// import AddressSelect from "../addressSelect";
-import { Select } from "../customizable";
+import { EditableUser, Select } from "../customizable";
 import { Suffixes } from "../../services/fakeDb";
-import { getAge } from "../../services/utilities";
+import { getAge, properFullname } from "../../services/utilities";
 import ProfileOthers from "./others";
 import AddressSelect from "../searchables/addressSelect";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { UPDATE } from "../../services/redux/slices/assets/persons/auth";
 
 export default function Details({
   address,
@@ -14,13 +16,31 @@ export default function Details({
   handleSubmit,
   isLoading,
 }) {
+  const { auth, isSuccess, formSubmitted, token } = useSelector(
+    ({ auth }) => auth
+  );
+  const dispatch = useDispatch();
+  const { guardian = {} } = auth;
+
+  // local state (if you plan to use this later)
+  const [primary, setPrimary] = useState(null);
+
+  const handleUpdate = ({ _id, key, value }) => {
+    console.log("selected", { _id, [key]: value });
+
+    // build payload here if needed
+    let data = { _id, [key]: value };
+    console.log("Updating guardian:", data);
+    dispatch(UPDATE({ token, data }));
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <MDBRow>
         <MDBCol md="3">
           <MDBInput
             type="text"
-            value={form.fullName?.fname?.toUpperCase()}
+            value={form.fullName?.fname?.toUpperCase() || ""}
             disabled
             onChange={(e) =>
               handleChange("fullName", {
@@ -35,7 +55,7 @@ export default function Details({
           <MDBInput
             disabled
             type="text"
-            value={form.fullName?.mname?.toUpperCase()}
+            value={form.fullName?.mname?.toUpperCase() || ""}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -49,7 +69,7 @@ export default function Details({
           <MDBInput
             type="text"
             disabled
-            value={form.fullName?.lname?.toUpperCase()}
+            value={form.fullName?.lname?.toUpperCase() || ""}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -62,17 +82,18 @@ export default function Details({
         <MDBCol md="3">
           <MDBInput
             type="text"
-            value={form?.alias?.toUpperCase()}
+            value={form?.alias?.toUpperCase() || ""}
             onChange={(e) => handleChange("alias", e.target.value)}
             label="Alias"
           />
         </MDBCol>
       </MDBRow>
+
       <MDBRow>
         <MDBCol md="4">
           <MDBInput
             type="text"
-            value={form.fullName?.title?.toUpperCase()}
+            value={form.fullName?.title?.toUpperCase() || ""}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -85,7 +106,7 @@ export default function Details({
         <MDBCol md="4" className="px-0">
           <MDBInput
             type="text"
-            value={form.fullName?.postnominal?.toUpperCase()}
+            value={form.fullName?.postnominal?.toUpperCase() || ""}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -110,14 +131,30 @@ export default function Details({
           />
         </MDBCol>
       </MDBRow>
+
+      <MDBRow>
+        <label>Guardian</label>
+        <EditableUser
+          isToggle={false}
+          formSubmitted={formSubmitted}
+          isSuccess={isSuccess}
+          onSave={(id) => {
+            handleUpdate({
+              _id: guardian._id,
+              key: "m",
+              value: id,
+            });
+          }}
+        />
+      </MDBRow>
+
       <MDBRow>
         <MDBCol md="3" style={{ paddingTop: "14px" }}>
           <MDBInput
             type="date"
-            value={form.dob}
+            value={form.dob || ""}
             disabled
             onChange={(e) => handleChange("dob", e.target.value)}
-            labelClass=""
             className="py-0"
             label={`Birthdate (${getAge(form.dob)})`}
           />
@@ -125,7 +162,7 @@ export default function Details({
         <MDBCol md="4">
           <MDBInput
             type="email"
-            value={form.email}
+            value={form.email || ""}
             onChange={(e) => handleChange("email", e.target.value)}
             label="E-mail Address"
             disabled
@@ -134,7 +171,7 @@ export default function Details({
         <MDBCol md="2">
           <MDBInput
             type="text"
-            value={form.mobile}
+            value={form.mobile || ""}
             disabled
             onChange={(e) =>
               handleChange("mobile", e.target.value.replace(/\D/g, ""))
@@ -145,7 +182,7 @@ export default function Details({
         </MDBCol>
         <MDBCol md="3" className="text-center">
           <MDBSwitch
-            checked={form.isMale}
+            checked={!!form.isMale}
             onChange={() => handleChange("isMale", !form.isMale)}
             labelLeft="Female"
             labelRight="Male"
@@ -154,7 +191,7 @@ export default function Details({
           />
         </MDBCol>
       </MDBRow>
-      {/* address disabled */}
+
       <AddressSelect
         label="Address"
         isPOS={false}
@@ -162,31 +199,7 @@ export default function Details({
         disabledAllExceptSelected={true}
         handleChange={(_, value) => setAddress(value)}
       />
-      {/* <MDBCol className="px-0">
-        <MDBInput
-          type="text"
-          label="Street"
-          value={address.street}
-          onChange={(e) => setAddress({ ...address, street: e.target.value })}
-          disabled
-        />
-      </MDBCol> */}
-      {/* address disabled
-      <AddressSelect
-        label="Current Address"
-        address={curraddress}
-        handleChange={(_, value) => setCurraddress(value)}
-      />
-      <MDBCol className="px-0">
-        <MDBInput
-          type="text"
-          label="Street"
-          value={curraddress.street}
-          onChange={(e) =>
-            setCurraddress({ ...curraddress, street: e.target.value })
-          }
-        />
-      </MDBCol> */}
+
       <div className="d-flex justify-content-between mt-2">
         <ProfileOthers />
         <MDBBtn disabled={isLoading} color="info" type="submit" rounded>
