@@ -1,7 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { Cloudinary } from "../../../../../../services/utilities";
+import { Cloudinary, ENDPOINT } from "../../../../../../services/utilities";
 import "./style.css";
 import QrCodeGenerator from "../../../../../../components/qrCode";
+import { useSelector } from "react-redux";
+import BarCodeGenerator from "../../../../../../components/barCode";
 
 export default function ID({
   frontImage,
@@ -14,6 +16,7 @@ export default function ID({
   backRef,
   layout,
 }) {
+  const { company } = useSelector(({ auth }) => auth);
   const [draggingKey, setDraggingKey] = useState(null);
   const containerRef = useRef(null);
   const [base64Cache, setBase64Cache] = useState({}); // cache for img & signature
@@ -35,6 +38,8 @@ export default function ID({
       return url; // fallback
     }
   };
+
+  console.log("plaacedValues", placedValues, selectedKey);
 
   // 🔧 pre-convert only img & signature values
   useEffect(() => {
@@ -137,10 +142,29 @@ export default function ID({
 
           // ✅ QR code render
           if (p.key === "qr" && p.value) {
-            console.log(p.value);
             return (
               <div {...commonProps}>
-                <QrCodeGenerator value={p.value} size={p.width || 50} />
+                <QrCodeGenerator
+                  value={`${ENDPOINT}/icard/portal/${company?._id}/${p.value}`}
+                  size={p.width || 50}
+                />
+              </div>
+            );
+          }
+
+          // ✅ QR code render
+          if (p.key === "bar" && p.value) {
+            console.log(
+              "barcode",
+              `${ENDPOINT}/icard/portal/${company?._id}/${p.value}`
+            );
+            return (
+              <div {...commonProps}>
+                <BarCodeGenerator
+                  value={`${ENDPOINT}/icard/portal/${company?._id}/${p.value}`}
+                  width={p.width || 50}
+                  height={p.height || 50}
+                />
               </div>
             );
           }

@@ -15,7 +15,7 @@ import {
   UPDATE_INFO,
   UPLOAD,
 } from "../../services/redux/slices/assets/persons/auth";
-import { ImageCropper } from "../../../src/components/images";
+import { ImageCropper } from "../images";
 
 export default function ProfileImage() {
   const { auth, token, progressBar, image } = useSelector(({ auth }) => auth),
@@ -84,55 +84,55 @@ export default function ProfileImage() {
   };
 
   return (
-    <MDBCol lg="3" className="mb-4">
-      <MDBCard narrow>
-        <MDBView cascade className="mdb-color lighten-3 card-header">
-          <h5 className="mb-0 font-weight-bold text-center text-white">
-            Edit Photo
-          </h5>
-        </MDBView>
-        <MDBCardBody className="text-center">
-          <MDBAvatar
-            style={{
-              height: "100px",
-            }}
-            tag="img"
-            src={image}
-            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
-            alt={`preview-${auth._id}`}
-            className="z-depth-1 mb-3 mx-auto rounded"
-          />
+    // <MDBCol lg="3" className="mb-4">
+    <MDBCard narrow>
+      <MDBView cascade className="mdb-color lighten-3 card-header">
+        <h5 className="mb-0 font-weight-bold text-center text-white">
+          Edit Photo
+        </h5>
+      </MDBView>
+      <MDBCardBody className="text-center">
+        <MDBAvatar
+          style={{
+            height: "100px",
+          }}
+          tag="img"
+          src={image}
+          onError={(e) => (e.target.src = PresetImage(auth.isMale))}
+          alt={`preview-${auth._id}`}
+          className="z-depth-1 mb-3 mx-auto rounded"
+        />
 
-          {progressBar >= 0 && <MDBProgress value={progressBar} animated />}
-          <p className="text-muted">
-            <small>
-              {progressBar > -1
-                ? "Please wait while we update your profile photo"
-                : "Profile photo will be changed automatically"}
-            </small>
-          </p>
-          <MDBBtnGroup>
-            <ImageCropper
-              accept="image/jpg, image/png, image/jpeg"
-              handleUpload={handleUpload}
-              isUpload={true}
-            />
-            <label
-              htmlFor="changeImage"
-              className="btn btn-info btn-sm btn-rounded"
-            >
-              Upload
-            </label>
-          </MDBBtnGroup>
-          <input
-            id="changeImage"
-            onChange={handleImageChange}
-            type="file"
-            className="d-none"
-            accept="image/jpg, image/png"
+        {progressBar >= 0 && <MDBProgress value={progressBar} animated />}
+        <p className="text-muted">
+          <small>
+            {progressBar > -1
+              ? "Please wait while we update your profile photo"
+              : "Profile photo will be changed automatically"}
+          </small>
+        </p>
+        <MDBBtnGroup>
+          <ImageCropper
+            accept="image/jpg, image/png, image/jpeg"
+            handleUpload={handleUpload}
+            isUpload={true}
           />
-        </MDBCardBody>
-      </MDBCard>
-    </MDBCol>
+          <label
+            htmlFor="changeImage"
+            className="btn btn-info btn-sm btn-rounded"
+          >
+            Upload
+          </label>
+        </MDBBtnGroup>
+        <input
+          id="changeImage"
+          onChange={handleImageChange}
+          type="file"
+          className="d-none"
+          accept="image/jpg, image/png"
+        />
+      </MDBCardBody>
+    </MDBCard>
+    // </MDBCol>
   );
 }

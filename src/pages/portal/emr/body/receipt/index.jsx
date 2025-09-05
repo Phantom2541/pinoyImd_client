@@ -134,7 +134,7 @@ const Stub = ({ sale }) => {
 };
 
 export default function Receipt() {
-  const { result: sale } = useSelector(({ portal }) => portal);
+  const { result: sale } = useSelector(({ emr }) => emr);
 
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 

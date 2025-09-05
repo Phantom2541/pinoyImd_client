@@ -34,11 +34,12 @@ import {
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
-import Portal from "./pages/emr/portal";
+import EMR from "./pages/portal/emr";
 import Subscribers from "./pages/subscribers";
 import Staff from "./components/printout/staff";
 import AttendancePrint from "./components/printout/dtr";
 import DutyPrintout from "./components/printout/duty";
+import ICard from "./pages/portal/icard";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -124,7 +125,12 @@ export default function App() {
       <Route path="/printout/staffs" exact component={Staff} />
       <Route path="/printout/Attendances" exact component={AttendancePrint} />
       {/* Diagnostic Portal */}
-      <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
+      <Route path="/emr/portal/:companyId/:dealId" exact component={EMR} />
+      <Route
+        path="/icard/portal/:companyId/:personnelId"
+        exact
+        component={ICard}
+      />
       <Route path="/subscribers/:companyId" exact component={Subscribers} />
 
       <Platforms />

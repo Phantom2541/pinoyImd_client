@@ -15,6 +15,7 @@ const fullAddress = (address, isComplete = true) => {
   }${city}, ${province}`.replace(/^\s+|\s+$/gm, "");
 };
 const billingAddress = (address) => {
+  if (!address) return "";
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
   const { province, city, barangay } = address;
   return `${barangay} , ${city}, ${

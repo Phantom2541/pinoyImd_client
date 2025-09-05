@@ -13,7 +13,6 @@ import html2canvas from "html2canvas";
 import ID from "./id";
 import Setting from "./setting";
 import { useToasts } from "react-toast-notifications";
-import QrCodeGenerator from "../../../../../../components/qrCode";
 
 export default function Modal() {
   const [frontImage, setFrontImage] = useState(null),
@@ -32,7 +31,8 @@ export default function Modal() {
     dispatch = useDispatch(),
     { addToast } = useToasts(),
     selectedRef = useRef(selected);
-  console.log("branch", branch);
+
+  console.log("branch", branch?.ct);
 
   // Sync ref sa latest selected
   useEffect(() => {
@@ -244,8 +244,6 @@ export default function Modal() {
       const filenameRaw = `${empNo}-${dob}`;
       const filename = filenameRaw.replace(/\s+/g, "");
 
-      console.log("filename", filename);
-
       const folderPath = `companies/${company?.name}/${activePlatform?.branch?.name}/ic/generatedID`;
 
       const form = Cloudinary.buildFileForm(base64data, folderPath, filename);
@@ -264,10 +262,7 @@ export default function Modal() {
             }, // only updating the icgId field
           })
         );
-        console.log("form", form);
-        console.log("res", res);
 
-        console.log("Uploaded image ID:", imgId);
         addToast("Image uploaded successfully!", {
           appearance: "success",
           autoDismiss: true,
