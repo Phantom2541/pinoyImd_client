@@ -156,6 +156,7 @@ const ICard = ({ match = {} }) => {
                     : `${Cloudinary.getEndpoint()}/${p.value}`
                 }
                 alt={p.key}
+                draggable={false}
               />
             );
           }
@@ -169,11 +170,11 @@ const ICard = ({ match = {} }) => {
   return (
     <div className="icard-front-back-container">
       <div className="icard-front-preview" style={{ position: "relative" }}>
-        {front ? <img src={front} alt="front" /> : null}
+        {front ? <img src={front} alt="front" draggable={false} /> : null}
         {renderValues("front")}
       </div>
       <div className="icard-back-preview" style={{ position: "relative" }}>
-        {back ? <img src={back} alt="back" /> : null}
+        {back ? <img src={back} alt="back" draggable={false} /> : null}
         {renderValues("back")}
       </div>
     </div>
