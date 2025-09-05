@@ -1,13 +1,9 @@
 // menusIndexedDB.js
-const DB_NAME = "Insources";
+const DB_NAME = "Global-Physicians";
 
 // Generate store name based on user & branch
 const getStoreName = () => {
-  const activePlatform = JSON.parse(
-    localStorage.getItem("activePlatform") || "{}"
-  );
-  const { branch = {} } = activePlatform;
-  return `insrouces-${branch._id || "nobranch"}`;
+  return `global-physicians`;
 };
 
 // Open DB and ensure store exists
@@ -70,7 +66,7 @@ async function withStore(mode, callback) {
 }
 
 export async function IDB_BULK_SAVE(menus) {
-  if (menus?.length === 0 || !Array.isArray(menus)) return;
+  if (menus.length === 0) return;
   return withStore("readwrite", async (store) => {
     for (const menu of menus) {
       await new Promise((resolve, reject) => {
@@ -79,26 +75,22 @@ export async function IDB_BULK_SAVE(menus) {
         getReq.onsuccess = () => {
           const existing = getReq.result;
 
-          if (existing) {
-            if (menu.deletedAt) {
-              const delReq = store.delete(menu._id);
-              delReq.onsuccess = () => resolve();
-              delReq.onerror = () => reject(delReq.error);
-            } else {
-              const updated = { ...existing, ...menu };
-              const putReq = store.put(updated);
-              putReq.onsuccess = () => resolve();
-              putReq.onerror = () => reject(putReq.error);
-            }
-          } else {
-            if (menu.deletedAt) {
-              resolve();
-            } else {
-              const putReq = store.put(menu);
-              putReq.onsuccess = () => resolve();
-              putReq.onerror = () => reject(putReq.error);
-            }
+          if (existing && menu.deletedAt) {
+            const delReq = store.delete(menu._id);
+            delReq.onsuccess = () => resolve();
+            delReq.onerror = () => reject(delReq.error);
+            return;
           }
+
+          if (!existing && menu.deletedAt) {
+            resolve();
+            return;
+          }
+
+          const updated = existing ? { ...existing, ...menu } : menu;
+          const putReq = store.put(updated);
+          putReq.onsuccess = () => resolve();
+          putReq.onerror = () => reject(putReq.error);
         };
 
         getReq.onerror = () => reject(getReq.error);

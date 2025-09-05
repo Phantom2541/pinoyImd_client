@@ -3,7 +3,16 @@ import {
   fullName,
   getPhysicianGenderIcon,
   globalSearch,
+  Tracker,
 } from "../../../services/utilities";
+import {
+  BROWSE as BROWSE_PHYSICIANS,
+  SetPHYSICIANS,
+} from "../../../services/redux/slices/assets/persons/physicians";
+import {
+  IDB_BROWSE,
+  IDB_BULK_SAVE,
+} from "../../../services/indexDB/assets/persons/globalPhysicians";
 import { useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { MDBAnimation, MDBProgress, MDBIcon } from "mdbreact";
@@ -24,6 +33,7 @@ const PickPhysician = ({
   handleCheck = () => {},
   handleClose = () => {},
 }) => {
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections = [] } = useSelector(({ physicians }) => physicians);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState("");
@@ -35,6 +45,25 @@ const PickPhysician = ({
   const [physicians, setPhysicians] = useState([]);
   const [results, setResults] = useState([]);
   const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    const init = async () => {
+      await Tracker.initialize({
+        config: {
+          token,
+          branchId: activePlatform.branchId,
+          trackerKey: "physician",
+        },
+        idb: { BROWSE: IDB_BROWSE, SAVE: IDB_BULK_SAVE },
+        redux: {
+          BROWSE: BROWSE_PHYSICIANS,
+          SetCOLLECTIONS: SetPHYSICIANS,
+        },
+      });
+    };
+
+    init();
+  }, [token, activePlatform]);
 
   useEffect(() => {
     setHideRegMsg(true);

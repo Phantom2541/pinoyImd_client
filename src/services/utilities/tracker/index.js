@@ -6,20 +6,25 @@ import {
 } from "../../indexDB/tracker";
 
 function extractActionData(action) {
-  const firstPayload = action?.payload;
-  if (!firstPayload) return null;
-  const lastPayload = firstPayload.payload;
-  if (
-    !lastPayload ||
-    (Array.isArray(lastPayload) && lastPayload.length === 0)
-  ) {
-    const fallbackKey = Object.keys(firstPayload).find(
-      (key) => key !== "payload" && firstPayload[key]
-    );
-    return fallbackKey ? firstPayload[fallbackKey] : null;
+  let current = action?.payload;
+
+  // Traverse down habang may `payload`
+  while (current && current.payload !== undefined) {
+    current = current.payload;
   }
 
-  return lastPayload;
+  // Priority 1: last payload na array
+  if (Array.isArray(current) && current.length > 0) {
+    return current;
+  }
+
+  // Priority 2: data key kung array
+  if (Array.isArray(current?.data) && current.data.length > 0) {
+    return current.data;
+  }
+
+  // Fallback: empty array
+  return [];
 }
 
 const fetchDatas = async ({
@@ -34,7 +39,7 @@ const fetchDatas = async ({
     SAVE: () => {},
   },
 }) => {
-  const { branchId, token, trackerKey } = config;
+  const { token, trackerKey } = config;
   const idbTracker = await IDB_TRACKER_BROWSE();
   const idbDatas = await idb.BROWSE();
   const mdbId = mdbTracker?.[trackerKey]?.id;

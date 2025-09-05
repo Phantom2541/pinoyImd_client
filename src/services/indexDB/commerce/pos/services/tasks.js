@@ -137,6 +137,8 @@ export async function IDB_BULK_SAVE(tasks) {
 
 // Update task (merge old data + new data)
 export async function IDB_UPDATE(task) {
+  console.log("task", task);
+  if (!task?._id) return;
   return withStore("readwrite", (store) => {
     return new Promise((resolve, reject) => {
       const getReq = store.get(task._id);

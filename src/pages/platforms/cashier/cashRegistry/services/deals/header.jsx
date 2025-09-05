@@ -10,7 +10,6 @@ import {
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { IDB_BROWSE } from "../../../../../../services/indexDB/commerce/pos/services/deals";
-import { INSOURCE } from "./../../../../../../services/redux/slices/assets/providers";
 import { fetchTracker } from "../../../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -53,15 +52,6 @@ const Header = () => {
 
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, auth]);
-
-  useEffect(() => {
-    dispatch(
-      INSOURCE({
-        token,
-        key: { vendors: activePlatform?.branchId, status: "approved" },
-      })
-    );
-  }, [dispatch, activePlatform, token]);
 
   useEffect(() => {
     message &&

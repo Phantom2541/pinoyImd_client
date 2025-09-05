@@ -16,6 +16,23 @@ const indexDB = {
       }
     }
   },
+  clearAll: async () => {
+    const databases = await indexedDB.databases();
+
+    const deletePromises = databases.map((dbInfo) => {
+      const dbName = dbInfo.name;
+      if (!dbName) return Promise.resolve();
+
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.deleteDatabase(dbName);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+        request.onblocked = () => console.warn(`Delete blocked for ${dbName}`);
+      });
+    });
+
+    await Promise.all(deletePromises);
+  },
 };
 
 export default indexDB;
