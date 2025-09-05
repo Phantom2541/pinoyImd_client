@@ -50,7 +50,7 @@ import { useToasts } from "react-toast-notifications";
 const EditableUser = ({
   onSave = () => {},
   setUserId = () => {},
-  user = {},
+  user = { key: "No Key" },
   isToggle = false,
   placeHolder = "Search..",
   formSubmitted = false,
@@ -139,22 +139,24 @@ const EditableUser = ({
   };
 
   if (!isToggle && !isEditing && user?.key !== selected?.key) {
+    const name = user?._id ? fullName(user.fullName) : "";
     return (
       <span
+        className="cursor-pointer"
         onClick={() => {
           window.dispatchEvent(
             new CustomEvent("close-all-editable", {
               detail: { excludeId: instanceId },
             })
           );
-          setSearchKey(fullName(user.fullName));
+          setSearchKey(name);
           setSelected(user);
           setIsEditing(true);
           setHideMsg(true);
           setResults([]);
         }}
       >
-        {fullName(user.fullName)}
+        {name ? fullName(user.fullName) : " N/A"}
       </span>
     );
   }
