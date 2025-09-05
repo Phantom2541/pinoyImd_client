@@ -11,12 +11,71 @@
 
 .icard-front-preview,
 .icard-back-preview {
-  width: 3.1875in;
-  height: 5.0625in;
   background-color: green;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   overflow: hidden;
+}
+
+.icard-front-preview.portrait,
+.icard-back-preview.portrait {
+  width: 3.1875in;
+  height: 5.0625in;
+}
+
+.icard-front-preview.landscape,
+.icard-back-preview.landscape {
+  height: 3.1875in;
+  width: 5.0625in;
+}
+
+.icard-front-preview img,
+.icard-back-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.icard-flip-container {
+  perspective: 1000px;
+  width: 3.1875in;
+  height: 5.0625in;
+  cursor: pointer;
+}
+
+.icard-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.icard-flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.icard-front-preview,
+.icard-back-preview {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+}
+
+.icard-front-preview {
+  background-color: green;
+}
+
+.icard-back-preview {
+  background-color: blue;
+  transform: rotateY(180deg);
 }
 
 .icard-front-preview img,
