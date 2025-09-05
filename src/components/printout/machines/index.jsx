@@ -36,9 +36,6 @@ const Machines = () => {
 
   const company = activePlatform?.branch?.companyId?.name || "";
   const name = activePlatform?.branch?.name || "";
-  console.log("SHOWING activePlatform: ", activePlatform);
-  console.log("SHOWING NAME: ", name);
-  console.log("SHOWING COMPANY: ", company);
 
   return (
     <>

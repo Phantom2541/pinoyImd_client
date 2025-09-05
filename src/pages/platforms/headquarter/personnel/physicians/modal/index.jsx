@@ -13,6 +13,7 @@ import {
   TOGGLE,
   SETPHYSICIAN,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
+import { UPDATE } from "../../../../../../services/redux/slices/assets/branches";
 import { useToasts } from "react-toast-notifications";
 import { SearchUser } from "../../../../../../components/searchables";
 
@@ -97,12 +98,23 @@ export default function Modal() {
     if (willCreate) {
       // Registered physician
       if (user._id) {
-        dispatch(
-          SAVE({
-            data: fullData, // contains `user` field
-            token,
-          })
-        ).then(() => {
+        Promise.all([
+          dispatch(
+            SAVE({
+              data: fullData, // contains `user` field
+              token,
+            })
+          ),
+          dispatch(
+            UPDATE({
+              data: {
+                _id: activePlatform.branchId,
+                affiliated: [user._id],
+              },
+              token,
+            })
+          ),
+        ]).then(() => {
           addToast("Registered physician saved successfully.", {
             appearance: "success",
           });

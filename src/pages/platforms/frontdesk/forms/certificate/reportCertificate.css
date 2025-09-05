@@ -1,16 +1,17 @@
 .report-container {
   width: 900px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   font-family: Arial, sans-serif;
   font-size: 14px;
   color: #000;
   background: #fff; /* white background */
   padding: 20px;
   /* border: 1px solid #aaa; */
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
 }
 
 .top-physical-container {
-  width: 600px;
+  width: 90%;
   margin: 0 auto;
   font-family: Arial, sans-serif;
   font-size: 14px;
@@ -113,7 +114,7 @@
   display: inline-block;
   border: none;
   border-bottom: 1px solid black;
-  width: 310px; /* shorter underline */
+  width: 470px; /* shorter underline */
   margin-left: 4px; /* space after label */
   outline: none;
   text-align: center;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Cloudinary } from "../../../../../../services/utilities";
+import { Banner, Cloudinary } from "../../../../../../services/utilities";
 import ReactFlow, {
   ReactFlowProvider,
   useReactFlow,
@@ -68,10 +68,6 @@ export default function OrgChartView() {
   const { org } = useSelector(({ orgChart }) => orgChart);
   const dispatch = useDispatch();
 
-  const BANNER = `${Cloudinary.getEndpoint()}/companies/${company.name}/${
-    activePlatform?.branch?.name
-  }/banner`;
-
   // Fetch org chart data
   useEffect(() => {
     dispatch(
@@ -84,7 +80,8 @@ export default function OrgChartView() {
 
   // Load nodes and edges from org chart
   useEffect(() => {
-    if (!org) return;
+    if (!org || !Array.isArray(org.breakdown) || !Array.isArray(org.edges))
+      return;
 
     const nodesFromOrg = org.breakdown.map((n) => ({
       id: n.id,
@@ -113,7 +110,7 @@ export default function OrgChartView() {
   return (
     <div className="orgChart-view-section">
       <div className="orgChart-view-container">
-        <img className="orgChart-view-img" src={BANNER} alt="Banner View" />
+        <Banner company={company.name} branch={activePlatform?.branch?.name} />
         <div className="orgChart-view-container-reactFlow">
           <button className="orgChart-view-print" onClick={handlePrint}>
             Print
