@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Cloudinary } from "../../../../../../services/utilities";
 import "./style.css";
+import { transform } from "lodash";
 
 export default function ID({
   frontImage,
@@ -124,6 +125,7 @@ export default function ID({
               borderRadius: p.borderRadius,
               border: p.border,
               borderBottom: p.borderBottom,
+              transform: p.transform,
               opacity: p.opacity ?? 1,
               outline:
                 p.key === selectedKey && !isFixed
