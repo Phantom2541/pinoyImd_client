@@ -1,6 +1,6 @@
 import React from "react";
 // import { useSelector } from "react-redux";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { MDBBtn } from "mdbreact";
 
 const Header = () => {
   // const { patient, tests } = useSelector(({ requestForm }) => requestForm);

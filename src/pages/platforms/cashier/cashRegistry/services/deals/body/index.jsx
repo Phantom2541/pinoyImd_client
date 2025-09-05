@@ -7,7 +7,7 @@ import {
   Deals,
   fullName,
   getGenderIcon,
-  paymentMethod,
+  // paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories } from "../../../../../../../services/fakeDb";
 import {
@@ -17,7 +17,7 @@ import {
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
-import { Input, Select } from "../../../../../../../components/customizable";
+import { Select } from "../../../../../../../components/customizable";
 import SingleUpdate from "../../../../../../../components/singleUpdate";
 import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
 import PaymentDetails from "./paymentDetails";
@@ -198,7 +198,7 @@ const Tables = () => {
               const { source = {} } = deal || [];
               const isSourceEdit = isMatch("source");
               const isPhysicianEdit = isMatch("physician");
-              const isSSXEdit = isMatch("ssx");
+              // const isSSXEdit = isMatch("ssx");
 
               return (
                 <tr

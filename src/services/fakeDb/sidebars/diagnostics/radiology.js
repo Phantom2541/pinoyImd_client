@@ -4,7 +4,7 @@ import {
   Reports,
 } from "../../../../pages/platforms/radiology/diagnostics";
 import { Menus, Services } from "../../../../pages/platforms/cashier";
-import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const radiology = [
   {

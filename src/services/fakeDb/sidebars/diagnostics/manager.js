@@ -51,7 +51,7 @@ import {
   Outsources,
   Utilities,
   Hotlines,
-  HotlinesPoster,
+  // HotlinesPoster,
   Suppliers,
 } from "../../../../pages/platforms/cashier/index.js";
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";

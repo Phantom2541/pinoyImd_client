@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Collapse from "./collapse";
 
 export default function Body() {
-  const { collections, patient } = useSelector(({ validator }) => validator),
+  const { collections } = useSelector(({ validator }) => validator),
     [activeCollapse, setActiveCollapse] = useState(""),
     [patients, setPatients] = useState([]),
     [didHoverID, setDidHoverID] = useState(-1);
@@ -11,7 +11,6 @@ export default function Body() {
   useEffect(() => {
     setPatients([...collections]);
   }, [collections]);
-
 
   return (
     <>

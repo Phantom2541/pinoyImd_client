@@ -20,6 +20,7 @@ export default function ID({
   const [draggingKey, setDraggingKey] = useState(null);
   const containerRef = useRef(null);
   const [base64Cache, setBase64Cache] = useState({}); // cache for img & signature
+  console.log(draggingKey, base64Cache);
 
   // 🔧 helper: image URL → base64
   const toBase64 = async (url) => {
@@ -187,7 +188,7 @@ export default function ID({
           // ✅ text render (default)
           return <div {...commonProps}>{p.value}</div>;
         }),
-    [placedValues, selectedKey, onSelect, startDrag, handleUpdateValue]
+    [placedValues, selectedKey, startDrag, onSelect, company]
   );
 
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import {
   getAge,
   getDevelopment,
@@ -8,8 +8,8 @@ import {
 } from "./../../../../../../services/utilities";
 
 export default function Patient({ patient }) {
-  const { customerId } =
-    useSelector(({ validator }) => validator.selected) || {};
+  // const { customerId } =
+  //   useSelector(({ validator }) => validator.selected) || {};
   const { fullName = {}, isMale, dob } = patient || {};
   return (
     <>

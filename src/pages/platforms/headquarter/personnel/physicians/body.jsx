@@ -18,7 +18,7 @@ export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
     {
       filtered,
-      collections,
+      // collections,
       message,
       isSuccess,
       maxPage,

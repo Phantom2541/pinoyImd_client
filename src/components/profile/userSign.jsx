@@ -1,5 +1,5 @@
 import {
-  MDBCol,
+  // MDBCol,
   MDBCard,
   MDBView,
   MDBCardBody,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Banner, Cloudinary } from "../../../../../../services/utilities";
+import { Banner } from "../../../../../../services/utilities";
 import ReactFlow, {
   ReactFlowProvider,
   useReactFlow,

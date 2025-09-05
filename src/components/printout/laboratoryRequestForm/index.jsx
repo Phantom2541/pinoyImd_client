@@ -28,7 +28,7 @@ const RequestFormPrint4x = () => {
     const img = new Image();
     img.src = BannerURL;
     img.onload = () => setReadyToPrint(true);
-  }, []);
+  }, [BannerURL]);
 
   // Trigger print when ready
   useEffect(() => {

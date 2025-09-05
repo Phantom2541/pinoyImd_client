@@ -11,7 +11,7 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import Modal from "./modal";
-import Print from "./print";
+// import Print from "./print";
 
 export default function IDGenerator() {
   const { activePlatform, token } = useSelector(({ auth }) => auth);

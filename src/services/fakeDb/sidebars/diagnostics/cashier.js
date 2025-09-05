@@ -13,7 +13,7 @@ import {
   Referrals,
   Remittances,
   Hotlines,
-  HotlinesPoster,
+  // HotlinesPoster,
   Suppliers,
   Payables,
   Receivables,

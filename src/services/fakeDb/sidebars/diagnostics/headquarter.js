@@ -15,7 +15,7 @@ import {
   Outsources,
   Utilities,
   Hotlines,
-  HotlinesPoster,
+  // HotlinesPoster,
   Suppliers,
 } from "../../../../pages/platforms/cashier";
 

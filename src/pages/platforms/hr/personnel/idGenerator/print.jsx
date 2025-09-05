@@ -6,7 +6,7 @@ export default function Print() {
   const { filtered } = useSelector(({ personnels }) => personnels);
   const { ct: branch } = useSelector(({ branches }) => branches);
   const { company, activePlatform } = useSelector((state) => state.auth);
-  const { icgId = {} } = branch || {};
+  // const { icgId = {} } = branch || {};
 
   const employees = filtered.map((item) => {
     const empName = item.front?.emp?.trim() || "NoName";

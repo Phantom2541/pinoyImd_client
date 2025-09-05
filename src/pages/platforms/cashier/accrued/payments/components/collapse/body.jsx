@@ -4,7 +4,7 @@ import { Statements } from "../../../../../../../services/fakeDb";
 import {
   currency,
   dateFormat,
-  fullName,
+  // fullName,
 } from "../../../../../../../services/utilities";
 import util from "../../../payables/util";
 

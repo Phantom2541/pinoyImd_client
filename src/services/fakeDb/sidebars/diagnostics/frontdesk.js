@@ -11,7 +11,7 @@ import {
   Ecg,
   Miscellaneous,
 } from "../../../../pages/platforms/frontdesk/reports";
-import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 import { Reports } from "../../../../pages/platforms/laboratory/diagnostics";
 import {

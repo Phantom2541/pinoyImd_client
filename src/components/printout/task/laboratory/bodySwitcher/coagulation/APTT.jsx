@@ -11,7 +11,7 @@ const APTT = ({ aptt = [0, 0] }) => {
       {aptt.map((item = 0, index) => {
         return (
           <tr key={index}>
-            <td className="py-0">{index == 0 ? "Patient" : "Control"}</td>
+            <td className="py-0">{index === 0 ? "Patient" : "Control"}</td>
             <td
               className="py-0 fw-bold text-center"
               style={{ color: item > 39.0 ? "red" : item < 24.0 ? "blue" : "" }}

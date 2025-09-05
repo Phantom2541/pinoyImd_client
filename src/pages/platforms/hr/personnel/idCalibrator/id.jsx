@@ -37,18 +37,18 @@ export default function ID({
   const containerRef = useRef(null);
   const [dragging, setDragging] = useState(null);
 
-  const valueToKeyMap = {
-    [fakeEMP.front.empID]: "id",
-    [fakeEMP.front.emp]: "fullName",
-    [fakeEMP.front.img]: "profile",
-    [fakeEMP.front.position]: "position",
-    [fakeEMP.front.department]: "department",
-    [fakeEMP.back.signature]: "signature",
-    [fakeEMP.back.dob]: "birthday",
-    [fakeEMP.back.address]: "address",
-    [fakeEMP.back.guardian]: "guardian",
-    [fakeEMP.back.pn]: "phone number",
-  };
+  // const valueToKeyMap = {
+  //   [fakeEMP.front.empID]: "id",
+  //   [fakeEMP.front.emp]: "fullName",
+  //   [fakeEMP.front.img]: "profile",
+  //   [fakeEMP.front.position]: "position",
+  //   [fakeEMP.front.department]: "department",
+  //   [fakeEMP.back.signature]: "signature",
+  //   [fakeEMP.back.dob]: "birthday",
+  //   [fakeEMP.back.address]: "address",
+  //   [fakeEMP.back.guardian]: "guardian",
+  //   [fakeEMP.back.pn]: "phone number",
+  // };
 
   const defaultTextStyle = {
     color: "black",

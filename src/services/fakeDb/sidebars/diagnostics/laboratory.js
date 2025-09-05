@@ -16,7 +16,7 @@ import {
   Wellness,
   Referrals,
   Hotlines,
-  HotlinesPoster,
+  // HotlinesPoster,
   Suppliers,
   Onboarding,
 } from "../../../../pages/platforms/cashier";

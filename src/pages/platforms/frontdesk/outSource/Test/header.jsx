@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+// import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 
 const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth); //get the max page
-  const { collections } = useSelector(({ services }) => services), //
-    dispatch = useDispatch();
+  // const { maxPage } = useSelector(({ auth }) => auth); //get the max page
+  const { collections } = useSelector(({ services }) => services); //
+  // dispatch = useDispatch();
 
   //initial values
-  
-
-   
 
   return (
     <MDBView
@@ -23,9 +20,7 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div>
-          
-        </div>
+        <div></div>
       </div>
     </MDBView>
   );
