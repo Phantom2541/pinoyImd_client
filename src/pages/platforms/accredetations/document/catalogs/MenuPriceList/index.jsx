@@ -14,7 +14,7 @@ export default function MenuPriceList() {
     window.open(
       "/printout/menuPriceList",
       "MenuPriceList",
-      "top=100px,left=100px,width=1050px,height=750px"
+      "top=100,left=100,width=1050,height=750"
     );
   };
 
@@ -30,21 +30,25 @@ export default function MenuPriceList() {
       className="d-flex align-items-start justify-content-center"
       style={{ gap: "20px", maxWidth: "1200px", margin: "0 auto" }}
     >
-      <div style={{ flex: 1 }} className="bg-white">
-        <div style={{ textAlign: "center" }}>
+      <div style={{ flex: 1, backgroundColor: "#fff", padding: "10px" }}>
+        {/* Banner */}
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <Banner
             company={activePlatform?.branch.companyId?.name}
             branch={activePlatform?.branch?.name}
+            style={{ maxHeight: "100px", width: "auto", objectFit: "contain" }}
           />
         </div>
 
-        <div style={{ width: "100%", padding: "10px" }}>
+        {/* Table */}
+        <div style={{ width: "100%" }}>
           <table
             style={{
               width: "100%",
               borderCollapse: "collapse",
               fontSize: "16px",
               margin: "0 auto",
+              tableLayout: "fixed",
             }}
           >
             <thead>
@@ -55,7 +59,6 @@ export default function MenuPriceList() {
                 <th style={{ border: "1px solid #000", padding: "8px", width: "8%", fontWeight: "bold" }}>Price</th>
                 <th style={{ border: "1px solid #000", padding: "8px", width: "25%", fontWeight: "bold" }}>Item</th>
                 <th style={{ border: "1px solid #000", padding: "8px", width: "8%", fontWeight: "bold" }}>Price</th>
-                
               </tr>
             </thead>
 
@@ -76,7 +79,7 @@ export default function MenuPriceList() {
 
                 return col1.map((m, i) => (
                   <tr key={m._id}>
-                    {/* Col 1 */}
+                    {/* Column 1 */}
                     <td style={{ border: "1px solid #000", padding: "8px", fontWeight: 600 }}>
                       {i + 1}. {m.description || m.itemName}
                     </td>
@@ -84,7 +87,7 @@ export default function MenuPriceList() {
                       ₱ {m.opd}
                     </td>
 
-                    {/* Col 2 */}
+                    {/* Column 2 */}
                     {col2[i] ? (
                       <>
                         <td style={{ border: "1px solid #000", padding: "8px", fontWeight: 600 }}>
@@ -101,7 +104,7 @@ export default function MenuPriceList() {
                       </>
                     )}
 
-                    {/* Col 3 */}
+                    {/* Column 3 */}
                     {col3[i] ? (
                       <>
                         <td style={{ border: "1px solid #000", padding: "8px", fontWeight: 600 }}>
@@ -125,16 +128,21 @@ export default function MenuPriceList() {
         </div>
       </div>
 
+      {/* Print Button */}
       <div style={{ minWidth: "120px", marginTop: "60px" }}>
         <MDBBtn size="md" color="primary" onClick={handlePrintOut}>
           Print
         </MDBBtn>
       </div>
 
+      {/* Print Styles */}
       <style>{`
         @media print {
           button { display: none; }
           body { margin: 0; }
+          table { font-size: 14px; }
+          img { max-height: 100px; width: auto; object-fit: contain; }
+          div { page-break-inside: avoid; }
         }
       `}</style>
     </div>

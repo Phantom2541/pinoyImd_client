@@ -158,6 +158,7 @@ const RequestFormPrint4x = () => {
                 <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
                   Clinical Chemistry
                 </div>
+                <div>[ ] FBS / RBS</div>
                 <div>[ ] SGOT / AST</div>
                 <div>[ ] SGPT / ALT</div>
                 <div>[ ] Lipid Profile</div>

@@ -6,8 +6,8 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
-import "./table.css";
+} from "../../../services/redux/slices/diagnostics/laboratory/electrolyte"; // Adjusted slice for Electrolytes
+
 const dayNames = [
   "Sunday",
   "Monday",
@@ -18,7 +18,6 @@ const dayNames = [
   "Saturday",
 ];
 
-// Format time function as in original
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
   let period = "AM";
@@ -31,9 +30,9 @@ const formatTime = (hours, minutes) => {
   return `${addZero(hours)}:${addZero(minutes)} ${period}`;
 };
 
-export default function ChemsPrint() {
-  const [chems, setChems] = useState([]),
-    { collections } = useSelector(({ chemistry }) => chemistry),
+export default function ElectrolytesPrint() {
+  const [electrolytes, setElectrolytes] = useState([]),
+    { collections } = useSelector(({ electrolyte }) => electrolyte),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
@@ -45,7 +44,7 @@ export default function ChemsPrint() {
     if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/chemistry/logbook",
+          entity: "results/laboratory/electrolyte/logbook",
           data: {
             branch: activePlatform?.branchId,
             month: _month,
@@ -61,65 +60,56 @@ export default function ChemsPrint() {
   }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
-    setChems(collections);
+    setElectrolytes(collections);
   }, [collections]);
 
-  const groupByDay = (chemistryData) =>
-    chemistryData.reduce((acc, chem) => {
-      const createdAt = new Date(chem.createdAt);
+  const groupByDay = (electrolyteData) =>
+    electrolyteData.reduce((acc, item) => {
+      const createdAt = new Date(item.createdAt);
       const day = createdAt.getDate();
       if (!acc[day]) acc[day] = [];
-      acc[day].push(chem);
+      acc[day].push(item);
       return acc;
     }, {});
 
-  const groupedChems = groupByDay(chems);
+  const groupedElectrolytes = groupByDay(electrolytes);
 
-  const renderGroupedChems = () => {
-    return Object.keys(groupedChems).map((day) => {
-      const sampleChem = groupedChems[day][0];
-      const d = new Date(sampleChem.createdAt);
+  const renderGroupedElectrolytes = () => {
+    return Object.keys(groupedElectrolytes).map((day) => {
+      const sampleItem = groupedElectrolytes[day][0];
+      const d = new Date(sampleItem.createdAt);
       const dayOfWeek = dayNames[d.getDay()];
 
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="14">
+            <td colSpan="10">
               <strong>
                 {dayOfWeek} ({day})
               </strong>
             </td>
           </tr>
-          {groupedChems[day].map((chem, index) => {
-            const { customerId, packages, createdAt } = chem;
-            const chemDate = new Date(createdAt);
-            const h = chemDate.getHours();
-            const m = chemDate.getMinutes();
+          {groupedElectrolytes[day].map((item, index) => {
+            const { customerId, packages, createdAt } = item;
+            const itemDate = new Date(createdAt);
+            const h = itemDate.getHours();
+            const m = itemDate.getMinutes();
             const timeFormatted = formatTime(h, m);
 
             return (
-              <tr key={chem._id}>
+              <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
                   <h6>{fullName(customerId.fullName)}</h6>
                   <span>
-                    {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
+                    {getAge(customerId?.dob)} | {customerId?.isMale ? "M" : "F"}
                   </span>
                 </td>
                 <td>{timeFormatted}</td>
-                <td>{packages["9"]}</td>
-                <td>{packages["10"]}</td>
-                <td>{packages["12"]}</td>
-                <td>{packages["13"]}</td>
-                <td>{packages["14"]}</td>
-                <td>{packages["15"]}</td>
-                <td>{packages["16"]}</td>
-                <td>
-                  {packages["17"] ? Number(packages["17"]).toFixed(2) : ""}
-                </td>
-                <td>{packages["21"]}</td>
-                <td>{packages["20"]}</td>
-                <td>{packages["22"]}</td>
+                <td>{packages["23"] || "N/A"}</td>
+                <td>{packages["24"] || "N/A"}</td>
+                <td>{packages["25"] || "N/A"}</td>
+                <td>{packages["28"] || "N/A"}</td>
               </tr>
             );
           })}
@@ -128,38 +118,28 @@ export default function ChemsPrint() {
     });
   };
 
-  
   return (
     <div>
       <Banner
         company={activePlatform?.branch?.companyId?.name}
         branch={activePlatform?.branch?.name}
-        className="banner"
       />
-
       <h3 className="text-center">
-        Chemistry Report for {Months[month - 1]} {year}
+        Electrolytes Report for {Months[month - 1]} {year}
       </h3>
-      <MDBTable className="responsive logbooks-table">
+      <MDBTable className="responsive">
         <thead>
           <tr>
             <th>#</th>
             <th>Name</th>
             <th>Time</th>
-            <th>RBS</th>
-            <th>FBS</th>
-            <th>SGPT</th>
-            <th>SGOT</th>
-            <th>Chole</th>
-            <th>Trigly</th>
-            <th>HDL</th>
-            <th>LDL</th>
-            <th>BUN</th>
-            <th>CREA</th>
-            <th>BUA</th>
+            <th>Na (Sodium)</th>
+            <th>K (Potassium)</th>
+            <th>Cl (Chloride)</th>
+            <th>iCa (Calcium)</th>
           </tr>
         </thead>
-        <tbody>{renderGroupedChems()}</tbody>
+        <tbody>{renderGroupedElectrolytes()}</tbody>
       </MDBTable>
     </div>
   );

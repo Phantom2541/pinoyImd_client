@@ -9,7 +9,7 @@ import {
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
 import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 import  MenuPriceList  from "../../../../pages/platforms/accredetations/document/catalogs/MenuPriceList";
-
+import Urinalysis from "../../../../pages/platforms/accredetations/logbook/urinalysis";
 const accreditation = [
   {
     name: "Dashboard",
@@ -330,6 +330,7 @@ const accreditation = [
             name: "Urinalysis",
             path: "/urinalysis",
             icon: "cogs",
+            component: Urinalysis,
           },
         ],
       },
