@@ -1,4 +1,4 @@
-import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const utility = [
   {

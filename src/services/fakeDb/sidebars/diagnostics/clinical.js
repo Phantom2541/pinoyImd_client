@@ -6,7 +6,7 @@ import {
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
-import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const clinical = [
   {

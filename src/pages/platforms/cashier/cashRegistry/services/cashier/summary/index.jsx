@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MDBBtn, MDBInput } from "mdbreact";
+import { MDBBtn } from "mdbreact";
 import {
   allServicesHavePrices,
   capitalize,

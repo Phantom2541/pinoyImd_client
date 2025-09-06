@@ -1,24 +1,24 @@
 import React, { useState, useCallback } from "react";
-import {
-  Fonts,
-  FontSizes,
-  FontWeights,
-} from "../../idCalibrator/toolkit/fontStyle";
+// import {
+//   Fonts,
+//   FontSizes,
+//   FontWeights,
+// } from "../../idCalibrator/toolkit/fontStyle";
 import { useSelector } from "react-redux";
 import { MDBIcon } from "mdbreact";
 import Input from "../../idCalibrator/toolkit/input";
-import Select from "../../idCalibrator/toolkit/select";
+// import Select from "../../idCalibrator/toolkit/select";
 import { useDispatch } from "react-redux";
 import {
   NEXT,
   PREV,
 } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
-const toHex = (color) => {
-  const ctx = document.createElement("canvas").getContext("2d");
-  ctx.fillStyle = color;
-  return ctx.fillStyle;
-};
+// const toHex = (color) => {
+//   const ctx = document.createElement("canvas").getContext("2d");
+//   ctx.fillStyle = color;
+//   return ctx.fillStyle;
+// };
 
 export default function Setting({
   selectedValue,

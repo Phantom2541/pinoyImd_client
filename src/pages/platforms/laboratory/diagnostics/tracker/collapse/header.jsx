@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBCollapseHeader, MDBBadge, MDBBtn } from "mdbreact";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   // axioKit,
   dateFormat,
@@ -24,8 +24,8 @@ export default function TaskHeader({
 }) {
   const { _id, category, source } = task; // cart, customerId, ssx
   console.log("task", task);
-  const { activeCOLAPSE } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
+  // const { activeCOLAPSE } = useSelector(({ validator }) => validator),
+  const dispatch = useDispatch();
 
   const { color, border } = collapse.getStyle(
     String(_id),

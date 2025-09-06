@@ -1,7 +1,7 @@
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
 import { EditableUser, Select } from "../customizable";
 import { Suffixes } from "../../services/fakeDb";
-import { getAge, properFullname } from "../../services/utilities";
+import { getAge } from "../../services/utilities";
 import ProfileOthers from "./others";
 import AddressSelect from "../searchables/addressSelect";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,7 +23,7 @@ export default function Details({
   const { guardian = {} } = auth;
 
   // local state (if you plan to use this later)
-  const [primary, setPrimary] = useState(null);
+  // const [primary, setPrimary] = useState(null);
 
   const handleUpdate = ({ _id, key, value }) => {
     console.log("selected", { _id, [key]: value });

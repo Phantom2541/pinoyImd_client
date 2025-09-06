@@ -1,4 +1,4 @@
-import { MDBModal, MDBModalBody, MDBModalHeader, MDBBtn } from "mdbreact";
+import { MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RadHC } from "../../../../../../services/fakeDb";

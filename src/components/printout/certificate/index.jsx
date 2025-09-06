@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 // import "./reportCertificate.css";
 import { Cloudinary } from "../../../services/utilities";
-import { MDBBtn } from "mdbreact";
+// import { MDBBtn } from "mdbreact";
 
 export default function MedicalExaminationClearance() {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);

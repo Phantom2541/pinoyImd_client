@@ -1,4 +1,4 @@
-import { Component } from "react";
+// import { Component } from "react";
 import {
   Staffs,
   qualityControls,
@@ -7,9 +7,11 @@ import {
   MissionVision,
 } from "../../../../pages/platforms/accredetations/index";
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
-import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 import  MenuPriceList  from "../../../../pages/platforms/accredetations/document/catalogs/MenuPriceList";
 import Urinalysis from "../../../../pages/platforms/accredetations/logbook/urinalysis";
+//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+
+
 const accreditation = [
   {
     name: "Dashboard",

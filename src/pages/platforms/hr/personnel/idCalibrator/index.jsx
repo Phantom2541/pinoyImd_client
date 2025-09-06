@@ -49,6 +49,7 @@ export default function IdCalibrator() {
 
   try {
     const ctData = branch.ct ? JSON.parse(branch.ct) : null;
+    console.log("ctData", ctData);
   } catch (err) {
     console.error("Invalid JSON in branch.ct:", branch.ct, err);
   }
@@ -251,9 +252,9 @@ export default function IdCalibrator() {
     document.body.style.cursor = "none";
   };
 
-  const handleMouseMove = (e) => {
-    if (floatingValue) setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 });
-  };
+  // const handleMouseMove = (e) => {
+  //   if (floatingValue) setCursorPos({ x: e.clientX + 10, y: e.clientY + 10 });
+  // };
 
   // inside IdCalibrator
   const handleReset = async () => {

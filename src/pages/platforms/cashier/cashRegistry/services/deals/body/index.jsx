@@ -7,7 +7,7 @@ import {
   Deals,
   fullName,
   getGenderIcon,
-  paymentMethod,
+  // paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories } from "../../../../../../../services/fakeDb";
 import {
@@ -17,7 +17,8 @@ import {
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
-import { Input, Select } from "../../../../../../../components/customizable";
+import { Select } from "../../../../../../../components/customizable";
+import SingleUpdate from "../../../../../../../components/singleUpdate";
 import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
 import PaymentDetails from "./paymentDetails";
 import "./style.css";
@@ -197,7 +198,7 @@ const Tables = () => {
               const { source = {} } = deal || [];
               const isSourceEdit = isMatch("source");
               const isPhysicianEdit = isMatch("physician");
-              const isSSXEdit = isMatch("ssx");
+              // const isSSXEdit = isMatch("ssx");
 
               return (
                 <tr
@@ -210,93 +211,31 @@ const Tables = () => {
                       {getGenderIcon(deal?.customerId?.isMale)}{" "}
                       {fullName(deal?.customerId?.fullName)}
                     </h6>
-                    {selected._id === deal._id &&
-                    selected?.updatedKey === "category" ? (
-                      <div
-                        style={{ width: "17rem" }}
-                        className="mt-3 d-flex align-items-center"
-                      >
-                        <Select
-                          label={"Category"}
-                          onChange={(value) =>
-                            setSelected({ ...selected, newCategory: value })
-                          }
-                          handleCheck={() =>
-                            handleUpdate("category", "newCategory")
-                          }
-                          handleClose={() => setSelected({})}
-                          formSubmitted={formSubmitted}
-                          soloUpdate
-                          whitelisted
-                          className="m-0 p-0"
-                          collections={Categories}
-                          preValue={deal.category}
-                          keys={"abbr"}
-                          values={"name"}
-                        />
-                      </div>
-                    ) : (
-                      <MDBBadge
-                        color="info"
-                        className="mr-2 cursor-pointer"
-                        onClick={() =>
-                          setSelected({ ...deal, updatedKey: "category" })
-                        }
-                        title={
-                          deal.category === "walkin"
-                            ? deal.category
-                            : Categories?.find(
-                                ({ abbr = "" }) => abbr === deal?.category
-                              )?.name
-                        }
-                      >
-                        {deal.category === "walkin"
-                          ? deal.category
-                          : Categories.find(
-                              ({ abbr = "" }) => abbr === deal?.category
-                            )?.abbr?.toUpperCase()}
-                      </MDBBadge>
-                    )}
+                    <SingleUpdate
+                      selected={selected}
+                      setSelected={setSelected}
+                      handleUpdate={handleUpdate}
+                      formSubmitted={formSubmitted}
+                      data={deal}
+                      _id={deal._id}
+                      title="category"
+                      options={Categories}
+                      isBadge={true}
+                    />
                     @ {new Date(deal?.createdAt).toLocaleTimeString()}
                   </td>
                   <td className="position-relative">
-                    <div
-                      style={{
-                        width: "17rem",
-                        opacity: isSSXEdit ? 1 : 0,
-                        zIndex: isSSXEdit ? 9999 : -1,
-                      }}
-                      className={`mt-3 d-flex p-1 align-items-center position-absolute ${
-                        isSSXEdit && "deals-zoom-in"
-                      }`}
-                    >
-                      <Input
-                        label={"SSX"}
-                        selected={selected}
-                        onChange={(_key, value) =>
-                          setSelected({ ...selected, [_key]: value })
-                        }
-                        _key="newSSX"
-                        handleCheck={() => handleUpdate("ssx", "newSSX")}
-                        handleClose={() => setSelected({})}
-                        formSubmitted={formSubmitted}
-                        isSuccess={isSuccess}
-                        className=" w-100  deals-zoom-in-input-ssx"
-                      />
-                    </div>
-                    <span
-                      className="cursor-pointer"
-                      style={{ fontWeight: 400, opacity: isSSXEdit ? 0 : 1 }}
-                      onClick={() =>
-                        setSelected({
-                          ...deal,
-                          updatedKey: "ssx",
-                          newSSX: deal.ssx,
-                        })
-                      }
-                    >
-                      {deal.ssx || "--"}
-                    </span>
+                    <SingleUpdate
+                      selected={selected}
+                      setSelected={setSelected}
+                      handleUpdate={handleUpdate}
+                      formSubmitted={formSubmitted}
+                      data={deal}
+                      _id={deal._id}
+                      title="ssx"
+                      dataType="text"
+                      isSuccess={isSuccess}
+                    />
                   </td>
                   <td className="position-relative ">
                     <div

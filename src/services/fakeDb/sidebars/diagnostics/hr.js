@@ -9,7 +9,7 @@ import {
   Heads,
   Applicants,
 } from "../../../../pages/platforms/hr";
-import { HotlinesPoster } from "../../../../pages/platforms/cashier";
+//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 import { Services, Menus } from "../../../../pages/platforms/accounting";
 import IdCalibrator from "../../../../pages/platforms/hr/personnel/idCalibrator";

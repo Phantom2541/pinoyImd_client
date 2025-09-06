@@ -365,7 +365,7 @@ export default function Setting({
               label={<i class="fas fa-rotate"></i>}
               value={
                 style.transform
-                  ? parseInt(style.transform.replace(/[^0-9\-]/g, "")) // extract degrees
+                  ? parseInt(style.transform.replace(/[^0-9\\-]/g, "")) // extract degrees
                   : 0
               }
               disabled={imgDisabled}

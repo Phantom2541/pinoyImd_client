@@ -1,5 +1,5 @@
 import {
-  MDBCol,
+  // MDBCol,
   MDBCard,
   MDBView,
   MDBCardBody,
@@ -113,6 +113,7 @@ export default function SignatureImage() {
         </p>
         <MDBBtnGroup>
           <ImageCropper
+            cropSize={{ width: 200, height: 100 }}
             accept="image/jpg, image/png, image/jpeg"
             handleUpload={handleUpload}
             isUpload={true}

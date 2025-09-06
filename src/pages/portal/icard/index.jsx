@@ -10,11 +10,13 @@ const ICard = ({ match = {} }) => {
     { info, branch } = useSelector(({ icard }) => icard),
     [front, setFront] = useState(null),
     [back, setBack] = useState(null),
+    [layout, setLayout] = useState("portrait"),
     [placedValues, setPlacedValues] = useState([]),
+    [flipped, setFlipped] = useState(false),
     dispatch = useDispatch();
 
   console.log("info", info);
-  console.log("branch", branch);
+  console.log("brance", branch);
 
   // fetch personnel info
   useEffect(() => {
@@ -41,6 +43,7 @@ const ICard = ({ match = {} }) => {
     // set front/back image URLs
     setFront(ctData.cf || null);
     setBack(ctData.cb || null);
+    setLayout(ctData.layout || "portrait");
 
     // parse dfp (branch + info)
     let branchDfp = {};
@@ -86,7 +89,6 @@ const ICard = ({ match = {} }) => {
     });
 
     setPlacedValues(newPlacedValues);
-    console.log("newPlacedValues", newPlacedValues);
   }, [branch, info]);
 
   // render placed values gaya ng ID.jsx
@@ -102,8 +104,6 @@ const ICard = ({ match = {} }) => {
             (p.value.startsWith("data:image/") ||
               /\.(png|jpe?g|gif)$/i.test(p.value));
 
-          const isFixed =
-            p.key === "img" || p.key === "signature" || p.key === "qr";
           const pos = { x: p.x, y: p.y };
 
           const commonProps = {
@@ -113,7 +113,7 @@ const ICard = ({ match = {} }) => {
               left: pos.x,
               position: "absolute",
               userSelect: "none",
-              cursor: isFixed ? "default" : "grab",
+              // cursor: isFixed ? "default" : "grab",
               display: "inline-block",
               fontFamily: p.fontFamily,
               fontSize: p.fontSize,
@@ -169,13 +169,20 @@ const ICard = ({ match = {} }) => {
 
   return (
     <div className="icard-front-back-container">
-      <div className="icard-front-preview" style={{ position: "relative" }}>
-        {front ? <img src={front} alt="front" draggable={false} /> : null}
-        {renderValues("front")}
-      </div>
-      <div className="icard-back-preview" style={{ position: "relative" }}>
-        {back ? <img src={back} alt="back" draggable={false} /> : null}
-        {renderValues("back")}
+      <div
+        className="icard-flip-container"
+        onClick={() => setFlipped((prev) => !prev)}
+      >
+        <div className={`icard-flip-inner ${flipped ? "flipped" : ""}`}>
+          <div className={`icard-front-preview ${layout}`}>
+            {front ? <img src={front} alt="front" draggable={false} /> : null}
+            {renderValues("front")}
+          </div>
+          <div className={`icard-back-preview ${layout}`}>
+            {back ? <img src={back} alt="back" draggable={false} /> : null}
+            {renderValues("back")}
+          </div>
+        </div>
       </div>
     </div>
   );

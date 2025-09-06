@@ -11,11 +11,11 @@ const Protime = ({ pt = [0, 0] }) => {
         </td>
       </tr>
       {pt.map((item = 0, index) => {
-        const hi = index == 0 ? 13.0 : 14.1;
-        const lo = index == 0 ? 11.0 : 10.7;
+        const hi = index === 0 ? 13.0 : 14.1;
+        const lo = index === 0 ? 11.0 : 10.7;
         return (
           <tr key={index}>
-            <td className="py-0">{index == 0 ? "Patient" : "Control"}</td>
+            <td className="py-0">{index === 0 ? "Patient" : "Control"}</td>
             <td
               className="py-0 fw-bold text-center"
               style={{ color: item > hi ? "red" : item < lo ? "blue" : "" }}
