@@ -10,8 +10,8 @@ import {
   InsertRealtimeOnboard,
   UpdateRealtimeOnboard,
 } from "../../services/redux/slices/commerce/pos/services/taskGenerator";
-
 import { IDB_BROWSE } from "../../services/indexDB/commerce/pos/services/onboardings";
+
 const departmentMapping = {
   laboratory: "LAB",
   radiology: "RAD",
@@ -28,108 +28,94 @@ export function useSocketListeners() {
   const departmentCode =
     departmentMapping[activePlatform?.department?.toLowerCase()];
 
-  // socket connected
-  useEffect(() => {
-    socket.on("me", (id) => {
-      console.log(`[Socket] ${id} Connected.`);
-    });
+  const useSocket = (event, handler, deps = []) => {
+    useEffect(() => {
+      socket.on(event, handler);
+      return () => socket.off(event, handler);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
+  };
 
-    return () => socket.off("me");
-  }, []);
+  // socket connected
+  useSocket(
+    "me",
+    (id) => {
+      console.log(`[Socket] ${id} Connected.`);
+    },
+    []
+  );
+
+  // join_room
+  useEffect(() => {
+    if (activePlatform?.branchId) {
+      socket.emit("join_room", activePlatform.branchId);
+    }
+  }, [activePlatform]);
 
   // received_tasks
-  useEffect(() => {
-    socket.on("received_tasks", (data) => {
-      const { branchId } = activePlatform;
-      if (
-        data?.branchId?._id === branchId &&
-        data?.department === departmentCode
-      ) {
+  useSocket(
+    "received_tasks",
+    (data) => {
+      if (data?.department === departmentCode) {
         dispatch(InsertRealtimeTask(data));
         addToast("New patient task has been received", {
           appearance: "success",
         });
       }
-    });
-
-    return () => socket.off("received_tasks");
-  }, [activePlatform, departmentCode, dispatch, addToast]);
+    },
+    [departmentCode, dispatch, addToast]
+  );
 
   // received_onboard
-  useEffect(() => {
-    socket.on("received_onboard", (data) => {
-      const { branchId } = activePlatform;
-      if (data?.branchId === branchId && data?._id) {
-        const pn = onboardings.length + 1;
-        dispatch(
-          InsertRealtimeOnboard({ ...data, pn, department: departmentCode })
-        );
-      }
-    });
+  useSocket(
+    "received_onboard",
+    (data) => {
+      const pn = onboardings.length + 1;
+      dispatch(
+        InsertRealtimeOnboard({ ...data, pn, department: departmentCode })
+      );
 
-    return () => socket.off("received_onboard");
-  }, [activePlatform, onboardings, departmentCode, dispatch]);
+      addToast(`New onboarding received for patient #${pn}`, {
+        appearance: "success",
+      });
+    },
+    [onboardings, departmentCode, dispatch]
+  );
 
   // received_updated_task
-  useEffect(() => {
-    socket.on("received_updated_task", (data) => {
-      const { branchId } = activePlatform;
-      if (data?.branchId?._id === branchId) {
-        dispatch(UpdateRealtimeTask(data));
-      }
-    });
-
-    return () => socket.off("received_updated_task");
-  }, [activePlatform, dispatch]);
+  useSocket(
+    "received_updated_task",
+    (data) => dispatch(UpdateRealtimeTask(data)),
+    [dispatch]
+  );
 
   // received_updated_deal_menus
-  useEffect(() => {
-    socket.on("received_updated_deal_menus", (data) => {
-      const { branchId } = activePlatform;
-      if (data?.branchId === branchId) {
-        IDB_BROWSE().then((datas) => {
-          var pn = 0;
-          if (datas.length > 0) {
-            datas.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-            const index = datas.findIndex((item) => item._id === data._id);
-            if (index > -1) {
-              pn = index + 1;
-            }
-          }
-          dispatch(
-            UpdateRealtimeOnboard({ ...data, pn, department: departmentCode })
-          );
-        });
-      }
-    });
-
-    return () => socket.off("received_updated_deal_menus");
-  }, [activePlatform, dispatch, departmentCode]);
+  useSocket(
+    "received_updated_deal_menus",
+    (data) => {
+      IDB_BROWSE().then((datas) => {
+        let pn = 0;
+        if (datas.length > 0) {
+          datas.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          const index = datas.findIndex((item) => item._id === data._id);
+          if (index > -1) pn = index + 1;
+        }
+        dispatch(
+          UpdateRealtimeOnboard({ ...data, pn, department: departmentCode })
+        );
+      });
+    },
+    [dispatch, departmentCode]
+  );
 
   // received_updated_onboarding
-  useEffect(() => {
-    socket.on("received_updated_onboarding", (data) => {
-      const { branchId } = activePlatform;
-      if (data?.branchId === branchId) {
-        dispatch(
-          UpdateRealtimeOnboard({ ...data, department: departmentCode })
-        );
-      }
-    });
+  useSocket(
+    "received_updated_onboarding",
+    (data) =>
+      dispatch(UpdateRealtimeOnboard({ ...data, department: departmentCode })),
+    [dispatch, departmentCode]
+  );
 
-    return () => socket.off("received_updated_onboarding");
-  }, [activePlatform, dispatch, departmentCode]);
-
-  //this is for tracker
-  useEffect(() => {
-    if (!activePlatform?.branchId) return;
-    socket.emit("join_room", activePlatform?.branchId);
-    socket.on("tracker", (data) => {
-      Tracker.set(data);
-    });
-
-    return () => {
-      socket.off("tracker");
-    };
-  }, [activePlatform]);
+  // tracker
+  useSocket("tracker", (data) => Tracker.set(data), []);
 }

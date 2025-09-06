@@ -259,7 +259,11 @@ export const reduxSlice = createSlice({
       const updatedItem = state.collections[findIndex(state.collections)];
       const item = JSON.parse(JSON.stringify(updatedItem));
       IDB_UPDATE(item);
-      socket.emit("send_updated_task", item);
+
+      socket.emit("send_updated_task", {
+        data: item,
+        roomID: fetchTracker.roomID(),
+      });
     },
     SetRAD_READER: (state, { payload }) => {
       state.showRadReader = true;

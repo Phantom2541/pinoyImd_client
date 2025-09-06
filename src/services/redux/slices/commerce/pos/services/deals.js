@@ -1498,7 +1498,10 @@ export const reduxSlice = createSlice({
         IDB_UPDATE(updatedData);
 
         //send updated deal in realtime to another client
-        socket.emit("send_updated_deal_menus", payload);
+        socket.emit("send_updated_deal_menus", {
+          data: payload,
+          roomID: fetchTracker.roomID(),
+        });
 
         const { department = "" } = JSON.parse(
           localStorage.getItem("activePlatform") || "{}"

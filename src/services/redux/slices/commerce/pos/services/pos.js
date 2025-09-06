@@ -301,10 +301,6 @@ export const reduxSlice = createSlice({
           cart: cartByDept(dealForOnboard.cart, department),
         };
 
-        if (fakeDB) {
-          //this is realtime send it to the onboarding but not in sender side
-          socket.emit("send_onboard", dealForOnboard);
-        }
         //same scenario in onboardings
         if (fetchTracker.hasLoaded("deals")) {
           IDB_SAVE(dealForOnboard);
@@ -319,6 +315,11 @@ export const reduxSlice = createSlice({
         ) {
           IDB_SAVE_ONBOARD(onboarding);
         }
+
+        socket.emit("send_onboard", {
+          data: dealForOnboard,
+          roomID: fetchTracker.roomID(),
+        });
         state.sourceId = "";
         state.message = success;
         // state.transaction = payload;

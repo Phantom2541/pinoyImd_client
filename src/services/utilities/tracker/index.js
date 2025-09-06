@@ -47,7 +47,7 @@ const fetchDatas = async ({
   if (idbDatas?.length === 0) shouldFetch = true;
   if (mdbId !== idbId) shouldFetch = true;
 
-  //IF WE HAVE A DATAS IN THE INDEXDB AND WE HAVE A MDBTRACKER GET ALL MENU FROM THE LAST DATA IN THE INDEXDB AND FROM THE MDBTRACKER
+  //IF WE HAVE A DATAS IN THE INDEXDB AND WE HAVE A MDBTRACKER GET ALL DATAS FROM THE LAST DATA IN THE INDEXDB AND FROM THE MDBTRACKER
   const latestIdbUpdatedAt = idbDatas?.reduce((latest, m) => {
     return m.updatedAt > latest ? m.updatedAt : latest;
   }, idbDatas[0]?.updatedAt);
@@ -156,7 +156,8 @@ const Tracker = {
       config,
     });
   },
-  set: (updatedTracker) => {
+  set: (updatedTracker = {}) => {
+    if (!updatedTracker?._id) return "";
     // Save the updated tracker object to localStorage
     localStorage.setItem(
       `tracker-${updatedTracker.branch}`,

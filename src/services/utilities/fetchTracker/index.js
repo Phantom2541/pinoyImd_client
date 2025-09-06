@@ -58,6 +58,14 @@ const fetchTracker = {
       }
     },
   },
+  roomID: () => {
+    const lcAP = localStorage.getItem("activePlatform");
+    if (!lcAP) return "";
+    if (lcAP) {
+      const { branchId = "" } = JSON.parse(lcAP);
+      return branchId;
+    }
+  },
 };
 
 export default fetchTracker;

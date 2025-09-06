@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBIcon,
@@ -7,8 +6,9 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { capitalize, fetchTracker } from "../../../services/utilities";
+import { capitalize, fetchTracker, Tracker } from "../../../services/utilities";
 import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth.js";
+import { BROWSE } from "../../../services/redux/slices/tracker.js";
 
 export default function Branches() {
   const {
@@ -39,6 +39,10 @@ export default function Branches() {
     };
     fetchTracker.reset();
     dispatch(SETACTIVEPLATFORM({ data, token }));
+    dispatch(BROWSE({ token, params: { branchId } })).then((action) => {
+      const { payload = {} } = action.payload;
+      Tracker.set(payload);
+    });
   };
 
   const { branch = {} } = activePlatform || {};

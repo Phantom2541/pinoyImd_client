@@ -199,7 +199,6 @@ export const reduxSlice = createSlice({
     },
     UpdateRealtimeOnboard: (state, { payload }) => {
       const { department, cart: baseCart = [], ...rest } = payload;
-      console.log("runninggggg updated realtime onboard");
       const onboarding = {
         ...rest,
         ...(baseCart.length > 0 && {
@@ -403,12 +402,18 @@ export const reduxSlice = createSlice({
 
         IDB_UPDATE(payload);
         //this is for realtime send in task page in another client
-        socket.emit("send_updated_onboarding", payload);
         if (fetchTracker.hasLoaded("tasks")) {
           //this is for saving local indexDB
           IDB_SAVE_TASK(task);
         }
-        socket.emit("send_tasks", task);
+        socket.emit("send_updated_onboarding", {
+          data: payload,
+          roomID: fetchTracker.roomID(),
+        });
+        socket.emit("send_tasks", {
+          data: task,
+          roomID: fetchTracker.roomID(),
+        });
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
