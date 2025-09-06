@@ -1,11 +1,9 @@
-import React from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
   MDBNavbarNav,
   MDBIcon,
   MDBBadge,
-  MDBBtn,
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import Platforms from "./platforms";

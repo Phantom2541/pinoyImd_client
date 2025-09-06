@@ -510,6 +510,11 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    InsertRealtimeDeal: (state, { payload }) => {
+      //this is for socket to receive realtime deal
+      state.collections.unshift(payload);
+      state.filtered.unshift(payload);
+    },
     SetTOTAL: (state, { payload }) => {
       state.total = payload;
     },
@@ -1558,6 +1563,7 @@ export const {
   RESET,
   ResetDATE,
   SetPrinting,
+  InsertRealtimeDeal,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
