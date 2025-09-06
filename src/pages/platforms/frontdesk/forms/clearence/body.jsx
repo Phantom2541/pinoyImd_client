@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../../../services/utilities";
 import { MDBBtn } from "mdbreact";
@@ -6,21 +6,47 @@ import { MDBBtn } from "mdbreact";
 const MedicalClearanceForm = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
 
-  const companyName = activePlatform?.company?.name || "";
-  const branchName = activePlatform?.branch?.name || "";
+  const companyName = activePlatform?.company?.name || "default-company";
+  const branchName = activePlatform?.branch?.name || "default-branch";
 
-  const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-    companyName
-  )}/${encodeURIComponent(branchName)}/banner`;
+  const BannerURL =
+    companyName && branchName
+      ? `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+          companyName
+        )}/${encodeURIComponent(branchName)}/banner`
+      : null;
 
   const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
+  const [bannerLoaded, setBannerLoaded] = useState(false);
 
+  // Preload banner before printing
   const handlePrint = () => {
-    window.open(
-      "/printout/laboratoryClearanceRequestForm",
-      "RequestForm",
-      "top=100px,left=100px,width=1050px,height=750px"
-    );
+    if (BannerURL) {
+      const img = new Image();
+      img.src = BannerURL;
+      img.onload = () => {
+        setBannerLoaded(true);
+        window.open(
+          "/printout/laboratoryClearanceRequestForm",
+          "RequestForm",
+          "top=100px,left=100px,width=1050px,height=750px"
+        );
+      };
+      img.onerror = () => {
+        setBannerLoaded(false);
+        window.open(
+          "/printout/laboratoryClearanceRequestForm",
+          "RequestForm",
+          "top=100px,left=100px,width=1050px,height=750px"
+        );
+      };
+    } else {
+      window.open(
+        "/printout/laboratoryClearanceRequestForm",
+        "RequestForm",
+        "top=100px,left=100px,width=1050px,height=750px"
+      );
+    }
   };
 
   return (
@@ -51,16 +77,29 @@ const MedicalClearanceForm = () => {
       >
         <thead>
           <tr>
-            <th colSpan={4} style={{ border: "1px solid #000" }}>
-              <img
-                src={BannerURL}
-                alt="Banner"
-                style={{
-                  maxHeight: "80px",
-                  margin: "auto",
-                  display: "block",
-                }}
-              />
+            <th colSpan={4} style={{ border: "1px solid #000", padding: 0 }}>
+              {BannerURL ? (
+                <img
+                  src={BannerURL}
+                  alt="Banner"
+                  style={{
+                    maxHeight: "80px",
+                    width: "100%",
+                    display: "block",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "20px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  [No Banner Available]
+                </div>
+              )}
             </th>
           </tr>
           <tr>
@@ -80,26 +119,24 @@ const MedicalClearanceForm = () => {
         <tbody>
           {/* Patient Info */}
           <tr>
-            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-              Requesting Company: _________________________________________
-              &nbsp;&nbsp;&nbsp; Date: _______________________________
-            </td>
-          </tr>
+          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Requesting Company: _____________________________________________ &nbsp;&nbsp;&nbsp;
+            Date: __________________________
+          </td>
+        </tr>
 
-          <tr>
-            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-              Name: ____________________________________ &nbsp;&nbsp;&nbsp;
-              Age/Sex: _______ &nbsp;&nbsp;&nbsp;Civil Status:
-              __________________________
-            </td>
-          </tr>
+        <tr>
+          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Name: _______________________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
+            _______ &nbsp;&nbsp;&nbsp; Civil Status: ______________
+          </td>
+        </tr>
 
-          <tr>
-            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-              Home Address:
-              ____________________________________________________________________________________
-            </td>
-          </tr>
+        <tr>
+          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Home Address: ____________________________________________________________________________________
+          </td>
+        </tr>
 
           {/* Histories */}
           <tr>
@@ -221,8 +258,13 @@ const MedicalClearanceForm = () => {
               background: #fff !important;
             }
             @page {
-              size: A4;
+              size: A4 portrait;
               margin: 12mm;
+            }
+            img {
+              max-width: 100%;
+              height: auto;
+              display: block;
             }
           }
         `}

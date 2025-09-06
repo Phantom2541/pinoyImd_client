@@ -120,8 +120,8 @@ export default function UrinalysisPrint() {
             return (
               <tr key={urin._id}>
                 <td>{index + 1}</td>
-                <td>
-                  <h6>{fullName(customerId.fullName)}</h6>
+                <td >
+                  <span style={{whiteSpace:"nowrap"}}>{fullName(customerId.fullName)}</span>
                   <span>
                     {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
                   </span>
@@ -135,13 +135,13 @@ export default function UrinalysisPrint() {
                 <td>{PH[pe[3]]}</td>
                 <td>
                   {nonEmptyPackages.map(([key, value]) => (
-                    <p key={key}>
+                    <span key={key}>
                       {ResultInName[parseInt(key)]?.substring(0, 3)}:
                       {ResultInRange[value]?.substring(0, 2)}
-                    </p>
+                    </span>
                   ))}
                 </td>
-                <td>{MicroscopicInRange[me[0]]?.replace("/hpf", "")}</td>
+                <td >{MicroscopicInRange[me[0]]?.replace("/hpf", "")}</td>
                 <td>{MicroscopicInRange[me[1]]?.replace("/hpf", "")}</td>
                 <td>{MicroscopicResultInWord[me[2]]?.substring(0, 1)}</td>
                 <td>{MicroscopicResultInWord[me[3]]?.substring(0, 1)}</td>
@@ -151,6 +151,27 @@ export default function UrinalysisPrint() {
               </tr>
             );
           })}
+
+          <style>
+            {
+              `
+              @media print {
+               @page{
+                 size: landscape;
+               }
+                 .logbooks-table tr td,
+                 .logbooks-table tr th{
+                 font-size: .8rem !important;
+                 }
+
+              }
+                 .logbooks-table tr th,
+                 .logbooks-table tr td{
+                 padding: 0 5px !important;
+                 }
+              `
+            }
+          </style>
         </React.Fragment>
       );
     });
@@ -165,13 +186,13 @@ export default function UrinalysisPrint() {
       <h3 className="text-center">
         Urinalysis Report for {Months[month - 1]} {year}
       </h3>
-      <MDBTable className="responsive">
+      <MDBTable className="responsive logbooks-table">
         <thead>
           <tr>
             <th>#</th>
             <th>Name</th>
             <th>Time</th>
-            <th>Color / Trans</th>
+            <th>C / T</th>
             <th>SG</th>
             <th>PH</th>
             <th>Chemical Reaction</th>
@@ -187,5 +208,6 @@ export default function UrinalysisPrint() {
         <tbody>{renderGroupedUrinalysis()}</tbody>
       </MDBTable>
     </div>
+
   );
 }

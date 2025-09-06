@@ -1,0 +1,45 @@
+@media print {
+  /* Hide everything initially */
+  /* body * {
+    visibility: hidden;
+  } */
+
+  /* Show only the banner and table */
+  .banner,
+  .banner * {
+    visibility: visible !important;
+  }
+
+  .responsive,
+  .responsive * {
+    visibility: visible;
+  }
+
+  /* Position the table correctly under the banner */
+  .responsive {
+    position: absolute;
+    top: 150px; /* Adjust depending on banner height */
+    left: 0;
+    width: 100%;
+  }
+
+  /* Ensure table headers are shown on each printed page */
+  thead {
+    display: table-header-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  table {
+    page-break-inside: auto;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+}

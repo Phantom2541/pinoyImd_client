@@ -6,8 +6,13 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
-import "./table.css";
+} from "../../../services/redux/slices/diagnostics/laboratory/fecalysis"; // Updated slice for Fecalysis
+import {
+  Consistency,
+  FecalColor,
+  MicroscopicInRange,
+} from "../../../services/fakeDb";
+
 const dayNames = [
   "Sunday",
   "Monday",
@@ -18,7 +23,6 @@ const dayNames = [
   "Saturday",
 ];
 
-// Format time function as in original
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
   let period = "AM";
@@ -31,9 +35,9 @@ const formatTime = (hours, minutes) => {
   return `${addZero(hours)}:${addZero(minutes)} ${period}`;
 };
 
-export default function ChemsPrint() {
-  const [chems, setChems] = useState([]),
-    { collections } = useSelector(({ chemistry }) => chemistry),
+export default function FecalysisPrint() {
+  const [fecalysis, setFecalysis] = useState([]),
+    { collections } = useSelector(({ fecalysis }) => fecalysis),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
@@ -45,7 +49,7 @@ export default function ChemsPrint() {
     if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/chemistry/logbook",
+          entity: "results/laboratory/fecalysis/ logbook",
           data: {
             branch: activePlatform?.branchId,
             month: _month,
@@ -61,65 +65,57 @@ export default function ChemsPrint() {
   }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
-    setChems(collections);
+    setFecalysis(collections);
   }, [collections]);
 
-  const groupByDay = (chemistryData) =>
-    chemistryData.reduce((acc, chem) => {
-      const createdAt = new Date(chem.createdAt);
+  const groupByDay = (fecalysisData) =>
+    fecalysisData.reduce((acc, item) => {
+      const createdAt = new Date(item.createdAt);
       const day = createdAt.getDate();
       if (!acc[day]) acc[day] = [];
-      acc[day].push(chem);
+      acc[day].push(item);
       return acc;
     }, {});
 
-  const groupedChems = groupByDay(chems);
+  const groupedFecalysis = groupByDay(fecalysis);
 
-  const renderGroupedChems = () => {
-    return Object.keys(groupedChems).map((day) => {
-      const sampleChem = groupedChems[day][0];
-      const d = new Date(sampleChem.createdAt);
+  const renderGroupedFecalysis = () => {
+    return Object.keys(groupedFecalysis).map((day) => {
+      const sampleItem = groupedFecalysis[day][0];
+      const d = new Date(sampleItem.createdAt);
       const dayOfWeek = dayNames[d.getDay()];
 
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="14">
+            <td colSpan="8">
               <strong>
                 {dayOfWeek} ({day})
               </strong>
             </td>
           </tr>
-          {groupedChems[day].map((chem, index) => {
-            const { customerId, packages, createdAt } = chem;
-            const chemDate = new Date(createdAt);
-            const h = chemDate.getHours();
-            const m = chemDate.getMinutes();
+          {groupedFecalysis[day].map((item, index) => {
+            const { customerId, pe, me, createdAt } = item;
+            const itemDate = new Date(createdAt);
+            const h = itemDate.getHours();
+            const m = itemDate.getMinutes();
             const timeFormatted = formatTime(h, m);
 
             return (
-              <tr key={chem._id}>
+              <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
                   <h6>{fullName(customerId.fullName)}</h6>
                   <span>
-                    {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
+                    {getAge(customerId?.dob)} | {customerId?.isMale ? "M" : "F"}
                   </span>
                 </td>
                 <td>{timeFormatted}</td>
-                <td>{packages["9"]}</td>
-                <td>{packages["10"]}</td>
-                <td>{packages["12"]}</td>
-                <td>{packages["13"]}</td>
-                <td>{packages["14"]}</td>
-                <td>{packages["15"]}</td>
-                <td>{packages["16"]}</td>
-                <td>
-                  {packages["17"] ? Number(packages["17"]).toFixed(2) : ""}
-                </td>
-                <td>{packages["21"]}</td>
-                <td>{packages["20"]}</td>
-                <td>{packages["22"]}</td>
+                <td>{FecalColor[pe[0]]}</td>
+                <td>{Consistency[pe[1]]}</td>
+                <td>{MicroscopicInRange[me[0]]}</td>
+                <td>{MicroscopicInRange[me[1]]}</td>
+                <td></td>
               </tr>
             );
           })}
@@ -128,38 +124,29 @@ export default function ChemsPrint() {
     });
   };
 
-  
   return (
     <div>
       <Banner
         company={activePlatform?.branch?.companyId?.name}
         branch={activePlatform?.branch?.name}
-        className="banner"
       />
-
       <h3 className="text-center">
-        Chemistry Report for {Months[month - 1]} {year}
+        Fecalysis Report for {Months[month - 1]} {year}
       </h3>
-      <MDBTable className="responsive logbooks-table">
+      <MDBTable className="responsive">
         <thead>
           <tr>
             <th>#</th>
             <th>Name</th>
             <th>Time</th>
-            <th>RBS</th>
-            <th>FBS</th>
-            <th>SGPT</th>
-            <th>SGOT</th>
-            <th>Chole</th>
-            <th>Trigly</th>
-            <th>HDL</th>
-            <th>LDL</th>
-            <th>BUN</th>
-            <th>CREA</th>
-            <th>BUA</th>
+            <th>Color</th>
+            <th>Consistency</th>
+            <th>pH</th>
+            <th>Mucus</th>
+            <th>Occult Blood</th>
           </tr>
         </thead>
-        <tbody>{renderGroupedChems()}</tbody>
+        <tbody>{renderGroupedFecalysis()}</tbody>
       </MDBTable>
     </div>
   );

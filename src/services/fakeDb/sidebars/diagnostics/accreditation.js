@@ -7,8 +7,10 @@ import {
   MissionVision,
 } from "../../../../pages/platforms/accredetations/index";
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
+import  MenuPriceList  from "../../../../pages/platforms/accredetations/document/catalogs/MenuPriceList";
+import Urinalysis from "../../../../pages/platforms/accredetations/logbook/urinalysis";
 //import { HotlinesPoster } from "../../../../pages/platforms/cashier";
-import MenuPriceList from "../../../../pages/platforms/accredetations/document/catalogs/MenuPriceList";
+
 
 const accreditation = [
   {
@@ -330,6 +332,7 @@ const accreditation = [
             name: "Urinalysis",
             path: "/urinalysis",
             icon: "cogs",
+            component: Urinalysis,
           },
         ],
       },
