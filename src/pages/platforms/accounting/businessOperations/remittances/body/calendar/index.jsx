@@ -16,7 +16,7 @@ export default function Calendar({ summaryRef }) {
 
   const items = collections.reduce((acc, { createdAt, ...rest }) => {
     if (createdAt) {
-      const date = new Date(createdAt).getUTCDate();
+      const date = new Date(createdAt).getDate();
       if (!acc.has(date)) {
         acc.set(date, []);
       }
