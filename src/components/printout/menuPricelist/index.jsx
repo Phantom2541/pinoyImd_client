@@ -52,13 +52,16 @@ export default function MenuPriceList() {
   const col3 = items.slice(2 * third);
 
   return (
-    <div style={{ maxWidth: "100%", padding: "5px", backgroundColor: "#fff" }}>
+    <div
+      className="print-container"
+      style={{ maxWidth: "100%", padding: "5px", backgroundColor: "#fff" }}
+    >
       {/* Banner */}
-      <div style={{  marginBottom: "10px", height: "85px" }}>
+      <div style={{ marginBottom: "10px", height: "85px" }}>
         <img
           src={BannerURL}
           alt={`${companyName} ${branchName} Banner`}
-          style={{ width: "100%", height:"100%", objectFit: "fill" }}
+          style={{ width: "100%", height: "100%", objectFit: "fill" }}
         />
       </div>
 
@@ -74,12 +77,66 @@ export default function MenuPriceList() {
       >
         <thead>
           <tr>
-            <th style={{ border: "1px solid #000", padding: "4px", width: "31%", fontWeight: "bold" }}>Item</th>
-            <th style={{ border: "1px solid #000", padding: "4px", width: "13%", fontWeight: "bold" }}>Price</th>
-            <th style={{ border: "1px solid #000", padding: "4px", width: "31%", fontWeight: "bold" }}>Item</th>
-            <th style={{ border: "1px solid #000", padding: "4px", width: "13%", fontWeight: "bold" }}>Price</th>
-            <th style={{ border: "1px solid #000", padding: "4px", width: "31%", fontWeight: "bold" }}>Item</th>
-            <th style={{ border: "1px solid #000", padding: "4px", width: "13%", fontWeight: "bold" }}>Price</th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: "4px",
+                width: "31%",
+                fontWeight: "bold",
+              }}
+            >
+              Item
+            </th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: "4px",
+                width: "13%",
+                fontWeight: "bold",
+              }}
+            >
+              Price
+            </th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: "4px",
+                width: "31%",
+                fontWeight: "bold",
+              }}
+            >
+              Item
+            </th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: "4px",
+                width: "13%",
+                fontWeight: "bold",
+              }}
+            >
+              Price
+            </th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: "4px",
+                width: "31%",
+                fontWeight: "bold",
+              }}
+            >
+              Item
+            </th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: "4px",
+                width: "13%",
+                fontWeight: "bold",
+              }}
+            >
+              Price
+            </th>
           </tr>
         </thead>
 
@@ -87,20 +144,49 @@ export default function MenuPriceList() {
           {col1.map((m, i) => (
             <tr key={m._id} style={{ pageBreakInside: "avoid" }}>
               {/* Column 1 */}
-              <td style={{ border: "1px solid #000", padding: "4px", fontWeight: 600 }}>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: "4px",
+                  fontWeight: 600,
+                }}
+              >
                 {i + 1}. {m.description || m.itemName}
               </td>
-              <td style={{ border: "1px solid #000", padding: "4px", textAlign: "right", color: "blue", fontWeight: "bold" }}>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: "4px",
+                  textAlign: "right",
+                  color: "blue",
+                  fontWeight: "bold",
+                }}
+              >
                 ₱ {m.opd}
               </td>
 
               {/* Column 2 */}
               {col2[i] ? (
                 <>
-                  <td style={{ border: "1px solid #000", padding: "4px", fontWeight: 600 }}>
-                    {i + 1 + third}. {col2[i].description || col2[i].itemName}
+                  <td
+                    style={{
+                      border: "1px solid #000",
+                      padding: "4px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {i + 1 + third}.{" "}
+                    {col2[i].description || col2[i].itemName}
                   </td>
-                  <td style={{ border: "1px solid #000", padding: "4px", textAlign: "right", color: "blue", fontWeight: "bold" }}>
+                  <td
+                    style={{
+                      border: "1px solid #000",
+                      padding: "4px",
+                      textAlign: "right",
+                      color: "blue",
+                      fontWeight: "bold",
+                    }}
+                  >
                     ₱ {col2[i].opd}
                   </td>
                 </>
@@ -114,10 +200,25 @@ export default function MenuPriceList() {
               {/* Column 3 */}
               {col3[i] ? (
                 <>
-                  <td style={{ border: "1px solid #000", padding: "4px", fontWeight: 600 }}>
-                    {i + 1 + 2 * third}. {col3[i].description || col3[i].itemName}
+                  <td
+                    style={{
+                      border: "1px solid #000",
+                      padding: "4px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {i + 1 + 2 * third}.{" "}
+                    {col3[i].description || col3[i].itemName}
                   </td>
-                  <td style={{ border: "1px solid #000", padding: "4px", textAlign: "right", color: "blue", fontWeight: "bold" }}>
+                  <td
+                    style={{
+                      border: "1px solid #000",
+                      padding: "4px",
+                      textAlign: "right",
+                      color: "blue",
+                      fontWeight: "bold",
+                    }}
+                  >
                     ₱ {col3[i].opd}
                   </td>
                 </>
@@ -139,22 +240,27 @@ export default function MenuPriceList() {
             size: A4 portrait;
             margin: 10mm;
           }
+            
+          .print-container {
+            zoom: 0.85;
+            width: 100%;
+          }
 
           .menuPricelist-table {
-            font-size: 11px;
             border-collapse: collapse;
             width: 100%;
-            font-size:.5rem !important
+            font-size: 10px;
           }
 
-          .menuPricelist-table th, td {
+          .menuPricelist-table th,
+          .menuPricelist-table td {
             border: 1px solid #000;
-            padding: 4px;
+            padding: 3px;
             word-break: break-word;
-            font-size:.5rem
+            font-size: 10px;
           }
 
-         .menuPricelist-table tr {
+          .menuPricelist-table tr {
             page-break-inside: avoid;
           }
         }

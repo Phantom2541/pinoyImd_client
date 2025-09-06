@@ -152,26 +152,36 @@ export default function UrinalysisPrint() {
             );
           })}
 
-          <style>
-            {
-              `
-              @media print {
-               @page{
-                 size: landscape;
-               }
-                 .logbooks-table tr td,
-                 .logbooks-table tr th{
-                 font-size: .8rem !important;
-                 }
+    <style>
+{`
+  @media print {
+    @page {
+      size: A4 landscape;
+      margin: 6mm;       
+    }
 
-              }
-                 .logbooks-table tr th,
-                 .logbooks-table tr td{
-                 padding: 0 5px !important;
-                 }
-              `
-            }
-          </style>
+    body {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .logbooks-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .logbooks-table tr th,
+    .logbooks-table tr td {
+      font-size: 9px !important;  
+      padding: 1px 3px !important;
+
+    .logbooks-table tr {
+      page-break-inside: avoid;
+    }
+  }
+`}
+</style>
+
         </React.Fragment>
       );
     });
