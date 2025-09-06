@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { socket } from "../../services/utilities";
+import { socket, Tracker } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import {
   InsertRealtimeTask,
@@ -10,6 +10,7 @@ import {
   InsertRealtimeOnboard,
   UpdateRealtimeOnboard,
 } from "../../services/redux/slices/commerce/pos/services/taskGenerator";
+
 import { IDB_BROWSE } from "../../services/indexDB/commerce/pos/services/onboardings";
 const departmentMapping = {
   laboratory: "LAB",
@@ -118,4 +119,17 @@ export function useSocketListeners() {
 
     return () => socket.off("received_updated_onboarding");
   }, [activePlatform, dispatch, departmentCode]);
+
+  //this is for tracker
+  useEffect(() => {
+    if (!activePlatform?.branchId) return;
+    socket.emit("join_room", activePlatform?.branchId);
+    socket.on("tracker", (data) => {
+      Tracker.set(data);
+    });
+
+    return () => {
+      socket.off("tracker");
+    };
+  }, [activePlatform]);
 }

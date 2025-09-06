@@ -1,5 +1,4 @@
 import store from "../../redux/store";
-import { BROWSE as FetchTracker } from "../../redux/slices/tracker";
 import {
   IDB_BROWSE as IDB_TRACKER_BROWSE,
   IDB_SAVE as IDB_TRACKER_SAVE,
@@ -39,13 +38,13 @@ const fetchDatas = async ({
     SAVE: () => {},
   },
 }) => {
-  const { token, trackerKey } = config;
+  const { token, trackerKey = "" } = config;
   const idbTracker = await IDB_TRACKER_BROWSE();
   const idbDatas = await idb.BROWSE();
-  const mdbId = mdbTracker?.[trackerKey]?.id;
-  const idbId = idbTracker?.[trackerKey]?.id;
+  const mdbId = mdbTracker?.[trackerKey]?.id || "";
+  const idbId = idbTracker?.[trackerKey]?.id || "";
   var shouldFetch = false;
-  if (idbDatas.length === 0) shouldFetch = true;
+  if (idbDatas?.length === 0) shouldFetch = true;
   if (mdbId !== idbId) shouldFetch = true;
 
   //IF WE HAVE A DATAS IN THE INDEXDB AND WE HAVE A MDBTRACKER GET ALL MENU FROM THE LAST DATA IN THE INDEXDB AND FROM THE MDBTRACKER
@@ -78,8 +77,8 @@ const fetchDatas = async ({
       )
       .then(async (action) => {
         idb.SAVE(extractActionData(action));
-        const menus = await idb.BROWSE();
-        store.dispatch(redux?.SetCOLLECTIONS(menus));
+        const collections = await idb.BROWSE();
+        store.dispatch(redux?.SetCOLLECTIONS(collections));
       });
   } else {
     store.dispatch(redux?.SetCOLLECTIONS(idbDatas));
@@ -93,24 +92,18 @@ const fetchDatas = async ({
   }
 };
 
-const getMDB_TRACKER = async (config) => {
-  const { branchId, token } = config;
-  // const lcTracker = localStorage.getItem(`tracker-${branchId}`);
+const getMDB_TRACKER = (config) => {
+  const { branchId } = config;
+  var tracker = {};
+  const lcTracker = localStorage.getItem(`tracker-${branchId}`);
 
-  // if (lcTracker) {
-  //   return JSON.parse(lcTracker);
-  // }
-
-  const action = await store.dispatch(
-    FetchTracker({ token, params: { branchId } })
-  );
-  const mdbTracker = action?.payload?.payload || {};
-
-  if (mdbTracker?._id) {
-    localStorage.setItem(`tracker-${branchId}`, JSON.stringify(mdbTracker));
+  if (lcTracker) {
+    tracker = JSON.parse(lcTracker);
   }
-
-  return mdbTracker;
+  if (tracker?._id) {
+    localStorage.setItem(`tracker-${branchId}`, JSON.stringify(tracker));
+  }
+  return tracker;
 };
 
 const Tracker = {
@@ -155,7 +148,7 @@ const Tracker = {
       params: {},
     },
   }) => {
-    const mdbTracker = await getMDB_TRACKER(config);
+    const mdbTracker = getMDB_TRACKER(config);
     await fetchDatas({
       mdbTracker: mdbTracker,
       redux,

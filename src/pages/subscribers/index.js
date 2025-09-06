@@ -27,9 +27,6 @@ export default function CompanyCategorySwitcher() {
     () => details?.category?.toLowerCase() || null,
     [details]
   );
-  console.log("companyId", companyId);
-  console.log("details", details);
-  console.log("category", category);
 
   useEffect(() => {
     dispatch(GET_DETAILS({ key: { companyId } }));

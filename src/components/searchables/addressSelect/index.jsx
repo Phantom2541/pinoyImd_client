@@ -13,7 +13,6 @@ export default function AddressSelect({
 }) {
   const handleAddress = (key, value) => {
     const _address = { ...address };
-    console.log("key", key);
     switch (key) {
       case "region":
         _address.region = value;
@@ -41,7 +40,6 @@ export default function AddressSelect({
     handleChange("address", _address);
   };
 
-  console.log("address", address);
   return (
     <>
       {isPOS ? (

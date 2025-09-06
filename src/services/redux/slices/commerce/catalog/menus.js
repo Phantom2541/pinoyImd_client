@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, Tracker } from "../../../../utilities";
+import { axioKit } from "../../../../utilities";
 
 const url = "commerce/catalog/menus";
 
@@ -147,11 +147,10 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload, tracker } = action.payload;
+        const { success, payload } = action.payload;
         state.message = success;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
-        Tracker.set(tracker);
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -185,7 +184,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload, tracker } = action.payload;
+        const { success, payload } = action.payload;
         const updateCollections = (collections) => {
           const index = collections.findIndex(
             (item) => item._id === payload._id
@@ -195,7 +194,6 @@ export const reduxSlice = createSlice({
         };
         updateCollections(state.collections);
         updateCollections(state.filtered);
-        Tracker.set(tracker);
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;

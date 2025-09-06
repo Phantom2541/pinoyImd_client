@@ -360,7 +360,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, isPatient } = payload;
+          {
+            token,
+            auth,
+            branches,
+            isCeo,
+            access,
+            isPatient,
+            tracker = {},
+          } = payload;
         const { branchId } = auth.activePlatform;
         if (branchId) {
           const _access = access
@@ -383,7 +391,12 @@ export const reduxSlice = createSlice({
             position: contract.designation,
             ...(!isEmployed && { platform: "" }),
           };
-
+          if (tracker?._id) {
+            localStorage.setItem(
+              `tracker-${branchId}`,
+              JSON.stringify(tracker)
+            );
+          }
           localStorage.setItem(
             "activePlatform",
             JSON.stringify(activePlatform)

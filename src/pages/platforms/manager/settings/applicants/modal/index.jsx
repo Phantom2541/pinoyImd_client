@@ -57,10 +57,6 @@ export default function AccessModal() {
     dispatch(ToggleAccessModal());
   }, [dispatch]);
 
-  console.log("clusters", clusters);
-  console.log("roles", roles);
-  console.log("search", search);
-
   useEffect(() => {
     if (isSuccess && !formSubmitted && show) {
       toggle();
