@@ -75,6 +75,9 @@ const Services = {
     return uniqueDepartments.length > 0 ? uniqueDepartments : [];
   },
   getTemplates: (pks, department) => {
+    console.log("pks", pks);
+    console.log("department", department);
+
     const cluster = collections.filter(({ id }) => pks.includes(id));
     const templates = cluster.map(({ template }) => template);
     const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
