@@ -147,7 +147,7 @@ const EditableUser = ({
   const editableObj = rest?.[editableKey] || {};
 
   if (!readOnly && !isEditing && user?._id !== selected?.key) {
-    const name = editableObj?._id ? fullName(editableObj?.fullName) : "";
+    const name = fullName(editableObj) || "";
     return (
       <span
         className="cursor-pointer"
@@ -170,14 +170,14 @@ const EditableUser = ({
   }
 
   const handleCheck = () => {
-    if (selected?.[editableKey]._id === editableObj?._id) {
+    if (selected?.[editableKey] === editableObj) {
       setIsEditing(false);
       setSelected({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
-    onSave({ _id, [editableKey]: selected?._id });
+    onSave({ _id, [editableKey]: selected?._id, uid: user.uid });
   };
 
   const handleClose = () => {
@@ -190,7 +190,7 @@ const EditableUser = ({
         {selected?._id && readOnly ? (
           <div className="my-">
             <span style={{ fontSize: "0.9rem" }}>
-              {fullName(selected.fullName)}xxxxx
+              {fullName(selected.fullName)}
             </span>
             <MDBIcon
               icon="times"

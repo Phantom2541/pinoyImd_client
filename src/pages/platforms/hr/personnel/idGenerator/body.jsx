@@ -10,6 +10,7 @@ import {
   TOGGLE,
   UPDATE,
   SetFILTERED,
+  UPDATEGUARDIAN,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
 import { Policy } from "../../../../../services/fakeDb";
 import {
@@ -21,12 +22,19 @@ const Body = () => {
   const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
+    // []
     dispatch = useDispatch();
 
-  const handleUpdate = (data) => {
-    console.log("data", data);
+  const handleUpdateGuardian = (data) => {
+    dispatch(UPDATEGUARDIAN({ token, data }));
+    // .then(({ payload: personnel }) => {
+    // setData(personnel);
+    // });
+  };
+  // console.log("personnel", personnel);
 
-    dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
+  const handleUpdate = (userdata) => {
+    dispatch(UPDATE({ token, userdata })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
       const Signature = `/users/${staff?.user?.email}/signature.png`;
@@ -81,9 +89,7 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = (filtered || []).slice(startIndex, endIndex); // Get only items for the active page
-  console.log("paginatedData", paginatedData);
 
-  console.log("paginatedData", paginatedData);
   return (
     <MDBTable responsive hover>
       <thead style={{ backgroundColor: "#", color: "black" }}>
@@ -100,7 +106,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((staff, index) => {
-          const { front, back, _id } = staff;
+          const { front, back, _id, uid } = staff;
 
           const { img, emp, empID, position, department } = front;
           const { address, guardian, guardianId, pn, signature } = back;
@@ -134,17 +140,18 @@ const Body = () => {
               <td>{address}</td>
               <td>
                 <EditableUser
-                  user={{ guardian, _id }} // unique key for each user
+                  user={{ guardian, _id, uid }} // unique key for each user
                   placeHolder="Primary Contact..."
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
-                  onSave={(data) => console.log("onsave data:", data)}
+                  onSave={handleUpdateGuardian}
+                  // onSave={(data) => console.log("onsave data:", data)}
                 />
                 <div className="d-flex flex-column">
                   <EditableField
                     type="number"
                     keyForValue="id"
-                    fieldData={{ guardianId, id: pn }}
+                    fieldData={{ _id: guardianId, id: pn }}
                     onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
