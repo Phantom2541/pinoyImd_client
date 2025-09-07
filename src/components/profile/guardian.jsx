@@ -1,11 +1,14 @@
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
-import { Select } from "../customizable";
+import { EditableUser, Select } from "../customizable";
 import { Suffixes } from "../../services/fakeDb";
 import { getAge } from "../../services/utilities";
 import ProfileOthers from "./others";
 import AddressSelect from "../searchables/addressSelect";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { UPDATE } from "../../services/redux/slices/assets/persons/auth";
 
-export default function Details({
+export default function Guardian({
   address,
   setAddress,
   form,
@@ -13,21 +16,39 @@ export default function Details({
   handleSubmit,
   isLoading,
 }) {
+  const { auth, isSuccess, formSubmitted, token } = useSelector(
+    ({ auth }) => auth
+  );
+  const dispatch = useDispatch();
+  const { guardian = {} } = auth;
+  console.log("nick", auth);
+
+  // local state (if you plan to use this later)
+  // const [primary, setPrimary] = useState(null);
+
+  const handleUpdate = ({ _id, key, value }) => {
+    console.log("selected", { _id, [key]: value });
+
+    // build payload here if needed
+    let data = { _id, [key]: value };
+    console.log("Updating guardian:", data);
+    dispatch(UPDATE({ token, data }));
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <MDBRow>
         <MDBCol md="3">
           <MDBInput
             type="text"
-            value={form.fullName?.fname?.toUpperCase() || ""}
-            disabled
+            value={form.guardian.fullName?.fname?.toUpperCase() || ""}
             onChange={(e) =>
-              handleChange("fullName", {
-                ...form.fullName,
-                fname: e.target.value.toUpperCase(),
-              })
+              handleChange(
+                "guardian.fullName.fname",
+                e.target.value.toUpperCase()
+              )
             }
-            label="First name"
+            label="Guardian First name"
           />
         </MDBCol>
         <MDBCol md="3" className="px-0">
@@ -109,6 +130,24 @@ export default function Details({
             disabledAllExceptSelected
           />
         </MDBCol>
+      </MDBRow>
+
+      <MDBRow>
+        <label>Primary Contact: </label>
+        <EditableUser
+          user="k"
+          placeHolder="Contact..."
+          keyforValue="${properFullName(guardian.fullName)}"
+          formSubmitted={formSubmitted}
+          isSuccess={isSuccess}
+          onSave={(data) => {
+            handleUpdate({
+              _id: auth._id,
+              key: "guardian",
+              value: data,
+            });
+          }}
+        />
       </MDBRow>
 
       <MDBRow>

@@ -8,6 +8,7 @@ import {
   RESET,
 } from "../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
 import "./table.css";
+
 const dayNames = [
   "Sunday",
   "Monday",
@@ -18,7 +19,6 @@ const dayNames = [
   "Saturday",
 ];
 
-// Format time function as in original
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
   let period = "AM";
@@ -84,7 +84,7 @@ export default function ChemsPrint() {
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="14">
+            <td colSpan="15">
               <strong>
                 {dayOfWeek} ({day})
               </strong>
@@ -101,9 +101,12 @@ export default function ChemsPrint() {
               <tr key={chem._id}>
                 <td>{index + 1}</td>
                 <td>
-                  <h6>{fullName(customerId.fullName)}</h6>
+                  <span style={{ whiteSpace: "nowrap" }}>
+                    {fullName(customerId.fullName)}
+                  </span>
                   <span>
-                    {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
+                    {getAge(customerId?.dob)}|
+                    {customerId?.isMale ? "M" : "F"}
                   </span>
                 </td>
                 <td>{timeFormatted}</td>
@@ -120,6 +123,7 @@ export default function ChemsPrint() {
                 <td>{packages["21"]}</td>
                 <td>{packages["20"]}</td>
                 <td>{packages["22"]}</td>
+                <td></td>
               </tr>
             );
           })}
@@ -139,7 +143,8 @@ export default function ChemsPrint() {
       <h3 className="text-center">
         Chemistry Report for {Months[month - 1]} {year}
       </h3>
-      <MDBTable className="responsive">
+
+      <MDBTable className="responsive logbooks-table">
         <thead>
           <tr>
             <th>#</th>
@@ -156,10 +161,35 @@ export default function ChemsPrint() {
             <th>BUN</th>
             <th>CREA</th>
             <th>BUA</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>{renderGroupedChems()}</tbody>
       </MDBTable>
+
+      <style>{`
+        @media print {
+          @page {
+            size: A4 landscape;
+            margin: 6mm;
+          }
+
+          .logbooks-table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          .logbooks-table tr th,
+          .logbooks-table tr td {
+            font-size: 12px !important;
+            padding: 1px 3px !important;
+          }
+
+          .logbooks-table tr {
+            page-break-inside: avoid;
+          }
+        }
+      `}</style>
     </div>
   );
 }

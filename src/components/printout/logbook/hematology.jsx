@@ -6,9 +6,9 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/hematology"; // Updated slice for Hematology
+} from "../../../services/redux/slices/diagnostics/laboratory/hematology";
 
-// const today = new Date();
+// Day names for grouping
 const dayNames = [
   "Sunday",
   "Monday",
@@ -32,22 +32,25 @@ const formatTime = (hours, minutes) => {
 };
 
 export default function HemaPrint() {
-  const [hema, setHema] = useState([]),
-    { collections } = useSelector(({ hematology }) => hematology),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    [month, setMonth] = useState(""),
-    [year, setYear] = useState(""),
-    dispatch = useDispatch();
+  const [hema, setHema] = useState([]);
+  const { collections } = useSelector(({ hematology }) => hematology);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const _month = JSON.parse(localStorage.getItem("month"));
-    const _year = JSON.parse(localStorage.getItem("year"));
+    const _month =
+      JSON.parse(localStorage.getItem("month")) || new Date().getMonth() + 1;
+    const _year =
+      JSON.parse(localStorage.getItem("year")) || new Date().getFullYear();
+
     if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/hematology/logbook",
           data: {
-            branch: activePlatform?.branchId,
+            branch: activePlatform.branchId,
             month: _month,
             year: _year,
           },
@@ -55,10 +58,14 @@ export default function HemaPrint() {
         })
       );
     }
+
     setMonth(_month);
     setYear(_year);
-    return () => RESET();
-  }, [activePlatform, dispatch, token, month, year]);
+
+    return () => {
+      dispatch(RESET());
+    };
+  }, [activePlatform, dispatch, token]);
 
   useEffect(() => {
     setHema(collections);
@@ -75,8 +82,8 @@ export default function HemaPrint() {
 
   const groupedHema = groupByDay(hema);
 
-  const renderGroupedHema = () => {
-    return Object.keys(groupedHema).map((day) => {
+  const renderGroupedHema = () =>
+    Object.keys(groupedHema).map((day) => {
       const sampleItem = groupedHema[day][0];
       const d = new Date(sampleItem.createdAt);
       const dayOfWeek = dayNames[d.getDay()];
@@ -84,7 +91,7 @@ export default function HemaPrint() {
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="10">
+            <td colSpan="20">
               <strong>
                 {dayOfWeek} ({day})
               </strong>
@@ -101,28 +108,30 @@ export default function HemaPrint() {
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
-                  <h6>{fullName(customerId.fullName)}</h6>
-                  <span>
-                    {getAge(customerId?.dob)} | {customerId?.isMale ? "M" : "F"}
-                  </span>
+                  {fullName(customerId.fullName)} | {getAge(customerId?.dob)}{" "}
+                  {customerId?.isMale ? "M" : "F"}
                 </td>
                 <td>{timeFormatted}</td>
-                <td>{cc[0]}</td>
-                <td>{cc[1]}</td>
-                <td>{cc[2]}</td>
-                <td>{cc[3]}</td>
-                <td>{dc["a"]}</td>
-                <td>{dc["b"]}</td>
-                <td>{dc["c"]}</td>
-                <td>{dc["d"]}</td>
-                <td>{dc["e"]}</td>
-                <td>{rci[0]}</td>
-                <td>{rci[1]}</td>
-                <td>{rci[2]}</td>
-                <td>{rci[3]}</td>
-                <td>{bt}</td>
-                <td>{esr}</td>
-                <td>{apc}</td>
+                {/* cc */}
+                <td>{cc?.[0] || ""}</td>
+                <td>{cc?.[1] || ""}</td>
+                <td>{cc?.[2] || ""}</td>
+                <td>{cc?.[3] || ""}</td>
+                {/* dc */}
+                <td>{dc?.["a"] || ""}</td>
+                <td>{dc?.["b"] || ""}</td>
+                <td>{dc?.["c"] || ""}</td>
+                <td>{dc?.["d"] || ""}</td>
+                <td>{dc?.["e"] || ""}</td>
+                {/* rci */}
+                <td>{rci?.[0] || ""}</td>
+                <td>{rci?.[1] || ""}</td>
+                <td>{rci?.[2] || ""}</td>
+                <td>{rci?.[3] || ""}</td>
+                {/* bt, esr, apc */}
+                <td>{bt || ""}</td>
+                <td>{esr || ""}</td>
+                <td>{apc || ""}</td>
                 <td></td>
               </tr>
             );
@@ -130,145 +139,89 @@ export default function HemaPrint() {
         </React.Fragment>
       );
     });
-  };
 
   return (
     <div>
-      <Banner
-        company={activePlatform?.branch?.companyId?.name}
-        branch={activePlatform?.branch?.name}
-      />
-      <h3 className="text-center">
-        Hematology Report for {Months[month - 1]} {year}
-      </h3>
-      <MDBTable className="responsive">
+      <div className="print-header">
+        <Banner
+          company={activePlatform?.branch?.companyId?.name}
+          branch={activePlatform?.branch?.name}
+        />
+        <h3 className="text-center">
+          Hematology Report for {Months[month - 1]} {year}
+        </h3>
+      </div>
+
+      <MDBTable className="responsive logbooks-table">
         <thead>
           <tr>
             <th>#</th>
             <th>Name</th>
             <th>Time</th>
             {/* cc */}
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              hct
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              hgb
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              rbc
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              wbc
-            </th>
+            <th>hct</th>
+            <th>hgb</th>
+            <th>rbc</th>
+            <th>wbc</th>
             {/* dc */}
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              seg
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              mono
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              eo
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              stab
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              baso
-            </th>
+            <th>seg</th>
+            <th>mono</th>
+            <th>eo</th>
+            <th>stab</th>
+            <th>baso</th>
             {/* rci */}
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              mcv
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              mch
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              mchc
-            </th>
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              rdw
-            </th>
-            {/* bt */}
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              bt
-            </th>
-            {/* esr */}
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              esr
-            </th>
-            {/* apc */}
-            <th
-              style={{
-                transform: "skewX(10deg)",
-              }}
-            >
-              apc
-            </th>
+            <th>mcv</th>
+            <th>mch</th>
+            <th>mchc</th>
+            <th>rdw</th>
+            {/* others */}
+            <th>bt</th>
+            <th>esr</th>
+            <th>apc</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>{renderGroupedHema()}</tbody>
       </MDBTable>
+
+      <style>{`
+        @media print {
+          @page {
+            size: A4 landscape;
+            margin: 6mm;
+          }
+
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+
+          /* Banner + Title only on first page */
+          .print-header {
+            display: block;
+          }
+          @page :not(:first) {
+            .print-header {
+              display: none !important;
+            }
+          }
+
+          .logbooks-table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          .logbooks-table tr th,
+          .logbooks-table tr td {
+            font-size: 9px !important;
+            padding: 1px 3px !important;
+          }
+
+          .logbooks-table tr {
+            page-break-inside: avoid;
+          }
+        }
+      `}</style>
     </div>
   );
 }

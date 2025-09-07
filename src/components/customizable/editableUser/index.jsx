@@ -18,23 +18,24 @@ import { useToasts } from "react-toast-notifications";
  * - Toggle Mode (isToggle = true)
  * - Editable Mode (isToggle = false)
  *
- * @param {function} onSave - Callback triggered when the check icon is clicked in Editable Mode.
- *                            Returns the selected user ID.
- *                            (Required if isToggle is false)
+ * @param {boolean} isToggle - Determines the mode.
+ *                             false = Editable Mode (default)
+ *                             true  = Toggle Mode
  *
  * @param {function} setUserId - Callback triggered when a user is selected in Toggle Mode.
  *                               Returns the selected user ID.
  *                               (Required if isToggle is true)
  *
+ * @param {string} placeHolder - Input placeholder text for searching users.
+ *
  * @param {object} user - User object shown by default in Editable Mode.
  *                        Must contain a unique `key` property.
  *                        (Required if isToggle is false)
  *
- * @param {boolean} isToggle - Determines the mode.
- *                             false = Editable Mode (default)
- *                             true  = Toggle Mode
  *
- * @param {string} placeHolder - Input placeholder text for searching users.
+ * @param {function} onSave - Callback triggered when the check icon is clicked in Editable Mode.
+ *                            Returns the selected user ID.
+ *                            (Required if isToggle is false)
  *
  * @param {boolean} formSubmitted - Works together with `isSuccess` in Editable Mode
  *                                  to auto-close the input after submission.
@@ -156,7 +157,7 @@ const EditableUser = ({
           setResults([]);
         }}
       >
-        {name ? fullName(user.fullName) : " N/A"}
+        {name ? fullName(user.fullName) : " Click here to select a Guardian"}
       </span>
     );
   }

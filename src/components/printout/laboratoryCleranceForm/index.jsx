@@ -5,19 +5,29 @@ import { Cloudinary } from "../../../services/utilities";
 const MedicalClearanceFormPrint = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
 
-  const companyName = activePlatform?.company?.name;
-  const branchName = activePlatform?.branch?.name;
+  const companyName = activePlatform?.company?.name || "default-company";
+  const branchName = activePlatform?.branch?.name || "default-branch";
 
-  const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-    companyName
-  )}/${encodeURIComponent(branchName)}/banner`;
+  const BannerURL =
+    companyName && branchName
+      ? `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+          companyName
+        )}/${encodeURIComponent(branchName)}/banner`
+      : null;
 
   const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
 
-  // 🔹 Auto open print dialog
+  // 🔹 Preload banner before print
   useEffect(() => {
-    window.print();
-  }, []);
+    if (BannerURL) {
+      const img = new Image();
+      img.src = BannerURL;
+      img.onload = () => window.print();
+      img.onerror = () => window.print();
+    } else {
+      window.print();
+    }
+  }, [BannerURL]);
 
   const renderTable = () => (
     <table
@@ -30,12 +40,29 @@ const MedicalClearanceFormPrint = () => {
     >
       <thead>
         <tr>
-          <th colSpan={4}>
-            <img
-              src={BannerURL}
-              alt="Banner"
-              style={{ maxHeight: "100px", width:"100%", margin: "auto", display: "block", objectFit:"cover" }}
-            />
+          <th colSpan={4} style={{ padding: "0" }}>
+            {BannerURL ? (
+              <img
+                src={BannerURL}
+                alt="Banner"
+                style={{
+                  maxHeight: "100px",
+                  width: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "20px",
+                  fontStyle: "italic",
+                }}
+              >
+                [No Banner Available]
+              </div>
+            )}
           </th>
         </tr>
         <tr>
@@ -52,26 +79,26 @@ const MedicalClearanceFormPrint = () => {
         </tr>
       </thead>
       <tbody>
-        {/* Patient Info */}
-      <tr>
-            <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-              Requesting Company: _________________________________________ &nbsp;&nbsp;&nbsp;
-              Date: _______________________________
-            </td>
-          </tr>
-
-          <tr>
-              <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
-            Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
-            _______ &nbsp;&nbsp;&nbsp;Civil Status: __________________________
+        <tr>
+          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Requesting Company: _________________________________________ &nbsp;&nbsp;&nbsp;
+            Date: _______________________________
           </td>
         </tr>
 
         <tr>
-        <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
+            Name: ____________________________________ &nbsp;&nbsp;&nbsp; Age/Sex:
+            _______ &nbsp;&nbsp;&nbsp; Civil Status: __________________________
+          </td>
+        </tr>
+
+        <tr>
+          <td colSpan={4} style={{ padding: "6px 10px", fontSize: "0.9rem" }}>
             Home Address: ____________________________________________________________________________________
           </td>
-          </tr>
+        </tr>
+
         {/* Histories */}
         <tr>
           <td colSpan={4} style={{ border: "1px solid #000", padding: "10px" }}>
@@ -92,13 +119,7 @@ const MedicalClearanceFormPrint = () => {
               <div style={{ flex: 1 }}>
                 <Section
                   title="FMHx"
-                  items={[
-                    "Hypertension",
-                    "Asthma",
-                    "Heart Disease",
-                    "Cancer",
-                    "Diabetes Mellitus",
-                  ]}
+                  items={["Hypertension", "Asthma", "Heart Disease", "Cancer", "Diabetes Mellitus"]}
                   itemStyle={itemStyle}
                 />
               </div>
@@ -110,39 +131,35 @@ const MedicalClearanceFormPrint = () => {
                 />
               </div>
               <div style={{ flex: 1 }}>
-                <Section
-                  title="OB Gyne Hx"
-                  items={["Nulligravid", "G___ P___ (____)"]}
-                  itemStyle={itemStyle}
-                />
+                <Section title="OB Gyne Hx" items={["Nulligravid", "G___ P___ (____)"]} itemStyle={itemStyle} />
               </div>
             </div>
           </td>
         </tr>
-     {/* Vital Signs */}
-<tr>
-  <td
-    colSpan={4}
-    style={{
-      padding: "10px",
-      fontSize: "0.9rem",
-      border: "1px solid #000",
-    }}
-  >
-    <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
-      VITAL SIGNS
-    </div>
-    <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
-      <span style={{ fontWeight: "bold" }}>BP:</span> ______ mmHg &nbsp;&nbsp;&nbsp; 
-      <span style={{ fontWeight: "bold" }}>PR/HR:</span> ______ bpm &nbsp;&nbsp;&nbsp; 
-      <span style={{ fontWeight: "bold" }}>RR:</span> ______ cpm &nbsp;&nbsp;&nbsp; 
-      <span style={{ fontWeight: "bold" }}>Temp:</span> ______ °C &nbsp;&nbsp;&nbsp; 
-      <span style={{ fontWeight: "bold" }}>Ht:</span> ______ cm &nbsp;&nbsp;&nbsp; 
-      <span style={{ fontWeight: "bold" }}>Wt:</span> ______ kg
-    </div>
-  </td>
-</tr>
 
+        {/* Vital Signs */}
+        <tr>
+          <td
+            colSpan={4}
+            style={{
+              padding: "10px",
+              fontSize: "0.9rem",
+              border: "1px solid #000",
+            }}
+          >
+            <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
+              VITAL SIGNS
+            </div>
+            <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
+              <span style={{ fontWeight: "bold" }}>BP:</span> ______ mmHg &nbsp;&nbsp;&nbsp; 
+              <span style={{ fontWeight: "bold" }}>PR/HR:</span> ______ bpm &nbsp;&nbsp;&nbsp; 
+              <span style={{ fontWeight: "bold" }}>RR:</span> ______ cpm &nbsp;&nbsp;&nbsp; 
+              <span style={{ fontWeight: "bold" }}>Temp:</span> ______ °C &nbsp;&nbsp;&nbsp; 
+              <span style={{ fontWeight: "bold" }}>Ht:</span> ______ cm &nbsp;&nbsp;&nbsp; 
+              <span style={{ fontWeight: "bold" }}>Wt:</span> ______ kg
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   );
@@ -165,7 +182,7 @@ const MedicalClearanceFormPrint = () => {
         {`
           @media print {
             @page {
-              size: A4;
+              size: A4 portrait;
               margin: 12mm;
             }
             .divider {
@@ -176,12 +193,15 @@ const MedicalClearanceFormPrint = () => {
             .medicalClearanceForm-grid {
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
-              height: 100vh; /* hatiin buong page */
+              justify-content: flex-start;
             }
             .medicalClearanceForm-grid table {
-              flex: 1;
               margin: 0;
+              page-break-inside: avoid;
+            }
+            img {
+              max-width: 100%;
+              height: auto;
             }
           }
         `}
