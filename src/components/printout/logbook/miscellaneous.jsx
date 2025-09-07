@@ -2,20 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fullName, getAge, Banner } from "../../../services/utilities";
 import Months from "../../../services/fakeDb/calendar/months";
-import {
-  BROWSE,
-  RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/miscellaneous";
+import { BROWSE, RESET } from "../../../services/redux/slices/diagnostics/laboratory/miscellaneous";
 
-const dayNames = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
@@ -38,24 +27,23 @@ export default function MiscellaneousPrint() {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
-    const _month = JSON.parse(localStorage.getItem("month"));
-    const _year = JSON.parse(localStorage.getItem("year"));
+    const _month = JSON.parse(localStorage.getItem("month")) || new Date().getMonth() + 1;
+    const _year = JSON.parse(localStorage.getItem("year")) || new Date().getFullYear();
+
     if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/miscellaneous/logbook",
-          data: {
-            branch: activePlatform?.branchId,
-            month: _month,
-            year: _year,
-          },
+          data: { branch: activePlatform?.branchId, month: _month, year: _year },
           token,
         })
       );
     }
+
     setMonth(_month);
     setYear(_year);
-    return () => RESET();
+
+    return () => dispatch(RESET());
   }, [dispatch, token, activePlatform]);
 
   useEffect(() => {
@@ -73,8 +61,8 @@ export default function MiscellaneousPrint() {
 
   const grouped = groupByDay(data);
 
-  const renderGrouped = () => {
-    return Object.keys(grouped).map((day) => {
+  const renderGrouped = () =>
+    Object.keys(grouped).map((day) => {
       const sample = grouped[day][0];
       const d = new Date(sample.createdAt);
       const dayOfWeek = dayNames[d.getDay()];
@@ -82,53 +70,52 @@ export default function MiscellaneousPrint() {
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="8">
-              <strong>
-                {dayOfWeek} ({day})
-              </strong>
+            <td colSpan="8" style={{ fontWeight: "bold", backgroundColor: "#f2f2f2" }}>
+              {dayOfWeek} ({day})
             </td>
           </tr>
           {grouped[day].map((item, index) => {
             const { createdAt, customerId, results, troupe } = item;
-            const testTime = formatTime(
-              new Date(createdAt).getHours(),
-              new Date(createdAt).getMinutes()
-            );
+            const testTime = formatTime(new Date(createdAt).getHours(), new Date(createdAt).getMinutes());
 
             return (
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
-                  <h6>{fullName(customerId?.fullName || {})}</h6>
-                  <span>
+                  <div>{fullName(customerId?.fullName || {})}</div>
+                  <small>
                     {getAge(customerId?.dob)} | {customerId?.isMale ? "M" : "F"}
-                  </span>
+                  </small>
                 </td>
                 <td>{testTime}</td>
                 <td>{results?.ns1 ? "Positive" : "Negative"}</td>
                 <td>{results?.igg ? "Positive" : "Negative"}</td>
                 <td>{results?.igm ? "Positive" : "Negative"}</td>
-                <td>{troupe?.kit}</td>
-                <td>{troupe?.lot}</td>
+                <td>{troupe?.kit || ""}</td>
+                <td>{troupe?.lot || ""}</td>
               </tr>
             );
           })}
-          
         </React.Fragment>
       );
     });
-  };
 
   return (
     <div>
+      {/* Banner */}
       <Banner
         company={activePlatform?.branch?.companyId?.name}
         branch={activePlatform?.branch?.name}
+        className="print-banner"
       />
-      <h3 className="text-center">
+
+      {/* Report Title */}
+      <h3 className="report-title">
         Miscellaneous Report for {Months[month - 1]} {year}
       </h3>
-      <table className="table table-bordered">
+
+      {/* Table */}
+      <table className="table table-bordered logbooks-table">
         <thead>
           <tr>
             <th>#</th>
@@ -143,7 +130,9 @@ export default function MiscellaneousPrint() {
         </thead>
         <tbody>{renderGrouped()}</tbody>
       </table>
-         <style>{`
+
+      {/* Print CSS */}
+      <style>{`
         @media print {
           @page {
             size: A4 landscape;
@@ -157,23 +146,24 @@ export default function MiscellaneousPrint() {
 
           .print-banner {
             margin-bottom: 8mm;
+            display: block;
           }
 
           .report-title {
-            margin: 2mm 0 6mm 0;
+            margin: 4mm 0 6mm 0;
             font-size: 14px !important;
             text-align: center;
           }
 
           .logbooks-table {
             width: 100%;
+            border-collapse: collapse;
           }
 
           .logbooks-table th,
           .logbooks-table td {
-            font-size: 10px !important;
-            padding: 2px 4px !important;
-          
+            font-size: 15px !important;
+            padding: 2.5px 4.5px !important;
           }
 
           .logbooks-table tr {

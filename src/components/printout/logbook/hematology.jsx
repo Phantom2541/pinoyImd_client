@@ -185,8 +185,8 @@ export default function HemaPrint() {
 
           .logbooks-table tr th,
           .logbooks-table tr td {
-            font-size: 10px !important;
-            padding: 1px 3px !important;
+            font-size: 9px !important;
+            padding: 5.5px 10px !important;
           }
 
           .logbooks-table tr {
