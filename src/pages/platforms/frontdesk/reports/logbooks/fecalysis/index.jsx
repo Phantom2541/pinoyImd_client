@@ -30,13 +30,11 @@ export default function Chems() {
   // Group the hemas by day
   const groupedFecal = groupByDay(hemas);
 
-  // Create an array for day names
-
   const renderGroupedUrin = () => {
     return Object.keys(groupedFecal).map((day) => {
-      const sampleUrin = groupedFecal[day][0]; // Get one fecal item to determine the date
-      const d = new Date(sampleUrin.createdAt); // Use `createdAt` to get the correct day
-      const dayOfWeek = dayNames[d.getDay()]; // Get the day of the week
+      const sampleUrin = groupedFecal[day][0];
+      const d = new Date(sampleUrin.createdAt);
+      const dayOfWeek = dayNames[d.getDay()];
 
       return (
         <React.Fragment key={day}>
@@ -47,17 +45,20 @@ export default function Chems() {
                   isWeekDays(dayOfWeek) ? "text-success" : "text-danger"
                 }
               >
-                {dayOfWeek} ({day}) {/* Display the day of the week */}
+                {dayOfWeek} ({day})
               </strong>
             </td>
           </tr>
           {groupedFecal[day].map((fecal, index) => {
             const { pe, me, createdAt, customerId, remarks } = fecal;
 
+            // Debug
+            console.log("Fecal ME data:", me, fecal._id);
+
             const fecalDate = new Date(createdAt);
             const h = fecalDate.getHours();
             const m = fecalDate.getMinutes();
-            const timeFormatted = formatTime(h, m); // Format time to standard time
+            const timeFormatted = formatTime(h, m);
 
             return (
               <tr key={fecal._id}>
@@ -68,12 +69,14 @@ export default function Chems() {
                     {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
                   </span>
                 </td>
-                <td>{timeFormatted}</td> {/* Display formatted time */}
-                <td>{FecalColor[pe[0]]}</td>
-                <td>{Consistency[pe[1]]}</td>
-                <td>{MicroscopicInRange[me[0]]}</td>
-                <td>{MicroscopicInRange[me[1]]}</td>
-                <td>{remarks}</td>
+                <td>{timeFormatted}</td>
+                <td>{FecalColor[pe[0]]}</td> {/* Color */}
+                <td>{Consistency[pe[1]]}</td> {/* Consistency */}
+                <td>{MicroscopicInRange[me?.[0]] || "N/A"}</td> {/* PUS */}
+                <td>{me?.length > 3 ? MicroscopicInRange[me[1]] : "N/A"}</td> {/* pH */}
+                <td>{MicroscopicInRange[me?.[1]] || "N/A"}</td> {/* Mucus */}
+                <td>{MicroscopicInRange[me?.[2]] || "N/A"}</td> {/* Occult Blood */}
+                <td>{remarks || "N/A"}</td> {/* Remarks */}
               </tr>
             );
           })}
@@ -100,10 +103,12 @@ export default function Chems() {
                   <th>#</th>
                   <th>Name</th>
                   <th>Time</th>
-                  <th>color</th>
-                  <th>consistensy</th>
+                  <th>Color</th>
+                  <th>Consistency</th>
                   <th>PUS</th>
-                  <th>RBC</th>
+                  <th>pH</th>
+                  <th>MUCUS</th>
+                  <th>Occult Blood</th>
                   <th>Remarks</th>
                 </tr>
               </thead>

@@ -113,6 +113,7 @@ export default function MiscellaneousPrint() {
               </tr>
             );
           })}
+          
         </React.Fragment>
       );
     });
@@ -142,6 +143,44 @@ export default function MiscellaneousPrint() {
         </thead>
         <tbody>{renderGrouped()}</tbody>
       </table>
+         <style>{`
+        @media print {
+          @page {
+            size: A4 landscape;
+            margin: 6mm;
+          }
+
+          body {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+
+          .print-banner {
+            margin-bottom: 8mm;
+          }
+
+          .report-title {
+            margin: 2mm 0 6mm 0;
+            font-size: 14px !important;
+            text-align: center;
+          }
+
+          .logbooks-table {
+            width: 100%;
+          }
+
+          .logbooks-table th,
+          .logbooks-table td {
+            font-size: 10px !important;
+            padding: 2px 4px !important;
+          
+          }
+
+          .logbooks-table tr {
+            page-break-inside: avoid;
+          }
+        }
+      `}</style>
     </div>
   );
 }
