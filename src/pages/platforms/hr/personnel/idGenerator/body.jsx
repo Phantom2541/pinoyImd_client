@@ -11,30 +11,23 @@ import {
   UPDATE,
   SetFILTERED,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
-import EditableField from "../../../../../components/customizable/editableField";
 import { Policy } from "../../../../../services/fakeDb";
+import {
+  EditableUser,
+  EditableField,
+} from "../../../../../components/customizable";
 
 const Body = () => {
-  const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
+  const { filtered, guardians, activePage, maxPage, isSuccess, formSubmitted } =
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+  console.log("guardian", guardians);
+  console.log("filtered", filtered);
 
-  const handleUpdate = ({ _id, key, value }) => {
-    let data = { _id };
-
-    // support nested keys like "settings.status"
-    if (key?.includes(".")) {
-      const keys = key.split(".");
-      const nested = keys.reduceRight((acc, curr) => ({ [curr]: acc }), value);
-      data = { ...data, ...nested };
-    } else {
-      data[key] = value;
-    }
-
+  const handleUpdate = (data) => {
     dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
-
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
       const Signature = `/users/${staff?.user?.email}/signature.png`;
       const empName = `${staff.user.title || ""} ${fullName(
@@ -44,11 +37,10 @@ const Body = () => {
       )
         .toLowerCase()
         .replace(/\b\w/g, (c) => c.toUpperCase())}`;
-      const guardian = fullName(staff.user?.guardian?.fullName, false, true);
+      const guardian = staff.user?.guardian?.fullName;
       const position = Policy.getPositions(staff?.contract?.designation),
         department = Policy.getDepartment(staff?.contract?.designation);
       const pn = mobile(staff?.user?.mobile);
-
       const idfiltered = {
         _id: staff._id,
         front: {
@@ -73,11 +65,9 @@ const Body = () => {
         },
         dfp: staff.dfp,
       };
-
       const newFiltered = filtered.map((staff) =>
         staff._id === idfiltered._id ? idfiltered : staff
       );
-
       dispatch(SetFILTERED(newFiltered));
     });
   };
@@ -127,18 +117,9 @@ const Body = () => {
                 <div className="d-flex flex-column">
                   <h4>{emp}</h4>
                   <EditableField
-                    title="Click to edit"
-                    width="13rem"
-                    type="string"
-                    keyForValue="empID"
-                    fieldData={{ _id, empID }}
-                    onSave={(data) =>
-                      handleUpdate({
-                        _id: data._id,
-                        key: "id",
-                        value: data.empID,
-                      })
-                    }
+                    keyForValue="id"
+                    fieldData={{ _id, id: empID }}
+                    onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
                   />
@@ -149,31 +130,15 @@ const Body = () => {
                 {department}
               </td>
               <td>
-                <h5>{guardian}</h5>
+                <EditableUser
+                  user={{ guardian, key: "_id" }} // unique key for each user
+                  placeHolder="Primary Contact..."
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) => handleUpdate({ _id, guardian: data })}
+                />
                 {address}
               </td>
-
-              {/* <td>
-                {isSelected && selected.key === "abbreviation" ? (
-                  <div style={{ width: "13rem" }}>
-                    <Input
-                      _key={"value"}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, val) =>
-                        setSelected({ ...selected, [key]: val })
-                      }
-                      handleCheck={() => handleUpdate()}
-                      handleClose={() => setSelected({})}
-                    />
-                  </div>
-                ) : (
-                  <strong onClick={() => handleSelected({ id, abbreviation })}>
-                    {abbreviation}
-                  </strong>
-                )}
-              </td> */}
               <td>{pn}</td>
               <td>
                 <img

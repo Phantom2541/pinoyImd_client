@@ -15,35 +15,35 @@ import { useToasts } from "react-toast-notifications";
  * EditableUser Component
  *
  * This component allows selecting and displaying a user with two modes:
- * - Toggle Mode (isToggle = true)
- * - Editable Mode (isToggle = false)
+ * - Read Only Mode (view)
+ * - Editable Mode (input field)
  *
- * @param {boolean} isToggle - Determines the mode.
- *                             false = Editable Mode (default)
- *                             true  = Toggle Mode
+ * @param {boolean} readOnly - Determines the mode.
+ *                             false (default) = viewing only
+ *                             true  = searching and selecting a user
  *
  * @param {function} setUserId - Callback triggered when a user is selected in Toggle Mode.
  *                               Returns the selected user ID.
- *                               (Required if isToggle is true)
+ *                               (Required if readOnly is true)
  *
  * @param {string} placeHolder - Input placeholder text for searching users.
  *
  * @param {object} user - User object shown by default in Editable Mode.
  *                        Must contain a unique `key` property.
- *                        (Required if isToggle is false)
+ *                        (Required if readOnly is false)
  *
  *
  * @param {function} onSave - Callback triggered when the check icon is clicked in Editable Mode.
  *                            Returns the selected user ID.
- *                            (Required if isToggle is false)
+ *                            (Required if readOnly is false)
  *
  * @param {boolean} formSubmitted - Works together with `isSuccess` in Editable Mode
  *                                  to auto-close the input after submission.
- *                                  (Required only if isToggle is false)
+ *                                  (Required only if readOnly is false)
  *
  * @param {boolean} isSuccess - Works together with `formSubmitted` in Editable Mode
  *                              to auto-close the input after submission.
- *                              (Required only if isToggle is false)
+ *                              (Required only if readOnly is false)
  *
  * @returns {JSX.Element} The rendered EditableUser component.
  */
@@ -52,10 +52,11 @@ const EditableUser = ({
   onSave = () => {},
   setUserId = () => {},
   user = { key: "No Key" },
-  isToggle = false,
+  readOnly = false,
   placeHolder = "Search..",
   formSubmitted = false,
   isSuccess: successUpdated = false,
+  onUserNotFound = () => {},
 }) => {
   const { collections } = useSelector(({ users }) => users),
     { token } = useSelector(({ auth }) => auth),
@@ -89,11 +90,11 @@ const EditableUser = ({
   }, [collections]);
 
   useEffect(() => {
-    if (!isToggle && successUpdated && !formSubmitted) {
+    if (!readOnly && successUpdated && !formSubmitted) {
       setIsEditing(false);
       setSelected({});
     }
-  }, [isToggle, successUpdated, formSubmitted]);
+  }, [readOnly, successUpdated, formSubmitted]);
 
   useEffect(() => {
     return () => {
@@ -101,9 +102,10 @@ const EditableUser = ({
     };
   }, [debouncedSearch]);
 
-  //this is for isToggle false
+  //this is for readOnly false
   useEffect(() => {
     const handleCloseAll = (e) => {
+      console.log("closing", instanceId, "exclude", e.detail?.excludeId);
       if (e.detail?.excludeId !== instanceId) {
         setSelected({});
         setIsEditing(false);
@@ -118,7 +120,7 @@ const EditableUser = ({
     setUserId(user._id);
     setSelected(user);
     setResults([]);
-    if (!isToggle) {
+    if (!readOnly) {
       setHideMsg(true);
       setSearchKey(fullName(user.fullName));
     } else {
@@ -139,7 +141,7 @@ const EditableUser = ({
     }
   };
 
-  if (!isToggle && !isEditing && user?.key !== selected?.key) {
+  if (!readOnly && !isEditing && user?.key !== selected?.key) {
     const name = user?._id ? fullName(user.fullName) : "";
     return (
       <span
@@ -180,7 +182,7 @@ const EditableUser = ({
   return (
     <div className="position-relative">
       <div className="editable-user-container">
-        {selected?._id && isToggle ? (
+        {selected?._id && readOnly ? (
           <div className="my-">
             <span style={{ fontSize: "0.9rem" }}>
               {fullName(selected.fullName)}
@@ -206,7 +208,7 @@ const EditableUser = ({
               onChange={(e) => handleChange(e)}
             />
 
-            {!isToggle && (
+            {!readOnly && (
               <Icons
                 formSubmitted={formSubmitted}
                 handleCheck={handleCheck}
@@ -225,12 +227,16 @@ const EditableUser = ({
                   searchKey.length > 0 &&
                   isSuccess && (
                     <ul className="editable-user-results-list">
-                      <li className="p-1 text-center my-1">
+                      <li
+                        className="p-1 text-center my-1 cursor-pointer"
+                        onClick={onUserNotFound}
+                      >
                         <span role="img" aria-label="physician not found">
                           🚫
                         </span>
                         <span style={{ fontSize: "0.9rem" }}>
                           User Not Found. <br />
+                          <span>(Click Here)</span>
                         </span>
                       </li>
                     </ul>

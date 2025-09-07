@@ -39,7 +39,6 @@ export default function Account() {
       street: "",
     }),
     [form, setForm] = useState({
-      _id: "",
       fullName: {
         fname: "",
         mname: "",
@@ -53,26 +52,11 @@ export default function Account() {
       mobile: "",
       alias: "",
       isMale: false,
-      guardian: {
-        _id: "",
-        fullName: {
-          fname: "",
-          mname: "",
-          lname: "",
-          suffix: "",
-        },
-        email: "",
-        dob: "",
-        mobile: "",
-        alias: "",
-        isMale: false,
-      },
     }),
     [activeTab, setActiveTab] = useState(0),
     dispatch = useDispatch(),
     { addToast } = useToasts();
 
-  // toast notifications
   useEffect(() => {
     if (auth._id && message) {
       addToast(message, {
@@ -82,55 +66,35 @@ export default function Account() {
     }
   }, [auth, isSuccess, message, dispatch, addToast]);
 
-  // populate form from auth
   useEffect(() => {
     if (auth._id) {
       if (auth?.address?.region) setAddress(auth.address);
 
-      setTimeout(
-        () =>
-          setForm((prev) => ({
-            ...prev,
-            _id: auth._id,
-            fullName: auth.fullName || prev.fullName,
-            email: auth.email || "",
-            dob: auth.dob || "",
-            isMale: auth.isMale ?? false,
-            mobile: auth.mobile || "",
-            alias: auth.alias || "",
-            guardian: auth.guardian || prev.guardian,
-          })),
-        1000
-      );
+      setForm({
+        _id: auth._id,
+        fullName: {
+          fname: auth.fullName?.fname || "",
+          mname: auth.fullName?.mname || "",
+          lname: auth.fullName?.lname || "",
+          suffix: auth.fullName?.suffix || "",
+          postnominal: auth.fullName?.postnominal || "",
+          title: auth.fullName?.title || "",
+        },
+        email: auth.email || "",
+        dob: auth.dob || "",
+        isMale: auth.isMale || false,
+        mobile: auth.mobile || "",
+        alias: auth.alias || "",
+      });
     }
   }, [auth]);
 
-  // deep update utility
-  const setDeepValue = (obj, path, value) => {
-    const keys = path.split(".");
-    const newObj = { ...obj };
-    let curr = newObj;
-
-    keys.forEach((key, i) => {
-      if (i === keys.length - 1) {
-        curr[key] = value;
-      } else {
-        curr[key] = { ...curr[key] };
-        curr = curr[key];
-      }
-    });
-
-    return newObj;
-  };
-
-  const handleChange = (path, value) => {
-    setForm((prev) => setDeepValue(prev, path, value));
-  };
+  const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const data = {
+    var data = {
       ...form,
       address,
       curraddress,
@@ -144,8 +108,6 @@ export default function Account() {
       dob: auth.dob,
       isMale: auth.isMale,
       mobile: auth.mobile,
-      alias: auth.alias,
-      guardian: auth.guardian,
     };
 
     if (isEqual(data, _auth))
