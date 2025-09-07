@@ -46,6 +46,8 @@ export default function Modal() {
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data, isStaticPath = false) => {
     try {
+      console.log("template", template);
+
       const _department = ["Laboratory", "Radiology"].includes(
         activePlatform.department
       )
@@ -106,6 +108,9 @@ export default function Modal() {
     };
 
     for (const key in _forms) {
+      console.log("key", key);
+      console.log("_forms", _forms);
+
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
       let requestData = {

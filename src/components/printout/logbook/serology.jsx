@@ -6,8 +6,9 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/serology"; // Updated slice for Serology
+} from "../../../services/redux/slices/diagnostics/laboratory/serology";
 import { Services } from "../../../services/fakeDb";
+import "./table.css"; // external css gaya sa ChemsPrint
 
 const dayNames = [
   "Sunday",
@@ -19,7 +20,6 @@ const dayNames = [
   "Saturday",
 ];
 
-// Format time function as in original
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
   let period = "AM";
@@ -65,90 +65,87 @@ export default function SerologyPrint() {
     setSerology(collections);
   }, [collections]);
 
-  const groupByDay = (serologyData) =>
-    serologyData.reduce((acc, serology) => {
-      const createdAt = new Date(serology.createdAt);
+  const groupByDay = (data) =>
+    data.reduce((acc, item) => {
+      const createdAt = new Date(item.createdAt);
       const day = createdAt.getDate();
       if (!acc[day]) acc[day] = [];
-      acc[day].push(serology);
+      acc[day].push(item);
       return acc;
     }, {});
 
   const groupedSerology = groupByDay(serology);
 
-  const renderGroupedSerology = () => {
-    return Object.keys(groupedSerology).map((day) => {
-      const sampleSerology = groupedSerology[day][0];
-      const d = new Date(sampleSerology.createdAt);
+  const renderGroupedSerology = () =>
+    Object.keys(groupedSerology).map((day) => {
+      const sample = groupedSerology[day][0];
+      const d = new Date(sample.createdAt);
       const dayOfWeek = dayNames[d.getDay()];
 
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="10">
+            <td colSpan="5">
               <strong>
                 {dayOfWeek} ({day})
               </strong>
             </td>
           </tr>
-          {groupedSerology[day].map((serology, index) => {
-            const { customerId, packages, createdAt } = serology;
-            const serologyDate = new Date(createdAt);
-            const h = serologyDate.getHours();
-            const m = serologyDate.getMinutes();
-            const timeFormatted = formatTime(h, m);
+          {groupedSerology[day].map((s, index) => {
+            const { customerId, packages, createdAt, remarks } = s;
+            const date = new Date(createdAt);
+            const timeFormatted = formatTime(date.getHours(), date.getMinutes());
+
             const nonEmptyPackages = Object.entries(packages).filter(
-              ([key, value]) => value && value !== ""
+              ([, value]) => value && value !== ""
             );
 
             return (
-              <React.Fragment key={serology._id}>
-                <tr>
-                  <td>{index + 1}</td>
-                  <td>
-                    <h6>{fullName(customerId.fullName)}</h6>
-                    <span>
-                      {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
-                    </span>
-                  </td>
-                  <td>{timeFormatted}</td> {/* Display formatted time */}
-                  <td>
-                    {nonEmptyPackages.map(([key, value]) => {
-                      //console.log(nonEmptyPackages);
-                      const service = Services.find(key);
-                      return (
-                        <React.Fragment key={key}>
-                          <p>
-                            {" "}
-                            {service.abbreviation != null
-                              ? service.abbreviation
-                              : service.name}
-                            : {value}
-                          </p>
-                        </React.Fragment>
-                      );
-                    })}
-                  </td>
-                </tr>
-              </React.Fragment>
+              <tr key={s._id}>
+                <td>{index + 1}</td>
+                <td>
+                  <span style={{ whiteSpace: "nowrap" }}>
+                    {fullName(customerId?.fullName)}
+                  </span>
+                  <span>
+                    {getAge(customerId?.dob)} |{" "}
+                    {customerId?.isMale ? "M" : "F"}
+                  </span>
+                </td>
+                <td>{timeFormatted}</td>
+                <td>
+                  {nonEmptyPackages.map(([key, value]) => {
+                    const service = Services.find(
+                      (srv) => srv._id === key || srv.name === key
+                    );
+                    return (
+                      <p key={key}>
+                        {service?.abbreviation ?? service?.name ?? key}: {value}
+                      </p>
+                    );
+                  })}
+                </td>
+                <td>{remarks || ""}</td>
+              </tr>
             );
           })}
         </React.Fragment>
       );
     });
-  };
 
   return (
     <div>
       <Banner
         company={activePlatform?.branch?.companyId?.name}
         branch={activePlatform?.branch?.name}
+        className="banner"
       />
 
       <h3 className="text-center">
         Serology Report for {Months[month - 1]} {year}
       </h3>
-      <MDBTable className="responsive">
+
+      <MDBTable className="responsive logbooks-table">
         <thead>
           <tr>
             <th>#</th>
@@ -160,6 +157,30 @@ export default function SerologyPrint() {
         </thead>
         <tbody>{renderGroupedSerology()}</tbody>
       </MDBTable>
+
+      <style>{`
+        @media print {
+          @page {
+            size: A4 landscape;
+            margin: 6mm;
+          }
+
+          .logbooks-table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          .logbooks-table tr th,
+          .logbooks-table tr td {
+            font-size: 12px !important;
+            padding: 1px 3px !important;
+          }
+
+          .logbooks-table tr {
+            page-break-inside: avoid;
+          }
+        }
+      `}</style>
     </div>
   );
 }

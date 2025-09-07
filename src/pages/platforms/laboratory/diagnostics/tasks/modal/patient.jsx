@@ -10,6 +10,8 @@ import {
 export default function Patient({ patient }) {
   // const { customerId } =
   //   useSelector(({ validator }) => validator.selected) || {};
+  console.log("patient", patient);
+
   const { fullName = {}, isMale, dob } = patient || {};
   return (
     <>

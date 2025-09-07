@@ -8,9 +8,17 @@ import {
 } from "../../../../pages/platforms/accredetations/index";
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
 import  MenuPriceList  from "../../../../pages/platforms/accredetations/document/catalogs/MenuPriceList";
-import Urinalysis from "../../../../pages/platforms/accredetations/logbook/urinalysis";
-//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
-
+import {
+  Fecalysis,
+  Hematology,
+  Urinalysis,
+  Chemistry,
+  Serology,
+  Xray,
+  Ultrasound,
+  Ecg,
+  Miscellaneous,
+} from "../../../../pages/platforms/frontdesk/reports";
 
 const accreditation = [
   {
@@ -174,6 +182,7 @@ const accreditation = [
           },
         ],
       },
+        
       {
         name: "3. PHYSICAL PLANT and ENVIRONMENT MANAGEMENT",
         path: "/laboratory/environment",
@@ -323,19 +332,96 @@ const accreditation = [
         ],
       },
       {
-        name: "Log Book",
-        title: "Patient Result Log Book",
-        path: "/logbook",
-        icon: "cogs",
+        name: "Logbook Results",
+        path: "/results",
+        icon: "file-alt",
         children: [
-          {
-            name: "Urinalysis",
-            path: "/urinalysis",
-            icon: "cogs",
-            component: Urinalysis,
-          },
-        ],
+      {
+        name: "Chemistry",
+        path: "/laboratory/chemistry",
+        icon: "flask",
+        component: Chemistry,
+        allowedFor: ["Laboratory"],
       },
+      {
+        name: "Hematology",
+        path: "/laboratory/hematology",
+        icon: "blood",
+        component: Hematology,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Urinalysis",
+        path: "/laboratory/urinalysis",
+        icon: "toilet-paper",
+        component: Urinalysis,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Fecalysis",
+        path: "/laboratory/fecalysis",
+        icon: "smile",
+        component: Fecalysis,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Serology",
+        path: "/laboratory/serology",
+        icon: "microscope",
+        component: Serology,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Miscellaneous",
+        path: "/laboratory/miscellaneous",
+        icon: "list",
+        component: Miscellaneous,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "ECG",
+        path: "/radiology/ecg",
+        icon: "heartbeat",
+        component: Ecg,
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "Ultrasound",
+        path: "/radiology/ultrasound",
+        icon: "user-md",
+        component: Ultrasound,
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "Xray",
+        path: "/radiology/xray",
+        icon: "x-ray",
+        component: Xray,
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "CT",
+        path: "/radiology/ct",
+        icon: "user-md",
+        // component: CtComponent, // add your component
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "MRI",
+        path: "/radiology/mri",
+        icon: "user-md",
+        // component: MriComponent, // add your component here
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "2DEcho",
+        path: "/radiology/mri",
+        icon: "user-md",
+        // component: MriComponent, // add your component here
+        allowedFor: ["Radiology"],
+      },
+    ],
+  },
       {
         name: "Reagent Inventory",
         path: "/reagents",
@@ -343,13 +429,6 @@ const accreditation = [
       },
     ],
   },
-  // {
-  //   name: "Hotlines",
-  //   path: "/hotlines",
-  //   icon: "phone-alt",
-  //   title: "Emergency Hotlines Poster",
-  //   component: HotlinesPoster,
-  // },
 ];
 
 export default accreditation;

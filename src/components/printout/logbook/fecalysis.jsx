@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/fecalysis"; // Updated slice for Fecalysis
+} from "../../../services/redux/slices/diagnostics/laboratory/fecalysis";
 import {
   Consistency,
   FecalColor,
@@ -49,7 +49,7 @@ export default function FecalysisPrint() {
     if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/fecalysis/ logbook",
+          entity: "results/laboratory/fecalysis/logbook",
           data: {
             branch: activePlatform?.branchId,
             month: _month,
@@ -62,7 +62,7 @@ export default function FecalysisPrint() {
     setMonth(_month);
     setYear(_year);
     return () => RESET();
-  }, [activePlatform, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token]);
 
   useEffect(() => {
     setFecalysis(collections);
@@ -88,14 +88,14 @@ export default function FecalysisPrint() {
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="8">
+            <td colSpan="9">
               <strong>
                 {dayOfWeek} ({day})
               </strong>
             </td>
           </tr>
           {groupedFecalysis[day].map((item, index) => {
-            const { customerId, pe, me, createdAt } = item;
+            const { customerId, pe, me, remarks, createdAt } = item;
             const itemDate = new Date(createdAt);
             const h = itemDate.getHours();
             const m = itemDate.getMinutes();
@@ -105,17 +105,18 @@ export default function FecalysisPrint() {
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
-                  <h6>{fullName(customerId.fullName)}</h6>
-                  <span>
+                  <div>{fullName(customerId.fullName)}</div>
+                  <small>
                     {getAge(customerId?.dob)} | {customerId?.isMale ? "M" : "F"}
-                  </span>
+                  </small>
                 </td>
                 <td>{timeFormatted}</td>
-                <td>{FecalColor[pe[0]]}</td>
-                <td>{Consistency[pe[1]]}</td>
-                <td>{MicroscopicInRange[me[0]]}</td>
-                <td>{MicroscopicInRange[me[1]]}</td>
-                <td></td>
+                <td>{FecalColor[pe?.[0]] || "N/A"}</td>
+                <td>{Consistency[pe?.[1]] || "N/A"}</td>
+                <td>N/A</td>
+                <td>{MicroscopicInRange[me?.[1]] || "N/A"}</td>
+                <td>{MicroscopicInRange[me?.[2]] || "N/A"}</td>
+                <td>{remarks || "N/A"}</td>
               </tr>
             );
           })}
@@ -127,13 +128,14 @@ export default function FecalysisPrint() {
   return (
     <div>
       <Banner
+        className="print-banner"
         company={activePlatform?.branch?.companyId?.name}
         branch={activePlatform?.branch?.name}
       />
-      <h3 className="text-center">
+      <h4 className="text-center report-title">
         Fecalysis Report for {Months[month - 1]} {year}
-      </h3>
-      <MDBTable className="responsive">
+      </h4>
+      <MDBTable className="logbooks-table">
         <thead>
           <tr>
             <th>#</th>
@@ -144,10 +146,45 @@ export default function FecalysisPrint() {
             <th>pH</th>
             <th>Mucus</th>
             <th>Occult Blood</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>{renderGroupedFecalysis()}</tbody>
       </MDBTable>
+
+      <style>{`
+        @media print {
+          @page {
+            size: A4 landscape;
+            margin: 6mm;
+          }
+
+          .print-banner {
+            margin-bottom: 8mm; 
+          }
+
+          .report-title {
+            margin: 2mm 0 6mm 0;
+            font-size: 14px !important;
+            text-align: center;
+          }
+
+          .logbooks-table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          .logbooks-table th,
+          .logbooks-table td {
+            font-size: 11px !important;
+            padding: 2px 4px !important;
+          }
+
+          .logbooks-table tr {
+            page-break-inside: avoid;
+          }
+        }
+      `}</style>
     </div>
   );
 }

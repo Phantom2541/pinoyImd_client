@@ -2,7 +2,7 @@ import React from "react";
 import { MDBAnimation } from "mdbreact";
 import Body from "./body";
 
-export default function MedicalClearanceForm() {
+export default function Clearance() {
   return (
     <div>
       <MDBAnimation type="bounceInDown">
