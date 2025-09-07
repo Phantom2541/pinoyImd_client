@@ -17,11 +17,11 @@ const EditableField = ({
   displayTag = "h6",
   className = "form-control form-control-sm",
   classNameTxt = "",
-  placeholder = "",
+  placeholder = "-",
   keyForValue = "",
   keyForText = "",
   type = "text",
-  width = "",
+  width = "13rem",
   fieldData = {},
   displayStyle = {},
   inputStyle = {},
@@ -64,7 +64,8 @@ const EditableField = ({
         appearance: "info",
       });
     } else {
-      onSave(editedData);
+      const { editingKey, ...fileredData } = editedData;
+      onSave(fileredData);
       if (localUpdate) {
         setEditedData({});
       }

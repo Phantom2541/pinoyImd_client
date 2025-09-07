@@ -1,213 +1,225 @@
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
 import { EditableUser, Select } from "../customizable";
-import { Suffixes } from "../../services/fakeDb";
 import { getAge } from "../../services/utilities";
-import ProfileOthers from "./others";
-import AddressSelect from "../searchables/addressSelect";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UPDATE } from "../../services/redux/slices/assets/persons/auth";
+import swal from "sweetalert2";
 
-export default function Guardian({
-  address,
-  setAddress,
-  form,
-  handleChange,
-  handleSubmit,
-  isLoading,
-}) {
+export default function Guardian({ handleChange, handleSubmit }) {
   const { auth, isSuccess, formSubmitted, token } = useSelector(
     ({ auth }) => auth
   );
+  const hasguardian = auth.guardian ? true : false;
+  const [address, setAddress] = useState({});
+
   const dispatch = useDispatch();
   const { guardian = {} } = auth;
-  console.log("nick", auth);
 
-  // local state (if you plan to use this later)
-  // const [primary, setPrimary] = useState(null);
+  useEffect(() => {
+    if (auth) {
+      const g = auth.guardian?.address || {};
 
-  const handleUpdate = ({ _id, key, value }) => {
-    console.log("selected", { _id, [key]: value });
+      setAddress({
+        region: g.region || "",
+        province: g.province || "",
+        city: g.city || "",
+        barangay: g.barangay || "",
+        street: g.street || "",
+      });
+    }
+  }, [auth]);
 
-    // build payload here if needed
-    let data = { _id, [key]: value };
-    console.log("Updating guardian:", data);
+  const fullAddress = [
+    address.street,
+    address.barangay,
+    address.city,
+    address.province,
+    address.region,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const handleUpdate = (G_id) => {
+    const data = { _id: auth._id, guardian: G_id };
     dispatch(UPDATE({ token, data }));
+  };
+  const handleOnUserNotFound = () => {
+    swal.fire({
+      icon: "info",
+      title: "Guardian not registered",
+      text: "Your guardian is not yet registered in the system. Please ask your guardian to complete registration (Sign-UP). Copy this link: http://localhost:3000/subscribers/636ab9ca4b154f3c30400829",
+      confirmButtonText: "OK",
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <MDBRow>
-        <MDBCol md="3">
-          <MDBInput
-            type="text"
-            value={form.guardian.fullName?.fname?.toUpperCase() || ""}
-            onChange={(e) =>
-              handleChange(
-                "guardian.fullName.fname",
-                e.target.value.toUpperCase()
-              )
-            }
-            label="Guardian First name"
-          />
-        </MDBCol>
-        <MDBCol md="3" className="px-0">
-          <MDBInput
-            disabled
-            type="text"
-            value={form.fullName?.mname?.toUpperCase() || ""}
-            onChange={(e) =>
-              handleChange("fullName", {
-                ...form.fullName,
-                mname: e.target.value.toUpperCase(),
-              })
-            }
-            label="Middle name"
-          />
-        </MDBCol>
-        <MDBCol md="3">
-          <MDBInput
-            type="text"
-            disabled
-            value={form.fullName?.lname?.toUpperCase() || ""}
-            onChange={(e) =>
-              handleChange("fullName", {
-                ...form.fullName,
-                lname: e.target.value.toUpperCase(),
-              })
-            }
-            label="Last name"
-          />
-        </MDBCol>
-        <MDBCol md="3">
-          <MDBInput
-            type="text"
-            value={form?.alias?.toUpperCase() || ""}
-            onChange={(e) => handleChange("alias", e.target.value)}
-            label="Alias"
-          />
-        </MDBCol>
-      </MDBRow>
+    <>
+      {hasguardian && (
+        <>
+          <form onSubmit={handleSubmit}>
+            <MDBRow>
+              <MDBCol md="3">
+                <MDBInput
+                  disabled
+                  type="text"
+                  value={auth.guardian?.fullName?.fname?.toUpperCase() || ""}
+                  onChange={(e) =>
+                    handleChange(
+                      "guardian.fullName.fname",
+                      e.target.value.toUpperCase()
+                    )
+                  }
+                  label="First name"
+                />
+              </MDBCol>
+              <MDBCol md="3" className="px-0">
+                <MDBInput
+                  disabled
+                  type="text"
+                  value={auth.guardian?.fullName?.mname?.toUpperCase() || ""}
+                  onChange={(e) =>
+                    handleChange("fullName", {
+                      ...auth.guardian.fullName,
+                      mname: e.target.value.toUpperCase(),
+                    })
+                  }
+                  label="Middle name"
+                />
+              </MDBCol>
+              <MDBCol md="3">
+                <MDBInput
+                  type="text"
+                  disabled
+                  value={auth.guardian?.fullName?.lname?.toUpperCase() || ""}
+                  onChange={(e) =>
+                    handleChange("fullName", {
+                      ...auth.guardian.fullName,
+                      lname: e.target.value.toUpperCase(),
+                    })
+                  }
+                  label="Last name"
+                />
+              </MDBCol>
+              <MDBCol md="3">
+                <MDBInput
+                  type="text"
+                  value={auth?.guardian?.alias?.toUpperCase() || ""}
+                  disabled
+                  onChange={(e) => handleChange("alias", e.target.value)}
+                  label="Alias"
+                />
+              </MDBCol>
+            </MDBRow>
 
-      <MDBRow>
-        <MDBCol md="4">
-          <MDBInput
-            type="text"
-            value={form.fullName?.title?.toUpperCase() || ""}
-            onChange={(e) =>
-              handleChange("fullName", {
-                ...form.fullName,
-                title: e.target.value,
-              })
-            }
-            label="Title"
-          />
-        </MDBCol>
-        <MDBCol md="4" className="px-0">
-          <MDBInput
-            type="text"
-            value={form.fullName?.postnominal?.toUpperCase() || ""}
-            onChange={(e) =>
-              handleChange("fullName", {
-                ...form.fullName,
-                postnominal: e.target.value,
-              })
-            }
-            label="Postnominal"
-          />
-        </MDBCol>
-        <MDBCol md="4" style={{ paddingTop: "2px" }}>
-          <Select
-            label="Suffix"
-            preValue={form.fullName?.suffix || "None"}
-            collections={Suffixes}
-            onChange={(e) =>
-              handleChange("fullName", {
-                ...form.fullName,
-                suffix: e === "None" ? "" : e,
-              })
-            }
-            disabledAllExceptSelected
-          />
-        </MDBCol>
-      </MDBRow>
+            <MDBRow>
+              <MDBCol md="4">
+                <MDBInput
+                  type="text"
+                  value={auth.guardian?.fullName?.title?.toUpperCase() || ""}
+                  disabled
+                  onChange={(e) =>
+                    handleChange("fullName", {
+                      ...auth.guardian.fullName,
+                      title: e.target.value,
+                    })
+                  }
+                  label="Title"
+                />
+              </MDBCol>
+              <MDBCol md="4" className="px-0">
+                <MDBInput
+                  type="text"
+                  value={
+                    auth.guardian?.fullName?.postnominal?.toUpperCase() || ""
+                  }
+                  disabled
+                  onChange={(e) =>
+                    handleChange("fullName", {
+                      ...auth.guardian.fullName,
+                      postnominal: e.target.value,
+                    })
+                  }
+                  label="Postnominal"
+                />
+              </MDBCol>
+              <MDBCol md="4" style={{ paddingTop: "2px" }}>
+                <Select
+                  label="Suffix"
+                  preValue={auth.guardian?.fullName?.suffix || ""}
+                  disabled
+                  onChange={(e) =>
+                    handleChange("fullName", {
+                      ...auth.guardian.fullName,
+                      suffix: e === "" ? "" : e,
+                    })
+                  }
+                />
+              </MDBCol>
+            </MDBRow>
 
-      <MDBRow>
-        <label>Primary Contact: </label>
-        <EditableUser
-          user="k"
-          placeHolder="Contact..."
-          keyforValue="${properFullName(guardian.fullName)}"
-          formSubmitted={formSubmitted}
-          isSuccess={isSuccess}
-          onSave={(data) => {
-            handleUpdate({
-              _id: auth._id,
-              key: "guardian",
-              value: data,
-            });
-          }}
-        />
-      </MDBRow>
+            <MDBRow>
+              <MDBCol md="3" style={{ paddingTop: "14px" }}>
+                <MDBInput
+                  type="date"
+                  value={auth.guardian.dob || ""}
+                  disabled
+                  onChange={(e) => handleChange("dob", e.target.value)}
+                  className="py-0"
+                  label={`Birthdate (${getAge(auth.guardian.dob)})`}
+                />
+              </MDBCol>
+              <MDBCol md="4">
+                <MDBInput
+                  type="email"
+                  value={auth.guardian.email || ""}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  label="E-mail Address"
+                  disabled
+                />
+              </MDBCol>
+              <MDBCol md="2">
+                <MDBInput
+                  type="text"
+                  value={auth.guardian.mobile || ""}
+                  disabled
+                  onChange={(e) =>
+                    handleChange("mobile", e.target.value.replace(/\D/g, ""))
+                  }
+                  label="Mobile (+63)"
+                  maxLength={10}
+                />
+              </MDBCol>
+              <MDBCol md="3" className="text-center">
+                <MDBSwitch
+                  checked={!!auth.guardian.isMale}
+                  onChange={() => handleChange("isMale", !auth.guardian.isMale)}
+                  labelLeft="Female"
+                  labelRight="Male"
+                  className="mt-4"
+                  disabled
+                />
+              </MDBCol>
+            </MDBRow>
+            <label> Address:</label>
 
-      <MDBRow>
-        <MDBCol md="3" style={{ paddingTop: "14px" }}>
-          <MDBInput
-            type="date"
-            value={form.dob || ""}
-            disabled
-            onChange={(e) => handleChange("dob", e.target.value)}
-            className="py-0"
-            label={`Birthdate (${getAge(form.dob)})`}
+            <p>{fullAddress}</p>
+          </form>
+        </>
+      )}
+      {!hasguardian && (
+        <>
+          <label>Guardian: </label>
+          <EditableUser
+            user={guardian}
+            placeHolder="Contact..."
+            formSubmitted={formSubmitted}
+            isSuccess={isSuccess}
+            onSave={(G_id) => handleUpdate(G_id)}
+            onUserNotFound={handleOnUserNotFound}
           />
-        </MDBCol>
-        <MDBCol md="4">
-          <MDBInput
-            type="email"
-            value={form.email || ""}
-            onChange={(e) => handleChange("email", e.target.value)}
-            label="E-mail Address"
-            disabled
-          />
-        </MDBCol>
-        <MDBCol md="2">
-          <MDBInput
-            type="text"
-            value={form.mobile || ""}
-            disabled
-            onChange={(e) =>
-              handleChange("mobile", e.target.value.replace(/\D/g, ""))
-            }
-            label="Mobile (+63)"
-            maxLength={10}
-          />
-        </MDBCol>
-        <MDBCol md="3" className="text-center">
-          <MDBSwitch
-            checked={!!form.isMale}
-            onChange={() => handleChange("isMale", !form.isMale)}
-            labelLeft="Female"
-            labelRight="Male"
-            className="mt-4"
-            disabled
-          />
-        </MDBCol>
-      </MDBRow>
-
-      <AddressSelect
-        label="Address"
-        isPOS={false}
-        address={address}
-        disabledAllExceptSelected={true}
-        handleChange={(_, value) => setAddress(value)}
-      />
-
-      <div className="d-flex justify-content-between mt-2">
-        <ProfileOthers />
-        <MDBBtn disabled={isLoading} color="info" type="submit" rounded>
-          Update account
-        </MDBBtn>
-      </div>
-    </form>
+        </>
+      )}
+    </>
   );
 }
