@@ -9,7 +9,10 @@ import {
   MDBTabContent,
   MDBTabPane,
 } from "mdbreact";
-import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import {
+  SetSELECTED,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
 import Images from "../images.jsx";
 
@@ -53,6 +56,7 @@ export default function TwoDEcho() {
           [field]: value,
         };
         dispatch(SetTASK({ form: task?.form, task: updatedTask }));
+        dispatch(SetSELECTED({ form: task?.form, deal: updatedTask }));
       }, 500);
     },
     [dispatch, task]
