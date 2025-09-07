@@ -51,7 +51,7 @@ import { useToasts } from "react-toast-notifications";
 const EditableUser = ({
   onSave = () => {},
   setUserId = () => {},
-  user = { key: "No Key" },
+  user = { _id: "No _id" },
   readOnly = false,
   placeHolder = "Search..",
   formSubmitted = false,
@@ -105,7 +105,6 @@ const EditableUser = ({
   //this is for readOnly false
   useEffect(() => {
     const handleCloseAll = (e) => {
-      console.log("closing", instanceId, "exclude", e.detail?.excludeId);
       if (e.detail?.excludeId !== instanceId) {
         setSelected({});
         setIsEditing(false);
@@ -141,8 +140,12 @@ const EditableUser = ({
     }
   };
 
-  if (!readOnly && !isEditing && user?.key !== selected?.key) {
-    const name = user?._id ? fullName(user.fullName) : "";
+  const { _id, ...rest } = user || {};
+  const editableKey = Object.keys(rest)[0] || "";
+  const editableObj = rest?.[editableKey] || {};
+
+  if (!readOnly && !isEditing && user?._id !== selected?.key) {
+    const name = editableObj?._id ? fullName(editableObj?.fullName) : "";
     return (
       <span
         className="cursor-pointer"
@@ -153,7 +156,7 @@ const EditableUser = ({
             })
           );
           setSearchKey(name);
-          setSelected(user);
+          setSelected({ ...user, key: user._id });
           setIsEditing(true);
           setHideMsg(true);
           setResults([]);
@@ -165,14 +168,14 @@ const EditableUser = ({
   }
 
   const handleCheck = () => {
-    if (selected?._id === user?._id) {
+    if (selected?._id === editableObj?._id) {
       setIsEditing(false);
       setSelected({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
-    onSave(selected._id);
+    onSave({ _id, [editableKey]: selected?._id });
   };
 
   const handleClose = () => {

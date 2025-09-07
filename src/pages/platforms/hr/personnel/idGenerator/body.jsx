@@ -22,8 +22,6 @@ const Body = () => {
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
-  console.log("guardian", guardians);
-  console.log("filtered", filtered);
 
   const handleUpdate = (data) => {
     dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
@@ -131,11 +129,11 @@ const Body = () => {
               </td>
               <td>
                 <EditableUser
-                  user={{ guardian, key: "_id" }} // unique key for each user
+                  user={{ guardian, _id }} // unique key for each user
                   placeHolder="Primary Contact..."
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
-                  onSave={(data) => handleUpdate({ _id, guardian: data })}
+                  onSave={(data) => console.log("onsave data:", data)}
                 />
                 {address}
               </td>
