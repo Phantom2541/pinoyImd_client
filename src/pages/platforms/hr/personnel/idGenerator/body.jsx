@@ -83,6 +83,7 @@ const Body = () => {
   const paginatedData = (filtered || []).slice(startIndex, endIndex); // Get only items for the active page
   console.log("paginatedData", paginatedData);
 
+  console.log("paginatedData", paginatedData);
   return (
     <MDBTable responsive hover>
       <thead style={{ backgroundColor: "#", color: "black" }}>

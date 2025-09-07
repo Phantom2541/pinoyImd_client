@@ -164,13 +164,13 @@ const EditableUser = ({
           setResults([]);
         }}
       >
-        {fullName(user.guardian) || " Click here to select a Guardian"}
+        {name ? name : " Click here to select a Guardian"}
       </span>
     );
   }
 
   const handleCheck = () => {
-    if (selected?._id === editableObj?._id) {
+    if (selected?.[editableKey]._id === editableObj?._id) {
       setIsEditing(false);
       setSelected({});
       return addToast("No changes found, skipping update.", {
