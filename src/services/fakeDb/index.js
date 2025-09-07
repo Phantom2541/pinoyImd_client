@@ -23,6 +23,8 @@ import {
   ResultInName,
   UrineColors,
   FecalColor,
+  PhysicalExam,
+  Microexam,
   Cellcount,
   Diffcount,
   Rci,
@@ -43,6 +45,8 @@ import RadHC from "./diagnostics/radiology";
 export {
   Suffixes,
   Calendar,
+  Microexam,
+  PhysicalExam,
   Rci,
   Diffcount,
   Cellcount,

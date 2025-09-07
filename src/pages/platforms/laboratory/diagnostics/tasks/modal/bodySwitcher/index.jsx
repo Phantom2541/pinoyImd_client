@@ -12,6 +12,7 @@ import {
   Coagulation,
   Miscellaneous,
   Pbs,
+  Seminogram,
 } from "./laboratory";
 import { PE, MC } from "./clinic";
 import {
@@ -41,6 +42,7 @@ const componentMap = {
   Bacteriology,
   Compatibility,
   Pbs,
+  Seminogram,
   PE,
   MC,
   Xray,
@@ -53,7 +55,6 @@ const componentMap = {
 
 export default function BodySwitcher() {
   const { task } = useSelector(({ validator }) => validator);
-  console.log("task", task);
 
   let Component = "";
   if (task.form === "2DEcho" || task.form === "2decho") {

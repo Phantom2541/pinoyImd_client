@@ -8,6 +8,7 @@ import Footer from "./footer.jsx";
 export default function Modal() {
   const { task, showModal } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
+  console.log("task", task);
 
   return (
     <MDBModal
@@ -20,7 +21,7 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE("task"))}
         className="light-blue darken-3 white-text"
       >
-        <Patient patient={task?.customerId} />
+        <Patient patient={task.patient ? task.patient : task.customerId} />
       </MDBModalHeader>
       <MDBModalBody className="mb-0 text-center">
         <MDBAlert
