@@ -79,7 +79,7 @@ export default function EmploymentContractPage() {
         </div>
 
         <div className="p-5" >
-             <p>
+            <p>
           <strong>This Employment Agreement</strong> is made and entered into
           by and between:
         </p>
