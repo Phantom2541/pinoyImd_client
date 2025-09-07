@@ -18,12 +18,14 @@ import {
 } from "../../../../../components/customizable";
 
 const Body = () => {
-  const { filtered, guardians, activePage, maxPage, isSuccess, formSubmitted } =
+  const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const handleUpdate = (data) => {
+    console.log("data", data);
+
     dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
@@ -79,6 +81,7 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = (filtered || []).slice(startIndex, endIndex); // Get only items for the active page
+  console.log("paginatedData", paginatedData);
 
   return (
     <MDBTable responsive hover>
@@ -88,8 +91,8 @@ const Body = () => {
           <th>Avatar</th>
           <th>Name</th>
           <th>Position</th>
-          <th>Contact Person</th>
-          <th>Phone</th>
+          <th>Address</th>
+          <th>Primary contact</th>
           <th>Signature</th>
           <th>Action</th>
         </tr>
@@ -99,7 +102,7 @@ const Body = () => {
           const { front, back, _id } = staff;
 
           const { img, emp, empID, position, department } = front;
-          const { address, guardian, pn, signature } = back;
+          const { address, guardian, guardianId, pn, signature } = back;
 
           return (
             <tr key={index}>
@@ -127,6 +130,7 @@ const Body = () => {
                 <h5>{position}</h5>
                 {department}
               </td>
+              <td>{address}</td>
               <td>
                 <EditableUser
                   user={{ guardian, _id }} // unique key for each user
@@ -135,9 +139,17 @@ const Body = () => {
                   isSuccess={isSuccess}
                   onSave={(data) => console.log("onsave data:", data)}
                 />
-                {address}
+                <div className="d-flex flex-column">
+                  <EditableField
+                    type="number"
+                    keyForValue="id"
+                    fieldData={{ guardianId, id: pn }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
+                </div>
               </td>
-              <td>{pn}</td>
               <td>
                 <img
                   src={`${Cloudinary.getEndpoint()}/${signature}`}

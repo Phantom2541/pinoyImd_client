@@ -70,6 +70,8 @@ const EditableUser = ({
     dispatch = useDispatch();
   const { addToast } = useToasts();
 
+  console.log("EditableUser user:", user);
+
   const [instanceId] = useState(() => Math.random().toString(36).substr(2, 9));
 
   const debouncedSearch = useMemo(
@@ -162,7 +164,7 @@ const EditableUser = ({
           setResults([]);
         }}
       >
-        {name ? fullName(user.fullName) : " Click here to select a Guardian"}
+        {fullName(user.guardian) || " Click here to select a Guardian"}
       </span>
     );
   }
@@ -188,16 +190,14 @@ const EditableUser = ({
         {selected?._id && readOnly ? (
           <div className="my-">
             <span style={{ fontSize: "0.9rem" }}>
-              {fullName(selected.fullName)}
+              {fullName(selected.fullName)}xxxxx
             </span>
             <MDBIcon
               icon="times"
               size="sm"
               className="ml-2 text-danger mt-n3 cursor-pointer"
               title="Remove"
-              onClick={() => {
-                setSelected({});
-              }}
+              onClick={() => setSelected({})}
             />
           </div>
         ) : (

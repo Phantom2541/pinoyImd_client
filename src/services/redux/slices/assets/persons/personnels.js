@@ -509,7 +509,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(IDGENERATOR.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.guardians = payload.map((item) => item.user);
         state.collections = state.filtered = payload.map((staff) => {
           const Avatar = `/users/${staff.user.email}/profile.jpg`;
           const Signature = `/users/${staff.user.email}/signature.png`;
@@ -521,9 +520,10 @@ export const reduxSlice = createSlice({
             .toLowerCase()
             .replace(/\b\w/g, (c) => c.toUpperCase())}`;
           const guardian = staff.user?.guardian?.fullName;
+          const guardianId = staff.user?.guardian?._id;
           const position = Policy.getPositions(staff.contract?.designation),
             department = Policy.getDepartment(staff.contract?.designation);
-          const pn = mobile(staff.user.mobile);
+          const pn = mobile(staff?.user?.guardian?.mobile) || "";
 
           return {
             _id: staff._id,
@@ -546,6 +546,7 @@ export const reduxSlice = createSlice({
               address: billingAddress(staff.user.address),
               guardian,
               pn,
+              guardianId,
               link: staff._id,
             },
             dfp: staff.dfp,
