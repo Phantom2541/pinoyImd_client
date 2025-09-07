@@ -14,7 +14,7 @@ const fullName = (fullname, isComplete = false, isProper = false) => {
   }
 
   const suffixPart = suffix && suffix !== "NONE" ? ` ${suffix}` : "";
-  const middlePart = mname ? ` y ${middleName}` : "";
+  const middlePart = mname ? ` y ${middleName?.toUpperCase()}` : "";
 
   if (isProper)
     return `${title} ${fname.toUpperCase()} ${middleName} ${lname.toUpperCase()}${suffixPart?.toUpperCase()}`;

@@ -13,7 +13,7 @@ const Results = ({ results, handleSelect = () => {} }) => {
             <span style={{ fontSize: "1.1rem" }}>
               {getGenderIcon(item?.isMale)}
             </span>
-            {fullName(item?.fullName)} - {getAge(item?.dob)}
+            {fullName(item?.fullName, true)} - {getAge(item?.dob)}
           </div>
         </li>
       ))}
