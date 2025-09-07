@@ -520,7 +520,7 @@ export const reduxSlice = createSlice({
           )
             .toLowerCase()
             .replace(/\b\w/g, (c) => c.toUpperCase())}`;
-          const guardian = staff.user?.guardian?.fullName;
+          const guardian = staff.user?.guardian;
           const position = Policy.getPositions(staff.contract?.designation),
             department = Policy.getDepartment(staff.contract?.designation);
           const pn = mobile(staff.user.mobile);
