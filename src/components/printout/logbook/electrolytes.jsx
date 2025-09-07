@@ -141,6 +141,7 @@ export default function ElectrolytesPrint() {
         </thead>
         <tbody>{renderGroupedElectrolytes()}</tbody>
       </MDBTable>
+      
     </div>
   );
 }

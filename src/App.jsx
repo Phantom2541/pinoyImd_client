@@ -30,6 +30,7 @@ import {
   RequestClearancePrint,
   MedicalExaminationClearance,
   MenuPriceList,
+  contract,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -83,6 +84,11 @@ export default function App() {
         path="/printout/MenuPriceList"
         exact
         component={MenuPriceList}
+      />
+       <Route
+        path="/printout/contract"
+        exact
+        component={contract}
       />
       <Route path="/printout/temperature/graph" exact component={TempGraph} />
 

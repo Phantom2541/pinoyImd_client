@@ -44,6 +44,7 @@ const initialState = {
    * Footer
    */
   filtered: [],
+  guardians: {},
   maxPage: 5,
   activePage: 1,
   totalPages: 0,
@@ -508,6 +509,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(IDGENERATOR.fulfilled, (state, action) => {
         const { payload } = action.payload;
+        state.guardians = payload.map((item) => item.user);
         state.collections = state.filtered = payload.map((staff) => {
           const Avatar = `/users/${staff.user.email}/profile.jpg`;
           const Signature = `/users/${staff.user.email}/signature.png`;
@@ -518,11 +520,7 @@ export const reduxSlice = createSlice({
           )
             .toLowerCase()
             .replace(/\b\w/g, (c) => c.toUpperCase())}`;
-          const guardian = fullName(
-            staff.user?.guardian?.fullName,
-            false,
-            true
-          );
+          const guardian = staff.user?.guardian;
           const position = Policy.getPositions(staff.contract?.designation),
             department = Policy.getDepartment(staff.contract?.designation);
           const pn = mobile(staff.user.mobile);

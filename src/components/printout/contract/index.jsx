@@ -1,7 +1,7 @@
 import { MDBContainer } from "mdbreact";
 import { useSelector } from "react-redux";
-import { billingAddress, fullName, Cloudinary } from "../../services/utilities";
-import { Policy } from "../../services/fakeDb";
+import { billingAddress, fullName, Cloudinary } from "../../../services/utilities";
+import { Policy } from "../../../services/fakeDb";
 
 export default function EmploymentContractPage() {
   const { auth, activePlatform } = useSelector(({ auth }) => auth);
@@ -16,7 +16,6 @@ export default function EmploymentContractPage() {
   const positionTitle = Policy.getPositions(position) || "";
   const employmentStatus = contract?.soe || "";
 
-  // Banner URL
   const BannerURL =
     companyName && branchName
       ? `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
@@ -24,26 +23,8 @@ export default function EmploymentContractPage() {
         )}/${encodeURIComponent(branchName)}/banner`
       : null;
 
-  const handlePrintOut = () => {
-    window.open(
-      "/printout/contract",
-      "contract",
-      "top=100px,left=100px,width=1050px,height=750px"
-    );
-  };
-
   return (
     <div style={{ position: "relative" }}>
-      {/* Print button */}
-      <div style={{ textAlign: "right", marginBottom: "10px" }}>
-        <button
-          className="btn btn-primary btn-sm no-print"
-          onClick={handlePrintOut}
-        >
-          Print
-        </button>
-      </div>
-
       <MDBContainer
         className="my-5"
         style={{
@@ -56,30 +37,25 @@ export default function EmploymentContractPage() {
           boxShadow: "0 0 20px rgba(0,0,0,0.2)",
         }}
       >
-        {/* Banner */}
+        {/* Banner Image */}
         {BannerURL && (
           <div className="text-center mb-4">
             <img
               src={BannerURL}
               alt={`${companyName} Banner`}
-              style={{
-                maxWidth: "100%",
-                height: "120px",
-                objectFit: "fill",
-                borderRadius: "10px",
-              }}
+              style={{ maxWidth: "100%", height: "auto", borderRadius: "10px" }}
             />
           </div>
         )}
 
-        <div className="text-center">
+            <div className="text-center">
           <h2 style={{ fontWeight: "bold", color: "#5a3921" }}>
             📝 Employment Contract
           </h2>
         </div>
 
-        <div className="p-5" >
-            <p>
+        <div className="p-5">
+             <p>
           <strong>This Employment Agreement</strong> is made and entered into
           by and between:
         </p>
@@ -181,14 +157,6 @@ export default function EmploymentContractPage() {
         </div>
     </div>
       </MDBContainer>
-
-      <style>{`
-        @media print {
-          .no-print {
-            display: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

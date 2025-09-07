@@ -3,21 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { fullName, getAge, Banner } from "../../../services/utilities";
 import Months from "../../../services/fakeDb/calendar/months";
-import {
-  BROWSE,
-  RESET,
-} from "../../../services/redux/slices/diagnostics/laboratory/hematology";
+import { BROWSE, RESET } from "../../../services/redux/slices/diagnostics/laboratory/hematology";
+import "./table.css"; // Optional: for any additional table styling
 
-// Day names for grouping
-const dayNames = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
@@ -40,20 +29,14 @@ export default function HemaPrint() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const _month =
-      JSON.parse(localStorage.getItem("month")) || new Date().getMonth() + 1;
-    const _year =
-      JSON.parse(localStorage.getItem("year")) || new Date().getFullYear();
+    const _month = JSON.parse(localStorage.getItem("month")) || new Date().getMonth() + 1;
+    const _year = JSON.parse(localStorage.getItem("year")) || new Date().getFullYear();
 
     if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/hematology/logbook",
-          data: {
-            branch: activePlatform.branchId,
-            month: _month,
-            year: _year,
-          },
+          data: { branch: activePlatform.branchId, month: _month, year: _year },
           token,
         })
       );
@@ -62,9 +45,7 @@ export default function HemaPrint() {
     setMonth(_month);
     setYear(_year);
 
-    return () => {
-      dispatch(RESET());
-    };
+    return () => dispatch(RESET());
   }, [activePlatform, dispatch, token]);
 
   useEffect(() => {
@@ -100,35 +81,33 @@ export default function HemaPrint() {
           {groupedHema[day].map((item, index) => {
             const { customerId, cc, dc, rci, bt, esr, apc, createdAt } = item;
             const itemDate = new Date(createdAt);
-            const h = itemDate.getHours();
-            const m = itemDate.getMinutes();
-            const timeFormatted = formatTime(h, m);
+            const timeFormatted = formatTime(itemDate.getHours(), itemDate.getMinutes());
 
             return (
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>
-                  {fullName(customerId.fullName)} | {getAge(customerId?.dob)}{" "}
-                  {customerId?.isMale ? "M" : "F"}
+                  <span style={{ whiteSpace: "nowrap" }}>{fullName(customerId.fullName)}</span>{" "}
+                  | {getAge(customerId?.dob)} {customerId?.isMale ? "M" : "F"}
                 </td>
                 <td>{timeFormatted}</td>
-                {/* cc */}
+                {/* CC */}
                 <td>{cc?.[0] || ""}</td>
                 <td>{cc?.[1] || ""}</td>
                 <td>{cc?.[2] || ""}</td>
                 <td>{cc?.[3] || ""}</td>
-                {/* dc */}
+                {/* DC */}
                 <td>{dc?.["a"] || ""}</td>
                 <td>{dc?.["b"] || ""}</td>
                 <td>{dc?.["c"] || ""}</td>
                 <td>{dc?.["d"] || ""}</td>
                 <td>{dc?.["e"] || ""}</td>
-                {/* rci */}
+                {/* RCI */}
                 <td>{rci?.[0] || ""}</td>
                 <td>{rci?.[1] || ""}</td>
                 <td>{rci?.[2] || ""}</td>
                 <td>{rci?.[3] || ""}</td>
-                {/* bt, esr, apc */}
+                {/* Others */}
                 <td>{bt || ""}</td>
                 <td>{esr || ""}</td>
                 <td>{apc || ""}</td>
@@ -142,15 +121,16 @@ export default function HemaPrint() {
 
   return (
     <div>
-      <div className="print-header">
-        <Banner
-          company={activePlatform?.branch?.companyId?.name}
-          branch={activePlatform?.branch?.name}
-        />
-        <h3 className="text-center">
-          Hematology Report for {Months[month - 1]} {year}
-        </h3>
-      </div>
+      {/* Banner on top, outside table */}
+      <Banner
+        company={activePlatform?.branch?.companyId?.name}
+        branch={activePlatform?.branch?.name}
+        className="banner"
+      />
+
+      <h3 className="text-center">
+        Hematology Report for {Months[month - 1]} {year}
+      </h3>
 
       <MDBTable className="responsive logbooks-table">
         <thead>
@@ -158,23 +138,19 @@ export default function HemaPrint() {
             <th>#</th>
             <th>Name</th>
             <th>Time</th>
-            {/* cc */}
             <th>hct</th>
             <th>hgb</th>
             <th>rbc</th>
             <th>wbc</th>
-            {/* dc */}
             <th>seg</th>
             <th>mono</th>
             <th>eo</th>
             <th>stab</th>
             <th>baso</th>
-            {/* rci */}
             <th>mcv</th>
             <th>mch</th>
             <th>mchc</th>
             <th>rdw</th>
-            {/* others */}
             <th>bt</th>
             <th>esr</th>
             <th>apc</th>
@@ -196,14 +172,10 @@ export default function HemaPrint() {
             print-color-adjust: exact;
           }
 
-          /* Banner + Title only on first page */
-          .print-header {
+          .banner {
             display: block;
-          }
-          @page :not(:first) {
-            .print-header {
-              display: none !important;
-            }
+            text-align: center;
+            margin-bottom: 10px;
           }
 
           .logbooks-table {
@@ -214,11 +186,12 @@ export default function HemaPrint() {
           .logbooks-table tr th,
           .logbooks-table tr td {
             font-size: 9px !important;
-            padding: 1px 3px !important;
+            padding: 5.5px 10px !important;
           }
 
           .logbooks-table tr {
             page-break-inside: avoid;
+            break-inside: avoid;
           }
         }
       `}</style>

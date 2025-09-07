@@ -172,7 +172,7 @@ export default function UrinalysisPrint() {
 
     .logbooks-table tr th,
     .logbooks-table tr td {
-      font-size: 9px !important;  
+      font-size: 8.98px !important;  
       padding: 1px 3px !important;
 
     .logbooks-table tr {

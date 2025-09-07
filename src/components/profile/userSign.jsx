@@ -8,7 +8,7 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { Cloudinary, PresetImage } from "../../services/utilities";
+import { Cloudinary } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import {
   IMAGE,
@@ -16,11 +16,14 @@ import {
   UPLOAD,
 } from "../../services/redux/slices/assets/persons/auth";
 import { ImageCropper } from "../images";
+import ImageDragAndDrop from "../images/dragAndDrop/dragNdroping";
 
 export default function SignatureImage() {
-  const { auth, token, progressBar, image } = useSelector(({ auth }) => auth),
+  const { auth, token, progressBar, image, isSuccess, formSubmitted } =
+      useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     { addToast } = useToasts();
+  console.log("auth", auth);
 
   const handleError = (message) =>
     addToast(message, {
@@ -45,7 +48,7 @@ export default function SignatureImage() {
         const formData = Cloudinary.buildFileForm(
           src,
           `users/${auth.email}`,
-          "profile"
+          "signature"
         );
         dispatch(
           UPLOAD({
@@ -66,21 +69,14 @@ export default function SignatureImage() {
     const formData = Cloudinary.buildFileForm(
       img,
       `users/${auth.email}`,
-      "profile"
+      "signature"
     );
     dispatch(
       UPLOAD({
         data: formData,
         token,
       })
-    ).then((action) => {
-      dispatch(
-        UPDATE_INFO({ data: { _id: auth._id, pid: action.payload.imgId } })
-      ).then(() => {
-        const freshUrl = `${action.payload.url}?v=${Date.now()}`;
-        dispatch(IMAGE(freshUrl));
-      });
-    });
+    );
   };
 
   return (
@@ -92,7 +88,17 @@ export default function SignatureImage() {
         </h5>
       </MDBView>
       <MDBCardBody className="text-center">
-        <MDBAvatar
+        {/* <ImageDragAndDrop
+          img={`${Cloudinary.getEndpoint()}/${auth.pid}/users/${
+            auth.email
+          }/sinature.png`}
+          handleUpload={(cropImg) =>
+            handleUploadSignature(cropImg, auth.email, auth._Id)
+          }
+          formSubmitted={formSubmitted}
+          allowedType="jpg"
+        /> */}
+        {/* <MDBAvatar
           style={{
             height: "100px",
           }}
@@ -101,16 +107,17 @@ export default function SignatureImage() {
           onError={(e) => (e.target.src = PresetImage(auth.isMale))}
           alt={`preview-${auth._id}`}
           className="z-depth-1 mb-3 mx-auto rounded"
-        />
+        /> */}
 
         {progressBar >= 0 && <MDBProgress value={progressBar} animated />}
         <p className="text-muted">
           <small>
             {progressBar > -1
-              ? "Please wait while we update your profile photo"
-              : "Profile photo will be changed automatically"}
+              ? "Please wait while we update your Signature photo"
+              : "Signature photo will be changed automatically"}
           </small>
         </p>
+
         <MDBBtnGroup>
           <ImageCropper
             cropSize={{ width: 200, height: 100 }}

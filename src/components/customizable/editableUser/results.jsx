@@ -1,5 +1,4 @@
-import React from "react";
-import { fullName } from "../../../services/utilities";
+import { fullName, getAge, getGenderIcon } from "../../../services/utilities";
 
 const Results = ({ results, handleSelect = () => {} }) => {
   return (
@@ -12,9 +11,9 @@ const Results = ({ results, handleSelect = () => {} }) => {
         >
           <div className="holder-result-content">
             <span style={{ fontSize: "1.1rem" }}>
-              {item.isMale ? "👨" : "👩"}
+              {getGenderIcon(item?.isMale)}
             </span>
-            {fullName(item?.fullName)}
+            {fullName(item?.fullName, true)} - {getAge(item?.dob)}
           </div>
         </li>
       ))}
