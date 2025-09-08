@@ -256,6 +256,23 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+export const UPDATEGUARDIAN = createAsyncThunk(
+  `${url}/updateGuardian`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "updateGuardian");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const DESTROY = createAsyncThunk(`${url}/destroy`, (form, thunkAPI) => {
   try {
@@ -509,48 +526,52 @@ export const reduxSlice = createSlice({
       })
       .addCase(IDGENERATOR.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.guardians = payload.map((item) => item.user);
-        state.collections = state.filtered = payload.map((staff) => {
-          const Avatar = `/users/${staff.user.email}/profile.jpg`;
-          const Signature = `/users/${staff.user.email}/signature.png`;
-          const empName = `${staff.user.title || ""} ${fullName(
-            staff.user.fullName,
-            false,
-            true
-          )
-            .toLowerCase()
-            .replace(/\b\w/g, (c) => c.toUpperCase())}`;
-          const guardian = staff.user?.guardian;
-          const position = Policy.getPositions(staff.contract?.designation),
-            department = Policy.getDepartment(staff.contract?.designation);
-          const pn = mobile(staff.user.mobile);
+        state.collections = state.filtered = payload.map(
+          ({ user, contract, _id, id, dfp }) => {
+            const Avatar = `/users/${user.email}/profile.jpg`;
+            const Signature = `/users/${user.email}/signature.png`;
+            const empName = `${user.title || ""} ${fullName(
+              user.fullName,
+              false,
+              true
+            )
+              .toLowerCase()
+              .replace(/\b\w/g, (c) => c.toUpperCase())}`;
+            const guardian = user?.guardian?.fullName;
+            const guardianId = user?.guardian?._id;
+            const position = Policy.getPositions(contract?.designation),
+              department = Policy.getDepartment(contract?.designation);
+            const pn = mobile(user?.guardian?.mobile) || "";
 
-          return {
-            _id: staff._id,
-            front: {
-              empID: staff.id,
-              img: Avatar,
-              emp: empName,
-              position,
-              department,
-            },
-            back: {
-              signature: Signature,
-              dob: new Date(staff.user.dob)
-                .toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-                .replace(" ", ", "),
-              address: billingAddress(staff.user.address),
-              guardian,
-              pn,
-              link: staff._id,
-            },
-            dfp: staff.dfp,
-          };
-        });
+            return {
+              _id,
+              uid: user._id,
+              front: {
+                empID: id,
+                img: Avatar,
+                emp: empName,
+                position,
+                department,
+              },
+              back: {
+                signature: Signature,
+                dob: new Date(user.dob)
+                  .toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })
+                  .replace(" ", ", "),
+                address: billingAddress(user.address),
+                guardian,
+                pn,
+                guardianId,
+                link: _id,
+              },
+              dfp,
+            };
+          }
+        );
 
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
@@ -738,6 +759,36 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isUpdating = false;
       })
+
+      .addCase(UPDATEGUARDIAN.pending, (state) => {
+        state.updateTracker.isLoading = true;
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATEGUARDIAN.fulfilled, (state, action) => {
+        const { success, payload } = action;
+
+        const index = state.collections.findIndex(
+          (item) => item._id === payload._id
+        );
+        const oldPersonnel = { ...state.collections[index] };
+        state.collections[index] = { ...oldPersonnel, ...payload };
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+        state.updateTracker = {
+          fieldName: "",
+          isLoading: false,
+        };
+      })
+      .addCase(UPDATEGUARDIAN.rejected, (state, action) => {
+        const { error } = action;
+        state.formSubmitted = true;
+        state.message = error.message;
+        state.isUpdating = false;
+      })
+
       .addCase(SEARCH.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

@@ -9,13 +9,6 @@ const status = {
     },
     {
       name: "Regular",
-      abbr: "reg",
-      group: "Currently Employed",
-      description: "Fully employed after passing probationary period.",
-      isEmployed: true,
-    },
-    {
-      name: "Regular",
       abbr: "active",
       group: "Currently Employed",
       description: "Fully employed after passing probationary period.",
@@ -57,6 +50,13 @@ const status = {
       isEmployed: true,
     },
     {
+      name: "Honorarium",
+      abbr: "hon",
+      group: "Currently Employed",
+      description: "token of appreciation given for a service,.",
+      isEmployed: true,
+    },
+    {
       name: "On-call",
       abbr: "onc",
       group: "Currently Employed",
@@ -78,6 +78,7 @@ const status = {
       description: "Resigned but still undergoing clearance process.",
       isEmployed: true,
     },
+
     {
       name: "End of Contract",
       abbr: "eoc",
@@ -102,13 +103,7 @@ const status = {
       description: "Absent without official leave or notice.",
       isEmployed: false,
     },
-    {
-      name: "Resigned",
-      abbr: "res",
-      group: "Separated",
-      description: "Voluntarily left the organization.",
-      isEmployed: false,
-    },
+
     {
       name: "Retired",
       abbr: "ret",
