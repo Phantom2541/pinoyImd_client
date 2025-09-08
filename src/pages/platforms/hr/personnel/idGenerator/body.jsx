@@ -10,6 +10,7 @@ import {
   TOGGLE,
   UPDATE,
   SetFILTERED,
+  UPDATEGUARDIAN,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
 import { Policy } from "../../../../../services/fakeDb";
 import {
@@ -23,7 +24,17 @@ const Body = () => {
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
+  const handleUpdateGuardian = (id) => {
+    dispatch(UPDATEGUARDIAN({ token, id }));
+    // .then(({ payload: personnel }) => {
+    // setData(personnel);
+    // });
+  };
+  // console.log("personnel", personnel);
+
   const handleUpdate = (data) => {
+    console.log("userdata", data);
+
     dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
@@ -136,7 +147,16 @@ const Body = () => {
                   isSuccess={isSuccess}
                   onSave={(data) => console.log("onsave data:", data)}
                 />
-                {address}
+                <div className="d-flex flex-column">
+                  <EditableField
+                    type="number"
+                    keyForValue="mobile"
+                    fieldData={{ _id: guardian?._id, mobile: pn }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
+                </div>
               </td>
               <td>{pn}</td>
               <td>
