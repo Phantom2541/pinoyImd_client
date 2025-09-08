@@ -33,8 +33,6 @@ const Body = () => {
   // console.log("personnel", personnel);
 
   const handleUpdate = (data) => {
-    console.log("userdata", data);
-
     dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
