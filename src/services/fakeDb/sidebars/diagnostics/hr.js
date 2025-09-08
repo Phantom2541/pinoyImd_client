@@ -34,6 +34,7 @@ import {
 } from "../../../../components/images";
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
+import Doctor from "../../../../pages/templates/doctor";
 
 const humanresources = [
   {
@@ -277,6 +278,12 @@ const humanresources = [
         icon: "tachometer-alt",
         path: "/admission",
         component: Admission,
+      },
+      {
+        name: "Doctor",
+        icon: "tachometer-alt",
+        path: "/doctor",
+        component: Doctor,
       },
     ],
   },
