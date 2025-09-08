@@ -13,7 +13,6 @@ import DailyTasks from "../../../../pages/platforms/physician/diagnostics/tasks"
 // import ImagingResults from "../../../pages/platforms/physician/imagingResults";
 // import Notifications from "../../../pages/platforms/physician/notifications";
 // import Referrals from "../../../pages/platforms/physician/referrals";
-//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const physician = [
   {
@@ -50,89 +49,96 @@ const physician = [
         component: Appointment,
       },
       {
+        name: "E H R Timeline",
+        icon: "stream",
+        path: "/ehr-timeline",
+        title:
+          "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
+      },
+      {
         name: "Teleconsult",
         icon: "video",
         path: "/teleconsult",
         title: "Conduct virtual consultations with patients",
       },
-      {
-        name: "Lab Results",
-        path: "/diagnostics/lab",
-        icon: "vial",
-        title: "Access and validate laboratory test results",
-      },
-      {
-        name: "Imaging Results",
-        path: "/diagnostics/imaging",
-        icon: "x-ray",
-        title: "View and interpret imaging such as X-ray, ECG, UTZ",
-        component: Imaging,
-      },
+      // {
+      //   name: "Lab Results",
+      //   path: "/diagnostics/lab",
+      //   icon: "vial",
+      //   title: "Access and validate laboratory test results",
+      // },
+      // {
+      //   name: "Imaging Results",
+      //   path: "/diagnostics/imaging",
+      //   icon: "x-ray",
+      //   title: "View and interpret imaging such as X-ray, ECG, UTZ",
+      //   component: Imaging,
+      // },
     ],
   },
+  // {
+  //   name: "Consultation Tools",
+  //   icon: "briefcase-medical",
+  //   path: "/consultation",
+  //   title: "Tools for clinical consultation and documentation",
+  //   children: [
+  //     {
+  //       name: "Progress Notes",
+  //       path: "/notes",
+  //       icon: "notes-medical",
+  //       title: "SOAP notes (Subjective, Objective, Assessment, Plan)",
+  //     },
+  //     {
+  //       name: "Prescriptions",
+  //       path: "/prescriptions",
+  //       icon: "prescription-bottle-alt",
+  //       title: "Create and manage prescriptions for patients",
+  //     },
+  //     {
+  //       name: "Medical Certificates",
+  //       path: "/certificates",
+  //       icon: "file-medical-alt",
+  //       title: "Issue official medical certificates to patients",
+  //     },
+  //     {
+  //       name: "Surgical Clearance",
+  //       path: "/surgical/clearance",
+  //       icon: "file-signature",
+  //       title: "Evaluate and clear patients for surgery",
+  //     },
+  //     {
+  //       name: "Referrals",
+  //       icon: "share-square",
+  //       path: "/referrals",
+  //       title: "Refer patients to another specialist or department",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Patients",
+  //   icon: "user-injured",
+  //   path: "/patients",
+  //   title: "Access patient medical records and clinical data",
+  //   children: [
+  //     {
+  //       name: "Medical Records",
+  //       path: "/records",
+  //       icon: "file-medical",
+  //       title: "View detailed patient medical records",
+  //     },
+  //     {
+  //       name: "Medical History",
+  //       path: "/history",
+  //       icon: "history",
+  //       title: "Check patient’s previous consultations and diagnostics",
+  //     },
+  //   ],
+  // },
   {
-    name: "Consultation Tools",
-    icon: "briefcase-medical",
-    path: "/consultation",
-    title: "Tools for clinical consultation and documentation",
-    children: [
-      {
-        name: "Progress Notes",
-        path: "/notes",
-        icon: "notes-medical",
-        title: "SOAP notes (Subjective, Objective, Assessment, Plan)",
-      },
-      {
-        name: "Prescriptions",
-        path: "/prescriptions",
-        icon: "prescription-bottle-alt",
-        title: "Create and manage prescriptions for patients",
-      },
-      {
-        name: "Medical Certificates",
-        path: "/certificates",
-        icon: "file-medical-alt",
-        title: "Issue official medical certificates to patients",
-      },
-      {
-        name: "Surgical Clearance",
-        path: "/surgical/clearance",
-        icon: "file-signature",
-        title: "Evaluate and clear patients for surgery",
-      },
-    ],
-  },
-  {
-    name: "Patients",
-    icon: "user-injured",
-    path: "/patients",
-    title: "Access patient medical records and clinical data",
-    children: [
-      {
-        name: "Medical Records",
-        path: "/records",
-        icon: "file-medical",
-        title: "View detailed patient medical records",
-      },
-      {
-        name: "Medical History",
-        path: "/history",
-        icon: "history",
-        title: "Check patient’s previous consultations and diagnostics",
-      },
-    ],
-  },
-  {
-    name: "Referrals",
-    icon: "share-square",
-    path: "/referrals",
-    title: "Refer patients to another specialist or department",
-  },
-  {
-    name: "Employees",
+    name: "Secretaries",
     icon: "share-square",
     path: "/Employees",
-    title: "Refer patients to another specialist or department",
+    title: "View and manage Sectretariat employees",
     children: [
       {
         name: "Staff",
@@ -157,32 +163,18 @@ const physician = [
     title: "Checklist of rounds, follow-ups, and pending actions",
   },
   {
-    name: "Analytics & KPIs",
-    icon: "chart-line",
-    path: "/analytics",
-    title:
-      "Insights into your consultations, workload, and performance (Key Performance Indicators)",
-  },
-  {
-    name: "E H R Timeline",
-    icon: "stream",
-    path: "/ehr-timeline",
-    title:
-      "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
-  },
-  {
     name: "Notifications",
     icon: "bell",
     path: "/notifications",
     title: "Receive reminders and system alerts",
   },
-  // {
-  //   name: "Hotlines",
-  //   path: "/hotlines",
-  //   icon: "phone-alt",
-  //   title: "Emergency Hotlines Poster",
-  //   component: HotlinesPoster,
-  // },
+  {
+    name: "Analytics & K P Is",
+    icon: "chart-line",
+    path: "/analytics",
+    title:
+      "Insights into your consultations, workload, and performance (Key Performance Indicators)",
+  },
 ];
 
 export default physician;
