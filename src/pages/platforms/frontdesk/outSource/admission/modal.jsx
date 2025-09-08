@@ -42,8 +42,6 @@ export default function Modal() {
   const [showInputFields, setShowInputFields] = useState(false);
 
   const handlePatient = (patient) => {
-    console.log("patient", patient);
-
     if (!patient) return;
     setForm((prev) => ({
       ...prev,

@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBCollapseHeader, MDBBadge, MDBBtn } from "mdbreact";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   // axioKit,
   dateFormat,
@@ -10,6 +10,7 @@ import {
 } from "../../../../../services/utilities";
 // import { Services } from "../../../../../../services/fakeDb";
 // import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { SetSELECTED } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 export default function TaskHeader({
   task,
@@ -21,7 +22,7 @@ export default function TaskHeader({
   activeCollapse,
 }) {
   const { _id, category, source } = task; // cart, customerId, ssx
-
+  const dispatch = useDispatch();
   const { color, border } = collapse.getStyle(
     String(_id),
     String(activeCollapse),
@@ -56,9 +57,14 @@ export default function TaskHeader({
             size="sm"
             color="white"
             rounded
-            onClick={() =>
-              setActiveCollapse((prev) => (prev === _id ? "" : _id))
-            }
+            onClick={() => {
+              dispatch(
+                SetSELECTED({
+                  deal: task,
+                })
+              );
+              setActiveCollapse((prev) => (prev === _id ? "" : _id));
+            }}
             className="m-0 p-0 transition-all "
             style={{ width: isActive ? "1.5rem" : "2rem", height: "1.4rem" }}
           >

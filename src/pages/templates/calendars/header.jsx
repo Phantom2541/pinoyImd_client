@@ -32,9 +32,7 @@ const Header = () => {
     //   );
     // return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
-  const setPatient = (patient) => {
-    console.log("patient", patient);
-  };
+  const setPatient = (patient) => {};
   const setRegister = (user) => {
     console.log("user", user);
   };

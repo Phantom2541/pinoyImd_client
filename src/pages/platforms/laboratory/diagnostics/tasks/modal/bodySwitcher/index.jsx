@@ -55,6 +55,7 @@ const componentMap = {
 
 export default function BodySwitcher() {
   const { task } = useSelector(({ validator }) => validator);
+  console.log("taskhere in body", task);
 
   let Component = "";
   if (task.form === "2DEcho" || task.form === "2decho") {

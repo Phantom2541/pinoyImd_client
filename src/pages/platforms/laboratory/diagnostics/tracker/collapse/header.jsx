@@ -62,9 +62,6 @@ export default function TaskHeader({
             color="white"
             rounded
             onClick={() => {
-              console.log("_id", _id);
-              console.log("activeCOLAPSE", activeCollapse);
-
               dispatch(
                 SetSELECTED({
                   deal: task,
