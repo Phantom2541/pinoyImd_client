@@ -9,6 +9,7 @@ export { default as ResultInRange } from "./resultInRange";
 export { default as ResultInName } from "./resultInName";
 export { default as UrineColors } from "./urineColors";
 export { default as FecalColor } from "./fecalColor";
+export { default as Macroexam } from "./macro";
 export { default as Microexam } from "./microExam";
 export { default as PhysicalExam } from "./physicalExam";
 export { default as Cellcount } from "./cellCount";

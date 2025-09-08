@@ -5,7 +5,7 @@ const Category = [
   "Grade B",
   "Grade C",
   "Vitality ",
-  "Agglutination ",
+  "Agglutination",
   "Pus cells",
   "Red Blood cells",
   "Epithelial cells",

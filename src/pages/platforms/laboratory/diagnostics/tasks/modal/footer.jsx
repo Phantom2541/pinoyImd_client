@@ -96,6 +96,8 @@ const Footer = () => {
   };
 
   const hasDoneChecker = (_id = "") => {
+    console.log("selected?.diagnostic", selected);
+
     const diagnostics = Object.values(selected?.diagnostic)
       .flat(Infinity)
       .filter((item) => item._id !== _id);

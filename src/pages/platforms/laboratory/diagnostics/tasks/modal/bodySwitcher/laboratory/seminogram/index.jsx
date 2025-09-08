@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBTabContent,
@@ -14,8 +14,8 @@ import {
 // Component imports
 import PhysicalExam from "./physicalExam";
 import MicroExam from "./microExam";
-// import Rci from "./rci";
-// import Platelet from "./platelet";
+import MacroExam from "./macroExam";
+import ChemExam from "./chemExam";
 
 export default function Seminogram() {
   const { task } = useSelector(({ validator }) => validator),
@@ -27,8 +27,8 @@ export default function Seminogram() {
   const orderedTabs = [
     { name: "PHYSICAL EXAM", component: PhysicalExam, key: 3 },
     { name: "MICROSCOPIC EXAM", component: MicroExam, key: 3 },
-    // { name: "MORPHOLOGY", component: Platelet, key: 3 },
-    // { name: "CHEMICAL EXAM", component: Rci, key: 3 },
+    { name: "MORPHOLOGY", component: MacroExam, key: 3 },
+    { name: "CHEMICAL EXAM", component: ChemExam, key: 3 },
   ];
 
   // Filter only tabs relevant to current packages

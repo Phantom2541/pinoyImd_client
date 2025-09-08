@@ -9,6 +9,7 @@ import Analysis from "./analysis";
 import Bacteriology from "./bacteriology";
 import Compatibility from "./compatibility";
 import Pbs from "./pbs";
+import Seminogram from "./seminogram";
 
 const Blank = ({ task }) => <div>{task?.form} is not working</div>;
 
@@ -24,6 +25,7 @@ const componentMap = {
   bacteriology: Bacteriology,
   compatibility: Compatibility,
   pbs: Pbs,
+  seminogram: Seminogram,
 };
 
 export default function BodySwitcher({ task }) {

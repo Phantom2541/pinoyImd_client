@@ -1,7 +1,7 @@
 import Category from "./category";
 
-const MacroExam = {
+const Microexam = {
   Category,
 };
 
-export default MacroExam;
+export default Microexam;

@@ -8,55 +8,48 @@ import { MDBTable } from "mdbreact";
 import { PhysicalExam } from "../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
-export default function Physicalexam({
-  setActiveTab = () => {},
+export default function PhysicalExamTab({
   activeTab = "",
+  setActiveTab = () => {},
 }) {
   const { task, showModal } = useSelector(({ validator }) => validator);
   const dispatch = useDispatch();
 
-  const { cc = [] } = task;
-  const { Preferences, Abbreviation, Title } = PhysicalExam;
+  // default: object with abbreviation keys
+  const { Abbreviation, Title, Preferences } = PhysicalExam;
+  const defaultObj = Abbreviation.reduce((acc, key) => {
+    acc[key] = "";
+    return acc;
+  }, {});
 
-  // refs for inputs
+  const { pe = defaultObj } = task;
+
   const inputRefs = useRef([]);
 
-  // focus first input when modal opens
   useEffect(() => {
     if (showModal && activeTab === "PHYSICAL EXAM") {
       setTimeout(() => {
         inputRefs.current[0]?.focus();
-      }, 400);
+      }, 300);
     }
   }, [showModal, activeTab]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const _name = Number(name);
-    const _cells = [...cc];
-    _cells[_name] = value;
 
-    // auto compute first values if index is 0
-    if (_name === 0) {
-      _cells[1] = parseFloat((Number(value) * 340).toFixed(0));
-      _cells[2] = parseFloat((Number(value) * 11).toFixed(2));
-    }
+    const updated = { ...pe, [name]: value };
 
-    while (_cells.length < Abbreviation.length) {
-      _cells.push(0);
-    }
-
-    dispatch(SetTASK({ form: task?.form, task: { ...task, cc: _cells } }));
-    dispatch(SetPARAMS({ key: "cc", value: _cells }));
+    dispatch(SetTASK({ form: task?.form, task: { ...task, pe: updated } }));
+    dispatch(SetPARAMS({ key: "pe", value: updated }));
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {
         nextInput.focus();
-        nextInput.select();
+        if (nextInput.select) nextInput.select();
       } else {
         setActiveTab("MICROSCOPIC EXAM");
       }
@@ -73,46 +66,87 @@ export default function Physicalexam({
         </tr>
       </thead>
       <tbody>
-        {(!!cc.length ? cc : new Array(Abbreviation.length).fill(0)).map(
-          (cell, index) => {
-            const abbr = Abbreviation[index]; // e.g. "te", "lf", "vol"
-            const pref = Preferences.physical[abbr] || {};
-            const { lo = "", hi = "", unit = "" } = pref;
+        {Abbreviation.map((abbr, index) => {
+          const category = Title[index] || abbr;
+          const pref = Preferences.physical[abbr] || {};
+          const { lo = "", hi = "", unit = "" } = pref;
 
-            let color = "";
-            if (!isNaN(cell) && lo !== "" && hi !== "") {
-              if (cell < lo) color = "blue";
-              else if (cell > hi) color = "red";
-            }
+          const value = pe[abbr] ?? "";
 
-            return (
-              <tr key={`cell-${index}`}>
-                <td className="py-1">{Title[index] || abbr}</td>
-                <td className="py-1">
+          let color = "";
+          if (value !== "" && !isNaN(value)) {
+            if (lo !== "" && !isNaN(lo) && value < lo) color = "blue";
+            else if (hi !== "" && !isNaN(hi) && value > hi) color = "red";
+          }
+
+          // Fields that should be dropdowns
+          const isSelect = ["Appearance", "Color", "Viscosity"].includes(
+            category
+          );
+
+          return (
+            <tr key={`physical-${abbr}`}>
+              <td className="py-1">{category}</td>
+              <td className="py-1">
+                {isSelect ? (
+                  <select
+                    ref={(el) => (inputRefs.current[index] = el)}
+                    name={abbr}
+                    value={value}
+                    onChange={handleChange}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    className="sectInput w-100 text-center fw-bold"
+                  >
+                    <option value="">-- Select --</option>
+                    {category === "Appearance" && (
+                      <>
+                        <option value="Normal">Normal</option>
+                        <option value="Opaque">Opaque</option>
+                        <option value="Clear">Clear</option>
+                        <option value="Yellowish">Yellowish</option>
+                      </>
+                    )}
+                    {category === "Color" && (
+                      <>
+                        <option value="Grayish">Grayish</option>
+                        <option value="Whitish">Whitish</option>
+                        <option value="Yellowish">Yellowish</option>
+                        <option value="Reddish">Reddish</option>
+                      </>
+                    )}
+                    {category === "Viscosity" && (
+                      <>
+                        <option value="Normal">Normal</option>
+                        <option value="Increased">Increased</option>
+                        <option value="Decreased">Decreased</option>
+                      </>
+                    )}
+                  </select>
+                ) : (
                   <input
                     type="number"
                     ref={(el) => (inputRefs.current[index] = el)}
                     style={{ color }}
-                    name={index}
-                    value={String(cell)}
+                    name={abbr}
+                    value={String(value)}
                     onChange={handleChange}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     className="sectInput w-100 text-center fw-bold"
                   />
-                </td>
-                <td className="py-1">
-                  {lo !== "" && hi !== "" ? (
-                    <>
-                      {lo} - {hi} <Markup content={unit} />
-                    </>
-                  ) : (
-                    <span className="text-muted"></span>
-                  )}
-                </td>
-              </tr>
-            );
-          }
-        )}
+                )}
+              </td>
+              <td className="py-1">
+                {lo !== "" || hi !== "" ? (
+                  <>
+                    {lo} {hi && `- ${hi}`} <Markup content={unit} />
+                  </>
+                ) : (
+                  <span className="text-muted">{unit || ""}</span>
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );
