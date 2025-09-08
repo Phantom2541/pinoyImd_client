@@ -139,7 +139,7 @@ export default function Details({
             onChange={(e) =>
               handleChange("mobile", e.target.value.replace(/\D/g, ""))
             }
-            label="Mobile (+63)"
+            label="Mobile(+63)"
             maxLength={10}
           />
         </MDBCol>

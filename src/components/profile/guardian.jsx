@@ -186,7 +186,7 @@ export default function Guardian({ handleChange, handleSubmit }) {
                   onChange={(e) =>
                     handleChange("mobile", e.target.value.replace(/\D/g, ""))
                   }
-                  label="Mobile (+63)"
+                  label="Mobile"
                   maxLength={10}
                 />
               </MDBCol>

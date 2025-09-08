@@ -25,16 +25,18 @@ const Body = () => {
     // []
     dispatch = useDispatch();
 
-  const handleUpdateGuardian = (data) => {
-    dispatch(UPDATEGUARDIAN({ token, data }));
+  const handleUpdateGuardian = (id) => {
+    dispatch(UPDATEGUARDIAN({ token, id }));
     // .then(({ payload: personnel }) => {
     // setData(personnel);
     // });
   };
   // console.log("personnel", personnel);
 
-  const handleUpdate = (userdata) => {
-    dispatch(UPDATE({ token, userdata })).then(({ payload: staff }) => {
+  const handleUpdate = (data) => {
+    console.log("userdata", data);
+
+    dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
       const Signature = `/users/${staff?.user?.email}/signature.png`;
@@ -150,8 +152,8 @@ const Body = () => {
                 <div className="d-flex flex-column">
                   <EditableField
                     type="number"
-                    keyForValue="id"
-                    fieldData={{ _id: guardianId, id: pn }}
+                    keyForValue="mobile"
+                    fieldData={{ _id: guardianId, mobile: pn }}
                     onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
