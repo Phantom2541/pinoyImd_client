@@ -54,6 +54,7 @@ const physician = [
         path: "/ehr-timeline",
         title:
           "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
+        component: Imaging,
       },
       {
         name: "Teleconsult",
@@ -72,7 +73,6 @@ const physician = [
       //   path: "/diagnostics/imaging",
       //   icon: "x-ray",
       //   title: "View and interpret imaging such as X-ray, ECG, UTZ",
-      //   component: Imaging,
       // },
     ],
   },
