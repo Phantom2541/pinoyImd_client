@@ -10,7 +10,6 @@ import {
   TOGGLE,
   UPDATE,
   SetFILTERED,
-  UPDATEGUARDIAN,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
 import { Policy } from "../../../../../services/fakeDb";
 import {
@@ -19,22 +18,13 @@ import {
 } from "../../../../../components/customizable";
 
 const Body = () => {
-  const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
+  const { filtered, guardians, activePage, maxPage, isSuccess, formSubmitted } =
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
-    // []
     dispatch = useDispatch();
 
-  const handleUpdateGuardian = (data) => {
-    dispatch(UPDATEGUARDIAN({ token, data }));
-    // .then(({ payload: personnel }) => {
-    // setData(personnel);
-    // });
-  };
-  // console.log("personnel", personnel);
-
-  const handleUpdate = (userdata) => {
-    dispatch(UPDATE({ token, userdata })).then(({ payload: staff }) => {
+  const handleUpdate = (data) => {
+    dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
       const Signature = `/users/${staff?.user?.email}/signature.png`;
@@ -90,6 +80,7 @@ const Body = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = (filtered || []).slice(startIndex, endIndex); // Get only items for the active page
 
+  console.log("paginatedData", paginatedData);
   return (
     <MDBTable responsive hover>
       <thead style={{ backgroundColor: "#", color: "black" }}>
@@ -98,18 +89,18 @@ const Body = () => {
           <th>Avatar</th>
           <th>Name</th>
           <th>Position</th>
-          <th>Address</th>
-          <th>Primary contact</th>
+          <th>Contact Person</th>
+          <th>Phone</th>
           <th>Signature</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((staff, index) => {
-          const { front, back, _id, uid } = staff;
+          const { front, back, _id } = staff;
 
           const { img, emp, empID, position, department } = front;
-          const { address, guardian, guardianId, pn, signature } = back;
+          const { address, guardian, pn, signature } = back;
 
           return (
             <tr key={index}>
@@ -137,27 +128,17 @@ const Body = () => {
                 <h5>{position}</h5>
                 {department}
               </td>
-              <td>{address}</td>
               <td>
                 <EditableUser
-                  user={{ guardian, _id, uid }} // unique key for each user
+                  user={{ guardian, _id }} // unique key for each user
                   placeHolder="Primary Contact..."
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
-                  onSave={handleUpdateGuardian}
-                  // onSave={(data) => console.log("onsave data:", data)}
+                  onSave={(data) => console.log("onsave data:", data)}
                 />
-                <div className="d-flex flex-column">
-                  <EditableField
-                    type="number"
-                    keyForValue="id"
-                    fieldData={{ _id: guardianId, id: pn }}
-                    onSave={handleUpdate}
-                    formSubmitted={formSubmitted}
-                    isSuccess={isSuccess}
-                  />
-                </div>
+                {address}
               </td>
+              <td>{pn}</td>
               <td>
                 <img
                   src={`${Cloudinary.getEndpoint()}/${signature}`}

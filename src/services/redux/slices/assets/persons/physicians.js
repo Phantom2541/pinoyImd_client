@@ -219,6 +219,7 @@ export const reduxSlice = createSlice({
       localStorage.setItem("physicians", JSON.stringify(physicians));
     },
     SetFILTERED: (state, { payload }) => {
+      console.log("payload", payload);
       state.filtered = payload;
     },
     TOGGLE: (state) => {
@@ -239,24 +240,19 @@ export const reduxSlice = createSlice({
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
-      console.log("maxPage", state.maxPage);
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
-      console.log("activePage", state.activePage);
     },
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
-      state.collections = [];
       state.message = "";
     },
-    SET_COLLECTIONS: (state, action) => {
-      const newTieups = action.payload.tieups;
-      state.collections = [...newTieups];
-      state.filtered = [...newTieups];
-      console.log("state.collections", state.collections);
-      console.log("state.filtered", state.filtered);
+    SET_COLLECTIONS: (state, { payload }) => {
+      console.log("payload", payload);
+      state.collections = [...payload];
+      state.filtered = [...payload];
     },
   },
   extraReducers: (builder) => {

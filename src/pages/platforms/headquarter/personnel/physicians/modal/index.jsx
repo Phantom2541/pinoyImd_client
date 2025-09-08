@@ -13,7 +13,6 @@ import {
   TOGGLE,
   SETPHYSICIAN,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
-import { UPDATE } from "../../../../../../services/redux/slices/assets/branches";
 import { useToasts } from "react-toast-notifications";
 import { SearchUser } from "../../../../../../components/searchables";
 
@@ -55,8 +54,6 @@ export default function Modal() {
 
   const buildData = () => {
     const { fname, mname, lname } = splitFullName(form.fullName || "");
-    console.log("form", form);
-
     if (user._id) {
       // Registered physician
       return {
@@ -96,45 +93,23 @@ export default function Modal() {
     const fullData = buildData();
 
     if (willCreate) {
-      // Registered physician
-      if (user._id) {
-        Promise.all([
-          dispatch(
-            SAVE({
-              data: fullData, // contains `user` field
-              token,
-            })
-          ),
-          dispatch(
-            UPDATE({
-              data: {
-                _id: activePlatform.branchId,
-                affiliated: [user._id],
-              },
-              token,
-            })
-          ),
-        ]).then(() => {
-          addToast("Registered physician saved successfully.", {
+      const isGhost = !Boolean(user._id);
+      dispatch(
+        SAVE({
+          data: { ...fullData, isGhost, branchId: activePlatform?.branchId }, // contains `user` field
+          token,
+        })
+      ).then(() => {
+        addToast(
+          isGhost
+            ? "Ghost physician saved successfully."
+            : "Registered physician saved successfully.",
+          {
             appearance: "success",
-          });
-          dispatch(TOGGLE());
-        });
-      } else {
-        // Ghost physician
-        dispatch(
-          SAVE({
-            data: fullData, // contains `ghostName` field
-            token,
-          })
-        ).then(() => {
-          addToast("Ghost physician saved successfully.", {
-            appearance: "info",
-          });
-          dispatch(TOGGLE());
-        });
-      }
-      return;
+          }
+        );
+        dispatch(TOGGLE());
+      });
     }
   };
 
@@ -150,7 +125,6 @@ export default function Modal() {
     setUser(physician);
     dispatch(SETPHYSICIAN(physician));
   };
-  console.log("free form", form);
 
   const handleClose = () => dispatch(TOGGLE());
 

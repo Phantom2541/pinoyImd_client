@@ -27,8 +27,8 @@ const Header = () => {
         month: "2-digit",
         day: "2-digit",
       })
-      .format(new Date())
-      .replace(/\//g, "-");
+        .format(new Date())
+        .replace(/\//g, "-");
 
       dispatch(
         CASHIER({

@@ -8,7 +8,6 @@ import Footer from "./footer.jsx";
 export default function Modal() {
   const { task, showModal } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
-  console.log("task", task);
 
   return (
     <MDBModal

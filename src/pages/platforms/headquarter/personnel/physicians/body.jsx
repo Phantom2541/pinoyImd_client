@@ -8,34 +8,22 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
 import {
-  // globalSearch,
   properFullname,
-  getGenderIcon,
+  getPhysicianGenderIcon,
 } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
-// mobile;
 export default function Body() {
-  const { token } = useSelector(({ auth }) => auth),
-    {
-      filtered,
-      // collections,
-      message,
-      isSuccess,
-      maxPage,
-      activePage,
-      closeModal,
-    } = useSelector(({ physicians }) => physicians),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { filtered, collections, message, isSuccess, maxPage, activePage } =
+      useSelector(({ physicians }) => physicians),
     [tieups, setTieups] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  //Set fetched data for mapping
   useEffect(() => {
     setTieups(filtered);
-  }, [filtered, isSuccess, closeModal]);
-  console.log("filtered", filtered);
+  }, [filtered]);
 
-  //Trigger for update
   const handleDelete = (item) => {
     Swal.fire({
       title: `Are you sure to remove  ${String(
@@ -49,31 +37,19 @@ export default function Body() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: item._id } })).then(() => {
-          const updated = tieups.filter((i) => i._id !== item._id);
-
-          // ✅ update local component state
-          // setTieups(updated);
-
-          // ✅ update Redux store using the action creator
-          dispatch(SET_COLLECTIONS({ tieups: updated }));
+        dispatch(
+          DESTROY({
+            token,
+            data: { id: item._id, branch: activePlatform?.branchId },
+          })
+        ).then(() => {
+          const updated = [...collections].filter((i) => i._id !== item._id);
+          console.log("updated", updated);
+          dispatch(SET_COLLECTIONS(updated));
         });
       }
     });
   };
-
-  //Trigger for create
-  // const handleCreate = async () => {
-  //   const { value: fullname } = await Swal.fire({
-  //     title: "Input Physician Fullname",
-  //     input: "text",
-  //     inputLabel: "Physician Fullname",
-  //     inputPlaceholder: "Lastname, Firstname y Middlename",
-  //   });
-  //   console.log("fullname", fullname);
-  // };
-
-  //Toast for errors or success
   useEffect(() => {
     if (message) {
       addToast(message, {
@@ -83,13 +59,6 @@ export default function Body() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-
-  //Search function
-  // const handleSearch = async (willSearch, key) => {
-  //   if (willSearch) return setTieups(globalSearch(collections.tieups, key));
-
-  //   setTieups(collections);
-  // };
 
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -110,25 +79,16 @@ export default function Body() {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
+          const { user = {} } = item;
+          const isGhost = !Boolean(item?.user?._id);
+          const baseName = isGhost ? item?.ghostName : item?.user?.fullName;
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>
-
               <td>
                 <strong>
-                  {getGenderIcon(item?.user?.isMale)}
-                  {item?.user?.fullName ? (
-                    String(
-                      properFullname(item.user.fullName, true)
-                    ).toUpperCase()
-                  ) : (
-                    <>
-                      👻{" "}
-                      {String(
-                        properFullname(item?.ghostName, true)
-                      ).toUpperCase()}
-                    </>
-                  )}
+                  {getPhysicianGenderIcon(user.isMale, isGhost)}
+                  {properFullname(baseName)}
                 </strong>
               </td>
               <td>{item?.department || "—"} </td>

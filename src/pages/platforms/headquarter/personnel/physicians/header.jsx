@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -12,10 +12,11 @@ import { CTBROWSE } from "../../../../../services/redux/slices/assets/branches";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
-    { collections, isSucscess } = useSelector(({ physicians }) => physicians),
+    { collections, filtered, isSucscess } = useSelector(
+      ({ physicians }) => physicians
+    ),
     dispatch = useDispatch(); //
   const handleAdd = (item) => dispatch(SetCREATE(item));
-  console.log("colhead", collections);
 
   //Initial Browse
   useEffect(() => {
@@ -33,7 +34,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Attending Physicians
+          {filtered.length} Attending Physicians
         </span>
       </div>
       <div>
