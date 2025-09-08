@@ -19,13 +19,13 @@ import {
 } from "../../../../../components/customizable";
 
 const Body = () => {
-  const { filtered, guardians, activePage, maxPage, isSuccess, formSubmitted } =
+  const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleUpdateGuardian = (id) => {
-    dispatch(UPDATEGUARDIAN({ token, id }));
+  const handleUpdateGuardian = (data) => {
+    dispatch(UPDATEGUARDIAN({ token, data }));
     // .then(({ payload: personnel }) => {
     // setData(personnel);
     // });
@@ -111,7 +111,7 @@ const Body = () => {
           const { front, back, _id } = staff;
 
           const { img, emp, empID, position, department } = front;
-          const { address, guardian, pn, signature } = back;
+          const { address, guardian, guardianId, pn, signature } = back;
 
           return (
             <tr key={index}>
@@ -145,13 +145,14 @@ const Body = () => {
                   placeHolder="Primary Contact..."
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
-                  onSave={(data) => console.log("onsave data:", data)}
+                  onSave={handleUpdateGuardian}
                 />
+                {address}
                 <div className="d-flex flex-column">
                   <EditableField
                     type="number"
                     keyForValue="mobile"
-                    fieldData={{ _id: guardian?._id, mobile: pn }}
+                    fieldData={{ _id: guardianId, mobile: pn }}
                     onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
