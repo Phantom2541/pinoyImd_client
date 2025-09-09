@@ -24,7 +24,7 @@ const expenseCodes = [
 export default function CostBreakdown({ form, setForm }) {
   const capital = form.capital || {};
   const expenses = form.expenses || {};
-  const srp = form?.opd || 0; // ✅ SRP galing sa form.opd
+  const srp = form?.opd || 0;
 
   // 🔵 Capital Handling
   const handleCapitalChange = (field, value) => {
@@ -54,7 +54,7 @@ export default function CostBreakdown({ form, setForm }) {
 
   // ✅ Default PF & RF = 10%
   const getExpenseValue = (code) => {
-    if ((code === "Pf" || code === "Rf") && expenses?.[code] == null) {
+    if (code === "Rf" && expenses?.[code] == null) {
       return 10;
     }
     return expenses?.[code] ?? 0;
