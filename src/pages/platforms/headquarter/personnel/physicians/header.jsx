@@ -7,21 +7,22 @@ import {
   SetCREATE,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
+
 import { Search } from "../../../../../components/searchables";
-import { CTBROWSE } from "../../../../../services/redux/slices/assets/branches";
+import { SECRETARY } from "../../../../../services/redux/slices/assets/persons/applicants";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
     { collections, isSucscess } = useSelector(({ physicians }) => physicians),
+    { filtered } = useSelector(({ applicants }) => applicants),
     dispatch = useDispatch(); //
   const handleAdd = (item) => dispatch(SetCREATE(item));
-  console.log("colhead", collections);
 
   //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId)
       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
-    dispatch(CTBROWSE({ token, data: { _id: activePlatform.branchId } }));
+    dispatch(SECRETARY({ token, data: { branchId: activePlatform.branchId } }));
 
     return () => dispatch(RESET());
   }, [token, activePlatform, isSucscess, dispatch]);
