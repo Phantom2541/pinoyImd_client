@@ -4,10 +4,11 @@ import Body from "./body";
 import Patient from "./patient";
 import Note from "./note";
 import Prescription from "./note/prescription";
-import Form from "./note/forms";
+import Form from "./note/form";
 import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import "./style.css";
+import RequestForm from "./note/forms";
 
 export default function Consultations() {
   const [activePanels, setActivePanels] = useState({
@@ -58,7 +59,7 @@ export default function Consultations() {
         buttonRefs={buttonRefs}
         zIndex={getZIndex("prescription")}
       />
-      <Form
+      <RequestForm
         active={activePanels.request}
         buttonRefs={buttonRefs}
         zIndex={getZIndex("request")}
