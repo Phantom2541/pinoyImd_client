@@ -1,5 +1,5 @@
 import React from "react";
-import PROFILE from "./../../../assets/male.jpg";
+import PROFILE from "./../../../../../assets/male.jpg";
 
 export default function Patient() {
   return (
