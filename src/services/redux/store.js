@@ -34,6 +34,7 @@ import {
   dispenser,
   onBoardings,
   admission,
+  kiosk,
 } from "./slices/commerce";
 
 // DIAGNOSTICS
@@ -148,6 +149,7 @@ const store = configureStore({
     orgChart,
     cases,
     requestForm,
+    kiosk,
     idCalibrator,
     idGenerator,
     //portal
