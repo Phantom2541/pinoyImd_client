@@ -1,7 +1,5 @@
 import { MDBCardBody } from "mdbreact";
-// import Header from "./header";
 import Body from "./body";
-// import "./requestForm.css"; // import the css
 import usePanelPosition from "../panelPosition";
 
 export default function RequestForm({ active, buttonRefs, zIndex }) {

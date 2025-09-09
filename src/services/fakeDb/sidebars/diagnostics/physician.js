@@ -36,17 +36,19 @@ const physician = [
     title: "Review diagnostics appointments and interpret results",
     children: [
       {
-        name: "Daily Tasks",
+        name: "Hospital Tasks",
         icon: "weight",
         path: "/daily-tasks",
-        title: "List of diagnostics appointments assigned to you",
+        title:
+          "Diagnostic tasks for in-patients (IPD) admitted in the hospital",
         component: DailyTasks,
       },
       {
-        name: "My Appointments",
+        name: "Clinic Appointments",
         icon: "stethoscope",
         path: "/appointments",
-        title: "List of diagnostics appointments assigned to you",
+        title:
+          "Diagnostic appointments for out-patients (OPD) visiting your clinic",
         component: Appointment,
       },
       {
