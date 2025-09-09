@@ -1,0 +1,25 @@
+import React from "react";
+// import { useSelector } from "react-redux";
+import { MDBBtn } from "mdbreact";
+
+const Header = () => {
+  // const { patient, tests } = useSelector(({ requestForm }) => requestForm);
+
+  const handlePrintOut = () => {
+    window.open(
+      "/printout/laboratoryRequestForm",
+      "RequestForm",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
+  };
+
+  return (
+    <div className="d-flex justify-content-center">
+      <MDBBtn size="md" color="primary" onClick={handlePrintOut}>
+        Print
+      </MDBBtn>
+    </div>
+  );
+};
+
+export default Header;

@@ -49,14 +49,6 @@ const physician = [
         title: "List of diagnostics appointments assigned to you",
         component: Appointment,
       },
-      // {
-      //   name: "E H R Timeline",
-      //   icon: "stream",
-      //   path: "/ehr-timeline",
-      //   title:
-      //     "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
-      //   component: Imaging,
-      // },
       {
         name: "E H R Timeline",
         icon: "stream",
@@ -70,6 +62,7 @@ const physician = [
         icon: "video",
         path: "/teleconsult",
         title: "Conduct virtual consultations with patients",
+        component: Imaging,
       },
       // {
       //   name: "Lab Results",
