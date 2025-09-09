@@ -161,28 +161,20 @@ export default function CollapsableIndex() {
               activeId,
               didHoverId
             );
+            const isActive = activeId === actualIndex;
+            const textClass = isActive
+              ? "font-weight-bold text-dark"
+              : "text-dark";
 
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
-                  <td
-                    style={{
-                      color: "black",
-                      fontWeight: activeId === actualIndex ? "bold" : "normal",
-                    }}
-                  >
+                  <td className={textClass}>
                     {user
                       ? properFullname(user.fullName)
                       : properFullname(ghostName)}
                   </td>
-                  <td
-                    style={{
-                      color: "black",
-                      fontWeight: activeId === actualIndex ? "bold" : "normal",
-                    }}
-                  >
-                    {specialization}
-                  </td>
+                  <td className={textClass}>{specialization}</td>
                   <td style={{ color: "black" }}>
                     {position?.employment &&
                       Policy.getDepartment(position?.employment?.designation)}
