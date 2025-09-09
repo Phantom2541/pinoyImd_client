@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import BODY from "./../../../assets/checkup/humanBody.png";
+import BODY from "./../../../../../assets/checkup/humanBody.png";
 
 export default function HumanBody({ setSlide, slide }) {
   const containerRef = useRef(null);
@@ -120,13 +120,14 @@ export default function HumanBody({ setSlide, slide }) {
 
       <div className="checkup-data-center-image-medical-history">
         {medicalHistory.map((text) => (
-          <span
+          <button
             key={text}
             ref={(el) => (textRefs.current[text] = el)}
-            onClick={() => setSlide(text)}
+            onClick={() => setSlide(slide === text ? "" : text)} // toggle
+            className={slide === text ? "active" : ""}
           >
             {text}
-          </span>
+          </button>
         ))}
       </div>
 
@@ -153,13 +154,15 @@ export default function HumanBody({ setSlide, slide }) {
 
       <div className="checkup-data-center-image-Ancillary">
         {ancillary.map((text) => (
-          <span
+          <button
             key={text}
             ref={(el) => (textRefs.current[text] = el)}
-            onClick={() => setSlide(text)}
+            onClick={() => setSlide(slide === text ? "" : text)} // toggle
+            className={slide === text ? "active" : ""}
+            disabled={slide === text}
           >
             {text}
-          </span>
+          </button>
         ))}
       </div>
     </div>

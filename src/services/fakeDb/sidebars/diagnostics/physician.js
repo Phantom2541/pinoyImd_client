@@ -5,6 +5,7 @@ import {
   Staffs,
   Applicants,
 } from "../../../../pages/platforms/physician";
+import Doctor from "../../../../pages/platforms/physician/diagnostics/doctor";
 import DailyTasks from "../../../../pages/platforms/physician/diagnostics/tasks";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
@@ -48,13 +49,21 @@ const physician = [
         title: "List of diagnostics appointments assigned to you",
         component: Appointment,
       },
+      // {
+      //   name: "E H R Timeline",
+      //   icon: "stream",
+      //   path: "/ehr-timeline",
+      //   title:
+      //     "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
+      //   component: Imaging,
+      // },
       {
         name: "E H R Timeline",
         icon: "stream",
         path: "/ehr-timeline",
         title:
           "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
-        component: Imaging,
+        component: Doctor,
       },
       {
         name: "Teleconsult",
