@@ -206,18 +206,18 @@ const CustomStepper = () => {
           ...validID,
           img: { front: viFront, back: viBack },
         };
+        await dispatch(
+          UPDATE_INFO({
+            token,
+            data: { _id: auth._id, healthCard, validID },
+          })
+        ).unwrap();
       }
 
       // save booking data
       await dispatch(SAVE({ token, data })).unwrap();
 
       // update user info
-      await dispatch(
-        UPDATE_INFO({
-          token,
-          data: { _id: auth._id, healthCard, validID },
-        })
-      ).unwrap();
 
       // success alert
       Swal.fire({
@@ -247,14 +247,16 @@ const CustomStepper = () => {
       });
     } finally {
       // persist updated auth locally
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          ...JSON.parse(localStorage.getItem("auth")),
-          healthCard,
-          validID,
-        })
-      );
+      if (haveCard) {
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            ...JSON.parse(localStorage.getItem("auth")),
+            healthCard,
+            validID,
+          })
+        );
+      }
 
       setIsLoading(false);
     }
