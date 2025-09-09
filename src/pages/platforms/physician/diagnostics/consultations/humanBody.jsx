@@ -125,6 +125,7 @@ export default function HumanBody({ setSlide, slide }) {
             ref={(el) => (textRefs.current[text] = el)}
             onClick={() => setSlide(slide === text ? "" : text)} // toggle
             className={slide === text ? "active" : ""}
+            disabled={slide && slide !== text}
           >
             {text}
           </button>
@@ -159,7 +160,7 @@ export default function HumanBody({ setSlide, slide }) {
             ref={(el) => (textRefs.current[text] = el)}
             onClick={() => setSlide(slide === text ? "" : text)} // toggle
             className={slide === text ? "active" : ""}
-            disabled={slide === text}
+            disabled={slide && slide !== text}
           >
             {text}
           </button>
