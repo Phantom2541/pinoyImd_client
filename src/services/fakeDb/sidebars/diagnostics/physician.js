@@ -5,7 +5,7 @@ import {
   Staffs,
   Applicants,
 } from "../../../../pages/platforms/physician";
-import Doctor from "../../../../pages/platforms/physician/diagnostics/doctor";
+import Consultations from "../../../../pages/platforms/physician/diagnostics/consultations";
 import DailyTasks from "../../../../pages/platforms/physician/diagnostics/tasks";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
@@ -63,7 +63,7 @@ const physician = [
         path: "/ehr-timeline",
         title:
           "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
-        component: Doctor,
+        component: Consultations,
       },
       {
         name: "Teleconsult",
