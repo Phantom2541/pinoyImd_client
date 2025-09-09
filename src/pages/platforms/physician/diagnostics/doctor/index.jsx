@@ -9,7 +9,7 @@ import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import "./style.css";
 
-export default function Doctor() {
+export default function Consultations() {
   const [activePanels, setActivePanels] = useState({
     request: false,
     prescription: false,
