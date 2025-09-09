@@ -5,8 +5,6 @@ import { useLocation } from "react-router-dom";
 import Body from "./body";
 import Patient from "./patient";
 import Note from "./note";
-// import Prescription from "./note/prescription";
-// import Form from "./note/form";
 import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import "./style.css";
