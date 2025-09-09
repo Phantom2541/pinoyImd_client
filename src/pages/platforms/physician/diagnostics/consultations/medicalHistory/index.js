@@ -19,11 +19,58 @@ export default function HistorySwitcher({ task }) {
   // sanitize task: remove spaces & lowercase
   const sanitizedTask = task?.toLowerCase().replace(/\s+/g, "");
   const Component = historyMap[sanitizedTask] || Blank;
+  const familyHistory = ["Diabetes", "Hypertension", "Heart Disease in father"];
+
+  const pastMedicalHistory = [
+    "Appendectomy - 2015",
+    "Allergic rhinitis",
+    "Asthma since childhood",
+  ];
+
+  const pastSurgicalHistory = [
+    "Appendectomy - 2015",
+    "Knee arthroscopy - 2020",
+  ];
+
+  const obGyneHistory = [
+    {
+      order: 1,
+      outcome: "Alive",
+      deliveryType: "Cesarean",
+      gestationWeeks: 39,
+    },
+    {
+      order: 2,
+      outcome: "Deceased",
+      deliveryType: "Cesarean",
+      gestationWeeks: 38,
+    },
+    {
+      order: 3,
+      outcome: "Alive",
+      deliveryType: "Cesarean",
+      gestationWeeks: 37,
+    },
+    {
+      order: 4,
+      outcome: "Stillbirth",
+      deliveryType: "Cesarean",
+      gestationWeeks: 36,
+    },
+    { order: 5, outcome: "Alive", deliveryType: "Normal", gestationWeeks: 39 },
+  ];
 
   return (
     <div>
       <div ref={contentRef}>
-        <Component task={task} fontSize={"1rem"} />
+        <Component
+          task={task}
+          familyHistory={familyHistory}
+          pastMedicalHistory={pastMedicalHistory}
+          pastSurgicalHistory={pastSurgicalHistory}
+          obGyneHistory={obGyneHistory}
+          fontSize={"1rem"}
+        />
       </div>
     </div>
   );

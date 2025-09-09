@@ -3,3 +3,73 @@
   height: 100%;
   background-color: bisque;
 }
+
+.checkup-data-pmh-container {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+}
+
+.family-history-list {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding: 0;
+}
+
+.checkup-data-pmh-container {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+}
+
+.pmh-list {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding: 0;
+}
+.checkup-data-pmh-container {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+}
+
+.pshx-list {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding: 0;
+}
+
+.checkup-data-pmh-container {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+}
+
+.obgyne-list {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding: 0;
+}
+
+.gtpal-summary {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.legend {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.legend ul {
+  list-style-type: circle;
+  margin-left: 20px;
+  padding: 0;
+}
