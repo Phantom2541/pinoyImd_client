@@ -17,7 +17,7 @@ const LabRequest = ({
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setForm({ ...form, form: reader.result.split(",")[1] });
+        setForm({ ...form, form: reader.result });
         setIsValid(true);
       };
       reader.readAsDataURL(file);
@@ -30,7 +30,7 @@ const LabRequest = ({
         className={!form.form ? "p-2" : ""}
         style={{
           width: "794px",
-          height: "300px",
+          height: "420px",
           borderRadius: "8px",
           position: "relative",
           backgroundColor: "#f9f9f9",
@@ -73,7 +73,7 @@ const LabRequest = ({
                 }}
               >
                 <img
-                  src={`data:image/png;base64,${form.form}`}
+                  src={form.form}
                   alt="Uploaded Lab Request"
                   style={{
                     width: "100%",

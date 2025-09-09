@@ -5,14 +5,16 @@ import {
   UPDATE_INFO,
   UPLOAD,
 } from "../../../../../services/redux/slices/assets/persons/auth";
-import LabRequest from "./labRequest";
-import CardRequest from "./card";
+import LabRequest from "./stepper/step1";
+import CardRequest from "./stepper/step2";
+import Schedule from "./stepper/step4";
+import ValidID from "./stepper/step3";
+
 import "./style.css";
-import Schedule from "./schedule";
-import ValidID from "./validID";
 import { SAVE } from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import Spinner from "../../../../../components/spinner";
 import Swal from "sweetalert2";
+import { Cloudinary } from "../../../../../services/utilities";
 
 const steps = [
   {
@@ -54,7 +56,10 @@ const _form = {
     proof: "",
   },
   vi: {
-    img: "",
+    img: {
+      back: "",
+      front: "",
+    },
     expiry: "",
     type: "",
     id: "",
@@ -90,6 +95,7 @@ const CustomStepper = () => {
     if (isStep1) {
       const isValid = !!form.form;
       setValid((v) => ({ ...v, 1: isValid }));
+      setForm((prev) => ({ ...prev, haveCard: null }));
       if (isValid) setActiveStep(2);
     }
 
@@ -105,7 +111,9 @@ const CustomStepper = () => {
     }
 
     if (isStep3) {
-      const isValid = !!form.vi.img;
+      const { vi } = form;
+      const { img } = vi;
+      const isValid = !!img.front && !!img.back;
       setValid((v) => ({ ...v, 3: isValid }));
       if (isValid) setActiveStep(4);
     }
@@ -125,66 +133,120 @@ const CustomStepper = () => {
     const portfolioPath = `users/${auth.email}/portfolio`;
     const { card, vi, haveCard = false, form: formImage, schedule } = form;
 
+    // base data
     const data = {
       vendor: form.branch,
       pid: auth._id,
-      haveCard,
+      haveCard: haveCard ?? false,
       schedule,
-      ...(haveCard && {
-        requirements: {
-          hmo: card.type,
-          vi: `${portfolioPath}/${vi.type}.png`,
-          rf: `users/${auth.email}/booking/form-${schedule}.png`,
-        },
-      }),
+      requirements: {
+        ...(haveCard && { hmo: card.type }),
+      },
     };
-    const healthCard = {
+
+    // clone for update
+    let healthCard = {
       ...card,
       name: card.type,
       isPrimary: card.primary,
     };
-    const validID = {
+    let validID = {
       ...vi,
       name: vi.type,
     };
 
-    const upload = async (path, base64, name) =>
-      await dispatch(UPLOAD({ data: { path, base64, name }, token }));
+    // upload helper
+    const upload = async (path, base64, name) => {
+      if (!base64) {
+        console.warn("⚠️ No file to upload:", { path, name });
+        return null;
+      }
+      const buildForm = Cloudinary.buildFileForm(base64, path, name);
+      const res = await dispatch(UPLOAD({ data: buildForm, token })).unwrap();
+      console.log("✅ Uploaded:", { path, name, imgId: res.imgId });
+      return res.imgId;
+    };
 
     try {
-      await dispatch(SAVE({ token, data }));
-      await dispatch(
-        UPDATE_INFO({
-          token,
-          data: {
-            _id: auth._id,
-            healthCard,
-            validID,
-          },
-        })
-      );
-
+      // collect uploads
       const uploadTasks = [
         upload(
           `users/${auth.email}/booking`,
           formImage,
-          `form-${schedule}.png`
+          `form-${schedule}` // unique filename
         ),
       ];
 
       if (haveCard) {
         uploadTasks.push(
-          upload(portfolioPath, card.img.front, `${card.type}-front.png`),
-          upload(portfolioPath, card.img.back, `${card.type}-back.png`),
-          upload(portfolioPath, vi.img, `${vi.type}-front.png`)
+          upload(`${portfolioPath}/${card.type}`, card?.img?.front, "front"),
+          upload(`${portfolioPath}/${card.type}`, card?.img?.back, "back"),
+          upload(`${portfolioPath}/${vi.type}`, vi?.img?.front, "front"),
+          upload(`${portfolioPath}/${vi.type}`, vi?.img?.back, "back")
         );
       }
 
-      await Promise.all(uploadTasks);
+      // wait for all uploads
+      const [rfId, cardFront, cardBack, viFront, viBack] = await Promise.all(
+        uploadTasks
+      );
+
+      // attach uploaded IDs
+      if (rfId) {
+        data.requirements.rfId = rfId;
+      }
+
+      if (haveCard) {
+        healthCard = {
+          ...healthCard,
+          img: { front: cardFront, back: cardBack },
+        };
+
+        validID = {
+          ...validID,
+          img: { front: viFront, back: viBack },
+        };
+      }
+
+      // save booking data
+      await dispatch(SAVE({ token, data })).unwrap();
+
+      // update user info
+      await dispatch(
+        UPDATE_INFO({
+          token,
+          data: { _id: auth._id, healthCard, validID },
+        })
+      ).unwrap();
+
+      // success alert
+      Swal.fire({
+        icon: "success",
+        title: "Schedule Submitted!",
+        html: `
+        <p style="margin-top: 8px;">
+          Your schedule has been submitted for approval.
+        </p>
+        <p style="margin: 4px 0;">
+          You’ll receive a text once it's confirmed, or you can check the system for updates.
+        </p>
+      `,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Got it!",
+      });
+
+      // reset form
+      setForm(_form);
+      setActiveStep(1);
     } catch (error) {
-      console.error("❌ Upload failed:", error);
-      // Optional: show toast
+      console.error("❌ Failed:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: error?.message || "Something went wrong. Please try again.",
+      });
     } finally {
+      // persist updated auth locally
       localStorage.setItem(
         "auth",
         JSON.stringify({
@@ -193,25 +255,9 @@ const CustomStepper = () => {
           validID,
         })
       );
-      setIsLoading(false);
-      setActiveStep(1);
 
-      Swal.fire({
-        icon: "success",
-        title: "Schedule Submitted!",
-        html: `
-    <p style="margin-top: 8px;">
-      Your schedule has been submitted for approval.
-    </p>
-    <p style="margin: 4px 0;">
-      You’ll receive a text once it's confirmed, or you can check the system for updates.
-    </p>
-  `,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Got it!",
-      });
+      setIsLoading(false);
     }
-    setForm(_form);
   };
 
   const fakeDB = localStorage.getItem("patronCompany");
@@ -220,29 +266,6 @@ const CustomStepper = () => {
   return (
     <form onSubmit={isLastStep ? handleSubmit : handleNext}>
       <div className="stepper-wrapper ">
-        {/* <div className="stepper-container mb-2">
-          {steps.map((step, index) => (
-            <React.Fragment key={step.id}>
-              <div className={`step ${activeStep >= step.id ? "active" : ""}`}>
-                <div className="step-circle">
-                  {step.id === 4 ? (
-                    <MDBIcon far icon="calendar-check" />
-                  ) : (
-                    step.id
-                  )}
-                </div>
-                <div className="step-label">{step.label}</div>
-              </div>
-              {index !== steps.length - 1 && (
-                <div
-                  className={`step-line ${
-                    activeStep > step.id ? "filled" : ""
-                  }`}
-                ></div>
-              )}
-            </React.Fragment>
-          ))}
-        </div> */}
         <div className="d-flex justify-content-center mb-4">
           <div
             className="position-relative d-flex justify-content-between"
