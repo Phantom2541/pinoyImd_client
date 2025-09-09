@@ -3,6 +3,8 @@ const modalityMap = {
   ultrasound: "utz",
   ecg: "ecg",
   xray: "x-ray",
+  ct: "ct",
+  mri: "mri",
 };
 const RadHC = {
   collections: [...collections],

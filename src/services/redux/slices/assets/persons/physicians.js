@@ -437,8 +437,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
+        if (state.collections?.length > 0) {
           const index = state?.collections?.tieups?.findIndex(
+            (item) => item?._id === payload?._id
+          );
+
+          state.collections[index] = payload;
+        }
+        if (state.filtered?.length > 0) {
+          const index = state?.filtered?.findIndex(
             (item) => item?._id === payload?._id
           );
 

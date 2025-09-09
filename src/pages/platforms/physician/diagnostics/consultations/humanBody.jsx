@@ -5,7 +5,7 @@ export default function HumanBody({ setSlide, slide }) {
   const containerRef = useRef(null);
   const bodyRef = useRef(null);
 
-  const medicalHistory = ["PMHx", "FMHx", "PSHx", "OB Gyne Hx"];
+  const medicalHistory = ["FMHx", "PMHx", "PSHx", "OB Gyne Hx"];
   const ancillary = ["Laboratory", "Radiology", "Vital"];
 
   const organs = [
@@ -20,7 +20,6 @@ export default function HumanBody({ setSlide, slide }) {
 
   const textRefs = useRef({});
   const organRefs = useRef({});
-
   const [lines, setLines] = useState([]);
 
   const getLinePoints = () => {
@@ -28,8 +27,8 @@ export default function HumanBody({ setSlide, slide }) {
     const rect = containerRef.current.getBoundingClientRect();
 
     const pairs = [
-      ["PMHx", "heart"],
-      ["FMHx", "leftLung"],
+      ["PMHx", "leftLung"],
+      ["FMHx", "heart"],
       ["PSHx", "liver"],
       ["OB Gyne Hx", "largeIntestine"],
       ["Laboratory", "rightLung"],
@@ -57,7 +56,7 @@ export default function HumanBody({ setSlide, slide }) {
       const x2 = oRect.left + oRect.width / 2 - rect.left;
       const y2 = oRect.top + oRect.height / 2 - rect.top;
 
-      return [{ x1, y1, x2, y2, text }]; // 👈 simple: balik na agad may text
+      return [{ x1, y1, x2, y2, text }];
     });
   };
 
@@ -86,6 +85,7 @@ export default function HumanBody({ setSlide, slide }) {
       ref={containerRef}
       style={{ position: "relative" }}
     >
+      {/* SVG Lines */}
       <svg
         aria-hidden="true"
         style={{
@@ -98,28 +98,39 @@ export default function HumanBody({ setSlide, slide }) {
         }}
       >
         {lines.map((ln, i) => (
-          <g
-            key={i}
-            style={{
-              opacity: slide && slide !== ln.text ? 0.2 : 1,
-              transition: "opacity 0.3s ease",
-            }}
-          >
+          <g key={i}>
             <line
               x1={ln.x1}
               y1={ln.y1}
               x2={ln.x2}
               y2={ln.y2}
               stroke="black"
-              strokeWidth={2}
+              strokeWidth={slide === ln.text ? 3 : 1} // Active line thicker
+              strokeOpacity={slide === ln.text ? 1 : 0.3} // Active line solid
               strokeLinecap="round"
+              style={{
+                transition: "stroke-width 0.3s ease, stroke-opacity 0.3s ease",
+              }}
             />
-            <circle cx={ln.x1} cy={ln.y1} r={3} fill="black" />
-            <circle cx={ln.x2} cy={ln.y2} r={3} fill="black" />
+            <circle
+              cx={ln.x1}
+              cy={ln.y1}
+              r={slide === ln.text ? 4 : 2} // Active circle bigger
+              fill={slide === ln.text ? "black" : "gray"}
+              style={{ transition: "r 0.3s ease, fill 0.3s ease" }}
+            />
+            <circle
+              cx={ln.x2}
+              cy={ln.y2}
+              r={slide === ln.text ? 4 : 2}
+              fill={slide === ln.text ? "black" : "gray"}
+              style={{ transition: "r 0.3s ease, fill 0.3s ease" }}
+            />
           </g>
         ))}
       </svg>
 
+      {/* Medical History Buttons */}
       <div className="checkup-data-center-image-medical-history">
         {medicalHistory.map((text) => (
           <button
@@ -127,13 +138,13 @@ export default function HumanBody({ setSlide, slide }) {
             ref={(el) => (textRefs.current[text] = el)}
             onClick={() => setSlide(slide === text ? "" : text)} // toggle
             className={slide === text ? "active" : ""}
-            disabled={slide && slide !== text}
           >
             {text}
           </button>
         ))}
       </div>
 
+      {/* Human Body Image & Organs */}
       <div
         className="checkup-data-center-image-full-body"
         style={{ position: "relative" }}
@@ -155,6 +166,7 @@ export default function HumanBody({ setSlide, slide }) {
         ))}
       </div>
 
+      {/* Ancillary Buttons */}
       <div className="checkup-data-center-image-Ancillary">
         {ancillary.map((text) => (
           <button
@@ -162,7 +174,6 @@ export default function HumanBody({ setSlide, slide }) {
             ref={(el) => (textRefs.current[text] = el)}
             onClick={() => setSlide(slide === text ? "" : text)} // toggle
             className={slide === text ? "active" : ""}
-            disabled={slide && slide !== text}
           >
             {text}
           </button>

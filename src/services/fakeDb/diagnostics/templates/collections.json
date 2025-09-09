@@ -40,21 +40,25 @@
   {
     "department": "RAD",
     "label": "Radiology",
-    "components": [
-      "ECG",
-      "Ultrasound",
-      "Xray",
-      "2DEcho",
-      "CTscan",
-      "Fibroscan",
-      "MRI"
-    ],
-    "codes": ["ECG", "UTZ", "XR", "2DE", "CTs", "FBs", "MRI"]
+    "components": ["ECG", "Ultrasound", "Xray", "2DEcho", "CTscan", "MRI"],
+    "codes": ["ECG", "UTZ", "XR", "2DE", "CTs", "MRI"]
+  },
+  {
+    "department": "CARDIO",
+    "label": "CARDIOLOGY",
+    "components": ["ABPM", "Holter", "Fibroscan"],
+    "codes": ["ABPM", "HOL", "FIB"]
   },
   {
     "department": "CLINIC",
-    "label": "Clinical",
-    "components": ["Certicifate", "Examination"],
-    "codes": ["CERT", "EXAM"]
+    "label": "Clinicians",
+    "components": [
+      "Certicifate",
+      "Clearance",
+      "Prescription",
+      "Order",
+      "Report"
+    ],
+    "codes": ["CERT", "CLR", "PRE", "ORD", "REP"]
   }
 ]

@@ -17,7 +17,7 @@ export default function CollapsableIndex() {
       ({ physicians }) => physicians
     ),
     { filtered: collection } = useSelector(({ applicants }) => applicants);
-  const { token } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -113,8 +113,9 @@ export default function CollapsableIndex() {
               UPDATE({
                 token,
                 data: {
-                  id: _id,
-                  secretary: value,
+                  _id,
+                  branch: activePlatform.branchId,
+                  secretaries: [value],
                 },
               })
             ).then(({ payload: physician }) => {

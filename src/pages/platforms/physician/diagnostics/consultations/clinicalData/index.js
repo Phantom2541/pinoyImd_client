@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import Laboratory from "./laboratory";
 import Radiology from "./radiology";
 import Vital from "./vital";
@@ -13,14 +13,20 @@ const toolsMap = {
 
 export default function ToolsSwitcher({ task }) {
   const contentRef = useRef(null);
-
-  console.log("ToolsSwitcher task: ", task);
+  const vitalSigns = {
+    temperature: "36.6°C",
+    pulse: "80 bpm",
+    bloodPressure: "120/80 mmHg",
+    respiration: "18 breaths/min",
+    weight: 70, // kg
+    height: 1.75, // meters
+  };
 
   const Component = toolsMap[task?.toLowerCase()] || Blank;
   return (
     <div>
       <div ref={contentRef}>
-        <Component task={task} fontSize={"1rem"} />
+        <Component task={task} vitalSigns={vitalSigns} fontSize={"1rem"} />
       </div>
     </div>
   );
