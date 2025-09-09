@@ -57,6 +57,7 @@ const EditableUser = ({
   formSubmitted = false,
   isSuccess: successUpdated = false,
   onUserNotFound = () => {},
+  emptyLabel = "Click here to select a Guardian",
 }) => {
   const { collections } = useSelector(({ users }) => users),
     { token } = useSelector(({ auth }) => auth),
@@ -70,10 +71,11 @@ const EditableUser = ({
     dispatch = useDispatch();
   const { addToast } = useToasts();
 
-  console.log("EditableUser user:", user);
-
   const [instanceId] = useState(() => Math.random().toString(36).substr(2, 9));
 
+  if (!user?._id) {
+    user._id = "No _id";
+  }
   const debouncedSearch = useMemo(
     () =>
       debounce((searchKey) => {
@@ -147,7 +149,7 @@ const EditableUser = ({
   const editableObj = rest?.[editableKey] || {};
 
   if (!readOnly && !isEditing && user?._id !== selected?.key) {
-    const name = fullName(editableObj) || "";
+    const name = editableObj?._id ? fullName(editableObj?.fullName) : "";
     return (
       <span
         className="cursor-pointer"
@@ -158,13 +160,13 @@ const EditableUser = ({
             })
           );
           setSearchKey(name);
-          setSelected({ ...user, key: user._id });
+          setSelected({ ...user, key: user?._id || "No _id" });
           setIsEditing(true);
           setHideMsg(true);
           setResults([]);
         }}
       >
-        {name ? name : " Click here to select a Guardian"}
+        {name ? name : emptyLabel}
       </span>
     );
   }

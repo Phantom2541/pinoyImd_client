@@ -55,6 +55,7 @@ import {
   miscellaneous,
   appointments,
 } from "./slices/diagnostics";
+import consultations from "./slices/diagnostics/consultations";
 
 // FINANCE
 import {
@@ -140,7 +141,7 @@ const store = configureStore({
     generics,
     mentainance,
     quest,
-
+    consultations,
     dragDrop,
     table,
     miscellaneous,

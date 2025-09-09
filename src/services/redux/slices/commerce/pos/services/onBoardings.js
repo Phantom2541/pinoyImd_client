@@ -395,7 +395,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetSELECTED: (state, { payload }) => {
-      console.log("payload", payload);
       state.selected = payload;
       state.showModal = true;
     },

@@ -1,14 +1,14 @@
 import { useState } from "react";
-import Laboratory from "./clinicalData/laboratory";
+import ToolsSwitcher from "./clinicalData";
+import HistorySwitcher from "./medicalHistory";
 import HumanBody from "./humanBody";
-import PMH from "./medicalHistory/pmh";
 
 export default function Body() {
   const [slide, setSlide] = useState("");
 
   const getTranslate = () => {
     if (!slide) return "-33.3333%"; // default center
-    if (["PMHx", "FMHx", "PSHx", "OB Gyne Hx"].includes(slide)) {
+    if (["FMHx", "PMHx", "PSHx", "OB Gyne Hx"].includes(slide)) {
       return "0"; // medicalHistory → right panel
     }
     if (["Laboratory", "Radiology", "Vital"].includes(slide)) {
@@ -27,6 +27,7 @@ export default function Body() {
           transition: "transform 0.5s ease-in-out, width 0.5s ease-in-out",
         }}
       >
+        {/* Medical History Panel */}
         <div
           className="checkup-data-body-slide-medicalHistory"
           style={{
@@ -34,9 +35,10 @@ export default function Body() {
             width: slide ? "calc(100% - 600px)" : "100%",
           }}
         >
-          <PMH />
+          <HistorySwitcher task={slide} />
         </div>
 
+        {/* Human Body / Image Panel */}
         <div
           className="checkup-data-body-slide-image"
           style={{
@@ -47,6 +49,7 @@ export default function Body() {
           <HumanBody setSlide={setSlide} slide={slide} />
         </div>
 
+        {/* Clinical Tools / Ancillary Panel */}
         <div
           className="checkup-data-body-slide-clinicalData"
           style={{
@@ -54,7 +57,7 @@ export default function Body() {
             width: slide ? "calc(100% - 600px)" : "100%",
           }}
         >
-          <Laboratory />
+          <ToolsSwitcher task={slide} />
         </div>
       </div>
     </div>

@@ -20,6 +20,7 @@ import {
 import Swal from "sweetalert2";
 import Menus from "./menus";
 import {
+  Cloudinary,
   ENDPOINT,
   fullAddress,
   fullName,
@@ -45,7 +46,7 @@ export default function Translate() {
 
   const toggle = useCallback(() => dispatch(TOGGLE(false)), [dispatch]);
 
-  const { pid = {}, schedule } = selected || {};
+  const { pid = {}, schedule, requirements = {} } = selected || {};
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -157,9 +158,13 @@ export default function Translate() {
             handleRemovedToCart={handleRemovedToCart}
           />
           <MDBCol>
-            <ImageMagnifier
-              src={`${ENDPOINT}/public/users/${pid.email}/booking/form-${schedule}.png`}
-            />
+            <div className="shadow-sm">
+              <ImageMagnifier
+                src={`${Cloudinary.getEndpoint()}/${
+                  requirements?.rfId || ""
+                }/users/${pid.email}/booking/form-${schedule}.png`}
+              />
+            </div>
           </MDBCol>
         </MDBRow>
         <div className="text-center mt-3">

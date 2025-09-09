@@ -13,6 +13,7 @@ import {
 } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import { RESET } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Translate from "./collapse/bodySwitcher/validation/translate";
+import Approval from "../approval";
 const Collapsable = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { isLoading, message, isSuccess } = useSelector(({ deals }) => deals),
@@ -77,7 +78,8 @@ const Collapsable = () => {
           <Footer />
         </MDBCard>
       </MDBAnimation>
-      <Modal />
+      {/* <Modal /> */}
+      <Approval />
       <Translate />
     </>
   );
