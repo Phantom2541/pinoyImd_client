@@ -42,6 +42,9 @@
   width: 4.25in;
   height: 5.5in;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .checkup-data-prescription-card-header {
@@ -142,4 +145,53 @@
   outline: none;
   box-shadow: none !important;
   border-bottom: 1px solid #007bff;
+}
+
+.checkup-data-prescription-card-body {
+  height: 66%;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkup-data-prescription-card-body canvas {
+  width: 100%; /* CSS scaling */
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.checkup-data-prescription-card-body-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(60%, 40%);
+  font-size: 3rem;
+  color: #004085;
+  z-index: 2;
+}
+
+.checkup-data-prescription-card-body-icon2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(5%, 5%);
+  font-size: 16rem;
+  color: #004085;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.checkup-data-prescription-card-footer {
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 10px;
+  margin-top: auto;
+}
+
+.checkup-data-prescription-card-footer span {
+  font-size: 0.7rem;
+  font-weight: 400;
 }
