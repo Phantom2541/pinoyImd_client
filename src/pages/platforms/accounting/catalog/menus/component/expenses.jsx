@@ -1,6 +1,7 @@
 import React from "react";
 import { MDBInput, MDBRow, MDBCol } from "mdbreact";
 import { currency } from "./../../../../../../services/utilities";
+
 const expenseCodes = [
   {
     code: "Tf",
@@ -9,13 +10,13 @@ const expenseCodes = [
   },
   {
     code: "Pf",
-    label: "Professional Fee (PF)",
+    label: "Professional Fee (%PF)",
     title:
       "Bayad sa nagbasa o nag-interpret ng resulta (e.g., radiologist, pathologist)",
   },
   {
     code: "Rf",
-    label: "Referral Fee (RF)",
+    label: "Referral Fee (%RF)",
     title: "Incentive o share ng nag-refer ng pasyente (doktor o ahente)",
   },
 ];
@@ -23,6 +24,7 @@ const expenseCodes = [
 export default function CostBreakdown({ form, setForm }) {
   const capital = form.capital || {};
   const expenses = form.expenses || {};
+  const srp = form?.opd || 0; // ✅ SRP galing sa form.opd
 
   // 🔵 Capital Handling
   const handleCapitalChange = (field, value) => {
@@ -50,17 +52,27 @@ export default function CostBreakdown({ form, setForm }) {
     setForm({ ...form, expenses: newExpenses });
   };
 
-  const getExpenseValue = (code) => expenses?.[code] ?? 0;
+  // ✅ Default PF & RF = 10%
+  const getExpenseValue = (code) => {
+    if ((code === "Pf" || code === "Rf") && expenses?.[code] == null) {
+      return 10;
+    }
+    return expenses?.[code] ?? 0;
+  };
 
   // 💰 Totals
   const capitalTotal = ["Pre", "Ana", "Pos"].reduce(
     (sum, key) => sum + (capital?.[key] ?? 0),
     0
   );
-  const expensesTotal = expenseCodes.reduce(
-    (sum, { code }) => sum + (getExpenseValue(code) || 0),
-    0
-  );
+
+  const expensesTotal = expenseCodes.reduce((sum, { code }) => {
+    if (code === "Pf" || code === "Rf") {
+      return sum + ((srp || 0) * (getExpenseValue(code) || 0)) / 100;
+    }
+    return sum + (getExpenseValue(code) || 0);
+  }, 0);
+
   const grandTotal = capitalTotal + expensesTotal;
 
   return (
@@ -108,13 +120,21 @@ export default function CostBreakdown({ form, setForm }) {
       <MDBRow>
         {expenseCodes.map(({ code, label, title }) => (
           <MDBCol md="4" key={code}>
-            <MDBInput
-              type="number"
-              label={label}
-              title={title}
-              value={getExpenseValue(code)}
-              onChange={(e) => handleExpenseChange(code, e.target.value)}
-            />
+            <div className="d-flex align-items-center">
+              <MDBInput
+                type="number"
+                label={label}
+                title={title}
+                value={getExpenseValue(code)}
+                onChange={(e) => handleExpenseChange(code, e.target.value)}
+              />
+              {/* ✅ Special handling for PF & RF */}
+              {(code === "Pf" || code === "Rf") && srp ? (
+                <small className="ml-2 text-primary font-weight-bold">
+                  = {currency.format((srp * getExpenseValue(code)) / 100)}
+                </small>
+              ) : null}
+            </div>
           </MDBCol>
         ))}
       </MDBRow>

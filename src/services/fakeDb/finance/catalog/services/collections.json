@@ -13,7 +13,8 @@
     "specimen": "Cerebrospinal Fluid (CSF)",
     "template": 7,
     "preference": "",
-    "purpose": "To evaluate for central nervous system infections (meningitis, encephalitis), subarachnoid hemorrhage, inflammatory or autoimmune conditions (e.g., multiple sclerosis), malignancies, and other neurological disorders."
+    "purpose": "To evaluate for central nervous system infections (meningitis, encephalitis), subarachnoid hemorrhage, inflammatory or autoimmune conditions (e.g., multiple sclerosis), malignancies, and other neurological disorders.",
+    "organ": []
   },
   {
     "id": 2,
@@ -29,7 +30,9 @@
     "specimen": "Pleural, Peritoneal, Pericardial, or Synovial Fluid",
     "template": 7,
     "preference": "",
-    "purpose": "To differentiate between transudate and exudate, evaluate for infection, malignancy, hemorrhage, or inflammatory conditions in body cavities or joints."
+    "purpose": "To differentiate between transudate and exudate, evaluate for infection, malignancy, hemorrhage, or inflammatory conditions in body cavities or joints.",
+
+    "organ": []
   },
   {
     "id": 3,
@@ -45,7 +48,8 @@
     "specimen": "Semen",
     "template": 15,
     "preference": "",
-    "purpose": "To evaluate male fertility potential and investigate causes of infertility by assessing semen quality, sperm count, motility, morphology, and other seminal parameters."
+    "purpose": "To evaluate male fertility potential and investigate causes of infertility by assessing semen quality, sperm count, motility, morphology, and other seminal parameters.",
+    "organ": []
   },
   {
     "id": 4,
@@ -61,7 +65,8 @@
     "specimen": "Whole Blood",
     "template": 8,
     "preference": "",
-    "purpose": "To detect bloodstream infections, identify causative organisms, and determine appropriate antibiotic therapy."
+    "purpose": "To detect bloodstream infections, identify causative organisms, and determine appropriate antibiotic therapy.",
+    "organ": []
   },
   {
     "id": 5,
@@ -77,7 +82,8 @@
     "specimen": "Sputum (preferred), may also use gastric aspirates or bronchoalveolar lavage",
     "template": 8,
     "preference": "",
-    "purpose": "To detect Mycobacterium tuberculosis and other acid-fast bacilli in respiratory and other specimens."
+    "purpose": "To detect Mycobacterium tuberculosis and other acid-fast bacilli in respiratory and other specimens.",
+    "organ": []
   },
   {
     "id": 6,
@@ -92,7 +98,8 @@
     "specimen": "Urine",
     "template": 8,
     "preference": "",
-    "purpose": "To detect urinary tract infections and guide appropriate antibiotic therapy."
+    "purpose": "To detect urinary tract infections and guide appropriate antibiotic therapy.",
+    "organ": []
   },
   {
     "id": 7,
@@ -107,7 +114,8 @@
     "specimen": "Body Fluid (pleural, peritoneal, pericardial, synovial, etc.)",
     "template": 8,
     "preference": "",
-    "purpose": "To identify infectious agents in body fluids and determine appropriate antimicrobial therapy."
+    "purpose": "To identify infectious agents in body fluids and determine appropriate antimicrobial therapy.",
+    "organ": []
   },
   {
     "id": 8,
@@ -122,7 +130,8 @@
     "specimen": "Other specimen types (e.g., pus, wound swab, catheter tip, etc.)",
     "template": 8,
     "preference": "",
-    "purpose": "To detect pathogens from non-routine specimens and guide antibiotic therapy."
+    "purpose": "To detect pathogens from non-routine specimens and guide antibiotic therapy.",
+    "organ": []
   },
   {
     "id": 9,
@@ -137,7 +146,8 @@
     "specimen": "Whole Blood (capillary) or Serum/Plasma (venous)",
     "template": 2,
     "preference": "equal",
-    "purpose": "To assess blood glucose level at any time of day, useful for diabetes screening and monitoring."
+    "purpose": "To assess blood glucose level at any time of day, useful for diabetes screening and monitoring.",
+    "organ": []
   },
   {
     "id": 10,
@@ -152,7 +162,8 @@
     "specimen": "Serum or Plasma",
     "template": 2,
     "preference": "equal",
-    "purpose": "To measure fasting blood glucose level for the diagnosis and monitoring of diabetes mellitus."
+    "purpose": "To measure fasting blood glucose level for the diagnosis and monitoring of diabetes mellitus.",
+    "organ": []
   },
   {
     "id": 11,
@@ -167,7 +178,8 @@
     "preparation": "No special preparation required",
     "specimen": "Whole Blood (EDTA)",
     "template": 4,
-    "purpose": "To assess average blood glucose levels over the past 2–3 months and monitor diabetes control"
+    "purpose": "To assess average blood glucose levels over the past 2–3 months and monitor diabetes control",
+    "organ": []
   },
   {
     "id": 12,
@@ -182,7 +194,8 @@
     "preparation": "No special preparation",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To detect and monitor liver injury or disease"
+    "purpose": "To detect and monitor liver injury or disease",
+    "organ": []
   },
   {
     "id": 13,
@@ -197,7 +210,8 @@
     "preparation": "No special preparation",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To detect liver or muscle damage and monitor treatment response"
+    "purpose": "To detect liver or muscle damage and monitor treatment response",
+    "organ": []
   },
   {
     "id": 14,
@@ -211,7 +225,8 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 15,
@@ -225,7 +240,8 @@
     "preference": "gender",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 16,
@@ -239,7 +255,8 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 17,
@@ -253,7 +270,8 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 18,
@@ -267,7 +285,8 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 19,
@@ -281,7 +300,8 @@
     "preference": "equal",
     "preparation": "None",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 47,
@@ -295,7 +315,8 @@
     "preparation": "None",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "Evaluates cardiovascular risk by comparing LDL (bad cholesterol) and HDL (good cholesterol) levels."
+    "purpose": "Evaluates cardiovascular risk by comparing LDL (bad cholesterol) and HDL (good cholesterol) levels.",
+    "organ": []
   },
   {
     "id": 20,
@@ -309,7 +330,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "preference": "gender"
+    "preference": "gender",
+    "organ": []
   },
   {
     "id": 21,
@@ -323,7 +345,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 22,
@@ -337,7 +360,8 @@
     "preference": "gender",
     "preparation": "FASTING 6 HOURS",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 23,
@@ -351,7 +375,8 @@
     "preference": "development",
     "preparation": "Never give K to any patient who is not voiding. Limit K to 40 mEqs/L of fluid added to IVF.",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 24,
@@ -365,7 +390,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 25,
@@ -379,7 +405,8 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 2
+    "template": 2,
+    "organ": []
   },
   {
     "id": 26,
@@ -393,7 +420,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "Used to evaluate phosphate metabolism, kidney function, and bone disorders such as rickets and osteomalacia."
+    "purpose": "Used to evaluate phosphate metabolism, kidney function, and bone disorders such as rickets and osteomalacia.",
+    "organ": []
   },
   {
     "id": 27,
@@ -407,7 +435,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "Assesses calcium balance, helpful in diagnosing bone disease, kidney disease, and parathyroid disorders."
+    "purpose": "Assesses calcium balance, helpful in diagnosing bone disease, kidney disease, and parathyroid disorders.",
+    "organ": []
   },
   {
     "id": 28,
@@ -421,7 +450,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "Measures the biologically active form of calcium; important in critically ill patients, surgery, and monitoring parathyroid function."
+    "purpose": "Measures the biologically active form of calcium; important in critically ill patients, surgery, and monitoring parathyroid function.",
+    "organ": []
   },
   {
     "id": 29,
@@ -435,7 +465,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "Evaluates magnesium levels in relation to muscle, nerve, and cardiac function; also used in monitoring kidney disorders and malnutrition."
+    "purpose": "Evaluates magnesium levels in relation to muscle, nerve, and cardiac function; also used in monitoring kidney disorders and malnutrition.",
+    "organ": []
   },
   {
     "id": 30,
@@ -449,7 +480,8 @@
     "preparation": "none",
     "specimen": "Urine",
     "template": 2,
-    "purpose": "Assesses urinary magnesium excretion to help differentiate causes of low or high blood magnesium levels."
+    "purpose": "Assesses urinary magnesium excretion to help differentiate causes of low or high blood magnesium levels.",
+    "organ": []
   },
   {
     "id": 31,
@@ -463,7 +495,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate liver and bone health, useful in diagnosing liver disease, bone disorders, and bile duct obstructions."
+    "purpose": "To evaluate liver and bone health, useful in diagnosing liver disease, bone disorders, and bile duct obstructions.",
+    "organ": []
   },
   {
     "id": 32,
@@ -477,7 +510,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction."
+    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction.",
+    "organ": []
   },
   {
     "id": 33,
@@ -491,7 +525,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction."
+    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction.",
+    "organ": []
   },
   {
     "id": 34,
@@ -505,7 +540,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction."
+    "purpose": "To assess liver function and diagnose jaundice, hemolysis, and bile duct obstruction.",
+    "organ": []
   },
   {
     "id": 35,
@@ -519,7 +555,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate protein levels in the blood and diagnose anemia, malnutrition, and kidney disease."
+    "purpose": "To evaluate protein levels in the blood and diagnose anemia, malnutrition, and kidney disease.",
+    "organ": []
   },
   {
     "id": 36,
@@ -533,7 +570,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To assess nutritional status, liver function, and kidney disease by measuring the main protein in blood plasma."
+    "purpose": "To assess nutritional status, liver function, and kidney disease by measuring the main protein in blood plasma.",
+    "organ": []
   },
   {
     "id": 37,
@@ -547,7 +585,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate immune system function and detect chronic infections, liver disease, or certain blood cancers."
+    "purpose": "To evaluate immune system function and detect chronic infections, liver disease, or certain blood cancers.",
+    "organ": []
   },
   {
     "id": 38,
@@ -561,7 +600,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To help differentiate between liver disease, kidney disease, and immune disorders by comparing albumin and globulin levels."
+    "purpose": "To help differentiate between liver disease, kidney disease, and immune disorders by comparing albumin and globulin levels.",
+    "organ": []
   },
   {
     "id": 39,
@@ -575,7 +615,8 @@
     "preparation": "none (pero minsan fasting or posture-specific)",
     "specimen": "Whole Blood",
     "template": 2,
-    "purpose": "To diagnose and monitor adrenal gland disorders such as hyperaldosteronism, Addison’s disease, and secondary hypertension."
+    "purpose": "To diagnose and monitor adrenal gland disorders such as hyperaldosteronism, Addison’s disease, and secondary hypertension.",
+    "organ": []
   },
   {
     "id": 40,
@@ -589,7 +630,8 @@
     "preparation": "none",
     "specimen": "Serum or Plasma",
     "template": 2,
-    "purpose": "To assess tissue damage and aid in diagnosing conditions such as heart attack, liver disease, hemolysis, and cancer."
+    "purpose": "To assess tissue damage and aid in diagnosing conditions such as heart attack, liver disease, hemolysis, and cancer.",
+    "organ": []
   },
   {
     "id": 41,
@@ -603,7 +645,8 @@
     "preparation": "Fasting preferred; avoid alcohol before test",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate liver and bile duct function, and to help detect alcohol-related liver damage."
+    "purpose": "To evaluate liver and bile duct function, and to help detect alcohol-related liver damage.",
+    "organ": []
   },
   {
     "id": 42,
@@ -617,7 +660,8 @@
     "preparation": "Fasting preferred; morning sample recommended",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate pituitary gland function and investigate infertility, galactorrhea, or suspected pituitary tumors."
+    "purpose": "To evaluate pituitary gland function and investigate infertility, galactorrhea, or suspected pituitary tumors.",
+    "organ": []
   },
   {
     "id": 43,
@@ -631,7 +675,8 @@
     "preparation": "Morning sample preferred; fasting recommended",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To measure circulating iron levels and help diagnose anemia, iron overload, or other iron metabolism disorders."
+    "purpose": "To measure circulating iron levels and help diagnose anemia, iron overload, or other iron metabolism disorders.",
+    "organ": []
   },
   {
     "id": 44,
@@ -645,7 +690,8 @@
     "preparation": "Morning sample preferred; fasting recommended",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To assess the blood’s capacity to transport iron and help distinguish between iron deficiency and other types of anemia."
+    "purpose": "To assess the blood’s capacity to transport iron and help distinguish between iron deficiency and other types of anemia.",
+    "organ": []
   },
   {
     "id": 45,
@@ -659,7 +705,8 @@
     "preparation": "none",
     "specimen": "Urine",
     "template": 2,
-    "purpose": "To evaluate liver function and detect hemolysis through measurement of urinary bilirubin breakdown products."
+    "purpose": "To evaluate liver function and detect hemolysis through measurement of urinary bilirubin breakdown products.",
+    "organ": []
   },
   {
     "id": 46,
@@ -673,7 +720,8 @@
     "preparation": "Fasting preferred, avoid prostate manipulation prior to test",
     "specimen": "Serum (separated immediately), EDTA plasma",
     "template": 2,
-    "purpose": "To assess prostate function and detect prostate cancer or bone-related disorders."
+    "purpose": "To assess prostate function and detect prostate cancer or bone-related disorders.",
+    "organ": []
   },
   {
     "id": 48,
@@ -687,7 +735,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum or heparinized plasma",
     "template": 2,
-    "purpose": "To detect early muscle injury, including myocardial infarction and rhabdomyolysis."
+    "purpose": "To detect early muscle injury, including myocardial infarction and rhabdomyolysis.",
+    "organ": []
   },
   {
     "id": 49,
@@ -701,7 +750,8 @@
     "preparation": "None",
     "specimen": "EDTA plasma",
     "template": 2,
-    "purpose": "To diagnose and monitor heart failure and ventricular dysfunction."
+    "purpose": "To diagnose and monitor heart failure and ventricular dysfunction.",
+    "organ": []
   },
   {
     "id": 50,
@@ -715,7 +765,8 @@
     "preparation": "Avoid intramuscular injections or vigorous exercise before test",
     "specimen": "Serum or plasma",
     "template": 2,
-    "purpose": "To evaluate muscle damage and support the diagnosis of myocardial infarction or rhabdomyolysis."
+    "purpose": "To evaluate muscle damage and support the diagnosis of myocardial infarction or rhabdomyolysis.",
+    "organ": []
   },
   {
     "id": 51,
@@ -729,7 +780,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum (red-top or SST)",
     "template": 2,
-    "purpose": "To diagnose and monitor acute pancreatitis and other pancreatic disorders."
+    "purpose": "To diagnose and monitor acute pancreatitis and other pancreatic disorders.",
+    "organ": []
   },
   {
     "id": 52,
@@ -743,7 +795,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum or urine",
     "template": 2,
-    "purpose": "To diagnose and monitor acute pancreatitis and other pancreatic or salivary gland disorders."
+    "purpose": "To diagnose and monitor acute pancreatitis and other pancreatic or salivary gland disorders.",
+    "organ": []
   },
   {
     "id": 53,
@@ -757,7 +810,8 @@
     "preparation": "No special preparation required",
     "specimen": "Citrated plasma",
     "template": 5,
-    "purpose": "To evaluate coagulation function and monitor warfarin therapy."
+    "purpose": "To evaluate coagulation function and monitor warfarin therapy.",
+    "organ": []
   },
   {
     "id": 54,
@@ -771,7 +825,8 @@
     "preparation": "No special preparation required",
     "specimen": "Citrated plasma",
     "template": 5,
-    "purpose": "To evaluate coagulation function and monitor heparin therapy."
+    "purpose": "To evaluate coagulation function and monitor heparin therapy.",
+    "organ": []
   },
   {
     "id": 55,
@@ -785,7 +840,8 @@
     "preparation": "No special preparation required",
     "specimen": "Whole blood (EDTA)",
     "template": 10,
-    "purpose": "To detect unexpected antibodies that may cause transfusion reactions or hemolytic disease of the newborn."
+    "purpose": "To detect unexpected antibodies that may cause transfusion reactions or hemolytic disease of the newborn.",
+    "organ": []
   },
   {
     "id": 56,
@@ -799,7 +855,8 @@
     "preparation": "No special preparation required",
     "specimen": "Whole blood (EDTA)",
     "template": 10,
-    "purpose": "To ensure donor-recipient blood compatibility before transfusion and prevent transfusion reactions."
+    "purpose": "To ensure donor-recipient blood compatibility before transfusion and prevent transfusion reactions.",
+    "organ": []
   },
   {
     "id": 57,
@@ -813,7 +870,8 @@
     "preparation": "No special preparation required",
     "specimen": "Whole blood (EDTA)",
     "template": 10,
-    "purpose": "To confirm donor-recipient blood compatibility before transfusion and prevent transfusion reactions."
+    "purpose": "To confirm donor-recipient blood compatibility before transfusion and prevent transfusion reactions.",
+    "organ": []
   },
   {
     "id": 58,
@@ -827,7 +885,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 1,
-    "purpose": "To evaluate overall blood health and detect conditions such as anemia, infection, and hematologic disorders."
+    "purpose": "To evaluate overall blood health and detect conditions such as anemia, infection, and hematologic disorders.",
+    "organ": []
   },
   {
     "id": 59,
@@ -841,7 +900,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 1,
-    "purpose": "To measure platelet levels and diagnose bleeding or clotting disorders."
+    "purpose": "To measure platelet levels and diagnose bleeding or clotting disorders.",
+    "organ": []
   },
   {
     "id": 60,
@@ -855,7 +915,8 @@
     "preparation": "Avoid aspirin/NSAIDs prior to test",
     "specimen": "Capillary blood (skin puncture)",
     "template": 1,
-    "purpose": "To assess platelet function and screen for bleeding disorders."
+    "purpose": "To assess platelet function and screen for bleeding disorders.",
+    "organ": []
   },
   {
     "id": 61,
@@ -869,7 +930,8 @@
     "preparation": "No special preparation required",
     "specimen": "Whole blood (capillary or venous)",
     "template": 1,
-    "purpose": "To assess overall clotting ability and help diagnose bleeding disorders."
+    "purpose": "To assess overall clotting ability and help diagnose bleeding disorders.",
+    "organ": []
   },
   {
     "id": 62,
@@ -883,7 +945,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 1,
-    "purpose": "To evaluate bone marrow activity and monitor treatment response in anemia."
+    "purpose": "To evaluate bone marrow activity and monitor treatment response in anemia.",
+    "organ": []
   },
   {
     "id": 63,
@@ -897,7 +960,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 1,
-    "purpose": "To detect and monitor inflammation and inflammatory conditions."
+    "purpose": "To detect and monitor inflammation and inflammatory conditions.",
+    "organ": []
   },
   {
     "id": 64,
@@ -911,7 +975,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 1,
-    "purpose": "To evaluate red blood cell levels and diagnose anemia or polycythemia."
+    "purpose": "To evaluate red blood cell levels and diagnose anemia or polycythemia.",
+    "organ": []
   },
   {
     "id": 65,
@@ -925,7 +990,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 1,
-    "purpose": "To assess red blood cell and platelet levels and diagnose anemia, polycythemia, or bleeding/clotting disorders."
+    "purpose": "To assess red blood cell and platelet levels and diagnose anemia, polycythemia, or bleeding/clotting disorders.",
+    "organ": []
   },
   {
     "id": 66,
@@ -939,7 +1005,8 @@
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
     "template": 4,
-    "purpose": "To determine ABO blood group and Rh factor for transfusion compatibility and pregnancy management."
+    "purpose": "To determine ABO blood group and Rh factor for transfusion compatibility and pregnancy management.",
+    "organ": []
   },
   {
     "id": 67,
@@ -953,7 +1020,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum or urine",
     "template": 4,
-    "purpose": "To detect pregnancy through the presence of human chorionic gonadotropin (hCG)."
+    "purpose": "To detect pregnancy through the presence of human chorionic gonadotropin (hCG).",
+    "organ": []
   },
   {
     "id": 68,
@@ -967,7 +1035,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum or plasma",
     "template": 4,
-    "purpose": "To screen for HIV infection."
+    "purpose": "To screen for HIV infection.",
+    "organ": []
   },
   {
     "id": 69,
@@ -981,7 +1050,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum or plasma",
     "template": 4,
-    "purpose": "To screen for syphilis infection."
+    "purpose": "To screen for syphilis infection.",
+    "organ": []
   },
   {
     "id": 71,
@@ -995,7 +1065,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To screen for G6PD deficiency, which may cause hemolytic anemia under oxidative stress."
+    "purpose": "To screen for G6PD deficiency, which may cause hemolytic anemia under oxidative stress.",
+    "organ": []
   },
   {
     "id": 72,
@@ -1009,7 +1080,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To confirm G6PD deficiency in patients with low enzyme activity on screening tests."
+    "purpose": "To confirm G6PD deficiency in patients with low enzyme activity on screening tests.",
+    "organ": []
   },
   {
     "id": 77,
@@ -1023,7 +1095,8 @@
     "specimen": "Serum/Plasma",
     "template": 4,
     "preference": "For screening only. Interpretation: NS1 positive = acute infection (1–7 days); IgM positive = recent/ongoing infection; IgG positive = past infection or secondary dengue.",
-    "purpose": "To screen for dengue using both antigen (NS1) and antibody (IgG/IgM) detection."
+    "purpose": "To screen for dengue using both antigen (NS1) and antibody (IgG/IgM) detection.",
+    "organ": []
   },
   {
     "id": 334,
@@ -1037,7 +1110,8 @@
     "specimen": "Serum/Plasma",
     "template": 4,
     "preference": "For screening only. Interpretation: IgM positive = recent/ongoing infection; IgG positive = past infection or secondary dengue.",
-    "purpose": "To screen for dengue infection using antibody detection (IgG/IgM)."
+    "purpose": "To screen for dengue infection using antibody detection (IgG/IgM).",
+    "organ": []
   },
   {
     "id": 335,
@@ -1051,7 +1125,8 @@
     "specimen": "Serum/Plasma",
     "template": 4,
     "preference": "For screening only. Interpretation: NS1 positive = acute dengue infection (1–7 days).",
-    "purpose": "To screen for dengue infection using antigen detection (NS1)."
+    "purpose": "To screen for dengue infection using antigen detection (NS1).",
+    "organ": []
   },
   {
     "id": 80,
@@ -1065,7 +1140,8 @@
     "specimen": "Skin scrapings / Hair / Nail clippings",
     "template": 4,
     "preference": "None",
-    "purpose": "To detect fungal infections using a 10% potassium hydroxide (KOH) smear."
+    "purpose": "To detect fungal infections using a 10% potassium hydroxide (KOH) smear.",
+    "organ": []
   },
   {
     "id": 82,
@@ -1079,7 +1155,8 @@
     "specimen": "EDTA whole blood",
     "template": 4,
     "preference": "None",
-    "purpose": "To diagnose malaria by detecting malarial parasites in blood smears."
+    "purpose": "To diagnose malaria by detecting malarial parasites in blood smears.",
+    "organ": []
   },
   {
     "id": 131,
@@ -1093,7 +1170,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To screen for acute or past hepatitis A virus infection."
+    "purpose": "To screen for acute or past hepatitis A virus infection.",
+    "organ": []
   },
   {
     "id": 138,
@@ -1107,7 +1185,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To determine past infection or immunity to hepatitis A virus."
+    "purpose": "To determine past infection or immunity to hepatitis A virus.",
+    "organ": []
   },
   {
     "id": 139,
@@ -1121,7 +1200,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To detect acute or recent hepatitis A virus infection."
+    "purpose": "To detect acute or recent hepatitis A virus infection.",
+    "organ": []
   },
   {
     "id": 70,
@@ -1135,7 +1215,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To screen for hepatitis B virus infection."
+    "purpose": "To screen for hepatitis B virus infection.",
+    "organ": []
   },
   {
     "id": 95,
@@ -1149,7 +1230,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To assess hepatitis B infectivity and viral replication activity."
+    "purpose": "To assess hepatitis B infectivity and viral replication activity.",
+    "organ": []
   },
   {
     "id": 96,
@@ -1163,7 +1245,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To quantify hepatitis B surface antigen levels for monitoring infection status and treatment response."
+    "purpose": "To quantify hepatitis B surface antigen levels for monitoring infection status and treatment response.",
+    "organ": []
   },
   {
     "id": 97,
@@ -1177,7 +1260,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To screen for hepatitis C virus infection."
+    "purpose": "To screen for hepatitis C virus infection.",
+    "organ": []
   },
   {
     "id": 83,
@@ -1191,7 +1275,8 @@
     "specimen": "Stool",
     "template": 3,
     "preference": "None",
-    "purpose": "To detect parasites, ova, cysts, and other abnormalities in stool."
+    "purpose": "To detect parasites, ova, cysts, and other abnormalities in stool.",
+    "organ": []
   },
   {
     "id": 84,
@@ -1205,7 +1290,8 @@
     "specimen": "Stool",
     "template": 4,
     "preference": "None",
-    "purpose": "To detect hidden (occult) blood in stool, useful for diagnosing gastrointestinal bleeding."
+    "purpose": "To detect hidden (occult) blood in stool, useful for diagnosing gastrointestinal bleeding.",
+    "organ": []
   },
   {
     "id": 85,
@@ -1219,7 +1305,8 @@
     "specimen": "Stool or vomitus sample",
     "template": 3,
     "preference": "None",
-    "purpose": "To determine whether the blood in stool or infant vomitus is of maternal or fetal origin."
+    "purpose": "To determine whether the blood in stool or infant vomitus is of maternal or fetal origin.",
+    "organ": []
   },
   {
     "id": 86,
@@ -1234,7 +1321,8 @@
     "template": 4,
     "preference": "None",
     "purpose": "To screen for cervical cancer and precancerous changes in cervical cells.",
-    "description": "A procedure in which a small brush is used to gently remove cells from the surface of the cervix and the area around it so they can be checked under a microscope for cervical cancer or precancerous changes."
+    "description": "A procedure in which a small brush is used to gently remove cells from the surface of the cervix and the area around it so they can be checked under a microscope for cervical cancer or precancerous changes.",
+    "organ": []
   },
   {
     "id": 87,
@@ -1248,7 +1336,8 @@
     "specimen": "EDTA whole blood",
     "template": 10,
     "preference": "None",
-    "purpose": "To evaluate blood cell morphology and diagnose hematologic disorders."
+    "purpose": "To evaluate blood cell morphology and diagnose hematologic disorders.",
+    "organ": []
   },
   {
     "id": 132,
@@ -1262,7 +1351,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To detect acute or recent hepatitis B infection."
+    "purpose": "To detect acute or recent hepatitis B infection.",
+    "organ": []
   },
   {
     "id": 133,
@@ -1276,7 +1366,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To detect past exposure or chronic hepatitis B infection."
+    "purpose": "To detect past exposure or chronic hepatitis B infection.",
+    "organ": []
   },
   {
     "id": 134,
@@ -1290,7 +1381,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To assess hepatitis B infection status, infectivity, and recovery phase."
+    "purpose": "To assess hepatitis B infection status, infectivity, and recovery phase.",
+    "organ": []
   },
   {
     "id": 99,
@@ -1304,7 +1396,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To detect acute hepatitis B infection and seroconversion phase."
+    "purpose": "To detect acute hepatitis B infection and seroconversion phase.",
+    "organ": []
   },
   {
     "id": 140,
@@ -1318,7 +1411,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To quantify antibodies against hepatitis C virus and help evaluate exposure or chronic infection."
+    "purpose": "To quantify antibodies against hepatitis C virus and help evaluate exposure or chronic infection.",
+    "organ": []
   },
   {
     "id": 147,
@@ -1332,7 +1426,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "None",
-    "purpose": "To screen for hepatitis C virus infection."
+    "purpose": "To screen for hepatitis C virus infection.",
+    "organ": []
   },
   {
     "id": 146,
@@ -1346,7 +1441,8 @@
     "specimen": "Serum/Plasma",
     "template": 4,
     "preference": "None",
-    "purpose": "To diagnose diabetes mellitus and impaired glucose tolerance."
+    "purpose": "To diagnose diabetes mellitus and impaired glucose tolerance.",
+    "organ": []
   },
   {
     "id": 78,
@@ -1360,7 +1456,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To evaluate skeletal muscle damage."
+    "purpose": "To evaluate skeletal muscle damage.",
+    "organ": []
   },
   {
     "id": 79,
@@ -1374,7 +1471,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To evaluate cardiac muscle injury, especially myocardial infarction."
+    "purpose": "To evaluate cardiac muscle injury, especially myocardial infarction.",
+    "organ": []
   },
   {
     "id": 81,
@@ -1388,7 +1486,8 @@
     "specimen": "Serum (and 24-hour urine if required)",
     "template": 6,
     "preference": "None",
-    "purpose": "To assess renal function and estimate glomerular filtration rate (GFR)."
+    "purpose": "To assess renal function and estimate glomerular filtration rate (GFR).",
+    "organ": []
   },
   {
     "id": 73,
@@ -1402,7 +1501,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To evaluate androgen status and diagnose hormonal imbalances."
+    "purpose": "To evaluate androgen status and diagnose hormonal imbalances.",
+    "organ": []
   },
   {
     "id": 74,
@@ -1416,7 +1516,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To monitor pancreatic cancer and other gastrointestinal malignancies."
+    "purpose": "To monitor pancreatic cancer and other gastrointestinal malignancies.",
+    "organ": []
   },
   {
     "id": 75,
@@ -1430,7 +1531,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To diagnose and monitor systemic lupus erythematosus (SLE)."
+    "purpose": "To diagnose and monitor systemic lupus erythematosus (SLE).",
+    "organ": []
   },
   {
     "id": 76,
@@ -1444,7 +1546,8 @@
     "specimen": "Tissue (biopsy specimen)",
     "template": 4,
     "preference": "None",
-    "purpose": "To guide therapy in breast cancer by assessing hormone receptor and HER2 status."
+    "purpose": "To guide therapy in breast cancer by assessing hormone receptor and HER2 status.",
+    "organ": []
   },
   {
     "id": 88,
@@ -1458,7 +1561,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To monitor colorectal and other gastrointestinal cancers."
+    "purpose": "To monitor colorectal and other gastrointestinal cancers.",
+    "organ": []
   },
   {
     "id": 89,
@@ -1472,7 +1576,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To monitor ovarian cancer and evaluate pelvic masses."
+    "purpose": "To monitor ovarian cancer and evaluate pelvic masses.",
+    "organ": []
   },
   {
     "id": 90,
@@ -1486,7 +1591,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "None",
-    "purpose": "To evaluate estrogen status and diagnose hormonal imbalances."
+    "purpose": "To evaluate estrogen status and diagnose hormonal imbalances.",
+    "organ": []
   },
   {
     "id": 91,
@@ -1500,7 +1606,8 @@
     "preparation": "Clean-catch midstream urine sample",
     "specimen": "Urine",
     "template": 6,
-    "purpose": "To detect urinary tract infections and guide antibiotic therapy."
+    "purpose": "To detect urinary tract infections and guide antibiotic therapy.",
+    "organ": []
   },
   {
     "id": 93,
@@ -1514,7 +1621,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To detect recent or acute Helicobacter pylori infection."
+    "purpose": "To detect recent or acute Helicobacter pylori infection.",
+    "organ": []
   },
   {
     "id": 94,
@@ -1528,7 +1636,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To detect and quantify recent or acute Helicobacter pylori infection."
+    "purpose": "To detect and quantify recent or acute Helicobacter pylori infection.",
+    "organ": []
   },
   {
     "id": 101,
@@ -1542,7 +1651,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "gender",
-    "purpose": "To detect current or past leptospira infection."
+    "purpose": "To detect current or past leptospira infection.",
+    "organ": []
   },
   {
     "id": 102,
@@ -1556,7 +1666,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "gender",
-    "purpose": "To evaluate luteinizing hormone levels and assess reproductive status."
+    "purpose": "To evaluate luteinizing hormone levels and assess reproductive status.",
+    "organ": []
   },
   {
     "id": 103,
@@ -1570,7 +1681,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To monitor for breast cancer."
+    "purpose": "To monitor for breast cancer.",
+    "organ": []
   },
   {
     "id": 104,
@@ -1584,7 +1696,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate parathyroid function and calcium metabolism."
+    "purpose": "To evaluate parathyroid function and calcium metabolism.",
+    "organ": []
   },
   {
     "id": 105,
@@ -1598,7 +1711,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate progesterone levels and reproductive hormone status."
+    "purpose": "To evaluate progesterone levels and reproductive hormone status.",
+    "organ": []
   },
   {
     "id": 106,
@@ -1612,7 +1726,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate prostate health and screen for prostate disorders."
+    "purpose": "To evaluate prostate health and screen for prostate disorders.",
+    "organ": []
   },
   {
     "id": 107,
@@ -1626,7 +1741,8 @@
     "specimen": "Serum",
     "template": 4,
     "preference": "none",
-    "purpose": "To screen for autoimmune disorders."
+    "purpose": "To screen for autoimmune disorders.",
+    "organ": []
   },
   {
     "id": 108,
@@ -1640,7 +1756,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "gender",
-    "purpose": "To quantify autoimmune activity."
+    "purpose": "To quantify autoimmune activity.",
+    "organ": []
   },
   {
     "id": 109,
@@ -1654,7 +1771,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "gender",
-    "purpose": "To evaluate muscle injury and monitor cardiac health."
+    "purpose": "To evaluate muscle injury and monitor cardiac health.",
+    "organ": []
   },
   {
     "id": 98,
@@ -1668,7 +1786,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate follicle-stimulating hormone levels and reproductive status."
+    "purpose": "To evaluate follicle-stimulating hormone levels and reproductive status.",
+    "organ": []
   },
   {
     "id": 110,
@@ -1682,7 +1801,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate thyroid function."
+    "purpose": "To evaluate thyroid function.",
+    "organ": []
   },
   {
     "id": 111,
@@ -1696,7 +1816,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate thyroid function."
+    "purpose": "To evaluate thyroid function.",
+    "organ": []
   },
   {
     "id": 112,
@@ -1710,7 +1831,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate thyroid function."
+    "purpose": "To evaluate thyroid function.",
+    "organ": []
   },
   {
     "id": 113,
@@ -1724,7 +1846,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate thyroid function."
+    "purpose": "To evaluate thyroid function.",
+    "organ": []
   },
   {
     "id": 114,
@@ -1738,7 +1861,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate thyroid function."
+    "purpose": "To evaluate thyroid function.",
+    "organ": []
   },
   {
     "id": 115,
@@ -1752,7 +1876,8 @@
     "specimen": "Serum",
     "template": 6,
     "preference": "development",
-    "purpose": "To evaluate for rheumatoid arthritis and other autoimmune disorders."
+    "purpose": "To evaluate for rheumatoid arthritis and other autoimmune disorders.",
+    "organ": []
   },
   {
     "id": 116,
@@ -1766,7 +1891,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To confirm syphilis infection."
+    "purpose": "To confirm syphilis infection.",
+    "organ": []
   },
   {
     "id": 117,
@@ -1780,7 +1906,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To quantify antibody levels and confirm syphilis infection."
+    "purpose": "To quantify antibody levels and confirm syphilis infection.",
+    "organ": []
   },
   {
     "id": 118,
@@ -1794,7 +1921,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate cardiac injury and diagnose myocardial infarction."
+    "purpose": "To evaluate cardiac injury and diagnose myocardial infarction.",
+    "organ": []
   },
   {
     "id": 119,
@@ -1808,7 +1936,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate cardiac injury and diagnose myocardial infarction."
+    "purpose": "To evaluate cardiac injury and diagnose myocardial infarction.",
+    "organ": []
   },
   {
     "id": 120,
@@ -1822,7 +1951,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To detect IgM/IgG antibodies for screening typhoid fever."
+    "purpose": "To detect IgM/IgG antibodies for screening typhoid fever.",
+    "organ": []
   },
   {
     "id": 121,
@@ -1836,7 +1966,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To screen for typhoid fever by detecting agglutinating antibodies against Salmonella antigens."
+    "purpose": "To screen for typhoid fever by detecting agglutinating antibodies against Salmonella antigens.",
+    "organ": []
   },
   {
     "id": 122,
@@ -1850,7 +1981,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate ovarian function, menstrual irregularities, and hormonal balance."
+    "purpose": "To evaluate ovarian function, menstrual irregularities, and hormonal balance.",
+    "organ": []
   },
   {
     "id": 123,
@@ -1864,7 +1996,8 @@
     "preparation": "none",
     "specimen": "Plasma or Serum",
     "template": 6,
-    "purpose": "To assess fibrin degradation products and evaluate thrombotic disorders such as DVT, PE, or DIC."
+    "purpose": "To assess fibrin degradation products and evaluate thrombotic disorders such as DVT, PE, or DIC.",
+    "organ": []
   },
   {
     "id": 124,
@@ -1878,7 +2011,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate immune function and autoimmune disorders (e.g., lupus, glomerulonephritis)."
+    "purpose": "To evaluate immune function and autoimmune disorders (e.g., lupus, glomerulonephritis).",
+    "organ": []
   },
   {
     "id": 125,
@@ -1892,7 +2026,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate immune function and autoimmune disorders (e.g., lupus, rheumatoid arthritis)."
+    "purpose": "To evaluate immune function and autoimmune disorders (e.g., lupus, rheumatoid arthritis).",
+    "organ": []
   },
   {
     "id": 126,
@@ -1906,7 +2041,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate iron storage and metabolism, and to assess anemia or iron overload."
+    "purpose": "To evaluate iron storage and metabolism, and to assess anemia or iron overload.",
+    "organ": []
   },
   {
     "id": 127,
@@ -1920,7 +2056,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate gastrointestinal cancers and monitor tumor activity."
+    "purpose": "To evaluate gastrointestinal cancers and monitor tumor activity.",
+    "organ": []
   },
   {
     "id": 128,
@@ -1934,7 +2071,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate and monitor prostate cancer and related disorders."
+    "purpose": "To evaluate and monitor prostate cancer and related disorders.",
+    "organ": []
   },
   {
     "id": 129,
@@ -1948,7 +2086,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To assess adrenal gland function and diagnose adrenal disorders."
+    "purpose": "To assess adrenal gland function and diagnose adrenal disorders.",
+    "organ": []
   },
   {
     "id": 130,
@@ -1962,7 +2101,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate liver disease and monitor cancer progression or recurrence."
+    "purpose": "To evaluate liver disease and monitor cancer progression or recurrence.",
+    "organ": []
   },
   {
     "id": 135,
@@ -1976,7 +2116,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To detect recent streptococcal infection and assess risk of complications (e.g., rheumatic fever, glomerulonephritis)."
+    "purpose": "To detect recent streptococcal infection and assess risk of complications (e.g., rheumatic fever, glomerulonephritis).",
+    "organ": []
   },
   {
     "id": 136,
@@ -1990,7 +2131,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To confirm and monitor pregnancy and evaluate trophoblastic or germ cell tumors."
+    "purpose": "To confirm and monitor pregnancy and evaluate trophoblastic or germ cell tumors.",
+    "organ": []
   },
   {
     "id": 145,
@@ -2004,7 +2146,8 @@
     "preparation": "none",
     "specimen": "Body Fluids",
     "template": 6,
-    "purpose": "To identify bacteria in body fluids and guide antibiotic therapy."
+    "purpose": "To identify bacteria in body fluids and guide antibiotic therapy.",
+    "organ": []
   },
   {
     "id": 137,
@@ -2018,7 +2161,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate inflammation."
+    "purpose": "To evaluate inflammation.",
+    "organ": []
   },
   {
     "id": 141,
@@ -2032,7 +2176,8 @@
     "preparation": "Patient should fast at least 6 hrs",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate autoimmune risk."
+    "purpose": "To evaluate autoimmune risk.",
+    "organ": []
   },
   {
     "id": 142,
@@ -2046,7 +2191,8 @@
     "preparation": "none",
     "specimen": "Serum",
     "template": 3,
-    "purpose": "To evaluate autoimmune risk."
+    "purpose": "To evaluate autoimmune risk.",
+    "organ": []
   },
   {
     "id": 143,
@@ -2060,7 +2206,8 @@
     "specimen": "Urine",
     "template": 0,
     "preference": "",
-    "purpose": "To evaluate kidney function."
+    "purpose": "To evaluate kidney function.",
+    "organ": []
   },
   {
     "id": 144,
@@ -2074,7 +2221,8 @@
     "specimen": "Urine",
     "template": 0,
     "preference": "",
-    "purpose": "To evaluate glucose metabolism."
+    "purpose": "To evaluate glucose metabolism.",
+    "organ": []
   },
   {
     "id": 170,
@@ -2088,7 +2236,8 @@
     "preparation": "No special preparation required. Performed by a physician.",
     "specimen": "Tissue or fluid sample obtained via fine needle",
     "template": 9,
-    "purpose": "To evaluate suspicious tissue or fluid for infection, inflammation, or malignancy."
+    "purpose": "To evaluate suspicious tissue or fluid for infection, inflammation, or malignancy.",
+    "organ": []
   },
   {
     "id": 172,
@@ -2102,7 +2251,8 @@
     "preparation": "No special preparation required.",
     "specimen": "Small tissue sample",
     "template": 9,
-    "purpose": "To analyze small tissue samples for signs of disease or malignancy."
+    "purpose": "To analyze small tissue samples for signs of disease or malignancy.",
+    "organ": []
   },
   {
     "id": 173,
@@ -2116,7 +2266,8 @@
     "preparation": "No special preparation required.",
     "specimen": "Medium-sized tissue sample",
     "template": 9,
-    "purpose": "To analyze medium tissue samples for signs of disease or malignancy."
+    "purpose": "To analyze medium tissue samples for signs of disease or malignancy.",
+    "organ": []
   },
   {
     "id": 174,
@@ -2130,7 +2281,8 @@
     "preparation": "No special preparation required.",
     "specimen": "Large tissue sample",
     "template": 9,
-    "purpose": "To analyze large tissue samples for signs of disease or malignancy."
+    "purpose": "To analyze large tissue samples for signs of disease or malignancy.",
+    "organ": []
   },
   {
     "id": 175,
@@ -2144,7 +2296,8 @@
     "preparation": "No special preparation required.",
     "specimen": "Extra large tissue sample",
     "template": 9,
-    "purpose": "To analyze extra large tissue samples for signs of disease or malignancy."
+    "purpose": "To analyze extra large tissue samples for signs of disease or malignancy.",
+    "organ": []
   },
   {
     "id": 176,
@@ -2158,7 +2311,8 @@
     "preparation": "Urine collection in a sterile container.",
     "specimen": "Urine",
     "template": 13,
-    "purpose": "To detect the presence of illicit or prescribed drugs."
+    "purpose": "To detect the presence of illicit or prescribed drugs.",
+    "organ": []
   },
   {
     "id": 177,
@@ -2172,7 +2326,8 @@
     "preparation": "No preparation required.",
     "specimen": "Not applicable",
     "template": 1,
-    "purpose": "To assess general health through physical signs and symptoms."
+    "purpose": "To assess general health through physical signs and symptoms.",
+    "organ": []
   },
   {
     "id": 178,
@@ -2186,7 +2341,8 @@
     "preparation": "No preparation required.",
     "specimen": "Not applicable",
     "template": 0,
-    "purpose": "To provide official documentation of medical condition or fitness."
+    "purpose": "To provide official documentation of medical condition or fitness.",
+    "organ": []
   },
   {
     "id": 201,
@@ -2196,7 +2352,8 @@
     "template": 0,
     "lo_ssx": "Normal sinus rhythm, no abnormalities",
     "hi_ssx": "Arrhythmias, ischemia, infarction, abnormal heart rate",
-    "purpose": "To evaluate electrical activity and rhythm of the heart."
+    "purpose": "To evaluate electrical activity and rhythm of the heart.",
+    "organ": []
   },
   {
     "id": 202,
@@ -2207,7 +2364,8 @@
     "template": 1,
     "lo_ssx": "Normal abdominal organs, no masses or fluid",
     "hi_ssx": "Masses, fluid collection, organ enlargement, abnormal findings",
-    "purpose": "To evaluate the entire abdomen for structural abnormalities."
+    "purpose": "To evaluate the entire abdomen for structural abnormalities.",
+    "organ": []
   },
   {
     "id": 203,
@@ -2218,7 +2376,8 @@
     "template": 1,
     "lo_ssx": "Normal liver, gallbladder, pancreas, spleen",
     "hi_ssx": "Masses, stones, cysts, organ enlargement, abnormal findings",
-    "purpose": "To evaluate upper abdominal organs."
+    "purpose": "To evaluate upper abdominal organs.",
+    "organ": []
   },
   {
     "id": 204,
@@ -2229,7 +2388,8 @@
     "template": 1,
     "lo_ssx": "Normal lower abdominal organs, no abnormalities",
     "hi_ssx": "Masses, fluid, organ enlargement, abnormal findings",
-    "purpose": "To evaluate lower abdominal organs and pelvis."
+    "purpose": "To evaluate lower abdominal organs and pelvis.",
+    "organ": []
   },
   {
     "id": 205,
@@ -2240,7 +2400,8 @@
     "template": 1,
     "lo_ssx": "Normal liver and biliary tree, no stones or obstruction",
     "hi_ssx": "Liver lesions, gallstones, bile duct obstruction, hepatomegaly",
-    "purpose": "To evaluate liver and biliary system."
+    "purpose": "To evaluate liver and biliary system.",
+    "organ": []
   },
   {
     "id": 206,
@@ -2251,7 +2412,8 @@
     "template": 1,
     "lo_ssx": "Normal liver size and echotexture",
     "hi_ssx": "Fatty liver, cirrhosis, masses, hepatomegaly",
-    "purpose": "To evaluate liver."
+    "purpose": "To evaluate liver.",
+    "organ": []
   },
   {
     "id": 207,
@@ -2262,7 +2424,8 @@
     "template": 1,
     "lo_ssx": "Normal kidney size and structure",
     "hi_ssx": "Stones, cysts, hydronephrosis, masses, abnormal echotexture",
-    "purpose": "To evaluate kidneys."
+    "purpose": "To evaluate kidneys.",
+    "organ": []
   },
   {
     "id": 208,
@@ -2273,7 +2436,8 @@
     "template": 1,
     "lo_ssx": "Normal spleen size and echotexture",
     "hi_ssx": "Splenomegaly, masses, cysts, abnormal echotexture",
-    "purpose": "To evaluate spleen."
+    "purpose": "To evaluate spleen.",
+    "organ": []
   },
   {
     "id": 209,
@@ -2284,7 +2448,8 @@
     "template": 1,
     "lo_ssx": "Normal pancreas size and echotexture",
     "hi_ssx": "Pancreatitis, masses, cysts, abnormal echotexture",
-    "purpose": "To evaluate pancreas."
+    "purpose": "To evaluate pancreas.",
+    "organ": []
   },
   {
     "id": 210,
@@ -2295,7 +2460,8 @@
     "template": 1,
     "lo_ssx": "Normal gallbladder, no stones or sludge",
     "hi_ssx": "Cholelithiasis, cholecystitis, wall thickening, polyps",
-    "purpose": "To evaluate gallbladder."
+    "purpose": "To evaluate gallbladder.",
+    "organ": []
   },
   {
     "id": 211,
@@ -2306,7 +2472,8 @@
     "template": 1,
     "lo_ssx": "Normal uterus, ovaries, and adnexa",
     "hi_ssx": "Fibroids, cysts, masses, abnormal endometrium",
-    "purpose": "To evaluate uterus, ovaries, and adnexa."
+    "purpose": "To evaluate uterus, ovaries, and adnexa.",
+    "organ": []
   },
   {
     "id": 212,
@@ -2317,7 +2484,8 @@
     "template": 1,
     "lo_ssx": "Normal pelvic organs",
     "hi_ssx": "Masses, cysts, fluid collection, abnormal findings",
-    "purpose": "To evaluate pelvic organs."
+    "purpose": "To evaluate pelvic organs.",
+    "organ": []
   },
   {
     "id": 214,
@@ -2328,7 +2496,8 @@
     "template": 1,
     "lo_ssx": "Normal follicular development",
     "hi_ssx": "Delayed or abnormal follicle growth, ovarian cysts",
-    "purpose": "To monitor ovarian follicle development."
+    "purpose": "To monitor ovarian follicle development.",
+    "organ": []
   },
   {
     "id": 215,
@@ -2339,7 +2508,8 @@
     "template": 1,
     "lo_ssx": "Normal fetal movement, tone, amniotic fluid, breathing",
     "hi_ssx": "Decreased fetal movement, abnormal amniotic fluid, abnormal tone",
-    "purpose": "To monitor fetal well-being and development."
+    "purpose": "To monitor fetal well-being and development.",
+    "organ": []
   },
   {
     "id": 216,
@@ -2350,7 +2520,8 @@
     "template": 1,
     "lo_ssx": "Unable to determine gender",
     "hi_ssx": "Gender visualized",
-    "purpose": "To determine fetal gender."
+    "purpose": "To determine fetal gender.",
+    "organ": []
   },
   {
     "id": 217,
@@ -2361,7 +2532,8 @@
     "template": 1,
     "lo_ssx": "No congenital anomalies detected",
     "hi_ssx": "Congenital anomalies or malformations detected",
-    "purpose": "To screen for fetal anomalies."
+    "purpose": "To screen for fetal anomalies.",
+    "organ": []
   },
   {
     "id": 218,
@@ -2372,7 +2544,8 @@
     "template": 1,
     "lo_ssx": "Normal KUB structures",
     "hi_ssx": "Stones, masses, hydronephrosis, abnormal findings",
-    "purpose": "To evaluate kidneys, ureters, and bladder."
+    "purpose": "To evaluate kidneys, ureters, and bladder.",
+    "organ": []
   },
   {
     "id": 219,
@@ -2383,7 +2556,8 @@
     "template": 1,
     "lo_ssx": "Normal prostate size and echotexture",
     "hi_ssx": "Enlargement, nodules, cysts, abnormal findings",
-    "purpose": "To evaluate prostate gland."
+    "purpose": "To evaluate prostate gland.",
+    "organ": []
   },
   {
     "id": 220,
@@ -2394,7 +2568,8 @@
     "template": 1,
     "lo_ssx": "Normal breast tissue",
     "hi_ssx": "Masses, cysts, abnormal findings",
-    "purpose": "To evaluate breast."
+    "purpose": "To evaluate breast.",
+    "organ": []
   },
   {
     "id": 221,
@@ -2405,7 +2580,8 @@
     "template": 1,
     "lo_ssx": "Normal testicular size, echotexture, and blood flow",
     "hi_ssx": "Masses, cysts, varicocele, hydrocele, abnormal findings",
-    "purpose": "To evaluate scrotal and testicular structures."
+    "purpose": "To evaluate scrotal and testicular structures.",
+    "organ": []
   },
   {
     "id": 222,
@@ -2416,7 +2592,8 @@
     "template": 1,
     "lo_ssx": "Normal thyroid size, echotexture, and vascularity",
     "hi_ssx": "Nodules, cysts, goiter, abnormal vascularity",
-    "purpose": "To evaluate thyroid gland."
+    "purpose": "To evaluate thyroid gland.",
+    "organ": []
   },
   {
     "id": 223,
@@ -2427,7 +2604,8 @@
     "template": 1,
     "lo_ssx": "Normal neck structures, lymph nodes, vessels",
     "hi_ssx": "Enlarged lymph nodes, masses, cysts, abnormal findings",
-    "purpose": "To evaluate neck structures."
+    "purpose": "To evaluate neck structures.",
+    "organ": []
   },
   {
     "id": 224,
@@ -2438,7 +2616,8 @@
     "template": 1,
     "lo_ssx": "Normal inguinal structures",
     "hi_ssx": "Hernias, lymphadenopathy, masses",
-    "purpose": "To evaluate inguinal structures."
+    "purpose": "To evaluate inguinal structures.",
+    "organ": []
   },
   {
     "id": 225,
@@ -2449,7 +2628,8 @@
     "template": 1,
     "lo_ssx": "No abnormal soft tissue mass",
     "hi_ssx": "Soft tissue mass, cysts, abscess, abnormal findings",
-    "purpose": "To evaluate soft tissue mass."
+    "purpose": "To evaluate soft tissue mass.",
+    "organ": []
   },
   {
     "id": 226,
@@ -2460,7 +2640,8 @@
     "template": 1,
     "lo_ssx": "Normal carotid artery flow, no stenosis",
     "hi_ssx": "Plaque, stenosis, abnormal blood flow",
-    "purpose": "To evaluate carotid arteries."
+    "purpose": "To evaluate carotid arteries.",
+    "organ": []
   },
   {
     "id": 227,
@@ -2471,7 +2652,8 @@
     "template": 1,
     "lo_ssx": "Normal venous flow, no thrombus",
     "hi_ssx": "Deep vein thrombosis, venous insufficiency",
-    "purpose": "To evaluate venous structures."
+    "purpose": "To evaluate venous structures.",
+    "organ": []
   },
   {
     "id": 228,
@@ -2482,7 +2664,8 @@
     "template": 1,
     "lo_ssx": "Normal arterial flow, no stenosis",
     "hi_ssx": "Stenosis, occlusion, abnormal flow patterns",
-    "purpose": "To evaluate arterial structures."
+    "purpose": "To evaluate arterial structures.",
+    "organ": []
   },
   {
     "id": 234,
@@ -2493,7 +2676,8 @@
     "reference": 1,
     "lo_ssx": "Normal lung fields, heart, and mediastinum",
     "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings",
-    "purpose": "To evaluate chest structures."
+    "purpose": "To evaluate chest structures.",
+    "organ": []
   },
   {
     "id": 235,
@@ -2504,7 +2688,8 @@
     "reference": 1,
     "lo_ssx": "Normal lung fields, heart, and mediastinum",
     "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings",
-    "purpose": "To evaluate chest structures."
+    "purpose": "To evaluate chest structures.",
+    "organ": []
   },
   {
     "id": 236,
@@ -2515,7 +2700,8 @@
     "reference": 1,
     "lo_ssx": "Normal lung fields, heart, and mediastinum",
     "hi_ssx": "Pneumonia, effusion, masses, cardiomegaly, abnormal findings",
-    "purpose": "To evaluate chest structures."
+    "purpose": "To evaluate chest structures.",
+    "organ": []
   },
   {
     "id": 237,
@@ -2526,7 +2712,8 @@
     "reference": 3,
     "lo_ssx": "Normal rib alignment and density",
     "hi_ssx": "Fractures, lesions, deformities",
-    "purpose": "To evaluate rib structures."
+    "purpose": "To evaluate rib structures.",
+    "organ": []
   },
   {
     "id": 238,
@@ -2537,7 +2724,8 @@
     "reference": 19,
     "lo_ssx": "Normal sternum appearance",
     "hi_ssx": "Fracture, dislocation, abnormal mass",
-    "purpose": "To evaluate sternum structures."
+    "purpose": "To evaluate sternum structures.",
+    "organ": []
   },
   {
     "id": 239,
@@ -2548,7 +2736,8 @@
     "reference": 5,
     "lo_ssx": "Normal bone structure, no fracture",
     "hi_ssx": "Fractures, lesions, deformities",
-    "purpose": "To evaluate arm structures."
+    "purpose": "To evaluate arm structures.",
+    "organ": []
   },
   {
     "id": 240,
@@ -2559,7 +2748,8 @@
     "reference": 5,
     "lo_ssx": "Normal bone and joint alignment",
     "hi_ssx": "Fractures, arthritis, deformities",
-    "purpose": "To evaluate hand structures."
+    "purpose": "To evaluate hand structures.",
+    "organ": []
   },
   {
     "id": 241,
@@ -2570,7 +2760,8 @@
     "reference": 5,
     "lo_ssx": "Normal shoulder joint, bones, and alignment",
     "hi_ssx": "Dislocation, fracture, degenerative changes",
-    "purpose": "To evaluate shoulder structures."
+    "purpose": "To evaluate shoulder structures.",
+    "organ": []
   },
   {
     "id": 242,
@@ -2581,7 +2772,8 @@
     "reference": 20,
     "lo_ssx": "Normal clavicle structure",
     "hi_ssx": "Fracture, malalignment, bone lesions",
-    "purpose": "To evaluate clavicle structures."
+    "purpose": "To evaluate clavicle structures.",
+    "organ": []
   },
   {
     "id": 243,
@@ -2592,7 +2784,8 @@
     "reference": 21,
     "lo_ssx": "Normal elbow joint and bones",
     "hi_ssx": "Fractures, dislocations, abnormal growths",
-    "purpose": "To evaluate elbow structures."
+    "purpose": "To evaluate elbow structures.",
+    "organ": []
   },
   {
     "id": 244,
@@ -2603,7 +2796,8 @@
     "reference": 22,
     "lo_ssx": "Normal tibia and fibula",
     "hi_ssx": "Fractures, lesions, deformities",
-    "purpose": "To evaluate leg structures."
+    "purpose": "To evaluate leg structures.",
+    "organ": []
   },
   {
     "id": 245,
@@ -2626,7 +2820,8 @@
     "reference": 23,
     "lo_ssx": "Normal bones, joints, and alignment",
     "hi_ssx": "Fractures, dislocations, arthritis, bone lesions",
-    "purpose": "To evaluate ankle structures."
+    "purpose": "To evaluate ankle structures.",
+    "organ": []
   },
   {
     "id": 247,
@@ -2637,7 +2832,8 @@
     "reference": 17,
     "lo_ssx": "Normal hip and pelvic bones, no deformities",
     "hi_ssx": "Fractures, dislocations, osteoarthritis, abnormal lesions",
-    "purpose": "To evaluate hip structures."
+    "purpose": "To evaluate hip structures.",
+    "organ": []
   },
   {
     "id": 248,
@@ -2648,7 +2844,8 @@
     "reference": 18,
     "lo_ssx": "Normal femur structure and alignment",
     "hi_ssx": "Fractures, lesions, deformities",
-    "purpose": "To evaluate femur structures."
+    "purpose": "To evaluate femur structures.",
+    "organ": []
   },
   {
     "id": 249,
@@ -2659,7 +2856,8 @@
     "reference": 13,
     "lo_ssx": "Normal thoracic vertebrae and curvature",
     "hi_ssx": "Fractures, scoliosis, degenerative changes, lesions",
-    "purpose": "To evaluate thoracic spine structures."
+    "purpose": "To evaluate thoracic spine structures.",
+    "organ": []
   },
   {
     "id": 250,
@@ -2670,7 +2868,8 @@
     "reference": 14,
     "lo_ssx": "Normal thoracolumbar vertebrae and alignment",
     "hi_ssx": "Fractures, scoliosis, degenerative changes, lesions",
-    "purpose": "To evaluate thoracolumbar spine structures."
+    "purpose": "To evaluate thoracolumbar spine structures.",
+    "organ": []
   },
   {
     "id": 251,
@@ -2681,7 +2880,8 @@
     "reference": 8,
     "lo_ssx": "Normal lumbar vertebrae, disc spaces, and alignment",
     "hi_ssx": "Fractures, spondylosis, disc degeneration, lesions",
-    "purpose": "To evaluate lumbar spine structures."
+    "purpose": "To evaluate lumbar spine structures.",
+    "organ": []
   },
   {
     "id": 252,
@@ -2692,7 +2892,8 @@
     "reference": 8,
     "lo_ssx": "Normal lumbosacral vertebrae and sacrum",
     "hi_ssx": "Fractures, degenerative changes, abnormal lesions",
-    "purpose": "To evaluate lumbosacral spine structures."
+    "purpose": "To evaluate lumbosacral spine structures.",
+    "organ": []
   },
   {
     "id": 253,
@@ -2703,7 +2904,8 @@
     "reference": 4,
     "lo_ssx": "Normal sacroiliac joint spaces",
     "hi_ssx": "Inflammation, arthritis, joint irregularities",
-    "purpose": "To evaluate sacroiliac joint structures."
+    "purpose": "To evaluate sacroiliac joint structures.",
+    "organ": []
   },
   {
     "id": 254,
@@ -2714,7 +2916,8 @@
     "reference": 2,
     "lo_ssx": "Normal skull bones and sutures",
     "hi_ssx": "Fractures, lesions, abnormal calcifications",
-    "purpose": "To evaluate skull structures."
+    "purpose": "To evaluate skull structures.",
+    "organ": []
   },
   {
     "id": 255,
@@ -2725,7 +2928,8 @@
     "reference": 11,
     "lo_ssx": "Clear sinuses, normal air spaces",
     "hi_ssx": "Sinusitis, fluid levels, masses",
-    "purpose": "To evaluate sinus structures."
+    "purpose": "To evaluate sinus structures.",
+    "organ": []
   },
   {
     "id": 256,
@@ -2736,7 +2940,8 @@
     "reference": 7,
     "lo_ssx": "Normal TMJ alignment and spacing",
     "hi_ssx": "Dislocation, arthritis, fractures, abnormal growths",
-    "purpose": "To evaluate TMJ structures."
+    "purpose": "To evaluate TMJ structures.",
+    "organ": []
   },
   {
     "id": 257,
@@ -2747,7 +2952,8 @@
     "special-view": true,
     "lo_ssx": "Normal oblique view findings",
     "hi_ssx": "Abnormal alignment, fractures, deformities",
-    "purpose": "To provide additional perspective on bone structures."
+    "purpose": "To provide additional perspective on bone structures.",
+    "organ": []
   },
   {
     "id": 258,
@@ -2758,7 +2964,8 @@
     "special-view": true,
     "lo_ssx": "Normal lateral view findings",
     "hi_ssx": "Abnormalities, fractures, deformities",
-    "purpose": "To provide additional perspective on bone structures."
+    "purpose": "To provide additional perspective on bone structures.",
+    "organ": []
   },
   {
     "id": 259,
@@ -2769,7 +2976,8 @@
     "special-view": true,
     "lo_ssx": "Normal spot film findings",
     "hi_ssx": "Localized fractures, masses, deformities",
-    "purpose": "To provide additional perspective on bone structures."
+    "purpose": "To provide additional perspective on bone structures.",
+    "organ": []
   },
   {
     "id": 260,
@@ -2779,7 +2987,8 @@
     "template": 3,
     "lo_ssx": "Normal cardiac structure and function",
     "hi_ssx": "Cardiomegaly, wall motion abnormalities, decreased ejection fraction",
-    "purpose": "To evaluate cardiac structure, chamber size, wall motion, and overall function."
+    "purpose": "To evaluate cardiac structure, chamber size, wall motion, and overall function.",
+    "organ": []
   },
   {
     "id": 261,
@@ -2789,7 +2998,8 @@
     "template": 3,
     "lo_ssx": "Normal cardiac chambers, valves, and flow patterns",
     "hi_ssx": "Valve regurgitation, stenosis, shunts, abnormal blood flow patterns, heart failure",
-    "purpose": "To evaluate cardiac chambers, valves, and blood flow dynamics using Doppler and color mapping."
+    "purpose": "To evaluate cardiac chambers, valves, and blood flow dynamics using Doppler and color mapping.",
+    "organ": []
   },
   {
     "id": 262,
@@ -2799,7 +3009,8 @@
     "template": 3,
     "lo_ssx": "Normal cardiac function under stress",
     "hi_ssx": "Ischemia, arrhythmias, wall motion abnormalities",
-    "purpose": "To evaluate cardiac function under stress."
+    "purpose": "To evaluate cardiac function under stress.",
+    "organ": []
   },
   {
     "id": 263,
@@ -2809,7 +3020,8 @@
     "template": 3,
     "lo_ssx": "Clear cardiac structures and normal function",
     "hi_ssx": "Valve abnormalities, thrombi, atrial septal defects",
-    "purpose": "To evaluate cardiac structures and function."
+    "purpose": "To evaluate cardiac structures and function.",
+    "organ": []
   },
   {
     "id": 310,
@@ -2817,49 +3029,56 @@
     "abbreviation": "JME",
     "department": "REHAB",
     "template": 0,
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 311,
     "name": "Musculoskeletal Rehabilitation",
     "abbreviation": "MSR",
     "department": "REHAB",
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 312,
     "name": "Orthopedic Rehabilitation",
     "abbreviation": "OR",
     "department": "REHAB",
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 313,
     "name": "Movement Restoration",
     "abbreviation": "MR",
     "department": "REHAB",
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 314,
     "name": "Pain Management Therapy",
     "abbreviation": "PMT",
     "department": "REHAB",
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 315,
     "name": "Post-Injury Rehabilitation",
     "abbreviation": "PIR",
     "department": "REHAB",
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 316,
     "name": "Sports Injury Recovery",
     "abbreviation": "SIR",
     "department": "REHAB",
-    "purpose": "To improve joint mobility and function."
+    "purpose": "To improve joint mobility and function.",
+    "organ": []
   },
   {
     "id": 317,
@@ -2873,7 +3092,8 @@
     "preparation": "none",
     "specimen": "SERUM",
     "template": 2,
-    "purpose": "To evaluate calcium metabolism."
+    "purpose": "To evaluate calcium metabolism.",
+    "organ": []
   },
   {
     "id": 320,
@@ -2902,7 +3122,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for vasculitis or autoimmune inflammation."
+    "purpose": "To evaluate for vasculitis or autoimmune inflammation.",
+    "organ": []
   },
   {
     "id": 322,
@@ -2916,7 +3137,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for thyroid autoimmune disease."
+    "purpose": "To evaluate for thyroid autoimmune disease.",
+    "organ": []
   },
   {
     "id": 323,
@@ -2930,7 +3152,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for thyroid autoimmune disease."
+    "purpose": "To evaluate for thyroid autoimmune disease.",
+    "organ": []
   },
   {
     "id": 324,
@@ -2944,7 +3167,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 7,
-    "purpose": "To evaluate for rheumatoid arthritis."
+    "purpose": "To evaluate for rheumatoid arthritis.",
+    "organ": []
   },
   {
     "id": 325,
@@ -2958,7 +3182,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for autoimmune liver disease."
+    "purpose": "To evaluate for autoimmune liver disease.",
+    "organ": []
   },
   {
     "id": 326,
@@ -2972,7 +3197,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate coagulation status."
+    "purpose": "To evaluate coagulation status.",
+    "organ": []
   },
   {
     "id": 327,
@@ -2986,7 +3212,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for antiphospholipid syndrome."
+    "purpose": "To evaluate for antiphospholipid syndrome.",
+    "organ": []
   },
   {
     "id": 328,
@@ -3000,7 +3227,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate lipid metabolism and cardiovascular risk."
+    "purpose": "To evaluate lipid metabolism and cardiovascular risk.",
+    "organ": []
   },
   {
     "id": 329,
@@ -3014,7 +3242,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate lipid metabolism and cardiovascular risk."
+    "purpose": "To evaluate lipid metabolism and cardiovascular risk.",
+    "organ": []
   },
   {
     "id": 330,
@@ -3028,7 +3257,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for antiphospholipid syndrome."
+    "purpose": "To evaluate for antiphospholipid syndrome.",
+    "organ": []
   },
   {
     "id": 331,
@@ -3042,7 +3272,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for antiphospholipid syndrome."
+    "purpose": "To evaluate for antiphospholipid syndrome.",
+    "organ": []
   },
   {
     "id": 332,
@@ -3056,7 +3287,8 @@
     "preparation": "Fasting for at least 8 hours is preferred",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for diabetes."
+    "purpose": "To evaluate for diabetes.",
+    "organ": []
   },
   {
     "id": 333,
@@ -3070,7 +3302,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate kidney function."
+    "purpose": "To evaluate kidney function.",
+    "organ": []
   },
   {
     "id": 336,
@@ -3084,7 +3317,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for syphilis infection."
+    "purpose": "To evaluate for syphilis infection.",
+    "organ": []
   },
   {
     "id": 337,
@@ -3098,7 +3332,8 @@
     "preparation": "No special preparation required",
     "specimen": "Stool",
     "template": 4,
-    "purpose": "To evaluate for H. pylori infection."
+    "purpose": "To evaluate for H. pylori infection.",
+    "organ": []
   },
   {
     "id": 338,
@@ -3112,7 +3347,8 @@
     "preparation": "Fasting not required; avoid contamination",
     "specimen": "Serum or Plasma",
     "template": 6,
-    "purpose": "To evaluate for hepatitis C infection."
+    "purpose": "To evaluate for hepatitis C infection.",
+    "organ": []
   },
   {
     "id": 339,
@@ -3126,7 +3362,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for ovarian pathology."
+    "purpose": "To evaluate for ovarian pathology.",
+    "organ": []
   },
   {
     "id": 340,
@@ -3140,7 +3377,8 @@
     "preparation": "Fasting not required",
     "specimen": "Whole Blood (EDTA)",
     "template": 4,
-    "purpose": "To evaluate for anemia."
+    "purpose": "To evaluate for anemia.",
+    "organ": []
   },
   {
     "id": 341,
@@ -3154,7 +3392,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for hepatitis B infection."
+    "purpose": "To evaluate for hepatitis B infection.",
+    "organ": []
   },
   {
     "id": 347,
@@ -3168,7 +3407,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for hepatitis B infection."
+    "purpose": "To evaluate for hepatitis B infection.",
+    "organ": []
   },
   {
     "id": 342,
@@ -3182,7 +3422,8 @@
     "preparation": "No special preparation required",
     "specimen": "Whole Blood (EDTA)",
     "template": 4,
-    "purpose": "To evaluate for autoimmune arthritis."
+    "purpose": "To evaluate for autoimmune arthritis.",
+    "organ": []
   },
   {
     "id": 343,
@@ -3196,7 +3437,8 @@
     "preparation": "Fasting for 8–12 hours is preferred",
     "specimen": "Plasma (EDTA)",
     "template": 6,
-    "purpose": "To evaluate for cardiovascular risk."
+    "purpose": "To evaluate for cardiovascular risk.",
+    "organ": []
   },
   {
     "id": 344,
@@ -3210,7 +3452,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for inflammation and cardiovascular risk."
+    "purpose": "To evaluate for inflammation and cardiovascular risk.",
+    "organ": []
   },
   {
     "id": 345,
@@ -3224,7 +3467,8 @@
     "preparation": "Fasting for at least 8 hours is required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for diabetes."
+    "purpose": "To evaluate for diabetes.",
+    "organ": []
   },
   {
     "id": 346,
@@ -3238,7 +3482,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for thyroid disease."
+    "purpose": "To evaluate for thyroid disease.",
+    "organ": []
   },
   {
     "id": 348,
@@ -3252,7 +3497,8 @@
     "preparation": "No special preparation required",
     "specimen": "Plasma (EDTA or Heparin)",
     "template": 2,
-    "purpose": "To evaluate for heart failure."
+    "purpose": "To evaluate for heart failure.",
+    "organ": []
   },
   {
     "id": 349,
@@ -3266,7 +3512,8 @@
     "preparation": "Sample taken 2 hours after meal",
     "specimen": "Plasma (Fluoride Oxalate)",
     "template": 2,
-    "purpose": "To evaluate for diabetes."
+    "purpose": "To evaluate for diabetes.",
+    "organ": []
   },
   {
     "id": 350,
@@ -3280,7 +3527,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum or Plasma",
     "template": 6,
-    "purpose": "To evaluate for bacterial infection."
+    "purpose": "To evaluate for bacterial infection.",
+    "organ": []
   },
   {
     "id": 352,
@@ -3294,7 +3542,8 @@
     "preparation": "No special preparation required",
     "specimen": "Plasma (Citrate)",
     "template": 6,
-    "purpose": "To evaluate coagulation status."
+    "purpose": "To evaluate coagulation status.",
+    "organ": []
   },
   {
     "id": 353,
@@ -3308,7 +3557,8 @@
     "preparation": "No special preparation required",
     "specimen": "Plasma (Citrate)",
     "template": 6,
-    "purpose": "To evaluate coagulation status."
+    "purpose": "To evaluate coagulation status.",
+    "organ": []
   },
   {
     "id": 354,
@@ -3322,7 +3572,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for rubella infection."
+    "purpose": "To evaluate for rubella infection.",
+    "organ": []
   },
   {
     "id": 355,
@@ -3336,7 +3587,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for thyroid disease."
+    "purpose": "To evaluate for thyroid disease.",
+    "organ": []
   },
   {
     "id": 356,
@@ -3349,7 +3601,8 @@
     "preference": "equal",
     "preparation": "No special preparation required",
     "specimen": "Serum",
-    "template": 6
+    "template": 6,
+    "organ": []
   },
   {
     "id": 357,
@@ -3363,7 +3616,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for thyroid autoimmune disease."
+    "purpose": "To evaluate for thyroid autoimmune disease.",
+    "organ": []
   },
   {
     "id": 370,
@@ -3377,7 +3631,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for thyroid autoimmune disease."
+    "purpose": "To evaluate for thyroid autoimmune disease.",
+    "organ": []
   },
   {
     "id": 358,
@@ -3391,7 +3646,8 @@
     "preparation": "Collect midstream urine sample",
     "specimen": "Urine",
     "template": 2,
-    "purpose": "To evaluate for kidney disease."
+    "purpose": "To evaluate for kidney disease.",
+    "organ": []
   },
   {
     "id": 359,
@@ -3405,7 +3661,8 @@
     "preparation": "Collect midstream urine sample",
     "specimen": "Urine",
     "template": 2,
-    "purpose": "To evaluate for kidney disease."
+    "purpose": "To evaluate for kidney disease.",
+    "organ": []
   },
   {
     "id": 360,
@@ -3419,7 +3676,8 @@
     "preparation": "Collect midstream urine sample",
     "specimen": "Urine",
     "template": 2,
-    "purpose": "To evaluate for kidney disease."
+    "purpose": "To evaluate for kidney disease.",
+    "organ": []
   },
   {
     "id": 361,
@@ -3433,7 +3691,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for varicella infection."
+    "purpose": "To evaluate for varicella infection.",
+    "organ": []
   },
   {
     "id": 362,
@@ -3447,7 +3706,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
-    "purpose": "To evaluate for varicella infection."
+    "purpose": "To evaluate for varicella infection.",
+    "organ": []
   },
   {
     "id": 363,
@@ -3461,7 +3721,8 @@
     "preparation": "Fasting for 6–8 hours is preferred",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate for vitamin B12 deficiency."
+    "purpose": "To evaluate for vitamin B12 deficiency.",
+    "organ": []
   },
   {
     "id": 364,
@@ -3475,7 +3736,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate for vitamin D deficiency."
+    "purpose": "To evaluate for vitamin D deficiency.",
+    "organ": []
   },
   {
     "id": 365,
@@ -3489,7 +3751,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate for vitamin D deficiency."
+    "purpose": "To evaluate for vitamin D deficiency.",
+    "organ": []
   },
   {
     "id": 366,
@@ -3503,7 +3766,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 2,
-    "purpose": "To evaluate for vitamin D deficiency."
+    "purpose": "To evaluate for vitamin D deficiency.",
+    "organ": []
   },
   {
     "id": 367,
@@ -3517,7 +3781,8 @@
     "preparation": "Fasting preferred, follow physician instruction",
     "specimen": "Serum/Plasma",
     "template": 4,
-    "purpose": "To evaluate for hepatitis B infection."
+    "purpose": "To evaluate for hepatitis B infection.",
+    "organ": []
   },
   {
     "id": 368,
@@ -3531,7 +3796,8 @@
     "preparation": "Fasting preferred, follow physician instruction",
     "specimen": "Serum/Plasma",
     "template": 4,
-    "purpose": "To evaluate for hepatitis C infection."
+    "purpose": "To evaluate for hepatitis C infection.",
+    "organ": []
   },
   {
     "id": 369,
@@ -3545,7 +3811,8 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "purpose": "To evaluate for ovarian pathology."
+    "purpose": "To evaluate for ovarian pathology.",
+    "organ": []
   },
   {
     "id": 370,
@@ -3559,7 +3826,8 @@
     "preparation": "No special preparation required; avoid strenuous exercise 24 hrs before test",
     "specimen": "Urine (spot urine or 24-hour collection)",
     "template": 4,
-    "purpose": "Detects early kidney damage by measuring small amounts of albumin in urine; important for monitoring diabetics and hypertensive patients"
+    "purpose": "Detects early kidney damage by measuring small amounts of albumin in urine; important for monitoring diabetics and hypertensive patients",
+    "organ": []
   },
   {
     "id": 371,
@@ -3573,7 +3841,8 @@
     "preparation": "Remove metallic objects; wear hospital gown; patient should stand upright for full spine imaging.",
     "specimen": "Radiographic image (spine)",
     "template": 2,
-    "purpose": "To evaluate and measure spinal curvature, monitor progression of scoliosis, and assess treatment outcomes."
+    "purpose": "To evaluate and measure spinal curvature, monitor progression of scoliosis, and assess treatment outcomes.",
+    "organ": []
   },
   {
     "id": 372,
@@ -3587,7 +3856,8 @@
     "preparation": "Remove metallic objects near pelvic area; patient positioned supine and lateral for imaging.",
     "specimen": "Radiographic image (coccyx)",
     "template": 2,
-    "purpose": "To evaluate coccygeal pain, trauma, or suspected fractures/dislocations."
+    "purpose": "To evaluate coccygeal pain, trauma, or suspected fractures/dislocations.",
+    "organ": []
   },
   {
     "id": 373,
