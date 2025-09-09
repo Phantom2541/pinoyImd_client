@@ -147,12 +147,10 @@ const CustomStepper = () => {
     // clone for update
     let healthCard = {
       ...card,
-      name: card.type,
       isPrimary: card.primary,
     };
     let validID = {
       ...vi,
-      name: vi.type,
     };
 
     // upload helper
