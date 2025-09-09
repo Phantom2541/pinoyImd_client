@@ -150,12 +150,14 @@ export default function Translate() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>
-          <Menus
-            cart={cart}
-            matchMenus={matchMenus}
-            handleAddToCart={handleAddToCart}
-            handleRemovedToCart={handleRemovedToCart}
-          />
+          <MDBCol>
+            <Menus
+              cart={cart}
+              matchMenus={matchMenus}
+              handleAddToCart={handleAddToCart}
+              handleRemovedToCart={handleRemovedToCart}
+            />
+          </MDBCol>
           <MDBCol>
             <ImageMagnifier
               src={`${ENDPOINT}/public/users/${pid.email}/booking/form-${schedule}.png`}

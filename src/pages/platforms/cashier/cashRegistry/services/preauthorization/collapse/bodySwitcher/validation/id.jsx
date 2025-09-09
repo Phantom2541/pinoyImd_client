@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
+  Cloudinary,
   dateFormat,
-  ENDPOINT,
 } from "../../../../../../../../../services/utilities";
 import Options from "./options";
 import Badge from "./badge";
@@ -23,11 +23,18 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
     }, 500);
   };
 
+  const id = pid?.[cardType];
+
+  const { isValid = null } = id;
+
   return (
     <div className={className} style={{ width: "400px" }}>
       <div style={{ position: "relative", display: "inline-block" }}>
         {showBadge && (
-          <Badge isCompleted={true} isValid={pid?.[cardType]?.isValid} />
+          <Badge
+            isCompleted={isValid !== null}
+            isValid={pid?.[cardType]?.isValid}
+          />
         )}
 
         <div
@@ -60,7 +67,9 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
               }}
             >
               <img
-                src={`${ENDPOINT}/public/users/${pid.email}/portfolio/${pid?.[cardType]?.name}-front.png`}
+                src={`${Cloudinary.getEndpoint()}/${
+                  pid?.[cardType]?.img?.front
+                }/users/${pid.email}/portfolio/${pid?.[cardType]?.name}/front`}
                 alt="Front"
                 className="shadow-lg"
                 style={{
@@ -82,7 +91,9 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
               }}
             >
               <img
-                src={`${ENDPOINT}/public/users/${pid.email}/portfolio/${pid?.[cardType]?.name}-back.png`}
+                src={`${Cloudinary.getEndpoint()}/${
+                  pid?.[cardType]?.img?.back
+                }/users/${pid.email}/portfolio/${pid?.[cardType]?.name}/back`}
                 alt="Back"
                 className="shadow-lg"
                 style={{

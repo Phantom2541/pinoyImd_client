@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import BODY from "./../../../../../assets/checkup/humanBody.png";
 
 export default function HumanBody({ setSlide, slide }) {
