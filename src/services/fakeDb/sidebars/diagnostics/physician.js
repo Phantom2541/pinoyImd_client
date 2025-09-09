@@ -52,7 +52,7 @@ const physician = [
       {
         name: "E H R Timeline",
         icon: "stream",
-        path: "/ehr-timeline/:ehrId",
+        path: "/consultation/:ehrId",
         title:
           "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
         component: Consultations,
