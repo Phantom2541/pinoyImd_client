@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Cloudinary } from "../../../../../services/utilities";
+import { Cloudinary } from "../../../../../../../services/utilities";
 
 const RequestForm = () => {
   const { activePlatform = {} } = useSelector(({ auth }) => auth);
@@ -22,16 +22,6 @@ const RequestForm = () => {
   };
 
   const renderTable = () => (
-    // <table
-    //   className="laboratoryRequestForm-table"
-    //   style={{
-    //     width: "100%",
-    //     borderCollapse: "collapse",
-    //     fontSize: "13px",
-    //     marginBottom: "20px",
-    //     border: "1px solid #000",
-    //   }}
-    // >
     <table className="laboratoryRequestForm-printout-table">
       <thead>
         <tr>
