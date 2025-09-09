@@ -474,7 +474,6 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "User Manual",
     title: "Documentation and user guidance.",
@@ -482,13 +481,6 @@ const ManagerSidebar = [
     path: "/user/manual",
     component: UserManual,
   },
-  // {
-  //   name: "Hotlines",
-  //   path: "/hotlines",
-  //   icon: "phone-alt",
-  //   title: "Emergency Hotlines Poster",
-  //   component: HotlinesPoster,
-  // },
 ];
 
 export default ManagerSidebar;
