@@ -48,7 +48,6 @@ export default function usePanelPosition(
             transform: "translate(-50%, -50%)",
             transition: "all .5s cubic-bezier(0.25,1,0.5,1)",
             zIndex,
-            borderRadius: "12px",
           };
 
       setStyle(newStyle);

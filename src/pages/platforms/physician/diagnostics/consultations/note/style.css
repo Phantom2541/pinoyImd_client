@@ -29,11 +29,117 @@
   color: white;
 }
 
-.checkup-data-prescription,
+.checkup-data-prescription-container,
 .checkup-data-form,
 .checkup-data-certificate,
 .checkup-data-clearance {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-
   overflow: auto;
+}
+
+/* prescription design */
+.checkup-data-prescription-card {
+  width: 4.25in;
+  height: 5.5in;
+  background-color: white;
+}
+
+.checkup-data-prescription-card-header {
+  padding: 10px 15px;
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 3px solid #007bff;
+}
+
+.checkup-data-prescription-card-logo {
+  width: 75px;
+  aspect-ratio: 1/1;
+}
+
+.checkup-data-prescription-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkup-data-prescrption-card-fullname {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.checkup-data-prescrption-card-fullname span:first-child {
+  font-size: 1.2rem;
+  color: #007bff;
+  font-weight: bold;
+  line-height: 1;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+.checkup-data-prescrption-card-fullname small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.checkup-data-prescription-card-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 8px;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+.checkup-data-prescription-card-contact span {
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.checkup-data-prescription-card-contact span:first-child {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.checkup-data-prescription-card-patient-info {
+  padding: 0 10px;
+}
+
+.checkup-data-prescription-card-patient-info-row {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.checkup-data-prescription-card-input {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  gap: 3px;
+}
+
+.checkup-data-prescription-card-input label {
+  all: unset;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  color: black;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.checkup-data-prescription-card-input input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 0.8rem;
+}
+
+.checkup-data-prescription-card-input input:focus {
+  outline: none;
+  box-shadow: none !important;
+  border-bottom: 1px solid #007bff;
 }

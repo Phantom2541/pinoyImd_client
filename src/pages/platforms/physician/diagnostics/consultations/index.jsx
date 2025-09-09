@@ -5,13 +5,15 @@ import { useLocation } from "react-router-dom";
 import Body from "./body";
 import Patient from "./patient";
 import Note from "./note";
-import Prescription from "./note/prescription";
+// import Prescription from "./note/prescription";
+// import Form from "./note/form";
 import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import "./style.css";
 import RequestForm from "./note/forms";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/consultations";
+import Prescription from "./note/prescription";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
