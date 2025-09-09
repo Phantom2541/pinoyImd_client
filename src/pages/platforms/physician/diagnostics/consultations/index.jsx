@@ -8,8 +8,9 @@ import Form from "./note/form";
 import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import "./style.css";
+import RequestForm from "./note/forms";
 
-export default function Doctor() {
+export default function Consultations() {
   const [activePanels, setActivePanels] = useState({
     request: false,
     prescription: false,
@@ -58,7 +59,7 @@ export default function Doctor() {
         buttonRefs={buttonRefs}
         zIndex={getZIndex("prescription")}
       />
-      <Form
+      <RequestForm
         active={activePanels.request}
         buttonRefs={buttonRefs}
         zIndex={getZIndex("request")}

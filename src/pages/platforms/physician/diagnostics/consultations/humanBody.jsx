@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import BODY from "./../../../assets/checkup/humanBody.png";
+import BODY from "./../../../../../assets/checkup/humanBody.png";
 
 export default function HumanBody({ setSlide, slide }) {
   const containerRef = useRef(null);
@@ -27,42 +27,38 @@ export default function HumanBody({ setSlide, slide }) {
     if (!containerRef.current) return [];
     const rect = containerRef.current.getBoundingClientRect();
 
-    return [
-      // medical history → organs
+    const pairs = [
       ["PMHx", "heart"],
       ["FMHx", "leftLung"],
       ["PSHx", "liver"],
       ["OB Gyne Hx", "largeIntestine"],
-      // ancillary → organs
       ["Laboratory", "rightLung"],
       ["Radiology", "stomach"],
       ["Vital", "smallIntestine"],
-    ]
-      .map(([text, organ]) => {
-        const tEl = textRefs.current[text];
-        const oEl = organRefs.current[organ];
-        if (!tEl || !oEl) return null;
+    ];
 
-        const tRect = tEl.getBoundingClientRect();
-        const oRect = oEl.getBoundingClientRect();
+    return pairs.flatMap(([text, organ]) => {
+      const tEl = textRefs.current[text];
+      const oEl = organRefs.current[organ];
+      if (!tEl || !oEl) return [];
 
-        const side = medicalHistory.includes(text) ? "right" : "left";
-        const gap = 6;
+      const tRect = tEl.getBoundingClientRect();
+      const oRect = oEl.getBoundingClientRect();
 
-        const startX =
-          side === "left"
-            ? tRect.left - rect.left - gap
-            : side === "right"
-            ? tRect.right - rect.left + gap
-            : tRect.left + tRect.width / 2 - rect.left;
-        const startY = tRect.top + tRect.height / 2 - rect.top;
+      const side = medicalHistory.includes(text) ? "right" : "left";
+      const gap = 6;
 
-        const endX = oRect.left + oRect.width / 2 - rect.left;
-        const endY = oRect.top + oRect.height / 2 - rect.top;
+      const x1 =
+        side === "left"
+          ? tRect.left - rect.left - gap
+          : tRect.right - rect.left + gap;
+      const y1 = tRect.top + tRect.height / 2 - rect.top;
 
-        return { x1: startX, y1: startY, x2: endX, y2: endY };
-      })
-      .filter(Boolean);
+      const x2 = oRect.left + oRect.width / 2 - rect.left;
+      const y2 = oRect.top + oRect.height / 2 - rect.top;
+
+      return [{ x1, y1, x2, y2, text }]; // 👈 simple: balik na agad may text
+    });
   };
 
   useEffect(() => {
@@ -102,7 +98,13 @@ export default function HumanBody({ setSlide, slide }) {
         }}
       >
         {lines.map((ln, i) => (
-          <g key={i}>
+          <g
+            key={i}
+            style={{
+              opacity: slide && slide !== ln.text ? 0.2 : 1,
+              transition: "opacity 0.3s ease",
+            }}
+          >
             <line
               x1={ln.x1}
               y1={ln.y1}
@@ -120,13 +122,15 @@ export default function HumanBody({ setSlide, slide }) {
 
       <div className="checkup-data-center-image-medical-history">
         {medicalHistory.map((text) => (
-          <span
+          <button
             key={text}
             ref={(el) => (textRefs.current[text] = el)}
-            onClick={() => setSlide(text)}
+            onClick={() => setSlide(slide === text ? "" : text)} // toggle
+            className={slide === text ? "active" : ""}
+            disabled={slide && slide !== text}
           >
             {text}
-          </span>
+          </button>
         ))}
       </div>
 
@@ -153,13 +157,15 @@ export default function HumanBody({ setSlide, slide }) {
 
       <div className="checkup-data-center-image-Ancillary">
         {ancillary.map((text) => (
-          <span
+          <button
             key={text}
             ref={(el) => (textRefs.current[text] = el)}
-            onClick={() => setSlide(text)}
+            onClick={() => setSlide(slide === text ? "" : text)} // toggle
+            className={slide === text ? "active" : ""}
+            disabled={slide && slide !== text}
           >
             {text}
-          </span>
+          </button>
         ))}
       </div>
     </div>

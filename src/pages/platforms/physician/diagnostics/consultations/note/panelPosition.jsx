@@ -16,39 +16,36 @@ export default function usePanelPosition(
       const button = buttonRef.current;
       if (!container || !button) return;
 
-      const containerRect = container.getBoundingClientRect();
       const btnRect = button.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
 
       const buttonCenterX =
         btnRect.left - containerRect.left + btnRect.width / 2;
       const buttonCenterY =
         btnRect.top - containerRect.top + btnRect.height / 2;
 
-      const containerCenterX = containerRect.width / 2;
-      const containerCenterY = containerRect.height / 2;
-
       const newStyle = !active
         ? {
             position: "absolute",
-            top: buttonCenterY - btnRect.height / 2,
-            left: buttonCenterX - btnRect.width / 2,
+            top: buttonCenterY,
+            left: buttonCenterX,
             width: btnRect.width,
             height: btnRect.height,
             opacity: 0,
             visibility: "hidden",
-            transform: "translate(0,0)",
+            transform: "translate(-50%, -50%)",
             transition: "all .5s ease-in-out",
             zIndex,
           }
         : {
             position: "absolute",
-            top: containerCenterY - targetSize.height / 2,
-            left: containerCenterX - targetSize.width / 2,
+            top: "50%",
+            left: "50%",
             width: targetSize.width,
             height: targetSize.height,
             opacity: 1,
             visibility: "visible",
-            transform: "translate(0,0)",
+            transform: "translate(-50%, -50%)",
             transition: "all .5s cubic-bezier(0.25,1,0.5,1)",
             zIndex,
             borderRadius: "12px",
@@ -58,7 +55,6 @@ export default function usePanelPosition(
     };
 
     frame = requestAnimationFrame(updateStyle);
-
     return () => cancelAnimationFrame(frame);
   }, [active, zIndex, targetSize, buttonRef]);
 
