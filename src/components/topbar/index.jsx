@@ -22,6 +22,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
     transition: "padding-left .3s",
   };
   const isEmployed = employment.isEmployed(activePlatform?.branch?.status);
+  console.log("activePlatform", activePlatform?.department);
   return (
     <MDBNavbar
       className="flexible-MDBNavbar"

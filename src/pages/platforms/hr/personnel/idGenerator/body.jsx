@@ -22,11 +22,10 @@ const Body = () => {
   const { filtered, activePage, maxPage, isSuccess, formSubmitted } =
       useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
-    // []
     dispatch = useDispatch();
 
-  const handleUpdateGuardian = (id) => {
-    dispatch(UPDATEGUARDIAN({ token, id }));
+  const handleUpdateGuardian = (data) => {
+    dispatch(UPDATEGUARDIAN({ token, data }));
     // .then(({ payload: personnel }) => {
     // setData(personnel);
     // });
@@ -34,8 +33,6 @@ const Body = () => {
   // console.log("personnel", personnel);
 
   const handleUpdate = (data) => {
-    console.log("userdata", data);
-
     dispatch(UPDATE({ token, data })).then(({ payload: staff }) => {
       // update filtered list locally
       const Avatar = `/users/${staff?.user?.email}/profile.jpg`;
@@ -100,15 +97,15 @@ const Body = () => {
           <th>Avatar</th>
           <th>Name</th>
           <th>Position</th>
-          <th>Address</th>
-          <th>Primary contact</th>
+          <th>Contact Person</th>
+          <th>Phone</th>
           <th>Signature</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((staff, index) => {
-          const { front, back, _id, uid } = staff;
+          const { front, back, _id } = staff;
 
           const { img, emp, empID, position, department } = front;
           const { address, guardian, guardianId, pn, signature } = back;
@@ -139,16 +136,15 @@ const Body = () => {
                 <h5>{position}</h5>
                 {department}
               </td>
-              <td>{address}</td>
               <td>
                 <EditableUser
-                  user={{ guardian, _id, uid }} // unique key for each user
+                  user={{ guardian, _id }} // unique key for each user
                   placeHolder="Primary Contact..."
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
                   onSave={handleUpdateGuardian}
-                  // onSave={(data) => console.log("onsave data:", data)}
                 />
+                {address}
                 <div className="d-flex flex-column">
                   <EditableField
                     type="number"
@@ -160,6 +156,7 @@ const Body = () => {
                   />
                 </div>
               </td>
+              <td>{pn}</td>
               <td>
                 <img
                   src={`${Cloudinary.getEndpoint()}/${signature}`}

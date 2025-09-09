@@ -200,6 +200,84 @@ export const DESTROY_IMG = createAsyncThunk(
   }
 );
 
+//set active platform
+const setAP = (state, payload) => {
+  const {
+    access = [],
+    branches = [],
+    isPhysician = false,
+    activePlatform: oldAP = {},
+  } = payload;
+  const { branchId = "" } = oldAP || {};
+  if (!branchId) return "";
+  const _access = access
+    .filter(({ branchId: bID }) => bID === branchId)
+    .map((a) => a.platform)
+    .filter((platform) => platform?.toLowerCase() !== "physician");
+
+  const branch = branches?.find((branch) => branch?._id === branchId);
+  const { contract = { designation: -1 }, status } = branch || {};
+  const isEmployed = employment.isEmployed(isPhysician ? "active" : status);
+  const designation = isPhysician ? 122 : contract?.designation;
+  const department = Policy.getDepartment(designation) || "";
+  const role = Policy.getPosition(designation) || {};
+  const activePlatform = {
+    ...oldAP,
+    branch,
+    company: branch?.companyId || {},
+    access: isEmployed
+      ? [..._access, ...(isPhysician ? ["physician"] : []), "patron"]
+      : ["patron"],
+    department,
+    role,
+    isPhysician,
+    position: designation,
+    ...(!isEmployed && { platform: "" }),
+  };
+  localStorage.setItem("activePlatform", JSON.stringify(activePlatform));
+  state.activePlatform = activePlatform;
+  state.company = branch?.companyId;
+};
+
+//formatted Active Platform
+const initializeInformation = (state, payload) => {
+  const {
+    token,
+    auth,
+    branches,
+    isCeo,
+    access,
+    isPatient,
+    isPhysician = false,
+  } = payload;
+  //set active platforms
+  setAP(state, {
+    isPhysician,
+    branches,
+    access,
+    activePlatform: auth.activePlatform,
+  });
+  state.isPatient = isPatient;
+  state.isCeo = isCeo;
+  //if we have a token it means user is logged in
+  if (token) {
+    state.token = token;
+  }
+  state.email = auth.email;
+  state.auth = auth;
+  state.access = access;
+  state.branches = branches;
+  state.image = `${Cloudinary.getEndpoint()}/${auth?.pid || ""}/users/${
+    auth.email
+  }/profile.png?v=${Date.now()}`;
+
+  state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
+  state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
+  state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
+  state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
+  state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
+};
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
@@ -279,6 +357,7 @@ export const reduxSlice = createSlice({
       state.company = payload;
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(SETACTIVEPLATFORM.pending, (state) => {
@@ -288,27 +367,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        const convert = (data) => JSON.parse(JSON.stringify(data));
 
-        const branch = state.branches.find(
-          (branch) => branch._id === payload.activePlatform.branchId
-        );
-        const _access = state.access
-          .filter(
-            ({ branchId }) => branchId === payload.activePlatform.branchId
-          )
-          .map((a) => a.platform);
+        setAP(state, {
+          branches: convert(state.branches),
+          access: convert(state.access),
+          isPhysician: state.activePlatform.isPhysician,
+          activePlatform: payload.activePlatform,
+        });
 
-        const { contract = { designation: -1 } } = branch || {};
-        const department = Policy.getDepartment(contract.designation) || {};
-
-        state.activePlatform = {
-          branch,
-          position: contract.designation,
-          branchId: payload.activePlatform.branchId,
-          ...payload.activePlatform,
-          access: [..._access],
-          department,
-        };
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -349,56 +416,11 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
-        const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, isPatient } = payload;
-        const { branchId } = auth.activePlatform;
-        if (branchId) {
-          const _access = access
-            .filter(({ branchId: bID }) => bID === branchId)
-            .map((a) => a.platform);
-
-          const branch = branches?.find((branch) => branch?._id === branchId);
-          const { contract = { designation: -1 }, status } = branch || {};
-          const isEmployed = employment.isEmployed(status);
-
-          const department = Policy.getDepartment(contract.designation) || "";
-          const role = Policy.getPosition(contract.designation) || {};
-          const activePlatform = {
-            ...auth.activePlatform,
-            branch,
-            company: branch?.companyId || {},
-            access: isEmployed ? [..._access, "patron"] : ["patron"],
-            department,
-            role,
-            position: contract.designation,
-            ...(!isEmployed && { platform: "" }),
-          };
-          localStorage.setItem(
-            "activePlatform",
-            JSON.stringify(activePlatform)
-          );
-          state.activePlatform = activePlatform;
-          state.company = branch?.companyId;
-        }
-        state.isPatient = isPatient;
-        state.isCeo = isCeo;
-        state.token = token;
-        state.email = auth.email;
-        state.auth = auth;
-        state.access = access;
-        state.branches = branches;
+        const { success, payload } = action.payload;
+        initializeInformation(state, payload);
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${Cloudinary.getEndpoint()}/${auth?.pid || ""}/users/${
-          auth.email
-        }/profile.png?v=${Date.now()}`;
-
-        state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
-        state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
-        state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
-        state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
-        state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
       })
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;
@@ -416,7 +438,6 @@ export const reduxSlice = createSlice({
         const branch = state.branches.find(
           ({ _id }) => _id === payload?.activePlatform.branchId
         );
-
         const { contract = { designation: -1 }, status } = branch || {};
         const isEmployed = employment.isEmployed(status);
         state.message = success;
@@ -459,58 +480,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(VALIDATEREFRESH.fulfilled, (state, action) => {
-        const { payload } = action.payload,
-          { auth, branches, isPatient, access } = payload;
-
-        const { activePlatform } = auth;
-
-        if (activePlatform) {
-          const branch = branches.find(
-            (branch) => branch._id === activePlatform.branchId
-          );
-          const _access = access
-            .filter(
-              ({ branchId }) =>
-                String(branchId) === String(activePlatform.branchId)
-            )
-            .map((a) => a.platform);
-
-          const { contract = { designation: -1 }, status } = branch || {};
-          const isEmployed = employment.isEmployed(status);
-          const department = Policy.getDepartment(contract.designation) || "";
-          const role = Policy.getPosition(contract.designation) || {};
-          state.activePlatform = {
-            ...activePlatform,
-            branch,
-            company: branch?.companyId || {},
-            access: isEmployed ? [..._access] : ["patron"],
-            department,
-            role,
-            position: contract.designation,
-            ...(!isEmployed && { platform: "" }),
-          };
-          state.company = branch?.companyId;
-          state.image = `${Cloudinary.getEndpoint()}/${auth?.pid || ""}/users/${
-            auth.email
-          }/profile.png?v=${Date.now()}`;
-
-          state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
-          state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
-          state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
-          state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
-          state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
-        }
-
-        /**
-         * this will control the topbar selections
-         */
-
-        state.isPatient = isPatient;
-        // lookup for active platform
-        state.branches = branches;
-        state.access = access;
-        state.auth = auth;
-        state.email = auth.email;
+        const { payload } = action.payload;
+        initializeInformation(state, payload);
         state.isLoading = false;
       })
       .addCase(VALIDATEREFRESH.rejected, (state, action) => {

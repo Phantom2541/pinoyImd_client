@@ -1,0 +1,45 @@
+.checkup-data-note {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 15px 10px;
+}
+
+.checkup-data-note.active {
+  position: relative;
+  z-index: 101;
+}
+
+.checkup-data-note button {
+  border: none;
+  background-color: transparent;
+  border-radius: 3px;
+  padding: 3px 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.checkup-data-note button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.checkup-data-note button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.checkup-data-prescription,
+.checkup-data-form,
+.checkup-data-certificate,
+.checkup-data-clearance {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  text-align: center;
+  overflow: hidden;
+}

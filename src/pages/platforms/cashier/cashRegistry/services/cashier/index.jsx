@@ -50,7 +50,7 @@ export default function Cashier() {
           localStorage.setItem("floatingcash", JSON.stringify(data));
           dispatch(SetSELECTED({ value: data }));
         } else {
-          dispatch(TOGGLE({ key: "open", value: new Date().getDay() }));
+          dispatch(TOGGLE({ key: "open", value: new Date().getDate() }));
         }
       });
     }

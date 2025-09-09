@@ -37,6 +37,7 @@ export default function Branches() {
         platform: "patron",
       },
     };
+    console.log("ativePlatform", activePlatform);
 
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };

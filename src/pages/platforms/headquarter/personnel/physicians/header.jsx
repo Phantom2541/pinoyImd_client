@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -14,7 +14,6 @@ import { SECRETARY } from "../../../../../services/redux/slices/assets/persons/a
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
     { collections, isSucscess } = useSelector(({ physicians }) => physicians),
-    { filtered } = useSelector(({ applicants }) => applicants),
     dispatch = useDispatch(); //
   const handleAdd = (item) => dispatch(SetCREATE(item));
 
