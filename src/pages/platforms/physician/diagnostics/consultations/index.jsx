@@ -28,7 +28,9 @@ export default function Consultations() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(GET_PATIENT({ token, key: { _id: ehrId } }));
+    dispatch(
+      GET_PATIENT({ token, key: { _id: ehrId || "636d37e0187c30ab0f611ce4" } })
+    );
   }, [ehrId, token, dispatch]);
 
   const buttonRefs = {

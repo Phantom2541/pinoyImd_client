@@ -1,5 +1,6 @@
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBTable } from "mdbreact";
 import {
+  Cloudinary,
   ENDPOINT,
   fullName,
 } from "../../../../../../../../../services/utilities";
@@ -22,6 +23,7 @@ const Validation = ({ item }) => {
   const {
     pid,
     schedule,
+    requirements = {},
     services = [],
     status,
     cancelled = [],
@@ -181,7 +183,9 @@ const Validation = ({ item }) => {
                       ? () => dispatch(SetSELECTED(item))
                       : () => console.log("done")
                   }
-                  src={`${ENDPOINT}/public/users/${pid.email}/booking/form-${schedule}.png`}
+                  src={`${Cloudinary.getEndpoint()}/${
+                    requirements?.rfId
+                  }/users/${pid.email}/booking/form-${schedule}.png`}
                   height={"550px"}
                   title="Double click to translate request"
                   className="shadow-sm cursor-pointer"
