@@ -35,7 +35,7 @@
     "description": "General-purpose ID issued by the Philippine Postal Corporation."
   },
   {
-    "name": "Voter’s ID / COMELEC Certificate",
+    "name": "Voter’s ID",
     "code": "vtr",
     "description": "Issued by COMELEC to registered voters as proof of registration."
   },
@@ -70,16 +70,6 @@
     "description": "Issued by the employer as proof of employment (valid if government-recognized)."
   },
 
-  {
-    "name": "Police Clearance",
-    "code": "plc",
-    "description": "Certifies that the individual has no criminal record, issued by PNP."
-  },
-  {
-    "name": "NBI Clearance",
-    "code": "nbi",
-    "description": "Issued by the National Bureau of Investigation, often used for job applications."
-  },
   {
     "name": "Firearms License",
     "code": "frl",

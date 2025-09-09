@@ -1,5 +1,5 @@
 // File: staffs/collapse/index.jsx
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody } from "mdbreact";
@@ -13,20 +13,20 @@ export default function CollapsableIndex() {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+
+  // ✅ Memoized paginated data
+  const paginatedData = useMemo(
+    () => filtered.slice(startIndex, endIndex),
+    [filtered, startIndex, endIndex]
+  );
 
   const [activeId, setActiveId] = useState(-1);
-  const [didHoverId] = useState(-1);
 
   const renderStatusBadge = (status, interviewDate) => {
-    if (status === "denied") {
-      return <span className="badge badge-danger">denied</span>;
-    }
-
-    if (!interviewDate && status !== "denied") {
-      return <span className="badge badge-warning">pending</span>;
-    }
-
+    if (status === "denied")
+      return <span className="badge badge-danger">Denied</span>;
+    if (!interviewDate)
+      return <span className="badge badge-warning">Pending</span>;
     return null;
   };
 
@@ -35,28 +35,33 @@ export default function CollapsableIndex() {
       <table className="table table-bordered table-hover">
         <thead className="thead-light">
           <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Application Date</th>
             <th>Interview Date</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
-          {paginatedData?.map((item, index) => {
+          {paginatedData.map((item, index) => {
+            const { user, createdAt, interviewDate, status } = item;
             const actualIndex = startIndex + index;
-            const { color } = collapse.getStyle(
-              actualIndex,
-              activeId,
-              didHoverId
-            );
+
+            const { color } = collapse.getStyle(actualIndex, activeId, -1);
+            const isActive = activeId === actualIndex;
+
+            const textClass = isActive
+              ? "font-weight-bold text-dark"
+              : "text-dark";
 
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
-                  <td>{properFullname(item.user.fullName)}</td>
-                  <td>
-                    {new Date(item.createdAt).toLocaleString("en-US", {
+                  <td className={textClass}>{actualIndex + 1}.</td>
+                  <td className={textClass}>{properFullname(user.fullName)}</td>
+                  <td className={textClass}>
+                    {new Date(createdAt).toLocaleString("en-US", {
                       month: "long",
                       day: "numeric",
                       year: "numeric",
@@ -65,16 +70,16 @@ export default function CollapsableIndex() {
                       hour12: true,
                     })}
                   </td>
-                  <td>
-                    {item.interviewDate
-                      ? new Date(item.interviewDate).toLocaleDateString("en-US", {
+                  <td className={textClass}>
+                    {interviewDate
+                      ? new Date(interviewDate).toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
                           year: "numeric",
                         })
                       : ""}
                   </td>
-                  <td>{renderStatusBadge(item.status, item.interviewDate)}</td>
+                  <td>{renderStatusBadge(status, interviewDate)}</td>
                   <td>
                     <button
                       onClick={() =>
@@ -83,16 +88,14 @@ export default function CollapsableIndex() {
                         )
                       }
                       className="btn btn-link p-0"
+                      aria-expanded={isActive}
                     >
-                      View{" "}
+                      Docs{" "}
                       <i
-                        className="fa fa-angle-left"
+                        className="fa fa-angle-left ml-1"
                         style={{
-                          transform: `rotate(${
-                            activeId === actualIndex ? "-90deg" : "0deg"
-                          })`,
+                          transform: `rotate(${isActive ? "-90deg" : "0deg"})`,
                           transition: "transform 0.3s ease",
-                          marginLeft: "5px",
                         }}
                       />
                     </button>
@@ -100,7 +103,7 @@ export default function CollapsableIndex() {
                 </tr>
                 <tr>
                   <td colSpan="6" className="p-0 m-0">
-                    <MDBCollapse isOpen={activeId === actualIndex}>
+                    <MDBCollapse isOpen={isActive}>
                       <MDBCardBody className="m-0 p-4">
                         <CollapsableBody item={item} />
                       </MDBCardBody>

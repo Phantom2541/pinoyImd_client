@@ -1,6 +1,14 @@
 import { MDBCard, MDBCardBody, MDBBtn, MDBIcon } from "mdbreact";
+import { useState } from "react";
 
-const Card = ({ isValid, handleUploadClick, isFront = false, src }) => {
+const Card = ({
+  isValid,
+  handleUploadClick,
+  isFront = false,
+  src,
+  isValidID,
+}) => {
+  const [isBrokenImg, setIsBrokenImg] = useState(false);
   return (
     <div style={{ maxWidth: "400px" }} className="w-100">
       <span style={{ fontWeight: 500 }}>{isFront ? "Front" : "Back"}:</span>
@@ -35,14 +43,15 @@ const Card = ({ isValid, handleUploadClick, isFront = false, src }) => {
                 color: "#721c24",
               }}
             >
-              Card {isFront ? "front" : "back"} is required. Please upload it
-              before proceeding to the next step.
+              {isValidID ? "ID" : "Card"} {isFront ? "front" : "back"} is
+              required. Please upload it before proceeding to the next step.
             </div>
           )}
-          {src ? (
+          {!isBrokenImg && src ? (
             <>
               <img
-                src={`data:image/png;base64,${src}`}
+                onError={() => setIsBrokenImg(true)}
+                src={src}
                 alt="Uploaded Card"
                 style={{
                   width: "100%",
