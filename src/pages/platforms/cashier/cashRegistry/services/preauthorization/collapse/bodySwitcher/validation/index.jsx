@@ -159,7 +159,7 @@ const Validation = ({ item }) => {
   const isDone = status === "done";
 
   return (
-    <>
+    <div>
       <MDBTable>
         <thead>
           <tr>
@@ -264,7 +264,16 @@ const Validation = ({ item }) => {
                 <MDBBtn
                   color="primary"
                   rounded
-                  onClick={handleApprove}
+                  // onClick={handleApprove}
+                  onClick={() =>
+                    dispatch(
+                      SetPROCESS({
+                        ...item,
+                        isValidation: true,
+                        isAuthorization: true,
+                      })
+                    )
+                  }
                   size="sm"
                 >
                   Approve
@@ -285,7 +294,7 @@ const Validation = ({ item }) => {
           </MDBBtnGroup>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

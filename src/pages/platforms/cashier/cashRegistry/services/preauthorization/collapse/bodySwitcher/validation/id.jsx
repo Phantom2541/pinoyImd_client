@@ -68,8 +68,8 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
             >
               <img
                 src={`${Cloudinary.getEndpoint()}/${
-                  pid?.[cardType]?.img?.front
-                }/users/${pid.email}/portfolio/${pid?.[cardType]?.name}/front`}
+                  pid?.[cardType]?.img?.front || ""
+                }/users/${pid.email}/portfolio/${pid?.[cardType]?.type}/front`}
                 alt="Front"
                 className="shadow-lg"
                 style={{
@@ -92,8 +92,8 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
             >
               <img
                 src={`${Cloudinary.getEndpoint()}/${
-                  pid?.[cardType]?.img?.back
-                }/users/${pid.email}/portfolio/${pid?.[cardType]?.name}/back`}
+                  pid?.[cardType]?.img?.back || ""
+                }/users/${pid.email}/portfolio/${pid?.[cardType]?.type}/back`}
                 alt="Back"
                 className="shadow-lg"
                 style={{
@@ -109,10 +109,12 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
           <MDBBtn
             size="sm"
             color="light"
-            className="position-absolute"
+            title="Flip Card"
+            className="position-absolute px-3 p-1"
             style={{
+              color: "blue",
               bottom: "-2px",
-              right: "5px",
+              right: "0px",
               zIndex: 10,
             }}
             onClick={handleFlip}
@@ -134,7 +136,7 @@ const ID = ({ handleValidateID, cardType, pid, className = "" }) => {
         }}
       >
         <div title={HMO.getName(pid?.[cardType]?.name)}>
-          {pid?.[cardType]?.name?.toUpperCase()}
+          {pid?.[cardType]?.type?.toUpperCase()}
         </div>
         <div>
           <strong>{pid?.[cardType]?.id || "N/A"}</strong>

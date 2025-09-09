@@ -1,5 +1,5 @@
 import { MDBCard, MDBCardBody, MDBBtn, MDBIcon } from "mdbreact";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Card = ({
   isValid,
@@ -9,6 +9,9 @@ const Card = ({
   isValidID,
 }) => {
   const [isBrokenImg, setIsBrokenImg] = useState(false);
+  useEffect(() => {
+    setIsBrokenImg(false);
+  }, [src]);
   return (
     <div style={{ maxWidth: "400px" }} className="w-100">
       <span style={{ fontWeight: 500 }}>{isFront ? "Front" : "Back"}:</span>

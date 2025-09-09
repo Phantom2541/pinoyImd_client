@@ -17,6 +17,8 @@ const CardRequest = ({
     fileInputRef.current.click();
   };
 
+  console.log("form", form);
+
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {

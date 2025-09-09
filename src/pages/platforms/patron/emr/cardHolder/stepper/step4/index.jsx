@@ -82,6 +82,7 @@ const Schedule = ({ branches: _branches, setForm, form }) => {
           <input
             required
             type="date"
+            min={new Date().toISOString().split("T")[0]}
             className="form-control"
             value={form.schedule}
             onChange={(e) => setForm({ ...form, schedule: e.target.value })}

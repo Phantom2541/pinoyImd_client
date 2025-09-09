@@ -10,6 +10,7 @@ const Step2 = ({ form, setForm, setActiveStep, hmo, isValid, setIsValid }) => {
   useEffect(() => {
     setForm((prev) => {
       const { healthCard: card, email } = authLS;
+      console.log("card", card);
       const { img, type, isPrimary = false } = card;
       const getPath = (isFront = false) =>
         `${Cloudinary.getEndpoint()}/${
