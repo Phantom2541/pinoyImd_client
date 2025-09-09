@@ -223,10 +223,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(SECRETARY.fulfilled, (state, action) => {
         const { payload } = action.payload || {};
-        console.log("payload", payload);
         state.collections = payload;
         state.filtered = payload;
-        console.log("state.collections", state.collections);
 
         // const { branchId } = query;
 

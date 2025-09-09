@@ -58,23 +58,27 @@ export default function CollapsableIndex() {
               activeId,
               didHoverId
             );
+            const isActive = activeId === actualIndex;
+            const textClass = isActive
+              ? "font-weight-bold text-dark"
+              : "text-dark";
 
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
-                  <td>
+                  <td className={textClass}>
                     {item.user
                       ? properFullname(item.user.fullName)
                       : properFullname(item.ghostName)}
                   </td>
-                  <td>{item.specialization}</td>
+                  <td className={textClass}>{item.specialization}</td>
                   <td>
                     {item?.position?.employment &&
                       Policy.getDepartment(
                         item?.position?.employment?.designation
                       )}
                   </td>
-                  <td>
+                  <td className={textClass}>
                     {renderStatusBadge(item?.clinic && item?.clinic?.status)}
                   </td>
                   <td>{renderStatusBadge(item.status)}</td>

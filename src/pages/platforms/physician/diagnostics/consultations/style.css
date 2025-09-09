@@ -1,0 +1,171 @@
+.checkup-data-container {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "image  patient"
+    "image  patient"
+    "image  prescription";
+  gap: 10px;
+  height: calc(100vh - 23vh);
+  user-select: none;
+  position: relative;
+}
+
+.checkup-data-patient {
+  grid-area: patient;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 10px;
+}
+
+.checkup-data-body {
+  grid-area: image;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.checkup-data-note {
+  grid-area: prescription;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  background-color: white;
+}
+
+.checkup-data-body-slide {
+  width: 300%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  transition: transform 0.5s ease;
+}
+
+.checkup-data-body-slide-medicalHistory,
+.checkup-data-body-slide-clinicalData {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  transition: width 0.5s ease;
+}
+
+.checkup-data-body-slide-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkup-data-center-image {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  min-width: 600px;
+  max-width: 600px;
+  height: 100%;
+}
+
+.checkup-data-center-image-full-body {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.checkup-data-center-image-body {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0px 0px 7px rgba(0, 0, 0, 0.3));
+}
+
+.checkup-data-center-image-medical-history,
+.checkup-data-center-image-Ancillary {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  align-items: center;
+  height: 100%;
+  z-index: 10;
+}
+
+.checkup-data-center-image-medical-history button,
+.checkup-data-center-image-Ancillary button {
+  font-size: 1.3rem;
+  font-weight: bold;
+  width: fit-content;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  transition: color 0.3s ease;
+}
+
+.checkup-data-center-image-medical-history button:hover,
+.checkup-data-center-image-Ancillary button:hover {
+  color: #007bff;
+}
+
+.checkup-data-center-image-medical-history button.active,
+.checkup-data-center-image-Ancillary button.active {
+  color: #007bff;
+}
+
+.checkup-data-center-image-medical-history button:disabled,
+.checkup-data-center-image-Ancillary button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.checkup-data-center-image-medical-history {
+  left: 3%;
+}
+
+.checkup-data-center-image-Ancillary {
+  right: 3%;
+}
+
+.checkup-data-patient-info {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.checkup-data-patient-profile {
+  width: 60px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  object-fit: fill;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.checkup-data-patient-info span {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: wrap;
+  letter-spacing: 0.5px;
+}
+
+.checkup-data-note-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3); /* translucent background */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(20px); /* for Safari */
+  visibility: hidden;
+  z-index: 100;
+}
+
+.checkup-data-note-mask.active {
+  visibility: visible;
+}
