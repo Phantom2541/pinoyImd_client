@@ -1,7 +1,8 @@
 import { useLocation, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { EditableUser } from "../../../../../components/customizable";
+import { EditableUser, Select } from "../../../../../components/customizable";
 import PROFILE from "./../../../../../assets/male.jpg";
+import { fullAddress, getAge } from "../../../../../services/utilities";
 
 export default function Patient() {
   const { patient, isLoading, isSuccess } = useSelector(
@@ -31,6 +32,45 @@ export default function Patient() {
           formSubmitted={isLoading}
           isSuccess={isSuccess}
         />
+      </div>
+      <div className="checkup-data-patient-data">
+        <span>Personal Details</span>
+        <br />
+        <span>
+          Age: {getAge(patient?.dob)}/ {patient?.isMale ? "Male" : "Female"}
+        </span>
+        <br />
+        <span>Address: {fullAddress(patient?.address)}</span>
+      </div>
+      <hr />
+      <div>
+        <span>
+          Reason for Visit:{" "}
+          <Select
+            collection={[
+              "New Consultation",
+              "Follow-up Consultation",
+              "Annual Physical Examination (APE)",
+              "Pre-Employment Medical Examination",
+              "Pre-Operative Evaluation",
+              "Outpatient Medical Clearance",
+              "Medical Certificate Issuance",
+              "Consultation for Second Opinion",
+              "Ongoing Treatment / Monitoring",
+              "Post-Hospital / Discharge Follow-up",
+              "Referral from Another Physician",
+              "Specialist Referral",
+              "Diagnostic Result Review",
+              "Wellness / Preventive Check",
+              "Health Screening",
+            ]}
+            soloUpdate={true}
+            preValue={patient?.reasonForVisit}
+            onChange={(value) =>
+              setPatientId({ ...patient, reasonForVisit: value })
+            }
+          />
+        </span>
       </div>
     </div>
   );
