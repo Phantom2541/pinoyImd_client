@@ -20,7 +20,7 @@ import {
   Vouchers,
   Payments,
   // SOA,
-  Onboarding,
+  ExpressLane,
   Preauthorization,
 } from "../../../../pages/platforms/cashier";
 import {
@@ -78,7 +78,7 @@ const cashier = [
         icon: "sign-in-alt",
         title:
           "Pre-charged → moves to Accrued Vouchers/frontdesk onboarding when done",
-        component: Onboarding,
+        component: ExpressLane,
       },
     ],
   },

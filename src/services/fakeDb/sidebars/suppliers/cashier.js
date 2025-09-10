@@ -18,7 +18,7 @@ import {
   Vouchers,
   Payments,
   // SOA,
-  Onboarding,
+  // Onboarding,
 } from "../../../../pages/platforms/cashier";
 
 const cashier = [
@@ -61,7 +61,7 @@ const cashier = [
         path: "/onboarding",
         icon: "sign-in-alt",
         title: "Pre-Registered Patients & HMO Approvals",
-        component: Onboarding,
+        // component: Onboarding,
       },
     ],
   },

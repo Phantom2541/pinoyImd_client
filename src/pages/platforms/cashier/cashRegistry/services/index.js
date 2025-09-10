@@ -1,8 +1,8 @@
 //
 export { default as Cashier } from "./cashier";
 export { default as Deals } from "./deals";
-export { default as Preauthorization } from "./preauthorization";
-export { default as Onboarding } from "./expressLane";
+export { default as Preauthorization } from "./kiosk/preauthorization";
+export { default as ExpressLane } from "./kiosk/expressLane";
 export { default as Remittances } from "./remittances";
 
 /**
