@@ -22,19 +22,22 @@
 .checkup-data-note button:hover {
   background-color: #007bff;
   color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
 }
 
 .checkup-data-note button.active {
   background-color: #007bff;
   color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
 }
 
 .checkup-data-prescription-container,
-.checkup-data-form,
+.checkup-data-form-container,
 .checkup-data-certificate,
 .checkup-data-clearance {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  overflow: auto;
+  overflow: hidden; /* importante: para walang scroll */
+  overflow-y: auto;
 }
 
 /* prescription design */

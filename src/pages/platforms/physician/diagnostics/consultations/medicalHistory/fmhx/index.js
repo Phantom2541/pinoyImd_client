@@ -1,22 +1,24 @@
-import "../style.css";
+import DraggableList, { useDragAndDrop } from "../dragAndDrop";
 
 export default function FMHx({ familyHistory }) {
+  const dragDrop = useDragAndDrop(familyHistory || []);
+
+  console.log("Current items:", dragDrop.items);
+
   if (!familyHistory || familyHistory.length === 0) {
     return (
       <div className="checkup-data-pmh-container">
-        No family history available.
+        No Family history available.
       </div>
     );
   }
 
   return (
-    <div className="checkup-data-pmh-container">
-      <h2>Family History</h2>
-      <ul className="family-history-list">
-        {familyHistory.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
+    <div className="checkup-data-mh-container">
+      <div className="checkup-data-fmhx-container">
+        <h2>Family History</h2>
+        <DraggableList items={dragDrop.items} {...dragDrop} />
+      </div>
     </div>
   );
 }

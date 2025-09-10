@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 export default function usePanelPosition(
   active,
   buttonRef,
-  zIndex,
   targetSize = { width: 500, height: 500 }
 ) {
   const [style, setStyle] = useState({});
@@ -35,7 +34,7 @@ export default function usePanelPosition(
             visibility: "hidden",
             transform: "translate(-50%, -50%)",
             transition: "all .5s ease-in-out",
-            zIndex,
+            zIndex: 10,
           }
         : {
             position: "absolute",
@@ -47,7 +46,7 @@ export default function usePanelPosition(
             visibility: "visible",
             transform: "translate(-50%, -50%)",
             transition: "all .5s cubic-bezier(0.25,1,0.5,1)",
-            zIndex,
+            zIndex: 120,
           };
 
       setStyle(newStyle);
@@ -55,7 +54,7 @@ export default function usePanelPosition(
 
     frame = requestAnimationFrame(updateStyle);
     return () => cancelAnimationFrame(frame);
-  }, [active, zIndex, targetSize, buttonRef]);
+  }, [active, targetSize, buttonRef]);
 
   return style;
 }

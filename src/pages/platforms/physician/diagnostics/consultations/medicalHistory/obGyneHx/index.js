@@ -3,7 +3,7 @@ import "../style.css";
 export default function OBGyneHx({ obGyneHistory }) {
   if (!obGyneHistory || obGyneHistory.length === 0) {
     return (
-      <div className="checkup-data-pmh-container">
+      <div className="checkup-data-mh-container">
         No OB-Gyne history available.
       </div>
     );
@@ -25,7 +25,7 @@ export default function OBGyneHx({ obGyneHistory }) {
   ).length;
 
   return (
-    <div className="checkup-data-pmh-container">
+    <div className="checkup-data-mh-container">
       <h2>OB-Gyne History</h2>
 
       <ul className="obgyne-list">
