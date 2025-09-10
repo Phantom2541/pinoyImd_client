@@ -73,29 +73,29 @@ export default function Patient({ activePanels }) {
           Reason for Visit:{" "}
           <Select
             collection={
-              ({ value: "new_consultation", label: "New Consultation" },
+              ({ value: "initial", label: "New Consultation" },
               {
-                value: "follow_up_consultation",
+                value: "follow_up",
                 label: "Follow-up Consultation",
               },
               {
-                value: "annual_physical_exam",
+                value: "ape",
                 label: "Annual Physical Examination (APE)",
               },
               {
-                value: "pre_employment_exam",
+                value: "peme",
                 label: "Pre-Employment Medical Examination",
               },
               {
-                value: "pre_operative_evaluation",
+                value: "poe",
                 label: "Pre-Operative Evaluation",
               },
               {
-                value: "medical_clearance",
+                value: "med-clear",
                 label: "Outpatient Medical Clearance",
               },
               {
-                value: "medical_certificate",
+                value: "med-cert",
                 label: "Medical Certificate Issuance",
               },
               {
@@ -107,17 +107,21 @@ export default function Patient({ activePanels }) {
                 label: "Ongoing Treatment / Monitoring",
               },
               {
-                value: "post_hospital_follow_up",
+                value: "ph_follow_up",
                 label: "Post-Hospital / Discharge Follow-up",
               },
               {
-                value: "referral_physician",
+                value: "referral",
                 label: "Referral from Another Physician",
               },
-              { value: "specialist_referral", label: "Specialist Referral" },
+              { value: "s_ref", label: "Specialist Referral" },
               { value: "diagnostic_review", label: "Diagnostic Result Review" },
               { value: "wellness_check", label: "Wellness / Preventive Check" },
-              { value: "health_screening", label: "Health Screening" })
+              { value: "health_screening", label: "Health Screening" },
+              {
+                value: "emergency",
+                label: "Emergency Case (extra, optional)",
+              })
             }
             soloUpdate={true}
             preValue={patient?.reasonForVisit}
