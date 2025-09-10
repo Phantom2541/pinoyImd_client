@@ -16,6 +16,7 @@
   grid-area: patient;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   background-color: white;
+  padding: 10px;
 }
 
 .checkup-data-body {
@@ -47,7 +48,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
   transition: width 0.5s ease;
 }
 

@@ -4,17 +4,57 @@
   background-color: bisque;
 }
 
-.checkup-data-pmh-container {
+.checkup-data-mh-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.checkup-data-fmhx-container,
+.checkup-data-pmhx-container,
+.checkup-data-pshx-container {
+  width: fit-content;
+  min-width: 300px;
+  height: fit-content;
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 8px;
   background-color: #f0f0f0;
 }
 
-.family-history-list {
-  list-style-type: disc;
-  margin-left: 20px;
+.checkup-data-fmhx-container h2,
+.checkup-data-pmhx-container h2,
+.checkup-data-pshx-container h2 {
+  font-weight: bold;
+}
+
+.checkup-data-draggable-list,
+.checkup-data-draggable-item-text {
+  list-style: none;
   padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.checkup-data-draggable-item {
+  cursor: grab;
+  padding: 6px;
+  transition: all 0.2s ease;
+}
+
+.checkup-data-draggable-item:active {
+  cursor: grabbing;
+}
+
+.checkup-data-draggable-item.dragging {
+  opacity: 1;
+}
+
+.checkup-data-placeholder-item {
+  height: 20px; /* slot space */
+  transition: all 0.2s ease;
 }
 
 .checkup-data-pmh-container {
