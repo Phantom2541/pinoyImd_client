@@ -10,9 +10,22 @@
   padding: 10px;
 }
 
+.checkup-data-mh-container.obgynehx {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.checkup-data-obgynhx-summary-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .checkup-data-fmhx-container,
 .checkup-data-pmhx-container,
-.checkup-data-pshx-container {
+.checkup-data-pshx-container,
+.checkup-data-obgynhx-container {
   width: fit-content;
   min-width: 300px;
   height: fit-content;
@@ -99,8 +112,38 @@
 }
 
 .gtpal-summary {
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkup-data-gtpal-label {
+  font-size: 1.2rem;
   font-weight: bold;
+}
+
+.gtpal-summary div {
+  display: flex;
+  align-items: center;
+  /* gap: 5px; */
+}
+
+.gtpal-summary div span {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.gtpal-summary div span:nth-child(2) {
+  background-color: #007bff;
+  color: white;
+  width: 30px;
+  aspect-ratio: 1/1;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
 }
 
 .legend {

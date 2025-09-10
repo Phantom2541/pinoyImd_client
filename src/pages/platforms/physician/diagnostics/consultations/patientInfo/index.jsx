@@ -39,24 +39,6 @@ export default function Patient({ activePanels }) {
           formSubmitted={isLoading}
           isSuccess={isSuccess}
         />
-        <div className="checkup-data-patient-ageGender">
-          <span>Male</span>
-          <span>21 years</span>
-        </div>
-        <div className="checkup-data-patient-HWBMI">
-          <div>
-            <span>Height</span>
-            <span>5'11 ft</span>
-          </div>
-          <div>
-            <span>Weight</span>
-            <span>89 kg</span>
-          </div>
-          <div>
-            <span>BMI</span>
-            <span>N/A</span>
-          </div>
-        </div>
       </div>
       <div className="checkup-data-patient-data">
         <span>Personal Details</span>
