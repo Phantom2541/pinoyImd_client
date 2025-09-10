@@ -54,23 +54,53 @@ export default function Patient({ activePanels }) {
         <span>
           Reason for Visit:{" "}
           <Select
-            collection={[
-              "New Consultation",
-              "Follow-up Consultation",
-              "Annual Physical Examination (APE)",
-              "Pre-Employment Medical Examination",
-              "Pre-Operative Evaluation",
-              "Outpatient Medical Clearance",
-              "Medical Certificate Issuance",
-              "Consultation for Second Opinion",
-              "Ongoing Treatment / Monitoring",
-              "Post-Hospital / Discharge Follow-up",
-              "Referral from Another Physician",
-              "Specialist Referral",
-              "Diagnostic Result Review",
-              "Wellness / Preventive Check",
-              "Health Screening",
-            ]}
+            collection={
+              ({ value: "new_consultation", label: "New Consultation" },
+              {
+                value: "follow_up_consultation",
+                label: "Follow-up Consultation",
+              },
+              {
+                value: "annual_physical_exam",
+                label: "Annual Physical Examination (APE)",
+              },
+              {
+                value: "pre_employment_exam",
+                label: "Pre-Employment Medical Examination",
+              },
+              {
+                value: "pre_operative_evaluation",
+                label: "Pre-Operative Evaluation",
+              },
+              {
+                value: "medical_clearance",
+                label: "Outpatient Medical Clearance",
+              },
+              {
+                value: "medical_certificate",
+                label: "Medical Certificate Issuance",
+              },
+              {
+                value: "second_opinion",
+                label: "Consultation for Second Opinion",
+              },
+              {
+                value: "ongoing_treatment",
+                label: "Ongoing Treatment / Monitoring",
+              },
+              {
+                value: "post_hospital_follow_up",
+                label: "Post-Hospital / Discharge Follow-up",
+              },
+              {
+                value: "referral_physician",
+                label: "Referral from Another Physician",
+              },
+              { value: "specialist_referral", label: "Specialist Referral" },
+              { value: "diagnostic_review", label: "Diagnostic Result Review" },
+              { value: "wellness_check", label: "Wellness / Preventive Check" },
+              { value: "health_screening", label: "Health Screening" })
+            }
             soloUpdate={true}
             preValue={patient?.reasonForVisit}
             onChange={(value) =>
