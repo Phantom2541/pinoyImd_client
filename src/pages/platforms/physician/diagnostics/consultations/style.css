@@ -16,7 +16,6 @@
   grid-area: patient;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   background-color: white;
-  padding: 10px;
 }
 
 .checkup-data-body {
@@ -128,29 +127,6 @@
 
 .checkup-data-center-image-Ancillary {
   right: 3%;
-}
-
-.checkup-data-patient-info {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 5px;
-}
-
-.checkup-data-patient-profile {
-  width: 60px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  object-fit: fill;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-}
-
-.checkup-data-patient-info span {
-  font-size: 1rem;
-  font-weight: 500;
-  text-transform: capitalize;
-  white-space: wrap;
-  letter-spacing: 0.5px;
 }
 
 .checkup-data-note-mask {

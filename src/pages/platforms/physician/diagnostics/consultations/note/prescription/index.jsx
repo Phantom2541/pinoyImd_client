@@ -5,10 +5,10 @@ import Patient from "./patient";
 import Body from "./body";
 import Footer from "./footer";
 
-export default function Prescription({ active, buttonRefs, zIndex }) {
-  const style = usePanelPosition(active, buttonRefs.prescription, zIndex, {
-    width: "auto",
-    height: "auto",
+export default function Prescription({ active, buttonRefs }) {
+  const style = usePanelPosition(active, buttonRefs.prescription, {
+    width: "4.25in",
+    height: "5.5in",
   });
 
   return (
