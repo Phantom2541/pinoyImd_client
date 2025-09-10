@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { RESET } from "../../../../../services/redux/slices/assets/persons/physicians";
-import { SECRETARY } from "../../../../../services/redux/slices/assets/persons/applicants";
+import { SECRETARYAPPLICANT } from "../../../../../services/redux/slices/assets/persons/applicants";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -12,7 +12,10 @@ const Header = () => {
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(
-        SECRETARY({ token, data: { branchId: activePlatform.branchId } })
+        SECRETARYAPPLICANT({
+          token,
+          data: { branchId: activePlatform.branchId, physicianId: auth._id },
+        })
       );
     }
 
