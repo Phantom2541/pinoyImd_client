@@ -6,11 +6,13 @@ import {
   Services,
 } from "../../../../../../../services/fakeDb";
 import { mobile } from "../../../../../../../services/utilities";
+import { useSelector } from "react-redux";
 const Contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
 };
-const Customer = ({ deal, categoryIndex }) => {
+const Customer = ({ categoryIndex }) => {
+  const { selected: deal } = useSelector(({ kiosk }) => kiosk);
   const {
     pid: customerId,
     // branchId,

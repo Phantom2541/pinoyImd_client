@@ -2,7 +2,7 @@ import { MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { capitalize, isEmpty } from "lodash";
 
-const Summary = ({
+const AuthorizedSummary = ({
   cart = 0,
   gross = 0,
   discount = 0,
@@ -91,4 +91,4 @@ const Summary = ({
   );
 };
 
-export default Summary;
+export default AuthorizedSummary;

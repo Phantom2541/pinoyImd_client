@@ -87,6 +87,9 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
       </thead>
       <tbody>
         {Object.entries(dc).map(([key, value], index) => {
+          console.log("diff", Preferences.differentials);
+          console.log("cat", Category[index]);
+
           const category = Category[index],
             { lo, hi } = Preferences.differentials[category];
 

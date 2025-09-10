@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -11,37 +11,42 @@ import {
 import {
   allServicesHavePrices,
   Cloudinary,
-  computeGD,
   fullAddress,
   fullName,
   getAge,
 } from "../../../../../../services/utilities";
-import { Categories, Services } from "../../../../../../services/fakeDb";
-import { findIndex, isEmpty } from "lodash";
+import { Services } from "../../../../../../services/fakeDb";
+import _, { isEmpty } from "lodash";
 import {
   PROCESS_ONBOARDING,
-  TOGGLE,
   RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
+import {
+  InitializeCART,
+  TOGGLE,
+} from "../../../../../../services/redux/slices/commerce/pos/services/kiosk";
 import Swal from "sweetalert2";
 import Customer from "./customer";
 import Menus from "./menus";
-import Summary from "./summary";
+import ApprovedSummary from "./summary/approved.jsx";
+import PendingSummary from "./summary/pending.jsx";
 import { ImageMagnifier } from "../../../../../../components/images";
+import utils from "./utils.js";
 
 export default function Approval() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { formSubmitted, isSuccess } = useSelector(
+      ({ onBoardings }) => onBoardings
+    ),
     {
-      formSubmitted,
-      isSuccess,
-      showProcess: show,
+      showModal: show,
       selected,
-    } = useSelector(({ onBoardings }) => onBoardings),
-    { collections: menus } = useSelector(({ menus }) => menus),
-    [cart, setCart] = useState([]),
-    [matchMenus, setMatchMenus] = useState([]),
-    [cash, setCash] = useState(0),
-    [payment, setPayment] = useState("cash"),
+      cart,
+      isAuthorization,
+      payment,
+      cash,
+    } = useSelector(({ kiosk }) => kiosk),
+    { collections: menuCollections } = useSelector(({ menus }) => menus),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => dispatch(TOGGLE(true)), [dispatch]);
@@ -50,10 +55,7 @@ export default function Approval() {
     pid: customerId = {},
     client = {},
     branchId = {},
-    privilege = 0,
     haveCard = false,
-    isAuthorization = false,
-    membership = "",
     services: servicesId = [],
     contract,
     schedule,
@@ -70,94 +72,20 @@ export default function Approval() {
   }, [formSubmitted, isSuccess, show, toggle, dispatch]);
 
   useEffect(() => {
-    setCash(0);
-    setPayment("cash");
-
-    if (show && servicesId?.length > 0) {
-      const defaultMenus = [];
-      for (const menu of menus) {
-        const { packages, isProfile = false } = menu;
-        const isSubset =
-          packages.length === 1 &&
-          packages.every((id) => servicesId.includes(id));
-        if (isSubset && !isProfile) {
-          defaultMenus.push(menu);
-          if (defaultMenus.length === servicesId.length) break;
-        }
-      }
-
-      const _matchMenus = [...menus].filter(
-        ({ packages, isProfile = false }) => {
-          const isSubset =
-            packages.length === 1 &&
-            packages.every((id) => servicesId.includes(id));
-          return isSubset && !isProfile;
-        }
-      );
-
-      setMatchMenus(_matchMenus);
-      setCart(defaultMenus);
+    if (show) {
+      dispatch(InitializeCART(menuCollections));
     }
-  }, [show, menus, servicesId]);
-
-  const handleRemovedToCart = (_id) => {
-    const _cart = [...cart];
-    const index = findIndex(_cart, { _id });
-    _cart.splice(index, 1);
-    setCart(_cart);
-  };
-
-  const handleAddToCart = (menu) => {
-    const { packages } = menu;
-    const _cart = [...cart];
-    const index = findIndex(_cart, { _id: menu._id });
-    const duplicatePackages = _cart.some((item) =>
-      menu.packages.some((id) => item.packages.includes(id))
-    );
-
-    if (duplicatePackages) {
-      return Swal.fire({
-        icon: "warning",
-        title: "Duplicate Packages",
-        html: `This    <b>${packages
-          .map((id) => Services.getAbbr(id))
-          .join(", ")}</b> package  has already been selected.`,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#3085d6",
-      });
-    }
-    if (index > -1) return "";
-    _cart.unshift(menu);
-    setCart(_cart);
-  };
-
-  const getCategoryIndex = (c) => {
-    return Categories.findIndex((item) => item.abbr === c);
-  };
+  }, [show, menuCollections, dispatch]);
 
   const getCategory = () => {
     if (client?._id) return "ctr";
     return haveCard ? "wls" : "opd";
   };
 
-  const getTotal = (cIndex, getObj = false) => {
-    const { gross = 0, discount = 0 } = computeGD(
-      cart,
-      cIndex,
-      privilege,
-      membership,
-      customerId?.healthCard?.name || "",
-      contract
-    );
-    const amount = gross - discount;
-    return !getObj ? amount : { gross, discount, amount };
-  };
-
-  const categoryIndex = getCategoryIndex(getCategory());
-  const { discount, amount, gross } = getTotal(categoryIndex, true);
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { discount, gross } = utils.computeCharges(cart, selected);
+
     const remainingPackages = [...servicesId].filter(
       (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
     );
@@ -168,14 +96,7 @@ export default function Approval() {
 
     const dealMenus = filteredCart.map((cart) => {
       return {
-        ...computeGD(
-          cart,
-          categoryIndex,
-          -1,
-          "",
-          customerId?.healthCard?.name,
-          contract
-        ),
+        // ...computeGD(cart, -1, -1, "", customerId?.healthCard?.name, contract),
         menuId: cart._id,
       };
     });
@@ -259,12 +180,7 @@ export default function Approval() {
     }
 
     if (
-      !allServicesHavePrices(
-        cart,
-        categoryIndex,
-        customerId?.healthCard?.name,
-        contract
-      )
+      !allServicesHavePrices(cart, 0, customerId?.healthCard?.name, contract)
     ) {
       Swal.fire({
         title: "Service Validator?",
@@ -319,32 +235,14 @@ export default function Approval() {
               </div>
             </MDBCol>
           ) : (
-            <Customer deal={selected} categoryIndex={categoryIndex} />
+            <Customer />
           )}
-          <Menus
-            cart={cart}
-            selected={selected}
-            category={categoryIndex}
-            contract={contract}
-            // discount={discountPercentage}
-            matchMenus={matchMenus}
-            handleAddToCart={handleAddToCart}
-            handleRemovedToCart={handleRemovedToCart}
-          />
-          <Summary
-            cart={cart}
-            gross={gross}
-            discount={discount}
-            amount={amount}
-            handleSubmit={handleSubmit}
-            formSubmitted={formSubmitted}
-            selected={selected}
-            cash={cash}
-            setCash={setCash}
-            payment={payment}
-            setPayment={setPayment}
-            category={getCategory()}
-          />
+          <Menus contract={contract} />
+          {isAuthorization ? (
+            <PendingSummary handleSubmit={handleSubmit} />
+          ) : (
+            <ApprovedSummary handleSubmit={handleSubmit} />
+          )}
         </MDBRow>
       </MDBModalBody>
       <div

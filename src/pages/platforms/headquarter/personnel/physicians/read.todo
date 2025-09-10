@@ -1,0 +1,5 @@
+-tagging of secretaries on the physician @done
+-controller @done
+-need the branchId and physicianId for the secretary @done
+-should be saved in the physician @done
+-can you also check the taging of physician on the branch is seem it's not adding a new physicianId in the affiliated but replacing it when it should be adding a new
