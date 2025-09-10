@@ -1,5 +1,73 @@
-.checkup-data-laboratory-container {
+.tools-switcher-container {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   height: 100%;
-  background-color: aqua;
+}
+
+.tools-switcher-panel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* enter / exit left (forward) */
+.enter-left {
+  animation: enterFromRight 0.3s ease-out forwards;
+}
+.exit-left {
+  animation: exitToLeft 0.3s ease-in forwards;
+}
+
+/* enter / exit right (backward) */
+.enter-right {
+  animation: enterFromLeft 0.3s ease-out forwards;
+}
+.exit-right {
+  animation: exitToRight 0.3s ease-in forwards;
+}
+
+@keyframes enterFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes exitToLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes enterFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes exitToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }

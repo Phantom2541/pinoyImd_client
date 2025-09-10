@@ -1,8 +1,8 @@
 import React from "react";
 import usePanelPosition from "./panelPosition";
 
-export default function Clearance({ active, buttonRefs, zIndex }) {
-  const style = usePanelPosition(active, buttonRefs.clearance, zIndex);
+export default function Clearance({ active, buttonRefs }) {
+  const style = usePanelPosition(active, buttonRefs.clearance);
 
   return (
     <div style={style} className="checkup-data-clearance">

@@ -4,17 +4,70 @@
   background-color: bisque;
 }
 
-.checkup-data-pmh-container {
+.checkup-data-mh-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.checkup-data-mh-container.obgynehx {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.checkup-data-obgynhx-summary-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.checkup-data-fmhx-container,
+.checkup-data-pmhx-container,
+.checkup-data-pshx-container,
+.checkup-data-obgynhx-container {
+  width: fit-content;
+  min-width: 300px;
+  height: fit-content;
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 8px;
   background-color: #f0f0f0;
 }
 
-.family-history-list {
-  list-style-type: disc;
-  margin-left: 20px;
+.checkup-data-fmhx-container h2,
+.checkup-data-pmhx-container h2,
+.checkup-data-pshx-container h2 {
+  font-weight: bold;
+}
+
+.checkup-data-draggable-list,
+.checkup-data-draggable-item-text {
+  list-style: none;
   padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.checkup-data-draggable-item {
+  cursor: grab;
+  padding: 6px;
+  transition: all 0.2s ease;
+}
+
+.checkup-data-draggable-item:active {
+  cursor: grabbing;
+}
+
+.checkup-data-draggable-item.dragging {
+  opacity: 1;
+}
+
+.checkup-data-placeholder-item {
+  height: 20px; /* slot space */
+  transition: all 0.2s ease;
 }
 
 .checkup-data-pmh-container {
@@ -59,8 +112,38 @@
 }
 
 .gtpal-summary {
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkup-data-gtpal-label {
+  font-size: 1.2rem;
   font-weight: bold;
+}
+
+.gtpal-summary div {
+  display: flex;
+  align-items: center;
+  /* gap: 5px; */
+}
+
+.gtpal-summary div span {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.gtpal-summary div span:nth-child(2) {
+  background-color: #007bff;
+  color: white;
+  width: 30px;
+  aspect-ratio: 1/1;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
 }
 
 .legend {

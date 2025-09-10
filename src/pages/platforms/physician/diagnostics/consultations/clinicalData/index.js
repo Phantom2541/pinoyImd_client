@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import Laboratory from "./laboratory";
 import Radiology from "./radiology";
 import Vital from "./vital";
@@ -11,22 +11,49 @@ const toolsMap = {
   vital: Vital,
 };
 
-export default function ToolsSwitcher({ task }) {
-  const contentRef = useRef(null);
+const order = ["laboratory", "radiology", "vital"];
+
+export default function ToolsSwitcher({ task, ...props }) {
+  const [current, setCurrent] = useState(task);
+  const [animating, setAnimating] = useState(false);
+  const [direction, setDirection] = useState("left");
+
   const vitalSigns = {
     temperature: "36.6°C",
     pulse: "80 bpm",
     bloodPressure: "120/80 mmHg",
     respiration: "18 breaths/min",
-    weight: 70, // kg
-    height: 1.75, // meters
+    weight: 70,
+    height: 1.75,
   };
 
-  const Component = toolsMap[task?.toLowerCase()] || Blank;
+  useEffect(() => {
+    if (!task || task === current) return;
+
+    const curIndex = order.indexOf(current?.toLowerCase());
+    const nextIndex = order.indexOf(task?.toLowerCase());
+    setDirection(nextIndex > curIndex ? "left" : "right");
+
+    setAnimating(true);
+    const t = setTimeout(() => {
+      setCurrent(task);
+      setAnimating(false);
+    }, 300);
+
+    return () => clearTimeout(t);
+  }, [task]);
+
+  const Component = toolsMap[current?.toLowerCase()] || Blank;
+
   return (
-    <div>
-      <div ref={contentRef}>
-        <Component task={task} vitalSigns={vitalSigns} fontSize={"1rem"} />
+    <div className="tools-switcher-container">
+      <div
+        key={current}
+        className={`tools-switcher-panel ${
+          animating ? `exit-${direction}` : `enter-${direction}`
+        }`}
+      >
+        <Component task={current} vitalSigns={vitalSigns} />
       </div>
     </div>
   );

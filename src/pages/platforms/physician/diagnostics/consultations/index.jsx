@@ -1,30 +1,32 @@
-// Doctor.jsx
+// Consultations.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import Body from "./body";
-import Patient from "./patient";
+import Patient from "./patientInfo";
 import Note from "./note";
 import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
-import "./style.css";
 import RequestForm from "./note/forms";
+import Prescription from "./note/prescription";
+import "./style.css";
+
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/consultations";
-import Prescription from "./note/prescription";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
+
   const [activePanels, setActivePanels] = useState({
     request: false,
     prescription: false,
     medcert: false,
     clearance: false,
   });
-  const [lastActive, setLastActive] = useState(""); // track last clicked panel
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -40,28 +42,31 @@ export default function Consultations() {
     clearance: useRef(),
   };
 
+  // Toggle panel: only one can be open at a time
   const togglePanel = (type) => {
     setActivePanels((prev) => {
-      const newState = {
-        ...prev,
-        [type]: !prev[type],
+      const isOpening = !prev[type];
+      return {
+        request: false,
+        prescription: false,
+        medcert: false,
+        clearance: false,
+        ...(isOpening && { [type]: true }),
       };
-      if (!prev[type]) setLastActive(type); // only update if panel is now active
-      return newState;
     });
   };
-
-  const getZIndex = (type) => (lastActive === type ? 200 : 120);
 
   return (
     <div className="checkup-data-container">
       <Body />
-      <Patient />
+      <Patient activePanels={activePanels} />
+
       <Note
         togglePanel={togglePanel}
         buttonRefs={buttonRefs}
         activePanels={activePanels}
       />
+
       <div
         className={`checkup-data-note-mask ${
           Object.values(activePanels).some(Boolean) && "active"
@@ -71,23 +76,10 @@ export default function Consultations() {
       <Prescription
         active={activePanels.prescription}
         buttonRefs={buttonRefs}
-        zIndex={getZIndex("prescription")}
       />
-      <RequestForm
-        active={activePanels.request}
-        buttonRefs={buttonRefs}
-        zIndex={getZIndex("request")}
-      />
-      <Certificate
-        active={activePanels.medcert}
-        buttonRefs={buttonRefs}
-        zIndex={getZIndex("medcert")}
-      />
-      <Clearance
-        active={activePanels.clearance}
-        buttonRefs={buttonRefs}
-        zIndex={getZIndex("clearance")}
-      />
+      <RequestForm active={activePanels.request} buttonRefs={buttonRefs} />
+      <Certificate active={activePanels.medcert} buttonRefs={buttonRefs} />
+      <Clearance active={activePanels.clearance} buttonRefs={buttonRefs} />
     </div>
   );
 }
