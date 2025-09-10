@@ -14,6 +14,7 @@ import {
   UPDATE,
   RESET,
 } from "../../../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
+import { SetSELECTED as SetKIOSK } from "../../../../../../../../../services/redux/slices/commerce/pos/services/kiosk";
 import Swal from "sweetalert2";
 import Badge from "./badge";
 import { VALIDATE_ID } from "../../../../../../../../../services/redux/slices/assets/persons/users";
@@ -267,16 +268,16 @@ const Validation = ({ item }) => {
                   // onClick={handleApprove}
                   onClick={() =>
                     dispatch(
-                      SetPROCESS({
-                        ...item,
-                        isValidation: true,
+                      SetKIOSK({
+                        data: item,
+                        isSendOut: false,
                         isAuthorization: true,
                       })
                     )
                   }
                   size="sm"
                 >
-                  Approve
+                  For Process
                 </MDBBtn>
               </>
             ) : (
