@@ -6,6 +6,7 @@ import {
 } from "../../../../../../components/customizable";
 import PROFILE from "./../../../../../../assets/male.jpg";
 import { fullAddress, getAge } from "../../../../../../services/utilities";
+import "./style.css";
 
 export default function Patient({ activePanels }) {
   const { patient, isLoading, isSuccess } = useSelector(
@@ -39,13 +40,14 @@ export default function Patient({ activePanels }) {
           formSubmitted={isLoading}
           isSuccess={isSuccess}
         />
+        <span>
+          Age: {getAge(patient?.dob)}/ {patient?.isMale ? "Male" : "Female"}
+        </span>
       </div>
       <div className="checkup-data-patient-data">
         <span>Personal Details</span>
         <br />
-        <span>
-          Age: {getAge(patient?.dob)}/ {patient?.isMale ? "Male" : "Female"}
-        </span>
+
         <br />
         <span>Address: {fullAddress(patient?.address)}</span>
       </div>

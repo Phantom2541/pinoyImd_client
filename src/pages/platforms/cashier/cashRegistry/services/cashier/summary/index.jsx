@@ -78,13 +78,17 @@ export default function Summary() {
     );
   }, [cardHolder]);
 
-  console.log("refNo", refNo);
   const checkout = async () => {
     const { careOf, pp, amount: rAmount, ...rest } = refNo;
 
     const baseRefNo = {
       ...rest,
-      amount: pp === "co" ? amount : rAmount > amount ? amount : rAmount,
+      amount:
+        pp === "co" || payment === "voucher"
+          ? amount
+          : rAmount > amount
+          ? amount
+          : rAmount,
       ...(pp === "co" && { careOf }),
     };
     let selected = {

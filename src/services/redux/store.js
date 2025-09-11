@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cases from "./slices/commerce/pos/services/cases";
 import requestForm from "./slices/requestForm/requestForm";
+import clinicMenus from "./slices/diagnostics/clinician/clinicMenus";
 
 // ASSETS
 import {
@@ -155,6 +156,7 @@ const store = configureStore({
     //portal
     emr,
     icard,
+    clinicMenus,
   },
   devTools: true,
 });

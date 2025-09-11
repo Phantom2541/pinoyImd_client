@@ -31,7 +31,7 @@ const ID = ({
 
   const id = pid?.[cardType];
 
-  const { isValid = null } = id;
+  const { isValid = null } = id || {};
 
   return (
     <div className={className} style={{ width: "400px" }}>
