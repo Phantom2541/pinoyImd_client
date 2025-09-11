@@ -7,6 +7,7 @@ import {
 import PROFILE from "./../../../../../../assets/male.jpg";
 import { fullAddress, getAge } from "../../../../../../services/utilities";
 import "./style.css";
+import { MDBIcon } from "mdbreact";
 
 export default function Patient({ activePanels }) {
   const { patient, isLoading, isSuccess } = useSelector(
@@ -34,86 +35,99 @@ export default function Patient({ activePanels }) {
           draggable={false}
         />
         <EditableUser
+          classNameTxt="checkup-data-patient-fullname"
           emptyLabel="Click here to select a Patient"
           user={{ patient, _id: patient?._id }}
           onSave={({ patient }) => setPatientId(patient)}
           formSubmitted={isLoading}
           isSuccess={isSuccess}
         />
-        <span>
-          Age: {getAge(patient?.dob)}/ {patient?.isMale ? "Male" : "Female"}
+        <span className="checkup-data-patient-ageGender">
+          {getAge(patient?.dob)}&nbsp;|&nbsp;
+          {patient?.isMale ? "Male" : "Female"}
         </span>
       </div>
-      <div className="checkup-data-patient-data">
-        <span>Personal Details</span>
-        <br />
-
-        <br />
-        <span>Address: {fullAddress(patient?.address)}</span>
+      <div className="checkup-data-patient-HWBMI">
+        <div>
+          <span>Height</span>
+          <span>5'11 ft</span>
+        </div>
+        <div>
+          <span>Weight</span>
+          <span>89 KG</span>
+        </div>
+        <div>
+          <span>BMI</span>
+          <span>N/A</span>
+        </div>
       </div>
-      <hr />
+      <div className="checkup-data-patient-address">
+        <label>Address Information</label>
+        <span>
+          <MDBIcon icon="location" />
+          {fullAddress(patient?.address).toLowerCase()}
+        </span>
+      </div>
       <div>
-        <span>
-          Reason for Visit:{" "}
-          <Select
-            collection={
-              ({ value: "initial", label: "New Consultation" },
-              {
-                value: "follow_up",
-                label: "Follow-up Consultation",
-              },
-              {
-                value: "ape",
-                label: "Annual Physical Examination (APE)",
-              },
-              {
-                value: "peme",
-                label: "Pre-Employment Medical Examination",
-              },
-              {
-                value: "poe",
-                label: "Pre-Operative Evaluation",
-              },
-              {
-                value: "med-clear",
-                label: "Outpatient Medical Clearance",
-              },
-              {
-                value: "med-cert",
-                label: "Medical Certificate Issuance",
-              },
-              {
-                value: "second_opinion",
-                label: "Consultation for Second Opinion",
-              },
-              {
-                value: "ongoing_treatment",
-                label: "Ongoing Treatment / Monitoring",
-              },
-              {
-                value: "ph_follow_up",
-                label: "Post-Hospital / Discharge Follow-up",
-              },
-              {
-                value: "referral",
-                label: "Referral from Another Physician",
-              },
-              { value: "s_ref", label: "Specialist Referral" },
-              { value: "diagnostic_review", label: "Diagnostic Result Review" },
-              { value: "wellness_check", label: "Wellness / Preventive Check" },
-              { value: "health_screening", label: "Health Screening" },
-              {
-                value: "emergency",
-                label: "Emergency Case (extra, optional)",
-              })
-            }
-            soloUpdate={true}
-            preValue={patient?.reasonForVisit}
-            onChange={(value) =>
-              setPatientId({ ...patient, reasonForVisit: value })
-            }
-          />
-        </span>
+        <span>Reason for Visit:</span>
+        <Select
+          collection={
+            ({ value: "initial", label: "New Consultation" },
+            {
+              value: "follow_up",
+              label: "Follow-up Consultation",
+            },
+            {
+              value: "ape",
+              label: "Annual Physical Examination (APE)",
+            },
+            {
+              value: "peme",
+              label: "Pre-Employment Medical Examination",
+            },
+            {
+              value: "poe",
+              label: "Pre-Operative Evaluation",
+            },
+            {
+              value: "med-clear",
+              label: "Outpatient Medical Clearance",
+            },
+            {
+              value: "med-cert",
+              label: "Medical Certificate Issuance",
+            },
+            {
+              value: "second_opinion",
+              label: "Consultation for Second Opinion",
+            },
+            {
+              value: "ongoing_treatment",
+              label: "Ongoing Treatment / Monitoring",
+            },
+            {
+              value: "ph_follow_up",
+              label: "Post-Hospital / Discharge Follow-up",
+            },
+            {
+              value: "referral",
+              label: "Referral from Another Physician",
+            },
+            { value: "s_ref", label: "Specialist Referral" },
+            { value: "diagnostic_review", label: "Diagnostic Result Review" },
+            { value: "wellness_check", label: "Wellness / Preventive Check" },
+            { value: "health_screening", label: "Health Screening" },
+            {
+              value: "emergency",
+              label: "Emergency Case (extra, optional)",
+            })
+          }
+          soloUpdate={true}
+          preValue={patient?.reasonForVisit}
+          onChange={(value) =>
+            setPatientId({ ...patient, reasonForVisit: value })
+          }
+        />
       </div>
     </div>
   );

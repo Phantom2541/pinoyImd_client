@@ -60,6 +60,7 @@ const EditableUser = ({
   hasRegister = false,
   setRegister = () => {},
   emptyLabel = "Click here to select a Guardian",
+  classNameTxt = "",
 }) => {
   const { collections } = useSelector(({ users }) => users),
     { token } = useSelector(({ auth }) => auth),
@@ -154,7 +155,7 @@ const EditableUser = ({
     const name = editableObj?._id ? fullName(editableObj?.fullName) : "";
     return (
       <span
-        className="cursor-pointer"
+        className={`cursor-pointer ${classNameTxt}`}
         onClick={() => {
           window.dispatchEvent(
             new CustomEvent("close-all-editable", {
