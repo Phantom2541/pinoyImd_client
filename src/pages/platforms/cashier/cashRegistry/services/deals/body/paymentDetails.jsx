@@ -37,10 +37,7 @@ const PaymentDetails = ({ deal = {} }) => {
       ];
     }
 
-    return [
-      { method: payment, amount },
-      { method: "tendered", amount },
-    ];
+    return [{ method: payment, amount }];
   };
   return (
     <div

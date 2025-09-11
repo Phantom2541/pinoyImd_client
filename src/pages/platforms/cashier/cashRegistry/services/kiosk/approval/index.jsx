@@ -236,8 +236,7 @@ export default function Approval() {
     const { covered, notCovered } = utils.arrangeServices(cart, selected);
     const hasRefno = payment === "mixed" || payment === "voucher";
     if (!utils.refNoIsValid(refNo)) return;
-    console.log("cart", cart);
-    console.log("covered", covered, "notCovered", notCovered);
+
     dispatch(
       UPDATE({
         token,

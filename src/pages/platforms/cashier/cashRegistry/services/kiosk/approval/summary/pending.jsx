@@ -295,7 +295,7 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
             color="success"
           >
             {!isAuthorization ? "Post" : "Process"}
-            {formSubmitted && (decision === "post" || isAuthorization) && (
+            {formSubmitted && (decision === "" || isAuthorization) && (
               <MDBIcon icon="spinner" className="ml-2" pulse />
             )}
           </MDBBtn>
