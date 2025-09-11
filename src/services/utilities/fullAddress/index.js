@@ -1,6 +1,5 @@
 import provinces from "../../../services/fakeDb/finance/philippines/provinces.json";
 const fullAddress = (address, isComplete = true) => {
-  console.log("address", address);
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
 
   const { region, province, city, barangay, street = "" } = address;

@@ -11,23 +11,12 @@ const utils = {
     } else {
       finalAmount = creditCovered;
     }
-
     const careOfAmount = type ? chargeAmount - creditCovered : chargeAmount;
     return {
       ...rest,
       amount: finalAmount,
       ...(pp === "co" && { careOf: { ...careOf, amount: careOfAmount } }),
     };
-    // const baseRefNo = {
-    //   ...rest,
-    //   amount:
-    //     pp === "co" || payment === "voucher"
-    //       ? amount
-    //       : rAmount > amount
-    //       ? amount
-    //       : rAmount,
-    //   ...(pp === "co" && { careOf }),
-    // };
   },
 };
 

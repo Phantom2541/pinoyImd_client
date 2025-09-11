@@ -65,7 +65,7 @@ export default function Patient({ activePanels }) {
         <label>Address Information</label>
         <span>
           <MDBIcon icon="location" />
-          {fullAddress(patient?.address).toLowerCase()}
+          {fullAddress(patient?.address)}
         </span>
       </div>
       <div>
