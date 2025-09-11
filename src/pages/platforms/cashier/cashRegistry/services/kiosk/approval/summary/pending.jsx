@@ -29,6 +29,7 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
     refNo,
     isAuthorization,
     cash = 0,
+    isSendOut = false,
   } = useSelector(({ kiosk }) => kiosk);
   const { formSubmitted = false } = useSelector(
     ({ onBoardings }) => onBoardings
@@ -53,6 +54,8 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
 
   useEffect(() => {
     if (!Boolean(cashOut) && haveCard) {
+      setPaymentMethods(["voucher"]);
+    } else if (isSendOut) {
       setPaymentMethods(["voucher"]);
     } else {
       setPaymentMethods([haveCard ? "voucher" : "cash", "mixed"]);
