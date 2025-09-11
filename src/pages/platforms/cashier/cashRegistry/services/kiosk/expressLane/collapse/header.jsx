@@ -14,8 +14,8 @@ const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
         {index + 1}. {getGenderIcon(pid?.isMale)} {fullName(pid?.fullName)} |
-        {getAge(pid?.dob)}{" "}
-        {client?._id ? "| Sendout" : `| ${dateFormat(schedule)}`}
+        <span className="mx-1"> {getAge(pid?.dob)}</span>
+        {client?._id ? " | Sendout" : ` | ${dateFormat(schedule)}`}
         {status === "done" && (
           <MDBIcon icon="check" className="ml-2 text-success" />
         )}
