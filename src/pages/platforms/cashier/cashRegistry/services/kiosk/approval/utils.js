@@ -150,7 +150,7 @@ const utils = {
   arrangeServices: (cart, selected) => {
     const { haveCard = false } = selected;
     //return all services
-    if (!haveCard) return getServices(cart);
+    if (!haveCard) return { covered: getServices(cart) };
     //Seperate approved and unapproved items in cart
     const covered = cart.filter(({ isApproved = true }) => isApproved);
     const notCovered = cart.filter(({ isApproved = true }) => !isApproved);

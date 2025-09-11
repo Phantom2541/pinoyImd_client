@@ -28,7 +28,12 @@ const PaymentDetails = ({ deal = {} }) => {
               },
             ]
           : []),
-        ...(cash > 0 ? [{ method: "tendered", amount: cash }] : []),
+        ...(cash > 0
+          ? [
+              { method: "cash", amount: amount - refNo?.amount },
+              { method: "tendered", amount: cash },
+            ]
+          : []),
       ];
     }
 
