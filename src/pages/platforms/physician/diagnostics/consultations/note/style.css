@@ -1,14 +1,43 @@
 .checkup-data-note {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 15px 10px;
+  background-color: white;
+  width: 100%;
 }
 
 .checkup-data-note.active {
   position: relative;
   z-index: 101;
+}
+
+.checkup-data-note-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.checkup-data-note-toggle span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.checkup-data-note-options {
+  height: 0;
+  width: 100%;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.checkup-data-note-options.active {
+  height: 160px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
 }
 
 .checkup-data-note button {
@@ -20,15 +49,28 @@
 }
 
 .checkup-data-note button:hover {
-  background-color: #007bff;
   color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
 }
 
-.checkup-data-note button.active {
+.checkup-data-note button.male-btn:hover {
   background-color: #007bff;
+}
+
+.checkup-data-note button.female-btn:hover {
+  background-color: #e83e8c;
+}
+
+.checkup-data-note button.active {
   color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+}
+
+.checkup-data-note button.male-btn.active {
+  background-color: #007bff;
+}
+.checkup-data-note button.female-btn.active {
+  background-color: #e83e8c;
 }
 
 .checkup-data-prescription-container,

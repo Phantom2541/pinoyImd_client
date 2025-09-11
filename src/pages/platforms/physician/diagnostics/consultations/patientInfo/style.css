@@ -10,7 +10,6 @@
   padding: 10px;
   padding-bottom: 20px;
   /* background-color: #007bff; */
-  color: white;
 }
 
 .checkup-data-patient-profile {
@@ -26,12 +25,14 @@
   overflow: hidden; /* tago yung sobra */
   text-overflow: ellipsis; /* palitan ng … */
   max-width: 240px;
+  color: white;
 }
 
 .checkup-data-patient-ageGender {
   font-weight: 500;
   font-size: 0.9rem;
   text-transform: capitalize;
+  color: white;
 }
 
 .checkup-data-patient-HWBMI {
@@ -41,7 +42,7 @@
   border: 1px solid white;
   border-left: none;
   border-right: none;
-  background-color: #007bff;
+  /* background-color: #007bff; */
   color: white;
 }
 
@@ -61,6 +62,7 @@
 .checkup-data-patient-HWBMI div span:nth-child(2) {
   font-size: 1rem;
   font-weight: 500;
+  text-transform: capitalize;
 }
 
 .checkup-data-patient-HWBMI div:nth-child(2) {
@@ -96,4 +98,8 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.checkup-data-patient-reason {
+  padding-bottom: 0;
 }
