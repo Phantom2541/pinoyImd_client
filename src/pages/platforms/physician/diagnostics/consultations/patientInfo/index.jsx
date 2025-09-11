@@ -1,8 +1,8 @@
 import { useLocation, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
+  EditableSelect,
   EditableUser,
-  Select,
 } from "../../../../../../components/customizable";
 import PROFILE from "./../../../../../../assets/male.jpg";
 import { fullAddress, getAge } from "../../../../../../services/utilities";
@@ -73,7 +73,7 @@ export default function Patient({ activePanels }) {
       </div>
       <div className="checkup-data-patient-reason">
         <label>Reason for Visit:</label>
-        <Select
+        <EditableSelect
           collections={[
             { value: "initial", label: "New Consultation" },
             { value: "follow_up", label: "Follow-up Consultation" },
@@ -101,9 +101,8 @@ export default function Patient({ activePanels }) {
             { value: "health_screening", label: "Health Screening" },
             { value: "emergency", label: "Emergency Case (extra, optional)" },
           ]}
-          keys="value"
-          values="label"
-          soloUpdate={true}
+          keyForValue="value"
+          keyForText="label"
           preValue={patient?.reasonForVisit}
           onChange={(value) =>
             setPatientId({ ...patient, reasonForVisit: value })
