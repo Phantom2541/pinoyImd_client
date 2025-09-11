@@ -74,10 +74,15 @@ export default function Consultations() {
       />
 
       <Prescription
+        togglePanel={togglePanel}
         active={activePanels.prescription}
         buttonRefs={buttonRefs}
       />
-      <RequestForm active={activePanels.request} buttonRefs={buttonRefs} />
+      <RequestForm
+        active={activePanels.request}
+        buttonRefs={buttonRefs}
+        togglePanel={togglePanel}
+      />
       <Certificate active={activePanels.medcert} buttonRefs={buttonRefs} />
       <Clearance active={activePanels.clearance} buttonRefs={buttonRefs} />
     </div>
