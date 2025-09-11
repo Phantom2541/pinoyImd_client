@@ -3,8 +3,8 @@ import {
   Tasks,
   Reports,
 } from "../../../../pages/platforms/laboratory/diagnostics";
-
-import { Menus, Services } from "../../../../pages/platforms/cashier";
+import { Menus } from "../../../../pages/platforms/physician";
+import {  Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
 //import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
