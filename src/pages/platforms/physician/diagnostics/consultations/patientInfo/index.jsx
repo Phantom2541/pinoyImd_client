@@ -27,7 +27,10 @@ export default function Patient({ activePanels }) {
         Object.values(activePanels).some(Boolean) && "active"
       }`}
     >
-      <div className="checkup-data-patient-info">
+      <div
+        className="checkup-data-patient-info"
+        style={{ backgroundColor: patient?.isMale ? "#007bff" : "#FFC107" }}
+      >
         <img
           src={PROFILE}
           alt="avatar"
