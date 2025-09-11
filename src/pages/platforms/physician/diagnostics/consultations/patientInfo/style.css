@@ -1,67 +1,16 @@
 .checkup-data-patient.active {
   position: relative;
-  z-index: 101;
+  z-index: 200;
 }
 
 .checkup-data-patient-info {
   display: flex;
   flex-direction: column;
-  background-color: #007bff;
-  color: white;
-  padding-top: 10px;
+  align-items: center;
 }
 
 .checkup-data-patient-profile {
-  width: 60px;
+  width: 90px;
   aspect-ratio: 1/1;
-  border-radius: 50%;
-  object-fit: fill;
-  align-self: center;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  margin-bottom: 5px;
-}
-
-.checkup-data-patient-info span {
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-transform: capitalize;
-  white-space: wrap;
-  white-space: nowrap; /* wag mag line break */
-  overflow: hidden; /* itago yung sobrang text */
-  text-overflow: ellipsis; /* gawing … yung sobra */
-  display: inline-block; /* o block/inline-block para gumana */
-  max-width: 230px;
-  align-self: center;
-}
-
-.checkup-data-patient-ageGender {
-  display: flex;
-  align-self: center;
-  gap: 10px;
-}
-
-.checkup-data-patient-ageGender span {
-  font-weight: 400;
-}
-
-.checkup-data-patient-HWBMI {
-  display: flex;
-  align-self: center;
-  width: 100%;
-  border: 1px solid white; /* parent border lang */
-  border-left: none;
-  border-right: none;
-  margin-top: 10px;
-}
-
-.checkup-data-patient-HWBMI div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-right: 1px solid white; /* hati lang sa gitna */
-}
-
-.checkup-data-patient-HWBMI div:last-child {
-  border-right: none; /* alisin yung huling border */
+  margin-bottom: 10px;
 }
