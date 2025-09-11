@@ -9,12 +9,20 @@ import { fullAddress, getAge } from "../../../../../../services/utilities";
 import "./style.css";
 import { MDBIcon } from "mdbreact";
 
+const vitals = {
+  height: "5'11",
+  weight: "89",
+};
+
 export default function Patient({ activePanels }) {
   const { patient, isLoading, isSuccess } = useSelector(
     ({ consultations }) => consultations
   );
   const location = useLocation();
   const history = useHistory();
+  const [feet, inches] = vitals.height.split("'").map(Number);
+  const meters = (feet * 12 + (inches || 0)) * 0.0254;
+  const bmi = (vitals.weight / meters ** 2).toFixed(2);
 
   const setPatientId = (newId) => {
     const newParams = new URLSearchParams(location.search);
@@ -29,7 +37,7 @@ export default function Patient({ activePanels }) {
     >
       <div
         className="checkup-data-patient-info"
-        style={{ backgroundColor: patient?.isMale ? "#007bff" : "#FFC107" }}
+        style={{ backgroundColor: patient?.isMale ? "#007bff" : "#e83e8c" }}
       >
         <img
           src={PROFILE}
@@ -50,29 +58,46 @@ export default function Patient({ activePanels }) {
           {patient?.isMale ? "Male" : "Female"}
         </span>
       </div>
-      <div className="checkup-data-patient-HWBMI">
+      <div
+        className="checkup-data-patient-HWBMI"
+        style={{ backgroundColor: patient?.isMale ? "#007bff" : "#e83e8c" }}
+      >
         <div>
           <span>Height</span>
-          <span>5'11 ft</span>
+          <span>{vitals.height} ft</span>
         </div>
         <div>
           <span>Weight</span>
-          <span>89 KG</span>
+          <span>{vitals.weight} kg</span>
         </div>
         <div>
           <span>BMI</span>
-          <span>N/A</span>
+          <span>{bmi}</span>
         </div>
       </div>
-      <div className="checkup-data-patient-address">
-        <label>Address Information</label>
+      <div
+        className="checkup-data-patient-address"
+        style={{
+          borderColor: patient?.isMale ? "#007bff" : "#e83e8c",
+        }}
+      >
+        <label style={{ color: patient?.isMale ? "#007bff" : "#e83e8c" }}>
+          Address Information
+        </label>
         <span>
           <MDBIcon icon="location" />
           {fullAddress(patient?.address)}
         </span>
       </div>
-      <div className="checkup-data-patient-reason">
-        <label>Reason for Visit:</label>
+      <div
+        className="checkup-data-patient-reason"
+        style={{
+          borderColor: patient?.isMale ? "#007bff" : "#e83e8c",
+        }}
+      >
+        <label style={{ color: patient?.isMale ? "#007bff" : "#e83e8c" }}>
+          Reason for Visit:
+        </label>
         <EditableSelect
           collections={[
             { value: "initial", label: "New Consultation" },
