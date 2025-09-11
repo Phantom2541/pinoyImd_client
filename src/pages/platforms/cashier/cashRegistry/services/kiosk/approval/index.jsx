@@ -9,6 +9,7 @@ import {
 } from "mdbreact";
 import {
   allServicesHavePrices,
+  computeGD,
   fullAddress,
   fullName,
   getAge,
@@ -37,7 +38,7 @@ import Footer from "./footer.jsx";
 import Swal from "sweetalert2";
 
 export default function Approval() {
-  const { token, auth } = useSelector(({ auth }) => auth),
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     {
       showModal: show,
       selected,
@@ -60,7 +61,11 @@ export default function Approval() {
     contract,
     refNo: _refNo,
     payment: _payment,
+    services,
     cash: _cash,
+    client = {},
+    branchId = {},
+    requirements = {},
   } = selected || {};
 
   useEffect(() => {
@@ -74,6 +79,7 @@ export default function Approval() {
 
   useEffect(() => {
     if (!isSendOut && cart.length > 0 && haveCard) {
+      //para kapag walang need icashout automatic mag vovoucher yung payment
       const hasCashOut = Boolean(utils.compute.cashOut(cart, selected));
       if (!hasCashOut) {
         dispatch(SetPAYMENT("voucher"));
@@ -84,56 +90,80 @@ export default function Approval() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const { discount, gross } = utils.compute.charges(cart, selected);
+    const _refNo = utils.refNo.process(cart, refNo, selected);
+    const hasRefno = payment === "mixed" || payment === "voucher";
+    const hasCash =
+      payment === "cash" || (payment === "mixed" && _refNo?.pp === "cash");
+    const { discount, gross } = utils.compute.charges(cart, selected);
+    //
+    if (!utils.refNoIsValid(refNo)) return;
+    if (!utils.checkOutChecker(cart, selected, payment)) return;
+    const remainingPackages = [...services].filter(
+      (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
+    );
 
-    // const remainingPackages = [...servicesId].filter(
-    //   (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
-    // );
+    const filteredCart = cart.filter(
+      (item) => !item.packages.some((pkg) => remainingPackages.includes(pkg))
+    );
 
-    // const filteredCart = cart.filter(
-    //   (item) => !item.packages.some((pkg) => remainingPackages.includes(pkg))
-    // );
+    const dealMenus = filteredCart.map((cart) => {
+      return {
+        ...computeGD(cart, 0, -1, {
+          type: haveCard ? "wls" : "wi",
+          company: { name: haveCard ? selected?.requirements?.hmo : "" },
+        }),
+        menuId: cart._id,
+      };
+    });
 
-    // const dealMenus = filteredCart.map((cart) => {
-    //   return {
-    //     // ...computeGD(cart, -1, -1, "", customerId?.healthCard?.name, contract),
-    //     menuId: cart._id,
-    //   };
-    // });
+    const deal = {
+      source: branchId?._id,
+      branchId: activePlatform.branchId,
+      customerId: customerId._id,
+      cash: hasCash ? cash : 0,
+      category: "wi",
+      cashierId: auth._id,
+      payment,
+      department: Services.getDepartment(
+        filteredCart.flatMap(({ packages }) => packages)
+      ),
+      discount,
+      amount: gross,
+      ...(_refNo && hasRefno && { refNo: _refNo }),
+      ...(haveCard && {
+        cardHolder: { type: "wls", company: { name: requirements?.hmo } },
+      }),
+    };
 
-    // const deal = {
-    //   source: branchId?._id,
-    //   branchId: activePlatform.branchId,
-    //   customerId: customerId._id,
-    //   cash,
-    //   category: getCategory(),
-    //   cashierId: auth._id,
-    //   payment: getCategory() === "opd" ? payment : "voucher",
-    //   department: Services.getDepartment(
-    //     filteredCart.flatMap(({ packages }) => packages)
-    //   ),
-    //   discount,
-    //   amount: gross,
-    // };
+    const { covered, notCovered } = utils.arrangeServices(cart, selected);
 
-    // const data = {
-    //   deal,
-    //   dealMenus,
-    //   onboardingID: selected?._id,
-    //   empId: auth._id,
-    //   status: "done",
-    // };
+    const data = {
+      deal,
+      dealMenus,
+      onboardingID: selected?._id,
+      empId: auth._id,
+      status: "done",
+      services: covered,
+      notCovered,
+      ...(_refNo && hasRefno && { refNo: _refNo }),
+    };
 
-    // if (!isEmpty(remainingPackages)) {
+    if (!utils.priceChecker(cart, selected, isSendOut)) return;
+
+    dispatch(PROCESS_ONBOARDING({ data, token })).then(() => {
+      dispatch(RESET_KIOSK());
+      dispatch(RESET_ONBOARDING());
+      dispatch(TOGGLE());
+    });
+
+    // if (!isEmpty(remainingPackages) && isSendOut) {
     //   return Swal.fire({
     //     icon: "warning",
     //     title: "Partial Acknowledgement",
     //     html: `
     //   <div style="text-align: left; font-size: 15px;">
     //     <p>The request from <b>${
-    //       getCategory() === "ctr"
-    //         ? client.displayname
-    //         : fullName(customerId?.fullName)
+    //       isSendOut ? client.displayname : fullName(customerId?.fullName)
     //     }</b> has been
     //       <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
     //     </p>
@@ -205,26 +235,7 @@ export default function Approval() {
     const _refNo = utils.refNo.process(cart, refNo, selected);
     const { covered, notCovered } = utils.arrangeServices(cart, selected);
     const hasRefno = payment === "mixed" || payment === "voucher";
-
-    const { pp, careOf } = _refNo;
-
-    if (pp === "co" && !careOf.user) {
-      const category = {
-        bm: "Board Member",
-        employee: "Employee",
-        physician: "Physician",
-      };
-      return Swal.fire({
-        icon: "warning",
-        title: `${category[careOf.category]} Required`,
-        text: `Please select a ${
-          category[careOf.category]
-        } who will take care of this credit transaction.`,
-        confirmButtonText: "Got it",
-        confirmButtonColor: "#3085d6",
-        backdrop: true,
-      });
-    }
+    if (!utils.refNoIsValid(refNo)) return;
     dispatch(
       UPDATE({
         token,
@@ -240,7 +251,7 @@ export default function Approval() {
             eid: auth._id,
           },
           ...(_refNo && hasRefno && { refNo: _refNo }),
-          ...(notCovered?.length > 0 && { notCovered }),
+          notCovered,
         },
       })
     ).then(() => {
@@ -281,7 +292,10 @@ export default function Approval() {
         <MDBRow>
           <ProfileSwitcher />
           <Menus contract={contract} />
-          <PendingSummary handleSubmit={handleApprove} />
+          <PendingSummary
+            handleSubmit={isAuthorization ? handleApprove : handleSubmit}
+            handleApprove={handleApprove}
+          />
         </MDBRow>
       </MDBModalBody>
       <Footer />

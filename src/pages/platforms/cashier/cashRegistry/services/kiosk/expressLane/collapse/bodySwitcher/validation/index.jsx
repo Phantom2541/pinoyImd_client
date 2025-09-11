@@ -60,7 +60,7 @@ const Validation = ({ item }) => {
       dispatch(
         UPDATE({
           token,
-          data: { ...item, reason, status: "denied" },
+          data: { ...item, reason, status: "cancelled" },
         })
       );
       Swal.fire({
@@ -158,7 +158,6 @@ const Validation = ({ item }) => {
   };
 
   const isTranslated = services.length > 0;
-  const isApproved = status === "approved";
   const isDone = status === "done";
 
   return (

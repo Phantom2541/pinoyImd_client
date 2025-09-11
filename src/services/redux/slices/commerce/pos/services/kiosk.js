@@ -69,7 +69,7 @@ export const reduxSlice = createSlice({
         ({ packages, isProfile = false }) =>
           isSubset(packages, services) && !isProfile
       );
-      const _menus = state.isAuthorization
+      const _menus = !state.isSendOut
         ? menus.filter(({ packages }) => packages.length === 1)
         : _matchMenus;
 
@@ -90,7 +90,11 @@ export const reduxSlice = createSlice({
     },
     SetREFNO: (state, { payload }) => {
       const { haveCard = true } = state.selected;
-      state.refNo = { ...payload, ...(!haveCard && { pp: "co" }) };
+      const isMixed = state.payment === "mixed";
+      state.refNo = {
+        ...payload,
+        ...(!haveCard && { pp: isMixed ? "co" : "cash" }),
+      };
     },
     SetCASH: (state, { payload }) => {
       state.cash = payload;

@@ -6,24 +6,29 @@ import {
 } from "../../../../../../../services/utilities";
 
 const PaymentDetails = ({ deal = {} }) => {
+  const { cardHolder = {} } = deal;
   const imageSrc = (type) => paymentMethod.getImage(type).img;
   const { payment, amount, refNo = {}, cash = 0 } = deal;
 
   const arrangePayment = () => {
     if (payment === "mixed") {
       const { careOf = {} } = refNo;
-      const _cash = amount - refNo?.amount;
+      const { user = {} } = careOf;
+      const { lname = "", fname = "" } = user?.fullName || {};
       return [
         { method: "mixed", amount: refNo?.amount },
-        ...(careOf?.user?._id
-          ? [{ method: "care", name: fullName(careOf?.user?.fullName) }]
-          : []),
-        ...(_cash > 0
+        ...(user?._id
           ? [
-              { method: "cash", amount: _cash },
-              { method: "tendered", amount: cash },
+              {
+                method: "care",
+                name: `${fname} ${lname[0]}.`,
+                isCare: true,
+                careAmount:
+                  cardHolder.type === "wls" ? careOf?.amount : refNo?.amount,
+              },
             ]
           : []),
+        ...(cash > 0 ? [{ method: "tendered", amount: cash }] : []),
       ];
     }
 
@@ -42,7 +47,15 @@ const PaymentDetails = ({ deal = {} }) => {
     >
       {arrangePayment().map(
         (
-          { method: type, amount, name = "", chequeNo, clearDate, createdAt },
+          {
+            method: type,
+            amount,
+            name = "",
+            chequeNo,
+            clearDate,
+            isCare,
+            careAmount = 0,
+          },
           i
         ) => (
           <div
@@ -80,16 +93,18 @@ const PaymentDetails = ({ deal = {} }) => {
               >
                 {name ? name : currency.format(amount)}
               </span>
-              <span
-                style={{
-                  float: "right",
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  color: "#888",
-                }}
-              >
-                {dateFormat(createdAt)}
-              </span>
+              {isCare && careAmount > 0 && (
+                <span
+                  style={{
+                    float: "right",
+                    fontSize: "0.75rem",
+                    fontWeight: 500,
+                    color: "#888",
+                  }}
+                >
+                  {currency.format(careAmount)}
+                </span>
+              )}
             </div>
 
             {type.toLowerCase() === "cheque" && (

@@ -103,7 +103,8 @@ const computeGD = (menu, categoryIndex, privilege, cardHolder) => {
   return accumulator;
 };
 
-const allServicesHavePrices = (cart, categoryIndex, hmoCode, contract) => {
+const allServicesHavePrices = (cart, categoryIndex, cardHolder = {}) => {
+  const { type, company, tier } = cardHolder;
   if (cart?.length === 0) return false;
 
   const category = Categories[categoryIndex] || {};
@@ -114,10 +115,10 @@ const allServicesHavePrices = (cart, categoryIndex, hmoCode, contract) => {
     )
       ? "opd"
       : category;
-    if (categoryAbbr === "wls") {
-      return HMO.getSrp(hmoCode, menu?.hmo) > 0;
+    if (type === "wls") {
+      return HMO.getSrp(company.name, menu?.hmo) > 0;
     }
-    if (categoryAbbr === "ctr") return menu?.[contract] > 0;
+    if (type === "ctr") return menu?.[tier] > 0;
 
     return menu[_abbr] > 0;
   });
