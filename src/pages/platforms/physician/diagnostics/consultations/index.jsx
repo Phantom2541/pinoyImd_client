@@ -60,7 +60,6 @@ export default function Consultations() {
     <div className="checkup-data-container">
       <Body />
       <Patient activePanels={activePanels} />
-
       <Note
         togglePanel={togglePanel}
         buttonRefs={buttonRefs}
