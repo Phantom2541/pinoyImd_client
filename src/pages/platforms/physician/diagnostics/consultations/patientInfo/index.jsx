@@ -68,35 +68,17 @@ export default function Patient({ activePanels }) {
           {fullAddress(patient?.address).toLowerCase()}
         </span>
       </div>
-      <div>
-        <span>Reason for Visit:</span>
+      <div className="checkup-data-patient-reason">
+        <label>Reason for Visit:</label>
         <Select
-          collection={
-            ({ value: "initial", label: "New Consultation" },
-            {
-              value: "follow_up",
-              label: "Follow-up Consultation",
-            },
-            {
-              value: "ape",
-              label: "Annual Physical Examination (APE)",
-            },
-            {
-              value: "peme",
-              label: "Pre-Employment Medical Examination",
-            },
-            {
-              value: "poe",
-              label: "Pre-Operative Evaluation",
-            },
-            {
-              value: "med-clear",
-              label: "Outpatient Medical Clearance",
-            },
-            {
-              value: "med-cert",
-              label: "Medical Certificate Issuance",
-            },
+          collections={[
+            { value: "initial", label: "New Consultation" },
+            { value: "follow_up", label: "Follow-up Consultation" },
+            { value: "ape", label: "Annual Physical Examination (APE)" },
+            { value: "peme", label: "Pre-Employment Medical Examination" },
+            { value: "poe", label: "Pre-Operative Evaluation" },
+            { value: "med-clear", label: "Outpatient Medical Clearance" },
+            { value: "med-cert", label: "Medical Certificate Issuance" },
             {
               value: "second_opinion",
               label: "Consultation for Second Opinion",
@@ -109,19 +91,15 @@ export default function Patient({ activePanels }) {
               value: "ph_follow_up",
               label: "Post-Hospital / Discharge Follow-up",
             },
-            {
-              value: "referral",
-              label: "Referral from Another Physician",
-            },
+            { value: "referral", label: "Referral from Another Physician" },
             { value: "s_ref", label: "Specialist Referral" },
             { value: "diagnostic_review", label: "Diagnostic Result Review" },
             { value: "wellness_check", label: "Wellness / Preventive Check" },
             { value: "health_screening", label: "Health Screening" },
-            {
-              value: "emergency",
-              label: "Emergency Case (extra, optional)",
-            })
-          }
+            { value: "emergency", label: "Emergency Case (extra, optional)" },
+          ]}
+          keys="value"
+          values="label"
           soloUpdate={true}
           preValue={patient?.reasonForVisit}
           onChange={(value) =>
