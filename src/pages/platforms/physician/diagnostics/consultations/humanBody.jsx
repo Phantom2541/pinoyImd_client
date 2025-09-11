@@ -153,8 +153,11 @@ export default function HumanBody({ setSlide, slide }) {
           alt="human body"
           src={BODY}
           ref={bodyRef}
-          className="checkup-data-center-image-body"
+          className={`checkup-data-center-image-body ${
+            slide ? "active-hover" : ""
+          }`}
           draggable={false}
+          onClick={() => setSlide("")}
         />
 
         {organs.map(({ name, style }) => (

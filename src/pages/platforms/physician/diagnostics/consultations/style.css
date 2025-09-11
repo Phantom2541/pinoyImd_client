@@ -8,7 +8,7 @@
     "image  prescription";
   gap: 10px;
   height: calc(100vh - 23vh);
-  user-select: none;
+  /* user-select: none; */
   position: relative;
 }
 
@@ -81,6 +81,11 @@
   height: 100%;
   object-fit: contain;
   filter: drop-shadow(0px 0px 7px rgba(0, 0, 0, 0.3));
+}
+
+.checkup-data-center-image-body.active-hover:hover {
+  filter: drop-shadow(0px 0px 7px rgba(0, 123, 255, 0.5));
+  cursor: pointer;
 }
 
 .checkup-data-center-image-medical-history,

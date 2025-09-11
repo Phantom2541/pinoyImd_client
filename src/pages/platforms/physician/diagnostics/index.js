@@ -1,4 +1,4 @@
 import Appointment from "./appointment";
 import Imaging from "./imaging";
-
-export { Appointment, Imaging };
+import Menus from "./menus";
+export { Appointment, Imaging, Menus };

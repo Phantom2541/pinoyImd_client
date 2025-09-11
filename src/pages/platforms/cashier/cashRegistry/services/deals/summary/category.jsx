@@ -44,7 +44,7 @@ export default function Payments() {
         cardHolder = { type: "" },
       } = item;
       const { type: chType = "" } = cardHolder;
-      const isMixed = payment === "mixed";
+      const isMixed = payment === "mixed" || payment === "mixed";
       const baseAmount = isMixed ? refNo?.amount : amount;
       const totalsKey = isMixed ? "voucher" : payment;
       totals[totalsKey] = (totals[totalsKey] || 0) + baseAmount;

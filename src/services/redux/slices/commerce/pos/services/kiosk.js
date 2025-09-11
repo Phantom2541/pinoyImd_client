@@ -1,17 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { findIndex } from "lodash";
 const url = "portal/ICard";
-const _refNo = {
+const createRefNo = () => ({
   number: "",
+  appNo: "",
+  exp: "",
   amount: 0,
-  pp: "cash", //cash or credit patient Payable
+  pp: "cash",
   careOf: {
     category: "employee",
     user: "",
   },
-};
+});
 
-const initialState = {
+var initialState = {
   menus: [],
   cart: [],
   isAuthorization: false,
@@ -19,7 +21,7 @@ const initialState = {
   showModal: false,
   selected: {},
   payment: "",
-  refNo: _refNo,
+  refNo: createRefNo(),
   cash: 0,
 };
 
@@ -41,26 +43,33 @@ export const reduxSlice = createSlice({
       state.isSendOut = isSendOut;
     },
     InitializeCART: (state, { payload: menus }) => {
-      const { servicesId = [] } = state.selected;
+      const { services: _services = [], notCovered = [] } = state.selected;
+      const services = [..._services, ...notCovered];
       const cart = [];
-      const isInitialize = servicesId?.length > 0 || state.isAuthorization;
+      const isInitialize = services?.length > 0 || state.isAuthorization;
 
       if (!isInitialize) return state;
 
       for (const menu of menus) {
         const { packages, isProfile = false } = menu;
 
-        if (isSubset(packages, servicesId) && !isProfile) {
-          cart.push(menu);
-          if (cart.length === servicesId.length) break;
+        if (isSubset(packages, services) && !isProfile) {
+          if (isSubset(packages, notCovered)) {
+            //this is not covered in approval
+            cart.push({ ...menu, isApproved: false });
+            console.log("packages", packages);
+          } else {
+            cart.push(menu);
+          }
+          if (cart.length === services.length) break;
         }
       }
 
       const _matchMenus = [...menus].filter(
         ({ packages, isProfile = false }) =>
-          isSubset(packages, servicesId) && !isProfile
+          isSubset(packages, services) && !isProfile
       );
-      const _menus = state.isAuthorization
+      const _menus = !state.isSendOut
         ? menus.filter(({ packages }) => packages.length === 1)
         : _matchMenus;
 
@@ -77,10 +86,15 @@ export const reduxSlice = createSlice({
       state.cart = payload;
     },
     SetPAYMENT: (state, { payload }) => {
-      state.payment = payload;
+      state.payment = state.isSendOut ? "voucher" : payload;
     },
     SetREFNO: (state, { payload }) => {
-      state.refNo = payload;
+      const { haveCard = true } = state.selected;
+      const isMixed = state.payment === "mixed";
+      state.refNo = {
+        ...payload,
+        ...(!haveCard && { pp: isMixed ? "co" : "cash" }),
+      };
     },
     SetCASH: (state, { payload }) => {
       state.cash = payload;
@@ -92,18 +106,34 @@ export const reduxSlice = createSlice({
       state.cart = _cart;
     },
     TOGGLE: (state) => {
-      state.showModal = !state.showModal;
+      state.showModal = false;
       state.selected = {};
       state.isAuthorization = false;
       state.isSendOut = false;
     },
     ResetREFNO: (state) => {
-      state.refNo = _refNo;
+      const { haveCard = false } = state.selected;
+      state.refNo = createRefNo();
+
+      if (state.payment === "mixed") {
+        state.refNo.pp = haveCard ? "cash" : "co";
+      }
+      if (!state.isAuthorization) {
+        const { refNo = {} } = state.selected;
+        state.refNo.appNo = refNo.appNo;
+        state.refNo.exp = refNo.exp;
+      }
     },
     RESET: (state) => {
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.message = "";
+      state.menus = [];
+      state.cart = [];
+      state.isAuthorization = false;
+      state.isSendOut = false;
+      state.selected = {};
+      state.payment = "";
+      state.refNo = createRefNo();
+
+      state.cash = 0;
     },
   },
 });

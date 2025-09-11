@@ -123,6 +123,23 @@ export const SAVE = createAsyncThunk(
     }
   }
 );
+export const WALKIN = createAsyncThunk(
+  `${url}/walkin`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "walkin");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const UPDATE_TAT = createAsyncThunk(
   `${url}/update_tat`,
@@ -489,13 +506,10 @@ export const reduxSlice = createSlice({
         const { payload } = action.payload;
         state.collections = state.filtered = payload || [];
 
-        let totalPages = Math.floor(payload.length / state.maxPage);
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
 
-        if (payload.length % state.maxPage > 0) totalPages += 1;
-        state.totalPages = totalPages;
-        if (state.activePage > totalPages) {
-          state.activePage = totalPages;
-        }
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -619,6 +633,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(WALKIN.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+
+      .addCase(WALKIN.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.message = success;
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(WALKIN.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
 
       .addCase(SAVE.pending, (state) => {
         state.formSubmitted = true;
@@ -686,14 +719,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload, isRemoved = false } = action.payload;
         if (state.collections.length > 0) {
           const updateCollections = (collections) => {
             const index = collections.findIndex(
               (item) => item._id === payload._id
             );
             const oldData = { ...collections[index] };
-            if (payload.status === "denied") {
+            if (payload.status === "denied" || isRemoved) {
               collections.splice(index, 1);
             } else {
               collections[index] = { ...oldData, ...payload };

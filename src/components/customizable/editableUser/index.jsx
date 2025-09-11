@@ -57,6 +57,8 @@ const EditableUser = ({
   formSubmitted = false,
   isSuccess: successUpdated = false,
   onUserNotFound = () => {},
+  hasRegister = false,
+  setRegister = () => {},
   emptyLabel = "Click here to select a Guardian",
 }) => {
   const { collections } = useSelector(({ users }) => users),
@@ -191,7 +193,7 @@ const EditableUser = ({
       <div className="editable-user-container">
         {selected?._id && readOnly ? (
           <div className="my-">
-            <span style={{ fontSize: "0.9rem" }}>
+            <span style={{ fontSize: "1rem", fontWeight: 400 }}>
               {fullName(selected.fullName)}
             </span>
             <MDBIcon
@@ -240,9 +242,19 @@ const EditableUser = ({
                           🚫
                         </span>
                         <span style={{ fontSize: "0.9rem" }}>
-                          User Not Found. <br />
-                          <span>(Click Here)</span>
+                          User Not Found.
                         </span>
+                        <br />
+                        {hasRegister && (
+                          <span
+                            style={{ color: "blue" }}
+                            onClick={() =>
+                              setRegister(formatNameToObj(searchKey))
+                            }
+                          >
+                            (Click Here to register)
+                          </span>
+                        )}
                       </li>
                     </ul>
                   )}

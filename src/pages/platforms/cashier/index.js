@@ -3,8 +3,8 @@ import {
   Deals,
   Sales,
   Remittances,
-  Onboarding,
   Preauthorization,
+  ExpressLane,
 } from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import {
@@ -34,8 +34,8 @@ export {
   Cashier,
   Deals,
   Sales,
-  Onboarding,
   Preauthorization,
+  ExpressLane,
   Remittances,
   Menus,
   Services,

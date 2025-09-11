@@ -18,7 +18,7 @@ import {
   Hotlines,
   // HotlinesPoster,
   Suppliers,
-  Onboarding,
+  // Onboarding,
 } from "../../../../pages/platforms/cashier";
 
 import {
@@ -86,7 +86,7 @@ const laboratory = [
         path: "/onboarding",
         icon: "sign-in-alt",
         title: "Pre-Registered Patients & HMO Approvals",
-        component: Onboarding,
+        // component: Onboarding,
         allowedFor: [
           "Jr. Medical Laboratory Scientist",
           "Medical Laboratory Scientist",

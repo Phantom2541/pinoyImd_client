@@ -193,6 +193,7 @@ export default function Modal() {
               pid: customerId?._id,
               client: activePlatform.branchId,
               services: getIDS(value),
+              status: "approved",
             },
             true
           );

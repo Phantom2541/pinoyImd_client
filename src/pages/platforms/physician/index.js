@@ -1,5 +1,5 @@
 import Dashboard from "./dashboard";
-import { Appointment, Imaging } from "./diagnostics";
+import {Menus, Appointment, Imaging } from "./diagnostics";
 import { Staffs, Applicants } from "./employees";
 
-export { Dashboard, Appointment, Imaging, Staffs, Applicants };
+export { Dashboard, Appointment, Imaging, Staffs, Applicants, Menus };

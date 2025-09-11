@@ -6,6 +6,7 @@ import {
 } from "../../../../../../components/customizable";
 import PROFILE from "./../../../../../../assets/male.jpg";
 import { fullAddress, getAge } from "../../../../../../services/utilities";
+import "./style.css";
 
 export default function Patient({ activePanels }) {
   const { patient, isLoading, isSuccess } = useSelector(
@@ -39,31 +40,14 @@ export default function Patient({ activePanels }) {
           formSubmitted={isLoading}
           isSuccess={isSuccess}
         />
-        <div className="checkup-data-patient-ageGender">
-          <span>Male</span>
-          <span>21 years</span>
-        </div>
-        <div className="checkup-data-patient-HWBMI">
-          <div>
-            <span>Height</span>
-            <span>5'11 ft</span>
-          </div>
-          <div>
-            <span>Weight</span>
-            <span>89 kg</span>
-          </div>
-          <div>
-            <span>BMI</span>
-            <span>N/A</span>
-          </div>
-        </div>
+        <span>
+          Age: {getAge(patient?.dob)}/ {patient?.isMale ? "Male" : "Female"}
+        </span>
       </div>
       <div className="checkup-data-patient-data">
         <span>Personal Details</span>
         <br />
-        <span>
-          Age: {getAge(patient?.dob)}/ {patient?.isMale ? "Male" : "Female"}
-        </span>
+
         <br />
         <span>Address: {fullAddress(patient?.address)}</span>
       </div>
@@ -73,29 +57,29 @@ export default function Patient({ activePanels }) {
           Reason for Visit:{" "}
           <Select
             collection={
-              ({ value: "new_consultation", label: "New Consultation" },
+              ({ value: "initial", label: "New Consultation" },
               {
-                value: "follow_up_consultation",
+                value: "follow_up",
                 label: "Follow-up Consultation",
               },
               {
-                value: "annual_physical_exam",
+                value: "ape",
                 label: "Annual Physical Examination (APE)",
               },
               {
-                value: "pre_employment_exam",
+                value: "peme",
                 label: "Pre-Employment Medical Examination",
               },
               {
-                value: "pre_operative_evaluation",
+                value: "poe",
                 label: "Pre-Operative Evaluation",
               },
               {
-                value: "medical_clearance",
+                value: "med-clear",
                 label: "Outpatient Medical Clearance",
               },
               {
-                value: "medical_certificate",
+                value: "med-cert",
                 label: "Medical Certificate Issuance",
               },
               {
@@ -107,17 +91,21 @@ export default function Patient({ activePanels }) {
                 label: "Ongoing Treatment / Monitoring",
               },
               {
-                value: "post_hospital_follow_up",
+                value: "ph_follow_up",
                 label: "Post-Hospital / Discharge Follow-up",
               },
               {
-                value: "referral_physician",
+                value: "referral",
                 label: "Referral from Another Physician",
               },
-              { value: "specialist_referral", label: "Specialist Referral" },
+              { value: "s_ref", label: "Specialist Referral" },
               { value: "diagnostic_review", label: "Diagnostic Result Review" },
               { value: "wellness_check", label: "Wellness / Preventive Check" },
-              { value: "health_screening", label: "Health Screening" })
+              { value: "health_screening", label: "Health Screening" },
+              {
+                value: "emergency",
+                label: "Emergency Case (extra, optional)",
+              })
             }
             soloUpdate={true}
             preValue={patient?.reasonForVisit}
