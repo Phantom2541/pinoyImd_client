@@ -30,6 +30,28 @@ const physician = [
     title: "View upcoming checkups, diagnostics, and responsibilities",
   },
   {
+    name: "Operations",
+    title: "Daily business and clinic operations.",
+    icon: "cogs",
+    path: "/operations",
+    children: [
+      {
+        name: "Sales",
+        title: "View and manage daily clinic sales data.",
+        path: "/sales",
+        icon: "money-bill",
+        // component: Sales,
+      },
+      {
+        name: "Remittances",
+        title: "Track remittances from various departments.",
+        path: "/remittances",
+        icon: "pencil-alt",
+        // component: Remittances,
+      },
+    ],
+  },
+  {
     name: "Diagnostics",
     icon: "flask",
     path: "/diagnostics",
