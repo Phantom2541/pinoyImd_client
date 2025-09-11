@@ -7,21 +7,23 @@ import {
 const getServices = (cart) => {
   return cart.flatMap(({ packages }) => packages);
 };
-const getGross = (cart, selected) => {
-  const { requirements, haveCard = false } = selected;
+const getGross = (cart, selected, isSendOut = false) => {
+  const { requirements, haveCard = false, contract } = selected;
   const { gross = 0 } = computeGD(cart, 0, 0, {
-    type: haveCard ? "wls" : "",
+    type: haveCard ? "wls" : isSendOut ? "ctr" : "wi",
     company: { name: requirements?.hmo || "" },
+    ...(isSendOut && { tier: contract }),
   });
   return gross;
 };
 const utils = {
   compute: {
-    charges: (cart, selected) => {
-      const { requirements, haveCard = false } = selected;
+    charges: (cart, selected, isSendOut = false) => {
+      const { requirements, haveCard = false, contract } = selected;
       const { gross = 0, discount = 0 } = computeGD(cart, 0, 0, {
-        type: haveCard ? "wls" : "opd",
+        type: haveCard ? "wls" : isSendOut ? "ctr" : "",
         company: { name: requirements?.hmo },
+        ...(isSendOut && { tier: contract }),
       });
       const amount = gross - discount;
       return { gross, discount, amount };
@@ -37,7 +39,7 @@ const utils = {
     },
   },
   refNo: {
-    process: (cart, refNo, selected) => {
+    process: (cart, refNo, selected, isSendOut = false) => {
       const {
         haveCard = false,
         requirements,
@@ -51,7 +53,7 @@ const utils = {
         const { careOf, ...rest } = _refNo;
         return {
           ...rest,
-          amount: getGross(cart, selected),
+          amount: getGross(cart, selected, isSendOut),
           ...(_refNo.pp === "co" && { careOf }),
         };
       }
@@ -119,13 +121,13 @@ const utils = {
     return true;
   },
   priceChecker: (cart, selected, isSendOut) => {
-    const { requirements, haveCard = false } = selected;
+    const { requirements, haveCard = false, contract } = selected;
     if (
       !allServicesHavePrices(cart, 0, {
-        type: haveCard ? "wls" : "wi",
+        type: haveCard ? "wls" : isSendOut ? "ctr" : "wi",
         company: { name: requirements?.hmo },
-      }) &&
-      !isSendOut
+        ...(isSendOut && { tier: contract }),
+      })
     ) {
       Swal.fire({
         title: "Service Validator ⚠️",

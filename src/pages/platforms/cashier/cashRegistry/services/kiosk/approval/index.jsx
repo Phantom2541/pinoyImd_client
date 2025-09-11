@@ -31,7 +31,7 @@ import {
   SetCASH,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/kiosk.js";
 import Menus from "./menus/index.jsx";
-import PendingSummary from "./summary/pending.jsx";
+import Summary from "./summary";
 import utils from "./utils.js";
 import ProfileSwitcher from "./profileSwitcher/index.jsx";
 import Footer from "./footer.jsx";
@@ -90,11 +90,15 @@ export default function Approval() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const _refNo = utils.refNo.process(cart, refNo, selected);
+    const _refNo = utils.refNo.process(cart, refNo, selected, isSendOut);
     const hasRefno = payment === "mixed" || payment === "voucher";
     const hasCash =
       payment === "cash" || (payment === "mixed" && _refNo?.pp === "cash");
-    const { discount, gross } = utils.compute.charges(cart, selected);
+    const { discount, gross } = utils.compute.charges(
+      cart,
+      selected,
+      isSendOut
+    );
     //
     if (!utils.refNoIsValid(refNo)) return;
     if (!utils.checkOutChecker(cart, selected, payment)) return;
@@ -109,8 +113,9 @@ export default function Approval() {
     const dealMenus = filteredCart.map((cart) => {
       return {
         ...computeGD(cart, 0, -1, {
-          type: haveCard ? "wls" : "wi",
+          type: haveCard ? "wls" : isSendOut ? "ctr" : "wi",
           company: { name: haveCard ? selected?.requirements?.hmo : "" },
+          ...(isSendOut && { tier: contract }),
         }),
         menuId: cart._id,
       };
@@ -121,7 +126,7 @@ export default function Approval() {
       branchId: activePlatform.branchId,
       customerId: customerId._id,
       cash: hasCash ? cash : 0,
-      category: "wi",
+      category: isSendOut ? "opd" : "wi",
       cashierId: auth._id,
       payment,
       department: Services.getDepartment(
@@ -130,8 +135,13 @@ export default function Approval() {
       discount,
       amount: gross,
       ...(_refNo && hasRefno && { refNo: _refNo }),
-      ...(haveCard && {
-        cardHolder: { type: "wls", company: { name: requirements?.hmo } },
+      ...((haveCard || isSendOut) && {
+        cardHolder: {
+          type: isSendOut ? "ctr" : "wls",
+          company: {
+            ...(isSendOut ? { ref: client?._id } : { name: requirements?.hmo }),
+          },
+        },
       }),
     };
 
@@ -150,64 +160,68 @@ export default function Approval() {
 
     if (!utils.priceChecker(cart, selected, isSendOut)) return;
 
-    dispatch(PROCESS_ONBOARDING({ data, token })).then(() => {
-      dispatch(RESET_KIOSK());
-      dispatch(RESET_ONBOARDING());
-      dispatch(TOGGLE());
-    });
-
-    // if (!isEmpty(remainingPackages) && isSendOut) {
-    //   return Swal.fire({
-    //     icon: "warning",
-    //     title: "Partial Acknowledgement",
-    //     html: `
-    //   <div style="text-align: left; font-size: 15px;">
-    //     <p>The request from <b>${
-    //       isSendOut ? client.displayname : fullName(customerId?.fullName)
-    //     }</b> has been
-    //       <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
-    //     </p>
-    //     <p>The following services could not be accommodated:</p>
-    //     <ul style="padding-left: 20px; margin-top: 0; margin-bottom: 1em;">
-    //       ${remainingPackages
-    //         .map((id) => `<li>${Services.getAbbr(id)}</li>`)
-    //         .join("")}
-    //     </ul>
-    //     <p style="margin-top: 1em;"><i>Please provide your reason for the incomplete processing:</i></p>
-    //   </div>`,
-    //     input: "textarea",
-    //     inputPlaceholder: "Enter your remarks here...",
-    //     inputAttributes: {
-    //       "aria-label": "Remarks",
-    //     },
-    //     showCancelButton: true,
-    //     reverseButtons: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#d33",
-    //     confirmButtonText: "Submit",
-    //     cancelButtonText: "Cancel",
-    //     preConfirm: (remarks) => {
-    //       if (!remarks) {
-    //         Swal.showValidationMessage("Please provide a remarks.");
-    //       }
-    //       return remarks;
-    //     },
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       const remarks = result.value;
-    //       dispatch(
-    //         PROCESS_ONBOARDING({
-    //           data: {
-    //             ...data,
-    //             remarks,
-    //             cancelled: remainingPackages,
-    //           },
-    //           token,
-    //         })
-    //       );
-    //     }
-    //   });
-    // }
+    if (!isEmpty(remainingPackages) && isSendOut) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Partial Acknowledgement",
+        html: `
+      <div style="text-align: left; font-size: 15px;">
+        <p>The request from <b>${
+          isSendOut ? client.displayname : fullName(customerId?.fullName)
+        }</b> has been
+          <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
+        </p>
+        <p>The following services could not be accommodated:</p>
+        <ul style="padding-left: 20px; margin-top: 0; margin-bottom: 1em;">
+          ${remainingPackages
+            .map((id) => `<li>${Services.getAbbr(id)}</li>`)
+            .join("")}
+        </ul>
+        <p style="margin-top: 1em;"><i>Please provide your reason for the incomplete processing:</i></p>
+      </div>`,
+        input: "textarea",
+        inputPlaceholder: "Enter your remarks here...",
+        inputAttributes: {
+          "aria-label": "Remarks",
+        },
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Submit",
+        cancelButtonText: "Cancel",
+        preConfirm: (remarks) => {
+          if (!remarks) {
+            Swal.showValidationMessage("Please provide a remarks.");
+          }
+          return remarks;
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const remarks = result.value;
+          dispatch(
+            PROCESS_ONBOARDING({
+              data: {
+                ...data,
+                remarks,
+                cancelled: remainingPackages,
+              },
+              token,
+            })
+          ).then(() => {
+            dispatch(RESET_KIOSK());
+            dispatch(RESET_ONBOARDING());
+            dispatch(TOGGLE());
+          });
+        }
+      });
+    } else {
+      dispatch(PROCESS_ONBOARDING({ data, token })).then(() => {
+        dispatch(RESET_KIOSK());
+        dispatch(RESET_ONBOARDING());
+        dispatch(TOGGLE());
+      });
+    }
 
     // if (
     //   !allServicesHavePrices(cart, 0, customerId?.healthCard?.name, contract)
@@ -293,8 +307,10 @@ export default function Approval() {
         <MDBRow>
           <ProfileSwitcher />
           <Menus contract={contract} />
-          <PendingSummary
-            handleSubmit={isAuthorization ? handleApprove : handleSubmit}
+          <Summary
+            handleSubmit={
+              isAuthorization && !isSendOut ? handleApprove : handleSubmit
+            }
             handleApprove={handleApprove}
           />
         </MDBRow>
