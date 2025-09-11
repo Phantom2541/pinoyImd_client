@@ -32,6 +32,7 @@ export default function usePanelPosition(
             height: btnRect.height,
             opacity: 0,
             visibility: "hidden",
+            overflow: "hidden",
             transform: "translate(-50%, -50%)",
             transition: "all .5s ease-in-out",
             zIndex: 10,
@@ -44,6 +45,8 @@ export default function usePanelPosition(
             height: targetSize.height,
             opacity: 1,
             visibility: "visible",
+            overflow: "visible",
+            // keep -50% para consistent sa balik
             transform: "translate(-50%, -50%)",
             transition: "all .5s cubic-bezier(0.25,1,0.5,1)",
             zIndex: 120,

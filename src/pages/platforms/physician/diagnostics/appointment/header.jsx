@@ -4,26 +4,36 @@ import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
 import { Templates, Services } from "../../../../../services/fakeDb";
 import {
-  SetSERVICES,
-  SetByTEMPLATES,
-} from "../../../../../services/redux/slices/commerce/catalog/services";
+  BROWSE,
+  SetPHYSICIAN,
+} from "../../../../../services/redux/slices/diagnostics/clinician/appointments";
 
 const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ services }) => services),
-    [component, setComponent] = useState(""),
+  const { activePlatform, auth, token } = useSelector(({ auth }) => auth),
+    { collections, physician } = useSelector(
+      ({ appointments }) => appointments
+    ),
     dispatch = useDispatch();
 
-  //initial values
   useEffect(() => {
-    dispatch(SetSERVICES({ collections: Services?.collections, maxPage }));
-  }, [dispatch, maxPage]);
+    if (token && activePlatform)
+      dispatch(
+        BROWSE({
+          token,
+          data: {
+            branch: activePlatform.branchId,
+            user: auth._id,
+            // month: new Date().getMonth() + 1,
+            month: 6,
+            // year: new Date().getFullYear(),
+            day: new Date().getDate(),
+            day: 3,
+          },
+        })
+      );
+  }, [dispatch, token, activePlatform]);
 
-  const handleComponent = (value) => {
-    setComponent(value);
-    const template = Templates.getComponentIndex(value);
-    dispatch(SetByTEMPLATES(template));
-  };
+  //initial values
 
   return (
     <MDBView
@@ -32,22 +42,11 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} Services
+          {collections.length} Apointments
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
-          <Select
-            className="m-0 p-0  mr-4 "
-            value={component}
-            onChange={(value) => handleComponent(value || "LAB")}
-            inputClassName="m-0 p-0 text-white"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-            label="Select Component"
-          />
-          {/* <Services template={template} setService={setService} /> */}
-        </div>
+        <div className="text-right d-flex items-center"></div>
       </div>
     </MDBView>
   );
