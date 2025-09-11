@@ -42,7 +42,7 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
   } = selected || {};
   const { hmo } = requirements || {};
   const { healthCard = {} } = customer || {};
-  const { gross, amount } = utils.compute.charges(cart, selected);
+  const { gross, amount } = utils.compute.charges(cart, selected, isSendOut);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [decision, setDecision] = useState("");
   const dispatch = useDispatch();
@@ -67,10 +67,11 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
   }, []);
 
   const handleDeny = async () => {
+    const isDeny = isAuthorization || isSendOut;
     const { value: reason } = await Swal.fire({
       title: `${fullName(selected?.pid?.fullName)}`,
       input: "textarea",
-      inputLabel: "Reason for cancellation",
+      inputLabel: `Reason for ${isDeny ? "denial" : "cancellation"}`,
       inputPlaceholder: "Enter your reason here...",
       inputAttributes: {
         "aria-label": "Reason",
@@ -94,7 +95,7 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
           data: {
             ...selected,
             reason,
-            status: isAuthorization ? "denied" : "cancelled",
+            status: isDeny ? "denied" : "cancelled",
             isRemoved: true,
           },
         })
@@ -162,6 +163,7 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
                     {isAuthorization ? (
                       <input
                         type="date"
+                        min={new Date().toISOString().split("T")[0]}
                         name="expiration"
                         required
                         value={refNo.exp}
@@ -267,12 +269,12 @@ const ApprovalSummary = ({ handleSubmit, handleApprove = () => {} }) => {
             disabled={formSubmitted}
             onClick={handleDeny}
           >
-            {isAuthorization ? "Deny" : "Cancel"}
+            {isAuthorization || isSendOut ? "Deny" : "Cancel"}
             {formSubmitted && decision === "rejected" && (
               <MDBIcon icon="spinner" className="ml-2" pulse />
             )}
           </MDBBtn>
-          {!isAuthorization && (
+          {!isAuthorization && !isSendOut && (
             <MDBBtn
               type="button"
               onClick={(e) => {

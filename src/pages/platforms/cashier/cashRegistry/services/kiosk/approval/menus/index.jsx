@@ -15,12 +15,18 @@ import {
 import { findIndex } from "lodash";
 import Swal from "sweetalert2";
 const Menus = ({ category }) => {
-  const { selected, cart, menus } = useSelector(({ kiosk }) => kiosk);
+  const {
+    selected,
+    cart,
+    menus,
+    isSendOut = false,
+  } = useSelector(({ kiosk }) => kiosk);
   const {
     privilege,
     haveCard = false,
     requirements,
     isWalkin = false,
+    contract,
   } = selected || {};
   const dispatch = useDispatch();
 
@@ -90,10 +96,11 @@ const Menus = ({ category }) => {
               title = "",
               color = "",
             } = computeGD(item, 0, privilege, {
-              type: haveCard ? "wls" : "",
+              type: haveCard ? "wls" : isSendOut ? "ctr" : "opd",
               company: {
                 name: requirements?.hmo,
               },
+              ...(isSendOut && { tier: contract }),
             });
 
             return (

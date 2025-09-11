@@ -11,7 +11,7 @@ const Contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
 };
-const Patient = ({ categoryIndex = 0 }) => {
+const Patient = () => {
   const { selected: deal } = useSelector(({ kiosk }) => kiosk);
   const {
     pid: customerId,
@@ -31,7 +31,7 @@ const Patient = ({ categoryIndex = 0 }) => {
         <MDBCardBody>
           {[
             { title: "SSX", value: ssx || "None" },
-            { title: "Category", value: Categories[categoryIndex]?.name },
+            { title: "Category", value: Categories[5]?.name },
             {
               title: "Privilege",
               value: Privileges[privilege],

@@ -25,6 +25,7 @@ import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/asset
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import RollingNumber from "../../../../../../../components/rollingNumber";
 import Credit from "./credit";
+import utils from "./utils";
 
 const _refNo = {
   number: "",
@@ -79,18 +80,7 @@ export default function Summary() {
   }, [cardHolder]);
 
   const checkout = async () => {
-    const { careOf, pp, amount: rAmount, ...rest } = refNo;
-
-    const baseRefNo = {
-      ...rest,
-      amount:
-        pp === "co" || payment === "voucher"
-          ? amount
-          : rAmount > amount
-          ? amount
-          : rAmount,
-      ...(pp === "co" && { careOf }),
-    };
+    const baseRefNo = utils.buildRefNo(refNo, payment, amount, cardHolder);
     let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
@@ -112,7 +102,7 @@ export default function Summary() {
       isPrint: true,
       status: "pending",
       ...(cardHolder?.type && { cardHolder }),
-      ...(baseRefNo?.amount > 0 && {
+      ...(baseRefNo && {
         refNo: baseRefNo,
       }),
       cart: cart.map((menu) => {
@@ -322,15 +312,11 @@ export default function Summary() {
             <>
               {[
                 { label: "Tracking No.", key: "number" },
-                ...(refNo.pp === "cash"
-                  ? [
-                      {
-                        label: "Credit Covered",
-                        key: "amount",
-                        ph: "Credit Covered",
-                      },
-                    ]
-                  : []),
+                {
+                  label: "Credit Covered",
+                  key: "amount",
+                  ph: "Credit Covered",
+                },
               ].map(({ label, key, ph = "" }, index) => (
                 <tr>
                   <td style={{ fontSize: "0.8rem" }}>{label}</td>
