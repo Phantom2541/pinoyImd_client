@@ -49,6 +49,12 @@ const physician = [
         icon: "pencil-alt",
         // component: Remittances,
       },
+      {
+        name: "stocks",
+        title: "Inventory of meds",
+        path: "/stocks",
+        icon: "med",
+      },
     ],
   },
   {
