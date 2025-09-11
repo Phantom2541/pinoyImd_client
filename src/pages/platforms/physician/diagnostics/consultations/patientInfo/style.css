@@ -10,7 +10,6 @@
   padding: 10px;
   padding-bottom: 20px;
   /* background-color: #007bff; */
-  color: white;
 }
 
 .checkup-data-patient-profile {
@@ -26,12 +25,14 @@
   overflow: hidden; /* tago yung sobra */
   text-overflow: ellipsis; /* palitan ng … */
   max-width: 240px;
+  color: white;
 }
 
 .checkup-data-patient-ageGender {
   font-weight: 500;
   font-size: 0.9rem;
   text-transform: capitalize;
+  color: white;
 }
 
 .checkup-data-patient-HWBMI {
