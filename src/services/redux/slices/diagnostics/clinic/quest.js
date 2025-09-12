@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinician/quest";
+const url = "/diagnostics/clinic/quest";
 const today = new Date();
 
 const initialState = {

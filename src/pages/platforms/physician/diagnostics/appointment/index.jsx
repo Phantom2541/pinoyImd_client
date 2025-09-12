@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
 
@@ -7,7 +6,10 @@ import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";
 const Collapsable = () => {
-  const { isLoading } = useSelector(({ services }) => services);
+  const { token } = useSelector(({ auth }) => auth),
+    { isLoading } = useSelector(({ clinic }) => clinic);
+
+  console.log("token", token);
 
   return (
     <MDBAnimation type="bounceInDown">

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBCol, MDBIcon, MDBRow } from "mdbreact";
 import Swal from "sweetalert2";
 import { fullName } from "../../../../../../services/utilities";
-import { UPDATE } from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
+import { UPDATE } from "../../../../../../services/redux/slices/diagnostics/clinic/quest";
 import "./style.css";
 
 import PROFILE from "./../../../../../../assets/female.jpg";
