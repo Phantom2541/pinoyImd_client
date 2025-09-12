@@ -1,11 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtn } from "mdbreact";
-import { toggleModal, DESTROY } from "../../../../../services/redux/slices/diagnostics/clinician/clinicMenus";
+import {
+  toggleModal,
+  DESTROY,
+} from "../../../../../services/redux/slices/diagnostics/clinician/clinicMenus";
 
 export default function Body() {
   const dispatch = useDispatch();
-  const { filtered = [], activePage, maxPage } = useSelector(({ clinicMenus }) => clinicMenus);
+  const {
+    filtered = [],
+    activePage,
+    maxPage,
+  } = useSelector(({ clinicMenus }) => clinicMenus);
   const { token } = useSelector(({ auth }) => auth);
 
   const itemsPerPage = maxPage || 10;
@@ -21,8 +28,6 @@ export default function Body() {
           <th>Description</th>
           <th>SRP</th>
           <th>Discountable</th>
-          <th>Doctor/Specialist</th>
-          <th>Doctor’s Fee</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -41,7 +46,15 @@ export default function Body() {
                 <MDBBtn
                   size="sm"
                   color="info"
-                  onClick={() => dispatch(toggleModal({ selected: row, willCreate: false, showModal: true }))}
+                  onClick={() =>
+                    dispatch(
+                      toggleModal({
+                        selected: row,
+                        willCreate: false,
+                        showModal: true,
+                      })
+                    )
+                  }
                 >
                   Edit
                 </MDBBtn>
@@ -58,7 +71,8 @@ export default function Body() {
         ) : (
           <tr>
             <td colSpan="8" className="text-center">
-              No clinic menus found. Click <strong>Add</strong> to create a menu.
+              No clinic menus found. Click <strong>Add</strong> to create a
+              menu.
             </td>
           </tr>
         )}

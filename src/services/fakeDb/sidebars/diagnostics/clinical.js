@@ -4,7 +4,7 @@ import {
   Reports,
 } from "../../../../pages/platforms/laboratory/diagnostics";
 import { Menus } from "../../../../pages/platforms/physician";
-import {  Services } from "../../../../pages/platforms/cashier";
+import { Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
 //import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
@@ -19,12 +19,6 @@ const clinical = [
     path: "/Schedules",
     icon: "cogs",
     children: [
-      {
-        name: "Dashboard",
-        title: "Overview of platform activity.",
-        path: "/dashboard",
-        icon: "concierge-bell",
-      },
       {
         name: "Appointments",
         path: "/appointments",
