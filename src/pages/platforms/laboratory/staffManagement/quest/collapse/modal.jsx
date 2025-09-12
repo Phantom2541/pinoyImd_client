@@ -13,7 +13,7 @@ import {
 import {
   UPDATE,
   TOGGLETeam,
-} from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
+} from "../../../../../../services/redux/slices/diagnostics/clinic/quest";
 import { COMPANY } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import { useToasts } from "react-toast-notifications";
 import { isEqual } from "lodash";

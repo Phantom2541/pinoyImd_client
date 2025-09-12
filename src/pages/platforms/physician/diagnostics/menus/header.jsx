@@ -8,29 +8,32 @@ import {
   SetFILTERED,
   RESET,
   toggleModal,
-} from "../../../../../services/redux/slices/diagnostics/clinician/clinicMenus";
+} from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import { TIEUPS } from "../../../../../services/redux/slices/assets/persons/physicians";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered = [], collections = [], message, isSuccess } = useSelector(
-    ({ clinicMenus }) => clinicMenus
-  );
+  const {
+    filtered = [],
+    collections = [],
+    message,
+    isSuccess,
+  } = useSelector(({ clinicMenus }) => clinicMenus);
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
   useEffect(() => {
-      if (token && activePlatform?.branchId)
-        dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
-  
-      return () => dispatch(RESET());
-    }, [token, activePlatform, dispatch]);
+    if (token && activePlatform?.branchId)
+      dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
+
+    return () => dispatch(RESET());
+  }, [token, activePlatform, dispatch]);
 
   // fetch menus
   useEffect(() => {
-    if (token && activePlatform?.branchId) 
+    if (token && activePlatform?.branchId)
       dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
-    
+
     return () => dispatch(RESET());
   }, [token, activePlatform?.branchId, dispatch]);
 
@@ -38,7 +41,7 @@ const Header = () => {
   // useEffect(() => {
   //   if (message) {
   //     addToast(message, { appearance: isSuccess ? "success" : "error" });
-    
+
   //     // refresh table if success
   //     if (isSuccess && token && activePlatform?.branchId) {
   //       dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));

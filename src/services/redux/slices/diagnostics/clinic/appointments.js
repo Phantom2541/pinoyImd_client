@@ -1,24 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinician/quest";
-const today = new Date();
+const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
-  paginated: [],
-  team: [],
 
+  paginated: [],
+  physician: "",
   // Bread attributes
   selected: {}, // assurance
   page: 0,
   willCreate: false,
   showModal: false,
-  willAdd: false,
-  showModalTeam: false,
-  wiilCreateTeam: false,
-  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
-  year: new Date().getFullYear(),
+
   /**
    * pagination
    */
@@ -34,9 +29,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${url}`,
-  ({ token, params }, thunkAPI) => {
+  ({ token, data }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, params);
+      return axioKit.universal(`${url}/browse`, token, data);
     } catch (error) {
       const message =
         (error.response &&
@@ -98,27 +93,43 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetPHYSICIAN: (state, { payload }) => {
+      const arrangePayload = (collections) => {
+        return collections.flatMap(({ user, appointments = [] }) => {
+          return appointments?.map((appt) => ({
+            ...appt,
+            doctor: user,
+          }));
+        });
+      };
+      if (payload === "all") {
+        state.physician = payload;
+        state.filtered = arrangePayload(state.collections);
+      } else {
+        state.filtered =
+          state.collections.find(({ user }) => user._id === payload)
+            ?.appointments || [];
+        state.physician = payload;
+      }
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
-      console.log("SetCREATE payload", payload);
       state.selected = {
-        company: "",
-        location: "",
-        scheadule: "",
+        lo: "",
+        norm: "",
+        hi: "",
+        serviceId: payload.serviceId,
       };
       state.willCreate = true;
       state.showModal = true;
     },
-    SetTeam: (state, { payload }) => {
-      state.team = payload;
-      state.willCreateTeam = true;
-      state.showModalTeam = true;
-    },
     SetFILTER: (state, { payload }) => {
+      console.log("payload", payload);
+
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -137,34 +148,10 @@ export const reduxSlice = createSlice({
       const { page, max } = state;
       // if (getPage) return array;
 
-      state.paginated = state.filter.slice(
+      state.paginated = state.filtered.slice(
         (page - 1) * max,
         max + (page - 1) * max
       );
-    },
-    SetMONTH: (state, { payload }) => {
-      if (payload === "next") {
-        if (state.month === 12) {
-          state.month = 1;
-          state.year += 1;
-        } else {
-          state.month += 1;
-        }
-      } else {
-        if (state.month === 1) {
-          state.month = 12;
-          state.year -= 1;
-        } else {
-          state.month -= 1;
-        }
-      }
-    },
-    ResetDATE: (state) => {
-      state.month = today.getMonth() + 1;
-      state.year = today.getFullYear();
-    },
-    setYear: (state, action) => {
-      state.year = Number(action.payload);
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -186,9 +173,6 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
-    TOGGLETeam: (state) => {
-      state.showModalTeam = !state.showModalTeam;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -198,9 +182,18 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.collections = state.filtered = payload; // Fix typo
-        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        const { success, payload = [] } = action.payload;
+        const arrangePayload = (collections) => {
+          return collections?.flatMap(({ user, appointments }) => {
+            return appointments.map((appt) => ({
+              ...appt,
+              doctor: user,
+            }));
+          });
+        };
+        state.collections = payload;
+        state.filtered = arrangePayload(payload);
+        state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;
@@ -218,7 +211,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
-        state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
@@ -235,20 +227,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("UPDATE.fulfilled", action.payload);
-
+        const { success, payload } = action;
         const index = state.collections.findIndex(
-          (item) => item._id === action.payload._id
-        );
-        const findex = state.filtered.findIndex(
-          (item) => item._id === action.payload._id
+          (item) => item._id === payload._id
         );
 
-        state.collections[index] = action.payload;
-
-        state.filtered[findex] = action.payload;
+        state.collections[index] = payload;
         state.showModal = false;
-        // state.message = success;
+        state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -265,14 +251,9 @@ export const reduxSlice = createSlice({
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success } = action;
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload.payload
+          (item) => item?._id === action.payload
         );
         state.collections.splice(index, 1);
-        const findex = state.filtered.findIndex(
-          (item) => item._id === action.payload.payload
-        );
-
-        state.filtered.splice(findex, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -286,20 +267,17 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetPHYSICIAN,
   SetCREATE,
-  SetTeam,
   SetEDIT,
   SetFILTER,
   SetPAGE,
-  SetMONTH,
-  ResetDATE,
   /**
    * for pagination
    */
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
-  TOGGLETeam,
   RESET,
 } = reduxSlice.actions;
 
