@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinic/appointments";
+const url = "/diagnostics/clinic/schedules";
 
 const initialState = {
   filter: [],
-
   paginated: [],
-  physician: "",
+
   // Bread attributes
   selected: {}, // assurance
   page: 0,
@@ -29,9 +28,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${url}`,
-  ({ token, data }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, data);
+      return axioKit.universal(`${url}/browse`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -93,25 +92,6 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    SetPHYSICIAN: (state, { payload }) => {
-      const arrangePayload = (collections) => {
-        return collections.flatMap(({ user, appointments = [] }) => {
-          return appointments?.map((appt) => ({
-            ...appt,
-            doctor: user,
-          }));
-        });
-      };
-      if (payload === "all") {
-        state.physician = payload;
-        state.filtered = arrangePayload(state.collections);
-      } else {
-        state.filtered =
-          state.collections.find(({ user }) => user._id === payload)
-            ?.appointments || [];
-        state.physician = payload;
-      }
-    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -128,8 +108,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -139,7 +117,7 @@ export const reduxSlice = createSlice({
           state.page = totalPages;
         }
       }
-      state.filtered = payload;
+      state.filter = payload;
     },
     SetPagination: (state) => {
       // {
@@ -148,7 +126,7 @@ export const reduxSlice = createSlice({
       const { page, max } = state;
       // if (getPage) return array;
 
-      state.paginated = state.filtered.slice(
+      state.paginated = state.filter.slice(
         (page - 1) * max,
         max + (page - 1) * max
       );
@@ -182,18 +160,10 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { success, payload = [] } = action.payload;
-        const arrangePayload = (collections) => {
-          return collections?.flatMap(({ user, appointments }) => {
-            return appointments.map((appt) => ({
-              ...appt,
-              doctor: user,
-            }));
-          });
-        };
-        state.collections = payload;
-        state.filtered = payload;
-        state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
+        const { success } = action.payload;
+        state.collections = state.filtered = action.payload; // Fix typo
+        state.totalPages =
+          Math.ceil(action.payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;
@@ -267,7 +237,6 @@ export const reduxSlice = createSlice({
 });
 
 export const {
-  SetPHYSICIAN,
   SetCREATE,
   SetEDIT,
   SetFILTER,

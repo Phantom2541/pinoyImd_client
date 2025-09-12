@@ -7,7 +7,7 @@ import {
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
   const { collections, physician } = useSelector(
     ({ appointments }) => appointments
   );
@@ -22,6 +22,7 @@ const Header = () => {
           token,
           data: {
             branch: activePlatform.branchId,
+            user: auth?._id,
             // month: new Date().getMonth() + 1,
             month: 6,
             year: new Date().getFullYear(),

@@ -19,6 +19,7 @@ export default function Register({ show, toggle = () => {} }) {
     e.preventDefault();
     setIsSchedule(true);
   };
+  const handleSave = () => {};
   return (
     <MDBModal
       size={isSchedule ? "fluid" : "xl"}
@@ -61,7 +62,7 @@ export default function Register({ show, toggle = () => {} }) {
               >
                 Prev
               </MDBBtn>
-              <MDBBtn size="md" color="info" type="submit">
+              <MDBBtn size="md" color="info" type="submit" onClick={handleSave}>
                 Submit
               </MDBBtn>
             </div>
