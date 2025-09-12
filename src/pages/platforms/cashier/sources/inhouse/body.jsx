@@ -21,18 +21,40 @@ const Body = () => {
     [activeId, setActiveId] = useState(0),
     [didHoverId, setDidHoverId] = useState(-1);
 
-  const sorted = [...filtered].sort((a, b) => {
-    const nameA = (a.name || a.displayname || "").trim().toLowerCase();
-    const nameB = (b.name || b.displayname || "").trim().toLowerCase();
+  const statusOrder = {
+    active: 1,
+    suspended: 2,
+    draft: 3,
+    expired: 4,
+    cancelled: 5,
+  };
 
-    return nameA.localeCompare(nameB, "en", { sensitivity: "base" });
+  const sorted = [...filtered].sort((a, b) => {
+    const rankA = statusOrder[a.settings?.status?.trim().toLowerCase()] ?? 99;
+    const rankB = statusOrder[b.settings?.status?.trim().toLowerCase()] ?? 99;
+    return rankA - rankB;
   });
 
+  const getColorByStatusType = (type) => {
+    const map = {
+      draft: "light",
+      active: "primary",
+      expired: "danger",
+      suspended: "warning",
+      cancelled: "dark",
+    };
+    return map[type?.toLowerCase()] || "secondary";
+  };
   return (
     <MDBCardBody>
       {filtered.length > 0 ? (
         handlePagination(sorted, activePage, maxPage).map((branch, index) => {
-          const { name = "", displayname = "", isMain = false } = branch;
+          const {
+            name = "",
+            displayname = "",
+            isMain = false,
+            settings,
+          } = branch;
           const { color, border } = collapse.getStyle(
             index,
             activeId,
@@ -58,6 +80,13 @@ const Body = () => {
                     )}
                   </div>
                   <div className="d-flex">
+                    <MDBBadge
+                      color={getColorByStatusType(settings?.status)}
+                      className="mr-2 px-2 py-1 rounded"
+                    >
+                      {settings?.status}
+                    </MDBBadge>
+
                     <MDBBtn
                       size="sm"
                       color="white"
