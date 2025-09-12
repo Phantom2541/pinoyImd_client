@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ToolsSwitcher from "./clinicalData";
-import HistorySwitcher from "./medicalHistory";
+import ToolsSwitcher from "../clinicalData";
+import HistorySwitcher from "../medicalHistory";
 import HumanBody from "./humanBody";
 
 export default function Body() {

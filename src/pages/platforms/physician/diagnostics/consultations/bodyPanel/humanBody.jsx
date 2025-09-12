@@ -1,12 +1,33 @@
 import React, { useRef, useEffect, useState } from "react";
-import BODY from "./../../../../../assets/checkup/humanBody.png";
+import BODY from "./../../../../../../assets/checkup/humanBody.png";
+import History from "./history";
+import "./style.css";
+import { useSelector } from "react-redux";
 
 export default function HumanBody({ setSlide, slide }) {
+  const { patient } = useSelector(({ consultations }) => consultations);
+
   const containerRef = useRef(null);
   const bodyRef = useRef(null);
 
   const medicalHistory = ["FMHx", "PMHx", "PSHx", "OB Gyne Hx"];
   const ancillary = ["Laboratory", "Radiology", "Vital"];
+
+  // <- dito ilagay ang iba't ibang laman para sa bawat button
+  const contentMap = {
+    FMHx: ["Diabetes (father)", "Hypertension (mother)"],
+    PMHx: ["Asthma dx 2015", "Allergic rhinitis"],
+    PSHx: ["Appendectomy — 2018"],
+    "OB Gyne Hx": ["G1P1", "LMP: 2025-08-01"],
+    Laboratory: [
+      "Complete Blood Count (CBC)",
+      "Fasting Blood Sugar (FBS)",
+      "Lipid Profile",
+      "Urinalysis",
+    ],
+    Radiology: ["Chest X-Ray", "Ultrasound abdomen"],
+    Vital: ["Blood Pressure", "Heart Rate", "Respiratory Rate", "Temperature"],
+  };
 
   const organs = [
     { name: "heart", style: { top: "25%", left: "42%" } },
@@ -85,7 +106,7 @@ export default function HumanBody({ setSlide, slide }) {
       ref={containerRef}
       style={{ position: "relative" }}
     >
-      {/* SVG Lines */}
+      {/* SVG Lines (same as before) */}
       <svg
         aria-hidden="true"
         style={{
@@ -105,8 +126,8 @@ export default function HumanBody({ setSlide, slide }) {
               x2={ln.x2}
               y2={ln.y2}
               stroke="black"
-              strokeWidth={slide === ln.text ? 3 : 1} // Active line thicker
-              strokeOpacity={slide === ln.text ? 1 : 0.3} // Active line solid
+              strokeWidth={slide === ln.text ? 3 : 1}
+              strokeOpacity={slide === ln.text ? 1 : 0.3}
               strokeLinecap="round"
               style={{
                 transition: "stroke-width 0.3s ease, stroke-opacity 0.3s ease",
@@ -115,7 +136,7 @@ export default function HumanBody({ setSlide, slide }) {
             <circle
               cx={ln.x1}
               cy={ln.y1}
-              r={slide === ln.text ? 4 : 2} // Active circle bigger
+              r={slide === ln.text ? 4 : 2}
               fill={slide === ln.text ? "black" : "gray"}
               style={{ transition: "r 0.3s ease, fill 0.3s ease" }}
             />
@@ -130,21 +151,27 @@ export default function HumanBody({ setSlide, slide }) {
         ))}
       </svg>
 
-      {/* Medical History Buttons */}
+      {/* Medical History Buttons + lists (always visible) */}
       <div className="checkup-data-center-image-medical-history">
         {medicalHistory.map((text) => (
-          <button
-            key={text}
-            ref={(el) => (textRefs.current[text] = el)}
-            onClick={() => setSlide(slide === text ? "" : text)} // toggle
-            className={slide === text ? "active" : ""}
-          >
-            {text}
-          </button>
+          <div key={text} className="history-group">
+            <button
+              ref={(el) => (textRefs.current[text] = el)}
+              onClick={() => setSlide(slide === text ? "" : text)} // keep for highlight
+              className={`${slide === text ? "active" : ""} ${
+                patient?.isMale ? "male" : "female"
+              }`}
+            >
+              {text}
+            </button>
+
+            {/* render the correct items for this label */}
+            <History items={contentMap[text]} />
+          </div>
         ))}
       </div>
 
-      {/* Human Body Image & Organs */}
+      {/* Body + organ anchors */}
       <div
         className="checkup-data-center-image-full-body"
         style={{ position: "relative" }}
@@ -169,17 +196,22 @@ export default function HumanBody({ setSlide, slide }) {
         ))}
       </div>
 
-      {/* Ancillary Buttons */}
+      {/* Ancillary Buttons + lists (always visible) */}
       <div className="checkup-data-center-image-Ancillary">
         {ancillary.map((text) => (
-          <button
-            key={text}
-            ref={(el) => (textRefs.current[text] = el)}
-            onClick={() => setSlide(slide === text ? "" : text)} // toggle
-            className={slide === text ? "active" : ""}
-          >
-            {text}
-          </button>
+          <div key={text} className="history-group">
+            <button
+              ref={(el) => (textRefs.current[text] = el)}
+              onClick={() => setSlide(slide === text ? "" : text)}
+              className={`${slide === text ? "active" : ""} ${
+                patient?.isMale ? "male" : "female"
+              }`}
+            >
+              {text}
+            </button>
+
+            <History items={contentMap[text]} />
+          </div>
         ))}
       </div>
     </div>

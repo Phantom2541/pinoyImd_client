@@ -96,8 +96,10 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
   height: 100%;
   z-index: 10;
 }
@@ -109,32 +111,37 @@
   width: fit-content;
   cursor: pointer;
   border: none;
+  padding: 0;
   background-color: transparent;
   transition: color 0.3s ease;
 }
 
-.checkup-data-center-image-medical-history button:hover,
-.checkup-data-center-image-Ancillary button:hover {
+.checkup-data-center-image-medical-history button.male:hover,
+.checkup-data-center-image-Ancillary button.male:hover {
   color: #007bff;
 }
 
-.checkup-data-center-image-medical-history button.active,
-.checkup-data-center-image-Ancillary button.active {
+.checkup-data-center-image-medical-history button.male.active,
+.checkup-data-center-image-Ancillary button.male.active {
   color: #007bff;
 }
 
-.checkup-data-center-image-medical-history button:disabled,
-.checkup-data-center-image-Ancillary button:disabled {
-  opacity: 0.6;
-  pointer-events: none;
+.checkup-data-center-image-medical-history button.female:hover,
+.checkup-data-center-image-Ancillary button.female:hover {
+  color: #e83e8c;
+}
+
+.checkup-data-center-image-medical-history button.female.active,
+.checkup-data-center-image-Ancillary button.female.active {
+  color: #e83e8c;
 }
 
 .checkup-data-center-image-medical-history {
-  left: 3%;
+  left: 0;
 }
 
 .checkup-data-center-image-Ancillary {
-  right: 3%;
+  right: 0;
 }
 
 .checkup-data-note-mask {
