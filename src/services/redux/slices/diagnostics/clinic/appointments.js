@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinician/appointments";
+const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
@@ -192,7 +192,7 @@ export const reduxSlice = createSlice({
           });
         };
         state.collections = payload;
-        state.filtered = arrangePayload(payload);
+        state.filtered = payload;
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;

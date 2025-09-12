@@ -102,144 +102,129 @@ export default function Hotline() {
       </button>
 
       {/* One modal only */}
-      <div className={`hotline-global-modal ${open ? "open" : ""}`}>
-        <div className="hotlines-global-modal-content">
-          <div className="hotlines-global-list-header">
-            <span>Emergency lines</span>
-            <span>
-              <MDBIcon fas icon="phone-volume" />
-            </span>
-          </div>
+      {ReactDOM.createPortal(
+        <div className={`hotline-global-modal ${open ? "open" : ""}`}>
+          <div className="hotlines-global-modal-content">
+            <div className="hotlines-global-list-header">
+              <span>Emergency lines</span>
+              <span>
+                <MDBIcon fas icon="phone-volume" />
+              </span>
+            </div>
 
-          {/* Loop all hotlines here */}
-          <div className="hotlines-global-list-container">
-            {paginatedData?.map((hotline, index) => {
-              const { _id, displayname, number, address } = hotline;
-              return (
-                <div
-                  key={`${index}-${_id}`}
-                  className={`hotline-poster-card fade-in ${
-                    direction === "right" ? "from-right" : "from-left"
-                  }`}
-                >
-                  <div className="hotline-poster-title">
-                    <span>
-                      <MDBIcon fas icon="phone-alt" />
-                    </span>
-                    <span> {formatPhoneNumber(number) || "No number"}</span>
-                  </div>
-                  <span className="hotline-poster-number">{displayname}</span>
-                  <div className="hotline-poster-address">
-                    <img
-                      alt=""
-                      title="Click to View QR Code"
-                      src={stationImages[displayname] || FIRE}
-                      onClick={() => {
-                        setSelectedHotline(hotline);
-                        setShowModal(true);
-                      }}
-                    />
-                    <span className="hotline-slant" title={address}>
-                      {address || "No address"}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Pagination controls */}
-            {totalPages > 1 && (
-              <>
-                <button
-                  className="hotline-arrow-btn left"
-                  onClick={() => {
-                    setDirection("left");
-                    setCurrentPage((prev) => prev - 1);
-                  }}
-                  disabled={currentPage === 0}
-                >
-                  <MDBIcon fas icon="chevron-left" />
-                </button>
-
-                <button
-                  className="hotline-arrow-btn right"
-                  onClick={() => {
-                    setDirection("right");
-                    setCurrentPage((prev) => prev + 1);
-                  }}
-                  disabled={currentPage === totalPages - 1}
-                >
-                  <MDBIcon fas icon="chevron-right" />
-                </button>
-              </>
-            )}
-
-            {/* Modal overlay */}
-            {showModal &&
-              selectedHotline &&
-              ReactDOM.createPortal(
-                <div
-                  className="hotline-poster-mask"
-                  onClick={() => setShowModal(false)}
-                >
+            {/* Loop all hotlines here */}
+            <div className="hotlines-global-list-container">
+              {paginatedData?.map((hotline, index) => {
+                const { _id, displayname, number, address } = hotline;
+                return (
                   <div
-                    className="hotline-poster-card active"
-                    onClick={(e) => e.stopPropagation()}
+                    key={`${index}-${_id}`}
+                    className={`hotline-poster-card fade-in ${
+                      direction === "right" ? "from-right" : "from-left"
+                    }`}
                   >
                     <div className="hotline-poster-title">
                       <span>
                         <MDBIcon fas icon="phone-alt" />
                       </span>
-                      <span>
-                        {formatPhoneNumber(selectedHotline.number) ||
-                          "No number"}
-                      </span>
+                      <span> {formatPhoneNumber(number) || "No number"}</span>
                     </div>
-                    <span className="hotline-poster-number">
-                      {selectedHotline.displayname}
-                    </span>
-                    <div className="hotline-poster-address active">
+                    <span className="hotline-poster-number">{displayname}</span>
+                    <div className="hotline-poster-address">
                       <img
                         alt=""
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=tel:${formatPhoneNumber(
-                          selectedHotline.number
-                        )}`}
+                        title="Click to View QR Code"
+                        src={stationImages[displayname] || FIRE}
+                        onClick={() => {
+                          setSelectedHotline(hotline);
+                          setShowModal(true);
+                        }}
                       />
-                      <span>{selectedHotline.address || "No address"}</span>
+                      <span className="hotline-slant" title={address}>
+                        {address || "No address"}
+                      </span>
                     </div>
                   </div>
-                </div>,
-                document.body
-              )}
-            {/* {filtered?.map((hotline, index) => {
-              const { _id, displayname, number, address } = hotline;
-              return (
-                <div key={_id || index} className="hotlines-global-list">
-                  <label>{displayname || "Police Station"}</label>
-                  <div>
-                    <span>
-                      <MDBIcon icon="phone-alt" />
-                      {number || "+63 912 345 6789"}
-                    </span>
-                    <span title={address}>
-                      <MDBIcon fas icon="map-marker-alt" className="mr-2" />
-                      {address || "Poblacion Central G.T"}
-                    </span>
-                  </div>
-                </div>
-              );
-            })} */}
-          </div>
+                );
+              })}
 
-          {/* Close button */}
-          <button
-            className="hotlines-global-modal-close"
-            onClick={() => setOpen(false)}
-          >
-            <MDBIcon icon="times" />
-          </button>
-        </div>
-      </div>
+              {/* Pagination controls */}
+              {totalPages > 1 && (
+                <>
+                  <button
+                    className="hotline-arrow-btn left"
+                    onClick={() => {
+                      setDirection("left");
+                      setCurrentPage((prev) => prev - 1);
+                    }}
+                    disabled={currentPage === 0}
+                  >
+                    <MDBIcon fas icon="chevron-left" />
+                  </button>
+
+                  <button
+                    className="hotline-arrow-btn right"
+                    onClick={() => {
+                      setDirection("right");
+                      setCurrentPage((prev) => prev + 1);
+                    }}
+                    disabled={currentPage === totalPages - 1}
+                  >
+                    <MDBIcon fas icon="chevron-right" />
+                  </button>
+                </>
+              )}
+
+              {/* Modal overlay */}
+              {showModal &&
+                selectedHotline &&
+                ReactDOM.createPortal(
+                  <div
+                    className="hotline-poster-mask"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <div
+                      className="hotline-poster-card active"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="hotline-poster-title">
+                        <span>
+                          <MDBIcon fas icon="phone-alt" />
+                        </span>
+                        <span>
+                          {formatPhoneNumber(selectedHotline.number) ||
+                            "No number"}
+                        </span>
+                      </div>
+                      <span className="hotline-poster-number">
+                        {selectedHotline.displayname}
+                      </span>
+                      <div className="hotline-poster-address active">
+                        <img
+                          alt=""
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=tel:${formatPhoneNumber(
+                            selectedHotline.number
+                          )}`}
+                        />
+                        <span>{selectedHotline.address || "No address"}</span>
+                      </div>
+                    </div>
+                  </div>,
+                  document.body
+                )}
+            </div>
+
+            {/* Close button */}
+            <button
+              className="hotlines-global-modal-close"
+              onClick={() => setOpen(false)}
+            >
+              <MDBIcon icon="times" />
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

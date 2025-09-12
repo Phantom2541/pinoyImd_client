@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import Body from "./body";
+import Body from "./bodyPanel/body";
 import Patient from "./patientInfo";
 import Note from "./note";
 import Certificate from "./note/certificate";

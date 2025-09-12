@@ -7,7 +7,7 @@ import {
   BROWSE,
   SetMONTH,
   ResetDATE,
-} from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
+} from "../../../../../../services/redux/slices/diagnostics/clinic/quest";
 import { Calendars } from "../../../../../../components/header";
 
 const Header = () => {

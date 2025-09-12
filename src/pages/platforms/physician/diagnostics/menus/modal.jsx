@@ -12,7 +12,7 @@ import {
   toggleModal,
   SAVE,
   UPDATE,
-} from "../../../../../services/redux/slices/diagnostics/clinician/clinicMenus";
+} from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { properFullname } from "../../../../../services/utilities";
@@ -22,13 +22,12 @@ export default function Modal() {
       ({ clinicMenus }) => clinicMenus
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    {filtered =[]} = useSelector(({ physicians }) => physicians),
+    { filtered = [] } = useSelector(({ physicians }) => physicians),
     [form, setForm] = useState(selected || {}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  
+
   console.log("filtered", filtered);
-  
 
   useEffect(() => {
     if (selected) {
@@ -154,29 +153,27 @@ export default function Modal() {
             <input
               type="checkbox"
               checked={form.discountable || false}
-              onChange={(e) =>
-                handleChange("discountable", e.target.checked)
-              }
+              onChange={(e) => handleChange("discountable", e.target.checked)}
             />
             <label className="ml-2">Discountable</label>
           </div>
-<small>Doctor / Specialist</small>
-<select
-  className="form-control mb-3"
-  value={form.doctor || ""}
-  onChange={(e) => handleChange("doctor", e.target.value)}
->
-  <option value="">-- Select Doctor --</option>
-  {filtered.map((doc) => {
-    const displayName= properFullname(doc.user?.fullName) || {};
-  
-    return (
-      <option key={doc._id} value={doc._id}>
-        {displayName}
-      </option>
-    );
-  })}
-</select>
+          <small>Doctor / Specialist</small>
+          <select
+            className="form-control mb-3"
+            value={form.doctor || ""}
+            onChange={(e) => handleChange("doctor", e.target.value)}
+          >
+            <option value="">-- Select Doctor --</option>
+            {filtered.map((doc) => {
+              const displayName = properFullname(doc.user?.fullName) || {};
+
+              return (
+                <option key={doc._id} value={doc._id}>
+                  {displayName}
+                </option>
+              );
+            })}
+          </select>
 
           <MDBInput
             label="Doctor’s Fee"
