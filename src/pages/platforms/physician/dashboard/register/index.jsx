@@ -11,10 +11,14 @@ import Information from "./information";
 import Schedule from "./schedule";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import { SAVE } from "../../../../../services/redux/slices/diagnostics/clinic/clinicInfo";
 
 export default function Register({ show, toggle = () => {} }) {
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
   const [form, setForm] = useState({ schedules: [] });
   const [isSchedule, setIsSchedule] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +36,20 @@ export default function Register({ show, toggle = () => {} }) {
       });
       return;
     }
+
+    dispatch(
+      SAVE({
+        data: {
+          ...form,
+          physicianId: auth._id,
+          branchId: activePlatform?.branchId,
+        },
+        token,
+      })
+    ).then(() => {
+      setIsSchedule(false);
+      setForm({ schedules: [] });
+    });
   };
   return (
     <MDBModal
