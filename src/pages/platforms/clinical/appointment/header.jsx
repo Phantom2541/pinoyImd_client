@@ -1,37 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import {
-  BROWSE,
-  SetPHYSICIAN,
-} from "../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { SetPHYSICIAN } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
   const { collections, physician } = useSelector(
     ({ appointments }) => appointments
   );
   const [appointments, setAppointments] = useState([]),
     dispatch = useDispatch();
-
-  //initial values
-  useEffect(() => {
-    if (token && activePlatform)
-      dispatch(
-        BROWSE({
-          token,
-          data: {
-            branch: activePlatform.branchId,
-            user: auth?._id,
-            // month: new Date().getMonth() + 1,
-            month: 6,
-            year: new Date().getFullYear(),
-            // day: new Date().getDate(),
-            day: 3,
-          },
-        })
-      );
-  }, [dispatch, token, activePlatform]);
 
   useEffect(() => {
     if (collections) setAppointments(collections);
