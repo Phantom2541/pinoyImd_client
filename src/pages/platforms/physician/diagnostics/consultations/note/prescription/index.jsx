@@ -17,7 +17,7 @@ export default function Prescription({ active, buttonRefs, togglePanel }) {
       <MDBIcon
         icon="times"
         className="checkup-data-note-close"
-        onClick={() => togglePanel("")}
+        onClick={() => togglePanel("prescription")}
       />
       <div className="checkup-data-prescription-card">
         <Header />
