@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinic/schedules";
+const url = "/diagnostics/clinic/informations";
 
 const initialState = {
+  clinic: {},
   filter: [],
   paginated: [],
 
@@ -23,6 +24,7 @@ const initialState = {
   activePage: 1,
   isSuccess: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -31,6 +33,24 @@ export const BROWSE = createAsyncThunk(
   ({ token, params }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const GET_CLINIC = createAsyncThunk(
+  `${url}/GET_CLINIC`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/get_clinic`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -174,21 +194,37 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(SAVE.pending, (state) => {
+      .addCase(GET_CLINIC.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
-        state.collections.unshift(payload);
+      .addCase(GET_CLINIC.fulfilled, (state, action) => {
+        state.clinic = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(GET_CLINIC.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SAVE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SAVE.fulfilled, (state, action) => {
+        console.log("action.payload: ", action.payload);
+        state.clinic = action.payload;
         state.showModal = false;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {
