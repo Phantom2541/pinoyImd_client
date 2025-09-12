@@ -240,17 +240,8 @@ export default function SideNavigation({
                 </div>
               ))}
         </MDBSideNavNav>
-        {/* <button
-          style={{
-            position: "absolute",
-            bottom: "10px",
-            left: "10px",
-          }}
-        >
-          Hotline <MDBIcon fas icon="phone-volume" />
-        </button> */}
+        <Hotline />
       </MDBSideNav>
-      <Hotline />
     </div>
   );
 }
