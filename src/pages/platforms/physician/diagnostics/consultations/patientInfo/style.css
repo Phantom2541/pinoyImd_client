@@ -7,10 +7,99 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px;
+  padding-bottom: 20px;
+  /* background-color: #007bff; */
 }
 
 .checkup-data-patient-profile {
   width: 90px;
   aspect-ratio: 1/1;
   margin-bottom: 10px;
+  border-radius: 3px;
+}
+
+.checkup-data-patient-fullname {
+  font-weight: bold;
+  white-space: nowrap; /* wag mag line break */
+  overflow: hidden; /* tago yung sobra */
+  text-overflow: ellipsis; /* palitan ng … */
+  max-width: 240px;
+  color: white;
+}
+
+.checkup-data-patient-ageGender {
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  color: white;
+}
+
+.checkup-data-patient-HWBMI {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border: 1px solid white;
+  border-left: none;
+  border-right: none;
+  /* background-color: #007bff; */
+  color: white;
+}
+
+.checkup-data-patient-HWBMI div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.checkup-data-patient-HWBMI div span:first-child {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.checkup-data-patient-HWBMI div span:nth-child(2) {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.checkup-data-patient-HWBMI div:nth-child(2) {
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+}
+
+.checkup-data-patient-address,
+.checkup-data-patient-reason {
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.checkup-data-patient-address label,
+.checkup-data-patient-reason label {
+  all: unset;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #007bff;
+}
+
+.checkup-data-patient-address span {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* hanggang 3rd line */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.checkup-data-patient-reason {
+  padding-bottom: 0;
 }

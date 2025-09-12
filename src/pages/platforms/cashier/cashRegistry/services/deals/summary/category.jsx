@@ -34,6 +34,7 @@ export default function Payments() {
       wls: 0,
       mbs: 0,
       ctr: 0,
+      care: 0,
     };
 
     collections?.forEach((item) => {
@@ -43,23 +44,30 @@ export default function Payments() {
         refNo = { amount: 0 },
         cardHolder = { type: "" },
       } = item;
+      const { careOf = {}, pp = "cash" } = refNo;
       const { type: chType = "" } = cardHolder;
-      const isMixed = payment === "mixed" || payment === "mixed";
-      const baseAmount = isMixed ? refNo?.amount : amount;
+      const isMixed = payment === "mixed" || payment === "voucher";
+      const baseAmount = isMixed
+        ? refNo?.amount + (careOf?.amount || 0)
+        : amount;
+
       const totalsKey = isMixed ? "voucher" : payment;
+
       totals[totalsKey] = (totals[totalsKey] || 0) + baseAmount;
 
-      if (isMixed) {
+      if (isMixed && pp === "cash") {
         const mixedCash = amount - refNo?.amount;
         totals.cash = (totals.cash || 0) + (mixedCash || 0);
       }
 
-      if (
-        (payment === "voucher" || isMixed) &&
-        chType &&
-        summary.hasOwnProperty(chType)
-      ) {
-        summary[chType] += baseAmount;
+      if (pp === "co") {
+        //patient payable is paid by care of
+        const coAmount = careOf?.amount > 0 ? careOf?.amount : refNo?.amount;
+        summary["care"] += coAmount || 0;
+      }
+
+      if (isMixed && chType && summary.hasOwnProperty(chType)) {
+        summary[chType] += refNo?.amount || 0;
       }
     });
 
@@ -161,6 +169,12 @@ export default function Payments() {
                 <span title="Insource : Contracts">Contracts :</span>
                 <strong className="text-primary">
                   {currency.format(voucherSummary.ctr)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2 ml-3">
+                <span title="Insource : Contracts">Care :</span>
+                <strong className="text-primary">
+                  {currency.format(voucherSummary.care)}
                 </strong>
               </div>
 
