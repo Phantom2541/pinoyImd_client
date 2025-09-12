@@ -11,6 +11,7 @@ const Header = () => {
   const { collections, physician } = useSelector(
     ({ appointments }) => appointments
   );
+  const { physicians = [] } = activePlatform?.branch || {};
   const [appointments, setAppointments] = useState([]),
     dispatch = useDispatch();
 
@@ -50,7 +51,15 @@ const Header = () => {
       <div>
         <div className="text-right d-flex align-items-center">
           <span className="mr-2">Physician:</span>
-          <select
+          <select className="form-control bg-light">
+            <option value="all">All</option>
+            {physicians.map((user) => (
+              <option key={user?._id} value={user?._id}>
+                Dr. {properFullname(user?.fullName)}
+              </option>
+            ))}
+          </select>
+          {/* <select
             className="form-control bg-light"
             value={physician}
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
@@ -61,7 +70,7 @@ const Header = () => {
                 Dr. {properFullname(user?.fullName)}
               </option>
             ))}
-          </select>
+          </select> */}
         </div>
       </div>
     </MDBView>
