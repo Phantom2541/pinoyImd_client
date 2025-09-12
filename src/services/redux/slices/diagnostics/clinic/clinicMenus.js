@@ -6,10 +6,14 @@ export const BROWSE = createAsyncThunk(
   "clinicMenus/browse",
   async ({ token, key }, thunkAPI) => {
     try {
-      const { data } = await axioKit(token).get("/clinic/menus", { params: key });
+      const { data } = await axioKit(token).get("/clinic/menus", {
+        params: key,
+      });
       return data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to fetch clinic menus");
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to fetch clinic menus"
+      );
     }
   }
 );
@@ -22,7 +26,9 @@ export const SAVE = createAsyncThunk(
       const res = await axioKit(token).post("/clinic/menus", data);
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to save clinic menu");
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to save clinic menu"
+      );
     }
   }
 );
@@ -35,7 +41,9 @@ export const UPDATE = createAsyncThunk(
       const res = await axioKit(token).put(`/clinic/menus/${data._id}`, data);
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to update clinic menu");
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to update clinic menu"
+      );
     }
   }
 );
@@ -48,7 +56,9 @@ export const DESTROY = createAsyncThunk(
       await axioKit(token).delete(`/clinic/menus/${id}`);
       return id;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to delete clinic menu");
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to delete clinic menu"
+      );
     }
   }
 );
@@ -86,7 +96,9 @@ const clinicMenusSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(BROWSE.pending, (state) => { state.isLoading = true; })
+      .addCase(BROWSE.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.isSuccess = true;
@@ -112,12 +124,15 @@ const clinicMenusSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(DESTROY.fulfilled, (state, { payload }) => {
-        state.collections = state.collections.filter((item) => item._id !== payload);
+        state.collections = state.collections.filter(
+          (item) => item._id !== payload
+        );
         state.filtered = state.filtered.filter((item) => item._id !== payload);
         state.isSuccess = true;
       });
   },
 });
 
-export const { SetFILTERED, RESET, toggleModal, setActivePage } = clinicMenusSlice.actions;
+export const { SetFILTERED, RESET, toggleModal, setActivePage } =
+  clinicMenusSlice.actions;
 export default clinicMenusSlice.reducer;

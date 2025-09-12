@@ -4,7 +4,7 @@ import { MDBView } from "mdbreact";
 import {
   BROWSE,
   SetPHYSICIAN,
-} from "../../../../services/redux/slices/diagnostics/clinician/appointments";
+} from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);

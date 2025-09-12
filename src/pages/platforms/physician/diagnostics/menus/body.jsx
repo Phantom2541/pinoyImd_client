@@ -4,7 +4,7 @@ import { MDBTable, MDBBtn } from "mdbreact";
 import {
   toggleModal,
   DESTROY,
-} from "../../../../../services/redux/slices/diagnostics/clinician/clinicMenus";
+} from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 
 export default function Body() {
   const dispatch = useDispatch();

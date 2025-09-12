@@ -6,7 +6,7 @@ import { Templates, Services } from "../../../../../services/fakeDb";
 import {
   BROWSE,
   SetPHYSICIAN,
-} from "../../../../../services/redux/slices/diagnostics/clinician/appointments";
+} from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 const Header = () => {
   const { activePlatform, auth, token } = useSelector(({ auth }) => auth),
@@ -23,15 +23,15 @@ const Header = () => {
           data: {
             branch: activePlatform.branchId,
             user: auth._id,
-            // month: new Date().getMonth() + 1,
-            month: 6,
-            // year: new Date().getFullYear(),
+            month: new Date().getMonth() + 1,
+            // month: 6,
+            year: new Date().getFullYear(),
             day: new Date().getDate(),
-            day: 3,
+            // day: 3,
           },
         })
       );
-  }, [dispatch, token, activePlatform]);
+  }, [dispatch, token, activePlatform, auth]);
 
   //initial values
 

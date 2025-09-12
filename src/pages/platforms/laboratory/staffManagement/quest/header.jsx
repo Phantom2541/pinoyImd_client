@@ -4,7 +4,7 @@ import {
   BROWSE,
   SetFILTER,
   SetCREATE,
-} from "../../../../../services/redux/slices/diagnostics/clinician/quest";
+} from "../../../../../services/redux/slices/diagnostics/clinic/quest";
 import { Search } from "../../../../../components/searchables";
 import Modal from "./modal";
 
