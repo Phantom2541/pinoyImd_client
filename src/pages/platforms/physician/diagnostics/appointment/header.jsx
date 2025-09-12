@@ -46,7 +46,7 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center"></div>
+        <div className="text-right d-flex items-center">xxxx</div>
       </div>
     </MDBView>
   );
