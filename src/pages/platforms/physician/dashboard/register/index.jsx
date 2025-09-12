@@ -10,6 +10,7 @@ import {
 import Information from "./information";
 import Schedule from "./schedule";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Register({ show, toggle = () => {} }) {
   const [form, setForm] = useState({ schedules: [] });
@@ -18,6 +19,19 @@ export default function Register({ show, toggle = () => {} }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSchedule(true);
+  };
+  const handleSave = () => {
+    const { schedules = [] } = form;
+
+    if (schedules.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "No Schedule Found",
+        text: "You need to create at least one schedule before saving.",
+        confirmButtonColor: "#3085d6",
+      });
+      return;
+    }
   };
   return (
     <MDBModal
@@ -61,7 +75,7 @@ export default function Register({ show, toggle = () => {} }) {
               >
                 Prev
               </MDBBtn>
-              <MDBBtn size="md" color="info" type="submit">
+              <MDBBtn size="md" color="info" type="submit" onClick={handleSave}>
                 Submit
               </MDBBtn>
             </div>
