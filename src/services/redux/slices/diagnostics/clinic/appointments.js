@@ -47,6 +47,23 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const CHECKUP = createAsyncThunk(
+  `${url}/checkup`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/checkup`, token, data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
@@ -239,7 +256,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
+      .addCase(CHECKUP.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(CHECKUP.fulfilled, (state, action) => {
+        const { success, payload = [] } = action.payload;
+        // initial values
+        state.filtered = state.collections = payload;
+        state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(CHECKUP.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -256,7 +291,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
       .addCase(UPDATE.pending, (state) => {
         state.isSuccess = false;
         state.message = "";
