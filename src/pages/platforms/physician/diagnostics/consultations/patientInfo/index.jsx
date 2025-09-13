@@ -5,7 +5,11 @@ import {
   EditableUser,
 } from "../../../../../../components/customizable";
 import PROFILE from "./../../../../../../assets/male.jpg";
-import { fullAddress, getAge } from "../../../../../../services/utilities";
+import {
+  Cloudinary,
+  fullAddress,
+  getAge,
+} from "../../../../../../services/utilities";
 import "./style.css";
 import { MDBIcon } from "mdbreact";
 
@@ -29,6 +33,10 @@ export default function Patient({ activePanels }) {
     newParams.set("ehrId", newId); // add if missing, replace if exists
     history.replace(`${location.pathname}?${newParams.toString()}`);
   };
+
+  const userUrl = `${Cloudinary.getEndpoint()}/users/${patient.email}/profile`;
+
+  console.log("patient here", patient);
   return (
     <div
       className={`checkup-data-patient ${
@@ -40,7 +48,7 @@ export default function Patient({ activePanels }) {
         style={{ backgroundColor: patient?.isMale ? "#007bff" : "#e83e8c" }}
       >
         <img
-          src={PROFILE}
+          src={userUrl || PROFILE}
           alt="avatar"
           className="checkup-data-patient-profile"
           draggable={false}
@@ -86,7 +94,7 @@ export default function Patient({ activePanels }) {
         </label>
         <span>
           <MDBIcon icon="location" />
-          {fullAddress(patient?.address)}
+          {fullAddress(patient?.address).toLowerCase()}
         </span>
       </div>
       <div

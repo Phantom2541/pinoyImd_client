@@ -56,6 +56,7 @@ import {
   ecg,
   miscellaneous,
   appointments,
+  clinicInfo,
 } from "./slices/diagnostics";
 import consultations from "./slices/diagnostics/consultations";
 
@@ -90,6 +91,7 @@ import emr from "./slices/portal/emr";
 import icard from "./slices/portal/icard";
 const store = configureStore({
   reducer: {
+    clinicInfo,
     duties,
     appointments,
     remittances,

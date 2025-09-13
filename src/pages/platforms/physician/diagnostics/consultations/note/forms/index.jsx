@@ -14,7 +14,7 @@ export default function RequestForm({ active, buttonRefs, togglePanel }) {
       <MDBIcon
         icon="times"
         className="checkup-data-note-close"
-        onClick={() => togglePanel("")}
+        onClick={() => togglePanel("request")}
       />
       <div
         style={{

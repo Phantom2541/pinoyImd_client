@@ -17,6 +17,7 @@
   aspect-ratio: 1/1;
   margin-bottom: 10px;
   border-radius: 3px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
 }
 
 .checkup-data-patient-fullname {
@@ -26,6 +27,8 @@
   text-overflow: ellipsis; /* palitan ng … */
   max-width: 240px;
   color: white;
+  font-size: 0.9rem;
+  text-transform: capitalize;
 }
 
 .checkup-data-patient-ageGender {
@@ -84,13 +87,13 @@
 .checkup-data-patient-address label,
 .checkup-data-patient-reason label {
   all: unset;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 400;
   color: #007bff;
 }
 
 .checkup-data-patient-address span {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   text-transform: capitalize;
   display: -webkit-box;
