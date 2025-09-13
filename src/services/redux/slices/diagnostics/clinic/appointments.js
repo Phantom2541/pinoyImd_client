@@ -201,8 +201,6 @@ export const reduxSlice = createSlice({
             });
           })
           .flat();
-
-        console.log("sched :", scheds);
         state.scheds = sortSchedules(scheds);
 
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
