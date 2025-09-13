@@ -4,7 +4,7 @@ import { MDBView } from "mdbreact";
 import { SetPHYSICIAN } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
-  const { collections, physicians } = useSelector(
+  const { collections, physicians, scheds } = useSelector(
     ({ appointments }) => appointments
   );
   const [appointments, setAppointments] = useState([]),
@@ -14,6 +14,8 @@ const Header = () => {
     if (collections) setAppointments(collections);
   }, [collections]);
 
+  console.log("Header scheds", scheds);
+
   return (
     <MDBView
       cascade
@@ -22,7 +24,10 @@ const Header = () => {
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
           <span className="mr-2">Physician:</span>
-          <select className="form-control bg-light">
+          <select
+            className="form-control bg-light"
+            onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
+          >
             <option value="all">All</option>
             {physicians.map((user) => (
               <option key={user?._id} value={user?._id}>
@@ -32,11 +37,23 @@ const Header = () => {
           </select>
         </span>
       </div>
+      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+        <span className="white-text mx-3 text-nowrap mt-0">
+          <span className="mr-2">Sched:</span>
+          <select className="form-control bg-light">
+            <option value="all">All</option>
+            {scheds.map((sched, index) => (
+              <option key={sched} value={index}>
+                {sched}
+              </option>
+            ))}
+          </select>
+        </span>
+      </div>
       <div>
         <div className="text-right d-flex align-items-center">
-          {/* <select
+          <select
             className="form-control bg-light"
-            value={physician}
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
           >
             <option value="all">All</option>
@@ -45,7 +62,7 @@ const Header = () => {
                 Dr. {properFullname(user?.fullName)}
               </option>
             ))}
-          </select> */}
+          </select>
         </div>
       </div>
     </MDBView>

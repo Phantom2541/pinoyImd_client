@@ -17,6 +17,7 @@ const initialState = {
    */
   roster: [],
   collections: [],
+  scheds: [],
   filtered: [],
   physicians: [],
   maxPage: 5,
@@ -185,9 +186,25 @@ export const reduxSlice = createSlice({
         const { success, payload = [] } = action.payload;
         state.roster = payload;
         state.physicians = payload.map(({ physicianId }) => physicianId);
+        // initial values
         state.physician = payload[0].physicianId;
         state.collections = payload[0].appointments;
         state.filtered = payload[0].appointments;
+        // 👉 result: ["M0709-0915","W0709-0917", ...]
+        const scheds = (payload[0]?.schedules || [])
+          .map(({ days, start, end }) => {
+            return days.map((day) => {
+              const code = generateScheduleCode(day);
+              return `${day}${String(start.hour).padStart(2, "0")}${String(
+                end.hour
+              ).padStart(2, "0")}-${code}`;
+            });
+          })
+          .flat();
+
+        console.log("sched :", scheds);
+        state.scheds = sortSchedules(scheds);
+
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
@@ -260,6 +277,67 @@ export const reduxSlice = createSlice({
       });
   },
 });
+
+// utils/dateHelpers.js
+
+// fixed day map
+const dayMap = { Sun: 0, M: 1, T: 2, W: 3, TH: 4, F: 5, Sat: 6 };
+
+// hanapin next date ng given day (hal. "M" → next Monday)
+export function getNextDateOfDay(day) {
+  const dayIndex = dayMap[day];
+  if (dayIndex === undefined) return null;
+
+  const today = new Date();
+  const diff = (dayIndex + 7 - today.getDay()) % 7 || 7;
+  const result = new Date(today);
+  result.setDate(today.getDate() + diff);
+  return result;
+}
+
+// format MMDD (e.g. Sep 15 → "0915")
+export function formatMMDD(date) {
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${mm}${dd}`;
+}
+
+// main function: ibalik ang nearest MMDD
+export function generateScheduleCode(day) {
+  const date = getNextDateOfDay(day);
+  return date ? formatMMDD(date) : null;
+}
+
+// order reference
+const dayOrder = { Sun: 0, M: 1, T: 2, W: 3, TH: 4, F: 5, Sat: 6 };
+
+function parseSchedule(code) {
+  // ex: "M0709-0915" -> day=M, start=07
+  const match = code.match(/^([A-Za-z]+)(\d{2})/);
+  if (!match) return null;
+  return {
+    day: match[1],
+    startHour: parseInt(match[2], 10),
+  };
+}
+
+export function sortSchedules(schedules) {
+  return [...schedules].sort((a, b) => {
+    const pa = parseSchedule(a);
+    const pb = parseSchedule(b);
+
+    // kung may invalid, ilagay sa dulo
+    if (!pa || !pb) return 0;
+
+    // compare by day
+    if (dayOrder[pa.day] !== dayOrder[pb.day]) {
+      return dayOrder[pa.day] - dayOrder[pb.day];
+    }
+
+    // compare by startHour
+    return pa.startHour - pb.startHour;
+  });
+}
 
 export const {
   SetPHYSICIAN,
