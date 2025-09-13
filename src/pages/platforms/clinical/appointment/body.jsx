@@ -7,8 +7,11 @@ import {
   MDBTableBody,
 } from "mdbreact";
 import { UPDATE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { capitalize, fullName } from "../../../../services/utilities";
-import { EditableSelect } from "../../../../components/customizable";
+import { fullName } from "../../../../services/utilities";
+import {
+  EditableField,
+  EditableSelect,
+} from "../../../../components/customizable";
 import visitTypes from "./visitTypes";
 const Body = () => {
   const { filtered, activePage, maxPage, formSubmitted, isSuccess } =
@@ -86,12 +89,12 @@ const Body = () => {
                 <EditableSelect
                   preValue={visitType}
                   keyForText="visitType"
-                  // keyForValue="visitType"
+                  keyForValue="visitType"
                   isEditable
                   collections={visitTypes}
                   fieldData={{
                     _id,
-                    status: visitType,
+                    visitType: visitType,
                   }}
                   onSave={handleUpdate}
                   formSubmitted={formSubmitted}
@@ -114,7 +117,16 @@ const Body = () => {
               </td>
               <td>{ehr ? "yes" : "no"}</td>
               <td>{consultation ? "yes" : "no"} </td>
-              <td>{remarks}</td>
+              <td>
+                <EditableField
+                  type="text"
+                  keyForValue="remarks"
+                  fieldData={{ _id, remarks: remarks }}
+                  onSave={handleUpdate}
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                />
+              </td>
             </tr>
           );
         })}
