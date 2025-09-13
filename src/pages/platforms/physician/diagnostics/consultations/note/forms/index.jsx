@@ -1,5 +1,7 @@
 import { MDBCardBody, MDBIcon } from "mdbreact";
+import Header from "./header";
 import Body from "./body";
+
 import usePanelPosition from "../panelPosition";
 import "./requestForm.css";
 
@@ -26,7 +28,19 @@ export default function RequestForm({ active, buttonRefs, togglePanel }) {
       >
         <div className="checkup-data-requestform-card">
           <MDBCardBody>
-            <Body />
+            <div style={{ fontFamily: "Arial, sans-serif" }}>
+              <div className="laboratoryRequestForm-grid d-flex justify-content-center align-items-center">
+                <table className="laboratoryRequestForm-printout-table">
+                  <Header />
+                  <Body />
+                </table>
+              </div>
+              <div style={{ textAlign: "center", marginTop: "20px" }}>
+                {/* <button onClick={handleSave}>
+                  Save xxxxxxxxxxxxxxxxxxxxxx
+                </button> */}
+              </div>
+            </div>
           </MDBCardBody>
         </div>
       </div>

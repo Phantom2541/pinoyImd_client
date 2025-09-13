@@ -1,196 +1,81 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import {
-  billingAddress,
-  Cloudinary,
-  fullAddress,
-  fullName,
-  properFullname,
-} from "../../../../../../../services/utilities";
-
+import { useState, useEffect } from "react";
+import EditableService from "../../../../../../../components/customizable/searchServices";
+import sectionsConfig from "./data.json";
 const RequestForm = () => {
-  const { activePlatform = {}, auth = {} } = useSelector(({ auth }) => auth);
-  const { patient } = useSelector(({ consultations }) => consultations);
-  const { fullName: name, dob, isMale, mobile, address } = patient || {};
-
-  const companyName = activePlatform?.branch?.companyId?.name || "";
-  const branchName = activePlatform?.branch?.name || "";
-  const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-    companyName
-  )}//${encodeURIComponent(branchName)}/banner`;
-  const [services, setServices] = useState([]);
+  const [selections, setSelections] = useState([]); // <- MUST be an array
+  const [other, setOther] = useState(""); // hiwalay na input para sa "Other"
 
   useEffect(() => {
-    console.log("services:", services);
-  }, [services]);
+    console.log("selections (flat ids):", selections);
+  }, [selections]);
 
-  // Centralized state for all sections
-  const [selections, setSelections] = useState({
-    //services
-    Hematology: [],
-    "Clinical Microscopy": [],
-    Serology: [],
-    "Clinical Chemistry": [],
-    Other: [],
-  });
+  useEffect(() => {
+    console.log("other:", other);
+  }, [other]);
 
-  const toggleItem = (section, item) => {
+  // toggleItem ngayon tumatanggap lang ng `item` at laging nagbabalik ng flat array of ids
+  const toggleItem = (item) => {
     setSelections((prev) => {
-      const current = prev[section] || [];
-      return {
-        ...prev,
-        [section]: current.includes(item)
-          ? current.filter((x) => x !== item)
-          : [...current, item],
-      };
+      // siguraduhin array ang ids
+      const ids = Array.isArray(item.id) ? item.id : [item.id];
+
+      // check kung kompleto nang naka-select lahat ng ids
+      const hasAll = ids.every((id) => prev.includes(id));
+
+      if (hasAll) {
+        // alisin lahat ng ids na nasa group
+        return prev.filter((x) => !ids.includes(x));
+      } else {
+        // idagdag yung wala pa (prevent duplicates)
+        const toAdd = ids.filter((id) => !prev.includes(id));
+        return [...prev, ...toAdd];
+      }
     });
   };
 
-  const handleSave = () => {
-    console.log("Saving payload:", selections);
-    // axios.post("/api/requests", selections)
-  };
-
-  const handleAddService = (service) => {
-    console.log("Adding service:", service);
-    setServices((prev) => [...prev, service]);
-  };
-
-  const handleRemoveService = (service) => {
-    console.log("Removing service:", service);
-    setServices((prev) => prev.filter((s) => s.id !== service.id));
-  };
-
-  const sectionsConfig = [
-    {
-      title: "Hematology",
-      items: ["CBC", "CBC w/ APC", "Platelet Count", "Blood Typing", "ESR"],
-    },
-    {
-      title: "Clinical Microscopy",
-      items: ["Urinalysis", "Pregnancy Test", "Fecalysis", "Occult Blood"],
-    },
-    {
-      title: "Serology",
-      items: ["Dengue Duo", "HBsAG Screening", "VDAL / RPR", "HIV Screening"],
-    },
-    {
-      title: "Clinical Chemistry",
-      items: [
-        "FBS / RBS",
-        "SGOT / AST",
-        "SGPT / ALT",
-        "Lipid Profile",
-        "Cholesterol",
-        "Triglycerides",
-        "HDL / LDL",
-        "Creatinine",
-        "BUN",
-        "Uric Acid",
-        "Sodium (NA)",
-        "Potassium (K)",
-        "Ionized Calcium (iCA)",
-        "Bilirubin",
-        "HbA1c",
-      ],
-      indentItems: [4, 5, 6],
-    },
-    { title: "Other", items: ["Others (Specify): ___________"] },
-  ];
-
   return (
-    <div style={{ fontFamily: "Arial, sans-serif" }}>
-      <div className="laboratoryRequestForm-grid d-flex justify-content-center align-items-center">
-        <table className="laboratoryRequestForm-printout-table">
-          <thead>
-            <tr>
-              <th colSpan={3}>
-                <img
-                  src={BannerURL}
-                  alt="Banner"
-                  className="laboratoryRequestForm-banner"
+    <tbody>
+      <tr>
+        <td colSpan={3} style={testCellStyle}>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <div style={{ flex: 1 }}>
+              {sectionsConfig.slice(0, 3).map((sec) => (
+                <Section
+                  key={sec.title}
+                  {...sec}
+                  selections={selections}
+                  toggleItem={toggleItem}
                 />
-              </th>
-            </tr>
-            <tr>
-              <th
-                colSpan={3}
-                style={{ fontSize: "1rem" }}
-                className="laboratoryRequestForm-font text-center"
-              >
-                PATIENT REQUEST FORM
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Patient Info */}
+              ))}
+            </div>
 
-            <tr>
-              <td colSpan={3} style={cellStyle}>
-                <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
-                  Name: {fullName(name) || ""}
-                </span>
-              </td>
-            </tr>
-
-            <tr style={{ height: "30px" }}>
-              <td style={cellStyle}>
-                Date of Birth:{" "}
-                {dob ? new Date(dob).toLocaleDateString("en-US") : ""}
-              </td>
-
-              <td style={cellStyle}>
-                Sex:{" "}
-                {isMale === true ? "Male" : isMale === false ? "Female" : ""}
-              </td>
-
-              <td style={cellStyle}>CP#: {mobile || ""}</td>
-            </tr>
-
-            <tr style={{ height: "20px" }}>
-              <td colSpan={2} style={cellStyle}>
-                Address: {address ? billingAddress(address) : ""}
-              </td>
-              <td style={cellStyle}>
-                Physician: {auth?.fullName?.title || ""}
-                {properFullname(auth?.fullName)}
-              </td>
-            </tr>
-
-            {/* Tests Section */}
-            <tr>
-              <td colSpan={3} style={testCellStyle}>
-                <div style={{ display: "flex", gap: "20px" }}>
-                  <div style={{ flex: 1 }}>
-                    {sectionsConfig.slice(0, 3).map((sec) => (
-                      <Section
-                        key={sec.title}
-                        {...sec}
-                        selections={selections}
-                        toggleItem={toggleItem}
-                      />
-                    ))}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    {sectionsConfig.slice(3).map((sec) => (
-                      <Section
-                        key={sec.title}
-                        {...sec}
-                        selections={selections}
-                        toggleItem={toggleItem}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <button onClick={handleSave}>Save</button>
-      </div>
-    </div>
+            <div style={{ flex: 1 }}>
+              {sectionsConfig.slice(3).map((sec) => (
+                <Section
+                  key={sec.title}
+                  {...sec}
+                  selections={selections}
+                  toggleItem={toggleItem}
+                />
+              ))}
+            </div>
+          </div>
+          {/* Other (separate searchable input) */}
+          <div style={{ marginTop: "16px" }}>
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1rem",
+                marginBottom: "8px",
+              }}
+            >
+              Other
+            </div>
+            <EditableService onSelect={setOther} displayName="name" />
+          </div>
+        </td>
+      </tr>
+    </tbody>
   );
 };
 
@@ -205,15 +90,23 @@ const Section = ({
     <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
       {title}
     </div>
-    {items.map((item, idx) => (
-      <CheckboxRow
-        key={idx}
-        label={item}
-        checked={selections[title]?.includes(item)}
-        onClick={() => toggleItem(title, item)}
-        indent={indentItems.includes(idx)}
-      />
-    ))}
+
+    {items.map((item, idx) => {
+      const key = Array.isArray(item.id) ? item.id.join("-") : item.id;
+      const checked = Array.isArray(item.id)
+        ? item.id.every((id) => selections.includes(id))
+        : selections.includes(item.id);
+
+      return (
+        <CheckboxRow
+          key={key}
+          label={item.label}
+          checked={checked}
+          onClick={() => toggleItem(item)}
+          indent={indentItems.includes(idx)}
+        />
+      );
+    })}
   </div>
 );
 
@@ -235,12 +128,6 @@ const CheckboxRow = ({ label, checked, onClick, indent }) => (
   </div>
 );
 
-const cellStyle = {
-  border: "1px solid #000",
-  padding: "6px",
-  fontSize: "1rem",
-  fontWeight: "bold",
-};
 const testCellStyle = {
   verticalAlign: "top",
   border: "1px solid #000",
@@ -256,25 +143,6 @@ const checkboxBox = {
   fontSize: "12px",
   fontWeight: "bold",
   userSelect: "none",
-};
-const patientHeaderStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "0 20px",
-  borderTop: "2px solid black",
-  fontSize: "0.85rem",
-  paddingBottom: "1px",
-  marginTop: "20px",
-};
-const valueRowStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "0 20px",
-  marginTop: "2px", // small gap above the underline
-  marginBottom: "-20px", // tuck values closer to line (adjust as needed)
-  fontSize: "1rem",
-  fontWeight: "bold",
-  lineHeight: "1.2", // tighter spacing
 };
 
 export default RequestForm;

@@ -1,11 +1,13 @@
 import { useState, useMemo } from "react";
 import { debounce } from "lodash";
 import Services from "../../../services/fakeDb/finance/catalog/services";
+import { MDBIcon } from "mdbreact";
 
-const EditableService = ({
+const EditableServices = ({
   placeHolder = "Search service...",
   onSelect = () => {},
   emptyLabel = "Click here to select a service",
+  displayName = "abbreviation",
 }) => {
   const [searchKey, setSearchKey] = useState("");
   const [results, setResults] = useState([]);
@@ -55,27 +57,36 @@ const EditableService = ({
   if (!isEditing) {
     return (
       <div
-        className="editable-service-display"
+        className="editable-service-display  d-flex align-items-center"
+        style={{ gap: "10px", flexWrap: "wrap", cursor: "pointer" }}
         onClick={() => setIsEditing(true)}
       >
         {selected.length > 0
           ? selected.map((s) => (
-              <span
+              <div
                 key={s.id}
-                className="selected-service-tag"
+                className="selected-service-tag position-relative"
                 style={{ marginRight: 5, cursor: "default" }}
+                title={s.name}
               >
-                {s.abbreviation}{" "}
+                {s.abbreviation}
                 <span
                   onClick={(e) => {
                     e.stopPropagation();
                     handleRemove(s.id);
                   }}
-                  style={{ marginLeft: 2, color: "red", cursor: "pointer" }}
+                  style={{
+                    position: "absolute",
+                    top: "-6px",
+                    right: "-10px",
+                    color: "red",
+                    fontSize: ".7rem",
+                    cursor: "pointer",
+                  }}
                 >
-                  ×
+                  <MDBIcon icon="times" />
                 </span>
-              </span>
+              </div>
             ))
           : emptyLabel}
       </div>
@@ -104,7 +115,7 @@ const EditableService = ({
               className="p-1 cursor-pointer"
               onClick={() => handleSelect(item)}
             >
-              {item.abbreviation} {/* Display abbreviation */}
+              {item[displayName]} {/* Display abbreviation */}
             </li>
           ))}
         </ul>
@@ -119,4 +130,4 @@ const EditableService = ({
   );
 };
 
-export default EditableService;
+export default EditableServices;

@@ -19,12 +19,7 @@ export default function HumanBody({ setSlide, slide }) {
     PMHx: ["Asthma dx 2015", "Allergic rhinitis"],
     PSHx: ["Appendectomy — 2018"],
     "OB Gyne Hx": ["G1P1", "LMP: 2025-08-01"],
-    Laboratory: [
-      "Complete Blood Count (CBC)",
-      "Fasting Blood Sugar (FBS)",
-      "Lipid Profile",
-      "Urinalysis",
-    ],
+    Laboratory: ["Hematology", "Chemistry", "Serology", "Urinalysis"],
     Radiology: ["Chest X-Ray", "Ultrasound abdomen"],
     Vital: ["Blood Pressure", "Heart Rate", "Respiratory Rate", "Temperature"],
   };
