@@ -7,6 +7,8 @@ const initialState = {
   filter: [],
   paginated: [],
   physician: "",
+  activeSched: null,
+  activePhysician: { _id: null },
   // Bread attributes
   selected: {}, // assurance
   page: 0,
@@ -95,23 +97,25 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetPHYSICIAN: (state, { payload }) => {
-      const arrangePayload = (collections) => {
-        return collections.flatMap(({ user, appointments = [] }) => {
-          return appointments?.map((appt) => ({
-            ...appt,
-            doctor: user,
-          }));
-        });
-      };
-      if (payload === "all") {
-        state.physician = payload;
-        state.filtered = arrangePayload(state.collections);
-      } else {
-        state.filtered =
-          state.collections.find(({ user }) => user._id === payload)
-            ?.appointments || [];
-        state.physician = payload;
-      }
+      console.log("payload", payload);
+
+      // const arrangePayload = (collections) => {
+      //   return collections.flatMap(({ user, appointments = [] }) => {
+      //     return appointments?.map((appt) => ({
+      //       ...appt,
+      //       doctor: user,
+      //     }));
+      //   });
+      // };
+      // if (payload === "all") {
+      //   state.physician = payload;
+      //   state.filtered = arrangePayload(state.collections);
+      // } else {
+      //   state.filtered =
+      //     state.collections.find(({ user }) => user._id === payload)
+      //       ?.appointments || [];
+      //   state.physician = payload;
+      // }
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
@@ -142,6 +146,25 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
+    SetSCHED: (state, { payload }) => {
+      console.log("SetSCHED", payload);
+      state.activeSched = payload;
+      state.filtered = state.collections.filter(
+        ({ sched }) => sched === payload
+      );
+
+      // const { page, maxPage } = state;
+      // if (payload.length > 0) {
+      //   let totalPages = Math.floor(payload.length / maxPage);
+      //   if (payload.length % maxPage > 0) totalPages += 1;
+      //   state.totalPages = totalPages;
+      //   if (page > totalPages) {
+      //     state.page = totalPages;
+      //   }
+      // }
+      // state.filtered = payload;
+    },
+
     SetPagination: (state) => {
       // {
       //   payload;
@@ -187,9 +210,8 @@ export const reduxSlice = createSlice({
         state.roster = payload;
         state.physicians = payload.map(({ physicianId }) => physicianId);
         // initial values
-        state.physician = payload[0].physicianId;
+        state.activePhysician = payload[0].physicianId;
         state.collections = payload[0].appointments;
-        state.filtered = payload[0].appointments;
         // 👉 result: ["M0709-0915","W0709-0917", ...]
         const scheds = (payload[0]?.schedules || [])
           .map(({ days, start, end }) => {
@@ -202,8 +224,11 @@ export const reduxSlice = createSlice({
           })
           .flat();
 
-        console.log("sched :", scheds);
         state.scheds = sortSchedules(scheds);
+        state.activeSched = state.scheds[0];
+        state.filtered = payload[0].appointments.filter(
+          ({ sched }) => sched === state.activeSched
+        );
 
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -341,6 +366,7 @@ export function sortSchedules(schedules) {
 
 export const {
   SetPHYSICIAN,
+  SetSCHED,
   SetCREATE,
   SetEDIT,
   SetFILTER,

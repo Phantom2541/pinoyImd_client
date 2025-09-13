@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../components/tableLoading";
 import Header from "./header";
-import Body from "./collapse";
+import Body from "./body";
 // import Footer from "./footer";
 // import Modal from "./modal";
 import { BROWSE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";

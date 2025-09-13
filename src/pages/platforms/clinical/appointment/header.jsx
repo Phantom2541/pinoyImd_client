@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { SetPHYSICIAN } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SetPHYSICIAN,
+  SetSCHED,
+} from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
-  const { collections, physicians, scheds } = useSelector(
-    ({ appointments }) => appointments
-  );
+  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { filtered, physicians, scheds, activeSched, activePhysician } =
+    useSelector(({ appointments }) => appointments);
   const [appointments, setAppointments] = useState([]),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    if (collections) setAppointments(collections);
-  }, [collections]);
+  console.log("activePlatform", activePlatform.branch.physicians);
 
-  console.log("Header scheds", scheds);
+  useEffect(() => {
+    if (filtered) setAppointments(filtered);
+  }, [filtered]);
 
   return (
     <MDBView
@@ -22,33 +25,49 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
+        <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center">
           <span className="mr-2">Physician:</span>
           <select
             className="form-control bg-light"
+            style={{ padding: "0 5px", fontSize: ".8rem " }}
+            value={activePhysician?._id}
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
           >
             <option value="all">All</option>
-            {physicians.map((user) => (
-              <option key={user?._id} value={user?._id}>
-                Dr. {properFullname(user?.fullName)}
-              </option>
-            ))}
+            {activePlatform.branch.physicians.map((user) => {
+              const isExisting = physicians.some(({ _id }) => _id === user._id);
+              return (
+                <option
+                  key={user?._id}
+                  value={user?._id}
+                  disabled={!isExisting}
+                  title={!isExisting && "No Clinic has been Register"}
+                >
+                  Dr. {properFullname(user?.fullName)}
+                </option>
+              );
+            })}
           </select>
-        </span>
+        </div>
       </div>
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
+        <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center">
           <span className="mr-2">Sched:</span>
-          <select className="form-control bg-light">
+          <select
+            className="form-control bg-light"
+            value={activeSched}
+            onChange={({ target }) => {
+              dispatch(SetSCHED(target.value));
+            }}
+          >
             <option value="all">All</option>
-            {scheds.map((sched, index) => (
-              <option key={sched} value={index}>
+            {scheds.map((sched) => (
+              <option key={sched} value={sched}>
                 {sched}
               </option>
             ))}
           </select>
-        </span>
+        </div>
       </div>
       <div>
         <div className="text-right d-flex align-items-center">
@@ -57,9 +76,9 @@ const Header = () => {
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
           >
             <option value="all">All</option>
-            {appointments.map(({ user }) => (
-              <option key={user?._id} value={user?._id}>
-                Dr. {properFullname(user?.fullName)}
+            {appointments.map(({ patient }) => (
+              <option key={patient?._id} value={patient?._id}>
+                {properFullname(patient?.fullName)}
               </option>
             ))}
           </select>
