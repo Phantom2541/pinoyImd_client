@@ -148,22 +148,24 @@ export default function HumanBody({ setSlide, slide }) {
 
       {/* Medical History Buttons + lists (always visible) */}
       <div className="checkup-data-center-image-medical-history">
-        {medicalHistory.map((text) => (
-          <div key={text} className="history-group">
-            <button
-              ref={(el) => (textRefs.current[text] = el)}
-              onClick={() => setSlide(slide === text ? "" : text)} // keep for highlight
-              className={`${slide === text ? "active" : ""} ${
-                patient?.isMale ? "male" : "female"
-              }`}
-            >
-              {text}
-            </button>
+        {medicalHistory
+          .filter((text) => !(patient?.isMale && text === "OB Gyne Hx"))
+          .map((text) => (
+            <div key={text} className="history-group">
+              <button
+                ref={(el) => (textRefs.current[text] = el)}
+                onClick={() => setSlide(slide === text ? "" : text)} // keep for highlight
+                className={`${slide === text ? "active" : ""} ${
+                  patient?.isMale ? "male" : "female"
+                }`}
+              >
+                {text}
+              </button>
 
-            {/* render the correct items for this label */}
-            <History items={contentMap[text]} />
-          </div>
-        ))}
+              {/* render the correct items for this label */}
+              <History items={contentMap[text]} />
+            </div>
+          ))}
       </div>
 
       {/* Body + organ anchors */}

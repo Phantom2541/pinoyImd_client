@@ -86,5 +86,20 @@ export default function LabTaskPrintout() {
       <Printout task={task} onloaded={onloaded} setOnloaded={setOnloaded} />
     );
 
-  return <div>Task is Empty</div>;
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "70vh", // full viewport height
+        fontSize: "3rem", // big text
+        fontWeight: "bold",
+        color: "#555", // subtle gray color
+        textAlign: "center",
+      }}
+    >
+      Laboratory Results is Empty
+    </div>
+  );
 }
