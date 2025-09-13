@@ -5,7 +5,6 @@ const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
-
   paginated: [],
   physician: "",
   // Bread attributes
@@ -13,12 +12,13 @@ const initialState = {
   page: 0,
   willCreate: false,
   showModal: false,
-
   /**
    * pagination
    */
+  roster: [],
   collections: [],
   filtered: [],
+  physicians: [],
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
@@ -183,16 +183,11 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload = [] } = action.payload;
-        const arrangePayload = (collections) => {
-          return collections?.flatMap(({ user, appointments }) => {
-            return appointments.map((appt) => ({
-              ...appt,
-              doctor: user,
-            }));
-          });
-        };
-        state.collections = payload;
-        state.filtered = payload;
+        state.roster = payload;
+        state.physicians = payload.map(({ physicianId }) => physicianId);
+        state.physician = payload[0].physicianId;
+        state.collections = payload[0].appointments;
+        state.filtered = payload[0].appointments;
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;

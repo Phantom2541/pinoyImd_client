@@ -17,7 +17,7 @@ const Index = () => {
   useEffect(() => {
     if (token && activePlatform) {
       const physicianIds =
-        activePlatform.branch.physicians?.map((p) => p._id) || [];
+        activePlatform.branch.physicians?.map(({ _id }) => _id) || [];
 
       dispatch(
         BROWSE({

@@ -4,10 +4,9 @@ import { MDBView } from "mdbreact";
 import { SetPHYSICIAN } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
-  const { collections, physician } = useSelector(
+  const { collections, physicians } = useSelector(
     ({ appointments }) => appointments
   );
-  const { physicians = [] } = activePlatform?.branch || {};
   const [appointments, setAppointments] = useState([]),
     dispatch = useDispatch();
 
@@ -22,11 +21,6 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {appointments.length} Physicians
-        </span>
-      </div>
-      <div>
-        <div className="text-right d-flex align-items-center">
           <span className="mr-2">Physician:</span>
           <select className="form-control bg-light">
             <option value="all">All</option>
@@ -36,6 +30,10 @@ const Header = () => {
               </option>
             ))}
           </select>
+        </span>
+      </div>
+      <div>
+        <div className="text-right d-flex align-items-center">
           {/* <select
             className="form-control bg-light"
             value={physician}
