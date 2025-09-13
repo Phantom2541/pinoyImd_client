@@ -264,7 +264,9 @@ export const reduxSlice = createSlice({
       .addCase(CHECKUP.fulfilled, (state, action) => {
         const { success, payload = [] } = action.payload;
         // initial values
-        state.filtered = state.collections = payload;
+        state.filtered = state.collections = payload.sort(
+          (a, b) => a.qn - b.qn
+        );
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;

@@ -13,6 +13,7 @@ import {
   EditableSelect,
 } from "../../../../../components/customizable";
 import visitTypes from "./visitTypes.json";
+import { Templates } from "../../../../../services/fakeDb";
 const Body = () => {
   const { filtered, activePage, maxPage, formSubmitted, isSuccess } =
       useSelector(({ appointments }) => appointments),
@@ -20,6 +21,15 @@ const Body = () => {
     dispatch = useDispatch();
 
   const handleUpdate = (data) => dispatch(UPDATE({ token, data }));
+  const handleIndicesUpdate = (data) => {
+    ["lab", "rad"].forEach((key) => {
+      const items = data[key];
+      if (!items || items.length === 0) return;
+
+      const indices = Templates.getComponentIndices(items, key.toUpperCase());
+      dispatch(UPDATE({ token, data: { ...data, [key]: indices } }));
+    });
+  };
 
   // Pagination
   const itemsPerPage = maxPage;
@@ -49,14 +59,15 @@ const Body = () => {
             patient,
             remarks,
             status,
-            hasLab,
-            hasRadiology,
+            lab,
+            rad,
             qn,
             visitType,
             ehr,
             consultation,
             _id,
           } = item;
+
           return (
             <tr key={index}>
               <td>{qn}</td>
@@ -99,17 +110,37 @@ const Body = () => {
                 />
               </td>
               <td className="text-center">
-                <MDBIcon
-                  size="lg"
-                  icon={hasLab ? "check" : "times"}
-                  style={{ color: hasLab ? "green" : "black" }}
+                <EditableSelect
+                  collections={Templates.getComponents("LAB")}
+                  preValues={Templates.getWordByIndices(lab, "components")}
+                  keyForText="lab"
+                  keyForValue="lab"
+                  onSave={handleIndicesUpdate}
+                  isEditable
+                  multiple={true}
+                  fieldData={{
+                    _id,
+                    lab: Templates.getWordByIndices(lab, "components"),
+                  }}
                 />
               </td>
               <td className="text-center">
-                <MDBIcon
-                  size="lg"
-                  icon={hasRadiology ? "check" : "times"}
-                  style={{ color: hasRadiology ? "green" : "black" }}
+                <EditableSelect
+                  collections={Templates.getComponents("RAD")}
+                  preValues={Templates.getWordByIndices(
+                    rad,
+                    "components",
+                    "RAD"
+                  )}
+                  keyForText="rad"
+                  keyForValue="rad"
+                  onSave={handleIndicesUpdate}
+                  isEditable
+                  multiple={true}
+                  fieldData={{
+                    _id,
+                    rad: Templates.getWordByIndices(rad, "components", "RAD"),
+                  }}
                 />
               </td>
               <td>{ehr ? "yes" : "no"}</td>

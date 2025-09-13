@@ -118,6 +118,23 @@ const Templates = {
 
     return deptIndexMap;
   },
+  /**
+   * Get codes from an array of component indices for a department
+   * @param {Array<Number>} indices - Array of component indices
+   * @param {String} department - Department name (default: LAB)
+   * @returns {Array<String>} Array of codes corresponding to the indices
+   */
+  getWordByIndices: (indices = [], type = "codes", department = "LAB") => {
+    const dept = collections.find(({ department: dep }) => dep === department);
+    if (!dept) {
+      console.warn(`Department "${department}" not found`);
+      return [];
+    }
+
+    const list = type === "components" ? dept.components : dept.codes;
+
+    return indices.map((i) => list[i]).filter((item) => item !== undefined);
+  },
   getDepartmentsByComponents: (componentList = []) => {
     const departments = [];
 
