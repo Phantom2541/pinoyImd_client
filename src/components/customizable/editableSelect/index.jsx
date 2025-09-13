@@ -135,13 +135,14 @@ export default function EditableSelect({
 
   const handleCheck = () => {
     if (String(fieldData[keyForValue]) === String(editedData?.[keyForValue])) {
-      setEditedData({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     } else {
-      onSave(editedData);
+      const { editingKey, ...rest } = editedData; // tanggalin yung keyForValue
+      onSave(rest);
     }
+    setEditedData({});
   };
 
   const editMode =
