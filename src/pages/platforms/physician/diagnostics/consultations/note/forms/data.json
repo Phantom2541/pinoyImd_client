@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Hematology",
+    "items": [
+      { "id": 58, "label": "CBC" },
+      { "id": [58, 59], "label": "CBC w/ APC" },
+      { "id": 59, "label": "Platelet Count" },
+      { "id": 66, "label": "Blood Typing" },
+      { "id": 63, "label": "ESR" }
+    ]
+  },
+  {
+    "title": "Clinical Microscopy",
+    "items": [
+      { "id": 143, "label": "Urinalysis" },
+      { "id": 67, "label": "Pregnancy Test" },
+      { "id": 83, "label": "Fecalysis" },
+      { "id": 84, "label": "Occult Blood" }
+    ]
+  },
+  {
+    "title": "Serology",
+    "items": [
+      { "id": 77, "label": "Dengue Duo" },
+      { "id": 68, "label": "HIV Screening" },
+      { "id": 69, "label": "VDRL / RPR" },
+      { "id": 70, "label": "HBsAG Screening" }
+    ]
+  },
+  {
+    "title": "Clinical Chemistry",
+    "items": [
+      { "id": 10, "label": "FBS" },
+      { "id": 9, "label": "RBS" },
+      { "id": 13, "label": "SGOT / AST" },
+      { "id": 12, "label": "SGPT / ALT" },
+      { "id": [14, 15, 16, 17, 18, 19, 47], "label": "Lipid Profile" },
+      { "id": 14, "label": "Cholesterol" },
+      { "id": 15, "label": "Triglycerides" },
+      { "id": 16, "label": "HDL / LDL" },
+      { "id": 20, "label": "Creatinine" },
+      { "id": 21, "label": "BUN" },
+      { "id": 22, "label": "Uric Acid" },
+      { "id": 25, "label": "Sodium (NA)" },
+      { "id": 23, "label": "Potassium (K)" },
+      { "id": 28, "label": "Ionized Calcium (iCA)" },
+      { "id": [32, 33, 34], "label": "Bilirubin" },
+      { "id": 11, "label": "HbA1c" }
+    ],
+    "indentItems": [5, 6, 7]
+  }
+]

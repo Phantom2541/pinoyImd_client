@@ -223,7 +223,6 @@ export const reduxSlice = createSlice({
             });
           })
           .flat();
-
         state.scheds = sortSchedules(scheds);
         state.activeSched = state.scheds[0];
         state.filtered = payload[0].appointments.filter(
