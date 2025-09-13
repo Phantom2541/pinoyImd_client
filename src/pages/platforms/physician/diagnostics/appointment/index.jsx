@@ -7,7 +7,7 @@ import Body from "./collapse";
 import Footer from "./footer";
 const Collapsable = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { isLoading } = useSelector(({ clinic }) => clinic);
+    { isLoading } = useSelector(({ appointments }) => appointments);
 
   console.log("token", token);
 

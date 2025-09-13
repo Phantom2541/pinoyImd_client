@@ -1,24 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
+  billingAddress,
   Cloudinary,
   fullAddress,
   fullName,
+  properFullname,
 } from "../../../../../../../services/utilities";
 
 const RequestForm = () => {
-  const { activePlatform = {} } = useSelector(({ auth }) => auth);
+  const { activePlatform = {}, auth = {} } = useSelector(({ auth }) => auth);
   const { patient } = useSelector(({ consultations }) => consultations);
-  const { user, dob, isMale, mobile, address, physician } = patient || {};
+  const { fullName: name, dob, isMale, mobile, address } = patient || {};
 
   const companyName = activePlatform?.branch?.companyId?.name || "";
   const branchName = activePlatform?.branch?.name || "";
   const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
     companyName
   )}//${encodeURIComponent(branchName)}/banner`;
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    console.log("services:", services);
+  }, [services]);
 
   // Centralized state for all sections
   const [selections, setSelections] = useState({
+    //services
     Hematology: [],
     "Clinical Microscopy": [],
     Serology: [],
@@ -41,6 +49,16 @@ const RequestForm = () => {
   const handleSave = () => {
     console.log("Saving payload:", selections);
     // axios.post("/api/requests", selections)
+  };
+
+  const handleAddService = (service) => {
+    console.log("Adding service:", service);
+    setServices((prev) => [...prev, service]);
+  };
+
+  const handleRemoveService = (service) => {
+    console.log("Removing service:", service);
+    setServices((prev) => prev.filter((s) => s.id !== service.id));
   };
 
   const sectionsConfig = [
@@ -109,27 +127,13 @@ const RequestForm = () => {
 
             <tr>
               <td colSpan={3} style={cellStyle}>
-                <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
-                  Name:
+                <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                  Name: {fullName(name) || ""}
                 </span>
-
-                {/* Values */}
-                <div style={valueRowStyle}>
-                  <span>{user?.fullName?.lname || ""}</span>
-                  <span>{user?.fullName?.fname || ""}</span>
-                  <span>{user?.fullName?.mname || ""}</span>
-                </div>
-
-                {/* Labels with top border */}
-                <div style={patientHeaderStyle}>
-                  <span>Last Name</span>
-                  <span>First Name</span>
-                  <span>Middle Name</span>
-                </div>
               </td>
             </tr>
 
-            <tr style={{ height: "50px" }}>
+            <tr style={{ height: "30px" }}>
               <td style={cellStyle}>
                 Date of Birth:{" "}
                 {dob ? new Date(dob).toLocaleDateString("en-US") : ""}
@@ -140,22 +144,23 @@ const RequestForm = () => {
                 {isMale === true ? "Male" : isMale === false ? "Female" : ""}
               </td>
 
-              <td style={cellStyle}>Contact No:{mobile || ""}</td>
+              <td style={cellStyle}>CP#: {mobile || ""}</td>
             </tr>
 
-            <tr style={{ height: "50px" }}>
+            <tr style={{ height: "20px" }}>
               <td colSpan={2} style={cellStyle}>
-                Address: {address ? fullAddress(address) : ""}
+                Address: {address ? billingAddress(address) : ""}
               </td>
               <td style={cellStyle}>
-                Physician:{physician ? fullName(physician.user.fullName) : ""}
+                Physician: {auth?.fullName?.title || ""}
+                {properFullname(auth?.fullName)}
               </td>
             </tr>
 
             {/* Tests Section */}
             <tr>
               <td colSpan={3} style={testCellStyle}>
-                <div style={{ display: "flex", gap: "40px" }}>
+                <div style={{ display: "flex", gap: "20px" }}>
                   <div style={{ flex: 1 }}>
                     {sectionsConfig.slice(0, 3).map((sec) => (
                       <Section
@@ -258,7 +263,7 @@ const patientHeaderStyle = {
   padding: "0 20px",
   borderTop: "2px solid black",
   fontSize: "0.85rem",
-  paddingBottom: "10px",
+  paddingBottom: "1px",
   marginTop: "20px",
 };
 const valueRowStyle = {
@@ -266,7 +271,7 @@ const valueRowStyle = {
   justifyContent: "space-between",
   padding: "0 20px",
   marginTop: "2px", // small gap above the underline
-  marginBottom: "-4px", // tuck values closer to line (adjust as needed)
+  marginBottom: "-20px", // tuck values closer to line (adjust as needed)
   fontSize: "1rem",
   fontWeight: "bold",
   lineHeight: "1.2", // tighter spacing
