@@ -1,37 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+// import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Select } from "../../../../../components/customizable";
-import { Templates, Services } from "../../../../../services/fakeDb";
-import {
-  BROWSE,
-  SetPHYSICIAN,
-} from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 const Header = () => {
-  const { activePlatform, auth, token } = useSelector(({ auth }) => auth),
-    { collections, physician } = useSelector(
-      ({ appointments }) => appointments
-    ),
-    dispatch = useDispatch();
-
-  useEffect(() => {
-    if (token && activePlatform)
-      dispatch(
-        BROWSE({
-          token,
-          data: {
-            branch: activePlatform.branchId,
-            user: auth._id,
-            month: new Date().getMonth() + 1,
-            // month: 6,
-            year: new Date().getFullYear(),
-            day: new Date().getDate(),
-            // day: 3,
-          },
-        })
-      );
-  }, [dispatch, token, activePlatform, auth]);
+  const { collections } = useSelector(({ appointments }) => appointments);
 
   //initial values
 
