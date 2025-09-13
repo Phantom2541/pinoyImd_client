@@ -6,14 +6,21 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from "mdbreact";
+import { UPDATE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { capitalize, fullName } from "../../../../services/utilities";
-
+import { EditableSelect } from "../../../../components/customizable";
+import visitTypes from "./visitTypes";
 const Body = () => {
-  const { filtered, activePage, maxPage } = useSelector(
-      ({ appointments }) => appointments
-    ),
+  const { filtered, activePage, maxPage, formSubmitted, isSuccess } =
+      useSelector(({ appointments }) => appointments),
+    { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
+  const handleUpdate = (data) => {
+    console.log("userdata", data);
+
+    dispatch(UPDATE({ token, data }));
+  };
   // Pagination
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -48,6 +55,7 @@ const Body = () => {
             visitType,
             ehr,
             consultation,
+            _id,
           } = item;
           return (
             <tr key={index}>
@@ -58,10 +66,38 @@ const Body = () => {
                   color={status === "confirmed" ? "success" : "info"}
                   className="ml-2"
                 >
-                  {capitalize(status)}
+                  <EditableSelect
+                    preValue={status}
+                    keyForText="status"
+                    keyForValue="status"
+                    isEditable
+                    collections={["draft", "confirmed", "cancelled"]}
+                    fieldData={{
+                      _id,
+                      status: status,
+                    }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
                 </MDBBadge>
               </td>
-              <td>{visitType}</td>
+              <td>
+                <EditableSelect
+                  preValue={visitType}
+                  keyForText="visitType"
+                  // keyForValue="visitType"
+                  isEditable
+                  collections={visitTypes}
+                  fieldData={{
+                    _id,
+                    status: visitType,
+                  }}
+                  onSave={handleUpdate}
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                />
+              </td>
               <td className="text-center">
                 <MDBIcon
                   size="lg"

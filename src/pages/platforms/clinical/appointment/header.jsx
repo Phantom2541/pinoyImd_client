@@ -13,8 +13,6 @@ const Header = () => {
   const [appointments, setAppointments] = useState([]),
     dispatch = useDispatch();
 
-  console.log("activePlatform", activePlatform.branch.physicians);
-
   useEffect(() => {
     if (filtered) setAppointments(filtered);
   }, [filtered]);

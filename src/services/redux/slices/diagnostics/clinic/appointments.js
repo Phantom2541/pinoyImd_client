@@ -258,7 +258,6 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -267,17 +266,18 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-
         state.collections[index] = payload;
+        state.filtered = state.collections.filter(
+          ({ sched }) => sched === state.activeSched
+        );
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.isSuccess = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
