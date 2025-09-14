@@ -14,16 +14,12 @@ import { SetSELECTED } from "../../../../../../../services/redux/slices/diagnost
 
 export default function TaskHeader({
   task,
-  number,
   didHoverID,
   setDidHoverID,
   setActiveCollapse,
-  isActive,
-  index,
   activeCollapse,
 }) {
-  const { _id, category, source } = task; // cart, customerId, ssx
-  console.log("task", task);
+  const { _id } = task; // cart, customerId, ssx
   // const { activeCOLAPSE } = useSelector(({ validator }) => validator),
   const dispatch = useDispatch();
 

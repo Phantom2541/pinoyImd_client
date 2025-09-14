@@ -268,7 +268,6 @@ export const reduxSlice = createSlice({
     },
     SetSELECTED: (state, { payload }) => {
       const { activeCOLAPSE, deal } = payload;
-      console.log("payload", payload);
 
       state.selected = { ...deal };
       state.activeCOLAPSE = activeCOLAPSE;

@@ -1,12 +1,11 @@
 import Tracker from "../../tracker";
 import { MDBCol, MDBRow } from "mdbreact";
 import { useState, useEffect } from "react";
-import Header from "./../../../../../../../../src/components/printout/task/laboratory/header";
+import Header from "../../../../../../../components/printout/task/laboratory/header";
 import { Banner } from "../../../../../../../services/utilities";
 import BodySwitcher from "../../../../../../../components/printout/task/laboratory/bodySwitcher";
-import Signatories from "./../../../../../../../../src/components/printout/task/laboratory/signatories";
+import Signatories from "../../../../../../../components/printout/task/laboratory/signatories";
 import "./printout.css";
-import Footer from "./../../../../../../../../src/components/printout/task/laboratory/footer";
 import "./style.css";
 
 function chunkArray(array, size) {
@@ -38,7 +37,11 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
               <div className="laboratory-body">
                 <Header task={task} />
                 <BodySwitcher
-                  task={{ ...task, packages: chunk, data: packages }}
+                  task={{
+                    ...task,
+                    packages: chunk,
+                    data: packages,
+                  }}
                 />
               </div>
             </div>
@@ -52,15 +55,6 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
               </div>
               <div className="laboratory-line" />
               <Signatories signatories={signatories} />
-              {task?.isDuplicate && (
-                <h6
-                  style={{ marginTop: "-2rem", fontWeight: 400 }}
-                  className="ml-2"
-                >
-                  Duplicate Copy
-                </h6>
-              )}
-              <Footer dealId={task?._id} />
             </div>
           </div>
         ))}
@@ -73,11 +67,15 @@ export default function Laboratory() {
   const [task, setTask] = useState({ _id: "" });
   const [onloaded, setOnloaded] = useState(false);
 
+  // component
   useEffect(() => {
-    setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-  }, []);
-  console.log("laboratortask", task);
+    const handler = () => {
+      setTask(JSON.parse(localStorage.getItem("taskPrintout")));
+    };
 
+    window.addEventListener("taskPrintout-change", handler);
+    return () => window.removeEventListener("taskPrintout-change", handler);
+  }, []);
   if (task?._id)
     return (
       <MDBRow className="h-100">

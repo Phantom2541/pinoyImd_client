@@ -226,7 +226,7 @@ export default function PosCard() {
             value={category}
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
-            {[0, ...categories]?.map((c, index) => {
+            {[0, ...(categories || [])]?.map((c, index) => {
               const { name = "", color = "" } = Categories[c] || {};
               return (
                 <option value={c} key={`category-${index}`} style={{ color }}>

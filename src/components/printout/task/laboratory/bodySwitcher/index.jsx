@@ -30,7 +30,6 @@ const componentMap = {
 
 export default function BodySwitcher({ task }) {
   const contentRef = useRef(null);
-
   const Component = componentMap[task?.form?.toLowerCase()] || Blank;
   return (
     <div>
