@@ -6,7 +6,10 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from "mdbreact";
-import { UPDATE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  UPDATE,
+  setShowModalEhr,
+} from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../services/utilities";
 import {
   EditableField,
@@ -118,7 +121,16 @@ const Body = () => {
                   style={{ color: hasRadiology ? "green" : "black" }}
                 />
               </td>
-              <td>{ehr ? "yes" : "no"}</td>
+              <td
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  console.log("Clicked cell:", ehr);
+                  dispatch(setShowModalEhr(ehr));
+                }}
+              >
+                {ehr ? "yes" : "no"}
+              </td>
+
               <td>{consultation ? "yes" : "no"} </td>
               <td>
                 <EditableField

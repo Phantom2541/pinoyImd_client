@@ -14,6 +14,8 @@ const initialState = {
   page: 0,
   willCreate: false,
   showModal: false,
+  willCreateEmr: false,
+  showModalEmr: false,
   /**
    * pagination
    */
@@ -149,6 +151,13 @@ export const reduxSlice = createSlice({
       state.willCreate = true;
       state.showModal = true;
     },
+    setShowModalEhr: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.selected = {};
+      state.willCreateEmr = true;
+      state.showModalEmr = true;
+    },
     SetFILTER: (state, { payload }) => {
       console.log("payload", payload);
 
@@ -213,6 +222,9 @@ export const reduxSlice = createSlice({
     },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
+    },
+    TOGGLEEMR: (state) => {
+      state.showModalEmr = !state.showModalEmr;
     },
   },
   extraReducers: (builder) => {
@@ -403,6 +415,7 @@ export const {
   SetPHYSICIAN,
   SetSCHED,
   SetCREATE,
+  setShowModalEhr,
   SetEDIT,
   SetFILTER,
   SetPAGE,
@@ -412,6 +425,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
+  TOGGLEEMR,
   RESET,
 } = reduxSlice.actions;
 
