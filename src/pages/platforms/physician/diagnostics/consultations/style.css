@@ -3,15 +3,14 @@
   grid-template-columns: 1fr 250px;
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
-    "image  patient"
-    "image  patient"
-    "image  prescription";
+    "image   patient"
+    "image   patient"
+    "image   prescription";
   gap: 10px;
   height: calc(100vh - 23vh);
-  /* user-select: none; */
+  user-select: none;
   position: relative;
 }
-
 .checkup-data-patient {
   grid-area: patient;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
@@ -28,10 +27,18 @@
   border-radius: 3px;
 }
 
+.checkup-data-tracker {
+  grid-area: tracker;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
 .checkup-data-note {
   grid-area: prescription;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  /* background-color: white; */
   border-radius: 3px;
 }
 

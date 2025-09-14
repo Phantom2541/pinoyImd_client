@@ -22,7 +22,6 @@
   align-items: flex-start;
 }
 
-.checkup-data-fmhx-container,
 .checkup-data-pmhx-container,
 .checkup-data-pshx-container,
 .checkup-data-obgynhx-container {
@@ -155,4 +154,162 @@
   list-style-type: circle;
   margin-left: 20px;
   padding: 0;
+}
+
+/* family histoy design */
+.checkup-data-fmhx-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.checkup-data-fmhx-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.checkup-data-fmhx-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.checkup-data-fmhx-header label {
+  all: unset;
+  width: 35%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* wrapper is positioned parent for absolute connectors & center line */
+.checkup-data-fmhx-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 12px 0;
+  box-sizing: border-box;
+  max-height: 700px; /* scroll container */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar {
+  width: 4px; /* kapal ng scrollbar */
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar-track {
+  background: transparent; /* pwede rin lightgray */
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* kulay ng handle */
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.6); /* hover effect */
+}
+
+.checkup-data-fmhx-rows {
+  position: relative; /* anchor for pseudo-line */
+}
+
+/* vertical center line follows content height */
+.checkup-data-fmhx-rows::before {
+  content: "";
+  position: absolute;
+  left: 50.4%;
+  top: 0;
+  bottom: 0; /* hanggang dulo ng content */
+  transform: translateX(-50%);
+  width: 2px;
+  background-color: #111;
+  z-index: 2;
+}
+
+/* center vertical line (absolute, full height of wrapper) */
+.checkup-data-fmhx-centerLine {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%; /* tuloy hanggang dulo */
+  width: 2px;
+  background-color: #555;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* rows container */
+.checkup-data-fmhx-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  /* keep some horizontal padding so boxes don't touch edges */
+  padding: 0 12%;
+  box-sizing: border-box;
+}
+
+/* each row — fixed height so centers align */
+.checkup-data-fmhx-row {
+  display: flex;
+  align-items: center;
+  min-height: 50px; /* matches box height */
+}
+
+/* three columns: left / center spacer / right */
+.checkup-data-fmhx-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* left & right take remaining space */
+.left-col,
+.right-col {
+  flex: 1;
+}
+
+/* center spacer width should align with center line width and gap */
+.center-col {
+  width: 3px; /* equal to centerLine width */
+  margin: 0 12px; /* small gap between boxes and center line */
+  pointer-events: none;
+}
+
+/* the visible boxes */
+.checkup-data-fmhx-condition {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* invisible "empty" placeholders (take no visual space but preserve flex) */
+.checkup-data-fmhx-empty {
+  width: 0;
+  height: 0;
+}
+
+.checkup-data-fmhx-condition span {
+  padding: 0 10px;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+/* connector line (absolute inside wrapper) */
+.connector-line {
+  position: absolute;
+  height: 1px;
+  background: #555;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 1px;
 }
