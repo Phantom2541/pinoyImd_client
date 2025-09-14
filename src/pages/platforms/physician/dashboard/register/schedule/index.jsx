@@ -61,7 +61,7 @@ const Schedule = ({ form, setForm }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(utils.hasConflict(form?.schedules || [], schedule));
+    if (utils.hasConflict(form?.schedules || [], schedule)) return false;
     setForm((prev) => ({
       ...prev,
       schedules: [...(prev?.schedules || []), schedule],
@@ -134,7 +134,7 @@ const Schedule = ({ form, setForm }) => {
           </MDBRow>
 
           <MDBRow>
-            <MDBCol>
+            <MDBCol md="4">
               <MDBInput
                 required
                 label="Duration in minutes"
