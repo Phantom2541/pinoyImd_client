@@ -27,7 +27,7 @@ const Body = () => {
       if (!items || items.length === 0) return;
 
       const indices = Templates.getComponentIndices(items, key.toUpperCase());
-      dispatch(UPDATE({ token, data: { ...data, [key]: indices } }));
+      // dispatch(UPDATE({ token, data: { ...data, [key]: indices } }));
     });
   };
 
