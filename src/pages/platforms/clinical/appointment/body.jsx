@@ -30,6 +30,12 @@ const Body = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
 
+  const statusColors = {
+    draft: "info",
+    confirmed: "success",
+    cancelled: "danger",
+  };
+
   return (
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
@@ -66,7 +72,7 @@ const Body = () => {
               <td>
                 {fullName(patient?.fullName)}{" "}
                 <MDBBadge
-                  color={status === "confirmed" ? "success" : "info"}
+                  color={statusColors[status] || "info"}
                   className="ml-2"
                 >
                   <EditableSelect
@@ -74,11 +80,8 @@ const Body = () => {
                     keyForText="status"
                     keyForValue="status"
                     isEditable
-                    collections={["draft", "confirmed", "cancelled"]}
-                    fieldData={{
-                      _id,
-                      status: status,
-                    }}
+                    collections={Object.keys(statusColors)}
+                    fieldData={{ _id, status }}
                     onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
