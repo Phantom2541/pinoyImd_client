@@ -17,7 +17,7 @@ export default function TaskBody({ task }) {
   const referral = physicianId?.fullName?.lname || physicianSTR || "";
 
   return (
-    <MDBCardBody className=" w-100 m-0 p-0">
+    <MDBCardBody className=" w-100 m-0 p-0" key={_id}>
       {Object.entries(diagnostic || {})?.map(([key, task], index) => {
         const isEmpty = !task || (Array.isArray(task) && task.length === 0);
         const _task = { ...task, category, source, referral, _id };
@@ -36,7 +36,7 @@ export default function TaskBody({ task }) {
             const _t = { ...t, category, source, referral, dealId: _id };
             return (
               <Record
-                key={`subform-${i}`}
+                _key={`subform-${i}`}
                 form={key}
                 branch={branch}
                 obj={_t || {}}
@@ -48,7 +48,7 @@ export default function TaskBody({ task }) {
         }
         return (
           <Record
-            key={`form-${index}`}
+            _key={`form-${index}`}
             form={key}
             branch={branch}
             obj={_task || {}}

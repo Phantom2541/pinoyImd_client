@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 export default function CollapseTable({
-  key,
+  _key: key,
   form,
   obj,
   index,

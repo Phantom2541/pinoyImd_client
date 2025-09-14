@@ -21,8 +21,11 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
   const { branchId, remarks, signatories, packages } = task;
   const chunks = chunkArray(packages, 23); // adjust row count per page here
   return (
-    <>
-      <div className="laboratory-container">
+    <div className=" d-flex justify-content-center">
+      <div
+        className="laboratory-container"
+        style={{ zoom: "80%", width: "95%" }}
+      >
         {chunks.map((chunk, index) => (
           <div key={index} className="laboratory-page">
             <div className="laboratory-page-content">
@@ -59,7 +62,7 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
