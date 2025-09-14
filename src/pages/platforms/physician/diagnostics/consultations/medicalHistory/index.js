@@ -4,7 +4,44 @@ import FMHx from "./fmhx";
 import PSHx from "./pshx";
 import OBGyneHx from "./obGyneHx";
 
-const familyHistory = ["Diabetes", "Hypertension", "Heart Disease in father"];
+const familyHistory = {
+  mother: [
+    "Diabetes",
+    "Hypertension",
+    "Asthma",
+    "Breast Cancer",
+    "Arthritis",
+    "Stroke",
+    "Tuberculosis",
+    "Migraine",
+    "Osteoporosis",
+    "Glaucoma",
+    "Alzheimer’s Disease",
+    "Thyroid Disorder",
+    "Depression",
+    "Obesity",
+    "Gout",
+    "Anemia",
+  ],
+  father: [
+    "Heart Disease",
+    "Cancer",
+    "Asthma",
+    "Lung Disease",
+    "Stroke",
+    "Kidney Disease",
+    "Arthritis",
+    "Diabetes",
+    "Parkinson’s Disease",
+    "Liver Disease",
+    "High Cholesterol",
+    "Peptic Ulcer",
+    "Epilepsy",
+    "Obesity",
+    "Prostate Cancer",
+    "Hepatitis",
+  ],
+};
 
 const pastMedicalHistory = [
   "Appendectomy - 2015",
