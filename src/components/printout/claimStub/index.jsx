@@ -6,7 +6,6 @@ import {
   currency,
   ENDPOINT,
   mobile,
-  fullName as nameFormatter,
 } from "../../../services/utilities";
 import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
@@ -23,6 +22,12 @@ const Hr = ({ className = "" }) => (
     className={`my-1 ${className}`}
   />
 );
+
+const careOfName = (careOf) => {
+  const { user = {} } = careOf;
+  const { fullName = {} } = user || {};
+  return `${fullName.fname} ${fullName?.lname[0]?.toUpperCase()}.`;
+};
 
 const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   return (
@@ -57,6 +62,7 @@ const Stub = ({ sale, companyId }) => {
       cashier = {},
       cart = [],
       refNo = {},
+      cardHolder = {},
     } = sale,
     {
       fullName = {},
@@ -64,10 +70,14 @@ const Stub = ({ sale, companyId }) => {
       email = "",
       // verified = false,
     } = customer || {};
-  const { careOf = {} } = refNo || {};
+  const { careOf = {}, pp = "cash" } = refNo || {};
   const isMixed = payment === "mixed";
   const cashOut = amount - refNo?.amount || 0;
-  const hasCashOut = cashOut > 0 && isMixed;
+  const hasCashOut = cashOut > 0 && isMixed && pp === "cash";
+  const isCardHolder = Boolean(
+    cardHolder?.company?.name || cardHolder?.company?.ref
+  );
+
   return (
     <div
       style={{
@@ -189,25 +199,35 @@ const Stub = ({ sale, companyId }) => {
         value={
           payment === "cash" || hasCashOut
             ? currency.format(cash)
-            : currency.format(amount)
+            : currency.format(refNo.amount)
         }
       />
       {(payment === "cash" || hasCashOut) && (
         <Text
           title="Change"
-          value={currency.format(
-            hasCashOut > 0 ? refNo.amount + cash - amount : cash - amount
-          )}
+          value={currency.format(hasCashOut ? cashOut : cash - amount)}
         />
       )}
       {isMixed && (
         <>
-          <Hr />
-          <Text title="Tracking No." value={`#${refNo.number}`} />
+          {isCardHolder && (
+            <>
+              <Hr />
+              <Text
+                title={cardHolder.type === "wls" ? "Card No." : "Tracking No."}
+                value={`${refNo.number}`}
+              />
+            </>
+          )}
           {careOf?.user?._id && (
             <>
               <Hr />
-              <Text title="C/O" value={nameFormatter(careOf?.user?.fullName)} />
+              <Text
+                title="C/O"
+                value={`${careOfName(careOf)} (${currency.format(
+                  careOf.amount
+                )})`}
+              />
             </>
           )}
         </>

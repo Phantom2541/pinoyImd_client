@@ -64,7 +64,7 @@ const utils = {
       Swal.fire({
         icon: "warning",
         title: "⚠️ Schedule Conflict",
-        width: "30em", // mas malapad
+        width: "30em",
         html: `
           A conflict was found on <b>${conflictDay}</b>.<br/>
            <b>${oldTime}</b><br/>
@@ -75,10 +75,10 @@ const utils = {
         confirmButtonColor: "#3085d6",
       });
 
-      return true; // may conflict
+      return true;
     }
 
-    return false; // walang conflict
+    return false;
   },
 };
 

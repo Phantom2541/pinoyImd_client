@@ -84,12 +84,26 @@ export default function Vouchers() {
       const serviceCountMap = {};
       const paymentSummary = {};
 
-      collections.forEach(({ cart, amount, payment }) => {
+      collections.forEach(({ cart, amount, payment, refNo }) => {
+        const { careOf = {}, amount: debtAmount, pp = "cash" } = refNo || {};
         if (payment && amount) {
-          if (!paymentSummary[payment]) {
-            paymentSummary[payment] = 0;
+          const isVoucher = payment === "voucher" || payment === "mixed";
+          const basePayment = isVoucher ? "voucher" : payment;
+          const baseAmount = isVoucher ? debtAmount || 0 : amount;
+
+          if (!paymentSummary[basePayment]) {
+            paymentSummary[basePayment] = 0;
           }
-          paymentSummary[payment] += amount;
+
+          paymentSummary[basePayment] =
+            (paymentSummary[basePayment] || 0) + baseAmount;
+
+          paymentSummary.co = (paymentSummary?.co || 0) + (careOf?.amount || 0);
+
+          if (isVoucher && pp === "cash") {
+            paymentSummary.cash =
+              (paymentSummary?.cash || 0) + (amount - debtAmount || 0);
+          }
         }
 
         cart?.forEach(({ menuId, packages }) => {

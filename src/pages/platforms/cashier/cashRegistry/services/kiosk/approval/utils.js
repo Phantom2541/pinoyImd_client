@@ -48,13 +48,21 @@ const utils = {
       } = selected;
       const { healthCard = {} } = pid;
       const _refNo = { ...refNo };
-
+      const debtAmount = getGross(cart, selected, isSendOut);
       if (!haveCard) {
-        const { careOf, ...rest } = _refNo;
+        const { careOf = {}, ...rest } = _refNo;
+        const { user = "" } = careOf || {};
         return {
           ...rest,
-          amount: getGross(cart, selected, isSendOut),
-          ...(_refNo.pp === "co" && { careOf }),
+          amount: isSendOut ? debtAmount : 0,
+          ...(_refNo.pp === "co" &&
+            !isSendOut && {
+              careOf: {
+                ...careOf,
+                user: user?._id || user,
+                amount: getGross(cart, selected, isSendOut),
+              },
+            }),
         };
       }
       if (haveCard) {

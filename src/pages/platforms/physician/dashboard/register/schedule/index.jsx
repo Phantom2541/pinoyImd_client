@@ -47,6 +47,7 @@ const Schedule = ({ form, setForm }) => {
         };
       });
     }
+    // eslint-disable-next-line
   }, [schedule.start]);
 
   const handlePickDays = (day) => {

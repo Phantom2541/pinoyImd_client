@@ -68,13 +68,13 @@ export default function Register({ show, toggle = () => {} }) {
       <MDBModalBody className="mb-0 ">
         <MDBStepper className="m-0 p-0 mt-n4">
           <MDBStep className={"active"}>
-            <a>
+            <a href="!#">
               <span className="circle">1</span>
               <span className="label">Clinic Information</span>
             </a>
           </MDBStep>
           <MDBStep className={isSchedule ? "active" : ""}>
-            <a>
+            <a href="!#">
               <span className="circle">2</span>
               <span className="label">Schedules</span>
             </a>

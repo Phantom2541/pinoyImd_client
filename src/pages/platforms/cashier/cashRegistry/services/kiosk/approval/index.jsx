@@ -222,26 +222,6 @@ export default function Approval() {
         dispatch(TOGGLE());
       });
     }
-
-    // if (
-    //   !allServicesHavePrices(cart, 0, customerId?.healthCard?.name, contract)
-    // ) {
-    //   Swal.fire({
-    //     title: "Service Validator?",
-    //     text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
-    //     icon: "error",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#d33",
-    //     confirmButtonText: "Yes, proceed",
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       dispatch(PROCESS_ONBOARDING({ data, token }));
-    //     }
-    //   });
-    // } else {
-    //   return dispatch(PROCESS_ONBOARDING({ data, token }));
-    // }
   };
 
   const handleApprove = (e) => {

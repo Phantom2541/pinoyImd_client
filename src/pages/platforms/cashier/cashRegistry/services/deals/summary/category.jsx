@@ -57,13 +57,12 @@ export default function Payments() {
 
       if (isMixed && pp === "cash") {
         const mixedCash = amount - refNo?.amount;
-        totals.cash = (totals.cash || 0) + (mixedCash || 0);
+        totals.cash += mixedCash || 0;
       }
 
-      if (pp === "co") {
-        //patient payable is paid by care of
-        const coAmount = careOf?.amount > 0 ? careOf?.amount : refNo?.amount;
-        summary["care"] += coAmount || 0;
+      //patient payable is paid by care of
+      if (isMixed && pp === "co") {
+        summary["care"] += careOf?.amount || 0;
       }
 
       if (isMixed && chType && summary.hasOwnProperty(chType)) {
@@ -172,7 +171,7 @@ export default function Payments() {
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
-                <span title="Insource : Contracts">Care :</span>
+                <span title="Insource : Contracts">Care Of :</span>
                 <strong className="text-primary">
                   {currency.format(voucherSummary.care)}
                 </strong>

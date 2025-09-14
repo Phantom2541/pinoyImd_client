@@ -35,11 +35,20 @@ export default function Modal({ show, selected, toggle, remittance }) {
   }, [filtered]);
   const paymentTotals = useMemo(() => {
     return collections?.reduce(
-      (acc, payment) => {
-        acc[payment.payment] = (acc[payment.payment] || 0) + payment.amount;
+      (acc, { payment, amount, refNo }) => {
+        const { pp, careOf = {} } = refNo || {};
+        const isVoucher = payment === "voucher" || payment === "mixed";
+        const basePayment = isVoucher ? "voucher" : payment;
+        const baseAmount = isVoucher ? refNo?.amount : amount;
+        acc[basePayment] = (acc[basePayment] || 0) + baseAmount;
+        if (pp === "cash" && isVoucher) {
+          const mixedCash = amount - refNo?.amount;
+          acc.cash += mixedCash;
+        }
+        acc.co += careOf?.amount || 0;
         return acc;
       },
-      { cash: 0, gcash: 0, voucher: 0, pending: 0 }
+      { cash: 0, gcash: 0, voucher: 0, pending: 0, co: 0 }
     );
   }, [collections]);
 
@@ -52,7 +61,7 @@ export default function Modal({ show, selected, toggle, remittance }) {
   const sales = total;
   const coh = cash + fc - expenses;
   const { patient = 0 } = selected;
-
+  console.log("selected", selected);
   const handleSubmit = () => {
     dispatch(
       CENSUS({ token, data: { ...selected, coh, sales, expenses } })
@@ -153,7 +162,7 @@ export default function Modal({ show, selected, toggle, remittance }) {
                     fontWeight: 400,
                   }}
                 >
-                  {key}:
+                  {key === "co" ? "Care Of" : key}:
                 </h5>
 
                 <div

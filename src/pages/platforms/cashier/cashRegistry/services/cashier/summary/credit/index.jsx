@@ -1,12 +1,13 @@
 import Holder from "./holder";
 
-const Credit = ({ refNo = {}, setRefNo = () => {} }) => {
+const Credit = ({ refNo = {}, setRefNo = () => {}, isMixed = false }) => {
   const { pp = "cash" } = refNo || {};
 
   // condition kung dapat ipakita si Credit
+
   const shouldShow = pp !== "cash";
 
-  if (!shouldShow) return null;
+  if (!shouldShow || !isMixed) return null;
 
   return (
     <>

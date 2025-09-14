@@ -5,6 +5,7 @@ import {
   capitalize,
   computeGD,
   currency,
+  paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories, Payments } from "../../../../../../../services/fakeDb";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../../services/redux/slices/assets/persons/users";
@@ -24,8 +25,8 @@ import Spinner from "../../../../../../../components/spinner";
 import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/assets/providers";
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import RollingNumber from "../../../../../../../components/rollingNumber";
-import Credit from "./credit";
 import utils from "./utils";
+import SplitBill from "./splitBill";
 
 const _refNo = {
   number: "",
@@ -34,6 +35,7 @@ const _refNo = {
   careOf: {
     category: "employee",
     user: "",
+    amount: 0,
   },
 };
 
@@ -54,6 +56,7 @@ export default function Summary() {
       cardHolder,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
+    [isMixed, setIsMixed] = useState(false),
     [refNo, setRefNo] = useState(_refNo),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
@@ -71,16 +74,19 @@ export default function Summary() {
     providedPaymentOptions =
       Payments[cardHolder?.type ? cardHolder?.type : abbr];
 
-  const isMixed = payment === "mixed";
-
   useEffect(() => {
     setPayment(
       ["mbs", "wls", "ctr"].includes(cardHolder?.type) ? "voucher" : "cash"
     );
+    setRefNo({ ..._refNo, pp: "cash" });
   }, [cardHolder]);
 
+  useEffect(() => {
+    setIsMixed(payment === "mixed");
+  }, [payment]);
   const checkout = async () => {
     const baseRefNo = utils.buildRefNo(refNo, payment, amount, cardHolder);
+    const _cash = utils.hasCash(refNo, payment, amount) ? cash : 0;
     let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
@@ -91,7 +97,7 @@ export default function Summary() {
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
       payment,
-      cash,
+      cash: _cash,
       amount,
       discount,
       isPickup,
@@ -133,7 +139,8 @@ export default function Summary() {
         };
       }),
     };
-    const balance = cash - amount;
+    const balance = _cash - amount;
+
     if (balance > 0)
       Swal.fire({
         icon: "info",
@@ -148,7 +155,6 @@ export default function Summary() {
           data: { _id: customer._id, privilege },
         })
       );
-
     selected = removeUndefinedValues(selected);
 
     try {
@@ -156,7 +162,6 @@ export default function Summary() {
         ({ payload: data }) => {
           const { payload, register } = data;
           selected._id = payload._id;
-
           dispatch(SetPrinting({ status: true, selected }));
           if (register.isRegister) {
             dispatch(ADD_AFFILIATED(register));
@@ -196,9 +201,14 @@ export default function Summary() {
     e.preventDefault();
     const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
     const { name = "", ref = "" } = company || {};
-    const { careOf = {}, pp = "" } = refNo;
-
-    if (pp === "co" && !careOf.user) {
+    const { careOf = {}, pp = "", amount: creditCovered } = refNo;
+    console.log("pppppppp", pp);
+    if (
+      pp === "co" &&
+      !careOf.user &&
+      payment === "mixed" &&
+      creditCovered < amount
+    ) {
       const category = {
         bm: "Board Member",
         employee: "Employee",
@@ -296,8 +306,20 @@ export default function Summary() {
               <select
                 value={payment}
                 onChange={({ target }) => {
-                  setPayment(target.value);
-                  setRefNo(_refNo);
+                  const _payment = target.value;
+                  const { company = {} } = cardHolder || {};
+                  const { name, ref } = company;
+                  const isCardHolder = Boolean(name || ref);
+                  setPayment(_payment);
+                  setRefNo({
+                    ..._refNo,
+                    pp:
+                      isCardHolder ||
+                      _payment === "cash" ||
+                      _payment === "downpayment"
+                        ? "cash"
+                        : "co",
+                  });
                 }}
               >
                 {providedPaymentOptions?.map((payment, index) => (
@@ -308,65 +330,12 @@ export default function Summary() {
               </select>
             </td>
           </tr>
-          {isMixed && (
-            <>
-              {[
-                { label: "Tracking No.", key: "number" },
-                {
-                  label: "Credit Covered",
-                  key: "amount",
-                  ph: "Credit Covered",
-                },
-              ].map(({ label, key, ph = "" }, index) => (
-                <tr>
-                  <td style={{ fontSize: "0.8rem" }}>{label}</td>
-                  <td className="p-0 m-0">
-                    <input
-                      type={index === 1 ? "number" : "string"}
-                      value={String(refNo[key] || "")}
-                      onChange={({ target }) =>
-                        setRefNo({
-                          ...refNo,
-                          [key]:
-                            index === 1 ? Number(target.value) : target.value,
-                        })
-                      }
-                      placeholder={ph ? ph : label}
-                      required
-                      name={key}
-                      title={label}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </>
-          )}
-          {isMixed ? (
-            <tr>
-              <td style={{ fontSize: "0.8rem" }}>Patient Payable</td>
-              <td className="p-0">
-                <select
-                  value={refNo.pp}
-                  onChange={({ target }) =>
-                    setRefNo({ ...refNo, pp: target.value })
-                  }
-                >
-                  <option value="cash">Cash</option>
-                  <option value="co">Care Of</option>
-                </select>
-              </td>
-            </tr>
-          ) : (
-            ""
-          )}
-
-          <Credit
+          <SplitBill
+            chargeAmount={amount}
+            isMixed={isMixed}
             refNo={refNo}
             setRefNo={setRefNo}
-            isMixed={isMixed}
-            amount={amount}
           />
-
           {["cash", "mixed", "downpayment"].includes(payment) &&
           refNo.pp === "cash" &&
           refNo.amount < amount ? (
