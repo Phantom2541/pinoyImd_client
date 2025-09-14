@@ -1,0 +1,50 @@
+.checkup-data-tracker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  max-height: 700px;
+  overflow: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.checkup-data-tracker::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+.checkup-data-tracker-collapse-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.checkup-data-tracker-collapse-header span {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.checkup-data-tracker-item-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 10px 5px;
+}
+
+.checkup-data-tracker-item {
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-left: 20px;
+}
+
+.checkup-data-tracker-item:hover {
+  color: #007bff;
+}
+
+.checkup-data-tracker-item:active {
+  transform: scale(0.98);
+}
