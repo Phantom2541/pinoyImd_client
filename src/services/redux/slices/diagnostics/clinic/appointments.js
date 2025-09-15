@@ -14,6 +14,7 @@ const initialState = {
   page: 0,
   willCreate: false,
   showModal: false,
+  showPatientModal: false,
   willCreateEmr: false,
   showModalEmr: false,
   /**
@@ -223,6 +224,9 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
+    TOGGLE_PATIENT_MODAL: (state) => {
+      state.showPatientModal = !state.showPatientModal;
+    },
     TOGGLEEMR: (state) => {
       state.showModalEmr = !state.showModalEmr;
     },
@@ -419,13 +423,14 @@ export const {
   SetEDIT,
   SetFILTER,
   SetPAGE,
+  TOGGLE_PATIENT_MODAL,
+  TOGGLE,
+  TOGGLEEMR,
   /**
    * for pagination
    */
   SetMaxPage,
   SetActivePAGE,
-  TOGGLE,
-  TOGGLEEMR,
   RESET,
 } = reduxSlice.actions;
 

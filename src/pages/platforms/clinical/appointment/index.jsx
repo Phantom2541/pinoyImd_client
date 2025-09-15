@@ -7,6 +7,7 @@ import Body from "./body";
 import Footer from "./footer";
 import Modal from "./modal/modalEmr";
 import { BROWSE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
+import PatientModal from "./patient";
 
 const Index = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -31,14 +32,17 @@ const Index = () => {
   }, [dispatch, token, activePlatform]);
 
   return (
-    <MDBAnimation type="bounceInDown">
-      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <Header />
-        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-        <Footer />
-      </MDBCard>
+    <>
+      <MDBAnimation type="bounceInDown">
+        <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+          <Header />
+          <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
+          <Footer />
+        </MDBCard>
+      </MDBAnimation>
       <Modal />
-    </MDBAnimation>
+      <PatientModal />
+    </>
   );
 };
 

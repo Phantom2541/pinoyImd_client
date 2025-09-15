@@ -4,8 +4,10 @@ import { MDBIcon, MDBView } from "mdbreact";
 import {
   SetPHYSICIAN,
   SetSCHED,
+  TOGGLE_PATIENT_MODAL,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
+
 const Header = () => {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { filtered, physicians, scheds, activeSched, activePhysician } =
@@ -66,7 +68,11 @@ const Header = () => {
             ))}
           </select>
         </div>
-        <button size="sm" className="search-add-btn ml-2">
+        <button
+          size="sm"
+          className="search-add-btn ml-2"
+          onClick={() => dispatch(TOGGLE_PATIENT_MODAL())}
+        >
           <MDBIcon icon="plus" />
         </button>
       </div>

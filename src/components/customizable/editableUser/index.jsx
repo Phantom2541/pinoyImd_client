@@ -52,7 +52,9 @@ const EditableUser = ({
   onSave = () => {},
   setUserId = () => {},
   user = { _id: "No _id" },
+  preValue = {},
   readOnly = false,
+  returnObj = false, // if true, return the whole user object instead of just the _id (mainly useful when readOnly is true)
   placeHolder = "Search..",
   formSubmitted = false,
   isSuccess: successUpdated = false,
@@ -79,6 +81,13 @@ const EditableUser = ({
   if (!user?._id) {
     user._id = "No _id";
   }
+
+  useEffect(() => {
+    if (preValue?._id) {
+      setSelected(preValue);
+    }
+  }, [preValue]);
+
   const debouncedSearch = useMemo(
     () =>
       debounce((searchKey) => {
@@ -123,7 +132,7 @@ const EditableUser = ({
   }, [instanceId]);
 
   const handleSelect = (user) => {
-    setUserId(user._id);
+    setUserId(returnObj ? user : user._id);
     setSelected(user);
     setResults([]);
     if (!readOnly) {
@@ -202,7 +211,10 @@ const EditableUser = ({
               size="sm"
               className="ml-2 text-danger mt-n3 cursor-pointer"
               title="Remove"
-              onClick={() => setSelected({})}
+              onClick={() => {
+                setUserId(returnObj ? {} : "");
+                setSelected({});
+              }}
             />
           </div>
         ) : (
