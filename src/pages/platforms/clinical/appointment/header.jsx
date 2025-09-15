@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBIcon, MDBView } from "mdbreact";
 import {
   SetPHYSICIAN,
   SetSCHED,
@@ -48,7 +48,7 @@ const Header = () => {
           </select>
         </div>
       </div>
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+      <div className="d-flex align-items-center">
         <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center">
           <span className="mr-2">Sched:</span>
           <select
@@ -66,21 +66,9 @@ const Header = () => {
             ))}
           </select>
         </div>
-      </div>
-      <div>
-        <div className="text-right d-flex align-items-center">
-          <select
-            className="form-control bg-light"
-            onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
-          >
-            <option value="all">All</option>
-            {appointments.map(({ patient }) => (
-              <option key={patient?._id} value={patient?._id}>
-                {properFullname(patient?.fullName)}
-              </option>
-            ))}
-          </select>
-        </div>
+        <button size="sm" className="search-add-btn ml-2">
+          <MDBIcon icon="plus" />
+        </button>
       </div>
     </MDBView>
   );

@@ -23,8 +23,6 @@ const Body = () => {
     dispatch = useDispatch();
 
   const handleUpdate = (data) => {
-    console.log("userdata", data);
-
     dispatch(UPDATE({ token, data }));
   };
   // Pagination
@@ -38,6 +36,8 @@ const Body = () => {
     confirmed: "success",
     cancelled: "danger",
   };
+
+  console.log("filtered", filtered);
 
   return (
     <MDBTable bordered className="m-0 p-0">
