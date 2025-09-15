@@ -10,7 +10,7 @@ const PaymentDetails = ({ deal = {} }) => {
   const { payment, amount, refNo = {}, cash = 0 } = deal;
 
   const arrangePayment = () => {
-    if (payment === "mixed") {
+    if (payment === "mixed" || payment === "voucher") {
       const { company } = cardHolder;
       const isCardHolder = Boolean(company?.name || company?.ref);
       const { careOf = {} } = refNo;
@@ -37,7 +37,10 @@ const PaymentDetails = ({ deal = {} }) => {
       ];
     }
 
-    return [{ method: payment, amount }];
+    return [
+      { method: payment, amount },
+      { method: "tendered", amount: cash },
+    ];
   };
   return (
     <div
