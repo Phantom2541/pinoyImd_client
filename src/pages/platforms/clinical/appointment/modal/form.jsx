@@ -99,9 +99,9 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
                     />
                     <line
                       x1={rootX}
-                      y1={y - -1}
+                      y1={y - 1}
                       x2={rootX + side.dir * 120}
-                      y2={y - -1}
+                      y2={y - 1}
                       stroke="red"
                       strokeWidth={2}
                     />

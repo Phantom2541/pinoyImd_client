@@ -4,7 +4,7 @@ export { default as Chemistry } from "./chemistry";
 export { default as Drugtest } from "./drugtest";
 export { default as Parasitology } from "./parasitology";
 export { default as Coagulation } from "./coagulation";
-export { default as Serology } from "./seminogram";
+export { default as Serology } from "./serology";
 export { default as Miscellaneous } from "./miscellaneous";
 export { default as Analysis } from "./analysis";
 export { default as Bacteriology } from "./bacteriology";
