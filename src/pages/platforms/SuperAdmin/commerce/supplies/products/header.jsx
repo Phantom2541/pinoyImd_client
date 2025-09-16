@@ -6,7 +6,7 @@ import {
   BROWSE,
   SetCREATE,
   SetFILTERED,
-} from "../../../../../../services/redux/slices/commerce/pos/services/cases";
+} from "../../../../../../services/redux/slices/diagnostics/cases";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);

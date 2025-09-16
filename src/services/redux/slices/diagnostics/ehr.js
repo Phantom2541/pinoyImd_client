@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "diagnostics/clinic/consultations";
+const url = "diagnostics/ehr";
 
 const initialState = {
   patient: {},
@@ -13,11 +13,11 @@ const initialState = {
   message: "",
 };
 
-export const GET_PATIENT = createAsyncThunk(
-  `${url}/getPatient`,
+export const FIND_EHR = createAsyncThunk(
+  `${url}/find/ehr`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/get_patient`, token, key);
+      return axioKit.universal(`${url}/find/ehr`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -43,17 +43,17 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(GET_PATIENT.pending, (state) => {
+      .addCase(FIND_EHR.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(GET_PATIENT.fulfilled, (state, { payload }) => {
+      .addCase(FIND_EHR.fulfilled, (state, { payload }) => {
         state.patient = payload;
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(GET_PATIENT.rejected, (state, action) => {
+      .addCase(FIND_EHR.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

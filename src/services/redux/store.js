@@ -1,7 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cases from "./slices/commerce/pos/services/cases";
 import requestForm from "./slices/requestForm/requestForm";
-import clinicMenus from "./slices/diagnostics/clinic/clinicMenus";
 
 // ASSETS
 import {
@@ -43,7 +41,6 @@ import {
   hematology,
   urinalysis,
   fecalysis,
-  electrolyte,
   serology,
   chemistry,
   preferences,
@@ -57,8 +54,11 @@ import {
   miscellaneous,
   appointments,
   clinicInfo,
+  clinicMenus,
+  consultations,
+  ehr,
+  cases,
 } from "./slices/diagnostics";
-import consultations from "./slices/diagnostics/consultations";
 
 // FINANCE
 import {
@@ -89,6 +89,7 @@ import { quest } from "./slices/diagnostics";
 import { idCalibrator, idGenerator } from "./slices/idCard";
 import emr from "./slices/portal/emr";
 import icard from "./slices/portal/icard";
+
 const store = configureStore({
   reducer: {
     clinicInfo,
@@ -128,7 +129,6 @@ const store = configureStore({
     fecalysis,
     applicants,
     liabilities,
-    electrolyte,
     serology,
     temperatures,
     providers,
@@ -145,12 +145,10 @@ const store = configureStore({
     generics,
     mentainance,
     quest,
-    consultations,
     dragDrop,
     table,
     miscellaneous,
     orgChart,
-    cases,
     requestForm,
     kiosk,
     idCalibrator,
@@ -159,6 +157,9 @@ const store = configureStore({
     emr,
     icard,
     clinicMenus,
+    consultations,
+    ehr,
+    cases,
   },
   devTools: true,
 });

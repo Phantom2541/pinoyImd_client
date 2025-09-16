@@ -7,7 +7,7 @@ import {
   MDBBtn,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { DESTROY } from "../../../../../services/redux/slices/commerce/pos/services/cases";
+import { DESTROY } from "../../../../../services/redux/slices/diagnostics/cases";
 import { fullName } from "../../../../../services/utilities";
 
 export default function CaseBody() {
@@ -85,13 +85,19 @@ export default function CaseBody() {
                           <th style={{ width: "15%" }}>Notes</th>
                           <th style={{ width: "25%" }}>Description</th>
                           <th style={{ width: "20%" }}>Remarks</th>
-                          <th style={{ width: "15%", textAlign: "center" }}>Action</th>
+                          <th style={{ width: "15%", textAlign: "center" }}>
+                            Action
+                          </th>
                         </tr>
                       </MDBTableHead>
                       <MDBTableBody>
                         <tr>
-                          <td></td> 
-                          <td>{ap.assignedAt ? new Date(ap.assignedAt).toLocaleString() : "—"}</td>
+                          <td></td>
+                          <td>
+                            {ap.assignedAt
+                              ? new Date(ap.assignedAt).toLocaleString()
+                              : "—"}
+                          </td>
                           <td>{ap.notes || "—"}</td>
                           <td>{item.description || "—"}</td>
                           <td>{item.remarks || "—"}</td>
@@ -102,7 +108,10 @@ export default function CaseBody() {
                               className="px-2 py-1"
                               onClick={() => handleDelete(item._id)}
                             >
-                              <i className="fas fa-trash-alt" style={{ fontSize: "0.75rem" }} />
+                              <i
+                                className="fas fa-trash-alt"
+                                style={{ fontSize: "0.75rem" }}
+                              />
                             </MDBBtn>
                           </td>
                         </tr>

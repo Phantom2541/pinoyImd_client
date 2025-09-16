@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/commerce/pos/services/cases";
+} from "../../../../../../services/redux/slices/diagnostics/cases";
 
 const CaseModal = ({ modal, toggle, selected = {} }) => {
   const dispatch = useDispatch();
@@ -125,7 +125,6 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
           label="Case Number"
           name="caseNumber"
           value={form?.caseNumber || ""}
-
           onChange={handleChange}
         />
         <MDBInput
