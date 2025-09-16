@@ -74,7 +74,11 @@ const Body = () => {
               consultation,
               _id,
               sched,
+              lab = {},
+              rad = {},
             } = item;
+            const hasLab = Object.keys(lab).length > 0;
+            const hasRad = Object.keys(rad).length > 0;
             return (
               <tr key={index}>
                 {!activeSched && <td>{sched}</td>}
@@ -116,24 +120,34 @@ const Body = () => {
                 </td>
                 <td className="text-center">
                   <MDBIcon
-                    size="md"
+                    size="lg"
                     onClick={() =>
                       dispatch(SetRESULT({ ...item, department: "lab" }))
                     }
-                    icon={"plus"}
-                    title="Add Laboratory Result"
-                    className="text-warning shadow-lg cursor-pointer"
+                    icon={hasLab ? "eye" : "plus"}
+                    title={
+                      !hasLab
+                        ? "Add Laboratory Result"
+                        : "View Laboratory Result"
+                    }
+                    className={`text-${
+                      hasLab ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
                   />
                 </td>
                 <td className="text-center">
                   <MDBIcon
-                    size="md"
+                    size="lg"
                     onClick={() =>
                       dispatch(SetRESULT({ ...item, department: "rad" }))
                     }
-                    icon={"plus"}
-                    title="Add Radiology Result"
-                    className="text-warning shadow-lg cursor-pointer"
+                    icon={hasRad ? "eye" : "plus"}
+                    title={
+                      !hasRad ? "Add Radiology Result" : "View Radiology Result"
+                    }
+                    className={`text-${
+                      hasRad ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
                   />
                 </td>
                 <td
