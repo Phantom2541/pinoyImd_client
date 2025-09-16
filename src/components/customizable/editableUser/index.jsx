@@ -52,8 +52,11 @@ const EditableUser = ({
   onSave = () => {},
   setUserId = () => {},
   user = { _id: "No _id" },
+  preValue = {},
   readOnly = false,
+  returnObj = false, // if true, return the whole user object instead of just the _id (mainly useful when readOnly is true)
   placeHolder = "Search..",
+  defaultSearchValue = "",
   formSubmitted = false,
   isSuccess: successUpdated = false,
   onUserNotFound = () => {},
@@ -79,6 +82,20 @@ const EditableUser = ({
   if (!user?._id) {
     user._id = "No _id";
   }
+
+  useEffect(() => {
+    if (preValue?._id) {
+      setSelected(preValue);
+    }
+  }, [preValue]);
+
+  useEffect(() => {
+    if (defaultSearchValue) {
+      handleChange("", true, defaultSearchValue);
+    }
+    //eslint-disable-next-line
+  }, [defaultSearchValue]);
+
   const debouncedSearch = useMemo(
     () =>
       debounce((searchKey) => {
@@ -123,7 +140,7 @@ const EditableUser = ({
   }, [instanceId]);
 
   const handleSelect = (user) => {
-    setUserId(user._id);
+    setUserId(returnObj ? user : user._id);
     setSelected(user);
     setResults([]);
     if (!readOnly) {
@@ -134,14 +151,15 @@ const EditableUser = ({
     }
   };
 
-  const handleChange = (e) => {
-    const _searchKey = e.target.value;
+  const handleChange = (e, isDefault = false, defaultValue) => {
+    const _searchKey = isDefault ? defaultValue : e.target.value;
     setSearchKey(_searchKey);
     setIsSuccess(false);
     setResults([]);
 
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
+      console.log("_searchkey", _searchKey);
       setIsFetching(true);
       return debouncedSearch(_searchKey);
     }
@@ -202,7 +220,10 @@ const EditableUser = ({
               size="sm"
               className="ml-2 text-danger mt-n3 cursor-pointer"
               title="Remove"
-              onClick={() => setSelected({})}
+              onClick={() => {
+                setUserId(returnObj ? {} : "");
+                setSelected({});
+              }}
             />
           </div>
         ) : (

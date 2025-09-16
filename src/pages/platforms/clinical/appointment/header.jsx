@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
   SetPHYSICIAN,
   SetSCHED,
+  TOGGLE_PATIENT_MODAL,
+  SetFILTERED,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
+import { Search } from "../../../../components/searchables";
+import { useState } from "react";
+
 const Header = () => {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered, physicians, scheds, activeSched, activePhysician } =
-    useSelector(({ appointments }) => appointments);
-  const [appointments, setAppointments] = useState([]),
+  const { collections, physicians, scheds, activeSched, activePhysician } =
+      useSelector(({ appointments }) => appointments),
+    [lastSched, setLastSched] = useState(""),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    if (filtered) setAppointments(filtered);
-  }, [filtered]);
 
   return (
     <MDBView
@@ -48,40 +48,36 @@ const Header = () => {
           </select>
         </div>
       </div>
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center">
-          <span className="mr-2">Sched:</span>
-          <select
-            className="form-control bg-light"
-            value={activeSched}
-            onChange={({ target }) => {
-              dispatch(SetSCHED(target.value));
-            }}
-          >
-            <option value="all">All</option>
-            {scheds.map((sched) => (
-              <option key={sched} value={sched}>
-                {sched}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center ml-n5">
+        <span className="mr-2">Schedule:</span>
+        <select
+          className="form-control bg-light"
+          value={activeSched}
+          onChange={({ target }) => {
+            dispatch(SetSCHED({ sched: target.value }));
+          }}
+        >
+          <option value="">All</option>
+          {scheds.map((sched) => (
+            <option key={sched} value={sched}>
+              {sched}
+            </option>
+          ))}
+        </select>
       </div>
-      <div>
-        <div className="text-right d-flex align-items-center">
-          <select
-            className="form-control bg-light"
-            onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
-          >
-            <option value="all">All</option>
-            {appointments.map(({ patient }) => (
-              <option key={patient?._id} value={patient?._id}>
-                {properFullname(patient?.fullName)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      <Search
+        setFiltered={(items) => {
+          dispatch(SetFILTERED(items));
+          dispatch(SetSCHED({ sched: "", isSearch: true }));
+          setLastSched(activeSched);
+        }}
+        reset={() => {
+          dispatch(SetSCHED({ sched: lastSched }));
+        }}
+        collections={collections}
+        handleAdd={(searchValue) => dispatch(TOGGLE_PATIENT_MODAL(searchValue))}
+        hideButton
+      />
     </MDBView>
   );
 };

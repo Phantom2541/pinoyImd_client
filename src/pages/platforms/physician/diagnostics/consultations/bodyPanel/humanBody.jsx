@@ -55,7 +55,9 @@ export default function HumanBody({ setSlide, slide }) {
     return pairs.flatMap(([text, organ]) => {
       const tEl = textRefs.current[text];
       const oEl = organRefs.current[organ];
-      if (!tEl || !oEl) return [];
+
+      // dagdag condition: skip kung wala talagang contentMap entry
+      if (!tEl || !oEl || (patient?.isMale && text === "OB Gyne Hx")) return [];
 
       const tRect = tEl.getBoundingClientRect();
       const oRect = oEl.getBoundingClientRect();
