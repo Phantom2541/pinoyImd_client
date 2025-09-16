@@ -40,6 +40,8 @@ const Upload = () => {
     const _images = [...images];
     _images.push(form);
     dispatch(SetDIAGNOSTIC({ ...diagnostic, images: _images }));
+    setForm(_form);
+    document.getElementById("form-file").value = "";
   };
   return (
     <MDBCard className="shadow-sm border-0 rounded-3">
@@ -80,6 +82,7 @@ const Upload = () => {
             <div className="w-full flex-grow-1">
               <input
                 type="file"
+                id="form-file"
                 className="form-control w-full"
                 accept="image/*"
                 style={{ cursor: "pointer" }}

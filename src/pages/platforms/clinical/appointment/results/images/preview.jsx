@@ -1,10 +1,12 @@
 import { MDBBtn, MDBIcon } from "mdbreact";
-import { dateFormat } from "../../../../../../services/utilities";
+import { Cloudinary, dateFormat } from "../../../../../../services/utilities";
+import { useSelector } from "react-redux";
 
 const Img = ({ preview = {}, setPreview = () => {} }) => {
-  const { img = "", date, section = "" } = preview || {};
+  const { selected } = useSelector(({ appointments }) => appointments);
+  const { img = "", date, section = "", imgId = "" } = preview || {};
   return (
-    <div>
+    <div style={{ minHeight: "27rem" }}>
       <div className="d-flex justify-content-between align-items-center">
         <span style={{ fontWeight: 500 }}>
           {section} - {dateFormat(date)}
@@ -22,8 +24,11 @@ const Img = ({ preview = {}, setPreview = () => {} }) => {
       </div>
       <div className="d-flex justify-content-center ">
         <img
-          src={img}
-          style={{ maxWidth: "40rem", maxHeight: "29rem" }}
+          src={`${Cloudinary.getEndpoint()}/${imgId}/diagnostics/${
+            selected._id
+          }/${section}_${date}`}
+          onError={(e) => (e.target.src = img)}
+          style={{ maxWidth: "40rem", maxHeight: "27rem" }}
           className="shadow-lg"
         />
       </div>

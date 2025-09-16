@@ -128,6 +128,9 @@ const Body = () => {
                 <td className="text-center">
                   <MDBIcon
                     size="md"
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "rad" }))
+                    }
                     icon={"plus"}
                     title="Add Radiology Result"
                     className="text-warning shadow-lg cursor-pointer"

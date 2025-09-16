@@ -6,14 +6,14 @@ import Img from "./preview";
 
 const Images = () => {
   const [preview, setPreview] = useState(null);
+  const hasImg = Boolean(preview?.img || preview?.imgId);
+
   return (
     <MDBAnimation
-      key={preview ? preview.img || "no-img" : "empty"} // 👈 unique key kada state
-      type={
-        preview === null ? "" : preview?.img ? "slideInRight" : "slideInRight"
-      }
+      key={preview ? hasImg || "no-img" : "empty"} // 👈 unique key kada state
+      type={preview === null ? "" : hasImg ? "fadeInDown" : "fadeInDown"}
     >
-      {!preview?.img ? (
+      {!hasImg ? (
         <>
           {" "}
           <Upload />

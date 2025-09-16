@@ -141,6 +141,7 @@ export const reduxSlice = createSlice({
       // }
     },
     SetDIAGNOSTIC: (state, { payload }) => {
+      console.log("diagnostic payload", payload);
       state.diagnostic = payload;
     },
     SetEDIT: (state, { payload }) => {
@@ -327,6 +328,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.pending, (state) => {
         state.isSuccess = false;
+        state.formSubmitted = true;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
@@ -339,6 +341,7 @@ export const reduxSlice = createSlice({
           ({ sched }) => sched === state.activeSched
         );
         state.showModal = false;
+        state.formSubmitted = false;
         state.message = success;
         state.isSuccess = true;
       })
@@ -346,6 +349,7 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isSuccess = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
