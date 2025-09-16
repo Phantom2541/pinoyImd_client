@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
+const url = "/diagnostics/clinic/menus";
 // Fetch clinic menus
 export const BROWSE = createAsyncThunk(
-  "clinicMenus/browse",
+  "/browse",
   async ({ token, key }, thunkAPI) => {
     try {
       const { data } = await axioKit(token).get("/clinic/menus", { params: key });
