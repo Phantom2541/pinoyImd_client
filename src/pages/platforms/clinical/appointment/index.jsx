@@ -8,6 +8,7 @@ import Footer from "./footer";
 import Modal from "./modal/modalEmr";
 import { BROWSE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import PatientModal from "./patient";
+import ResultsModal from "./results";
 
 const Index = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -42,6 +43,7 @@ const Index = () => {
       </MDBAnimation>
       <Modal />
       <PatientModal />
+      <ResultsModal />
     </>
   );
 };

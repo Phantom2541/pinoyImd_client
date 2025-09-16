@@ -11,9 +11,11 @@ const initialState = {
   activePhysician: { _id: null },
   // Bread attributes
   selected: {}, // assurance
+  diagnostic: {}, //for storing selected forms
   page: 0,
   willCreate: false,
   showModal: false,
+  showResultModal: false,
   showPatientModal: false,
   willCreateEmr: false,
   showModalEmr: false,
@@ -138,6 +140,9 @@ export const reduxSlice = createSlice({
       //   state.physician = payload;
       // }
     },
+    SetDIAGNOSTIC: (state, { payload }) => {
+      state.diagnostic = payload;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -154,15 +159,11 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     setShowModalEhr: (state, { payload }) => {
-      console.log("payload", payload);
-
       state.selected = {};
       state.willCreateEmr = true;
       state.showModalEmr = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -204,6 +205,10 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetRESULT: (state, { payload }) => {
+      state.selected = payload;
+      state.showResultModal = true;
+    },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
@@ -223,6 +228,9 @@ export const reduxSlice = createSlice({
     },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
+    },
+    TOGGLE_RESULT_MODAL: (state) => {
+      state.showResultModal = !state.showResultModal;
     },
     TOGGLE_PATIENT_MODAL: (state, { payload }) => {
       const formattedName = payload?.includes(",")
@@ -424,7 +432,9 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetDIAGNOSTIC,
   SetFILTERED,
+  SetRESULT,
   SetPHYSICIAN,
   SetSCHED,
   SetCREATE,
@@ -433,6 +443,7 @@ export const {
   SetFILTER,
   SetPAGE,
   TOGGLE_PATIENT_MODAL,
+  TOGGLE_RESULT_MODAL,
   TOGGLE,
   TOGGLEEMR,
   /**

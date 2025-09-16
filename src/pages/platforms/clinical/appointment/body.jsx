@@ -9,6 +9,7 @@ import {
 import {
   UPDATE,
   setShowModalEhr,
+  SetRESULT,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../services/utilities";
 import {
@@ -67,8 +68,6 @@ const Body = () => {
               patient,
               remarks,
               status,
-              hasLab,
-              hasRadiology,
               qn,
               visitType,
               ehr,
@@ -117,16 +116,21 @@ const Body = () => {
                 </td>
                 <td className="text-center">
                   <MDBIcon
-                    size="lg"
-                    icon={hasLab ? "check" : "times"}
-                    style={{ color: hasLab ? "green" : "black" }}
+                    size="md"
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "lab" }))
+                    }
+                    icon={"plus"}
+                    title="Add Laboratory Result"
+                    className="text-warning shadow-lg cursor-pointer"
                   />
                 </td>
                 <td className="text-center">
                   <MDBIcon
-                    size="lg"
-                    icon={hasRadiology ? "check" : "times"}
-                    style={{ color: hasRadiology ? "green" : "black" }}
+                    size="md"
+                    icon={"plus"}
+                    title="Add Radiology Result"
+                    className="text-warning shadow-lg cursor-pointer"
                   />
                 </td>
                 <td
