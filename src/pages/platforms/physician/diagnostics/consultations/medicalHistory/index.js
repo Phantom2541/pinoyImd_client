@@ -170,7 +170,7 @@ export default function HistorySwitcher({ task }) {
     }, 300);
 
     return () => clearTimeout(t);
-  }, [task]);
+  }, [task, current]);
 
   const sanitized = current?.toLowerCase().replace(/\s+/g, "");
   const Comp = historyMap[sanitized] || Blank;

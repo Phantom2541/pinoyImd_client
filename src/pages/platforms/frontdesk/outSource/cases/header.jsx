@@ -5,7 +5,7 @@ import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
   SetFILTERED,
-} from "../../../../../services/redux/slices/commerce/pos/services/cases";
+} from "../../../../../services/redux/slices/diagnostics/cases";
 
 export default function Header({ onAdd }) {
   const dispatch = useDispatch();
