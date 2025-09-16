@@ -1,7 +1,6 @@
 import {
   currency,
   dateFormat,
-  fullName,
   paymentMethod,
 } from "../../../../../../../services/utilities";
 
@@ -11,20 +10,21 @@ const PaymentDetails = ({ deal = {} }) => {
   const { payment, amount, refNo = {}, cash = 0 } = deal;
 
   const arrangePayment = () => {
-    if (payment === "mixed") {
+    if (payment === "mixed" || payment === "voucher") {
+      const { company } = cardHolder;
+      const isCardHolder = Boolean(company?.name || company?.ref);
       const { careOf = {} } = refNo;
       const { user = {} } = careOf;
       const { lname = "", fname = "" } = user?.fullName || {};
       return [
-        { method: "mixed", amount: refNo?.amount },
+        ...(isCardHolder ? [{ method: "mixed", amount: refNo?.amount }] : []),
         ...(user?._id
           ? [
               {
-                method: "care",
+                method: "co",
                 name: `${fname} ${lname[0]}.`,
                 isCare: true,
-                careAmount:
-                  cardHolder.type === "wls" ? careOf?.amount : refNo?.amount,
+                careAmount: careOf?.amount,
               },
             ]
           : []),
@@ -37,7 +37,10 @@ const PaymentDetails = ({ deal = {} }) => {
       ];
     }
 
-    return [{ method: payment, amount }];
+    return [
+      { method: payment, amount },
+      { method: "tendered", amount: cash },
+    ];
   };
   return (
     <div
@@ -50,7 +53,7 @@ const PaymentDetails = ({ deal = {} }) => {
       {arrangePayment().map(
         (
           {
-            method: type,
+            method: type = "",
             amount,
             name = "",
             chequeNo,
@@ -109,7 +112,7 @@ const PaymentDetails = ({ deal = {} }) => {
               )}
             </div>
 
-            {type.toLowerCase() === "cheque" && (
+            {type?.toLowerCase() === "cheque" && (
               <div
                 style={{
                   fontSize: "0.85rem",

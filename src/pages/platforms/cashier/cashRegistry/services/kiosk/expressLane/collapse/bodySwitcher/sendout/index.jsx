@@ -12,6 +12,7 @@ import {
   SetPROCESS,
   UPDATE,
 } from "../../../../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
+import { SetSELECTED } from "../../../../../../../../../../services/redux/slices/commerce/pos/services/kiosk";
 import { Services } from "../../../../../../../../../../services/fakeDb";
 export default function Sendout({ item }) {
   const { token } = useSelector(({ auth }) => auth),
@@ -19,7 +20,7 @@ export default function Sendout({ item }) {
     dispatch = useDispatch();
 
   const handleProcess = (deal) => {
-    dispatch(SetPROCESS(deal));
+    dispatch(SetSELECTED({ data: deal, isSendOut: true }));
   };
 
   const handleDeny = async () => {

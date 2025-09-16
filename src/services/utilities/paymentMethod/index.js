@@ -39,7 +39,7 @@ const paymentMethods = [
     style: { height: "1.2rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
   },
   {
-    text: "Care",
+    text: "co",
     img: care,
     style: { height: "1.2rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
   },

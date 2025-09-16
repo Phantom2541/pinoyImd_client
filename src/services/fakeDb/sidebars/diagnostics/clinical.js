@@ -1,12 +1,10 @@
 import {
-  // Onboard,
   Tasks,
   Reports,
 } from "../../../../pages/platforms/laboratory/diagnostics";
 import { Menus } from "../../../../pages/platforms/physician";
-import {  Services } from "../../../../pages/platforms/cashier";
+import { Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
-//import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
 const clinical = [
   {
@@ -15,16 +13,10 @@ const clinical = [
     path: "/clinical/bulletin",
   },
   {
-    name: "Schedules",
-    path: "/Schedules",
+    name: "Consultations",
+    path: "/consultations",
     icon: "cogs",
     children: [
-      {
-        name: "Dashboard",
-        title: "Overview of platform activity.",
-        path: "/dashboard",
-        icon: "concierge-bell",
-      },
       {
         name: "Appointments",
         path: "/appointments",
@@ -35,6 +27,7 @@ const clinical = [
         name: "Tasks",
         path: "/tasks",
         icon: "cogs",
+        title: "active Checkup",
         component: Tasks,
       },
       {
@@ -105,13 +98,6 @@ const clinical = [
       },
     ],
   },
-  // {
-  //   name: "Hotlines",
-  //   path: "/hotlines",
-  //   icon: "phone-alt",
-  //   title: "Emergency Hotlines Poster",
-  //   component: HotlinesPoster,
-  // },
 ];
 
 export default clinical;

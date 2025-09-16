@@ -1,4 +1,4 @@
-import "../style.css";
+import "./../style.css";
 
 export default function VitalSign({ vitalSigns }) {
   if (!vitalSigns) {
@@ -14,23 +14,35 @@ export default function VitalSign({ vitalSigns }) {
 
   return (
     <div className="vital-sign-container">
-      <h2>Vital Signs</h2>
-      <table className="vital-signs-table">
-        <tbody>
-          {Object.entries(otherVitals).map(([key, value]) => (
-            <tr key={key}>
-              <td className="vital-label">{formatLabel(key)}</td>
-              <td className="vital-value">{value}</td>
-            </tr>
-          ))}
-          {bmi && (
-            <tr>
-              <td className="vital-label">BMI</td>
-              <td className="vital-value">{bmi}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div className="vital-signs-wrapper">
+        <h2>Vital Signs</h2>
+        <table className="vital-signs-table">
+          <tbody>
+            {Object.entries(otherVitals).map(([key, value]) => (
+              <tr key={key}>
+                <td className="vital-label">{formatLabel(key)}</td>
+                <td className="vital-value">{value}</td>
+              </tr>
+            ))}
+            {bmi && (
+              <tr>
+                <td className="vital-label">BMI</td>
+                <td
+                  className={`vital-value ${
+                    bmi < 18.5
+                      ? "vital-bmi-warning"
+                      : bmi >= 25
+                      ? "vital-bmi-danger"
+                      : "vital-bmi-normal"
+                  }`}
+                >
+                  {bmi}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

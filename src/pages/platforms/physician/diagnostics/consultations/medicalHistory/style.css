@@ -22,7 +22,6 @@
   align-items: flex-start;
 }
 
-.checkup-data-fmhx-container,
 .checkup-data-pmhx-container,
 .checkup-data-pshx-container,
 .checkup-data-obgynhx-container {
@@ -155,4 +154,388 @@
   list-style-type: circle;
   margin-left: 20px;
   padding: 0;
+}
+
+/* family histoy design */
+.checkup-data-fmhx-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.checkup-data-fmhx-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #1a2a3a;
+}
+
+.checkup-data-fmhx-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.checkup-data-fmhx-header label {
+  all: unset;
+  width: 35%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* wrapper is positioned parent for absolute connectors & center line */
+.checkup-data-fmhx-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 12px 0;
+  box-sizing: border-box;
+  max-height: 700px; /* scroll container */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar {
+  width: 4px; /* kapal ng scrollbar */
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar-track {
+  background: transparent; /* pwede rin lightgray */
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* kulay ng handle */
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.checkup-data-fmhx-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.6); /* hover effect */
+}
+
+.checkup-data-fmhx-rows {
+  position: relative; /* anchor for pseudo-line */
+}
+
+/* vertical center line follows content height */
+.checkup-data-fmhx-rows::before {
+  content: "";
+  position: absolute;
+  left: 50.4%;
+  top: 0;
+  bottom: 0; /* hanggang dulo ng content */
+  transform: translateX(-50%);
+  width: 2px;
+  background-color: #111;
+  z-index: 2;
+}
+
+/* center vertical line (absolute, full height of wrapper) */
+.checkup-data-fmhx-centerLine {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%; /* tuloy hanggang dulo */
+  width: 2px;
+  background-color: #555;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* rows container */
+.checkup-data-fmhx-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  /* keep some horizontal padding so boxes don't touch edges */
+  padding: 0 12%;
+  box-sizing: border-box;
+}
+
+/* each row — fixed height so centers align */
+.checkup-data-fmhx-row {
+  display: flex;
+  align-items: center;
+  min-height: 50px; /* matches box height */
+}
+
+/* three columns: left / center spacer / right */
+.checkup-data-fmhx-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* left & right take remaining space */
+.left-col,
+.right-col {
+  flex: 1;
+}
+
+/* center spacer width should align with center line width and gap */
+.center-col {
+  width: 3px; /* equal to centerLine width */
+  margin: 0 12px; /* small gap between boxes and center line */
+  pointer-events: none;
+}
+
+/* the visible boxes */
+.checkup-data-fmhx-condition {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* invisible "empty" placeholders (take no visual space but preserve flex) */
+.checkup-data-fmhx-empty {
+  width: 0;
+  height: 0;
+}
+
+.checkup-data-fmhx-condition span {
+  padding: 0 10px;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+/* connector line (absolute inside wrapper) */
+.connector-line {
+  position: absolute;
+  height: 1px;
+  background: #555;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 1px;
+}
+
+.pmhx-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 28px;
+  color: #1a2a3a;
+  letter-spacing: 0.5px;
+}
+
+.pmhx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+.pmhx-category {
+  height: fit-content;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.pmhx-category:hover {
+  transform: translateY(-2px);
+}
+
+.pmhx-category-title {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 1px solid #e5eaf0;
+  padding-bottom: 6px;
+}
+.pmhx-card {
+  background: #fafbfc;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #e1e6eb;
+}
+
+.pmhx-card:hover {
+  background: #fdfefe;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pmhx-card.expanded {
+  border-color: #3498db;
+  background: #f9fcff;
+}
+
+.pmhx-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pmhx-card-name {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #1f2d3d;
+}
+
+/* Status pill refined */
+.pmhx-status {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: capitalize;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Professional colors for status */
+.pmhx-status.controlled {
+  background: #e8f8f0;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.pmhx-status.uncontrolled {
+  background: #fdecea;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.pmhx-status.stable {
+  background: #fff9e6;
+  color: #b8860b;
+  border: 1px solid #f6d365;
+}
+
+.pmhx-status.recovered {
+  background: #e8f4fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.pmhx-status.severe {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  border: 1px solid #ce93d8;
+}
+
+/* Expandable body with smooth animation */
+.pmhx-card-body {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #4a4a4a;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.pmhx-card.expanded .pmhx-card-body {
+  max-height: 300px;
+  opacity: 1;
+}
+
+/* past surgical history design */
+.pshx-container {
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.pshx-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a2a3a;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+.pshx-timeline {
+  position: relative;
+  margin-left: 20px;
+  border-left: 2px solid #ddd;
+  padding-left: 20px;
+}
+
+.pshx-item {
+  position: relative;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  padding-left: 10px;
+}
+
+.pshx-item:hover {
+  background: #f0f0f0;
+  border-radius: 6px;
+}
+
+.pshx-dot {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background: #007bff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.6);
+  border: 2px solid white;
+}
+
+.pshx-content {
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+
+.pshx-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pshx-procedure {
+  font-weight: bold;
+  font-size: 16px;
+  color: #222;
+}
+
+.pshx-date {
+  font-size: 13px;
+  background: #007bff;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.pshx-body {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  font-size: 14px;
+  color: #555;
+  margin-top: 8px;
+}
+
+.pshx-body.show {
+  max-height: 500px; /* enough space */
+  opacity: 1;
+}
+
+.pshx-complication {
+  color: #b71c1c;
+  font-weight: bold;
+}
+
+.pshx-item + .pshx-item {
+  border-top: 1px dashed #ddd;
 }

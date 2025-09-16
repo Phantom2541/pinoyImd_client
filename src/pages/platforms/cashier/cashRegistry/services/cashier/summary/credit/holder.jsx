@@ -82,7 +82,6 @@ const Holder = ({ refNo = {}, setRefNo = () => {} }) => {
       }, 1000),
     [token, dispatch, activePlatform, holder]
   );
-
   useEffect(() => {
     if (holder) {
       //reset the selected after changing the holder
@@ -91,6 +90,13 @@ const Holder = ({ refNo = {}, setRefNo = () => {} }) => {
       setQuery("");
     }
   }, [holder]);
+
+  useEffect(() => {
+    if (credit?.user && !selected?._id) {
+      setRefNo((prev) => ({ ...prev, careOf: { ...prev.careOf, user: "" } }));
+    }
+  }, [credit, results, setRefNo]);
+
   useEffect(() => {
     setResults(holder === "physician" ? physicians : personnels);
   }, [physicians, personnels, holder]);
@@ -122,7 +128,7 @@ const Holder = ({ refNo = {}, setRefNo = () => {} }) => {
       <td colSpan={2} className="p-1">
         <div className="position-relative">
           <div className="holder-search-container">
-            {selected._id ? (
+            {selected?._id ? (
               <div className="my-">
                 <span style={{ fontSize: "0.9rem" }} className="text-primary">
                   {fullName(selected.fullName)}

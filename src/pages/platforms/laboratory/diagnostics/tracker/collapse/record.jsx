@@ -24,7 +24,6 @@ export default function CollapseTable({ menu }) {
           }))
         : undefined,
     };
-    console.log("_task", _task);
 
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem(

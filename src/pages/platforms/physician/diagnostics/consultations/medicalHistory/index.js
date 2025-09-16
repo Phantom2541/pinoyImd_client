@@ -4,15 +4,123 @@ import FMHx from "./fmhx";
 import PSHx from "./pshx";
 import OBGyneHx from "./obGyneHx";
 
-const familyHistory = ["Diabetes", "Hypertension", "Heart Disease in father"];
+const familyHistory = {
+  mother: [
+    "Diabetes",
+    "Hypertension",
+    "Asthma",
+    "Breast Cancer",
+    "Arthritis",
+    "Stroke",
+    "Tuberculosis",
+    "Migraine",
+    "Osteoporosis",
+    "Glaucoma",
+    "Alzheimer’s Disease",
+    "Thyroid Disorder",
+    "Depression",
+    "Obesity",
+    "Gout",
+    "Anemia",
+  ],
+  father: [
+    "Heart Disease",
+    "Cancer",
+    "Asthma",
+    "Lung Disease",
+    "Stroke",
+    "Kidney Disease",
+    "Arthritis",
+    "Diabetes",
+    "Parkinson’s Disease",
+    "Liver Disease",
+    "High Cholesterol",
+    "Peptic Ulcer",
+    "Epilepsy",
+    "Obesity",
+    "Prostate Cancer",
+    "Hepatitis",
+  ],
+};
 
-const pastMedicalHistory = [
-  "Appendectomy - 2015",
-  "Allergic rhinitis",
-  "Asthma since childhood",
+const pastMedicalHistory = {
+  "Chronic Illnesses": [
+    { name: "Hypertension", year: 2015, status: "Controlled" },
+    { name: "Diabetes", year: 2018, status: "Uncontrolled" },
+    { name: "Asthma", year: 2020, status: "Stable" },
+  ],
+  Surgeries: [{ name: "Appendectomy", year: 2010, status: "Recovered" }],
+  Hospitalizations: [{ name: "Pneumonia", year: 2022, status: "Recovered" }],
+  Allergies: [{ name: "Penicillin", year: "-", status: "Severe" }],
+};
+
+const pastSurgicalHistory = [
+  {
+    procedure: "Appendectomy",
+    year: "2010",
+    hospital: "St. Luke's",
+    surgeon: "Dr. Santos",
+    type: "Emergency",
+    anesthesia: "General",
+    duration: "2 hours",
+    outcome: "Recovered",
+    followUp: "None",
+    complication: "None",
+    remarks: "Patient discharged after 3 days",
+  },
+  {
+    procedure: "Cholecystectomy",
+    year: "2015",
+    hospital: "Makati Med",
+    surgeon: "Dr. Cruz",
+    type: "Elective",
+    anesthesia: "General",
+    duration: "3 hours",
+    outcome: "Recovered",
+    followUp: "1 month check-up",
+    complication: "Mild infection",
+    remarks: "Resolved with antibiotics",
+  },
+  {
+    procedure: "Knee Replacement",
+    year: "2018",
+    hospital: "PGH",
+    surgeon: "Dr. Reyes",
+    type: "Elective",
+    anesthesia: "Spinal",
+    duration: "4 hours",
+    outcome: "Ongoing rehab",
+    followUp: "Weekly PT sessions",
+    complication: "Delayed wound healing",
+    remarks: "Patient improving with therapy",
+  },
+  {
+    procedure: "Cataract Surgery",
+    year: "2020",
+    hospital: "Asian Hospital",
+    surgeon: "Dr. Dela Cruz",
+    type: "Elective",
+    anesthesia: "Local",
+    duration: "1 hour",
+    outcome: "Good vision recovery",
+    followUp: "2 weeks follow-up",
+    complication: "None",
+    remarks: "Successful outcome",
+  },
+  {
+    procedure: "Hip Replacement",
+    year: "2022",
+    hospital: "Cardinal Santos",
+    surgeon: "Dr. Villanueva",
+    type: "Elective",
+    anesthesia: "Spinal",
+    duration: "5 hours",
+    outcome: "Stable, under rehab",
+    followUp: "Monthly ortho checkup",
+    complication: "Minor bleeding",
+    remarks: "Monitoring progress",
+  },
 ];
-
-const pastSurgicalHistory = ["Appendectomy - 2015", "Knee arthroscopy - 2020"];
 
 const obGyneHistory = [
   { order: 1, outcome: "Alive", deliveryType: "Cesarean", gestationWeeks: 39 },
@@ -62,7 +170,7 @@ export default function HistorySwitcher({ task }) {
     }, 300);
 
     return () => clearTimeout(t);
-  }, [task]);
+  }, [task, current]);
 
   const sanitized = current?.toLowerCase().replace(/\s+/g, "");
   const Comp = historyMap[sanitized] || Blank;

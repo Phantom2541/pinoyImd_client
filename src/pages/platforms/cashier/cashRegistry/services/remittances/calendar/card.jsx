@@ -91,7 +91,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                           fontWeight: 400,
                         }}
                       >
-                        {key}:
+                        {key === "co" ? "Care Of" : key}:
                       </h6>
 
                       <div

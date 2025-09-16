@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCardBody } from "mdbreact";
 import Record from "./record";
 

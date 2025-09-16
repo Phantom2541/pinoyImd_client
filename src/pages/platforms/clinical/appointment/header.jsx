@@ -1,40 +1,21 @@
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  BROWSE,
   SetPHYSICIAN,
-} from "../../../../services/redux/slices/diagnostics/clinician/appointments";
+  SetSCHED,
+  TOGGLE_PATIENT_MODAL,
+  SetFILTERED,
+} from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { properFullname } from "../../../../services/utilities";
+import { Search } from "../../../../components/searchables";
+import { useState } from "react";
+
 const Header = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections, physician } = useSelector(
-    ({ appointments }) => appointments
-  );
-  const [appointments, setAppointments] = useState([]),
+  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { collections, physicians, scheds, activeSched, activePhysician } =
+      useSelector(({ appointments }) => appointments),
+    [lastSched, setLastSched] = useState(""),
     dispatch = useDispatch();
-
-  //initial values
-  useEffect(() => {
-    if (token && activePlatform)
-      dispatch(
-        BROWSE({
-          token,
-          data: {
-            branch: activePlatform.branchId,
-            // month: new Date().getMonth() + 1,
-            month: 6,
-            year: new Date().getFullYear(),
-            // day: new Date().getDate(),
-            day: 3,
-          },
-        })
-      );
-  }, [dispatch, token, activePlatform]);
-
-  useEffect(() => {
-    if (collections) setAppointments(collections);
-  }, [collections]);
 
   return (
     <MDBView
@@ -42,27 +23,61 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {appointments.length} Physicians
-        </span>
-      </div>
-      <div>
-        <div className="text-right d-flex align-items-center">
+        <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center">
           <span className="mr-2">Physician:</span>
           <select
             className="form-control bg-light"
-            value={physician}
+            style={{ padding: "0 5px", fontSize: ".8rem " }}
+            value={activePhysician?._id}
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
           >
             <option value="all">All</option>
-            {appointments.map(({ user }) => (
-              <option key={user?._id} value={user?._id}>
-                Dr. {properFullname(user?.fullName)}
-              </option>
-            ))}
+            {activePlatform.branch.physicians.map((user) => {
+              const isExisting = physicians.some(({ _id }) => _id === user._id);
+              return (
+                <option
+                  key={user?._id}
+                  value={user?._id}
+                  disabled={!isExisting}
+                  title={!isExisting && "No Clinic has been Register"}
+                >
+                  Dr. {properFullname(user?.fullName)}
+                </option>
+              );
+            })}
           </select>
         </div>
       </div>
+      <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center ml-n5">
+        <span className="mr-2">Schedule:</span>
+        <select
+          className="form-control bg-light"
+          value={activeSched}
+          onChange={({ target }) => {
+            dispatch(SetSCHED({ sched: target.value }));
+          }}
+        >
+          <option value="">All</option>
+          {scheds.map((sched) => (
+            <option key={sched} value={sched}>
+              {sched}
+            </option>
+          ))}
+        </select>
+      </div>
+      <Search
+        setFiltered={(items) => {
+          dispatch(SetFILTERED(items));
+          dispatch(SetSCHED({ sched: "", isSearch: true }));
+          setLastSched(activeSched);
+        }}
+        reset={() => {
+          dispatch(SetSCHED({ sched: lastSched }));
+        }}
+        collections={collections}
+        handleAdd={(searchValue) => dispatch(TOGGLE_PATIENT_MODAL(searchValue))}
+        hideButton
+      />
     </MDBView>
   );
 };

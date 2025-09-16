@@ -1,0 +1,48 @@
+.checkup-data-center-image-history {
+  position: absolute;
+}
+
+.checkup-data-center-history button {
+  border: none;
+  background-color: transparent;
+}
+
+/* Group container for each button + list */
+.history-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* o flex-start kung gusto mo left-aligned */
+}
+
+.history-group button.male:hover {
+  color: #007bff;
+}
+
+.history-group button.female:hover {
+  color: #e83e8c;
+}
+
+/* List ng items sa ilalim ng button */
+.history-list {
+  /* padding-left: 12px; */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: #444;
+  align-items: center;
+}
+
+/* Individual item */
+.history-list span {
+  display: block;
+  cursor: pointer;
+}
+
+.history-list span.male:hover {
+  color: #007bff;
+}
+
+.history-list span.female:hover {
+  color: #e83e8c;
+}

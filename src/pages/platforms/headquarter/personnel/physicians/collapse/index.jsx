@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody, MDBBtn, MDBRow } from "mdbreact";
 import { collapse, properFullname } from "../../../../../../services/utilities";
-import { Policy } from "../../../../../../services/fakeDb";
 import {
   DESTROY,
   SET_COLLECTIONS,
@@ -136,10 +135,10 @@ export default function CollapsableIndex() {
       <table className="table table-bordered table-hover">
         <thead className="light-blue">
           <tr>
-            <th>Name</th>
+            <th>#</th>
+            <th>Physician's Name</th>
             <th>Specialization</th>
-            <th>Department</th>
-            <th>Position</th>
+            <th>Clinic Status</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -150,7 +149,6 @@ export default function CollapsableIndex() {
               user,
               ghostName,
               specialization,
-              position,
               clinic,
               status,
               _id,
@@ -170,16 +168,13 @@ export default function CollapsableIndex() {
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
+                  <td>{++index}</td>
                   <td className={textClass}>
                     {user
                       ? properFullname(user.fullName)
                       : properFullname(ghostName)}
                   </td>
                   <td className={textClass}>{specialization}</td>
-                  <td style={{ color: "black" }}>
-                    {position?.employment &&
-                      Policy.getDepartment(position?.employment?.designation)}
-                  </td>
                   <td style={{ color: "black" }}>
                     {renderStatusBadge(clinic && clinic?.status)}
                   </td>
@@ -195,7 +190,7 @@ export default function CollapsableIndex() {
                       }
                       className="btn btn-link p-0"
                     >
-                      PCA{" "}
+                      <span title="Patient Care Associate">PCA</span>{" "}
                       <i
                         className="fa fa-angle-left"
                         style={{

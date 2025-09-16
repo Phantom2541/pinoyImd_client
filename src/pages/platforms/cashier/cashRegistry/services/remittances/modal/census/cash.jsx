@@ -115,7 +115,9 @@ export default function Cash({
             key={idx}
             className="d-flex justify-content-between align-items-center mb-1"
           >
-            <span className="text-capitalize">{key}</span>
+            <span className="text-capitalize">
+              {key === "co" ? "Care Of" : key}
+            </span>
             <b>{currency.format(value) || 0}</b>
           </div>
         ))}

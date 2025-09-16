@@ -1,201 +1,148 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Cloudinary } from "../../../../../../../services/utilities";
-
+import { useState, useEffect } from "react";
+import EditableService from "../../../../../../../components/customizable/searchServices";
+import sectionsConfig from "./data.json";
 const RequestForm = () => {
-  const { activePlatform = {} } = useSelector(({ auth }) => auth);
+  const [selections, setSelections] = useState([]); // <- MUST be an array
+  const [other, setOther] = useState(""); // hiwalay na input para sa "Other"
 
-  const companyName = activePlatform?.branch?.companyId?.name;
-  const branchName = activePlatform?.branch?.name;
+  useEffect(() => {
+    console.log("selections (flat ids):", selections);
+  }, [selections]);
 
-  const BannerURL = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-    companyName
-  )}//${encodeURIComponent(branchName)}/banner`;
+  useEffect(() => {
+    console.log("other:", other);
+  }, [other]);
 
-  const itemStyle = { marginBottom: "6px", fontSize: "0.9rem" };
+  // toggleItem ngayon tumatanggap lang ng `item` at laging nagbabalik ng flat array of ids
+  const toggleItem = (item) => {
+    setSelections((prev) => {
+      // siguraduhin array ang ids
+      const ids = Array.isArray(item.id) ? item.id : [item.id];
 
-  const cellStyle = {
-    border: "1px solid #000",
-    padding: "6px",
-    fontSize: "1rem",
-    fontWeight: "bold",
+      // check kung kompleto nang naka-select lahat ng ids
+      const hasAll = ids.every((id) => prev.includes(id));
+
+      if (hasAll) {
+        // alisin lahat ng ids na nasa group
+        return prev.filter((x) => !ids.includes(x));
+      } else {
+        // idagdag yung wala pa (prevent duplicates)
+        const toAdd = ids.filter((id) => !prev.includes(id));
+        return [...prev, ...toAdd];
+      }
+    });
   };
 
-  const renderTable = () => (
-    <table className="laboratoryRequestForm-printout-table">
-      <thead>
-        <tr>
-          <th colSpan={3}>
-            <img
-              src={BannerURL}
-              alt="Banner"
-              className="laboratoryRequestForm-banner"
-            />
-          </th>
-        </tr>
-        <tr>
-          <th
-            colSpan={3}
-            style={{ fontSize: "1rem" }}
-            className="laboratoryRequestForm-font text-center"
-          >
-            PATIENT REQUEST FORM
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {/* Patient Info */}
-        <tr>
-          <td
-            colSpan={3}
-            style={{ border: "1px solid #000", padding: "6px 10px" }}
-          >
-            <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
-              Name:
-            </span>
+  return (
+    <tbody>
+      <tr>
+        <td colSpan={3} style={testCellStyle}>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <div style={{ flex: 1 }}>
+              {sectionsConfig.slice(0, 3).map((sec) => (
+                <Section
+                  key={sec.title}
+                  {...sec}
+                  selections={selections}
+                  toggleItem={toggleItem}
+                />
+              ))}
+            </div>
+
+            <div style={{ flex: 1 }}>
+              {sectionsConfig.slice(3).map((sec) => (
+                <Section
+                  key={sec.title}
+                  {...sec}
+                  selections={selections}
+                  toggleItem={toggleItem}
+                />
+              ))}
+            </div>
+          </div>
+          {/* Other (separate searchable input) */}
+          <div style={{ marginTop: "16px" }}>
             <div
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "0 20px",
-                borderTop: "2px solid black",
-                fontSize: "0.85rem",
-                paddingBottom: "10px",
-                marginTop: "20px",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                marginBottom: "8px",
               }}
             >
-              <span>Last Name</span>
-              <span>First Name</span>
-              <span>Middle Name</span>
+              Other
             </div>
-          </td>
-        </tr>
-
-        <tr style={{ height: "50px" }}>
-          <td style={cellStyle}>Date of Birth:</td>
-          <td style={cellStyle}>Sex:</td>
-          <td style={cellStyle}>Contact No:</td>
-        </tr>
-
-        <tr style={{ height: "50px" }}>
-          <td colSpan={2} style={cellStyle}>
-            Address:
-          </td>
-          <td style={cellStyle}>Physician:</td>
-        </tr>
-
-        {/* Tests Section */}
-        <tr>
-          <td
-            style={{
-              verticalAlign: "top",
-              border: "1px solid #000",
-              padding: "10px",
-            }}
-            colSpan={3}
-          >
-            <div style={{ display: "flex", gap: "40px" }}>
-              {/* Left Column */}
-              <div style={{ flex: 1 }}>
-                <Section
-                  title="Hematology"
-                  items={[
-                    "CBC",
-                    "CBC w/ APC",
-                    "Platelet Count",
-                    "Blood Typing",
-                    "ESR",
-                  ]}
-                  itemStyle={itemStyle}
-                />
-
-                <Section
-                  title="Clinical Microscopy"
-                  items={[
-                    "Urinalysis",
-                    "Pregnancy Test",
-                    "Fecalysis",
-                    "Occult Blood",
-                  ]}
-                  itemStyle={itemStyle}
-                />
-
-                <Section
-                  title="Serology"
-                  items={[
-                    "Dengue Duo",
-                    "HBsAG Screening",
-                    "VDAL / RPR",
-                    "HIV Screening",
-                  ]}
-                  itemStyle={itemStyle}
-                />
-              </div>
-
-              {/* Right Column */}
-              <div style={{ flex: 1 }}>
-                <Section
-                  title="Clinical Chemistry"
-                  items={[
-                    "FBS / RBS",
-                    "SGOT / AST",
-                    "SGPT / ALT",
-                    "Lipid Profile",
-                    "Cholesterol",
-                    "Triglycerides",
-                    "HDL / LDL",
-                    "Creatinine",
-                    "BUN",
-                    "Uric Acid",
-                    "Sodium (NA)",
-                    "Potassium (K)",
-                    "Ionized Calcium (iCA)",
-                    "Bilirubin",
-                    "HbA1c",
-                  ]}
-                  itemStyle={itemStyle}
-                  indentItems={[4, 5, 6]}
-                />
-
-                <Section
-                  title="Other"
-                  items={["Others (Specify): ___________"]}
-                  itemStyle={itemStyle}
-                />
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  );
-
-  return (
-    <div style={{ fontFamily: "Arial, sans-serif" }}>
-      <div className="laboratoryRequestForm-grid d-flex justify-content-center align-items-center">
-        <div className="laboratoryRequestForm-copy">{renderTable()}</div>
-      </div>
-    </div>
+            <EditableService onSelect={setOther} displayName="name" />
+          </div>
+        </td>
+      </tr>
+    </tbody>
   );
 };
 
-const Section = ({ title, items, itemStyle, indentItems = [] }) => (
+const Section = ({
+  title,
+  items,
+  selections,
+  toggleItem,
+  indentItems = [],
+}) => (
   <div style={{ marginBottom: "16px" }}>
     <div style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
       {title}
     </div>
-    {items.map((item, idx) => (
-      <div
-        key={idx}
-        style={{
-          ...itemStyle,
-          marginLeft: indentItems.includes(idx) ? "20px" : 0,
-        }}
-      >
-        [ ] {item}
-      </div>
-    ))}
+
+    {items.map((item, idx) => {
+      const key = Array.isArray(item.id) ? item.id.join("-") : item.id;
+      const checked = Array.isArray(item.id)
+        ? item.id.every((id) => selections.includes(id))
+        : selections.includes(item.id);
+
+      return (
+        <CheckboxRow
+          key={key}
+          label={item.label}
+          checked={checked}
+          onClick={() => toggleItem(item)}
+          indent={indentItems.includes(idx)}
+        />
+      );
+    })}
   </div>
 );
+
+const CheckboxRow = ({ label, checked, onClick, indent }) => (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      cursor: "pointer",
+      marginBottom: "6px",
+      fontSize: "0.9rem",
+      marginLeft: indent ? "20px" : 0,
+    }}
+    onClick={onClick}
+  >
+    <div style={checkboxBox}>{checked ? "✓" : ""}</div>
+    <span>{label}</span>
+  </div>
+);
+
+const testCellStyle = {
+  verticalAlign: "top",
+  border: "1px solid #000",
+  padding: "10px",
+};
+const checkboxBox = {
+  width: "16px",
+  height: "16px",
+  border: "1.5px solid #000",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "12px",
+  fontWeight: "bold",
+  userSelect: "none",
+};
 
 export default RequestForm;

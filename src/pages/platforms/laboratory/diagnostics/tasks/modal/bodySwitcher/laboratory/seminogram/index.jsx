@@ -31,8 +31,11 @@ export default function Seminogram() {
     { name: "CHEMICAL EXAM", component: ChemExam, key: 3 },
   ];
 
+  console.log("packages", packages);
   // Filter only tabs relevant to current packages
-  const availableTabs = orderedTabs.filter((tab) => packages.includes(tab.key));
+  const availableTabs = Array.isArray(packages)
+    ? orderedTabs?.filter((tab) => packages?.includes(tab.key))
+    : [];
 
   return (
     <MDBContainer>

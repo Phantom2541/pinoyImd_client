@@ -86,7 +86,7 @@ export const reduxSlice = createSlice({
       state.cart = payload;
     },
     SetPAYMENT: (state, { payload }) => {
-      state.payment = payload;
+      state.payment = state.isSendOut ? "voucher" : payload;
     },
     SetREFNO: (state, { payload }) => {
       const { haveCard = true } = state.selected;

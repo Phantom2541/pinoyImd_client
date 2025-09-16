@@ -10,7 +10,7 @@ import {
 import {
   SetTeam,
   SetEDIT,
-} from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
+} from "../../../../../../services/redux/slices/diagnostics/clinic/quest";
 import { useDispatch } from "react-redux";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {

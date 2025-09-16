@@ -3,20 +3,19 @@
   grid-template-columns: 1fr 250px;
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
-    "image  patient"
-    "image  patient"
-    "image  prescription";
+    "image   patient"
+    "image   patient"
+    "image   prescription";
   gap: 10px;
   height: calc(100vh - 23vh);
-  /* user-select: none; */
+  user-select: none;
   position: relative;
 }
-
 .checkup-data-patient {
   grid-area: patient;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   background-color: white;
-  padding: 10px;
+  border-radius: 3px;
 }
 
 .checkup-data-body {
@@ -25,12 +24,22 @@
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
+  border-radius: 3px;
+}
+
+.checkup-data-tracker {
+  grid-area: tracker;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }
 
 .checkup-data-note {
   grid-area: prescription;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  background-color: white;
+  border-radius: 3px;
 }
 
 .checkup-data-body-slide {
@@ -48,6 +57,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 15px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   transition: width 0.5s ease;
 }
 
@@ -57,6 +68,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 20px;
 }
 
 .checkup-data-center-image {
@@ -93,8 +105,10 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
   height: 100%;
   z-index: 10;
 }
@@ -106,32 +120,37 @@
   width: fit-content;
   cursor: pointer;
   border: none;
+  padding: 0;
   background-color: transparent;
   transition: color 0.3s ease;
 }
 
-.checkup-data-center-image-medical-history button:hover,
-.checkup-data-center-image-Ancillary button:hover {
+.checkup-data-center-image-medical-history button.male:hover,
+.checkup-data-center-image-Ancillary button.male:hover {
   color: #007bff;
 }
 
-.checkup-data-center-image-medical-history button.active,
-.checkup-data-center-image-Ancillary button.active {
+.checkup-data-center-image-medical-history button.male.active,
+.checkup-data-center-image-Ancillary button.male.active {
   color: #007bff;
 }
 
-.checkup-data-center-image-medical-history button:disabled,
-.checkup-data-center-image-Ancillary button:disabled {
-  opacity: 0.6;
-  pointer-events: none;
+.checkup-data-center-image-medical-history button.female:hover,
+.checkup-data-center-image-Ancillary button.female:hover {
+  color: #e83e8c;
+}
+
+.checkup-data-center-image-medical-history button.female.active,
+.checkup-data-center-image-Ancillary button.female.active {
+  color: #e83e8c;
 }
 
 .checkup-data-center-image-medical-history {
-  left: 3%;
+  left: 0;
 }
 
 .checkup-data-center-image-Ancillary {
-  right: 3%;
+  right: 0;
 }
 
 .checkup-data-note-mask {

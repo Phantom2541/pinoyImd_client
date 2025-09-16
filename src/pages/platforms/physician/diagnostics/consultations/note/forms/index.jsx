@@ -1,19 +1,48 @@
-import { MDBCardBody } from "mdbreact";
+import { MDBCardBody, MDBIcon } from "mdbreact";
+import Header from "./header";
 import Body from "./body";
-import usePanelPosition from "../panelPosition";
 
-export default function RequestForm({ active, buttonRefs }) {
+import usePanelPosition from "../panelPosition";
+import "./requestForm.css";
+
+export default function RequestForm({ active, buttonRefs, togglePanel }) {
   const style = usePanelPosition(active, buttonRefs.request, {
-    width: 500,
+    width: 507,
     height: 700,
   });
 
   return (
     <div style={style} className="checkup-data-form-container">
-      <div className="requestform-card">
-        <MDBCardBody>
-          <Body />
-        </MDBCardBody>
+      <MDBIcon
+        icon="times"
+        className="checkup-data-note-close"
+        onClick={() => togglePanel("request")}
+      />
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          maxHeight: "700px",
+          overflow: "auto",
+        }}
+      >
+        <div className="checkup-data-requestform-card">
+          <MDBCardBody>
+            <div style={{ fontFamily: "Arial, sans-serif" }}>
+              <div className="laboratoryRequestForm-grid d-flex justify-content-center align-items-center">
+                <table className="laboratoryRequestForm-printout-table">
+                  <Header />
+                  <Body />
+                </table>
+              </div>
+              <div style={{ textAlign: "center", marginTop: "20px" }}>
+                {/* <button onClick={handleSave}>
+                  Save xxxxxxxxxxxxxxxxxxxxxx
+                </button> */}
+              </div>
+            </div>
+          </MDBCardBody>
+        </div>
       </div>
     </div>
   );

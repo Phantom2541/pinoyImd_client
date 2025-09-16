@@ -71,3 +71,77 @@
     opacity: 0;
   }
 }
+
+.vital-sign-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.vital-signs-wrapper {
+  background: linear-gradient(135deg, #f9f9f9, #ffffff);
+  width: fit-content;
+  padding: 20px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.2s ease;
+}
+
+.vital-signs-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.vital-signs-wrapper h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #007bff;
+}
+
+.vital-signs-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.vital-signs-table tr {
+  border-bottom: 1px solid #eee;
+}
+
+.vital-signs-table tr:last-child {
+  border-bottom: none;
+}
+
+.vital-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #666;
+  padding: 10px 15px;
+  text-transform: capitalize;
+}
+
+.vital-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  padding: 10px 15px;
+  text-align: right;
+}
+
+.vital-bmi-normal {
+  color: #28a745;
+  font-weight: 700;
+}
+
+.vital-bmi-warning {
+  color: #ffc107;
+  font-weight: 700;
+}
+
+.vital-bmi-danger {
+  color: #dc3545;
+  font-weight: 700;
+}

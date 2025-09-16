@@ -12,7 +12,7 @@ import {
   SAVE,
   UPDATE,
   TOGGLE,
-} from "../../../../../services/redux/slices/diagnostics/clinician/quest";
+} from "../../../../../services/redux/slices/diagnostics/clinic/quest";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 

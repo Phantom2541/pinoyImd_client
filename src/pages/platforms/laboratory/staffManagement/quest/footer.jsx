@@ -5,12 +5,10 @@ import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../../services/redux/slices/diagnostics/clinician/quest";
+} from "../../../../../services/redux/slices/diagnostics/clinic/quest";
 const Footer = () => {
   const { maxPage } = useSelector(({ auth }) => auth),
-    { isLoading, totalPages, activePage } = useSelector(
-      ({ quest }) => quest
-    ),
+    { isLoading, totalPages, activePage } = useSelector(({ quest }) => quest),
     dispatch = useDispatch();
 
   useEffect(() => {
