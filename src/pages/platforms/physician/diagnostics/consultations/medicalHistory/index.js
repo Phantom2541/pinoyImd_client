@@ -43,11 +43,16 @@ const familyHistory = {
   ],
 };
 
-const pastMedicalHistory = [
-  "Appendectomy - 2015",
-  "Allergic rhinitis",
-  "Asthma since childhood",
-];
+const pastMedicalHistory = {
+  "Chronic Illnesses": [
+    { name: "Hypertension", year: 2015, status: "Controlled" },
+    { name: "Diabetes", year: 2018, status: "Uncontrolled" },
+    { name: "Asthma", year: 2020, status: "Stable" },
+  ],
+  Surgeries: [{ name: "Appendectomy", year: 2010, status: "Recovered" }],
+  Hospitalizations: [{ name: "Pneumonia", year: 2022, status: "Recovered" }],
+  Allergies: [{ name: "Penicillin", year: "-", status: "Severe" }],
+};
 
 const pastSurgicalHistory = ["Appendectomy - 2015", "Knee arthroscopy - 2020"];
 
