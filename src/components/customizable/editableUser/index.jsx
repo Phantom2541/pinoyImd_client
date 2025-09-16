@@ -56,6 +56,7 @@ const EditableUser = ({
   readOnly = false,
   returnObj = false, // if true, return the whole user object instead of just the _id (mainly useful when readOnly is true)
   placeHolder = "Search..",
+  defaultSearchValue = "",
   formSubmitted = false,
   isSuccess: successUpdated = false,
   onUserNotFound = () => {},
@@ -87,6 +88,13 @@ const EditableUser = ({
       setSelected(preValue);
     }
   }, [preValue]);
+
+  useEffect(() => {
+    if (defaultSearchValue) {
+      handleChange("", true, defaultSearchValue);
+    }
+    //eslint-disable-next-line
+  }, [defaultSearchValue]);
 
   const debouncedSearch = useMemo(
     () =>
@@ -143,14 +151,15 @@ const EditableUser = ({
     }
   };
 
-  const handleChange = (e) => {
-    const _searchKey = e.target.value;
+  const handleChange = (e, isDefault = false, defaultValue) => {
+    const _searchKey = isDefault ? defaultValue : e.target.value;
     setSearchKey(_searchKey);
     setIsSuccess(false);
     setResults([]);
 
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
+      console.log("_searchkey", _searchKey);
       setIsFetching(true);
       return debouncedSearch(_searchKey);
     }

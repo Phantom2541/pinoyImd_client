@@ -7,7 +7,7 @@ const initialState = {
   filter: [],
   paginated: [],
   physician: "",
-  activeSched: null,
+  activeSched: "",
   activePhysician: { _id: null },
   // Bread attributes
   selected: {}, // assurance
@@ -28,6 +28,7 @@ const initialState = {
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
+  formSubmitted: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -174,22 +175,18 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetSCHED: (state, { payload }) => {
-      console.log("SetSCHED", payload);
-      state.activeSched = payload;
-      state.filtered = state.collections.filter(
-        ({ sched }) => sched === payload
-      );
+      const { sched = "", isSearch = false } = payload;
 
-      // const { page, maxPage } = state;
-      // if (payload.length > 0) {
-      //   let totalPages = Math.floor(payload.length / maxPage);
-      //   if (payload.length % maxPage > 0) totalPages += 1;
-      //   state.totalPages = totalPages;
-      //   if (page > totalPages) {
-      //     state.page = totalPages;
-      //   }
-      // }
-      // state.filtered = payload;
+      if (isSearch) {
+        state.filtered = state.filtered;
+      } else if (!sched) {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = state.collections.filter(
+          ({ sched: sc }) => sc === sched
+        );
+      }
+      state.activeSched = sched;
     },
 
     SetPagination: (state) => {
@@ -203,6 +200,9 @@ export const reduxSlice = createSlice({
         (page - 1) * max,
         max + (page - 1) * max
       );
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -224,7 +224,12 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
-    TOGGLE_PATIENT_MODAL: (state) => {
+    TOGGLE_PATIENT_MODAL: (state, { payload }) => {
+      const formattedName = payload?.includes(",")
+        ? payload
+        : payload?.split(" ").join(",");
+
+      state.selected = { defaultSearch: formattedName };
       state.showPatientModal = !state.showPatientModal;
     },
     TOGGLEEMR: (state) => {
@@ -294,20 +299,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+        state.isSuccess = false;
       })
       .addCase(UPDATE.pending, (state) => {
         state.isSuccess = false;
@@ -416,6 +424,7 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetFILTERED,
   SetPHYSICIAN,
   SetSCHED,
   SetCREATE,

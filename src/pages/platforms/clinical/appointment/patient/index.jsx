@@ -6,100 +6,180 @@ import {
   MDBModalHeader,
   MDBBtn,
 } from "mdbreact";
-import { TOGGLE_PATIENT_MODAL } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { useState } from "react";
-import Stepper from "../../../../../components/stepper";
-import Step1 from "./steps/step-1";
-import Step2 from "./steps/step-2";
-import Step3 from "./steps/step-3";
-const steps = [
-  {
-    label: "Patient",
-  },
-  {
-    label: "Diagnostics",
-  },
-  {
-    label: "eMR",
-  },
-
-  {
-    label: "VS",
-  },
-  {
-    label: "Schedule",
-  },
-];
-const stepMap = {
-  0: Step1,
-  1: Step2,
-  2: Step3,
+import {
+  TOGGLE_PATIENT_MODAL,
+  SAVE,
+  SetSCHED,
+} from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { useEffect, useState } from "react";
+import visitTypes from "../visitTypes.json";
+import { EditableUser } from "../../../../../components/customizable";
+import Register from "./register";
+import Swal from "sweetalert2";
+import { generateEmail } from "../../../../../services/utilities";
+import Spinner from "../../../../../components/spinner";
+const _form = {
+  isRegister: false,
+  sched: "",
+  patient: "",
+  visitType: "",
 };
 export default function PatientModal() {
-  const { showPatientModal } = useSelector(({ appointments }) => appointments),
-    [form, setForm] = useState({ isRegister: false }),
-    [activeStep, setActiveStep] = useState(0),
+  const { auth, token } = useSelector(({ auth }) => auth);
+  const {
+      showPatientModal,
+      selected,
+      scheds,
+      activeSched,
+      roster = [],
+      activePhysician,
+      formSubmitted,
+    } = useSelector(({ appointments }) => appointments),
+    [form, setForm] = useState(_form),
     dispatch = useDispatch();
 
-  const toggle = () => dispatch(TOGGLE_PATIENT_MODAL());
-  const Step = stepMap[activeStep];
-
-  const modalSize = () => {
-    if (activeStep === 0) {
-      if (form.isRegister) {
-        return "md";
-      } else {
-        return "md";
-      }
-    } else if (activeStep === 1) {
-      return "xl";
+  useEffect(() => {
+    if (showPatientModal) {
+      setForm(_form);
     }
-    return "xl";
+  }, [showPatientModal]);
+
+  const toggle = () => dispatch(TOGGLE_PATIENT_MODAL());
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const clinic = [...roster].find(
+      ({ physicianId }) => physicianId?._id === activePhysician?._id
+    )?._id;
+
+    const { isRegister, patient } = form;
+
+    if (!isRegister && !patient) {
+      Swal.fire({
+        icon: "warning",
+        title: "Patient Required",
+        text: "Please select a patient from the search or register a new patient before proceeding.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+      });
+      return; // stop submission
+    }
+
+    if (!clinic) {
+      Swal.fire({
+        icon: "warning",
+        title: "Clinic Required",
+        text: "Please select a clinic.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+      });
+      return; // stop submission
+    }
+
+    const _form = {
+      ...form,
+      clinic,
+      status: "draft",
+      userId: auth._id,
+      ...(isRegister && {
+        patient: {
+          ...patient,
+          password: patient?.dob.replaceAll("-", ""),
+          email: patient?.email || generateEmail(patient),
+        },
+      }),
+    };
+    dispatch(SAVE({ data: _form, token })).then(() => {
+      dispatch(SetSCHED({ sched: form.sched }));
+      setForm(_form);
+      toggle();
+    });
   };
+
   return (
-    <MDBModal
-      isOpen={showPatientModal}
-      toggle={toggle}
-      backdrop
-      size={modalSize()}
-    >
+    <MDBModal isOpen={showPatientModal} toggle={toggle} backdrop size={"md"}>
       <MDBModalHeader
         toggle={toggle}
         className=" light-blue darken-3 white-text"
       >
-        <MDBIcon icon="user-injured" className=" mr-2" />
-        Patient Appointment
+        <MDBIcon icon="calendar " className=" mr-2" />
+        Appointment
       </MDBModalHeader>
 
       <MDBModalBody>
-        <div className="mt-n2">
-          <Stepper steps={steps} activeStep={activeStep} />
-        </div>
-
-        <Step form={form} setForm={setForm} />
-        <div
-          className={`"d-flex justify-content-${
-            activeStep > 0 ? "between" : "end"
-          } mt-3`}
-        >
-          {activeStep > 0 && (
+        <form onSubmit={handleSubmit}>
+          {form.isRegister ? (
+            <Register form={form} setForm={setForm} />
+          ) : (
+            <div>
+              <span style={{ fontWeight: 400 }} className=" d-block grey-text">
+                Patient:
+              </span>
+              <EditableUser
+                readOnly
+                defaultSearchValue={selected?.defaultSearch}
+                setUserId={(patient) => setForm({ ...form, patient })}
+                hasRegister
+                setRegister={(fullName) =>
+                  setForm({ ...form, isRegister: true, patient: { fullName } })
+                }
+              />
+            </div>
+          )}
+          <div>
+            <span
+              style={{ fontWeight: 400 }}
+              className="mb-1 d-block grey-text mt-3"
+            >
+              Visit Type:
+            </span>
+            <select
+              className="form-control"
+              required
+              value={form?.visitType}
+              onChange={(e) => setForm({ ...form, visitType: e.target.value })}
+            >
+              <option value="">Choose Visit Type</option>
+              {visitTypes.map((visit, index) => (
+                <option key={index} value={visit}>
+                  {visit}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <span
+              style={{ fontWeight: 400 }}
+              className="mb-1 d-block grey-text mt-3"
+            >
+              Schedule:
+            </span>
+            <select
+              className="form-control"
+              required
+              value={!form?.sched ? activeSched : form?.sched}
+              onChange={(e) => setForm({ ...form, sched: e.target.value })}
+            >
+              <option value="">Choose a Schedule </option>
+              {scheds.map((sched) => (
+                <option key={sched} value={sched}>
+                  {sched}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="text-center mt-3">
             <MDBBtn
               size="md"
-              onClick={() => setActiveStep(activeStep - 1)}
-              color="light"
+              color="info"
+              rounded
+              type="submit"
+              disabled={formSubmitted}
             >
-              Prev
+              Submit <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
-          )}
-          <MDBBtn
-            size="md"
-            className="float-right"
-            color="primary"
-            onClick={() => setActiveStep(activeStep + 1)}
-          >
-            Next
-          </MDBBtn>
-        </div>
+          </div>
+        </form>
       </MDBModalBody>
     </MDBModal>
   );

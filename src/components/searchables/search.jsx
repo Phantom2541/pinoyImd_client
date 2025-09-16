@@ -65,6 +65,7 @@ export default function Search({
           size="sm"
           style={{
             opacity: showBtn ? 1 : 0,
+            pointerEvents: showBtn ? "auto" : "none", // prevents clicking when hidden
             marginRight: "-5px",
           }}
           // color="white"
