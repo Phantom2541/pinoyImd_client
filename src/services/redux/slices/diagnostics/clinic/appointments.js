@@ -178,7 +178,7 @@ export const reduxSlice = createSlice({
       const { sched = "", isSearch = false } = payload;
 
       if (isSearch) {
-        state.filtered = state.filtered;
+        state.filtered = [...state.filtered];
       } else if (!sched) {
         state.filtered = state.collections;
       } else {

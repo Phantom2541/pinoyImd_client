@@ -40,9 +40,9 @@ export default function PatientModal() {
 
   useEffect(() => {
     if (showPatientModal) {
-      setForm(_form);
+      setForm({ ..._form, sched: activeSched });
     }
-  }, [showPatientModal]);
+  }, [showPatientModal, activeSched]);
 
   const toggle = () => dispatch(TOGGLE_PATIENT_MODAL());
 
@@ -157,7 +157,7 @@ export default function PatientModal() {
             <select
               className="form-control"
               required
-              value={!form?.sched ? activeSched : form?.sched}
+              value={form?.sched}
               onChange={(e) => setForm({ ...form, sched: e.target.value })}
             >
               <option value="">Choose a Schedule </option>
