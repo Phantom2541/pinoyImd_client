@@ -27,7 +27,7 @@ const Table = ({ setPreview = () => {} }) => {
   };
 
   return (
-    <MDBCard className="mt-3">
+    <MDBCard className="shadow-sm border-0 rounded-3 mt-3">
       <MDBCardBody>
         <div>
           <span style={{ fontWeight: 500 }}>Uploaded Result List</span>

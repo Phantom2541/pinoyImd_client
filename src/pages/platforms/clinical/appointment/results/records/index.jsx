@@ -55,7 +55,7 @@ const Records = () => {
   if (isLoading) {
     return (
       <MDBCol>
-        <MDBCard>
+        <MDBCard className="shadow-sm border-0 rounded-3">
           <MDBCardBody style={{ minHeight: "30rem" }}>
             <span style={{ fontWeight: 500 }} className="mb-2 d-block">
               Record of patient in database
@@ -82,7 +82,7 @@ const Records = () => {
 
   return (
     <MDBCol>
-      <MDBCard>
+      <MDBCard className="shadow-sm border-0 rounded-3">
         <MDBCardBody>
           <div>
             <div className="d-flex justify-content-between">
