@@ -8,7 +8,6 @@ import {
   MDBRow,
 } from "mdbreact";
 import {
-  allServicesHavePrices,
   computeGD,
   fullAddress,
   fullName,

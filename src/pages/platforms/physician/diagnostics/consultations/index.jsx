@@ -13,7 +13,6 @@ import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/consultations";
-import Tracker from "./tracker";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);

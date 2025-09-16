@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import BODY from "./../../../../../../assets/checkup/humanBody.png";
 import History from "./history";
 import "./style.css";
