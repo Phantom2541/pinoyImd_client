@@ -168,6 +168,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 25px;
+  color: #1a2a3a;
 }
 
 .checkup-data-fmhx-header {
@@ -438,4 +439,103 @@
 .pmhx-card.expanded .pmhx-card-body {
   max-height: 300px;
   opacity: 1;
+}
+
+/* past surgical history design */
+.pshx-container {
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.pshx-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a2a3a;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+.pshx-timeline {
+  position: relative;
+  margin-left: 20px;
+  border-left: 2px solid #ddd;
+  padding-left: 20px;
+}
+
+.pshx-item {
+  position: relative;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  padding-left: 10px;
+}
+
+.pshx-item:hover {
+  background: #f0f0f0;
+  border-radius: 6px;
+}
+
+.pshx-dot {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background: #007bff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.6);
+  border: 2px solid white;
+}
+
+.pshx-content {
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+
+.pshx-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pshx-procedure {
+  font-weight: bold;
+  font-size: 16px;
+  color: #222;
+}
+
+.pshx-date {
+  font-size: 13px;
+  background: #007bff;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.pshx-body {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  font-size: 14px;
+  color: #555;
+  margin-top: 8px;
+}
+
+.pshx-body.show {
+  max-height: 500px; /* enough space */
+  opacity: 1;
+}
+
+.pshx-complication {
+  color: #b71c1c;
+  font-weight: bold;
+}
+
+.pshx-item + .pshx-item {
+  border-top: 1px dashed #ddd;
 }

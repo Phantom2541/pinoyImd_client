@@ -27,7 +27,17 @@ export default function VitalSign({ vitalSigns }) {
             {bmi && (
               <tr>
                 <td className="vital-label">BMI</td>
-                <td className="vital-value">{bmi}</td>
+                <td
+                  className={`vital-value ${
+                    bmi < 18.5
+                      ? "vital-bmi-warning"
+                      : bmi >= 25
+                      ? "vital-bmi-danger"
+                      : "vital-bmi-normal"
+                  }`}
+                >
+                  {bmi}
+                </td>
               </tr>
             )}
           </tbody>
