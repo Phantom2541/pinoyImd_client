@@ -94,6 +94,9 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetFILTER: (state, { payload }) => {
+      state.filtered = payload;
+    },
     RESET: (state) => {
       state.message = "";
       state.isSuccess = false;
@@ -203,6 +206,7 @@ export const reduxSlice = createSlice({
 
 export const {
   SetFILTERED,
+  SetFILTER,
   RESET,
   toggleModal,
   setActivePage,
