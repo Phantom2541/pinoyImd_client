@@ -28,10 +28,8 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  console.log("selected", selected);
-
   const steps = dataEhr;
-  console.log("form", form);
+  console.log("formnick", form);
 
   const handleUpdate = () => {
     dispatch(TOGGLEEMR());
@@ -78,7 +76,7 @@ export default function Modal() {
         };
       }
 
-      // Other sections = multi select
+      // PMHx and PSHx = multi select base
       const current = prev[code] || [];
       return {
         ...prev,
@@ -88,6 +86,31 @@ export default function Modal() {
       };
     });
   };
+
+  // For PMHx textbox values
+  const handleTextChange = (code, label, value) => {
+    setForm((prev) => {
+      const values = prev[`${code}_values`] || {};
+      return {
+        ...prev,
+        [`${code}_values`]: {
+          ...values,
+          [label]: value,
+        },
+      };
+    });
+  };
+
+  // For PSHx frequency selection
+  function handleFrequency(code, label, value) {
+    setForm((prev) => ({
+      ...prev,
+      [`${code}_freq`]: {
+        ...prev[`${code}_freq`],
+        [label]: value, // overwrite ensures only one
+      },
+    }));
+  }
 
   const handleNumber = (section, field, value) => {
     setForm((prev) => {
@@ -135,6 +158,8 @@ export default function Modal() {
                 step={currentStep}
                 form={form}
                 handleCheck={handleCheck}
+                handleTextChange={handleTextChange}
+                handleFrequency={handleFrequency}
               />
             )}
             {currentStep.code === "OB Gyne Hx" && (

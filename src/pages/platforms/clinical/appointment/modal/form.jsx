@@ -117,19 +117,59 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
 }
 
 // ----------------- ChecklistSection -----------------
-export function ChecklistSection({ step, form, handleCheck }) {
+export function ChecklistSection({
+  step,
+  form,
+  handleCheck,
+  handleTextChange,
+  handleFrequency,
+}) {
+  const frequencies = ["Once a week", "Twice a week", "Daily", "Occasional"];
+
   return (
     <div>
       {step.items.map((item) => {
         const checked = (form[step.code] || []).includes(item.label);
+        const value = form[`${step.code}_values`]?.[item.label] || "";
+        const freq = form[`${step.code}_freq`]?.[item.label] || "";
+
         return (
-          <CheckboxRow
-            key={item.label}
-            label={item.label}
-            checked={checked}
-            onClick={() => handleCheck(step.code, item.label, !checked)}
-            style={{ marginLeft: "150px" }}
-          />
+          <div key={item.label} className="mb-4">
+            <CheckboxRow
+              label={item.label}
+              checked={checked}
+              onClick={() => handleCheck(step.code, item.label, !checked)}
+              style={{ marginLeft: "150px" }}
+            />
+
+            {/* PMHx → show textbox */}
+            {checked && step.code === "PMHx" && (
+              <input
+                type="text"
+                value={value}
+                onChange={(e) =>
+                  handleTextChange(step.code, item.label, e.target.value)
+                }
+                placeholder="Enter details"
+                className="border px-2 py-1 ml-120"
+                style={{ marginLeft: "150px" }}
+              />
+            )}
+
+            {/* PSHx → show frequency choices */}
+            {checked && step.code === "PSHx" && (
+              <div style={{ marginLeft: "200px", marginTop: "4px" }}>
+                {frequencies.map((f) => (
+                  <CheckboxRow
+                    key={f}
+                    label={f}
+                    checked={freq === f}
+                    onClick={() => handleFrequency(step.code, item.label, f)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         );
       })}
     </div>
