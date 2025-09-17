@@ -1,18 +1,18 @@
 import { MDBBadge } from "mdbreact";
-import { Services } from "../../../../../../services/fakeDb";
+import { Services, Templates } from "../../../../../../services/fakeDb";
 import { useDispatch, useSelector } from "react-redux";
 import { SetDIAGNOSTIC } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
-const Result = ({ form, index, obj }) => {
-  const { diagnostic, selected } = useSelector(
-    ({ appointments }) => appointments
-  );
+const Result = ({ form: formTxt, index, obj }) => {
+  const { diagnostic } = useSelector(({ appointments }) => appointments);
   const dispatch = useDispatch();
   const { packages, dealId } = obj;
 
   const _packages = Array.isArray(packages)
     ? obj.packages
     : Object.keys(packages || {}).map(Number);
+
+  const form = Templates.getComponentIndex(formTxt);
 
   const handleCheck = () => {
     const _diagnostic = { ...diagnostic };
@@ -44,13 +44,13 @@ const Result = ({ form, index, obj }) => {
           type="checkbox"
           onChange={handleCheck}
           checked={!!diagnostic[dealId]?.includes(form)}
-          id={`${form}-${index}-${obj?._id}`}
+          id={`${formTxt}-${index}-${obj?._id}`}
         />
         <label
-          htmlFor={`${form}-${index}-${obj?._id}`}
+          htmlFor={`${formTxt}-${index}-${obj?._id}`}
           className="form-check-label label-table"
         >
-          {form}
+          {formTxt}
         </label>
       </td>
       <td>

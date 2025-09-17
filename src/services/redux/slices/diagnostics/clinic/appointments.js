@@ -17,8 +17,8 @@ const initialState = {
   showModal: false,
   showResultModal: false,
   showPatientModal: false,
-  willCreateEmr: false,
-  showModalEmr: false,
+  willCreateEhr: false,
+  showModalEhr: false,
   /**
    * pagination
    */
@@ -158,9 +158,16 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     setShowModalEhr: (state, { payload }) => {
-      state.selected = {};
-      state.willCreateEmr = true;
-      state.showModalEmr = true;
+      if (payload) {
+        // update mode
+        state.selected = payload;
+        state.willCreateEhr = false;
+      } else {
+        // create mode
+        state.selected = null;
+        state.willCreateEhr = true;
+      }
+      state.showModalEhr = true;
     },
 
     SetFILTER: (state, { payload }) => {
@@ -241,7 +248,7 @@ export const reduxSlice = createSlice({
       state.showPatientModal = !state.showPatientModal;
     },
     TOGGLEEMR: (state) => {
-      state.showModalEmr = !state.showModalEmr;
+      state.showModalEhr = !state.showModalEhr;
     },
   },
   extraReducers: (builder) => {
