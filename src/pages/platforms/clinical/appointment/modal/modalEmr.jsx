@@ -19,7 +19,7 @@ import { FamilyRootSystem, ChecklistSection, ObGyneSection } from "./form";
 import "./style.css";
 
 export default function Modal() {
-  const { showModalEmr, willCreateEhr, selected, isLoading } = useSelector(
+  const { showModalEhr, willCreateEhr, selected, isLoading } = useSelector(
       ({ appointments }) => appointments
     ),
     { token } = useSelector(({ auth }) => auth),
@@ -28,7 +28,10 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  console.log("selected", selected);
+
   const steps = dataEhr;
+  console.log("form", form);
 
   const handleUpdate = () => {
     dispatch(TOGGLEEMR());
@@ -104,7 +107,7 @@ export default function Modal() {
   const currentStep = steps[step];
 
   return (
-    <MDBModal isOpen={showModalEmr} toggle={handleClose} backdrop size="ml">
+    <MDBModal isOpen={showModalEhr} toggle={handleClose} backdrop size="ml">
       <MDBModalHeader
         toggle={handleClose}
         className="appEhr light-blue darken-3 white-text"
