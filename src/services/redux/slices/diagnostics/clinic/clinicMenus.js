@@ -2,14 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const url = "/diagnostics/clinic/menus";
+
 // Fetch clinic menus
 export const BROWSE = createAsyncThunk(
-  "/browse",
+  "clinicMenus/browse",
   async ({ token, key }, thunkAPI) => {
     try {
-      const { data } = await axioKit(token).get("/clinic/menus", {
-        params: key,
-      });
+      const { data } = await axioKit(token).get(url, { params: key });
       return data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -24,7 +23,7 @@ export const SAVE = createAsyncThunk(
   "clinicMenus/save",
   async ({ data, token }, thunkAPI) => {
     try {
-      const res = await axioKit(token).post("/clinic/menus", data);
+      const res = await axioKit(token).post(url, data);
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -39,7 +38,7 @@ export const UPDATE = createAsyncThunk(
   "clinicMenus/update",
   async ({ data, token }, thunkAPI) => {
     try {
-      const res = await axioKit(token).put(`/clinic/menus/${data._id}`, data);
+      const res = await axioKit(token).put(`${url}/${data._id}`, data);
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -54,7 +53,7 @@ export const DESTROY = createAsyncThunk(
   "clinicMenus/destroy",
   async ({ id, token }, thunkAPI) => {
     try {
-      await axioKit(token).delete(`/clinic/menus/${id}`);
+      await axioKit(token).delete(`${url}/${id}`);
       return id;
     } catch (err) {
       return thunkAPI.rejectWithValue(
