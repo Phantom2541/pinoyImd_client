@@ -8,7 +8,7 @@ import {
 } from "mdbreact";
 import {
   UPDATE,
-  setShowModalEhr,
+  openEhrModal,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../services/utilities";
 import {
@@ -125,7 +125,7 @@ const Body = () => {
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   console.log("Clicked cell:", ehr);
-                  dispatch(setShowModalEhr(ehr));
+                  dispatch(openEhrModal(ehr));
                 }}
               >
                 {ehr ? "yes" : "no"}

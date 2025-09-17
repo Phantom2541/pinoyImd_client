@@ -29,7 +29,10 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  console.log("selected", selected);
+
   const steps = dataEhr;
+  console.log("form", form);
 
   const handleUpdate = () => {
     dispatch(TOGGLEEMR());

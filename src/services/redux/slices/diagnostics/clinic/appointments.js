@@ -14,8 +14,8 @@ const initialState = {
   page: 0,
   willCreate: false,
   showModal: false,
-  willCreateEmr: false,
-  showModalEmr: false,
+  willCreateEhr: false,
+  showModalEhr: false,
   /**
    * pagination
    */
@@ -116,8 +116,6 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetPHYSICIAN: (state, { payload }) => {
-      console.log("payload", payload);
-
       // const arrangePayload = (collections) => {
       //   return collections.flatMap(({ user, appointments = [] }) => {
       //     return appointments?.map((appt) => ({
@@ -151,13 +149,19 @@ export const reduxSlice = createSlice({
       state.willCreate = true;
       state.showModal = true;
     },
-    setShowModalEhr: (state, { payload }) => {
-      console.log("payload", payload);
-
-      state.selected = {};
-      state.willCreateEmr = true;
+    openEhrModal: (state, { payload }) => {
+      if (payload) {
+        // update mode
+        state.selected = payload;
+        state.willCreateEhr = false;
+      } else {
+        // create mode
+        state.selected = null;
+        state.willCreateEhr = true;
+      }
       state.showModalEmr = true;
     },
+
     SetFILTER: (state, { payload }) => {
       console.log("payload", payload);
 
@@ -415,7 +419,7 @@ export const {
   SetPHYSICIAN,
   SetSCHED,
   SetCREATE,
-  setShowModalEhr,
+  openEhrModal,
   SetEDIT,
   SetFILTER,
   SetPAGE,
