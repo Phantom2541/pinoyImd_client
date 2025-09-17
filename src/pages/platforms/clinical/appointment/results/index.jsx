@@ -45,7 +45,6 @@ export default function ResultsModal() {
   const toggle = () => dispatch(TOGGLE_RESULT_MODAL());
 
   const { department = "", patient = {} } = selected || {};
-  console.log("patient", patient);
 
   useEffect(() => {
     if (show) {

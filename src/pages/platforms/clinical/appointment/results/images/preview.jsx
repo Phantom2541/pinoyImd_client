@@ -5,12 +5,13 @@ import { useSelector } from "react-redux";
 const Img = ({ preview = {}, setPreview = () => {} }) => {
   const { selected } = useSelector(({ appointments }) => appointments);
   const { img = "", date, section = "", imgId = "" } = preview || {};
+  const { patient = {} } = selected || {};
 
   const src = img
     ? img
-    : `${Cloudinary.getEndpoint()}/${imgId}/diagnostics/${
-        selected._id
-      }/${section}_${date}`;
+    : `${Cloudinary.getEndpoint()}/${imgId}/users/${
+        patient?.email
+      }/EHR/${section}_${date}`;
   return (
     <div style={{ minHeight: "27rem" }}>
       <div className="d-flex justify-content-between align-items-center">
