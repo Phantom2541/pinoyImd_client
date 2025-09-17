@@ -38,7 +38,18 @@ const Upload = () => {
   const handleUpload = (e) => {
     e.preventDefault();
     const _images = [...images];
-    _images.push(form);
+    const index = _images.findIndex(
+      (i) => i.section === form.section && i.date === form.date
+    );
+
+    if (index > -1) {
+      const section = _images[index]?.section;
+      const [base, num] = section.split("-");
+      const nextId = num ? parseInt(num, 10) + 1 : 1;
+      _images.push({ ...form, section: `${base}-${nextId}` });
+    } else {
+      _images.push(form);
+    }
     dispatch(SetDIAGNOSTIC({ ...diagnostic, images: _images }));
     setForm(_form);
     document.getElementById("form-file").value = "";
