@@ -350,6 +350,7 @@
   font-weight: bold;
   font-size: 0.8rem;
   line-height: 1;
+  font-family: Cambria, "Times New Roman", serif;
 }
 
 .checkup-data-clearance-card-body-text {
@@ -357,6 +358,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   display: flex;
+  font-family: "Times New Roman", Times, serif;
 }
 
 .checkup-data-clearance-card-body-data {
