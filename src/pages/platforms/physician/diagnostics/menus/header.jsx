@@ -7,18 +7,16 @@ import {
   BROWSE,
   SetFILTERED,
   RESET,
-  toggleModal,
+  SetCREATE,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import { TIEUPS } from "../../../../../services/redux/slices/assets/persons/physicians";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const {
-    filtered = [],
-    collections = [],
-    message,
-    isSuccess,
-  } = useSelector(({ clinicMenus }) => clinicMenus);
+  const { filtered = [], collections = [] } = useSelector(
+    ({ clinicMenus }) => clinicMenus
+  );
+  const { physicians } = useSelector(({ physicians }) => physicians);
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
@@ -29,28 +27,16 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
-  // fetch menus
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
-
-    return () => dispatch(RESET());
-  }, [token, activePlatform?.branchId, dispatch]);
-
-  // notifications + auto refresh
-  // useEffect(() => {
-  //   if (message) {
-  //     addToast(message, { appearance: isSuccess ? "success" : "error" });
-
-  //     // refresh table if success
-  //     if (isSuccess && token && activePlatform?.branchId) {
-  //       dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
-  //       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
-  //     }
-
-  //     dispatch(RESET());
-  //   }
-  // }, [message, isSuccess, addToast, dispatch, token, activePlatform?.branchId]);
+    if (token && physicians.length > 0) {
+      dispatch(
+        BROWSE({
+          token,
+          data: { physicianId: physicians }, // send all IDs
+        })
+      );
+    }
+  }, [token, physicians, dispatch]);
 
   return (
     <MDBView
@@ -74,11 +60,7 @@ const Header = () => {
           size="sm"
           rounded
           className="ml-2"
-          onClick={() =>
-            dispatch(
-              toggleModal({ showModal: true, willCreate: true, selected: null })
-            )
-          }
+          onClick={() => dispatch(SetCREATE())}
         >
           <MDBIcon icon="plus" /> Add
         </MDBBtn>

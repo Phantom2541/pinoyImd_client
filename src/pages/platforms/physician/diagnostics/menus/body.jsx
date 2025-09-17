@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtn } from "mdbreact";
 import {
-  toggleModal,
   DESTROY,
+  SetEDIT,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 
 export default function Body() {
@@ -18,8 +18,8 @@ export default function Body() {
   const itemsPerPage = maxPage || 10;
   const startIndex = (activePage - 1) * itemsPerPage;
   const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage);
+  console.log("paginatedData", paginatedData);
 
- 
   const formatCurrency = (value) => {
     if (value == null || value === "") return "-";
     return new Intl.NumberFormat("en-PH", {
@@ -49,7 +49,7 @@ export default function Body() {
             <tr key={row._id || index}>
               <td>{startIndex + index + 1}</td>
               <td>{formatCurrency(row.doctorFee)}</td>
-              <td>{row.service || "-"}</td>
+              <td>{row.abbreviation || "-"}</td>
               <td>{row.description || "-"}</td>
               <td>{formatCurrency(row.srp)}</td>
               <td>{row.discountable ? "Yes" : "No"}</td>
@@ -58,22 +58,15 @@ export default function Body() {
                 <MDBBtn
                   size="sm"
                   color="info"
-                  onClick={() =>
-                    dispatch(
-                      toggleModal({
-                        selected: row,
-                        willCreate: false,
-                        showModal: true,
-                      })
-                    )
-                  }
+                  onClick={() => dispatch(SetEDIT(row))}
                 >
                   Edit
                 </MDBBtn>
                 <MDBBtn
                   size="sm"
                   color="danger"
-                  onClick={() => dispatch(DESTROY({ id: row._id, token }))}>
+                  onClick={() => dispatch(DESTROY({ id: row._id, token }))}
+                >
                   Delete
                 </MDBBtn>
               </td>
@@ -82,7 +75,8 @@ export default function Body() {
         ) : (
           <tr>
             <td colSpan="8" className="text-center">
-              No clinic menus found. Click <strong>Add</strong> to create a menu.
+              No clinic menus found. Click <strong>Add</strong> to create a
+              menu.
             </td>
           </tr>
         )}

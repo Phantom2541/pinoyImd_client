@@ -18,7 +18,7 @@ import { useToasts } from "react-toast-notifications";
 import { properFullname } from "../../../../../services/utilities";
 
 export default function Modal() {
-  const { show, selected, willCreate, isLoading } = useSelector(
+  const { showModal, selected, willCreate, isLoading } = useSelector(
       ({ clinicMenus }) => clinicMenus
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -26,117 +26,48 @@ export default function Modal() {
     [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+  console.log("form", form);
 
-  // 🔎 Sync form with redux
   useEffect(() => {
-    console.log("🔎 Selected record:", selected);
-
-    if (selected && !willCreate) {
-      setForm({
-        service: selected.abbreviation || "",
-        description: selected.description || "",
-        srp: selected.srp || "",
-        discountable:
-          selected.discountable === true ||
-          selected.discountable === "true" ||
-          selected.discountable === 1,
-        doctor: selected.clinic?._id || selected.clinic || "",
-        doctorFee: selected.pf || "",
-      });
-    } else if (willCreate) {
-      setForm({
-        service: "",
-        description: "",
-        srp: "",
-        discountable: false,
-        doctor: "",
-        doctorFee: "",
-      });
+    if (selected) {
+      setForm(selected);
     }
-  }, [selected, willCreate]);
-
-  // DTO builder
-  const buildPayload = () => {
-    const payload = {
-      clinic: form.doctor, // doctor id
-      description: form.description,
-      abbreviation: form.service,
-      srp: Number(form.srp),
-      pf: Number(form.doctorFee),
-      discountable: !!form.discountable,
-      userId: auth?._id,
-      branchId: activePlatform?.branchId,
-    };
-    console.log("🛠️ buildPayload:", payload);
-    return payload;
-  };
+  }, [selected]);
 
   // CREATE
   const handleCreate = () => {
-    const payload = buildPayload();
-    console.log("🚀 Creating with:", payload);
-
     dispatch(
       SAVE({
-        data: payload,
+        data: form,
         token,
       })
-    )
-      .unwrap()
-      .then(() => {
-        addToast("Clinic menu created successfully", {
-          appearance: "success",
-        });
-        dispatch(toggleModal());
-      })
-      .catch((err) => {
-        console.error("❌ Create error:", err);
-        addToast("Failed to create clinic menu", { appearance: "error" });
-      });
+    );
   };
 
-  // UPDATE
+  // // UPDATE
   const handleUpdate = () => {
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
-
-    const payload = { ...buildPayload(), _id: selected._id };
-    console.log("🚀 Updating with:", payload);
-
     dispatch(
       UPDATE({
-        data: payload,
+        data: form,
         token,
       })
-    )
-      .unwrap()
-      .then(() => {
-        addToast("Clinic menu updated successfully", {
-          appearance: "success",
-        });
-        dispatch(toggleModal());
-      })
-      .catch((err) => {
-        console.error("❌ Update error:", err);
-        addToast("Failed to update clinic menu", { appearance: "error" });
-      });
+    );
   };
 
   // SUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("📋 Final form before submit:", form);
-
     if (willCreate) return handleCreate();
     handleUpdate();
   };
 
   // STATE HELPERS
   const handleChange = (key, value) => {
-    console.log(`✏️ handleChange: ${key} =`, value);
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -145,7 +76,7 @@ export default function Modal() {
   const handleClose = () => dispatch(toggleModal());
 
   return (
-    <MDBModal isOpen={show} toggle={handleClose} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
@@ -166,9 +97,9 @@ export default function Modal() {
           <MDBInput
             label="Services/Procedure"
             type="text"
-            value={handleValue("service")}
+            value={handleValue("abbreviation")}
             required
-            onChange={(e) => handleChange("service", e.target.value)}
+            onChange={(e) => handleChange("abbreviation", e.target.value)}
           />
 
           <MDBInput
