@@ -5,11 +5,13 @@ import {
   MDBTable,
   MDBTableHead,
   MDBTableBody,
+  MDBBtn,
 } from "mdbreact";
 import {
   UPDATE,
   setShowModalEhr,
   SetRESULT,
+  SetTRANSAC,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../services/utilities";
 import {
@@ -45,7 +47,7 @@ const Body = () => {
   };
 
   return (
-    <MDBTable bordered className="m-0 p-0">
+    <MDBTable bordered className="m-0 p-0" small>
       <MDBTableHead>
         <tr>
           {!activeSched && <th>Schedule</th>}
@@ -84,7 +86,7 @@ const Body = () => {
                 {!activeSched && <td>{sched}</td>}
                 <td>{qn}</td>
                 <td>
-                  {fullName(patient?.fullName)}{" "}
+                  {fullName(patient?.fullName)}
                   <MDBBadge
                     color={statusColors[status] || "info"}
                     className="ml-2"
@@ -101,6 +103,16 @@ const Body = () => {
                       isSuccess={isSuccess}
                     />
                   </MDBBadge>
+
+                  {index === 0 && (
+                    <MDBIcon
+                      icon="cash-register"
+                      onClick={() => dispatch(SetTRANSAC(item))}
+                      size="lg"
+                      className="ml-3 cursor-pointer"
+                      title="Transaction"
+                    />
+                  )}
                 </td>
                 <td>
                   <EditableSelect

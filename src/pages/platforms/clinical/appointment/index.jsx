@@ -9,6 +9,7 @@ import Modal from "./modal/modalEmr";
 import { BROWSE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import PatientModal from "./patient";
 import ResultsModal from "./results";
+import TransactionModal from "./transaction";
 
 const Index = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -44,6 +45,7 @@ const Index = () => {
       <Modal />
       <PatientModal />
       <ResultsModal />
+      <TransactionModal />
     </>
   );
 };

@@ -17,6 +17,7 @@ const initialState = {
   showModal: false,
   showResultModal: false,
   showPatientModal: false,
+  showTransacModal: false,
   willCreateEhr: false,
   showModalEhr: false,
   /**
@@ -216,6 +217,10 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showResultModal = true;
     },
+    SetTRANSAC: (state, { payload }) => {
+      state.selected = payload;
+      state.showTransacModal = true;
+    },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
@@ -238,6 +243,9 @@ export const reduxSlice = createSlice({
     },
     TOGGLE_RESULT_MODAL: (state) => {
       state.showResultModal = !state.showResultModal;
+    },
+    TOGGLE_TRANSAC_MODAL: (state) => {
+      state.showTransacModal = !state.showTransacModal;
     },
     TOGGLE_PATIENT_MODAL: (state, { payload }) => {
       const formattedName = payload?.includes(",")
@@ -442,6 +450,7 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetTRANSAC,
   SetDIAGNOSTIC,
   SetFILTERED,
   SetRESULT,
@@ -456,6 +465,7 @@ export const {
   TOGGLE_RESULT_MODAL,
   TOGGLE,
   TOGGLEEMR,
+  TOGGLE_TRANSAC_MODAL,
   /**
    * for pagination
    */
