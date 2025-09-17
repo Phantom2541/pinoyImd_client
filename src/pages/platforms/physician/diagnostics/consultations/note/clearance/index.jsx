@@ -1,5 +1,10 @@
 import React from "react";
 import usePanelPosition from "../panelPosition";
+import { MDBIcon } from "mdbreact";
+import "./../style.css";
+import LOGO from "./../../../../../../../assets/iMD.png";
+import CADUCEUS from "./../../../../../../../assets/caduceus.png";
+import SIGNATURE from "./../../../../../../../assets/templateSampleSignature.png";
 
 export default function Clearance({
   active,
@@ -8,10 +13,11 @@ export default function Clearance({
   doctor,
   purpose,
   date,
+  togglePanel,
 }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {
-    width: 600,
-    height: 460,
+    width: 700,
+    height: 600,
   });
 
   return (
@@ -21,53 +27,64 @@ export default function Clearance({
       }}
       className="checkup-data-clearance"
     >
-      <div
-        style={{
-          width: "600px",
-          padding: "20px",
-          backgroundColor: "white",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          borderRadius: "10px",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h2 style={{ margin: 0 }}>ABC Medical Clinic</h2>
-          <p style={{ margin: 0 }}>123 Main St., Quezon City</p>
-          <hr style={{ margin: "10px 0" }} />
-          <h3 style={{ textDecoration: "underline", margin: 0 }}>
-            MEDICAL CLEARANCE
-          </h3>
+      <MDBIcon
+        icon="times"
+        className="checkup-data-note-close"
+        onClick={() => togglePanel("clearance")}
+      />
+      <div className="checkup-data-clearance-card">
+        <div className="checkup-data-clearance-card-header">
+          <img src={LOGO} alt="" />
+          <span>Medi Care</span>
+          <span>123 Main St., Quezon City</span>
+          <span>Contact: (02) 1234-5678</span>
         </div>
-
-        {/* Body */}
-        <div style={{ lineHeight: 1.6 }}>
-          <p>
-            This is to certify that <b>{patient?.name || "________________"}</b>
-            , {patient?.age ? `${patient.age} years old` : "___ years old"},{" "}
-            {patient?.gender || "______"} has undergone medical examination at
-            this clinic.
-          </p>
-
-          <p>
-            Purpose of clearance: <b>{purpose || "____________________"}</b>
-          </p>
-
-          <p>
-            Date of issuance: <b>{date || "__________"}</b>
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div style={{ textAlign: "right", marginTop: "30px" }}>
-          <p>______________________________</p>
-          <p>
-            <b>{doctor?.name || "Dr. Juan Dela Cruz"}</b>
-          </p>
-          <p>
-            Lic. No.: <b>{doctor?.license || "000000"}</b>
-          </p>
+        <h1 className="checkup-data-clearance-card-title">
+          Medical Certificate
+        </h1>
+        <div className="checkup-data-clearance-card-body">
+          <div className="checkup-data-clearance-card-body-date">
+            <span>Date:</span>
+            <span>August 21, 2025</span>
+          </div>
+          <img alt="caducues" src={CADUCEUS} />
+          <label>to whomsoever it may concern</label>
+          <div className="checkup-data-clearance-card-body-text">
+            <span>
+              This is to certify that Mr/Mrs.&nbsp;
+              <span className="checkup-data-clearance-card-body-data width-50">
+                Jhon Kevin Magtalas
+              </span>
+              &nbsp; Male/Female&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                Male
+              </span>
+              &nbsp;Age&nbsp;
+              <span className="checkup-data-clearance-card-body-data">21</span>
+              &nbsp;years,residing at&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                Magsaysay Bayombong Nueva Vizcaya
+              </span>
+              &nbsp;was under my treatment since&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                August 1, 2025
+              </span>
+              &nbsp;Suffering from &nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                Pneumonia
+              </span>
+              &nbsp;He/She is/was adviced treatment or rest for this
+              period&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                August 21, 2025
+              </span>
+            </span>
+          </div>
+          <div className="checkup-data-clearance-card-body-doctor">
+            <span>Dr, Emily Clard adasda</span>
+            <span>Physician/Examiner</span>
+            <img alt="signature" src={SIGNATURE} />
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import usePanelPosition from "../panelPosition";
+import { MDBIcon } from "mdbreact";
 
 export default function MedicalCertificate({
   patient,
@@ -7,6 +8,7 @@ export default function MedicalCertificate({
   date,
   active,
   buttonRefs,
+  togglePanel,
 }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {
     width: 800,
@@ -14,6 +16,11 @@ export default function MedicalCertificate({
   });
   return (
     <div style={style} className="checkup-data-clearance">
+      <MDBIcon
+        icon="times"
+        className="checkup-data-note-close"
+        onClick={() => togglePanel("medcert")}
+      />
       <div
         className="medical-cert border p-6 bg-white shadow-md rounded-xl"
         style={{
