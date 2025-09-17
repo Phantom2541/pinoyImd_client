@@ -5,6 +5,7 @@ const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
+  cart: [], //for tranasction in appointment
   paginated: [],
   physician: "",
   activeSched: "",
@@ -138,6 +139,13 @@ export const reduxSlice = createSlice({
       //       ?.appointments || [];
       //   state.physician = payload;
       // }
+    },
+    SetCART: (state, { payload }) => {
+      state.cart = payload;
+    },
+    ChangeQty: (state, { payload }) => {
+      const { index, value } = payload;
+      state.cart[index].qty = value; // ✅ safe ito sa RTK
     },
     SetDIAGNOSTIC: (state, { payload }) => {
       console.log("diagnostic payload", payload);
@@ -450,6 +458,8 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetCART,
+  ChangeQty,
   SetTRANSAC,
   SetDIAGNOSTIC,
   SetFILTERED,

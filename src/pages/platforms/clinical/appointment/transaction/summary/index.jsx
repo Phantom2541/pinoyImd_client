@@ -1,10 +1,15 @@
 import { MDBCol, MDBBtn } from "mdbreact";
 import { capitalize } from "lodash";
 import { useState } from "react";
-import { currency } from "../../../../../../services/utilities";
+import { computeCP, currency } from "../../../../../../services/utilities";
+import { useSelector } from "react-redux";
+import RollingNumber from "../../../../../../components/rollingNumber";
 const Summary = () => {
-  const [payment, setPayment] = useState(""),
-    [cash, setCash] = useState(0);
+  const { cart } = useSelector(({ appointments }) => appointments),
+    [payment, setPayment] = useState("cash"),
+    [cash, setCash] = useState(0),
+    { gross, discount, net } = computeCP(cart);
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -22,18 +27,20 @@ const Summary = () => {
           <tbody>
             <tr>
               <td>Gross Amount</td>
-              <td className="table-price text-right">{currency.format(120)}</td>
+              <td className="table-price text-right">
+                {currency.format(gross)}
+              </td>
             </tr>
             <tr>
               <td>Discount</td>
               <td className="table-price  text-right">
-                {currency.format(120)}
+                {currency.format(discount)}
               </td>
             </tr>
             <tr>
               <td>Net Amount</td>
               <td className="table-price  text-right">
-                {currency.format(120)}
+                {currency.format(net)}
               </td>
             </tr>
             <tr>
@@ -56,6 +63,7 @@ const Summary = () => {
                 {["cash"].includes(payment) ? (
                   <input
                     type="number"
+                    min={net}
                     value={String(cash)}
                     onChange={({ target }) => setCash(Number(target.value))}
                     placeholder="Amount in Peso"
@@ -72,6 +80,7 @@ const Summary = () => {
         <MDBBtn
           type="submit"
           className="m-0 w-100 fw-bold mt-3"
+          disabled={cart.length === 0}
           color="success"
         >
           Complete Transaction
