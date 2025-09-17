@@ -23,15 +23,26 @@ export default function Modal() {
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     { filtered = [] } = useSelector(({ physicians }) => physicians),
-    [form, setForm] = useState(selected || {}),
+    [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  console.log("filtered", filtered);
-
+  // 🔎 Sync form with redux
   useEffect(() => {
-    if (selected) {
-      setForm(selected);
+    console.log("🔎 Selected record:", selected);
+
+    if (selected && !willCreate) {
+      setForm({
+        service: selected.abbreviation || "",
+        description: selected.description || "",
+        srp: selected.srp || "",
+        discountable:
+          selected.discountable === true ||
+          selected.discountable === "true" ||
+          selected.discountable === 1,
+        doctor: selected.clinic?._id || selected.clinic || "",
+        doctorFee: selected.pf || "",
+      });
     } else if (willCreate) {
       setForm({
         service: "",
@@ -44,37 +55,30 @@ export default function Modal() {
     }
   }, [selected, willCreate]);
 
-  // Handle update
-  const handleUpdate = () => {
-    if (isEqual(form, selected)) {
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-
-    dispatch(
-      UPDATE({
-        data: { ...form, _id: selected._id },
-        token,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        addToast("Clinic menu updated successfully", {
-          appearance: "success",
-        });
-        dispatch(toggleModal());
-      })
-      .catch(() =>
-        addToast("Failed to update clinic menu", { appearance: "error" })
-      );
+  // DTO builder
+  const buildPayload = () => {
+    const payload = {
+      clinic: form.doctor, // doctor id
+      description: form.description,
+      abbreviation: form.service,
+      srp: Number(form.srp),
+      pf: Number(form.doctorFee),
+      discountable: !!form.discountable,
+      userId: auth?._id,
+      branchId: activePlatform?.branchId,
+    };
+    console.log("🛠️ buildPayload:", payload);
+    return payload;
   };
 
-  // Handle create
+  // CREATE
   const handleCreate = () => {
+    const payload = buildPayload();
+    console.log("🚀 Creating with:", payload);
+
     dispatch(
       SAVE({
-        data: form,
+        data: payload,
         token,
       })
     )
@@ -85,32 +89,59 @@ export default function Modal() {
         });
         dispatch(toggleModal());
       })
-      .catch(() =>
-        addToast("Failed to create clinic menu", { appearance: "error" })
-      );
+      .catch((err) => {
+        console.error("❌ Create error:", err);
+        addToast("Failed to create clinic menu", { appearance: "error" });
+      });
   };
 
-  // Handle form submit
+  // UPDATE
+  const handleUpdate = () => {
+    if (isEqual(form, selected)) {
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+
+    const payload = { ...buildPayload(), _id: selected._id };
+    console.log("🚀 Updating with:", payload);
+
+    dispatch(
+      UPDATE({
+        data: payload,
+        token,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        addToast("Clinic menu updated successfully", {
+          appearance: "success",
+        });
+        dispatch(toggleModal());
+      })
+      .catch((err) => {
+        console.error("❌ Update error:", err);
+        addToast("Failed to update clinic menu", { appearance: "error" });
+      });
+  };
+
+  // SUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("📋 Final form before submit:", form);
+
     if (willCreate) return handleCreate();
     handleUpdate();
   };
 
-  // Handle change
+  // STATE HELPERS
   const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: value,
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    });
+    console.log(`✏️ handleChange: ${key} =`, value);
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Get field value safely
-  const handleValue = (key) => form[key] || "";
+  const handleValue = (key) => form[key] ?? "";
 
-  // Close modal
   const handleClose = () => dispatch(toggleModal());
 
   return (
@@ -125,13 +156,13 @@ export default function Modal() {
 
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          
           <MDBInput
             label="Professional Fee"
             type="number"
-            value={handleValue("ProfessionalFee")}
+            value={handleValue("doctorFee")}
             onChange={(e) => handleChange("doctorFee", e.target.value)}
           />
+
           <MDBInput
             label="Services/Procedure"
             type="text"
@@ -159,11 +190,12 @@ export default function Modal() {
           <div className="d-flex align-items-center mb-3">
             <input
               type="checkbox"
-              checked={form.discountable || false}
+              checked={!!form.discountable}
               onChange={(e) => handleChange("discountable", e.target.checked)}
             />
             <label className="ml-2">Discountable</label>
           </div>
+
           <small>Doctor / Specialist</small>
           <select
             className="form-control mb-3"
@@ -172,8 +204,7 @@ export default function Modal() {
           >
             <option value="">-- Select Doctor --</option>
             {filtered.map((doc) => {
-              const displayName = properFullname(doc.user?.fullName) || {};
-
+              const displayName = properFullname(doc.user?.fullName) || "";
               return (
                 <option key={doc._id} value={doc._id}>
                   {displayName}
@@ -181,7 +212,6 @@ export default function Modal() {
               );
             })}
           </select>
-
 
           <div className="text-center mb-1-half">
             <MDBBtn
