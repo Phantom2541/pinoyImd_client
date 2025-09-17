@@ -22,7 +22,10 @@ import {
 import Records from "./records";
 import Images from "./images";
 import Swal from "sweetalert2";
-import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
+import {
+  DESTROY_IMG,
+  UPLOAD,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 import Spinner from "../../../../../components/spinner";
 import { useEffect, useState } from "react";
 
@@ -49,6 +52,74 @@ export default function ResultsModal() {
     }
   }, [selected, show, dispatch, department]);
 
+  const deleteRemovedImages = async (existingImages, newImages) => {
+    if (!existingImages.length) return;
+
+    const deletedImages = existingImages.filter(
+      ({ section: sec, date: dt }) =>
+        !newImages.some(({ section, date }) => section === sec && date === dt)
+    );
+
+    if (deletedImages.length > 0) {
+      await Promise.all(
+        deletedImages.map(({ section, date }) =>
+          dispatch(
+            DESTROY_IMG({
+              data: { path: `diagnostics/${_id}/${section}_${date}` },
+              token,
+            })
+          )
+        )
+      );
+    }
+  };
+
+  // ⬆ Upload new images
+  const uploadNewImages = async (images) => {
+    const pendingUploads = images.filter(({ img }) => img);
+
+    if (pendingUploads.length > 0) {
+      await Promise.all(
+        pendingUploads.map(async (element) => {
+          const { section, img, date } = element;
+          const buildForm = Cloudinary.buildFileForm(
+            img,
+            `diagnostics/${_id}`,
+            `${section}_${date}`
+          );
+
+          const action = await dispatch(UPLOAD({ data: buildForm, token }));
+
+          const index = images.findIndex(
+            ({ section: sec, date: dt }) => sec === section && dt === date
+          );
+
+          images[index] = { ...images[index], imgId: action.payload.imgId };
+        })
+      );
+    }
+
+    return images;
+  };
+
+  // 🔄 Update diagnostic record
+  const updateDiagnostic = async (images) => {
+    await dispatch(
+      UPDATE({
+        token,
+        data: {
+          _id: selected?._id,
+          [department]: {
+            ...diagnostic,
+            ...(images.length > 0
+              ? { images: images.map(({ img, ...rest }) => rest) }
+              : {}),
+          },
+        },
+      })
+    );
+  };
+
   const handleSubmit = async () => {
     const haveResults = Boolean(results?.length);
     const haveForms = Boolean(Object.keys(diagnostic).length);
@@ -70,51 +141,23 @@ export default function ResultsModal() {
       });
       return;
     }
+    setFormSubmitted(true);
 
     let images = [...(diagnostic?.images || [])];
-    const _images = images.filter(({ img }) => img);
-    setFormSubmitted(true);
-    if (_images.length > 0) {
-      await Promise.all(
-        _images.map(async (element) => {
-          const { section, img, date } = element;
-          const buildForm = Cloudinary.buildFileForm(
-            img,
-            `diagnostics/${_id}`,
-            `${section}_${date}`
-          );
+    const { images: existingImages = [] } = selected[department] || {};
 
-          const action = await dispatch(UPLOAD({ data: buildForm, token }));
+    // 🔹 Step 1: Delete removed images
+    await deleteRemovedImages(existingImages, images);
 
-          const index = images.findIndex(
-            ({ section: sec, date: dt }) => sec === section && dt === date
-          );
+    // 🔹 Step 2: Upload new images
+    images = await uploadNewImages(images);
 
-          images[index] = { ...images[index], imgId: action.payload.imgId };
-        })
-      );
-    }
+    // 🔹 Step 3: Update record
+    await updateDiagnostic(images);
 
-    dispatch(
-      UPDATE({
-        token,
-        data: {
-          _id: selected?._id,
-          [department]: {
-            ...diagnostic,
-            ...(images.length > 0
-              ? {
-                  images: images.map(({ img, ...rest }) => rest),
-                }
-              : {}),
-          },
-        },
-      })
-    ).then(() => {
-      setFormSubmitted(false);
-      dispatch(SetDIAGNOSTIC({}));
-      toggle();
-    });
+    setFormSubmitted(false);
+    dispatch(SetDIAGNOSTIC({}));
+    toggle();
   };
 
   return (
