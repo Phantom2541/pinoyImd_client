@@ -10,7 +10,6 @@ import {
 } from "mdbreact";
 import {
   SAVE,
-  UPDATE,
   TOGGLEEMR,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { isEqual } from "lodash";

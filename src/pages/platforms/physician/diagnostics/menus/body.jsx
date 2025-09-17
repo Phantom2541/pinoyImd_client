@@ -24,10 +24,13 @@ export default function Body() {
       <thead>
         <tr>
           <th>#</th>
-          <th>Services/Procedure</th>
+           <th>Professional Fee</th>
+          <th>Services/Product</th>
           <th>Description</th>
           <th>SRP</th>
           <th>Discountable</th>
+          <th>Doctor/Specialist</th>
+          <th>Doctor’s Fee</th>
           <th>Actions</th>
         </tr>
       </thead>

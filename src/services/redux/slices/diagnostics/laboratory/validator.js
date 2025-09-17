@@ -216,6 +216,10 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+      state.filtered = payload;
+    },
     SetByGroup: (state, action) => {
       const selectedKey = action.payload; // e.g., "Chemistry"
       if (selectedKey === "all") {
@@ -408,6 +412,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(TRACKER.rejected, (state, action) => {
         const { error } = action;
+        state.collections = state.filtered = [];
         state.message = error.message;
         state.isLoading = false;
       })
@@ -443,6 +448,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCOLLECTIONS,
   SetSELECTED,
   SetPatient,
   SetTASK,

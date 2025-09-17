@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit } from "../../../utilities";
 
 const url = "/diagnostics/cases";
 
@@ -21,43 +21,58 @@ const initialState = {
 
 // THUNKS
 
-export const BROWSE = createAsyncThunk(`${url}/browse`, async ({ token }, thunkAPI) => {
-  try {
-    return await axioKit.universal(`${url}/browse`, token);
-  } catch (error) {
-    const message = error.response?.data?.message || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
+export const BROWSE = createAsyncThunk(
+  `${url}/browse`,
+  async ({ token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/browse`, token);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const SAVE = createAsyncThunk(`${url}/save`, async ({ data, token }, thunkAPI) => {
-  try {
-    return await axioKit.save(url, data, token);
-  } catch (error) {
-    const message = error.response?.data?.message || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
+export const SAVE = createAsyncThunk(
+  `${url}/save`,
+  async ({ data, token }, thunkAPI) => {
+    try {
+      return await axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const UPDATE = createAsyncThunk(`${url}/update`, async (form, thunkAPI) => {
-  try {
-    return await axioKit.update(url, form.data, form.token);
-  } catch (error) {
-    const message = error.response?.data?.message || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
+export const UPDATE = createAsyncThunk(
+  `${url}/update`,
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.update(url, form.data, form.token);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 // 🆕 DELETE THUNK
-export const DESTROY = createAsyncThunk(`${url}/destroy`, async ({ id, token }, thunkAPI) => {
-  try {
-    return await axioKit.remove(`${url}/${id}`, token);
-  } catch (error) {
-    const message = error.response?.data?.message || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
+export const DESTROY = createAsyncThunk(
+  `${url}/destroy`,
+  async ({ id, token }, thunkAPI) => {
+    try {
+      return await axioKit.remove(`${url}/${id}`, token);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
-
+);
 
 // SLICE
 
@@ -149,8 +164,8 @@ export const casesSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const id = action.meta.arg.id;
-        state.collections = state.collections.filter(item => item._id !== id);
-        state.filtered = state.filtered.filter(item => item._id !== id);
+        state.collections = state.collections.filter((item) => item._id !== id);
+        state.filtered = state.filtered.filter((item) => item._id !== id);
         state.message = "Case deleted successfully.";
       })
       .addCase(DESTROY.rejected, (state, action) => {

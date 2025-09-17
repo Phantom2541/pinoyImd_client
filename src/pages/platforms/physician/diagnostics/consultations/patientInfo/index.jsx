@@ -36,7 +36,6 @@ export default function Patient({ activePanels }) {
 
   const userUrl = `${Cloudinary.getEndpoint()}/users/${patient.email}/profile`;
 
-  console.log("patient here", patient);
   return (
     <div
       className={`checkup-data-patient ${

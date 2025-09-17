@@ -1,11 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  MDBBadge,
-  MDBIcon,
-  MDBTable,
-  MDBTableHead,
-  MDBTableBody,
-} from "mdbreact";
+import { MDBBadge, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { UPDATE } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../../services/utilities";
 import {

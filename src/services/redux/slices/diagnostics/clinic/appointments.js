@@ -7,15 +7,18 @@ const initialState = {
   filter: [],
   paginated: [],
   physician: "",
-  activeSched: null,
+  activeSched: "",
   activePhysician: { _id: null },
   // Bread attributes
   selected: {}, // assurance
+  diagnostic: {}, //for storing selected forms
   page: 0,
   willCreate: false,
   showModal: false,
-  willCreateEhr: false,
-  showModalEhr: false,
+  showResultModal: false,
+  showPatientModal: false,
+  willCreateEmr: false,
+  showModalEmr: false,
   /**
    * pagination
    */
@@ -27,6 +30,7 @@ const initialState = {
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
+  formSubmitted: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -134,6 +138,10 @@ export const reduxSlice = createSlice({
       //   state.physician = payload;
       // }
     },
+    SetDIAGNOSTIC: (state, { payload }) => {
+      console.log("diagnostic payload", payload);
+      state.diagnostic = payload;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -149,22 +157,13 @@ export const reduxSlice = createSlice({
       state.willCreate = true;
       state.showModal = true;
     },
-    openEhrModal: (state, { payload }) => {
-      if (payload) {
-        // update mode
-        state.selected = payload;
-        state.willCreateEhr = false;
-      } else {
-        // create mode
-        state.selected = null;
-        state.willCreateEhr = true;
-      }
+    setShowModalEhr: (state, { payload }) => {
+      state.selected = {};
+      state.willCreateEmr = true;
       state.showModalEmr = true;
     },
 
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -177,22 +176,18 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetSCHED: (state, { payload }) => {
-      console.log("SetSCHED", payload);
-      state.activeSched = payload;
-      state.filtered = state.collections.filter(
-        ({ sched }) => sched === payload
-      );
+      const { sched = "", isSearch = false } = payload;
 
-      // const { page, maxPage } = state;
-      // if (payload.length > 0) {
-      //   let totalPages = Math.floor(payload.length / maxPage);
-      //   if (payload.length % maxPage > 0) totalPages += 1;
-      //   state.totalPages = totalPages;
-      //   if (page > totalPages) {
-      //     state.page = totalPages;
-      //   }
-      // }
-      // state.filtered = payload;
+      if (isSearch) {
+        state.filtered = [...state.filtered];
+      } else if (!sched) {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = state.collections.filter(
+          ({ sched: sc }) => sc === sched
+        );
+      }
+      state.activeSched = sched;
     },
 
     SetPagination: (state) => {
@@ -206,6 +201,13 @@ export const reduxSlice = createSlice({
         (page - 1) * max,
         max + (page - 1) * max
       );
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetRESULT: (state, { payload }) => {
+      state.selected = payload;
+      state.showResultModal = true;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -226,6 +228,17 @@ export const reduxSlice = createSlice({
     },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
+    },
+    TOGGLE_RESULT_MODAL: (state) => {
+      state.showResultModal = !state.showResultModal;
+    },
+    TOGGLE_PATIENT_MODAL: (state, { payload }) => {
+      const formattedName = payload?.includes(",")
+        ? payload
+        : payload?.split(" ").join(",");
+
+      state.selected = { defaultSearch: formattedName };
+      state.showPatientModal = !state.showPatientModal;
     },
     TOGGLEEMR: (state) => {
       state.showModalEmr = !state.showModalEmr;
@@ -294,23 +307,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+        state.isSuccess = false;
       })
       .addCase(UPDATE.pending, (state) => {
         state.isSuccess = false;
+        state.formSubmitted = true;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
@@ -323,6 +340,7 @@ export const reduxSlice = createSlice({
           ({ sched }) => sched === state.activeSched
         );
         state.showModal = false;
+        state.formSubmitted = false;
         state.message = success;
         state.isSuccess = true;
       })
@@ -330,6 +348,7 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isSuccess = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
@@ -416,20 +435,25 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetDIAGNOSTIC,
+  SetFILTERED,
+  SetRESULT,
   SetPHYSICIAN,
   SetSCHED,
   SetCREATE,
-  openEhrModal,
+  setShowModalEhr,
   SetEDIT,
   SetFILTER,
   SetPAGE,
+  TOGGLE_PATIENT_MODAL,
+  TOGGLE_RESULT_MODAL,
+  TOGGLE,
+  TOGGLEEMR,
   /**
    * for pagination
    */
   SetMaxPage,
   SetActivePAGE,
-  TOGGLE,
-  TOGGLEEMR,
   RESET,
 } = reduxSlice.actions;
 

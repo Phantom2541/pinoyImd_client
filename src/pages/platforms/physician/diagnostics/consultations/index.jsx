@@ -12,8 +12,8 @@ import Prescription from "./note/prescription";
 import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/consultations";
-import Tracker from "./tracker";
+import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
+import { FIND_EHR } from "../../../../../services/redux/slices/diagnostics/ehr";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
@@ -33,6 +33,9 @@ export default function Consultations() {
   useEffect(() => {
     dispatch(
       GET_PATIENT({ token, key: { _id: ehrId || "636d37e0187c30ab0f611ce4" } })
+    );
+    dispatch(
+      FIND_EHR({ token, key: { patient: ehrId || "636d37e0187c30ab0f611ce4" } })
     );
   }, [ehrId, token, dispatch]);
 
@@ -60,7 +63,6 @@ export default function Consultations() {
   return (
     <div className="checkup-data-container">
       <Body />
-
       <Patient activePanels={activePanels} />
       <Note
         togglePanel={togglePanel}

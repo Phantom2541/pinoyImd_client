@@ -125,6 +125,13 @@ export default function Modal() {
 
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
+          
+          <MDBInput
+            label="Professional Fee"
+            type="number"
+            value={handleValue("ProfessionalFee")}
+            onChange={(e) => handleChange("doctorFee", e.target.value)}
+          />
           <MDBInput
             label="Services/Procedure"
             type="text"
@@ -175,12 +182,6 @@ export default function Modal() {
             })}
           </select>
 
-          <MDBInput
-            label="Doctor’s Fee"
-            type="number"
-            value={handleValue("doctorFee")}
-            onChange={(e) => handleChange("doctorFee", e.target.value)}
-          />
 
           <div className="text-center mb-1-half">
             <MDBBtn

@@ -1,15 +1,7 @@
 import React from "react";
-import { MDBCollapseHeader, MDBBadge, MDBBtn } from "mdbreact";
+import { MDBCollapseHeader } from "mdbreact";
 import { useDispatch } from "react-redux";
-import {
-  // axioKit,
-  dateFormat,
-  sourceColor,
-  // harvestTask,
-  collapse,
-} from "../../../../../../../services/utilities";
-// import { Services } from "../../../../../../services/fakeDb";
-// import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { dateFormat, collapse } from "../../../../../../../services/utilities";
 import { SetSELECTED } from "../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 export default function TaskHeader({
@@ -20,7 +12,6 @@ export default function TaskHeader({
   activeCollapse,
 }) {
   const { _id } = task; // cart, customerId, ssx
-  // const { activeCOLAPSE } = useSelector(({ validator }) => validator),
   const dispatch = useDispatch();
 
   const { color, border } = collapse.getStyle(
