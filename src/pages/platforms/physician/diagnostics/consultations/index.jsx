@@ -86,8 +86,16 @@ export default function Consultations() {
         buttonRefs={buttonRefs}
         togglePanel={togglePanel}
       />
-      <Certificate active={activePanels.medcert} buttonRefs={buttonRefs} />
-      <Clearance active={activePanels.clearance} buttonRefs={buttonRefs} />
+      <Certificate
+        active={activePanels.medcert}
+        buttonRefs={buttonRefs}
+        togglePanel={togglePanel}
+      />
+      <Clearance
+        active={activePanels.clearance}
+        buttonRefs={buttonRefs}
+        togglePanel={togglePanel}
+      />
     </div>
   );
 }

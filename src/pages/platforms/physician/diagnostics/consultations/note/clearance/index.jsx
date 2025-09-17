@@ -1,17 +1,31 @@
 import React from "react";
 import usePanelPosition from "../panelPosition";
+import { MDBIcon } from "mdbreact";
+import "./../style.css";
+import LOGO from "./../../../../../../../assets/aplhamed.png";
+import CADUCEUS from "./../../../../../../../assets/caduceus.png";
+import SIGNATURE from "./../../../../../../../assets/templateSampleSignature.png";
+
+const certificateData = {
+  patientName: "Jhon Kevin Magtalas",
+  gender: "Male",
+  age: 21,
+  address: "Magsaysay Bayombong Nueva Vizcaya",
+  diagnosis: "Pneumonia",
+  startDate: "August 1, 2025",
+  endDate: "August 21, 2025",
+  doctorName: "Dr. Emily Clark",
+};
 
 export default function Clearance({
   active,
   buttonRefs,
-  patient,
-  doctor,
-  purpose,
-  date,
+
+  togglePanel,
 }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {
-    width: 600,
-    height: 460,
+    width: 700,
+    height: 600,
   });
 
   return (
@@ -21,53 +35,70 @@ export default function Clearance({
       }}
       className="checkup-data-clearance"
     >
-      <div
-        style={{
-          width: "600px",
-          padding: "20px",
-          backgroundColor: "white",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          borderRadius: "10px",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
+      <MDBIcon
+        icon="times"
+        className="checkup-data-note-close"
+        onClick={() => togglePanel("clearance")}
+      />
+      <div className="checkup-data-clearance-card">
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h2 style={{ margin: 0 }}>ABC Medical Clinic</h2>
-          <p style={{ margin: 0 }}>123 Main St., Quezon City</p>
-          <hr style={{ margin: "10px 0" }} />
-          <h3 style={{ textDecoration: "underline", margin: 0 }}>
-            MEDICAL CLEARANCE
-          </h3>
+        <div className="checkup-data-clearance-card-header">
+          <img src={LOGO} alt="" />
+          <span>Medi Care</span>
+          <span>123 Main St., Quezon City</span>
+          <span>Contact: (02) 1234-5678</span>
         </div>
+
+        {/* Title */}
+        <h1 className="checkup-data-clearance-card-title">
+          Medical Certificate
+        </h1>
 
         {/* Body */}
-        <div style={{ lineHeight: 1.6 }}>
-          <p>
-            This is to certify that <b>{patient?.name || "________________"}</b>
-            , {patient?.age ? `${patient.age} years old` : "___ years old"},{" "}
-            {patient?.gender || "______"} has undergone medical examination at
-            this clinic.
-          </p>
+        <div className="checkup-data-clearance-card-body">
+          <div className="checkup-data-clearance-card-body-date">
+            <span>Date:</span>
+            <span>{certificateData.endDate}</span>
+          </div>
+          <img alt="caducues" src={CADUCEUS} />
+          <label>TO WHOMSOEVER IT MAY CONCERN</label>
 
-          <p>
-            Purpose of clearance: <b>{purpose || "____________________"}</b>
-          </p>
+          <div className="checkup-data-clearance-card-body-text">
+            <span>
+              This is to certify that Mr/Mrs.&nbsp;
+              <span className="checkup-data-clearance-card-body-data width-50">
+                {certificateData.patientName}
+              </span>
+              &nbsp; Male/Female&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {certificateData.gender}
+              </span>
+              &nbsp;Age&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {certificateData.age}
+              </span>
+              &nbsp;years, residing at&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {certificateData.address}
+              </span>
+              , was examined at this clinic and is found to be
+              <span className="checkup-data-clearance-card-body-data">
+                medically fit
+              </span>{" "}
+              to engage in
+              <span className="checkup-data-clearance-card-body-data">
+                work/school/sports/travel
+              </span>
+              .
+            </span>
+          </div>
 
-          <p>
-            Date of issuance: <b>{date || "__________"}</b>
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div style={{ textAlign: "right", marginTop: "30px" }}>
-          <p>______________________________</p>
-          <p>
-            <b>{doctor?.name || "Dr. Juan Dela Cruz"}</b>
-          </p>
-          <p>
-            Lic. No.: <b>{doctor?.license || "000000"}</b>
-          </p>
+          {/* Doctor */}
+          <div className="checkup-data-clearance-card-body-doctor">
+            <span>{certificateData.doctorName}</span>
+            <span>Physician/Examiner</span>
+            <img alt="signature" src={SIGNATURE} />
+          </div>
         </div>
       </div>
     </div>
