@@ -44,7 +44,7 @@ export default function ResultsModal() {
 
   const toggle = () => dispatch(TOGGLE_RESULT_MODAL());
 
-  const { department = "", patient = {}, _id } = selected || {};
+  const { department = "", patient = {} } = selected || {};
 
   useEffect(() => {
     if (show) {
@@ -65,7 +65,7 @@ export default function ResultsModal() {
         deletedImages.map(({ section, date }) =>
           dispatch(
             DESTROY_IMG({
-              data: { path: `diagnostics/${_id}/${section}_${date}` },
+              data: { path: `users/${patient?.email}/EHR/${section}_${date}` },
               token,
             })
           )
@@ -84,7 +84,7 @@ export default function ResultsModal() {
           const { section, img, date } = element;
           const buildForm = Cloudinary.buildFileForm(
             img,
-            `diagnostics/${_id}`,
+            `users/${patient?.email}/EHR`,
             `${section}_${date}`
           );
 
