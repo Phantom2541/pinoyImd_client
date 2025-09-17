@@ -77,7 +77,7 @@ export default function MedicalCertificate({
               <span className="checkup-data-clearance-card-body-data">
                 {certificateData.startDate}
               </span>
-              &nbsp;Suffering from&nbsp;
+              &nbsp; Suffering from&nbsp;
               <span className="checkup-data-clearance-card-body-data">
                 {certificateData.diagnosis}
               </span>
