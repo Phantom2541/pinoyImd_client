@@ -1,0 +1,79 @@
+.menus-clinic-table {
+  width: 100%;
+  border-radius: 10px;
+  border-collapse: collapse;
+  background-color: #fff;
+  height: fit-content;
+}
+
+.menus-clinic-table th,
+.menus-clinic-table td {
+  border: 2px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+.menus-clinic-table th {
+  background-color: hsl(0, 0%, 35%);
+  color: white;
+}
+
+.menus-clinic-table td {
+  font-weight: 450;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.menus-clinic-table tr:hover td {
+  background-color: rgba(255, 53, 71, 1);
+  color: white;
+  border-right-color: rgba(255, 53, 71, 1);
+}
+
+.menus-clinic-table tr:hover td:nth-child(n + 2) {
+  color: rgba(255, 53, 71, 1);
+  border-right-color: rgba(255, 53, 71, 1);
+}
+
+.menus-clinic-table tr:hover td:nth-child(4) {
+  border-right-color: black;
+  position: relative;
+}
+
+.menus-clinic-table tr:hover .menus-up {
+  color: green;
+  display: none;
+}
+
+.menus-clinic-table .menus-clinic-button-delete {
+  display: none;
+  margin: auto;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.menus-clinic-table tr:hover .menus-clinic-button-delete {
+  display: block;
+}
+
+.menus-clinic-table tr .menus-empty {
+  background-color: #fff;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.menus-clinic-table tr:hover .menus-empty {
+  background-color: white;
+  color: rgba(0, 0, 0, 0.4);
+  border-color: black;
+}
+
+.menus-clinic-qty {
+  width: 9rem;
+}

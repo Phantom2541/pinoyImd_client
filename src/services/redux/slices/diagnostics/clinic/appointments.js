@@ -5,6 +5,7 @@ const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
+  cart: [], //for tranasction in appointment
   paginated: [],
   physician: "",
   activeSched: "",
@@ -17,6 +18,7 @@ const initialState = {
   showModal: false,
   showResultModal: false,
   showPatientModal: false,
+  showTransacModal: false,
   willCreateEhr: false,
   showModalEhr: false,
   /**
@@ -138,6 +140,13 @@ export const reduxSlice = createSlice({
       //   state.physician = payload;
       // }
     },
+    SetCART: (state, { payload }) => {
+      state.cart = payload;
+    },
+    ChangeQty: (state, { payload }) => {
+      const { index, value } = payload;
+      state.cart[index].qty = value; // ✅ safe ito sa RTK
+    },
     SetDIAGNOSTIC: (state, { payload }) => {
       console.log("diagnostic payload", payload);
       state.diagnostic = payload;
@@ -216,6 +225,10 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showResultModal = true;
     },
+    SetTRANSAC: (state, { payload }) => {
+      state.selected = payload;
+      state.showTransacModal = true;
+    },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
@@ -238,6 +251,9 @@ export const reduxSlice = createSlice({
     },
     TOGGLE_RESULT_MODAL: (state) => {
       state.showResultModal = !state.showResultModal;
+    },
+    TOGGLE_TRANSAC_MODAL: (state) => {
+      state.showTransacModal = !state.showTransacModal;
     },
     TOGGLE_PATIENT_MODAL: (state, { payload }) => {
       const formattedName = payload?.includes(",")
@@ -442,6 +458,9 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetCART,
+  ChangeQty,
+  SetTRANSAC,
   SetDIAGNOSTIC,
   SetFILTERED,
   SetRESULT,
@@ -456,6 +475,7 @@ export const {
   TOGGLE_RESULT_MODAL,
   TOGGLE,
   TOGGLEEMR,
+  TOGGLE_TRANSAC_MODAL,
   /**
    * for pagination
    */

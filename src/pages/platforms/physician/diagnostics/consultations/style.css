@@ -1,11 +1,12 @@
 .checkup-data-container {
   display: grid;
   grid-template-columns: 1fr 250px;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto 50px;
   grid-template-areas:
     "image   patient"
     "image   patient"
-    "image   prescription";
+    "image   prescription"
+    "toolkit toolkit";
   gap: 10px;
   height: calc(100vh - 23vh);
   user-select: none;
@@ -16,6 +17,11 @@
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   background-color: white;
   border-radius: 3px;
+  overflow-y: auto;
+}
+
+.checkup-data-patient::-webkit-scrollbar {
+  display: none;
 }
 
 .checkup-data-body {
@@ -27,17 +33,17 @@
   border-radius: 3px;
 }
 
-.checkup-data-tracker {
-  grid-area: tracker;
-  width: 100%;
-  height: 100%;
+.checkup-data-note {
+  grid-area: prescription;
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
 
-.checkup-data-note {
-  grid-area: prescription;
+.checkup-data-toolkit {
+  grid-area: toolkit;
+  background-color: white;
+
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }

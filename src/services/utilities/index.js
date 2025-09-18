@@ -22,6 +22,7 @@ import getDepartment from "./getDepartment";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
 import { computeGD, allServicesHavePrices } from "./computeGD";
+import computeCP from "./computeCP"; // Compute Clinic Purchase
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
 import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
@@ -135,6 +136,7 @@ export {
   currency,
   removeRedundantPackages,
   computeGD,
+  computeCP, // Compute Clinic Purchase
   allServicesHavePrices,
   validateContact,
   generateEmail,
