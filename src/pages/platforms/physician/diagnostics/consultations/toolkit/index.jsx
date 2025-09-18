@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import Case from "../case";
 
 export default function Toolkit({ activePanels }) {
   return (
@@ -8,8 +9,8 @@ export default function Toolkit({ activePanels }) {
         Object.values(activePanels).some(Boolean) && "active"
       }`}
     >
-      <button>case</button>
-      <div>
+      <Case />
+      <div className="checkup-data-toolkit-buttons">
         <button className="checkup-data-toolkit-button prev">
           <span data-hover="«">Prev</span>
         </button>
