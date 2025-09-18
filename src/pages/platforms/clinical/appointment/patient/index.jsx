@@ -10,13 +10,15 @@ import {
   TOGGLE_PATIENT_MODAL,
   SAVE,
   SetSCHED,
+  arrangeSchedules,
+  SetPHYSICIAN,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { useEffect, useState } from "react";
 import visitTypes from "../visitTypes.json";
 import { EditableUser } from "../../../../../components/customizable";
 import Register from "./register";
 import Swal from "sweetalert2";
-import { generateEmail } from "../../../../../services/utilities";
+import { fullName, generateEmail } from "../../../../../services/utilities";
 import Spinner from "../../../../../components/spinner";
 const _form = {
   isRegister: false,
@@ -32,24 +34,33 @@ export default function PatientModal() {
       scheds,
       activeSched,
       roster = [],
+      physicians = [],
       activePhysician,
       formSubmitted,
     } = useSelector(({ appointments }) => appointments),
+    [physician, setPhysician] = useState(""),
     [form, setForm] = useState(_form),
+    [schedules, setSchedules] = useState([]),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (showPatientModal) {
+    if (showPatientModal && activePhysician?._id) {
       setForm({ ..._form, sched: activeSched });
+      setPhysician(activePhysician?._id);
+      setSchedules(scheds);
+    } else {
+      setForm(_form);
+      setPhysician("");
+      setSchedules([]);
     }
-  }, [showPatientModal, activeSched]);
+  }, [showPatientModal, activeSched, activePhysician, scheds]);
 
   const toggle = () => dispatch(TOGGLE_PATIENT_MODAL());
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const clinic = [...roster].find(
-      ({ physicianId }) => physicianId?._id === activePhysician?._id
+      ({ physicianId }) => physicianId?._id === physician
     )?._id;
 
     const { isRegister, patient } = form;
@@ -90,10 +101,21 @@ export default function PatientModal() {
       }),
     };
     dispatch(SAVE({ data: _form, token })).then(() => {
+      dispatch(SetPHYSICIAN(physician));
       dispatch(SetSCHED({ sched: form.sched }));
       setForm(_form);
       toggle();
     });
+  };
+
+  const handleChangePhysician = (e) => {
+    const { value } = e.target;
+    const { schedules = [] } = [...roster].find(
+      ({ physicianId }) => physicianId?._id === value
+    );
+
+    setSchedules(arrangeSchedules(schedules));
+    setPhysician(value);
   };
 
   return (
@@ -147,6 +169,29 @@ export default function PatientModal() {
               ))}
             </select>
           </div>
+          {!activePhysician._id && (
+            <div>
+              <span
+                style={{ fontWeight: 400 }}
+                className="mb-1 d-block grey-text mt-3"
+              >
+                Physician:
+              </span>
+              <select
+                className="form-control"
+                required
+                value={physician}
+                onChange={handleChangePhysician}
+              >
+                <option value="">Choose a Physician </option>
+                {physicians.map(({ fullName: name, _id }) => (
+                  <option key={_id} value={_id}>
+                    Dr. {fullName(name)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div>
             <span
               style={{ fontWeight: 400 }}
@@ -161,7 +206,7 @@ export default function PatientModal() {
               onChange={(e) => setForm({ ...form, sched: e.target.value })}
             >
               <option value="">Choose a Schedule </option>
-              {scheds.map((sched) => (
+              {schedules.map((sched) => (
                 <option key={sched} value={sched}>
                   {sched}
                 </option>
