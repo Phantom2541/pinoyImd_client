@@ -5,7 +5,6 @@ const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
-  cart: [], //for tranasction in appointment
   paginated: [],
   physician: "",
   activeSched: "",
@@ -13,6 +12,11 @@ const initialState = {
   // Bread attributes
   selected: {}, // assurance
   diagnostic: {}, //for storing selected forms
+  roster: [],
+  collections: [],
+  scheds: [],
+  filtered: [],
+  physicians: [],
   page: 0,
   willCreate: false,
   showModal: false,
@@ -24,11 +28,7 @@ const initialState = {
   /**
    * pagination
    */
-  roster: [],
-  collections: [],
-  scheds: [],
-  filtered: [],
-  physicians: [],
+
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
@@ -121,6 +121,14 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSETTLED: (state, { payload }) => {
+      const update = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === payload);
+        collections.splice(index, 1);
+      };
+      update(state.collections);
+      update(state.filtered);
+    },
     SetPHYSICIAN: (state, { payload }) => {
       // const arrangePayload = (collections) => {
       //   return collections.flatMap(({ user, appointments = [] }) => {
@@ -140,13 +148,7 @@ export const reduxSlice = createSlice({
       //   state.physician = payload;
       // }
     },
-    SetCART: (state, { payload }) => {
-      state.cart = payload;
-    },
-    ChangeQty: (state, { payload }) => {
-      const { index, value } = payload;
-      state.cart[index].qty = value; // ✅ safe ito sa RTK
-    },
+
     SetDIAGNOSTIC: (state, { payload }) => {
       console.log("diagnostic payload", payload);
       state.diagnostic = payload;
@@ -458,8 +460,7 @@ export function sortSchedules(schedules) {
 }
 
 export const {
-  SetCART,
-  ChangeQty,
+  SetSETTLED,
   SetTRANSAC,
   SetDIAGNOSTIC,
   SetFILTERED,

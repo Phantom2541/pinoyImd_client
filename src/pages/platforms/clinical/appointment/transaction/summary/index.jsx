@@ -2,16 +2,59 @@ import { MDBCol, MDBBtn } from "mdbreact";
 import { capitalize } from "lodash";
 import { useState } from "react";
 import { computeCP, currency } from "../../../../../../services/utilities";
-import { useSelector } from "react-redux";
-import RollingNumber from "../../../../../../components/rollingNumber";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SAVE,
+  SetCART,
+} from "../../../../../../services/redux/slices/diagnostics/clinic/settlements";
+import {
+  SetSETTLED,
+  TOGGLE_TRANSAC_MODAL,
+} from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import Spinner from "../../../../../../components/spinner";
 const Summary = () => {
-  const { cart } = useSelector(({ appointments }) => appointments),
+  const { auth, token } = useSelector(({ auth }) => auth),
+    { selected } = useSelector(({ appointments }) => appointments),
+    { cart, formSubmitted } = useSelector(({ settlements }) => settlements),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
-    { gross, discount, net } = computeCP(cart);
+    { gross, discount, net } = computeCP(cart),
+    dispatch = useDispatch();
+
+  const { patient } = selected;
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const items = cart.map((item) => {
+      const { discount, up, net } = computeCP(item);
+      return {
+        menu: item._id,
+        srp: up,
+        discount,
+        amount: net,
+        qty: item.qty,
+      };
+    });
+
+    const settlement = {
+      cart: items,
+      userId: auth._id,
+      patient: patient._id,
+      appointment: selected._id,
+      payment,
+      discount,
+      cash,
+      amount: net,
+    };
+    dispatch(SAVE({ data: settlement, token })).then((action) => {
+      const { payload = {} } = action?.payload;
+      const { appointment = {} } = payload;
+      dispatch(SetSETTLED(appointment?._id));
+      dispatch(TOGGLE_TRANSAC_MODAL());
+      dispatch(SetCART([]));
+      setPayment("cash");
+      setCash(0);
+    });
   };
   return (
     <MDBCol md="5">
@@ -80,10 +123,10 @@ const Summary = () => {
         <MDBBtn
           type="submit"
           className="m-0 w-100 fw-bold mt-3"
-          disabled={cart.length === 0}
+          disabled={cart.length === 0 || formSubmitted}
           color="success"
         >
-          Complete Transaction
+          Complete Transaction <Spinner formSubmitted={formSubmitted} />
         </MDBBtn>
       </form>
     </MDBCol>

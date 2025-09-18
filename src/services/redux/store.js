@@ -58,6 +58,7 @@ import {
   consultations,
   ehr,
   cases,
+  settlements,
 } from "./slices/diagnostics";
 
 // FINANCE
@@ -95,6 +96,7 @@ const store = configureStore({
     clinicInfo,
     duties,
     appointments,
+    settlements,
     remittances,
     payables,
     payments,

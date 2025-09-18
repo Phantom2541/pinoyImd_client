@@ -72,6 +72,7 @@ export default function EditableSelect({
   disableSearch = false,
   isMoney = false,
   formSubmitted = false,
+  iSuccess = false,
   animationStyle = { width: "100%" },
   animation = false,
   isCapitalize = true,
@@ -80,6 +81,7 @@ export default function EditableSelect({
   onSave = () => {}, //this function is use to editable mode to get the edited data
   _key = "",
 }) {
+  console.log("formSubmitted", formSubmitted);
   const [editedData, setEditedData] = useState(null);
   const { addToast } = useToasts();
 
@@ -92,7 +94,7 @@ export default function EditableSelect({
     if (!formSubmitted) {
       setEditedData({});
     }
-  }, [formSubmitted]);
+  }, [formSubmitted, iSuccess]);
 
   // 🔊 Listen to "close-all-editable" to reset own state
   useEffect(() => {
@@ -135,6 +137,7 @@ export default function EditableSelect({
 
   const handleCheck = () => {
     if (String(fieldData[keyForValue]) === String(editedData?.[keyForValue])) {
+      setEditedData({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
@@ -142,7 +145,6 @@ export default function EditableSelect({
       const { editingKey, ...rest } = editedData; // tanggalin yung keyForValue
       onSave(rest);
     }
-    setEditedData({});
   };
 
   const editMode =

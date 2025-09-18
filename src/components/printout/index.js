@@ -1,4 +1,5 @@
 export { default as ClaimStub } from "./claimStub";
+export { default as ClinicStub } from "./clinicStub";
 export * from "./logbook";
 export { default as ChartPrintout } from "./chart";
 export { default as RequestForm } from "./requestFormNew";

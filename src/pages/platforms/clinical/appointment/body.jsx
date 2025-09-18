@@ -42,7 +42,8 @@ const Body = () => {
 
   const statusColors = {
     draft: "info",
-    confirmed: "success",
+    confirmed: "primary",
+    done: "success",
     cancelled: "danger",
   };
 
@@ -92,6 +93,13 @@ const Body = () => {
                     className="ml-2"
                   >
                     <EditableSelect
+                      animation
+                      animationStyle={{
+                        width: "10rem",
+                        marginLeft: "-.3rem",
+                        marginTop: "-.4rem",
+                      }}
+                      className="mb-n3"
                       preValue={status}
                       keyForText="status"
                       keyForValue="status"
@@ -104,7 +112,7 @@ const Body = () => {
                     />
                   </MDBBadge>
 
-                  {index === 0 && (
+                  {status === "done" && (
                     <MDBIcon
                       icon="cash-register"
                       onClick={() => dispatch(SetTRANSAC(item))}
@@ -116,9 +124,16 @@ const Body = () => {
                 </td>
                 <td>
                   <EditableSelect
+                    animation
+                    animationStyle={{
+                      width: "15rem",
+                      marginLeft: "-.3rem",
+                      marginTop: "0.2rem",
+                    }}
                     preValue={visitType}
                     keyForText="visitType"
                     keyForValue="visitType"
+                    className="mb-n3"
                     isEditable
                     collections={visitTypes}
                     fieldData={{
@@ -173,9 +188,14 @@ const Body = () => {
                 </td>
 
                 <td>{consultation ? "yes" : "no"} </td>
-                <td>
+                <td className="position-relative">
                   <EditableField
                     type="text"
+                    animation
+                    animationStyle={{
+                      width: "15rem",
+                      marginTop: "-0.4rem",
+                    }}
                     keyForValue="remarks"
                     fieldData={{ _id, remarks: remarks }}
                     onSave={handleUpdate}

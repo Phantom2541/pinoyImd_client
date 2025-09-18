@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ChangeQty,
   SetCART,
-} from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+} from "../../../../../../services/redux/slices/diagnostics/clinic/settlements";
 import "./style.css";
 const Menus = () => {
-  const { cart = [] } = useSelector(({ appointments }) => appointments),
+  const { cart = [] } = useSelector(({ settlements }) => settlements),
     dispatch = useDispatch();
 
   const handleAddToCart = (item) => {
