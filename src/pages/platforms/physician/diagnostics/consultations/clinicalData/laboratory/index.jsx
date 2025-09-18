@@ -83,15 +83,7 @@ export default function Laboratory() {
     return (
       <MDBRow className="h-100">
         <MDBCol md="10" className="p-1 h-100" style={{ overflow: "auto" }}>
-          {/* <div
-            style={{
-              maxHeight: "680px",
-              overflowX: "hidden",
-              overflowY: "auto",
-            }}
-          > */}
           <Printout task={task} onloaded={onloaded} setOnloaded={setOnloaded} />
-          {/* </div> */}
         </MDBCol>
         <MDBCol md="2" className="p-1">
           <Tracker />
