@@ -27,7 +27,7 @@ import "../style.css";
 export default function Search({
   setMenu,
   setRegister = () => {},
-  filtered = [],
+  clinic = "",
 }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ clinicMenus }) => clinicMenus),
@@ -41,9 +41,10 @@ export default function Search({
 
   // initial values
   useEffect(() => {
-    if (token && activePlatform.branchId) {
-      const branchId = activePlatform.branchId;
-
+    if (token && activePlatform) {
+      const { branch = {} } = activePlatform;
+      const { physicians = [] } = branch || {};
+      const physicianIDS = physicians.map(({ _id }) => _id) || [];
       // Check if the data for the specific branchId is already in localStorage
       const storedMenus = localStorage.getItem(`clinic_menus`);
 
@@ -54,7 +55,7 @@ export default function Search({
         dispatch(SetCOLLECTIONS(menus));
       } else {
         // If no data in localStorage, make the server request
-        dispatch(MENUS({ token, key: { branchId } }))
+        dispatch(MENUS({ token, key: { physicianId: physicianIDS } }))
           .then(({ payload }) => {
             // Assuming the response contains the menus data in 'payload'
             const menus = payload.payload;
@@ -78,17 +79,23 @@ export default function Search({
   const debouncedSearch = useMemo(
     () =>
       debounce((key) => {
-        setIsLoading(false);
-
         if (key.trim().length <= 1) return setMatch([]);
         const _match = globalSearch(
-          isEmpty(filtered) ? collections : filtered,
+          collections.filter(({ clinicId }) => clinicId === clinic),
           key.trim()
         );
+        setIsLoading(false);
         setMatch(_match);
-      }, 500),
-    [collections, filtered, setMatch, setIsLoading]
+      }, 800),
+    [collections, clinic]
   ); // dependencies
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+      setIsLoading(false);
+    };
+  }, [debouncedSearch]);
 
   const handleChange = (value) => {
     setSearchKey(value);
