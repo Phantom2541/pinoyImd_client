@@ -21,11 +21,12 @@ import { properFullname } from "../../../../../services/utilities";
 export default function Modal() {
   const { collections, showModal, selected, willCreate, isLoading } =
       useSelector(({ clinicMenus }) => clinicMenus),
-    { token } = useSelector(({ auth }) => auth),
-    { filtered = [] } = useSelector(({ physicians }) => physicians),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  const physicians = activePlatform.branch.physicians || "";
 
   // Initialize form when selected changes
   useEffect(() => {
@@ -35,12 +36,21 @@ export default function Modal() {
       setForm({});
     }
   }, [selected]);
+  console.log("form", form);
 
+  // SUBMIT
   // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // 🔒 Validation: block if doctor has no clinic
+      if (!form.clinicId) {
+        return addToast("This doctor has not yet registered a clinic.", {
+          appearance: "error",
+        });
+      }
+
       if (willCreate) {
         await dispatch(SAVE({ data: form, token }));
       } else {
@@ -51,8 +61,7 @@ export default function Modal() {
         }
         await dispatch(UPDATE({ data: form, token }));
       }
-      // ✅ Do NOT manually toggle the modal
-      // The slice will set showModal = false on success
+      // ✅ Slice will handle closing the modal
     } catch (err) {
       addToast(err.message || "Failed to save/update.", {
         appearance: "error",
@@ -112,30 +121,40 @@ export default function Modal() {
             onChange={(e) => handleChange("srp", e.target.value)}
           />
 
-          <div className="d-flex align-items-center mb-3">
+          <div className="form-check mb-3">
             <input
               type="checkbox"
+              className="form-check-input"
+              id="discountable"
               checked={!!form.discountable}
               onChange={(e) => handleChange("discountable", e.target.checked)}
             />
-            <label className="ml-2">Discountable</label>
+            <label className="form-check-label" htmlFor="discountable">
+              Discountable
+            </label>
           </div>
 
           <small>Doctor / Specialist</small>
           <select
             className="form-control mb-3"
             value={form.physicianId || ""}
-            onChange={(e) => handleChange("physicianId", e.target.value)}
+            onChange={(e) => {
+              const { _id, clinic } =
+                physicians.find((doc) => doc._id === e.target.value) || {};
+
+              setForm((prev) => ({
+                ...prev,
+                physicianId: _id || "",
+                clinicId: clinic?._id || "",
+              }));
+            }}
           >
             <option value="">-- Select Doctor --</option>
-            {filtered.map((doc) => {
-              const displayName = properFullname(doc.user?.fullName) || "";
-              return (
-                <option key={doc._id} value={doc._id}>
-                  {displayName}
-                </option>
-              );
-            })}
+            {physicians.map(({ _id, fullName }) => (
+              <option key={_id} value={_id}>
+                {properFullname(fullName) || ""}
+              </option>
+            ))}
           </select>
 
           <div className="text-center mb-1-half">

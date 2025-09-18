@@ -1,31 +1,23 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Search } from "../../../../../components/searchables";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { useToasts } from "react-toast-notifications";
+import { MDBView } from "mdbreact";
 import {
   BROWSE,
   SetFILTERED,
-  RESET,
   SetCREATE,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
-import { TIEUPS } from "../../../../../services/redux/slices/assets/persons/physicians";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { filtered = [], collections = [] } = useSelector(
     ({ clinicMenus }) => clinicMenus
   );
-  const { physicians } = useSelector(({ physicians }) => physicians);
   const dispatch = useDispatch();
-  const { addToast } = useToasts();
 
-  useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
-
-    return () => dispatch(RESET());
-  }, [token, activePlatform, dispatch]);
+  const physicians = Array.isArray(activePlatform.branch.physicians)
+    ? activePlatform.branch.physicians.map((p) => p._id)
+    : [];
 
   useEffect(() => {
     if (token && physicians.length > 0) {
@@ -36,7 +28,7 @@ const Header = () => {
         })
       );
     }
-  }, [token, physicians, dispatch]);
+  }, [token, dispatch]);
 
   return (
     <MDBView
