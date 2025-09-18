@@ -5,6 +5,7 @@ import {
   DESTROY,
   SetEDIT,
   SetFILTER,
+  RESET,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import Swal from "sweetalert2";
 
@@ -14,21 +15,13 @@ export default function Body() {
     filtered = [],
     activePage,
     maxPage,
+    collections = [],
   } = useSelector(({ clinicMenus }) => clinicMenus);
   const { token } = useSelector(({ auth }) => auth);
 
   const itemsPerPage = maxPage || 10;
   const startIndex = (activePage - 1) * itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage);
-
-  const formatCurrency = (value) => {
-    if (value == null || value === "") return "-";
-    return new Intl.NumberFormat("en-PH", {
-      style: "currency",
-      currency: "PHP",
-      minimumFractionDigits: 2,
-    }).format(value);
-  };
+  const paginatedData = filtered?.slice(startIndex, startIndex + itemsPerPage);
 
   const handleDelete = (_id, abbreviation) => {
     Swal.fire({
@@ -41,23 +34,7 @@ export default function Body() {
       confirmButtonText: "Yes, delete it",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: _id } }))
-          .unwrap()
-          .then(() => {
-            // Remove from redux filtered list
-            dispatch(
-              SetFILTER((prev) => prev.filter((item) => item._id !== _id))
-            );
-
-            Swal.fire(
-              "Deleted!",
-              "The clinic menu has been removed.",
-              "success"
-            );
-          })
-          .catch((err) => {
-            Swal.fire("Error", err.message || "Failed to delete.", "error");
-          });
+        dispatch(DESTROY({ token, data: { id: _id } }));
       }
     });
   };
@@ -79,25 +56,32 @@ export default function Body() {
       <tbody>
         {paginatedData.length > 0 ? (
           paginatedData.map((row, index) => {
+            if (!row) return null;
             const {
-              doctorFee,
+              professionalFee,
               abbreviation,
               description,
               srp,
               discountable,
               doctor,
               _id,
-            } = row;
+            } = row || {};
 
             return (
-              <tr key={_id || index}>
+              <tr key={index}>
                 <td>{startIndex + index + 1}</td>
-                <td>{formatCurrency(doctorFee) || "-"}</td>
-                <td>{abbreviation || "-"}</td>
-                <td>{description || "-"}</td>
-                <td>{formatCurrency(srp)}</td>
-                <td>{discountable ? "Yes" : "No"}</td>
-                <td>{doctor || "-"}</td>
+                <td>
+                  {typeof professionalFee === "number"
+                    ? `₱${professionalFee.toLocaleString()}`
+                    : "-"}
+                </td>
+                <td>{abbreviation ?? "-"}</td>
+                <td>{description ?? "-"}</td>
+                <td>
+                  {typeof srp === "number" ? `₱ ${srp.toLocaleString()}` : "-"}
+                </td>
+                <td>{Boolean(discountable) ? "Yes" : "No"}</td>
+                <td>{doctor ?? "-"}</td>{" "}
                 <td className="d-flex gap-2">
                   <MDBBtn
                     size="sm"

@@ -1,0 +1,177 @@
+.checkup-data-toolkit-button-case-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.checkup-data-toolkit-button-case-content {
+  position: relative;
+}
+
+.checkup-data-toolkit-button-case {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  width: 130px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.checkup-data-toolkit-button-case-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-105%) translateX(-10px);
+  padding: 10px;
+  width: auto;
+  max-height: 300px;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.checkup-data-toolkit-button-case-list.active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-105%) translateX(0);
+}
+
+.checkup-data-toolkit-button-case-list button {
+  border: none;
+  background-color: transparent;
+  padding: 3px 5px;
+  width: 100%;
+  text-align: left;
+  text-transform: capitalize;
+  white-space: nowrap;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.checkup-data-toolkit-button-case-list button.male:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-list button.female:hover {
+  background-color: #e83e8c;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-list button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-list button.male.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-list button.female.selected {
+  background-color: #e83e8c;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-selected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  max-width: 600px;
+  overflow-x: auto;
+}
+
+/* Optional: prettier scrollbar (webkit) */
+.checkup-data-toolkit-button-case-selected::-webkit-scrollbar {
+  height: 3px;
+}
+.checkup-data-toolkit-button-case-selected::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.checkup-data-toolkit-button-case-selected::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 3px;
+}
+
+.checkup-data-toolkit-button-case-selected:active {
+  cursor: grabbing;
+}
+
+.checkup-data-toolkit-button-case-selected-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 4px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  text-transform: capitalize;
+  transition: all 0.3s ease;
+}
+
+.checkup-data-toolkit-button-case-selected-item.male:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-selected-item.female:hover {
+  background-color: #e83e8c;
+  color: white;
+}
+
+.checkup-data-toolkit-button-case-selected-item:hover {
+}
+
+.checkup-data-toolkit-button-case-selected-item button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.6rem;
+  border: 1px solid black;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 0;
+  width: 17px;
+  aspect-ratio: 1/1;
+  transition: all 0.3s ease;
+}
+
+.checkup-data-toolkit-button-case-selected-item:hover button {
+  color: white;
+  border-color: white;
+}
+
+.checkup-data-toolkit-button-case-selected-item button:hover {
+  color: white;
+  border-color: red;
+  background-color: red;
+}
+
+.checkup-data-toolkit-button-case-selected-item span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-left: 5px;
+  white-space: nowrap;
+}
