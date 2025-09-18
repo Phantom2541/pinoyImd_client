@@ -1,0 +1,99 @@
+.checkup-data-toolkit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+}
+
+.checkup-data-toolkit.active {
+  position: relative;
+  z-index: 101;
+}
+
+/* Base button design galing sa iyo */
+.checkup-data-toolkit-button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #3d405b;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 17px;
+  padding: 5px 10px;
+  width: 100px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.checkup-data-toolkit-button:active {
+  transform: scale(0.95);
+}
+
+.checkup-data-toolkit-button.done {
+  background-color: #28a745;
+  width: 130px;
+}
+
+.checkup-data-toolkit-button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.checkup-data-toolkit-button span:after {
+  content: attr(data-hover);
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  transition: 0.5s;
+}
+
+/* NEXT → hover arrow sa kanan */
+.checkup-data-toolkit-button.next span:after {
+  right: -15px;
+}
+.checkup-data-toolkit-button.next:hover span {
+  padding-right: 15px;
+}
+.checkup-data-toolkit-button.next:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+/* PREV → hover arrow sa kaliwa */
+.checkup-data-toolkit-button.prev span:after {
+  left: -15px;
+}
+.checkup-data-toolkit-button.prev:hover span {
+  padding-left: 15px;
+}
+.checkup-data-toolkit-button.prev:hover span:after {
+  opacity: 1;
+  left: 0;
+}
+
+/* DONE → hover check sa kanan (katulad ng NEXT) */
+.checkup-data-toolkit-button.done span:after {
+  content: attr(data-hover);
+  right: -15px;
+}
+.checkup-data-toolkit-button.done:hover span {
+  padding-right: 15px;
+}
+.checkup-data-toolkit-button.done:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+/* Check icon sa loob ng Done button */
+.checkup-data-toolkit-button.done i {
+  margin-right: 6px;
+  transition: transform 0.4s ease;
+}
+
+.checkup-data-toolkit-button.done:hover i {
+  transform: rotate(15deg) scale(1.2);
+}

@@ -14,6 +14,7 @@ import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import { FIND_EHR } from "../../../../../services/redux/slices/diagnostics/ehr";
+import Toolkit from "./toolkit";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
@@ -69,6 +70,7 @@ export default function Consultations() {
         buttonRefs={buttonRefs}
         activePanels={activePanels}
       />
+      <Toolkit activePanels={activePanels} />
 
       <div
         className={`checkup-data-note-mask ${

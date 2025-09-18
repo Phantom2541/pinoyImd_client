@@ -20,7 +20,7 @@ export default function MedicalCertificate({
   buttonRefs,
   togglePanel,
 }) {
-  const style = usePanelPosition(active, buttonRefs.clearance, {
+  const style = usePanelPosition(active, buttonRefs.medcert, {
     width: 700,
     height: 600,
   });
