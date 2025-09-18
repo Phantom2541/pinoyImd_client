@@ -12,58 +12,52 @@ import {
   toggleModal,
   SAVE,
   UPDATE,
+  SetFILTER,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { properFullname } from "../../../../../services/utilities";
 
 export default function Modal() {
-  const { showModal, selected, willCreate, isLoading } = useSelector(
-      ({ clinicMenus }) => clinicMenus
-    ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+  const { collections, showModal, selected, willCreate, isLoading } =
+      useSelector(({ clinicMenus }) => clinicMenus),
+    { token } = useSelector(({ auth }) => auth),
     { filtered = [] } = useSelector(({ physicians }) => physicians),
     [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log("form", form);
 
+  // Initialize form when selected changes
   useEffect(() => {
     if (selected) {
       setForm(selected);
+    } else {
+      setForm({});
     }
   }, [selected]);
 
-  // CREATE
-  const handleCreate = () => {
-    dispatch(
-      SAVE({
-        data: form,
-        token,
-      })
-    );
-  };
+  // SUBMIT
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // // UPDATE
-  const handleUpdate = () => {
-    if (isEqual(form, selected)) {
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
+    try {
+      if (willCreate) {
+        await dispatch(SAVE({ data: form, token }));
+      } else {
+        if (isEqual(form, selected)) {
+          return addToast("No changes found, skipping update.", {
+            appearance: "info",
+          });
+        }
+        await dispatch(UPDATE({ data: form, token }));
+      }
+      // ✅ Do NOT manually toggle the modal
+      // The slice will set showModal = false on success
+    } catch (err) {
+      addToast(err.message || "Failed to save/update.", {
+        appearance: "error",
       });
     }
-    dispatch(
-      UPDATE({
-        data: form,
-        token,
-      })
-    );
-  };
-
-  // SUBMIT
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (willCreate) return handleCreate();
-    handleUpdate();
   };
 
   // STATE HELPERS
@@ -90,8 +84,8 @@ export default function Modal() {
           <MDBInput
             label="Professional Fee"
             type="number"
-            value={handleValue("doctorFee")}
-            onChange={(e) => handleChange("doctorFee", e.target.value)}
+            value={handleValue("professionalFee")}
+            onChange={(e) => handleChange("professionalFee", e.target.value)}
           />
 
           <MDBInput
@@ -130,8 +124,8 @@ export default function Modal() {
           <small>Doctor / Specialist</small>
           <select
             className="form-control mb-3"
-            value={form.doctor || ""}
-            onChange={(e) => handleChange("doctor", e.target.value)}
+            value={form.physicianId || ""}
+            onChange={(e) => handleChange("physicianId", e.target.value)}
           >
             <option value="">-- Select Doctor --</option>
             {filtered.map((doc) => {

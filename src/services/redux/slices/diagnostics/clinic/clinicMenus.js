@@ -96,6 +96,7 @@ export const reduxSlice = createSlice({
     },
     SetFILTER: (state, { payload }) => {
       state.filtered = payload;
+      state.collections = payload;
     },
     RESET: (state) => {
       state.message = "";
@@ -107,18 +108,18 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetCREATE: (state) => {
-      state.selected = {
-        lo: "",
-        norm: "",
-        hi: "",
-      };
       state.willCreate = true;
       state.showModal = true;
     },
     toggleModal: (state) => {
       state.showModal = !state.showModal;
     },
-    setActivePage: (state, { payload }) => {
+
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
   },
@@ -143,13 +144,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+        const payload = action.payload; // direct
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
         state.formSubmitted = false;
       })
+
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -162,19 +164,16 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
+        const payload = action.payload.payload;
+        state.collections = state.collections.map((item) =>
+          item._id === payload._id ? payload : item
         );
-        state.collections[index] = payload;
-        state.filtered = state.collections.filter(
-          ({ sched }) => sched === state.activeSched
-        );
+        state.filtered = state.collections;
         state.showModal = false;
         state.formSubmitted = false;
-        state.message = success;
         state.isSuccess = true;
       })
+
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -187,15 +186,19 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action;
-        const index = state.collections.findIndex(
-          (item) => item?._id === action.payload
+        const deletedId =
+          action.payload.payload.id || action.payload.payload._id;
+        state.collections = state.collections.filter(
+          (item) => item._id !== deletedId
         );
-        state.collections.splice(index, 1);
-        state.message = success;
+        state.filtered = state.filtered.filter(
+          (item) => item._id !== deletedId
+        );
         state.isSuccess = true;
         state.isLoading = false;
+        state.showModal = false;
       })
+
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -210,6 +213,7 @@ export const {
   RESET,
   toggleModal,
   setActivePage,
+  SetMaxPage,
   SetCREATE,
   SetEDIT,
 } = reduxSlice.actions;

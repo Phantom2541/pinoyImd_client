@@ -52,18 +52,11 @@ const Header = () => {
         <Search
           collections={collections}
           setFiltered={(items) => dispatch(SetFILTERED(items))}
+          haveAction={true}
           reset={() => dispatch(SetFILTERED(collections))}
-          haveAction={false}
+          hideButton={true}
+          handleAdd={() => dispatch(SetCREATE())}
         />
-        <MDBBtn
-          color="success"
-          size="sm"
-          rounded
-          className="ml-2"
-          onClick={() => dispatch(SetCREATE())}
-        >
-          <MDBIcon icon="plus" /> Add
-        </MDBBtn>
       </div>
     </MDBView>
   );
