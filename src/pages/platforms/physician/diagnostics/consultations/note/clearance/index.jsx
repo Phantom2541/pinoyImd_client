@@ -8,6 +8,7 @@ import {
   billingAddress,
   Cloudinary,
   contacts,
+  fullName,
   getAge,
   properFullname,
 } from "../../../../../../../services/utilities";
@@ -30,7 +31,7 @@ export default function Clearance({
   });
   const { patient } = useSelector(({ consultations }) => consultations),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
-    { fullName, isMale, dob, address } = patient;
+    { fullName: name, isMale, dob, address } = patient;
   const logoURL =
     `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
       activePlatform.branch.companyId.name
@@ -79,7 +80,7 @@ export default function Clearance({
             <span>
               This is to certify that Mr/Mrs.&nbsp;
               <span className="checkup-data-clearance-card-body-data width-50">
-                {properFullname(fullName)}
+                {fullName(name)}
               </span>
               &nbsp; Male/Female&nbsp;
               <span className="checkup-data-clearance-card-body-data">
