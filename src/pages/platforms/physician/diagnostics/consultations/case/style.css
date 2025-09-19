@@ -47,6 +47,10 @@
   transition: all 0.3s ease;
 }
 
+.checkup-data-toolkit-button-case-list input {
+  height: 1.8rem !important;
+}
+
 .checkup-data-toolkit-button-case-list.active {
   visibility: visible;
   opacity: 1;
@@ -57,7 +61,6 @@
   border: none;
   background-color: transparent;
   padding: 3px 5px;
-  width: 100%;
   text-align: left;
   text-transform: capitalize;
   white-space: nowrap;

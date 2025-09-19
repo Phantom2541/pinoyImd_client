@@ -22,7 +22,7 @@ export default function MedicalCertificate({
 }) {
   const style = usePanelPosition(active, buttonRefs.medcert, {
     width: 700,
-    height: 600,
+    height: 530,
   });
 
   return (

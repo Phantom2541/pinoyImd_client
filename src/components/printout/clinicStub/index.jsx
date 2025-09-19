@@ -6,7 +6,6 @@ import {
 } from "../../../services/utilities";
 import { Privileges } from "../../../services/fakeDb";
 import Header from "./header";
-import { useSelector } from "react-redux";
 import Body from "./body";
 import Footer from "./footer";
 
@@ -20,12 +19,6 @@ const Hr = ({ className = "" }) => (
     className={`my-1 ${className}`}
   />
 );
-
-const careOfName = (careOf) => {
-  const { user = {} } = careOf;
-  const { fullName = {} } = user || {};
-  return `${fullName.fname} ${fullName?.lname[0]?.toUpperCase()}.`;
-};
 
 const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   return (
@@ -47,32 +40,22 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   );
 };
 
-const Stub = ({ sale, companyId }) => {
+const Stub = ({ sale }) => {
   const {
       _id,
       createdAt = "",
       payment = 0,
-      customer = {},
-      privilege,
+      patient: customer = {},
       amount = 0,
       cash = 0,
       discount = 0,
-      cashier = {},
+      userId: cashier = {},
       cart = [],
-      refNo = {},
-      cardHolder = {},
+      appointment = {},
     } = sale,
     { fullName = {}, address = {}, email = "" } = customer || {};
-  const { careOf = {}, pp = "cash" } = refNo || {};
-  const isMixed = payment === "mixed";
-  const cashOut = amount - refNo?.amount || 0;
-  const hasCashOut = cashOut > 0 && isMixed && pp === "cash";
 
-  const isCardHolder = Boolean(
-    cardHolder?.company?.name || cardHolder?.company?.ref
-  );
-
-  const change = hasCashOut ? cash - cashOut : cash - amount;
+  const change = cash - amount;
 
   return (
     <div
@@ -87,7 +70,7 @@ const Stub = ({ sale, companyId }) => {
       }}
       className="text-center thermal-font"
     >
-      <Header date={createdAt} dealId={_id} />
+      <Header date={createdAt} dealId={_id} appointment={appointment} />
       <Text
         className="mt-2"
         title="Name"
@@ -104,9 +87,7 @@ const Stub = ({ sale, companyId }) => {
         isAddress
         fontSize="0.9rem"
       />
-      {privilege !== 0 && (
-        <Text title="Privilege" value={Privileges[privilege] || "-"} />
-      )}
+
       <Hr />
       <Body cart={cart} />
       <Hr />
@@ -126,76 +107,37 @@ const Stub = ({ sale, companyId }) => {
         </>
       )}
       <Hr />
-      {hasCashOut && (
-        <>
-          <Text title={"Voucher"} value={currency.format(refNo.amount)} />
-          <Text title={"Patient Share"} value={currency.format(cashOut)} />
-        </>
-      )}
+
       <Text
-        title={capitalize(
-          payment === "cash" || hasCashOut
-            ? "Tendered"
-            : payment === "mixed"
-            ? "voucher"
-            : payment
-        )}
-        value={
-          payment === "cash" || hasCashOut
-            ? currency.format(cash)
-            : currency.format(refNo.amount)
-        }
+        title={capitalize(payment === "cash" ? "Tendered" : payment)}
+        value={payment === "cash" ? currency.format(cash) : ""}
       />
-      {(payment === "cash" || hasCashOut) && change > 0 && (
+      {payment === "cash" && change > 0 && (
         <Text title="Change" value={currency.format(change)} />
       )}
-      {isMixed && (
-        <>
-          {isCardHolder && (
-            <>
-              <Hr />
-              <Text
-                title={cardHolder.type === "wls" ? "Card No." : "Tracking No."}
-                value={`${refNo.number}`}
-              />
-            </>
-          )}
-          {careOf?.user?._id && (
-            <>
-              <Hr />
-              <Text
-                title="C/O"
-                value={`${careOfName(careOf)} (${currency.format(
-                  careOf.amount
-                )})`}
-              />
-            </>
-          )}
-        </>
-      )}
+
       <Hr />
       <Text
         title="Cashier"
         value={capitalize(
-          `${cashier?.fname?.split?.(" ")[0] || ""} ${cashier?.lname || ""}`
+          `${cashier?.fullName?.fname?.split?.(" ")[0] || ""} ${
+            cashier?.fullName?.lname || ""
+          }`
         )}
       />
       <Hr />
       <br />
-      <Footer email={email} companyId={companyId} _id={_id} />
+      <Footer email={email} _id={_id} />
     </div>
   );
 };
 
-export default function ClaimStub() {
-  const { activePlatform } = useSelector(({ auth }) => auth),
-    { branch = {} } = activePlatform,
-    { companyId = {} } = branch,
-    [sale, setSale] = useState({});
+export default function ClinicStub() {
+  const [sale, setSale] = useState({});
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("claimStub");
+      const raw = localStorage.getItem("clinicStub");
       if (raw) {
         const parsed = JSON.parse(raw);
         setSale(parsed);
@@ -212,7 +154,7 @@ export default function ClaimStub() {
 
   return (
     <>
-      <Stub sale={sale} companyId={companyId?._id} />
+      <Stub sale={sale} />
     </>
   );
 }

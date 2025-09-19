@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { VALIDATEREFRESH } from "./services/redux/slices/assets/persons/auth";
 import {
   ClaimStub,
+  ClinicStub,
   ChemLog,
   ChartPrintout,
   RequestForm,
@@ -58,6 +59,7 @@ export default function App() {
       {/* Frequent Ask Questions */}
       <Route path="/printout/FAQ" exact component={FAQ} />
       <Route path="/printout/claimstub" exact component={ClaimStub} />
+      <Route path="/printout/clinicStub" exact component={ClinicStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
       <Route path="/printout/chart" exact component={ChartPrintout} />
       <Route
@@ -80,16 +82,8 @@ export default function App() {
         exact
         component={RequestOutSource}
       />
-      <Route
-        path="/printout/MenuPriceList"
-        exact
-        component={MenuPriceList}
-      />
-       <Route
-        path="/printout/contract"
-        exact
-        component={contract}
-      />
+      <Route path="/printout/MenuPriceList" exact component={MenuPriceList} />
+      <Route path="/printout/contract" exact component={contract} />
       <Route path="/printout/temperature/graph" exact component={TempGraph} />
 
       {/* Logbooks */}

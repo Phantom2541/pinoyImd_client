@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ChangeQty,
   SetCART,
-} from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+} from "../../../../../../services/redux/slices/diagnostics/clinic/settlements";
 import "./style.css";
 const Menus = () => {
-  const { cart = [] } = useSelector(({ appointments }) => appointments),
+  const { selected } = useSelector(({ appointments }) => appointments);
+  const { cart = [] } = useSelector(({ settlements }) => settlements),
     dispatch = useDispatch();
-
   const handleAddToCart = (item) => {
     const _cart = [...cart];
     _cart.push({ ...item, qty: 1 });
@@ -34,7 +34,10 @@ const Menus = () => {
           <tr>
             <th colSpan="4" className="bg-white">
               <div className="d-flex justify-content-center ">
-                <SearchClinicMenus setMenu={handleAddToCart} />
+                <SearchClinicMenus
+                  setMenu={handleAddToCart}
+                  clinic={selected?.clinic}
+                />
               </div>
             </th>
           </tr>

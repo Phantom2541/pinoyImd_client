@@ -6,6 +6,7 @@ const individual = (menu) => {
     gross,
     up: srp,
     discount: 0,
+    net: gross, //dito ikakaltas yung discount pero sa ngayon wala pa
   };
 };
 

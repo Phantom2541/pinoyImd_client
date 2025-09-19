@@ -14,11 +14,11 @@ export default function Modal({ show, toggle, handlePick }) {
   }, []);
 
   const handleSearch = async (willSearch, key) => {
-    if (!key) return setServices(Services.collections);
+    if (!key) return setServices(Services?.collections);
     if (willSearch) {
-      setServices(globalSearch(Services.collections, key));
+      setServices(globalSearch(Services?.collections, key));
     } else {
-      setServices(Services.collections);
+      setServices(Services?.collections);
     }
   };
 
@@ -56,10 +56,10 @@ export default function Modal({ show, toggle, handlePick }) {
           tableBodies={[
             {
               _key: "name",
-              _format: (data, { abbreviation }) => (
+              _format: (data, { abbreviation = "" }) => (
                 <>
                   <p className="fw-bold mb-1">{capitalize(data)}</p>
-                  <p className="mb-0">{abbreviation.toUpperCase()}</p>
+                  <p className="mb-0">{abbreviation?.toUpperCase()}</p>
                 </>
               ),
             },

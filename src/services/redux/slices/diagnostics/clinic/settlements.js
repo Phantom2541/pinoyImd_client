@@ -1,43 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinic/menus";
+const url = "/diagnostics/clinic/settlements";
 
 const initialState = {
-  filter: [],
-  paginated: [],
-  // Bread attributes
-  selected: {}, // assurance
-  page: 0,
-  willCreate: false,
-  showModal: false,
-  /**
-   * pagination
-   */
   collections: [],
-  filtered: [],
-  maxPage: 5,
-  totalPages: 0,
-  activePage: 1,
+  cart: [],
   formSubmitted: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-// Fetch clinic menus
-export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
-  try {
-    return axioKit.universal(`${url}/browse`, token, key);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const BROWSE = createAsyncThunk(
+  `${url}`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/browse`, token, data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
@@ -82,83 +73,71 @@ export const DESTROY = createAsyncThunk(
     }
   }
 );
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    SetCOLLECTIONS: (state, { payload }) => {
-      state.collections = payload;
+    SetCART: (state, { payload }) => {
+      state.cart = payload;
     },
-    SetFILTERED: (state, { payload }) => {
-      state.filtered = payload;
+    ChangeQty: (state, { payload }) => {
+      const { index, value } = payload;
+      state.cart[index].qty = value; // ✅ safe ito sa RTK
     },
 
     RESET: (state) => {
-      state.message = "";
+      state.formSubmitted = false;
       state.isSuccess = false;
+      state.message = "";
     },
-    SetEDIT: (state, { payload }) => {
-      state.selected = payload;
-      state.willCreate = false;
-      state.showModal = true;
-    },
-    SetCREATE: (state) => {
-      state.selected = {
-        srp: 0,
-        professionalFee: 0,
-        discountable: false,
-        physicianId: "",
-        clinicId: "",
-        abbreviation: "",
-        description: "",
-      };
-      state.willCreate = true;
-      state.showModal = true;
-    },
-    toggleModal: (state) => {
-      state.showModal = !state.showModal;
-    },
-
-    SetMaxPage: (state, { payload }) => {
-      state.maxPage = payload;
-      state.activePage = 1;
-    },
-    SetActivePAGE: (state, { payload }) => {
-      state.activePage = payload;
-    },
+    /**
+     *  for pagination
+     */
   },
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.collections = payload.payload || [];
-        state.filtered = payload.payload || [];
-        state.totalPages =
-          Math.ceil(payload.payload.length / state.maxPage) || 1;
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        const { success, payload = [] } = action.payload;
+
+        state.collections = payload;
+        state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-      })
-      .addCase(BROWSE.rejected, (state, { payload }) => {
+        state.isSuccess = success;
         state.isLoading = false;
-        state.message = payload || "Failed to fetch clinic menus";
       })
+
+      .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
       .addCase(SAVE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const payload = action.payload; // direct
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
-        state.showModal = false;
+        const { payload } = action.payload;
+        if (state.collections.length > 0) {
+          state.collections.unshift(payload);
+          state.filtered.unshift(payload);
+        }
+        localStorage.setItem("clinicStub", JSON.stringify(payload));
+        window.open(
+          "/printout/clinicStub",
+          "Claim Stub",
+          "top=100px,left=100px,width=550px,height=750px"
+        );
         state.isSuccess = true;
         state.formSubmitted = false;
       })
-
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -171,16 +150,19 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const payload = action.payload.payload;
-        state.collections = state.collections.map((item) =>
-          item._id === payload._id ? payload : item
+        const { success, payload } = action;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload._id
         );
-        state.filtered = state.collections;
+        state.collections[index] = payload;
+        state.filtered = state.collections.filter(
+          ({ sched }) => sched === state.activeSched
+        );
         state.showModal = false;
         state.formSubmitted = false;
+        state.message = success;
         state.isSuccess = true;
       })
-
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -193,19 +175,15 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const deletedId =
-          action.payload.payload.id || action.payload.payload._id;
-        state.collections = state.collections.filter(
-          (item) => item._id !== deletedId
+        const { success } = action;
+        const index = state.collections.findIndex(
+          (item) => item?._id === action.payload
         );
-        state.filtered = state.filtered.filter(
-          (item) => item._id !== deletedId
-        );
+        state.collections.splice(index, 1);
+        state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
-        state.showModal = false;
       })
-
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -214,14 +192,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const {
-  SetCOLLECTIONS,
-  SetFILTERED,
-  RESET,
-  toggleModal,
-  setActivePage,
-  SetMaxPage,
-  SetCREATE,
-  SetEDIT,
-} = reduxSlice.actions;
+export const { SetCART, ChangeQty, RESET } = reduxSlice.actions;
+
 export default reduxSlice.reducer;

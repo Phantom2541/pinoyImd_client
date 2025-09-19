@@ -24,7 +24,7 @@ const Header = () => {
       dispatch(
         BROWSE({
           token,
-          data: { physicianId: physicians }, // send all IDs
+          key: { physicianId: physicians }, // send all IDs
         })
       );
     }

@@ -5,7 +5,6 @@ const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
-  cart: [], //for tranasction in appointment
   paginated: [],
   physician: "",
   activeSched: "",
@@ -13,6 +12,11 @@ const initialState = {
   // Bread attributes
   selected: {}, // assurance
   diagnostic: {}, //for storing selected forms
+  roster: [],
+  collections: [],
+  scheds: [],
+  filtered: [],
+  physicians: [],
   page: 0,
   willCreate: false,
   showModal: false,
@@ -24,11 +28,7 @@ const initialState = {
   /**
    * pagination
    */
-  roster: [],
-  collections: [],
-  scheds: [],
-  filtered: [],
-  physicians: [],
+
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
@@ -117,11 +117,55 @@ export const DESTROY = createAsyncThunk(
   }
 );
 
+export const arrangeSchedules = (schedules = []) => {
+  if (schedules.length === 0) return [];
+  const scheds = schedules
+    .map(({ days, start, end }) => {
+      return days.map((day) => {
+        const code = generateScheduleCode(day);
+        return `${day}${String(start.hour).padStart(2, "0")}${String(
+          end.hour
+        ).padStart(2, "0")}-${code}`;
+      });
+    })
+    .flat();
+
+  return sortSchedules(scheds);
+};
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSETTLED: (state, { payload }) => {
+      const update = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === payload);
+        collections.splice(index, 1);
+      };
+      update(state.collections);
+      update(state.filtered);
+    },
     SetPHYSICIAN: (state, { payload }) => {
+      if (!payload) {
+        const appointments = state.roster.flatMap(
+          ({ appointments }) => appointments
+        );
+        state.filtered = appointments;
+        state.collections = appointments;
+        state.activePhysician = {};
+        state.activeSched = "";
+      } else {
+        const clinic = state.roster.find(
+          ({ physicianId }) => physicianId?._id === payload
+        );
+        const { schedules = [], physicianId = {}, appointments = [] } = clinic;
+        const _schedules = arrangeSchedules(schedules);
+        state.scheds = _schedules;
+        state.activePhysician = physicianId;
+        state.collections = appointments;
+        state.filtered = appointments;
+        state.activeSched = "";
+      }
       // const arrangePayload = (collections) => {
       //   return collections.flatMap(({ user, appointments = [] }) => {
       //     return appointments?.map((appt) => ({
@@ -140,13 +184,7 @@ export const reduxSlice = createSlice({
       //   state.physician = payload;
       // }
     },
-    SetCART: (state, { payload }) => {
-      state.cart = payload;
-    },
-    ChangeQty: (state, { payload }) => {
-      const { index, value } = payload;
-      state.cart[index].qty = value; // ✅ safe ito sa RTK
-    },
+
     SetDIAGNOSTIC: (state, { payload }) => {
       console.log("diagnostic payload", payload);
       state.diagnostic = payload;
@@ -281,18 +319,8 @@ export const reduxSlice = createSlice({
         // initial values
         state.activePhysician = payload[0].physicianId;
         state.collections = payload[0].appointments;
-        // 👉 result: ["M0709-0915","W0709-0917", ...]
-        const scheds = (payload[0]?.schedules || [])
-          .map(({ days, start, end }) => {
-            return days.map((day) => {
-              const code = generateScheduleCode(day);
-              return `${day}${String(start.hour).padStart(2, "0")}${String(
-                end.hour
-              ).padStart(2, "0")}-${code}`;
-            });
-          })
-          .flat();
-        state.scheds = sortSchedules(scheds);
+
+        state.scheds = arrangeSchedules(payload[0]?.schedules);
         state.activeSched = state.scheds[0];
         state.filtered = payload[0].appointments.filter(
           ({ sched }) => sched === state.activeSched
@@ -338,6 +366,14 @@ export const reduxSlice = createSlice({
         const { payload } = action.payload;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
+        if (state.roster.length > 0) {
+          const index = state.roster.findIndex(
+            (item) => item._id === payload.clinic
+          );
+          const { appointments = [] } = state.roster[index] || {};
+          appointments.unshift(payload);
+          state.roster[index] = { ...state.roster[index], appointments };
+        }
         state.showModal = false;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -458,8 +494,7 @@ export function sortSchedules(schedules) {
 }
 
 export const {
-  SetCART,
-  ChangeQty,
+  SetSETTLED,
   SetTRANSAC,
   SetDIAGNOSTIC,
   SetFILTERED,
