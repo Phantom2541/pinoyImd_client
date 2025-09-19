@@ -25,7 +25,7 @@ export default function Clearance({
 }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {
     width: 700,
-    height: 600,
+    height: 530,
   });
 
   return (
