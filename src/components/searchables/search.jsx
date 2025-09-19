@@ -16,7 +16,11 @@ export default function Search({
     [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    if (!hideButton && haveAction) setShowBtn(true);
+    if (!hideButton && haveAction) {
+      setShowBtn(true);
+    } else {
+      setShowBtn(false);
+    }
   }, [hideButton, haveAction]);
 
   const debouncedSearch = useMemo(() => {

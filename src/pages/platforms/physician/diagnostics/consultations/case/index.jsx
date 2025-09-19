@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
 import { MDBIcon } from "mdbreact";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Search } from "../../../../../../components/searchables";
 import Modal from "./modal";
+import { SetFILTERED } from "../../../../../../services/redux/slices/diagnostics/cases";
+import { capitalize } from "../../../../../../services/utilities";
 const caseOptions = [
   // Surgical cases
   "hip replacement",
@@ -39,11 +41,13 @@ const caseOptions = [
 
 export default function Case() {
   const { patient } = useSelector(({ consultations }) => consultations);
-  const [cases, setCases] = useState(caseOptions);
+  const { filtered, collections } = useSelector(({ cases }) => cases);
   const [active, setActive] = useState(false);
   const [show, setShow] = useState(false);
+  const [defaultCase, setDefaultCase] = useState("");
   const [selected, setSelected] = useState([]);
   const scrollRef = useRef(null);
+  const dispatch = useDispatch();
   let isDown = false;
   let startX;
   let scrollLeft;
@@ -53,16 +57,21 @@ export default function Case() {
   const dropdownRef = useRef(null); // ref for dropdown container
 
   const toggleCase = (item) => {
-    if (selected.includes(item)) {
-      setSelected(selected.filter((val) => val !== item));
+    const _cases = [...selected];
+    const index = _cases.findIndex((val) => val._id === item._id);
+    if (index > -1) {
+      _cases.splice(index, 1);
     } else {
-      setSelected([...selected, item]);
+      _cases.push(item);
     }
-    // ❌ dropdown stays open
+    setSelected(_cases);
   };
 
   const removeCase = (item) => {
-    setSelected(selected.filter((val) => val !== item));
+    const _cases = [...selected];
+    const index = _cases.findIndex((val) => val._id === item._id);
+    _cases.splice(index, 1);
+    setSelected(_cases);
   };
 
   // 🔹 close dropdown if clicked outside
@@ -99,7 +108,7 @@ export default function Case() {
     const walk = (x - startX) * 1.5; // scroll speed
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
-
+  console.log("collections", collections);
   return (
     <>
       <div
@@ -126,23 +135,33 @@ export default function Case() {
           >
             <div className="mr-2">
               <Search
-                hideButton
-                setFiltered={(items) => console.log("cases results:", items)}
-                collections={cases}
-                handleAdd={() => setShow(true)}
+                hideButton={collections.length > 0}
+                setFiltered={(items) => dispatch(SetFILTERED(items))}
+                reset={() => dispatch(SetFILTERED(collections))}
+                collections={collections}
+                handleAdd={(value) => {
+                  setShow(true);
+                  setDefaultCase(value);
+                }}
               />
             </div>
-            {cases.map((item) => (
-              <button
-                className={`w-100 ${
-                  selected.includes(item) ? "selected" : ""
-                } ${patient?.isMale ? "male" : "female"}`}
-                key={item}
-                onClick={() => toggleCase(item)}
-              >
-                {item}
-              </button>
-            ))}
+            {filtered.length > 0 ? (
+              filtered.map((item) => (
+                <button
+                  className={`w-100 ${
+                    selected.includes(item) ? "selected" : ""
+                  } ${patient?.isMale ? "male" : "female"}`}
+                  key={item}
+                  onClick={() => toggleCase(item)}
+                >
+                  {capitalize(item?.title)}
+                </button>
+              ))
+            ) : (
+              <div className="w-100">
+                <span className="text-center d-block">No Cases Found.</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -161,15 +180,19 @@ export default function Case() {
                 patient?.isMale ? "male" : "female"
               }`}
             >
-              <button onClick={() => removeCase(item)}>
+              <button onClick={() => removeCase(item?._id)}>
                 <MDBIcon icon="times" />
               </button>
-              <span>{item}</span>
+              <span>{capitalize(item?.title)}</span>
             </div>
           ))}
         </div>
       </div>
-      <Modal show={show} toggle={() => setShow(!show)} />
+      <Modal
+        show={show}
+        toggle={() => setShow(!show)}
+        defaultCase={defaultCase}
+      />
     </>
   );
 }
