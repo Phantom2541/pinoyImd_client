@@ -8,6 +8,7 @@ import {
   properFullname,
   Cloudinary,
   getAge,
+  fullName,
 } from "../../../../../../../services/utilities";
 
 const certificateData = {
@@ -27,7 +28,7 @@ export default function MedicalCertificate({
   });
   const { patient } = useSelector(({ consultations }) => consultations),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
-    { fullName, isMale, dob, address, createdAt } = patient;
+    { fullName: name, isMale, dob, address, createdAt } = patient;
   const logoURL =
     `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
       activePlatform.branch.companyId.name
@@ -73,7 +74,7 @@ export default function MedicalCertificate({
             <span>
               This is to certify that Mr/Mrs.&nbsp;
               <span className="checkup-data-clearance-card-body-data width-50">
-                {properFullname(fullName)}
+                {fullName(name)}
               </span>
               &nbsp; Male/Female&nbsp;
               <span className="checkup-data-clearance-card-body-data">
