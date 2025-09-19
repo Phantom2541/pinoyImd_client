@@ -124,16 +124,19 @@ const Templates = {
    * @param {String} department - Department name (default: LAB)
    * @returns {Array<String>} Array of codes corresponding to the indices
    */
-  getWordByIndices: (indices = [], type = "codes", department = "LAB") => {
+  getWordByIndices: (indices = {}, type = "codes", department = "LAB") => {
     const dept = collections.find(({ department: dep }) => dep === department);
     if (!dept) {
       console.warn(`Department "${department}" not found`);
       return [];
     }
-
+    const { images, ...rest } = indices;
+    const haveSections = Object.keys(rest).length > 0;
     const list = type === "components" ? dept.components : dept.codes;
-
-    return indices.map((i) => list[i]).filter((item) => item !== undefined);
+    const _indices = Object.values(rest).flat();
+    return haveSections
+      ? _indices?.map((i) => list[i]).filter((item) => item !== undefined)
+      : [];
   },
   getDepartmentsByComponents: (componentList = []) => {
     const departments = [];
