@@ -181,9 +181,7 @@ const Body = () => {
                 <td
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch(
-                      setShowModalEhr({ ...ehr, patient: patient?._id })
-                    );
+                    dispatch(setShowModalEhr({ ...ehr, patient: patient }));
                   }}
                 >
                   {ehr ? "yes" : "no"}
@@ -192,9 +190,13 @@ const Body = () => {
                 <td
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    console.log("consultation", consultation);
-
-                    dispatch(setShowModalVs(consultation));
+                    dispatch(
+                      setShowModalVs({
+                        ...consultation,
+                        appointment: _id,
+                        patient: patient,
+                      })
+                    );
                   }}
                 >
                   {consultation ? "yes" : "no"}{" "}

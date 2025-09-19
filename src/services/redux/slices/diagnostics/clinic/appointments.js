@@ -115,6 +115,19 @@ export const SET_EMR = createAsyncThunk(`${url}/set_emr`, (form, thunkAPI) => {
   }
 });
 
+export const SET_VS = createAsyncThunk(`${url}/set_vs`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token, "setVS");
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -237,13 +250,9 @@ export const reduxSlice = createSlice({
       state.showModalEhr = true;
     },
     setShowModalVs: (state, { payload }) => {
-      if (payload) {
-        state.selected = payload;
-        state.willCreateVs = false;
-      } else {
-        state.selected = {}; // instead of null
-        state.willCreateVs = true;
-      }
+      const { appointment, vitals, patient } = payload;
+      state.selected = { ...vitals, appointment, patient };
+      state.willCreateVs = false;
       state.showModalVs = true;
     },
 
@@ -440,6 +449,36 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(SET_EMR.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isSuccess = false;
+        state.formSubmitted = false;
+      })
+      .addCase(SET_VS.pending, (state) => {
+        state.isSuccess = false;
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(SET_VS.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload.appointment
+          );
+          if (index > -1) {
+            collections[index] = {
+              ...collections[index],
+              consultation: payload,
+            };
+          }
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.formSubmitted = false;
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(SET_VS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isSuccess = false;

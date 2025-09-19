@@ -18,6 +18,7 @@ import dataEhr from "./dataEhr.json";
 import { FamilyRootSystem, ChecklistSection, ObGyneSection } from "./form";
 import "./style.css";
 import Spinner from "../../../../../components/spinner";
+import { fullName } from "../../../../../services/utilities";
 const _form = {
   familyHistory: {
     Mother: [],
@@ -55,7 +56,7 @@ export default function Modal() {
 
     dispatch(
       SET_EMR({
-        data: { ...form, patient: selected?.patient },
+        data: { ...form, patient: selected?.patient?._id },
         token,
       })
     ).then(() => {
@@ -138,6 +139,7 @@ export default function Modal() {
 
   const steps = dataEhr;
   const currentStep = steps[step];
+  const { patient } = selected;
 
   return (
     <MDBModal isOpen={showModalEhr} toggle={handleClose} backdrop size="ml">
@@ -145,8 +147,19 @@ export default function Modal() {
         toggle={handleClose}
         className="appEhr light-blue darken-3 white-text"
       >
-        <MDBIcon icon="user" className="appEhr mr-2" />
-        {willCreateEhr ? "Create" : "Update"} eMR
+        <MDBIcon icon="clipboard-check" className="appEhr mr-2" />
+        eMR
+        <span
+          className="d-block"
+          style={{
+            fontSize: "0.9rem",
+            marginLeft: "1.7rem",
+            marginBottom: "-1rem",
+            marginTop: "-0.3rem",
+          }}
+        >
+          {fullName(patient?.fullName)}
+        </span>
       </MDBModalHeader>
 
       <MDBModalBody className="appEhr mb-0">
