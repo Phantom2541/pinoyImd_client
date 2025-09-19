@@ -25,6 +25,9 @@ const initialState = {
   showTransacModal: false,
   willCreateEhr: false,
   showModalEhr: false,
+  showModalVs: false,
+  willCreateVs: false,
+
   /**
    * pagination
    */
@@ -211,10 +214,20 @@ export const reduxSlice = createSlice({
         state.willCreateEhr = false;
       } else {
         // create mode
-        state.selected = null;
+        state.selected = {};
         state.willCreateEhr = true;
       }
       state.showModalEhr = true;
+    },
+    setShowModalVs: (state, { payload }) => {
+      if (payload) {
+        state.selected = payload;
+        state.willCreateVs = false;
+      } else {
+        state.selected = {}; // instead of null
+        state.willCreateVs = true;
+      }
+      state.showModalVs = true;
     },
 
     SetFILTER: (state, { payload }) => {
@@ -303,6 +316,9 @@ export const reduxSlice = createSlice({
     },
     TOGGLEEMR: (state) => {
       state.showModalEhr = !state.showModalEhr;
+    },
+    TOGGLEVS: (state) => {
+      state.showModalVs = !state.showModalVs;
     },
   },
   extraReducers: (builder) => {
@@ -503,6 +519,7 @@ export const {
   SetSCHED,
   SetCREATE,
   setShowModalEhr,
+  setShowModalVs,
   SetEDIT,
   SetFILTER,
   SetPAGE,
@@ -510,6 +527,7 @@ export const {
   TOGGLE_RESULT_MODAL,
   TOGGLE,
   TOGGLEEMR,
+  TOGGLEVS,
   TOGGLE_TRANSAC_MODAL,
   /**
    * for pagination

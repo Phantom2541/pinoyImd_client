@@ -29,7 +29,6 @@ export default function Modal() {
     dispatch = useDispatch();
 
   const steps = dataEhr;
-  console.log("formnick", form);
 
   const handleUpdate = () => {
     dispatch(TOGGLEEMR());
