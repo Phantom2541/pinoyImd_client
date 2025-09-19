@@ -4,8 +4,6 @@ import { MDBTable, MDBBtn } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-  SetFILTER,
-  RESET,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import Swal from "sweetalert2";
 import { properFullname } from "../../../../../services/utilities";
@@ -16,17 +14,15 @@ export default function Body() {
     filtered = [],
     activePage,
     maxPage,
-    collections = [],
   } = useSelector(({ clinicMenus }) => clinicMenus);
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   const physicians = activePlatform.branch.physicians || "";
 
-  console.log("physicians", physicians);
-
-  const itemsPerPage = maxPage || 10;
+  const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
-  const paginatedData = filtered?.slice(startIndex, startIndex + itemsPerPage);
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   const handleDelete = (_id, abbreviation) => {
     Swal.fire({
@@ -73,8 +69,6 @@ export default function Body() {
             } = row || {};
 
             const doctor = physicians.find((doc) => doc._id === physicianId);
-            console.log("doctor", doctor);
-            console.log("physicianId", physicianId, description);
 
             return (
               <tr key={index}>

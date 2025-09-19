@@ -97,10 +97,7 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
-    SetFILTER: (state, { payload }) => {
-      state.filtered = payload;
-      state.collections = payload;
-    },
+
     RESET: (state) => {
       state.message = "";
       state.isSuccess = false;
@@ -111,6 +108,15 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetCREATE: (state) => {
+      state.selected = {
+        srp: 0,
+        professionalFee: 0,
+        discountable: false,
+        physicianId: "",
+        clinicId: "",
+        abbreviation: "",
+        description: "",
+      };
       state.willCreate = true;
       state.showModal = true;
     },
@@ -136,6 +142,9 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.collections = payload.payload || [];
         state.filtered = payload.payload || [];
+        state.totalPages =
+          Math.ceil(payload.payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
       })
       .addCase(BROWSE.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -213,7 +222,6 @@ export const reduxSlice = createSlice({
 export const {
   SetCOLLECTIONS,
   SetFILTERED,
-  SetFILTER,
   RESET,
   toggleModal,
   setActivePage,

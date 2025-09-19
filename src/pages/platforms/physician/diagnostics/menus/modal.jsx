@@ -12,15 +12,15 @@ import {
   toggleModal,
   SAVE,
   UPDATE,
-  SetFILTER,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { properFullname } from "../../../../../services/utilities";
 
 export default function Modal() {
-  const { collections, showModal, selected, willCreate, isLoading } =
-      useSelector(({ clinicMenus }) => clinicMenus),
+  const { showModal, selected, willCreate, isLoading } = useSelector(
+      ({ clinicMenus }) => clinicMenus
+    ),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState({}),
     { addToast } = useToasts(),
@@ -36,9 +36,7 @@ export default function Modal() {
       setForm({});
     }
   }, [selected]);
-  console.log("form", form);
 
-  // SUBMIT
   // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +51,7 @@ export default function Modal() {
 
       if (willCreate) {
         await dispatch(SAVE({ data: form, token }));
+        setForm({});
       } else {
         if (isEqual(form, selected)) {
           return addToast("No changes found, skipping update.", {
