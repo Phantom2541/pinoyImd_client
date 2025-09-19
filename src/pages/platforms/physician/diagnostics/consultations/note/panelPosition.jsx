@@ -51,7 +51,14 @@ export default function usePanelPosition(
             zIndex: 120,
           };
 
-      setStyle(newStyle);
+      // ✅ set lang if may actual change
+      setStyle((prev) => {
+        const same =
+          Object.keys(newStyle).length === Object.keys(prev).length &&
+          Object.entries(newStyle).every(([k, v]) => prev[k] === v);
+
+        return same ? prev : newStyle;
+      });
     };
 
     frame = requestAnimationFrame(updateStyle);
