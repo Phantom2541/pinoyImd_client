@@ -4,10 +4,9 @@ import { MDBTable, MDBBtn } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-  SetFILTER,
-  RESET,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 import Swal from "sweetalert2";
+import { properFullname } from "../../../../../services/utilities";
 
 export default function Body() {
   const dispatch = useDispatch();
@@ -15,13 +14,15 @@ export default function Body() {
     filtered = [],
     activePage,
     maxPage,
-    collections = [],
   } = useSelector(({ clinicMenus }) => clinicMenus);
-  const { token } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
 
-  const itemsPerPage = maxPage || 10;
+  const physicians = activePlatform.branch.physicians || "";
+
+  const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
-  const paginatedData = filtered?.slice(startIndex, startIndex + itemsPerPage);
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   const handleDelete = (_id, abbreviation) => {
     Swal.fire({
@@ -63,9 +64,11 @@ export default function Body() {
               description,
               srp,
               discountable,
-              doctor,
+              physicianId,
               _id,
             } = row || {};
+
+            const doctor = physicians.find((doc) => doc._id === physicianId);
 
             return (
               <tr key={index}>
@@ -81,7 +84,7 @@ export default function Body() {
                   {typeof srp === "number" ? `₱ ${srp.toLocaleString()}` : "-"}
                 </td>
                 <td>{Boolean(discountable) ? "Yes" : "No"}</td>
-                <td>{doctor ?? "-"}</td>{" "}
+                <td>Dr. {properFullname(doctor?.fullName) ?? "-"}</td>
                 <td className="d-flex gap-2">
                   <MDBBtn
                     size="sm"

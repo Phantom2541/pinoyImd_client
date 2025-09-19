@@ -4,15 +4,6 @@ import sectionsConfig from "./data.json";
 const RequestForm = () => {
   const [selections, setSelections] = useState([]); // <- MUST be an array
   const [other, setOther] = useState(""); // hiwalay na input para sa "Other"
-
-  useEffect(() => {
-    console.log("selections (flat ids):", selections);
-  }, [selections]);
-
-  useEffect(() => {
-    console.log("other:", other);
-  }, [other]);
-
   // toggleItem ngayon tumatanggap lang ng `item` at laging nagbabalik ng flat array of ids
   const toggleItem = (item) => {
     setSelections((prev) => {
