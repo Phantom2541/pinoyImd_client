@@ -1,20 +1,21 @@
 import React from "react";
 import usePanelPosition from "../panelPosition";
 import { MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
 import "./../style.css";
-import LOGO from "./../../../../../../../assets/aplhamed.png";
 import CADUCEUS from "./../../../../../../../assets/caduceus.png";
-import SIGNATURE from "./../../../../../../../assets/templateSampleSignature.png";
+import {
+  billingAddress,
+  Cloudinary,
+  contacts,
+  getAge,
+  properFullname,
+} from "../../../../../../../services/utilities";
 
 const certificateData = {
-  patientName: "Jhon Kevin Magtalas",
-  gender: "Male",
-  age: 21,
-  address: "Magsaysay Bayombong Nueva Vizcaya",
   diagnosis: "Pneumonia",
   startDate: "August 1, 2025",
   endDate: "August 21, 2025",
-  doctorName: "Dr. Emily Clark",
 };
 
 export default function Clearance({
@@ -27,7 +28,19 @@ export default function Clearance({
     width: 700,
     height: 530,
   });
+  const { patient } = useSelector(({ consultations }) => consultations),
+    { auth, activePlatform } = useSelector(({ auth }) => auth),
+    { fullName, isMale, dob, address } = patient;
+  const logoURL =
+    `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+      activePlatform.branch.companyId.name
+    )}/logo` || "";
+  const signUrl =
+    `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
 
+  const companyname = activePlatform.branch.companyId.name || "";
+  const branchaddress = activePlatform.branch.address || "";
+  const branchcontact = activePlatform.branch.contacts.mobile || "";
   return (
     <div
       style={{
@@ -43,12 +56,11 @@ export default function Clearance({
       <div className="checkup-data-clearance-card">
         {/* Header */}
         <div className="checkup-data-clearance-card-header">
-          <img src={LOGO} alt="" />
-          <span>Medi Care</span>
-          <span>123 Main St., Quezon City</span>
-          <span>Contact: (02) 1234-5678</span>
+          <img src={logoURL} alt="" />
+          <span>{companyname}</span>
+          <span>{billingAddress(branchaddress)}</span>
+          <span>Contact: {contacts(branchcontact)}</span>
         </div>
-
         {/* Title */}
         <h1 className="checkup-data-clearance-card-title">
           Medical Certificate
@@ -67,19 +79,19 @@ export default function Clearance({
             <span>
               This is to certify that Mr/Mrs.&nbsp;
               <span className="checkup-data-clearance-card-body-data width-50">
-                {certificateData.patientName}
+                {properFullname(fullName)}
               </span>
               &nbsp; Male/Female&nbsp;
               <span className="checkup-data-clearance-card-body-data">
-                {certificateData.gender}
+                {isMale ? "Male" : "Female"}
               </span>
               &nbsp;Age&nbsp;
               <span className="checkup-data-clearance-card-body-data">
-                {certificateData.age}
+                {getAge(dob)}
               </span>
               &nbsp;years, residing at&nbsp;
               <span className="checkup-data-clearance-card-body-data">
-                {certificateData.address}
+                {billingAddress(address)}
               </span>
               , was examined at this clinic and is found to be
               <span className="checkup-data-clearance-card-body-data">
@@ -95,9 +107,9 @@ export default function Clearance({
 
           {/* Doctor */}
           <div className="checkup-data-clearance-card-body-doctor">
-            <span>{certificateData.doctorName}</span>
+            <span>{properFullname(auth.fullName)}</span>
             <span>Physician/Examiner</span>
-            <img alt="signature" src={SIGNATURE} />
+            <img alt="signature" src={signUrl} />
           </div>
         </div>
       </div>
