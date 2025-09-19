@@ -181,7 +181,9 @@ const Body = () => {
                 <td
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch(setShowModalEhr(ehr));
+                    dispatch(
+                      setShowModalEhr({ ...ehr, patient: patient?._id })
+                    );
                   }}
                 >
                   {ehr ? "yes" : "no"}

@@ -69,8 +69,9 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
 
           {side.items.map((item, i) => {
             const y = getY(i);
-            const key = `${step.code}-${side.label}`;
-            const checked = (form[key] || []).includes(item);
+            const key = `${side.label}`;
+            const value = form?.familyHistory[key] || [];
+            const checked = Array.isArray(value) ? value.includes(item) : false;
 
             return (
               <g
@@ -125,20 +126,24 @@ export function ChecklistSection({
   handleFrequency,
 }) {
   const frequencies = ["Once a week", "Twice a week", "Daily", "Occasional"];
-
+  const keys = {
+    PMHx: "conditions",
+    PSHx: "habits",
+  };
+  const baseKey = keys[step.code];
   return (
     <div>
       {step.items.map((item) => {
-        const checked = (form[step.code] || []).includes(item.label);
-        const value = form[`${step.code}_values`]?.[item.label] || "";
-        const freq = form[`${step.code}_freq`]?.[item.label] || "";
+        const checked = Object.keys(form[baseKey] || {}).includes(item.label);
+        const value = form[baseKey]?.[item.label] || "";
+        const freq = form[baseKey][item.label];
 
         return (
-          <div key={item.label} className="mb-4">
+          <div key={item.label} className="mb-3">
             <CheckboxRow
               label={item.label}
               checked={checked}
-              onClick={() => handleCheck(step.code, item.label, !checked)}
+              onClick={() => handleCheck(baseKey, item.label, !checked)}
               style={{ marginLeft: "150px" }}
             />
 
@@ -148,11 +153,11 @@ export function ChecklistSection({
                 type="text"
                 value={value}
                 onChange={(e) =>
-                  handleTextChange(step.code, item.label, e.target.value)
+                  handleTextChange(baseKey, item.label, e.target.value)
                 }
                 placeholder="Enter details"
-                className="border px-2 py-1 ml-120"
-                style={{ marginLeft: "150px" }}
+                className="border px-2 py-1  mb-n5"
+                style={{ marginLeft: "10.9rem" }}
               />
             )}
 
@@ -164,7 +169,9 @@ export function ChecklistSection({
                     key={f}
                     label={f}
                     checked={freq === f}
-                    onClick={() => handleFrequency(step.code, item.label, f)}
+                    onClick={() =>
+                      handleFrequency(baseKey, item.label, f, freq === f)
+                    }
                   />
                 ))}
               </div>

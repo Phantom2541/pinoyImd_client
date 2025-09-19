@@ -1,5 +1,5 @@
 // Consultations.jsx
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import Body from "./bodyPanel/body";
@@ -14,10 +14,11 @@ import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import { FIND_EHR } from "../../../../../services/redux/slices/diagnostics/ehr";
+import { BROWSE as GET_CASES } from "../../../../../services/redux/slices/diagnostics/cases";
 import Toolkit from "./toolkit";
 
 export default function Consultations() {
-  const { token } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
@@ -38,7 +39,16 @@ export default function Consultations() {
     dispatch(
       FIND_EHR({ token, key: { patient: ehrId || "636d37e0187c30ab0f611ce4" } })
     );
-  }, [ehrId, token, dispatch]);
+    dispatch(
+      GET_CASES({
+        token,
+        key: {
+          pId: ehrId || "636d37e0187c30ab0f611ce4",
+          branch: activePlatform?.branchId,
+        },
+      })
+    );
+  }, [ehrId, token, dispatch, activePlatform]);
 
   const buttonRefs = {
     request: useRef(),

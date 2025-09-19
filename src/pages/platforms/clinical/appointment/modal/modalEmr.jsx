@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -9,7 +9,7 @@ import {
   MDBTypography,
 } from "mdbreact";
 import {
-  SAVE,
+  SET_EMR,
   TOGGLEEMR,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { isEqual } from "lodash";
@@ -17,71 +17,69 @@ import { useToasts } from "react-toast-notifications";
 import dataEhr from "./dataEhr.json";
 import { FamilyRootSystem, ChecklistSection, ObGyneSection } from "./form";
 import "./style.css";
-
+import Spinner from "../../../../../components/spinner";
+const _form = {
+  familyHistory: {
+    Mother: [],
+    Father: [],
+  },
+  habits: {},
+  conditions: {},
+};
 export default function Modal() {
-  const { showModalEhr, willCreateEhr, selected, isLoading } = useSelector(
-      ({ appointments }) => appointments
-    ),
+  const {
+      showModalEhr,
+      willCreateEhr,
+      selected,
+      formSubmitted = false,
+    } = useSelector(({ appointments }) => appointments),
     { token } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected || {}),
+    [form, setForm] = useState(_form),
     [step, setStep] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const steps = dataEhr;
+  useEffect(() => {
+    if (showModalEhr) {
+      setForm(selected);
+    }
+  }, [showModalEhr, selected]);
 
-  const handleUpdate = () => {
-    dispatch(TOGGLEEMR());
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
 
-    // dispatch(
-    //   UPDATE({
-    //     data: { ...form, _id: selected._id },
-    //     token,
-    //   })
-    // );
-  };
-
-  const handleCreate = () => {
     dispatch(
-      SAVE({
-        data: form,
+      SET_EMR({
+        data: { ...form, patient: selected?.patient },
         token,
       })
-    ).then(() => dispatch(TOGGLEEMR()));
+    ).then(() => {
+      dispatch(TOGGLEEMR());
+      setForm(_form);
+      setStep(0);
+    });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (willCreateEhr) return handleCreate();
-    handleUpdate();
-  };
-
-  const handleCheck = (code, label, checked) => {
+  const handleCheck = (code, label) => {
     setForm((prev) => {
-      // OB Gyne Hx = single select
-      if (code === "OB Gyne Hx") {
-        return {
-          ...prev,
-          [code]: {
-            ...(prev[code] || {}),
-            selected: checked ? label : "",
-          },
-        };
+      const current = prev[code] || {};
+      // clone the object to avoid modifying frozen object
+      const newCurrent = { ...current };
+
+      if (newCurrent.hasOwnProperty(label)) {
+        delete newCurrent[label];
+      } else {
+        newCurrent[label] = "";
       }
 
-      // PMHx and PSHx = multi select base
-      const current = prev[code] || [];
       return {
         ...prev,
-        [code]: checked
-          ? [...current, label] // add
-          : current.filter((x) => x !== label), // remove
+        [code]: newCurrent,
       };
     });
   };
@@ -89,27 +87,39 @@ export default function Modal() {
   // For PMHx textbox values
   const handleTextChange = (code, label, value) => {
     setForm((prev) => {
-      const values = prev[`${code}_values`] || {};
+      const current = { ...(prev[code] || {}) };
+      current[label] = value;
+
       return {
         ...prev,
-        [`${code}_values`]: {
-          ...values,
-          [label]: value,
-        },
+        [code]: current,
       };
     });
   };
 
   // For PSHx frequency selection
   function handleFrequency(code, label, value) {
+    const _form = { ...form };
+    const current = _form[code] ? { ..._form[code] } : {};
+    current[label] = value;
+    setForm({ ..._form, [code]: current });
+  }
+
+  const handleSelectRoot = (key, value, isChecked) => {
+    const roots = [...(form?.familyHistory[key] || [])];
+    if (isChecked) {
+      roots.push(value);
+    } else {
+      roots.splice(roots.indexOf(value), 1);
+    }
     setForm((prev) => ({
       ...prev,
-      [`${code}_freq`]: {
-        ...prev[`${code}_freq`],
-        [label]: value, // overwrite ensures only one
+      familyHistory: {
+        ...prev.familyHistory,
+        [key]: roots,
       },
     }));
-  }
+  };
 
   const handleNumber = (section, field, value) => {
     setForm((prev) => {
@@ -126,6 +136,7 @@ export default function Modal() {
 
   const handleClose = () => dispatch(TOGGLEEMR());
 
+  const steps = dataEhr;
   const currentStep = steps[step];
 
   return (
@@ -149,7 +160,7 @@ export default function Modal() {
               <FamilyRootSystem
                 step={currentStep}
                 form={form}
-                handleCheck={handleCheck}
+                handleCheck={handleSelectRoot}
               />
             )}
             {["PMHx", "PSHx"].includes(currentStep.code) && (
@@ -172,7 +183,7 @@ export default function Modal() {
           </div>
 
           {/* Navigation */}
-          <div className="appEhr flex justify-between">
+          <div className="d-flex justify-content-center">
             <MDBBtn
               type="button"
               disabled={step === 0}
@@ -194,8 +205,9 @@ export default function Modal() {
                 Next
               </MDBBtn>
             ) : (
-              <MDBBtn type="submit" disabled={isLoading} color="info">
-                {willCreateEhr ? "Submit" : "Update"}
+              <MDBBtn type="submit" disabled={formSubmitted} color="info">
+                {willCreateEhr ? "Submit" : "Update"}{" "}
+                <Spinner formSubmitted={formSubmitted} />
               </MDBBtn>
             )}
           </div>

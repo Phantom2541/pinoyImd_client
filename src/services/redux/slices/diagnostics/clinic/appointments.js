@@ -102,6 +102,19 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   }
 });
 
+export const SET_EMR = createAsyncThunk(`${url}/set_emr`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token, "setEMR");
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -208,15 +221,19 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     setShowModalEhr: (state, { payload }) => {
-      if (payload) {
-        // update mode
-        state.selected = payload;
-        state.willCreateEhr = false;
-      } else {
-        // create mode
-        state.selected = {};
-        state.willCreateEhr = true;
-      }
+      const {
+        familyHistory = {},
+        socialHistory = {},
+        conditions = {},
+      } = payload || {};
+
+      const ehr = {
+        familyHistory,
+        habits: socialHistory?.habits || {},
+        conditions,
+        patient: payload?.patient,
+      };
+      state.selected = ehr;
       state.showModalEhr = true;
     },
     setShowModalVs: (state, { payload }) => {
@@ -400,6 +417,35 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
         state.isSuccess = false;
       })
+      .addCase(SET_EMR.pending, (state) => {
+        state.isSuccess = false;
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(SET_EMR.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item.patient?._id === payload.patient
+          );
+          console.log("index", index);
+          if (index > -1) {
+            collections[index] = { ...collections[index], ehr: payload };
+          }
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.formSubmitted = false;
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(SET_EMR.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isSuccess = false;
+        state.formSubmitted = false;
+      })
+
       .addCase(UPDATE.pending, (state) => {
         state.isSuccess = false;
         state.formSubmitted = true;
