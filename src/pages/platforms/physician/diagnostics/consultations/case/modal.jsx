@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
   MDBModalBody,
@@ -11,7 +11,9 @@ import {
 } from "mdbreact";
 import { fullName } from "../../../../../../services/utilities";
 import { EditableSelect } from "../../../../../../components/customizable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SAVE } from "../../../../../../services/redux/slices/diagnostics/cases";
+import Spinner from "../../../../../../components/spinner";
 const _form = {
   title: "",
   hospital: "",
@@ -24,10 +26,19 @@ const _form = {
   category: "medical",
   notes: "",
 };
-export default function Modal({ show, toggle = () => {} }) {
+export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-  const [form, setForm] = useState(_form);
   const { patient } = useSelector(({ consultations }) => consultations);
+  const { formSubmitted } = useSelector(({ cases }) => cases);
+  const [form, setForm] = useState(_form);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setForm({ _form });
+    if (show) {
+      setForm({ ..._form, title: defaultCase });
+    }
+  }, [defaultCase, show]);
   const handleChange = (e, key = "") => {
     setForm({ ...form, [key]: e.target.value });
   };
@@ -39,11 +50,16 @@ export default function Modal({ show, toggle = () => {} }) {
       pId: patient._id,
       branch: activePlatform?.branchId,
       tags: [tags],
-      ap: {
-        notes,
-        userId: auth._id,
-      },
+      ap: [
+        {
+          notes,
+          userId: auth._id,
+          specialization: activePlatform?.branch?.specialization,
+        },
+      ],
     };
+
+    dispatch(SAVE({ data, token })).then(() => toggle());
   };
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size="xl">
@@ -139,8 +155,8 @@ export default function Modal({ show, toggle = () => {} }) {
             </MDBCol>
           </MDBRow>
           <div className="text-center">
-            <MDBBtn color="info" type="submit">
-              Submit
+            <MDBBtn color="info" type="submit" disabled={formSubmitted}>
+              Submit <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
           </div>
         </form>

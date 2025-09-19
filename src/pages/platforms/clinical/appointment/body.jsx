@@ -180,8 +180,9 @@ const Body = () => {
                 <td
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    console.log("Clicked cell:", ehr);
-                    dispatch(setShowModalEhr(ehr));
+                    dispatch(
+                      setShowModalEhr({ ...ehr, patient: patient?._id })
+                    );
                   }}
                 >
                   {ehr ? "yes" : "no"}

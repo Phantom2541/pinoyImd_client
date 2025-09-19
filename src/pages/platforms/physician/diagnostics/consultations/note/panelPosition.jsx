@@ -62,8 +62,11 @@ export default function usePanelPosition(
     };
 
     frame = requestAnimationFrame(updateStyle);
+
     return () => cancelAnimationFrame(frame);
-  }, [active, targetSize, buttonRef]);
+    // ✅ Only dependencies that really matter
+    // eslint-disable-next-line
+  }, [active, targetSize.width, targetSize.height]);
 
   return style;
 }

@@ -25,6 +25,9 @@ const Footer = () => {
     }
   };
 
+  console.log("totalpages", totalPages);
+  console.log("activepage", activePage);
+
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
       <TableRowCount disablePageSelect={false} />
