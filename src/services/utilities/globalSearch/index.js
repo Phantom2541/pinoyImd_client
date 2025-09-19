@@ -35,9 +35,9 @@ const globalSearch = (collection, key = "") => {
 
     for (const value of Object.values(obj)) {
       if (value && typeof value === "object") {
-        result = result.concat(flattenObject(value));
+        result = result?.concat(flattenObject(value));
       } else {
-        result.push(String(value));
+        result?.push(String(value));
       }
     }
 
@@ -47,7 +47,7 @@ const globalSearch = (collection, key = "") => {
   return collection.filter((obj) => {
     if (!obj || typeof obj !== "object") return false;
 
-    const allValues = normalize(flattenObject(obj).join(""));
+    const allValues = normalize(flattenObject(obj)?.join(""));
     return allValues.includes(key);
   });
 };

@@ -53,7 +53,7 @@ export default function Search({
           placeholder="Search..."
           onChange={({ target }) => handleChange(target.value)}
           autoCorrect="off"
-          className="search"
+          className="search  "
           type="search"
           id="item-search"
           spellCheck={false}
