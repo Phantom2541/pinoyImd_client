@@ -6,38 +6,6 @@ import { Search } from "../../../../../../components/searchables";
 import Modal from "./modal";
 import { SetFILTERED } from "../../../../../../services/redux/slices/diagnostics/cases";
 import { capitalize } from "../../../../../../services/utilities";
-const caseOptions = [
-  // Surgical cases
-  "hip replacement",
-  "knee replacement",
-  "appendectomy",
-  "cholecystectomy",
-  "cesarean section",
-  "hernia repair",
-
-  // Chronic diseases
-  "diabetes",
-  "hypertension",
-  "asthma",
-  "chronic kidney disease",
-  "heart failure",
-  "tuberculosis",
-
-  // Acute conditions
-  "pneumonia",
-  "dengue fever",
-  "influenza",
-  "myocardial infarction",
-  "stroke",
-  "sepsis",
-
-  // Others
-  "cancer",
-  "allergy",
-  "arthritis",
-  "migraine",
-  "peptic ulcer disease",
-];
 
 export default function Case() {
   const { patient } = useSelector(({ consultations }) => consultations);
@@ -108,7 +76,6 @@ export default function Case() {
     const walk = (x - startX) * 1.5; // scroll speed
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
-  console.log("collections", collections);
   return (
     <>
       <div

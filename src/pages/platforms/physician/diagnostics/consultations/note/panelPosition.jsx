@@ -46,7 +46,6 @@ export default function usePanelPosition(
             opacity: 1,
             visibility: "visible",
             overflow: "visible",
-            // keep -50% para consistent sa balik
             transform: "translate(-50%, -50%)",
             transition: "all .5s cubic-bezier(0.25,1,0.5,1)",
             zIndex: 120,
@@ -56,8 +55,11 @@ export default function usePanelPosition(
     };
 
     frame = requestAnimationFrame(updateStyle);
+
     return () => cancelAnimationFrame(frame);
-  }, [active, targetSize, buttonRef]);
+    // ✅ Only dependencies that really matter
+    // eslint-disable-next-line
+  }, [active, targetSize.width, targetSize.height]);
 
   return style;
 }
