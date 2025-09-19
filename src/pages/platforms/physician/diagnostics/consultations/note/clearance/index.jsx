@@ -3,9 +3,7 @@ import usePanelPosition from "../panelPosition";
 import { MDBIcon } from "mdbreact";
 import { useSelector } from "react-redux";
 import "./../style.css";
-import LOGO from "./../../../../../../../assets/aplhamed.png";
 import CADUCEUS from "./../../../../../../../assets/caduceus.png";
-import SIGNATURE from "./../../../../../../../assets/templateSampleSignature.png";
 import {
   billingAddress,
   Cloudinary,
@@ -37,6 +35,8 @@ export default function Clearance({
     `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
       activePlatform.branch.companyId.name
     )}/logo` || "";
+  const signUrl =
+    `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
 
   const companyname = activePlatform.branch.companyId.name || "";
   const branchaddress = activePlatform.branch.address || "";
@@ -109,7 +109,7 @@ export default function Clearance({
           <div className="checkup-data-clearance-card-body-doctor">
             <span>{properFullname(auth.fullName)}</span>
             <span>Physician/Examiner</span>
-            <img alt="signature" src={SIGNATURE} />
+            <img alt="signature" src={signUrl} />
           </div>
         </div>
       </div>
