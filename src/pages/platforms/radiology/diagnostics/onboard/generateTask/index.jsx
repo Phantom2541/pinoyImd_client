@@ -101,7 +101,6 @@ export default function Modal() {
         branchId: activePlatform.branchId,
         hasRead: false,
       };
-      console.log("key", key);
 
       switch (key) {
         case "Miscellaneous":
@@ -134,18 +133,16 @@ export default function Modal() {
         case "Ultrasound":
         case "X-ray":
           await Promise.all(
-            bucket.map((test) => {
-              console.log(test);
-
-              return saveRequest(lowercaseKey, {
+            bucket.map((test) =>
+              saveRequest(lowercaseKey, {
                 pn,
                 dealId: _id,
                 packages: test,
                 hasRead: false,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
-              });
-            })
+              })
+            )
           );
           break;
         case "ECG":
