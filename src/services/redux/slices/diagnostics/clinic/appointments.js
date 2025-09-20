@@ -25,6 +25,9 @@ const initialState = {
   showTransacModal: false,
   willCreateEhr: false,
   showModalEhr: false,
+  showModalVs: false,
+  willCreateVs: false,
+
   /**
    * pagination
    */
@@ -102,6 +105,19 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
 export const SET_EMR = createAsyncThunk(`${url}/set_emr`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token, "setEMR");
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const SET_VS = createAsyncThunk(`${url}/set_vs`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token, "setVS");
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -233,6 +249,12 @@ export const reduxSlice = createSlice({
       state.selected = ehr;
       state.showModalEhr = true;
     },
+    setShowModalVs: (state, { payload }) => {
+      const { appointment, vitals, patient } = payload;
+      state.selected = { ...vitals, appointment, patient };
+      state.willCreateVs = false;
+      state.showModalVs = true;
+    },
 
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = state;
@@ -320,6 +342,9 @@ export const reduxSlice = createSlice({
     },
     TOGGLEEMR: (state) => {
       state.showModalEhr = !state.showModalEhr;
+    },
+    TOGGLEVS: (state) => {
+      state.showModalVs = !state.showModalVs;
     },
   },
   extraReducers: (builder) => {
@@ -424,6 +449,36 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(SET_EMR.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isSuccess = false;
+        state.formSubmitted = false;
+      })
+      .addCase(SET_VS.pending, (state) => {
+        state.isSuccess = false;
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(SET_VS.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload.appointment
+          );
+          if (index > -1) {
+            collections[index] = {
+              ...collections[index],
+              consultation: payload,
+            };
+          }
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.formSubmitted = false;
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(SET_VS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isSuccess = false;
@@ -549,6 +604,7 @@ export const {
   SetSCHED,
   SetCREATE,
   setShowModalEhr,
+  setShowModalVs,
   SetEDIT,
   SetFILTER,
   SetPAGE,
@@ -556,6 +612,7 @@ export const {
   TOGGLE_RESULT_MODAL,
   TOGGLE,
   TOGGLEEMR,
+  TOGGLEVS,
   TOGGLE_TRANSAC_MODAL,
   /**
    * for pagination

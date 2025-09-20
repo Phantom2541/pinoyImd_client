@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
-export default function FMHx({ familyHistory = { mother: [], father: [] } }) {
+export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   const wrapperRef = useRef(null);
 
   // refs per row / box
@@ -10,8 +10,8 @@ export default function FMHx({ familyHistory = { mother: [], father: [] } }) {
 
   const [lines, setLines] = useState([]);
 
-  const mother = familyHistory.mother || [];
-  const father = familyHistory.father || [];
+  const mother = familyHistory.Mother || [];
+  const father = familyHistory.Father || [];
 
   // zipper style merge
   function mergeAlternate(motherArr, fatherArr) {

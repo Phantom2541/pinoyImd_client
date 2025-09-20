@@ -10,6 +10,7 @@ import {
 import {
   UPDATE,
   setShowModalEhr,
+  setShowModalVs,
   SetRESULT,
   SetTRANSAC,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
@@ -180,15 +181,26 @@ const Body = () => {
                 <td
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch(
-                      setShowModalEhr({ ...ehr, patient: patient?._id })
-                    );
+                    dispatch(setShowModalEhr({ ...ehr, patient: patient }));
                   }}
                 >
                   {ehr ? "yes" : "no"}
                 </td>
 
-                <td>{consultation ? "yes" : "no"} </td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    dispatch(
+                      setShowModalVs({
+                        ...consultation,
+                        appointment: _id,
+                        patient: patient,
+                      })
+                    );
+                  }}
+                >
+                  {consultation ? "yes" : "no"}{" "}
+                </td>
                 <td className="position-relative">
                   <EditableField
                     type="text"

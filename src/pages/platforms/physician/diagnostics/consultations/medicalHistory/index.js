@@ -3,6 +3,7 @@ import PMHx from "./pmhx";
 import FMHx from "./fmhx";
 import PSHx from "./pshx";
 import OBGyneHx from "./obGyneHx";
+import { useSelector } from "react-redux";
 
 const familyHistory = {
   mother: [
@@ -152,6 +153,7 @@ const historyMap = {
 const order = ["pmhx", "fmhx", "pshx", "obgynehx"];
 
 export default function HistorySwitcher({ task }) {
+  const { patient: ehrPatient } = useSelector(({ ehr }) => ehr);
   const [current, setCurrent] = useState(task);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState("left");
@@ -185,7 +187,7 @@ export default function HistorySwitcher({ task }) {
       >
         <Comp
           task={current}
-          familyHistory={familyHistory}
+          familyHistory={ehrPatient?.familyHistory || {}}
           pastMedicalHistory={pastMedicalHistory}
           pastSurgicalHistory={pastSurgicalHistory}
           obGyneHistory={obGyneHistory}
