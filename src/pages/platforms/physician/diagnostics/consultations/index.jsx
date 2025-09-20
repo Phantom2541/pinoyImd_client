@@ -9,13 +9,15 @@ import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import RequestForm from "./note/forms";
 import Prescription from "./note/prescription";
+import Toolkit from "./toolkit";
+
 import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import { FIND_EHR } from "../../../../../services/redux/slices/diagnostics/ehr";
 import { BROWSE as GET_CASES } from "../../../../../services/redux/slices/diagnostics/cases";
-import Toolkit from "./toolkit";
+import Skeleton from "./skeleton/main";
 
 export default function Consultations() {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
@@ -72,6 +74,10 @@ export default function Consultations() {
   };
 
   return (
+    // <>
+    //   <Skeleton />
+    // </>
+
     <div className="checkup-data-container">
       <Body />
       <Patient activePanels={activePanels} />
