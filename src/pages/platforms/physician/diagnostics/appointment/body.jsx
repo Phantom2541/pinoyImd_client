@@ -110,7 +110,7 @@ const Body = () => {
                         className="d-block mt-n2 mb-n2 ml-2 cursor-pointer"
                         onClick={() => {
                           history.push(
-                            `/physician/diagnostics/consultations?ehrId=${patient?._id}&apptId=${_id}&sched=${activeSched}`
+                            `/physician/diagnostics/consultations?ehrId=${_id}&sched=${activeSched}`
                           );
                         }}
                       >

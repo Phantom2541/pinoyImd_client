@@ -9,19 +9,19 @@ import Certificate from "./note/certificate";
 import Clearance from "./note/clearance";
 import RequestForm from "./note/forms";
 import Prescription from "./note/prescription";
+import Toolkit from "./toolkit";
+
 import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import { FIND as GET_APPOINTMENT } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
-import Toolkit from "./toolkit";
 
 export default function Consultations() {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
-  const apptId = params.get("apptId");
 
   const [activePanels, setActivePanels] = useState({
     request: false,
@@ -34,12 +34,9 @@ export default function Consultations() {
 
   useEffect(() => {
     dispatch(
-      GET_PATIENT({ token, key: { _id: ehrId || "636d37e0187c30ab0f611ce4" } })
-    );
-    dispatch(
       GET_APPOINTMENT({
         token,
-        key: { _id: apptId || "636d37e0187c30ab0f611ce4" },
+        key: { _id: ehrId || "636d37e0187c30ab0f611ce4" },
       })
     );
   }, [ehrId, token, dispatch, activePlatform]);
@@ -66,6 +63,10 @@ export default function Consultations() {
   };
 
   return (
+    // <>
+    //   <Skeleton />
+    // </>
+
     <div className="checkup-data-container">
       <Body />
       <Patient activePanels={activePanels} />

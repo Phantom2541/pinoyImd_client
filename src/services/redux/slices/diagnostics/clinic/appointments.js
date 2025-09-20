@@ -219,6 +219,9 @@ export const reduxSlice = createSlice({
       update(state.collections);
       update(state.filtered);
     },
+    SetPATIENT: (state, { payload }) => {
+      state.patient = payload;
+    },
     SetPHYSICIAN: (state, { payload }) => {
       if (!payload) {
         const appointments = state.roster.flatMap(
@@ -278,8 +281,8 @@ export const reduxSlice = createSlice({
       state.showModalEhr = true;
     },
     setShowModalVs: (state, { payload }) => {
-      const { appointment, vitals, patient } = payload;
-      state.selected = { ...vitals, appointment, patient };
+      const { appointment, vitals, patient, _id = "" } = payload;
+      state.selected = { ...vitals, appointment, patient, _id };
       state.willCreateVs = false;
       state.showModalVs = true;
     },
@@ -644,6 +647,7 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetPATIENT,
   SetSETTLED,
   SetTRANSAC,
   SetDIAGNOSTIC,
