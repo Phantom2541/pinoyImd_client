@@ -13,8 +13,7 @@ import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
-import { FIND_EHR } from "../../../../../services/redux/slices/diagnostics/ehr";
-import { BROWSE as GET_CASES } from "../../../../../services/redux/slices/diagnostics/cases";
+import { FIND as GET_APPOINTMENT } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import Toolkit from "./toolkit";
 
 export default function Consultations() {
@@ -22,6 +21,7 @@ export default function Consultations() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
+  const apptId = params.get("apptId");
 
   const [activePanels, setActivePanels] = useState({
     request: false,
@@ -37,15 +37,9 @@ export default function Consultations() {
       GET_PATIENT({ token, key: { _id: ehrId || "636d37e0187c30ab0f611ce4" } })
     );
     dispatch(
-      FIND_EHR({ token, key: { patient: ehrId || "636d37e0187c30ab0f611ce4" } })
-    );
-    dispatch(
-      GET_CASES({
+      GET_APPOINTMENT({
         token,
-        key: {
-          pId: ehrId || "636d37e0187c30ab0f611ce4",
-          branch: activePlatform?.branchId,
-        },
+        key: { _id: apptId || "636d37e0187c30ab0f611ce4" },
       })
     );
   }, [ehrId, token, dispatch, activePlatform]);

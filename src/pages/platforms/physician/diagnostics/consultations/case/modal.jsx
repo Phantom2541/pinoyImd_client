@@ -28,7 +28,11 @@ const _form = {
 };
 export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
+    { patient = {}, consultation = {}, clinic } = appointment;
+
   const { formSubmitted } = useSelector(({ cases }) => cases);
   const [form, setForm] = useState(_form);
   const dispatch = useDispatch();
@@ -50,6 +54,9 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
       pId: patient._id,
       branch: activePlatform?.branchId,
       tags: [tags],
+      appointment: appointment._id,
+      consultation: consultation._id,
+      clinic,
       ap: [
         {
           notes,

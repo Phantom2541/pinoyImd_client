@@ -6,6 +6,7 @@ const url = "/diagnostics/clinic/appointments";
 const initialState = {
   filter: [],
   paginated: [],
+  patient: {},
   physician: "",
   activeSched: "",
   activePhysician: { _id: null },
@@ -58,6 +59,26 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
+//get the details of active appointment in eHR page
+export const FIND = createAsyncThunk(
+  `${url}/find`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/find`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const CHECKUP = createAsyncThunk(
   `${url}/checkup`,
   ({ token, data }, thunkAPI) => {
@@ -161,6 +182,30 @@ export const arrangeSchedules = (schedules = []) => {
 
   return sortSchedules(scheds);
 };
+function getDefaultSchedule(scheds) {
+  if (!scheds || scheds.length === 0) return "";
+
+  const dayMap = {
+    0: "Sun", // Sunday
+    1: "M", // Monday
+    2: "T", // Tuesday
+    3: "W", // Wednesday
+    4: "TH", // Thursday
+    5: "F", // Friday
+    6: "Sat", // Saturday
+  };
+
+  const today = new Date().getDay();
+
+  for (let i = 0; i < 7; i++) {
+    const checkDay = dayMap[(today + i) % 7];
+
+    const match = scheds.find((s) => s.startsWith(checkDay));
+    if (match) return match;
+  }
+
+  return scheds[0];
+}
 
 export const reduxSlice = createSlice({
   name: url,
@@ -195,23 +240,6 @@ export const reduxSlice = createSlice({
         state.filtered = appointments;
         state.activeSched = "";
       }
-      // const arrangePayload = (collections) => {
-      //   return collections.flatMap(({ user, appointments = [] }) => {
-      //     return appointments?.map((appt) => ({
-      //       ...appt,
-      //       doctor: user,
-      //     }));
-      //   });
-      // };
-      // if (payload === "all") {
-      //   state.physician = payload;
-      //   state.filtered = arrangePayload(state.collections);
-      // } else {
-      //   state.filtered =
-      //     state.collections.find(({ user }) => user._id === payload)
-      //       ?.appointments || [];
-      //   state.physician = payload;
-      // }
     },
 
     SetDIAGNOSTIC: (state, { payload }) => {
@@ -384,10 +412,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(CHECKUP.fulfilled, (state, action) => {
-        const { success, payload = [] } = action.payload;
-        // initial values
-        state.filtered = state.collections = payload.sort(
-          (a, b) => a.qn - b.qn
+        const { success, payload = [], schedules } = action.payload;
+        // initial values for pagination
+        state.collections = payload.sort((a, b) => a.qn - b.qn);
+        state.scheds = arrangeSchedules(schedules);
+
+        state.activeSched = getDefaultSchedule(arrangeSchedules(schedules));
+        state.filtered = state.collections.filter(
+          ({ sched }) => sched === state.activeSched
         );
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -395,6 +427,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(CHECKUP.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(FIND.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(FIND.fulfilled, (state, action) => {
+        const { success, payload = {} } = action.payload;
+        state.patient = payload;
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(FIND.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
