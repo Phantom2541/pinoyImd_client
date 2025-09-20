@@ -123,7 +123,7 @@ export const reduxSlice = createSlice({
       state.maxPage = payload;
       state.activePage = 1;
     },
-    SetActivePAGE: (state, { payload }) => {
+    SetActivePage: (state, { payload }) => {
       state.activePage = payload;
     },
   },
@@ -151,7 +151,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const payload = action.payload; // direct
+        const payload = action.payload;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -219,7 +219,7 @@ export const {
   SetFILTERED,
   RESET,
   toggleModal,
-  setActivePage,
+  SetActivePage,
   SetMaxPage,
   SetCREATE,
   SetEDIT,
