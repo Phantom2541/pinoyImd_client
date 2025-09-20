@@ -101,6 +101,8 @@ export default function Modal() {
         branchId: activePlatform.branchId,
         hasRead: false,
       };
+      console.log("key", key);
+
       switch (key) {
         case "Miscellaneous":
           const panelAvail = bucket.filter((test) => panel.includes(test));
@@ -130,18 +132,20 @@ export default function Modal() {
           }
           break;
         case "Ultrasound":
-        case "Xray":
+        case "X-ray":
           await Promise.all(
-            bucket.map((test) =>
-              saveRequest(lowercaseKey, {
+            bucket.map((test) => {
+              console.log(test);
+
+              return saveRequest(lowercaseKey, {
                 pn,
                 dealId: _id,
                 packages: test,
                 hasRead: false,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
-              })
-            )
+              });
+            })
           );
           break;
         case "ECG":
