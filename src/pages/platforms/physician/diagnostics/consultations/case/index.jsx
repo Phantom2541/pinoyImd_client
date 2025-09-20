@@ -83,6 +83,7 @@ export default function Case() {
         ref={dropdownRef}
       >
         <div className="checkup-data-toolkit-button-case-content">
+          {/* <div className="checkup-data-toolkit-button-skeleton" /> */}
           <button
             className="checkup-data-toolkit-button-case"
             onClick={() => setActive(!active)}
@@ -140,6 +141,15 @@ export default function Case() {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
+          {/* {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="checkup-data-toolkit-button-case-selected-item-skeleton"
+            >
+              <div className="checkup-data-skeleton-circle"></div>
+              <div className="checkup-data-skeleton-line"></div>
+            </div>
+          ))} */}
           {selected.map((item) => (
             <div
               key={item}

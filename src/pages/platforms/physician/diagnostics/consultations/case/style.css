@@ -178,3 +178,96 @@
   margin-left: 5px;
   white-space: nowrap;
 }
+
+/* skeleton design */
+.checkup-data-toolkit-button-skeleton {
+  width: 140px;
+  height: 30px;
+  background: #e0e0e0; /* base background like FB */
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkup-data-toolkit-button-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 0%,
+    #f6f6f6 20%,
+    #e0e0e0 40%,
+    #e0e0e0 100%
+  );
+  background-size: 200% 100%;
+  animation: checkup-data-shimmer-toolkit 3s infinite linear;
+}
+
+@keyframes checkup-data-shimmer-toolkit {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.checkup-data-toolkit-button-case-selected-item-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+/* circle for close button */
+.checkup-data-skeleton-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: #e0e0e0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* line for title text */
+.checkup-data-skeleton-line {
+  width: 80px;
+  height: 14px;
+  border-radius: 4px;
+  background: #e0e0e0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* shimmer effect reuse */
+.checkup-data-toolkit-button-case-selected-item-skeleton::after,
+.checkup-data-skeleton-circle::after,
+.checkup-data-skeleton-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 0%,
+    #f6f6f6 20%,
+    #e0e0e0 40%,
+    #e0e0e0 100%
+  );
+  background-size: 200% 100%;
+  animation: checkup-data-shimmer 3s infinite linear;
+}
+
+@keyframes checkup-data-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
