@@ -9,10 +9,13 @@ import { capitalize } from "../../../../../../services/utilities";
 
 export default function Case() {
   const { patient } = useSelector(({ consultations }) => consultations);
-  const { filtered, collections } = useSelector(({ cases }) => cases);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
   const [active, setActive] = useState(false);
   const [show, setShow] = useState(false);
   const [defaultCase, setDefaultCase] = useState("");
+  const [cases, setCases] = useState([]);
   const [selected, setSelected] = useState([]);
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
@@ -23,6 +26,18 @@ export default function Case() {
   const color = patient?.isMale ? "#007bff" : "#e83e8c";
 
   const dropdownRef = useRef(null); // ref for dropdown container
+
+  const { consultation = {} } = appointment || {};
+  const { cases: caseCollections = [] } = consultation || {};
+  useEffect(() => {
+    // compare contents, not just reference
+    setCases((prev) => {
+      const prevStr = JSON.stringify(prev);
+      const nextStr = JSON.stringify(caseCollections);
+
+      return prevStr === nextStr ? prev : caseCollections;
+    });
+  }, [caseCollections]);
 
   const toggleCase = (item) => {
     const _cases = [...selected];
@@ -83,6 +98,7 @@ export default function Case() {
         ref={dropdownRef}
       >
         <div className="checkup-data-toolkit-button-case-content">
+          {/* <div className="checkup-data-toolkit-button-skeleton" /> */}
           <button
             className="checkup-data-toolkit-button-case"
             onClick={() => setActive(!active)}
@@ -102,23 +118,25 @@ export default function Case() {
           >
             <div className="mr-2">
               <Search
-                hideButton={collections.length > 0}
-                setFiltered={(items) => dispatch(SetFILTERED(items))}
-                reset={() => dispatch(SetFILTERED(collections))}
-                collections={collections}
+                hideButton={caseCollections.length > 0}
+                setFiltered={(items) => setCases(items)}
+                reset={() => dispatch(SetFILTERED(caseCollections))}
+                collections={caseCollections}
                 handleAdd={(value) => {
                   setShow(true);
                   setDefaultCase(value);
                 }}
               />
             </div>
-            {filtered.length > 0 ? (
-              filtered.map((item) => (
+            {cases.length > 0 ? (
+              cases.map((item) => (
                 <button
                   className={`w-100 ${
-                    selected.includes(item) ? "selected" : ""
+                    selected.some((val) => val._id === item._id)
+                      ? "selected"
+                      : ""
                   } ${patient?.isMale ? "male" : "female"}`}
-                  key={item}
+                  key={item?._id}
                   onClick={() => toggleCase(item)}
                 >
                   {capitalize(item?.title)}
@@ -140,6 +158,15 @@ export default function Case() {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
+          {/* {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="checkup-data-toolkit-button-case-selected-item-skeleton"
+            >
+              <div className="checkup-data-skeleton-circle"></div>
+              <div className="checkup-data-skeleton-line"></div>
+            </div>
+          ))} */}
           {selected.map((item) => (
             <div
               key={item}

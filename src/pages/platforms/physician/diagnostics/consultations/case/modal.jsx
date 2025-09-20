@@ -14,6 +14,7 @@ import { EditableSelect } from "../../../../../../components/customizable";
 import { useEffect, useState } from "react";
 import { SAVE } from "../../../../../../services/redux/slices/diagnostics/cases";
 import Spinner from "../../../../../../components/spinner";
+import { SetPATIENT } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 const _form = {
   title: "",
   hospital: "",
@@ -28,7 +29,11 @@ const _form = {
 };
 export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
+    { patient = {}, consultation = {}, clinic } = appointment;
+
   const { formSubmitted } = useSelector(({ cases }) => cases);
   const [form, setForm] = useState(_form);
   const dispatch = useDispatch();
@@ -39,6 +44,7 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
       setForm({ ..._form, title: defaultCase });
     }
   }, [defaultCase, show]);
+
   const handleChange = (e, key = "") => {
     setForm({ ...form, [key]: e.target.value });
   };
@@ -50,6 +56,9 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
       pId: patient._id,
       branch: activePlatform?.branchId,
       tags: [tags],
+      appointment: appointment._id,
+      consultation: consultation._id,
+      clinic,
       ap: [
         {
           notes,
@@ -59,7 +68,11 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
       ],
     };
 
-    dispatch(SAVE({ data, token })).then(() => toggle());
+    dispatch(SAVE({ data, token })).then((action) => {
+      const { payload } = action.payload;
+      dispatch(SetPATIENT({ ...appointment, consultation: payload }));
+      toggle(payload);
+    });
   };
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size="xl">

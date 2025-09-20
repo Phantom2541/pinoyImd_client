@@ -200,7 +200,11 @@ const EditableUser = ({
         appearance: "info",
       });
     }
-    onSave({ _id, [editableKey]: selected?._id, uid: user.uid });
+    onSave({
+      _id,
+      [editableKey]: returnObj ? selected : selected?._id,
+      uid: user.uid,
+    });
   };
 
   const handleClose = () => {

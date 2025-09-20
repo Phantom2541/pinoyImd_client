@@ -7,6 +7,7 @@ import BodySwitcher from "../../../../../../../components/printout/task/laborato
 import Signatories from "../../../../../../../components/printout/task/laboratory/signatories";
 import "./printout.css";
 import "./style.css";
+import LabRadSkeleton from "../../skeleton/rablad";
 
 function chunkArray(array, size) {
   const result = [];
@@ -92,6 +93,10 @@ export default function Laboratory() {
     );
 
   return (
+    // <>
+    //   <LabRadSkeleton />
+    // </>
+
     <MDBRow className="h-100">
       <MDBCol md="10" className="p-1">
         <div

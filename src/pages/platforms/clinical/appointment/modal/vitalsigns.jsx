@@ -68,7 +68,7 @@ function UnitInput({ label, type = "number", unit, value, onChange, hint }) {
         label={label}
         type={type}
         value={cleanValue}
-        onChange={(e) => onChange(e.target.value + " " + unit)}
+        onChange={(e) => onChange(e.target.value)}
         hint={hint}
       />
       <span
@@ -116,8 +116,10 @@ export default function Modal() {
     });
   };
 
-  const handleChange = (key, value) =>
+  const handleChange = (key, value) => {
+    console.log(key, value);
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
   const { patient } = selected;
   return (
     <MDBModal

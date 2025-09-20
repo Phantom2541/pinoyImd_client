@@ -1,5 +1,5 @@
 import { useLocation, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   EditableSelect,
   EditableUser,
@@ -8,30 +8,71 @@ import PROFILE from "./../../../../../../assets/male.jpg";
 import {
   Cloudinary,
   fullAddress,
+  fullName,
   getAge,
 } from "../../../../../../services/utilities";
 import "./style.css";
 import { MDBIcon } from "mdbreact";
-
-const vitals = {
-  height: "5'11",
-  weight: "89",
-};
+import Swal from "sweetalert2";
+import { SAVE } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function Patient({ activePanels }) {
-  const { patient, isLoading, isSuccess } = useSelector(
-    ({ consultations }) => consultations
-  );
+  const { token, auth } = useSelector(({ auth }) => auth),
+    { isLoading, isSuccess } = useSelector(
+      ({ consultations }) => consultations
+    ),
+    { patient: appointment } = useSelector(({ appointments }) => appointments),
+    dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
-  const [feet, inches] = vitals.height.split("'").map(Number);
+  const { consultation = {}, patient = {} } = appointment || {};
+  const { vitals = { height: 0, weight: 0 } } = consultation || {};
+  const [feet, inches] = vitals?.height?.split("'").map(Number);
   const meters = (feet * 12 + (inches || 0)) * 0.0254;
   const bmi = (vitals.weight / meters ** 2).toFixed(2);
 
-  const setPatientId = (newId) => {
-    const newParams = new URLSearchParams(location.search);
-    newParams.set("ehrId", newId); // add if missing, replace if exists
-    history.replace(`${location.pathname}?${newParams.toString()}`);
+  const setPatient = (patient) => {
+    Swal.fire({
+      title: "Create Appointment",
+      text: `You selected ${fullName(
+        patient.fullName
+      )}. Do you want to create a new appointment for schedule ${
+        appointment.sched
+      }?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, create",
+      cancelButtonText: "No, cancel",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newqn = parseFloat((appointment.qn + 0.1).toFixed(1));
+        const newAppt = {
+          patient: patient._id,
+          clinic: appointment.clinic,
+          sched: appointment.sched,
+          qn: newqn,
+          userId: auth._id,
+        };
+
+        dispatch(SAVE({ data: newAppt, token })).then((action) => {
+          const { payload } = action.payload;
+          // const newParams = new URLSearchParams(location.search);
+          // newParams.set("ehrId", newId); // add if missing, replace if exists
+          // history.replace(`${location.pathname}?${newParams.toString()}`);
+          Swal.fire({
+            title: "Appointment Created!",
+            text: `Successfully created an appointment for ${fullName(
+              patient.fullName
+            )} on schedule ${appointment.sched}.`,
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        console.log("Appointment creation canceled.");
+      }
+    });
   };
 
   const userUrl = `${Cloudinary.getEndpoint()}/users/${patient.email}/profile`;
@@ -56,7 +97,8 @@ export default function Patient({ activePanels }) {
           classNameTxt="checkup-data-patient-fullname"
           emptyLabel="Click here to select a Patient"
           user={{ patient, _id: patient?._id }}
-          onSave={({ patient }) => setPatientId(patient)}
+          onSave={({ patient }) => setPatient(patient)}
+          returnObj
           formSubmitted={isLoading}
           isSuccess={isSuccess}
         />
@@ -136,9 +178,9 @@ export default function Patient({ activePanels }) {
           keyForValue="value"
           keyForText="label"
           preValue={patient?.reasonForVisit}
-          onChange={(value) =>
-            setPatientId({ ...patient, reasonForVisit: value })
-          }
+          // onChange={(value) =>
+          //   setPatientId({ ...patient, reasonForVisit: value })
+          // }
         />
       </div>
     </div>

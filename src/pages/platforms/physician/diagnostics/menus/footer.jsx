@@ -4,29 +4,29 @@ import TableRowCount from "../../../../../components/pagination/rows";
 import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
-  setActivePage,
+  SetActivePage,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
+
 const Footer = () => {
-  const { maxPage } = useSelector(({ auth }) => auth),
-    { isLoading, totalPages, activePage } = useSelector(
-      ({ clinicMenus }) => clinicMenus
-    ),
-    dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { maxPage } = useSelector(({ auth }) => auth);
+  const { isLoading, totalPages, activePage } = useSelector(
+    ({ clinicMenus }) => clinicMenus
+  );
 
   useEffect(() => {
-    dispatch(SetMaxPage(maxPage));
+    if (maxPage) {
+      dispatch(SetMaxPage(maxPage));
+    }
   }, [dispatch, maxPage]);
 
   const handlePageChange = (action) => {
     const newPage =
       typeof action === "number" ? action : activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
-      dispatch(setActivePage(newPage));
+      dispatch(SetActivePage(newPage));
     }
   };
-
-  console.log("totalpages", totalPages);
-  console.log("activepage", activePage);
 
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">

@@ -153,10 +153,12 @@ const historyMap = {
 const order = ["pmhx", "fmhx", "pshx", "obgynehx"];
 
 export default function HistorySwitcher({ task }) {
-  const { patient: ehrPatient } = useSelector(({ ehr }) => ehr);
+  const { patient } = useSelector(({ appointments }) => appointments);
   const [current, setCurrent] = useState(task);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState("left");
+
+  const { ehr = {} } = patient || {};
 
   useEffect(() => {
     if (!task || task === current) return;
@@ -187,7 +189,7 @@ export default function HistorySwitcher({ task }) {
       >
         <Comp
           task={current}
-          familyHistory={ehrPatient?.familyHistory || {}}
+          familyHistory={ehr?.familyHistory || {}}
           pastMedicalHistory={pastMedicalHistory}
           pastSurgicalHistory={pastSurgicalHistory}
           obGyneHistory={obGyneHistory}
