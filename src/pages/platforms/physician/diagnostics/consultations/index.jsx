@@ -14,7 +14,6 @@ import Toolkit from "./toolkit";
 import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import {
   FIND as GET_APPOINTMENT,
   GET_BY_SCHED,
@@ -45,28 +44,22 @@ export default function Consultations() {
         token,
         key: { _id: ehrId || "636d37e0187c30ab0f611ce4" },
       })
-    );
-  }, [ehrId, token, dispatch]);
+    ).then((action) => {
+      const { payload } = action.payload;
+      const { clinic, sched } = payload;
+      dispatch(
+        GET_BY_SCHED({
+          token,
+          key: { clinic, sched },
+        })
+      ).then((action) => {
+        const { payload } = action?.payload;
 
-  useEffect(() => {
-    if (appointment?._id) {
-      const { clinic, sched } = appointment;
-      const ls = localStorage.getItem(`appointment-${clinic}-${sched}`);
-      if (ls) {
-        dispatch(SetCLUSTER(JSON.parse(ls)));
-      } else {
-        dispatch(
-          GET_BY_SCHED({
-            token,
-            key: { clinic, sched },
-          })
-        ).then((action) => {
-          const { payload } = action.payload;
-          dispatch(SetCLUSTER(payload));
-        });
-      }
-    }
-  }, [appointment, dispatch, token]);
+        dispatch(SetCLUSTER(payload));
+      });
+    });
+    // eslint-disable-next-line
+  }, [token, dispatch]);
 
   const buttonRefs = {
     request: useRef(),

@@ -31,7 +31,23 @@
   /* color: #ffffff; */
   text-align: center;
   font-size: 1rem;
-  width: 25px;
+  width: 30px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.checkup-data-toolkit-pagination-item.disabled {
+  pointer-events: none; /* wala nang click/hover */
+  display: inline-block;
+  border-radius: 4px;
+  color: #ffffff;
+  border: none;
+  opacity: 0.4;
+  background-color: #3d405b;
+  /* color: #ffffff; */
+  text-align: center;
+  font-size: 1rem;
+  width: 30px;
   transition: all 0.5s;
   cursor: pointer;
 }
@@ -43,7 +59,7 @@
   color: #ffffff;
   text-align: center;
   font-size: 1rem;
-  width: 25px;
+  width: 30px;
   transition: all 0.5s;
   cursor: pointer;
 }

@@ -230,6 +230,18 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetDONE_CHECKUP: (state, { payload }) => {
+      if (state.collections.length > 0) {
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload);
+          if (index > -1) {
+            collections[index] = { ...collections[index], status: "done" };
+          }
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+      }
+    },
     SetSETTLED: (state, { payload }) => {
       const update = (collections) => {
         const index = collections.findIndex(({ _id }) => _id === payload);
@@ -349,7 +361,12 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetCLUSTER: (state, { payload }) => {
+      const { clinic, sched } = state.patient;
       state.cluster = payload;
+      localStorage.setItem(
+        `appointment-${clinic}-${sched}`,
+        JSON.stringify(payload)
+      );
     },
     SetRESULT: (state, { payload }) => {
       state.selected = payload;

@@ -10,11 +10,15 @@ import {
   fullAddress,
   fullName,
   getAge,
+  PresetImage,
 } from "../../../../../../services/utilities";
 import "./style.css";
 import { MDBIcon } from "mdbreact";
 import Swal from "sweetalert2";
-import { SAVE } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SAVE,
+  SetCLUSTER,
+} from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { useState } from "react";
 import Register from "./register";
 
@@ -24,6 +28,7 @@ export default function Patient({ activePanels }) {
       patient: appointment,
       formSubmitted,
       isSuccess,
+      cluster = [],
     } = useSelector(({ appointments }) => appointments),
     dispatch = useDispatch();
   const [isRegister, setIsRegister] = useState(false),
@@ -91,6 +96,15 @@ export default function Patient({ activePanels }) {
 
         dispatch(SAVE({ data: newAppt, token })).then((action) => {
           const { payload } = action.payload;
+          const _cluster = [...(cluster || [])];
+          const apptIndex = _cluster.findIndex(
+            (p) => p._id === appointment?._id
+          );
+          if (apptIndex !== -1) {
+            _cluster.splice(apptIndex + 1, 0, payload);
+          } else {
+            _cluster.push(payload);
+          }
           const newParams = new URLSearchParams(location.search);
           newParams.set("ehrId", payload?._id); // add if missing, replace if exists
           history.replace(`${location.pathname}?${newParams.toString()}`);
@@ -102,6 +116,7 @@ export default function Patient({ activePanels }) {
             icon: "success",
             confirmButtonText: "OK",
           });
+          dispatch(SetCLUSTER(_cluster));
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         console.log("Appointment creation canceled.");
@@ -122,7 +137,8 @@ export default function Patient({ activePanels }) {
         style={{ backgroundColor: patient?.isMale ? "#007bff" : "#e83e8c" }}
       >
         <img
-          src={userUrl || PROFILE}
+          src={userUrl}
+          onError={(e) => (e.target.src = PresetImage(patient?.isMale))}
           alt="avatar"
           className="checkup-data-patient-profile"
           draggable={false}

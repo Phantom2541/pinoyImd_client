@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SideNavigation from "../../components/sidebar";
 import TopNavigation from "../../components/topbar";
 import Routes from "../Routes";
 import Login from "../home/login";
 import { useDispatch, useSelector } from "react-redux";
-import { socket } from "../../services/utilities";
+import { fullName, socket } from "../../services/utilities";
 import { NETWORK } from "../../services/redux/slices/assets/persons/auth";
+import bell from "../../assets/bell.mp3";
+import Swal from "sweetalert2";
 
 const breakWidth = 1400;
 export default function Platforms() {
@@ -14,7 +16,8 @@ export default function Platforms() {
     [sideNavToggled, setSideNavToggled] = useState(false),
     [dynamicLeftPadding, setDynamicLeftPadding] = useState("0"),
     { email, auth, token, isOnline } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    audioRef = useRef(null);
 
   const handleResize = () => setWindowWidth(window.innerWidth);
 
@@ -25,12 +28,37 @@ export default function Platforms() {
   }, [token, email]);
 
   useEffect(() => {
-    socket.on("me", (id) => {
-      // console.log(`[Socket] ${id} Connected.`);
+    audioRef.current = new Audio(bell);
+  }, []);
+
+  useEffect(() => {
+    if (!auth?._id) return;
+
+    socket.emit("join_room", auth._id);
+    socket.on("received_checkup_done", (data) => {
+      if (audioRef.current) {
+        audioRef.current.play().catch((err) => {
+          console.warn("Audio blocked until user interacts:", err);
+        });
+      }
+      // show sweetalert
+      Swal.fire({
+        title: "Checkup Done",
+        text: `Patient ${
+          fullName(data.patient?.fullName) || "Unknown"
+        } is done.`,
+        icon: "info",
+        confirmButtonText: "OK",
+      });
     });
 
-    return () => socket.off("me");
-  }, []);
+    return () => {
+      socket.off("received_checkup_done");
+    };
+  }, [auth._id, socket]);
+  useEffect(() => {
+    socket.emit("join_room", auth._id);
+  }, [auth._id]);
 
   useEffect(() => {
     const handleOnline = () => dispatch(NETWORK(true));

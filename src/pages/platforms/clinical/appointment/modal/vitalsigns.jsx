@@ -104,10 +104,15 @@ export default function Modal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { patient, appointment, ...rest } = form;
+    const { patient, appointment, _id, ...rest } = form;
     dispatch(
       SET_VS({
-        data: { patient: patient._id, appointment, vitals: rest },
+        data: {
+          patient: patient._id,
+          appointment,
+          vitals: rest,
+          ...(_id && { _id }),
+        },
         token,
       })
     ).then(() => {
@@ -117,7 +122,6 @@ export default function Modal() {
   };
 
   const handleChange = (key, value) => {
-    console.log(key, value);
     setForm((prev) => ({ ...prev, [key]: value }));
   };
   const { patient } = selected;

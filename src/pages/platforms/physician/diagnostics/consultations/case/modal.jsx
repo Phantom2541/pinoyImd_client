@@ -14,7 +14,10 @@ import { EditableSelect } from "../../../../../../components/customizable";
 import { useEffect, useState } from "react";
 import { SAVE } from "../../../../../../services/redux/slices/diagnostics/cases";
 import Spinner from "../../../../../../components/spinner";
-import { SetPATIENT } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SetPATIENT,
+  SetCLUSTER,
+} from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 const _form = {
   title: "",
   hospital: "",
@@ -29,7 +32,7 @@ const _form = {
 };
 export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-  const { patient: appointment } = useSelector(
+  const { patient: appointment, cluster } = useSelector(
       ({ appointments }) => appointments
     ),
     { patient = {}, consultation = {}, clinic } = appointment;
@@ -70,7 +73,17 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
 
     dispatch(SAVE({ data, token })).then((action) => {
       const { payload } = action.payload;
+      const _cluster = [...cluster];
+      const pIndex = _cluster.findIndex((p) => p._id === appointment?._id);
+      if (pIndex !== -1) {
+        _cluster[pIndex] = {
+          ..._cluster[pIndex],
+          consultation: payload,
+        };
+      }
+
       dispatch(SetPATIENT({ ...appointment, consultation: payload }));
+      dispatch(SetCLUSTER(_cluster));
       toggle(payload);
     });
   };

@@ -12,14 +12,19 @@ import { useLocation, useHistory } from "react-router-dom";
 import Info from "./info";
 import { useEffect, useState } from "react";
 import { generateEmail } from "../../../../../../../services/utilities";
-import { SAVE } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SAVE,
+  SetCLUSTER,
+} from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import Spinner from "../../../../../../../components/spinner";
 
 export default function Register({ searchValue, show, toggle = () => {} }) {
   const { token, auth } = useSelector(({ auth }) => auth);
-  const { patient: appointment, formSubmitted } = useSelector(
-    ({ appointments }) => appointments
-  );
+  const {
+    patient: appointment,
+    formSubmitted,
+    cluster,
+  } = useSelector(({ appointments }) => appointments);
   const [form, setForm] = useState({ patient: {} });
   const dispatch = useDispatch();
   const history = useHistory();
@@ -49,6 +54,14 @@ export default function Register({ searchValue, show, toggle = () => {} }) {
     };
     dispatch(SAVE({ data: newAppt, token })).then((action) => {
       const { payload } = action.payload;
+      const _cluster = [...cluster];
+      const apptIndex = _cluster.findIndex((p) => p._id === appointment?._id);
+      if (apptIndex !== -1) {
+        _cluster.splice(apptIndex + 1, 0, payload);
+      } else {
+        _cluster.push(payload);
+      }
+      dispatch(SetCLUSTER(_cluster));
       const newParams = new URLSearchParams(location.search);
       newParams.set("ehrId", payload?._id); // add if missing, replace if exists
       history.replace(`${location.pathname}?${newParams.toString()}`);
