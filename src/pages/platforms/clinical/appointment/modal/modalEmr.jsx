@@ -26,6 +26,7 @@ const _form = {
   },
   habits: {},
   conditions: {},
+  surgeries: {},
 };
 export default function Modal() {
   const {
@@ -42,9 +43,16 @@ export default function Modal() {
 
   useEffect(() => {
     if (showModalEhr) {
-      setForm(selected);
+      // Merge selected with default _form to ensure surgeries exists
+      setForm({
+        ..._form,
+        ...selected,
+        surgeries: selected?.surgeries || {}, // ensure surgeries key exists
+      });
     }
   }, [showModalEhr, selected]);
+
+  console.log("form", form);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,7 +77,6 @@ export default function Modal() {
   const handleCheck = (code, label) => {
     setForm((prev) => {
       const current = prev[code] || {};
-      // clone the object to avoid modifying frozen object
       const newCurrent = { ...current };
 
       if (newCurrent.hasOwnProperty(label)) {
@@ -86,19 +93,37 @@ export default function Modal() {
   };
 
   // For PMHx textbox values
-  const handleTextChange = (code, label, value) => {
+  const formatDate = (value) => {
+    if (!value) return "";
+    const d = new Date(value);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}/${month}/${day}`; // YYYY/MM/DD
+  };
+
+  const handleTextChange = (baseKey, label, field, newValue) => {
     setForm((prev) => {
-      const current = { ...(prev[code] || {}) };
-      current[label] = value;
+      const prevVal = prev[baseKey]?.[label] || "";
+      const [prevDetails = "", prevDate = ""] = prevVal.split("-");
+
+      const details = field === "details" ? newValue : prevDetails;
+      const date = field === "date" ? formatDate(newValue) : prevDate;
+
+      let combined = details;
+      if (date) combined = `${details}-${date}`;
 
       return {
         ...prev,
-        [code]: current,
+        [baseKey]: {
+          ...prev[baseKey],
+          [label]: combined,
+        },
       };
     });
   };
 
-  // For PSHx frequency selection
+  // For socialHistory frequency selection
   function handleFrequency(code, label, value) {
     const _form = { ...form };
     const current = _form[code] ? { ..._form[code] } : {};
@@ -176,7 +201,7 @@ export default function Modal() {
                 handleCheck={handleSelectRoot}
               />
             )}
-            {["PMHx", "PSHx"].includes(currentStep.code) && (
+            {["PMHx", "PSHx", "socialHistory"].includes(currentStep.code) && (
               <ChecklistSection
                 step={currentStep}
                 form={form}

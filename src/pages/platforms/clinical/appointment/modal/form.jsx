@@ -1,4 +1,5 @@
 // Sections.jsx
+import { MDBDatePicker } from "mdbreact";
 import React from "react";
 
 // Reusable checkbox row
@@ -125,18 +126,30 @@ export function ChecklistSection({
   handleTextChange,
   handleFrequency,
 }) {
-  const frequencies = ["Once a week", "Twice a week", "Daily", "Occasional"];
+  const frequencies = ["Daily", "Once a week", "Twice a week", "Occasional"];
   const keys = {
+    PSHx: "surgeries",
     PMHx: "conditions",
-    PSHx: "habits",
+    socialHistory: "habits",
   };
   const baseKey = keys[step.code];
+
   return (
     <div>
       {step.items.map((item) => {
-        const checked = Object.keys(form[baseKey] || {}).includes(item.label);
-        const value = form[baseKey]?.[item.label] || "";
-        const freq = form[baseKey][item.label];
+        let checked = false;
+        let value = "";
+
+        // if (step.code === "PSHx") {
+        //   const surgeriesObj = form.surgeries || {};
+        //   checked = surgeriesObj.hasOwnProperty(item.label);
+        //   value = surgeriesObj[item.label] || "";
+        // } else {
+        checked = Object.keys(form[baseKey] || {}).includes(item.label);
+        value = form[baseKey]?.[item.label] || "";
+        // }
+
+        const freq = form[baseKey]?.[item.label] || "";
 
         return (
           <div key={item.label} className="mb-3">
@@ -147,22 +160,37 @@ export function ChecklistSection({
               style={{ marginLeft: "150px" }}
             />
 
-            {/* PMHx → show textbox */}
-            {checked && step.code === "PMHx" && (
-              <input
-                type="text"
-                value={value}
-                onChange={(e) =>
-                  handleTextChange(baseKey, item.label, e.target.value)
-                }
-                placeholder="Enter details"
-                className="border px-2 py-1  mb-n5"
-                style={{ marginLeft: "10.9rem" }}
-              />
+            {/* PMHx & PSHx → show textbox */}
+            {checked && ["PMHx", "PSHx"].includes(step.code) && (
+              <div style={{ marginLeft: "10.9rem" }}>
+                <input
+                  type="text"
+                  value={value.split("-")[0] || ""}
+                  onChange={(e) =>
+                    handleTextChange(
+                      baseKey,
+                      item.label,
+                      "details",
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter details"
+                  className="border px-2 py-1 mb-1"
+                />
+
+                <MDBDatePicker
+                  valueDefault={value.split("-")[1] || new Date()}
+                  getValue={(val) =>
+                    handleTextChange(baseKey, item.label, "date", val)
+                  }
+                  className="mt-1"
+                  style={{ width: "10rem" }}
+                />
+              </div>
             )}
 
-            {/* PSHx → show frequency choices */}
-            {checked && step.code === "PSHx" && (
+            {/* socialHistory → show frequency choices */}
+            {checked && step.code === "socialHistory" && (
               <div style={{ marginLeft: "200px", marginTop: "4px" }}>
                 {frequencies.map((f) => (
                   <CheckboxRow
@@ -194,7 +222,6 @@ export function ObGyneSection({ step, form, handleCheck, handleNumber }) {
 
         return (
           <div key={item.label} className="mb-2">
-            {/* Checkbox row */}
             <CheckboxRow
               label={item.label}
               checked={isChecked}
@@ -202,7 +229,6 @@ export function ObGyneSection({ step, form, handleCheck, handleNumber }) {
               style={{ marginLeft: "150px" }}
             />
 
-            {/* Show children inputs only when Multigravida is active */}
             {item.label === "Multigravida" && isChecked && item.children && (
               <div className="grid grid-cols-2 gap-2 ml-6 mt-2">
                 {item.children.map((field) => (
