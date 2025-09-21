@@ -27,9 +27,22 @@ export default function Patient({ activePanels }) {
   const history = useHistory();
   const { consultation = {}, patient = {} } = appointment || {};
   const { vitals = { height: 0, weight: 0 } } = consultation || {};
-  const [feet, inches] = vitals?.height?.split("'").map(Number);
-  const meters = (feet * 12 + (inches || 0)) * 0.0254;
-  const bmi = (vitals.weight / meters ** 2).toFixed(2);
+
+  // --- Safe height parsing ---
+  let feet = 0,
+    inches = 0;
+
+  if (typeof vitals.height === "string" && vitals.height.includes("'")) {
+    [feet, inches] = vitals.height.split("'").map(Number);
+  } else if (typeof vitals.height === "number" && vitals.height > 0) {
+    // assume cm → convert to ft/in
+    const totalInches = vitals.height / 2.54;
+    feet = Math.floor(totalInches / 12);
+    inches = Math.round(totalInches % 12);
+  }
+
+  const meters = (feet * 12 + (inches || 0)) * 0.0254 || 0;
+  const bmi = meters > 0 ? (vitals.weight / meters ** 2).toFixed(2) : "N/A";
 
   const setPatient = (patient) => {
     Swal.fire({
@@ -56,10 +69,6 @@ export default function Patient({ activePanels }) {
         };
 
         dispatch(SAVE({ data: newAppt, token })).then((action) => {
-          const { payload } = action.payload;
-          // const newParams = new URLSearchParams(location.search);
-          // newParams.set("ehrId", newId); // add if missing, replace if exists
-          // history.replace(`${location.pathname}?${newParams.toString()}`);
           Swal.fire({
             title: "Appointment Created!",
             text: `Successfully created an appointment for ${fullName(
@@ -107,13 +116,16 @@ export default function Patient({ activePanels }) {
           {patient?.isMale ? "Male" : "Female"}
         </span>
       </div>
+
       <div
         className="checkup-data-patient-HWBMI"
         style={{ backgroundColor: patient?.isMale ? "#007bff" : "#e83e8c" }}
       >
         <div>
           <span>Height</span>
-          <span>{vitals.height} ft</span>
+          <span>
+            {feet}'{inches}"
+          </span>
         </div>
         <div>
           <span>Weight</span>
@@ -124,6 +136,7 @@ export default function Patient({ activePanels }) {
           <span>{bmi}</span>
         </div>
       </div>
+
       <div
         className="checkup-data-patient-address"
         style={{
@@ -138,6 +151,7 @@ export default function Patient({ activePanels }) {
           {fullAddress(patient?.address)}
         </span>
       </div>
+
       <div
         className="checkup-data-patient-reason"
         style={{
@@ -178,9 +192,6 @@ export default function Patient({ activePanels }) {
           keyForValue="value"
           keyForText="label"
           preValue={patient?.reasonForVisit}
-          // onChange={(value) =>
-          //   setPatientId({ ...patient, reasonForVisit: value })
-          // }
         />
       </div>
     </div>
