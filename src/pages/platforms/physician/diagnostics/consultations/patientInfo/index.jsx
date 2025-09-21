@@ -15,43 +15,63 @@ import "./style.css";
 import { MDBIcon } from "mdbreact";
 import Swal from "sweetalert2";
 import { SAVE } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { useState } from "react";
+import Register from "./register";
 
 export default function Patient({ activePanels }) {
   const { token, auth } = useSelector(({ auth }) => auth),
-    { isLoading, isSuccess } = useSelector(
-      ({ consultations }) => consultations
-    ),
-    { patient: appointment } = useSelector(({ appointments }) => appointments),
+    {
+      patient: appointment,
+      formSubmitted,
+      isSuccess,
+    } = useSelector(({ appointments }) => appointments),
     dispatch = useDispatch();
+  const [isRegister, setIsRegister] = useState(false),
+    [searchValue, setSearchValue] = useState({});
   const location = useLocation();
   const history = useHistory();
   const { consultation = {}, patient = {} } = appointment || {};
   const { vitals = { height: 0, weight: 0 } } = consultation || {};
-
-  // --- Safe height parsing ---
-  let feet = 0,
-    inches = 0;
-
-  if (typeof vitals.height === "string" && vitals.height.includes("'")) {
-    [feet, inches] = vitals.height.split("'").map(Number);
-  } else if (typeof vitals.height === "number" && vitals.height > 0) {
-    // assume cm → convert to ft/in
-    const totalInches = vitals.height / 2.54;
-    feet = Math.floor(totalInches / 12);
-    inches = Math.round(totalInches % 12);
-  }
-
-  const meters = (feet * 12 + (inches || 0)) * 0.0254 || 0;
-  const bmi = meters > 0 ? (vitals.weight / meters ** 2).toFixed(2) : "N/A";
+  const [feet, inches] = String(vitals?.height)?.split("'").map(Number);
+  const meters = (feet * 12 + (inches || 0)) * 0.0254;
+  const rawBmi = vitals.weight / meters ** 2;
+  const bmi = Number.isFinite(rawBmi) ? rawBmi.toFixed(2) : 0;
 
   const setPatient = (patient) => {
     Swal.fire({
       title: "Create Appointment",
-      text: `You selected ${fullName(
-        patient.fullName
-      )}. Do you want to create a new appointment for schedule ${
-        appointment.sched
-      }?`,
+      html: `
+  <div style="text-align:left; line-height:1.5; font-size:15px;"  class="text-center">
+    <p style="margin:0 0 12px 0;">
+      You have selected 
+      <span style="
+        display:inline-block; 
+        padding:3px 8px; 
+        margin-left:6px;
+        font-weight:700; 
+        color:#1d4ed8; 
+        background:#e0ebff; 
+        border-radius:6px;">
+        ${fullName(patient.fullName)}
+      </span>
+    </p>
+
+    <p style="margin:0; font-size:15px;">
+      Do you want to create a new appointment for the schedule on
+      <span style="
+        display:inline-block; 
+        padding:3px 8px; 
+        margin-left:6px;
+        font-weight:700; 
+        color:#047857; 
+        background:#dcfce7; 
+        border-radius:6px;">
+        ${appointment.sched ?? "<em>— no schedule —</em>"}
+      </span>
+      ?
+    </p>
+  </div>
+`,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes, create",
@@ -66,9 +86,14 @@ export default function Patient({ activePanels }) {
           sched: appointment.sched,
           qn: newqn,
           userId: auth._id,
+          status: "confirmed",
         };
 
         dispatch(SAVE({ data: newAppt, token })).then((action) => {
+          const { payload } = action.payload;
+          const newParams = new URLSearchParams(location.search);
+          newParams.set("ehrId", payload?._id); // add if missing, replace if exists
+          history.replace(`${location.pathname}?${newParams.toString()}`);
           Swal.fire({
             title: "Appointment Created!",
             text: `Successfully created an appointment for ${fullName(
@@ -106,9 +131,14 @@ export default function Patient({ activePanels }) {
           classNameTxt="checkup-data-patient-fullname"
           emptyLabel="Click here to select a Patient"
           user={{ patient, _id: patient?._id }}
+          hasRegister
           onSave={({ patient }) => setPatient(patient)}
           returnObj
-          formSubmitted={isLoading}
+          setRegister={(value) => {
+            setSearchValue(value);
+            setIsRegister(true);
+          }}
+          formSubmitted={formSubmitted}
           isSuccess={isSuccess}
         />
         <span className="checkup-data-patient-ageGender">
@@ -194,6 +224,11 @@ export default function Patient({ activePanels }) {
           preValue={patient?.reasonForVisit}
         />
       </div>
+      <Register
+        searchValue={searchValue}
+        show={isRegister}
+        toggle={() => setIsRegister(false)}
+      />
     </div>
   );
 }
