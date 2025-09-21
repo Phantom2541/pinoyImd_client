@@ -146,13 +146,16 @@ export default function Patient({ activePanels }) {
           {patient?.isMale ? "Male" : "Female"}
         </span>
       </div>
+
       <div
         className="checkup-data-patient-HWBMI"
         style={{ backgroundColor: patient?.isMale ? "#007bff" : "#e83e8c" }}
       >
         <div>
           <span>Height</span>
-          <span>{vitals.height} ft</span>
+          <span>
+            {feet}'{inches}"
+          </span>
         </div>
         <div>
           <span>Weight</span>
@@ -163,6 +166,7 @@ export default function Patient({ activePanels }) {
           <span>{bmi}</span>
         </div>
       </div>
+
       <div
         className="checkup-data-patient-address"
         style={{
@@ -177,6 +181,7 @@ export default function Patient({ activePanels }) {
           {fullAddress(patient?.address)}
         </span>
       </div>
+
       <div
         className="checkup-data-patient-reason"
         style={{
@@ -217,9 +222,6 @@ export default function Patient({ activePanels }) {
           keyForValue="value"
           keyForText="label"
           preValue={patient?.reasonForVisit}
-          // onChange={(value) =>
-          //   setPatientId({ ...patient, reasonForVisit: value })
-          // }
         />
       </div>
       <Register
