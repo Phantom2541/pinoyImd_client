@@ -15,6 +15,7 @@ const initialState = {
   diagnostic: {}, //for storing selected forms
   roster: [],
   collections: [],
+  cluster: [], //for eHR pagination data UI
   scheds: [],
   filtered: [],
   physicians: [],
@@ -47,6 +48,24 @@ export const BROWSE = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const GET_BY_SCHED = createAsyncThunk(
+  `${url}/getBySched`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/getBySched`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -329,6 +348,9 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetCLUSTER: (state, { payload }) => {
+      state.cluster = payload;
+    },
     SetRESULT: (state, { payload }) => {
       state.selected = payload;
       state.showResultModal = true;
@@ -405,6 +427,24 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(GET_BY_SCHED.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+
+      .addCase(GET_BY_SCHED.fulfilled, (state, action) => {
+        const { success, payload = [] } = action.payload;
+        state.cluster = payload;
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(GET_BY_SCHED.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -652,6 +692,7 @@ export const {
   SetTRANSAC,
   SetDIAGNOSTIC,
   SetFILTERED,
+  SetCLUSTER,
   SetRESULT,
   SetPHYSICIAN,
   SetSCHED,

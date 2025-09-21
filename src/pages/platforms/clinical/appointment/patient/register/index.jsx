@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { useSelector } from "react-redux";
-import { MDBBtn, MDBIcon, MDBInput } from "mdbreact";
+import { MDBBtn, MDBCol, MDBIcon, MDBInput } from "mdbreact";
 import {
   generateEmail,
   getAge,
@@ -9,6 +9,7 @@ import {
 } from "../../../../../../services/utilities";
 import { Privileges, Suffixes } from "../../../../../../services/fakeDb";
 import AddressSelect from "../../../../../../components/searchables/addressSelect";
+import Profile from "./profile";
 const Register = ({ form, setForm }) => {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const handleChange = (key, value) =>
@@ -21,8 +22,6 @@ const Register = ({ form, setForm }) => {
     }));
   }, [activePlatform, setForm]);
 
-  console.log("form", form);
-
   const {
     fullName = {},
     dob,
@@ -33,18 +32,21 @@ const Register = ({ form, setForm }) => {
     email,
   } = form?.patient || {};
   return (
-    <>
+    <MDBCol>
       <MDBBtn
-        className="float-right px-2  mt-n3 ml-n5 py-1 zIndex-2 "
+        className="float-right  "
         size="sm"
         color="danger"
-        rounded
+        style={{ height: "30px", width: "30px" }}
+        floating
         onClick={() => setForm({ ...form, isRegister: false })}
         title="Search again..."
       >
-        <MDBIcon icon="times" style={{ fontSize: "12px" }} />
+        <MDBIcon icon="times" className="mt-n1" />
       </MDBBtn>
-      <div className="patient-personal-container mt-2">
+      <Profile setForm={setForm} form={form} />
+
+      <div className="patient-personal-container mt-3">
         <div className="patient-personal-info" data-title="Fullname">
           <div className="patient-form">
             <span>Last Name</span>
@@ -218,7 +220,7 @@ const Register = ({ form, setForm }) => {
         onChange={({ target }) => handleChange("email", target.value)}
         value={email || generateEmail(form.patient)}
       />
-    </>
+    </MDBCol>
   );
 };
 

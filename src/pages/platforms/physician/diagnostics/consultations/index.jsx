@@ -15,10 +15,17 @@ import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { GET_PATIENT } from "../../../../../services/redux/slices/diagnostics/clinic/consultations";
-import { FIND as GET_APPOINTMENT } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  FIND as GET_APPOINTMENT,
+  GET_BY_SCHED,
+  SetCLUSTER,
+} from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function Consultations() {
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { token } = useSelector(({ auth }) => auth);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
@@ -40,6 +47,26 @@ export default function Consultations() {
       })
     );
   }, [ehrId, token, dispatch]);
+
+  useEffect(() => {
+    if (appointment?._id) {
+      const { clinic, sched } = appointment;
+      const ls = localStorage.getItem(`appointment-${clinic}-${sched}`);
+      if (ls) {
+        dispatch(SetCLUSTER(JSON.parse(ls)));
+      } else {
+        dispatch(
+          GET_BY_SCHED({
+            token,
+            key: { clinic, sched },
+          })
+        ).then((action) => {
+          const { payload } = action.payload;
+          dispatch(SetCLUSTER(payload));
+        });
+      }
+    }
+  }, [appointment, dispatch, token]);
 
   const buttonRefs = {
     request: useRef(),

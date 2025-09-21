@@ -23,6 +23,43 @@
   transform: scale(0.95);
 }
 
+.checkup-data-toolkit-pagination-item {
+  display: inline-block;
+  border-radius: 4px;
+  border: none;
+  background-color: transparent;
+  /* color: #ffffff; */
+  text-align: center;
+  font-size: 1rem;
+  width: 25px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.checkup-data-toolkit-pagination-item:hover {
+  background-color: #3d405b;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1rem;
+  width: 25px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.checkup-data-toolkit-pagination-item.active {
+  background-color: #3d405b;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1rem;
+  width: 25px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
 /* Base button design galing sa iyo */
 .checkup-data-toolkit-button {
   display: inline-block;

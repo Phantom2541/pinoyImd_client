@@ -16,12 +16,10 @@ import { SAVE } from "../../../../../../../services/redux/slices/diagnostics/cli
 import Spinner from "../../../../../../../components/spinner";
 
 export default function Register({ searchValue, show, toggle = () => {} }) {
-  const { token } = useSelector(({ auth }) => auth);
-  const {
-    patient: appointment,
-    auth,
-    formSubmitted,
-  } = useSelector(({ appointments }) => appointments);
+  const { token, auth } = useSelector(({ auth }) => auth);
+  const { patient: appointment, formSubmitted } = useSelector(
+    ({ appointments }) => appointments
+  );
   const [form, setForm] = useState({ patient: {} });
   const dispatch = useDispatch();
   const history = useHistory();
@@ -35,7 +33,7 @@ export default function Register({ searchValue, show, toggle = () => {} }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newqn = parseFloat((appointment.qn + 0.1).toFixed(1));
+    const newqn = parseFloat((appointment?.qn + 0.1).toFixed(1));
     const newAppt = {
       patient: {
         ...form.patient,

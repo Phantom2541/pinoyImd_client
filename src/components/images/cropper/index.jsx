@@ -10,6 +10,7 @@ export default function ImageCropper({
   setIsShow = () => {},
   handleUpload = () => {},
   isUpload = false,
+  isStatic = false, //if true after the upload automatically close the modal
 }) {
   const [show, setShow] = useState(false),
     [img, setImg] = useState(null),
@@ -57,6 +58,7 @@ export default function ImageCropper({
         show={show}
         cropSize={cropSize}
         toggle={toggle}
+        isStatic={isStatic}
         img={img}
         aspect={aspect}
         ext={ext}
