@@ -39,7 +39,7 @@ export default function Consultations() {
         key: { _id: ehrId || "636d37e0187c30ab0f611ce4" },
       })
     );
-  }, [ehrId, token, dispatch, activePlatform]);
+  }, [ehrId, token, dispatch]);
 
   const buttonRefs = {
     request: useRef(),
