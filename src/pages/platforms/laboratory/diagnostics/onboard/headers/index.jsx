@@ -38,9 +38,9 @@ export default function Header() {
         BROWSE({
           key: {
             branchId: activePlatform?.branchId,
-            createdAt,
+            // createdAt,
             department: activePlatform?.department,
-            timezone,
+            // timezone,
           },
           token,
         })
