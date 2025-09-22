@@ -75,14 +75,22 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
       const { payload } = action.payload;
       const _cluster = [...cluster];
       const pIndex = _cluster.findIndex((p) => p._id === appointment?._id);
-      if (pIndex !== -1) {
-        _cluster[pIndex] = {
-          ..._cluster[pIndex],
-          consultation: payload,
-        };
-      }
+      const oldCases = _cluster[pIndex]?.cases || [];
+      const newCases = [payload, ...oldCases]; // create a new array
 
-      dispatch(SetPATIENT({ ...appointment, consultation: payload }));
+      _cluster[pIndex] = {
+        ..._cluster[pIndex],
+        cases: newCases,
+      };
+
+      // if (pIndex !== -1) {
+      //   _cluster[pIndex] = {
+      //     ..._cluster[pIndex],
+      //     consultation: payload,
+      //   };
+      // }
+
+      dispatch(SetPATIENT({ ...appointment, cases: newCases }));
       dispatch(SetCLUSTER(_cluster));
       toggle(payload);
     });

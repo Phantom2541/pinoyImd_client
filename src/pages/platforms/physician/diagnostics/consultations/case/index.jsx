@@ -6,6 +6,7 @@ import { Search } from "../../../../../../components/searchables";
 import Modal from "./modal";
 import { SetFILTERED } from "../../../../../../services/redux/slices/diagnostics/cases";
 import { capitalize } from "../../../../../../services/utilities";
+import { SetPATIENT } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function Case() {
   const { patient } = useSelector(({ consultations }) => consultations);
@@ -27,8 +28,8 @@ export default function Case() {
 
   const dropdownRef = useRef(null); // ref for dropdown container
 
-  const { consultation = {} } = appointment || {};
-  const { cases: caseCollections = [] } = consultation || {};
+  const { cases: caseCollections = [], consultation = {} } = appointment || {};
+  const { cases: selectedCases = [] } = consultation || {};
   useEffect(() => {
     // compare contents, not just reference
     setCases((prev) => {
@@ -40,21 +41,31 @@ export default function Case() {
   }, [caseCollections]);
 
   const toggleCase = (item) => {
-    const _cases = [...selected];
+    const _cases = [...selectedCases];
     const index = _cases.findIndex((val) => val._id === item._id);
     if (index > -1) {
       _cases.splice(index, 1);
     } else {
       _cases.push(item);
     }
-    setSelected(_cases);
+    dispatch(
+      SetPATIENT({
+        ...appointment,
+        consultation: { ...consultation, cases: _cases },
+      })
+    );
   };
 
   const removeCase = (item) => {
-    const _cases = [...selected];
+    const _cases = [...selectedCases];
     const index = _cases.findIndex((val) => val._id === item._id);
     _cases.splice(index, 1);
-    setSelected(_cases);
+    dispatch(
+      SetPATIENT({
+        ...appointment,
+        consultation: { ...consultation, cases: _cases },
+      })
+    );
   };
 
   // 🔹 close dropdown if clicked outside
@@ -132,7 +143,7 @@ export default function Case() {
               cases.map((item) => (
                 <button
                   className={`w-100 ${
-                    selected.some((val) => val._id === item._id)
+                    selectedCases.some((val) => val._id === item._id)
                       ? "selected"
                       : ""
                   } ${patient?.isMale ? "male" : "female"}`}
@@ -167,7 +178,7 @@ export default function Case() {
               <div className="checkup-data-skeleton-line"></div>
             </div>
           ))} */}
-          {selected.map((item) => (
+          {selectedCases.map((item) => (
             <div
               key={item}
               className={`checkup-data-toolkit-button-case-selected-item ${
