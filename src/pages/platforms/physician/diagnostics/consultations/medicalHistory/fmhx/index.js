@@ -1,6 +1,9 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { MDBBtn, MDBIcon } from "mdbreact";
 
 export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
+  console.log("FMHx rendered with:", familyHistory);
+
   const wrapperRef = useRef(null);
 
   // refs per row / box
@@ -13,7 +16,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   const mother = familyHistory.Mother || [];
   const father = familyHistory.Father || [];
 
-  // zipper style merge
+  // merge mother + father arrays (zipper style)
   function mergeAlternate(motherArr, fatherArr) {
     const rows = [];
     const usedMother = new Set();
@@ -54,6 +57,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
 
   const mergedRows = mergeAlternate(mother, father);
 
+  // measure positions for SVG lines
   const measure = () => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
@@ -66,30 +70,30 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
       if (!rowEl) return;
 
       const rowRect = rowEl.getBoundingClientRect();
-      const top = rowRect.top - wrapperRect.top + rowRect.height / 2;
+      const y = rowRect.top - wrapperRect.top + rowRect.height / 2;
 
       const mBox = m ? motherBoxRefs.current[idx] : null;
       const fBox = f ? fatherBoxRefs.current[idx] : null;
 
       if (mBox && fBox) {
-        // shared
+        // shared condition (mother + father)
         const mRect = mBox.getBoundingClientRect();
         const fRect = fBox.getBoundingClientRect();
-        const left = mRect.right - wrapperRect.left;
-        const right = fRect.left - wrapperRect.left;
-        if (right - left > 0) newLines.push({ top, left, right });
+        const startX = mRect.right - wrapperRect.left;
+        const endX = fRect.left - wrapperRect.left;
+        newLines.push({ x1: startX, y1: y, x2: endX, y2: y, type: "shared" });
       } else if (mBox && !fBox) {
-        // unique mother
+        // unique mother condition
         const mRect = mBox.getBoundingClientRect();
-        const left = mRect.right - wrapperRect.left;
-        const right = wrapperRect.width / 2;
-        if (right - left > 0) newLines.push({ top, left, right });
+        const startX = mRect.right - wrapperRect.left;
+        const endX = wrapperRect.width / 2;
+        newLines.push({ x1: startX, y1: y, x2: endX, y2: y, type: "unique" });
       } else if (!mBox && fBox) {
-        // unique father
+        // unique father condition
         const fRect = fBox.getBoundingClientRect();
-        const left = wrapperRect.width / 2;
-        const right = fRect.left - wrapperRect.left;
-        if (right - left > 0) newLines.push({ top, left, right });
+        const startX = wrapperRect.width / 2;
+        const endX = fRect.left - wrapperRect.left;
+        newLines.push({ x1: startX, y1: y, x2: endX, y2: y, type: "unique" });
       }
     });
 
@@ -114,6 +118,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
       if (ro) ro.disconnect();
       clearTimeout(t);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [familyHistory, mergedRows.length]);
 
   if (!familyHistory || (!mother.length && !father.length)) {
@@ -126,13 +131,21 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
 
   return (
     <div className="checkup-data-mh-container">
+      <MDBBtn color="success" size="sm">
+        <MDBIcon icon="plus" className="cursor-pointer" />
+      </MDBBtn>
       <div className="checkup-data-fmhx-container">
         <label className="checkup-data-fmhx-title">Family History</label>
         <div className="checkup-data-fmhx-header">
           <label>mother</label>
           <label>father</label>
         </div>
-        <div className="checkup-data-fmhx-wrapper" ref={wrapperRef}>
+
+        <div
+          className="checkup-data-fmhx-wrapper"
+          ref={wrapperRef}
+          style={{ position: "relative" }}
+        >
           {/* rows */}
           <div className="checkup-data-fmhx-rows">
             {mergedRows.map(([m, f], idx) => (
@@ -172,22 +185,47 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
             ))}
           </div>
 
-          {/* connector lines */}
-          {lines.map((ln, i) => {
-            const width = ln.right - ln.left;
-            return (
-              <div
-                key={i}
-                className="connector-line"
-                style={{
-                  top: `${ln.top}px`,
-                  left: `${ln.left}px`,
-                  width: `${width}px`,
-                  transform: "translateY(-50%)",
-                }}
-              />
-            );
-          })}
+          {/* SVG connectors */}
+          <svg
+            className="fmhx-svg"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+            }}
+          >
+            {lines.map((ln, i) => {
+              if (ln.type === "shared") {
+                // straight line for shared conditions
+                return (
+                  <line
+                    key={i}
+                    x1={ln.x1}
+                    y1={ln.y1}
+                    x2={ln.x2}
+                    y2={ln.y2}
+                    stroke="#666"
+                    strokeWidth="2"
+                  />
+                );
+              } else {
+                // curved line for unique conditions
+                const midX = (ln.x1 + ln.x2) / 2;
+                return (
+                  <path
+                    key={i}
+                    d={`M${ln.x1},${ln.y1} C${midX},${ln.y1} ${midX},${ln.y2} ${ln.x2},${ln.y2}`}
+                    stroke="#999"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                );
+              }
+            })}
+          </svg>
         </div>
       </div>
     </div>
