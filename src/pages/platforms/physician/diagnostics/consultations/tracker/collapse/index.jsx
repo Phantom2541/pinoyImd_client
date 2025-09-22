@@ -27,7 +27,7 @@ export default function TasksCollapse({
         isActive={isActive}
       />
       <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
-        <TaskBody task={task} />
+        <TaskBody task={task} isActive={isActive} />
       </MDBCollapse>
     </MDBCard>
   );

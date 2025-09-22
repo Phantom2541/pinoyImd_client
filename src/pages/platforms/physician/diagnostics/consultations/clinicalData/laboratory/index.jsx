@@ -2,12 +2,18 @@ import Tracker from "../../tracker";
 import { MDBCol, MDBRow } from "mdbreact";
 import { useState, useEffect } from "react";
 import Header from "../../../../../../../components/printout/task/laboratory/header";
-import { Banner } from "../../../../../../../services/utilities";
+import { Banner, Cloudinary } from "../../../../../../../services/utilities";
 import BodySwitcher from "../../../../../../../components/printout/task/laboratory/bodySwitcher";
 import Signatories from "../../../../../../../components/printout/task/laboratory/signatories";
 import "./printout.css";
 import "./style.css";
 import LabRadSkeleton from "../../skeleton/rablad";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  TRACKER,
+  SetPatient,
+} from "../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import ImgMagnifier from "../../../../../../../components/images/magnifier/imgMagnifier";
 
 function chunkArray(array, size) {
   const result = [];
@@ -68,9 +74,13 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
 };
 
 export default function Laboratory() {
+  const { token } = useSelector(({ auth }) => auth),
+    { patient: appointment } = useSelector(({ appointments }) => appointments),
+    { isLoading } = useSelector(({ validator }) => validator),
+    dispatch = useDispatch();
   const [task, setTask] = useState({ _id: "" });
   const [onloaded, setOnloaded] = useState(false);
-
+  const { patient } = appointment;
   // component
   useEffect(() => {
     const handler = () => {
@@ -80,11 +90,47 @@ export default function Laboratory() {
     window.addEventListener("taskPrintout-change", handler);
     return () => window.removeEventListener("taskPrintout-change", handler);
   }, []);
+
+  useEffect(() => {
+    dispatch(
+      TRACKER({
+        token,
+        key: {
+          customerId: patient._id,
+        },
+      })
+    );
+    dispatch(SetPatient(patient));
+  }, [patient, token, dispatch]);
+
+  if (isLoading) {
+    return <LabRadSkeleton />;
+  }
+
+  const { activeDiag = {} } = appointment || {};
+  const { isImg = false, section, imgId, date } = activeDiag;
   if (task?._id)
     return (
       <MDBRow className="h-100">
         <MDBCol md="10" className="p-1 h-100" style={{ overflow: "auto" }}>
-          <Printout task={task} onloaded={onloaded} setOnloaded={setOnloaded} />
+          {isImg ? (
+            <div
+              className="d-flex justify-content-center"
+              style={{ zoom: "70%" }}
+            >
+              <ImgMagnifier
+                src={`${Cloudinary.getEndpoint()}/${imgId}/users/${
+                  patient?.email
+                }/EHR/${section}_${date}.jpg`}
+              />
+            </div>
+          ) : (
+            <Printout
+              task={task}
+              onloaded={onloaded}
+              setOnloaded={setOnloaded}
+            />
+          )}
         </MDBCol>
         <MDBCol md="2" className="p-1">
           <Tracker />
@@ -93,10 +139,6 @@ export default function Laboratory() {
     );
 
   return (
-    // <>
-    //   <LabRadSkeleton />
-    // </>
-
     <MDBRow className="h-100">
       <MDBCol md="10" className="p-1">
         <div

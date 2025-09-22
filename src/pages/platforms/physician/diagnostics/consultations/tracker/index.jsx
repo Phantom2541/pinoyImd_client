@@ -18,20 +18,23 @@ import {
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import Body from "./body";
 export default function Tracker() {
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(
-      TRACKER({
-        token,
-        key: {
-          customerId: patient._id,
-        },
-      })
-    );
-    dispatch(SetPatient(patient));
-  }, [patient, token, dispatch]);
+  const { patient } = appointment || {};
+  // useEffect(() => {
+  //   dispatch(
+  //     TRACKER({
+  //       token,
+  //       key: {
+  //         customerId: patient._id,
+  //       },
+  //     })
+  //   );
+  //   dispatch(SetPatient(patient));
+  // }, [patient, token, dispatch]);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {

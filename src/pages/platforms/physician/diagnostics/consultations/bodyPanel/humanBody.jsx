@@ -2,10 +2,16 @@ import { useRef, useEffect, useState } from "react";
 import BODY from "./../../../../../../assets/checkup/humanBody.png";
 import History from "./history";
 import "./style.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import DiagHistory from "./diagHistory";
+import { SetPATIENT } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function HumanBody({ setSlide, slide }) {
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const dispatch = useDispatch();
+  const { patient } = appointment || {};
 
   const containerRef = useRef(null);
   const bodyRef = useRef(null);
@@ -163,9 +169,9 @@ export default function HumanBody({ setSlide, slide }) {
               >
                 {text}
               </button>
+              <History items={contentMap[text]} />
 
               {/* render the correct items for this label */}
-              <History items={contentMap[text]} />
             </div>
           ))}
       </div>
@@ -201,7 +207,13 @@ export default function HumanBody({ setSlide, slide }) {
           <div key={text} className="history-group">
             <button
               ref={(el) => (textRefs.current[text] = el)}
-              onClick={() => setSlide(slide === text ? "" : text)}
+              onClick={() => {
+                const isSameSelction = slide === text;
+                setSlide(isSameSelction ? "" : text);
+                if (isSameSelction) {
+                  dispatch(SetPATIENT({ ...appointment, activeDiag: {} }));
+                }
+              }}
               className={`${slide === text ? "active" : ""} ${
                 patient?.isMale ? "male" : "female"
               }`}
@@ -209,7 +221,11 @@ export default function HumanBody({ setSlide, slide }) {
               {text}
             </button>
 
-            <History items={contentMap[text]} />
+            {["Laboratory", "Radiology"].includes(text) ? (
+              <DiagHistory department={text} setSlide={setSlide} />
+            ) : (
+              <History items={contentMap[text]} />
+            )}
           </div>
         ))}
       </div>

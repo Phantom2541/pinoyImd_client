@@ -4,14 +4,25 @@ import { MDBTypography } from "mdbreact";
 import Collapse from "./collapse";
 
 export default function Body() {
-  const { collections, patient } = useSelector(({ validator }) => validator),
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
+    { collections, patient } = useSelector(({ validator }) => validator),
     [activeCollapse, setActiveCollapse] = useState(""),
     [patients, setPatients] = useState([]),
     [didHoverID, setDidHoverID] = useState(-1);
 
+  const { activeDiag = {} } = appointment || {};
+
   useEffect(() => {
     setPatients([...collections]);
   }, [collections]);
+
+  useEffect(() => {
+    if (!activeDiag.isImg && activeDiag?.dealId) {
+      setActiveCollapse(activeDiag.dealId);
+    }
+  }, [activeDiag]);
 
   if (!patient?._id)
     return (

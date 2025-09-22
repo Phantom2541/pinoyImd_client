@@ -14,7 +14,7 @@ const toolsMap = {
 
 const order = ["laboratory", "radiology", "vital"];
 
-export default function ToolsSwitcher({ task, ...props }) {
+export default function ToolsSwitcher({ task }) {
   const { patient: appointment } = useSelector(
     ({ appointments }) => appointments
   );
@@ -22,16 +22,7 @@ export default function ToolsSwitcher({ task, ...props }) {
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState("left");
   const { consultation = {} } = appointment || {};
-  const vitalSigns = {
-    temperature: "36.6°C",
-    pulse: "80 bpm",
-    bloodPressure: "120/80 mmHg",
-    respiration: "18 breaths/min",
-    weight: 70,
-    height: 1.75,
-  };
 
-  console.log("consultation", consultation?.vitals, appointment);
   useEffect(() => {
     if (!task || task === current) return;
 

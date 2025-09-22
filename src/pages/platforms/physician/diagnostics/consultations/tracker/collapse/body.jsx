@@ -1,9 +1,15 @@
 import { MDBCardBody } from "mdbreact";
 import Record from "./record";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
-export default function TaskBody({ task }) {
+export default function TaskBody({ task, isActive }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const [activeSection, setActiveSection] = useState("");
+  const { activeDiag = {} } = appointment || {};
   const {
     diagnostic = {},
     _id,
@@ -16,6 +22,11 @@ export default function TaskBody({ task }) {
   } = task;
   const referral = physicianId?.fullName?.lname || physicianSTR || "";
 
+  useEffect(() => {
+    if (!activeDiag?.isImg && activeDiag?.dealId) {
+      setActiveSection(activeDiag?.section);
+    }
+  }, [activeDiag]);
   return (
     <MDBCardBody className=" w-100 m-0 p-0" key={_id}>
       {Object.entries(diagnostic || {})?.map(([key, task], index) => {
@@ -38,6 +49,8 @@ export default function TaskBody({ task }) {
               <Record
                 _key={`subform-${i}`}
                 form={key}
+                isSelected={activeSection === key && i === 0 && isActive}
+                setActiveSection={setActiveSection}
                 branch={branch}
                 obj={_t || {}}
                 customer={customer}
@@ -51,6 +64,8 @@ export default function TaskBody({ task }) {
             _key={`form-${index}`}
             form={key}
             branch={branch}
+            isSelected={activeSection === key && isActive}
+            setActiveSection={setActiveSection}
             obj={_task || {}}
             customer={customer}
             index={index + 1}
