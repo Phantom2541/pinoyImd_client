@@ -22,9 +22,7 @@ import {
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
-  const { patient: appointment } = useSelector(
-    ({ appointments }) => appointments
-  );
+  const { isLoading } = useSelector(({ appointments }) => appointments);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
@@ -82,11 +80,9 @@ export default function Consultations() {
     });
   };
 
-  return (
-    // <>
-    //   <Skeleton />
-    // </>
+  if (isLoading) return <Skeleton />;
 
+  return (
     <div className="checkup-data-container">
       <Body />
       <Patient activePanels={activePanels} />

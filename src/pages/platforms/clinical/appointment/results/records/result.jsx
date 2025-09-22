@@ -2,9 +2,12 @@ import { MDBBadge } from "mdbreact";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { useDispatch, useSelector } from "react-redux";
 import { SetDIAGNOSTIC } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { getDepartment } from "../../../../../../services/utilities";
 
 const Result = ({ form: formTxt, index, obj }) => {
-  const { diagnostic } = useSelector(({ appointments }) => appointments);
+  const { diagnostic, selected } = useSelector(
+    ({ appointments }) => appointments
+  );
   const dispatch = useDispatch();
   const { packages, dealId } = obj;
 
@@ -12,7 +15,10 @@ const Result = ({ form: formTxt, index, obj }) => {
     ? obj.packages
     : Object.keys(packages || {}).map(Number);
 
-  const form = Templates.getComponentIndex(formTxt);
+  const { department: dept = "" } = selected;
+  const department = getDepartment(dept);
+
+  const form = Templates.getComponentIndex(formTxt, department);
 
   const handleCheck = () => {
     const _diagnostic = { ...diagnostic };

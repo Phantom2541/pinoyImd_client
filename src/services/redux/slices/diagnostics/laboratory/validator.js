@@ -286,6 +286,7 @@ export const reduxSlice = createSlice({
       state.task = task;
       state.showModal = true;
     },
+
     SetWorkArea: (state, { payload }) => {
       state.work = payload;
       state.showWorkArea = true;

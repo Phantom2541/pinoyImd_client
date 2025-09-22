@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetPATIENT } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { Services } from "../../../../../../../services/fakeDb";
 
 export default function CollapseTable({
   _key: key,
@@ -19,17 +20,15 @@ export default function CollapseTable({
   const { collections } = useSelector(({ preferences }) => preferences);
   const dispatch = useDispatch();
 
-  const handleLabPrint = useCallback(
+  const { activeDiag = {} } = appointment || {};
+
+  const handleResult = useCallback(
     (_obj) => {
-      const task = formattedTask(_obj);
-      const services = collections.filter(({ id }) =>
-        task.services.includes(id)
-      );
-      const taskData = { ...task, services };
-
-      // I-save sa localStorage
-      localStorage.setItem("taskPrintout", JSON.stringify(taskData));
-
+      if (activeDiag?.dept === "Laboratory") {
+        Laboratory(_obj);
+      } else {
+        Radiology(_obj);
+      }
       // Dispatch event para marinig sa ibang component
       window.dispatchEvent(new Event("taskPrintout-change"));
       setActiveSection("");
@@ -41,14 +40,30 @@ export default function CollapseTable({
         })
       );
     },
-    [collections] // ilagay sa dependencies ang collections dahil ginagamit sa loob ng function
+    //eslint-disable-next-line
+    [collections, activeDiag]
   );
 
   useEffect(() => {
     if (isSelected && !isLoading) {
-      handleLabPrint(obj);
+      handleResult(obj);
     }
-  }, [isSelected, isLoading, handleLabPrint, obj]);
+  }, [isSelected, isLoading, handleResult, obj]);
+
+  const Radiology = (_obj) => {
+    const task = formattedTask(_obj);
+    const services = Services.find(task.services);
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+  };
+
+  const Laboratory = (_obj) => {
+    const task = formattedTask(_obj);
+    const services = collections.filter(({ id }) => task.services.includes(id));
+    const taskData = { ...task, services };
+
+    // I-save sa localStorage
+    localStorage.setItem("taskPrintout", JSON.stringify(taskData));
+  };
 
   const formattedTask = (_obj) => {
     const {
@@ -98,7 +113,7 @@ export default function CollapseTable({
       <div className="checkup-data-tracker-item-container" key={key}>
         <span
           className="checkup-data-tracker-item"
-          onClick={() => handleLabPrint(obj)}
+          onClick={() => handleResult(obj)}
         >
           {form}
         </span>
