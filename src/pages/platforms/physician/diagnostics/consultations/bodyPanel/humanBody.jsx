@@ -101,7 +101,8 @@ export default function HumanBody({ setSlide, slide }) {
       window.removeEventListener("scroll", update, true);
       if (bodyRef.current) bodyRef.current.removeEventListener("load", update);
     };
-  }, []);
+    // eslint-disable-next-line
+  }, [patient]);
 
   return (
     <div

@@ -23,15 +23,22 @@ export default function TaskBody({ task, isActive }) {
   const referral = physicianId?.fullName?.lname || physicianSTR || "";
 
   useEffect(() => {
-    if (!activeDiag?.isImg && activeDiag?.dealId) {
+    if (!activeDiag?.isImg) {
       setActiveSection(activeDiag?.section);
     }
-  }, [activeDiag]);
+  }, [activeDiag?.section, activeDiag?.isImg]);
   return (
     <MDBCardBody className=" w-100 m-0 p-0" key={_id}>
       {Object.entries(diagnostic || {})?.map(([key, task], index) => {
         const isEmpty = !task || (Array.isArray(task) && task.length === 0);
-        const _task = { ...task, category, source, referral, _id };
+        const _task = {
+          ...task,
+          category,
+          source,
+          referral,
+          _id,
+          identity: _id,
+        };
         if (isEmpty && activePlatform.department === "Laboratory") {
           return (
             <tr key={`empty-${index}`}>
@@ -44,7 +51,14 @@ export default function TaskBody({ task, isActive }) {
           ["miscellaneous", "xray", "ultrasound"].includes(key.toLowerCase())
         ) {
           return task.map((t, i) => {
-            const _t = { ...t, category, source, referral, dealId: _id };
+            const _t = {
+              ...t,
+              category,
+              source,
+              referral,
+              dealId: _id,
+              identity: _id,
+            };
             return (
               <Record
                 _key={`subform-${i}`}

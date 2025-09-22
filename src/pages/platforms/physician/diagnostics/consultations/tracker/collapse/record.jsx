@@ -36,13 +36,18 @@ export default function CollapseTable({
       dispatch(
         SetPATIENT({
           ...appointment,
-          activeDiag: {},
+          activeDiag:
+            obj?.identity === activeDiag?.dealId
+              ? { ...activeDiag, isImg: false }
+              : {},
         })
       );
     },
     //eslint-disable-next-line
     [collections, activeDiag]
   );
+
+  console.log("isSelected", isSelected);
 
   useEffect(() => {
     if (isSelected && !isLoading) {

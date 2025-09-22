@@ -10,7 +10,7 @@ import Clearance from "./note/clearance";
 import RequestForm from "./note/forms";
 import Prescription from "./note/prescription";
 import Toolkit from "./toolkit";
-
+import Skeleton from "./skeleton/main";
 import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -42,20 +42,24 @@ export default function Consultations() {
         token,
         key: { _id: ehrId || "636d37e0187c30ab0f611ce4" },
       })
-    ).then((action) => {
-      const { payload } = action.payload;
-      const { clinic, sched } = payload;
-      dispatch(
-        GET_BY_SCHED({
-          token,
-          key: { clinic, sched },
-        })
-      ).then((action) => {
-        const { payload } = action?.payload;
+    )
+      .then((action) => {
+        const { payload } = action.payload;
+        const { clinic, sched } = payload;
+        dispatch(
+          GET_BY_SCHED({
+            token,
+            key: { clinic, sched },
+          })
+        ).then((action) => {
+          const { payload } = action?.payload;
 
-        dispatch(SetCLUSTER(payload));
+          dispatch(SetCLUSTER(payload));
+        });
+      })
+      .catch((error) => {
+        console.log("error", error.message);
       });
-    });
     // eslint-disable-next-line
   }, [token, dispatch]);
 
@@ -80,7 +84,7 @@ export default function Consultations() {
     });
   };
 
-  if (isLoading) return <Skeleton />;
+  if (isLoading || !ehrId) return <Skeleton ehrId={ehrId} />;
 
   return (
     <div className="checkup-data-container">

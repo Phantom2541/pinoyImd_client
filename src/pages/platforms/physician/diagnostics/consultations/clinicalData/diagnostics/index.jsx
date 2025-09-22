@@ -89,6 +89,7 @@ export default function Diagnostics({ task: department }) {
 
   const Printout = resultMap[department];
   const haveRecords = collections.length > 0;
+  console.log("isImg", isImg, section, activeDiag);
   if (task?._id || (isImg && section))
     return (
       <MDBRow className="h-100">

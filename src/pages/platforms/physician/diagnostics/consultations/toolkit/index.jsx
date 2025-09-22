@@ -58,10 +58,16 @@ export default function Toolkit({ activePanels }) {
     dispatch(SetPATIENT(_appointment));
   };
 
+  const resetResultForm = () => {
+    localStorage.removeItem("taskPrintout");
+    window.dispatchEvent(new Event("taskPrintout-change"));
+  };
+
   const handlePrev = () => {
     if (activeQn === -1) return;
     const qn = utils.findNextQn(activeQn, -1, cluster);
     if (qn !== null) handleSetQN(qn);
+    resetResultForm();
   };
 
   const handleNext = () => {
@@ -69,6 +75,7 @@ export default function Toolkit({ activePanels }) {
     const qn = utils.findNextQn(activeQn, +1, cluster);
 
     if (qn !== null) handleSetQN(qn);
+    resetResultForm();
   };
 
   const handleDone = () => {
