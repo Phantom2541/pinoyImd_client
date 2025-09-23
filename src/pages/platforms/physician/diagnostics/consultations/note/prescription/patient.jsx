@@ -7,6 +7,7 @@ export default function Patient() {
     ({ appointments }) => appointments
   );
   const { patient, consultation = {} } = appointment;
+  const { vitals = {} } = consultation || {};
   const { prescription = {} } = consultation || {};
   const dispatch = useDispatch();
 
@@ -49,7 +50,10 @@ export default function Patient() {
         </div>
         <div className="checkup-data-prescription-card-input">
           <label>Weight:</label>
-          <input type="text" value="85 kg" />
+          <input
+            type="text"
+            value={vitals?.weight ? `${vitals?.weight} kg` : ""}
+          />
         </div>
       </div>
       <div className="checkup-data-prescription-card-patient-info-row">
