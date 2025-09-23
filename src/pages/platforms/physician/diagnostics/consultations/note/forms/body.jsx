@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import EditableService from "../../../../../../../components/customizable/searchServices";
 import sectionsConfig from "./data.json";
 import { useDispatch, useSelector } from "react-redux";

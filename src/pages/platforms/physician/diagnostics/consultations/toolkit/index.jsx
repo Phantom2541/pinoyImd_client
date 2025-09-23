@@ -10,6 +10,7 @@ import {
   SetPATIENT,
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import Swal from "sweetalert2";
+import { fullName } from "../../../../../../services/utilities";
 export default function Toolkit({ activePanels }) {
   const { token } = useSelector(({ auth }) => auth);
   const {
@@ -101,16 +102,38 @@ export default function Toolkit({ activePanels }) {
         allowOutsideClick: false,
       });
     }
-    dispatch(
-      DONE({
-        token,
-        data: {
-          status: "done",
-          ...appointment,
-          consultation: { ...consultation, cases: casesIds },
-        },
-      })
-    );
+    Swal.fire({
+      title: `Are you sure?`,
+      html: `
+      <div style="font-size: 1.1rem; line-height: 1.5; text-align: center;">
+        You are about to mark <b>${
+          fullName(appointment?.patient?.fullName) || "this patient"
+        }</b> as <b>done</b>.
+        <br/>
+        This action cannot be undone.
+      </div>
+    `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, mark as done",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#10b981", // green
+      cancelButtonColor: "#ef4444", // red
+      focusCancel: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          DONE({
+            token,
+            data: {
+              status: "done",
+              ...appointment,
+              consultation: { ...consultation, cases: casesIds },
+            },
+          })
+        );
+      }
+    });
   };
 
   const disabledPrev = cluster[0]?.qn === activeQn;
