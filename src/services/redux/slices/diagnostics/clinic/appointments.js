@@ -296,16 +296,22 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     setShowModalEhr: (state, { payload }) => {
+      console.log("showModalEhr payload", payload);
+
       const {
         familyHistory = {},
         socialHistory = {},
         conditions = {},
+        surgeries = {},
+        obGyneHistory = {},
       } = payload || {};
 
       const ehr = {
         familyHistory,
         habits: socialHistory?.habits || {},
         conditions,
+        surgeries,
+        obGyneHistory,
         patient: payload?.patient,
       };
       state.selected = ehr;
