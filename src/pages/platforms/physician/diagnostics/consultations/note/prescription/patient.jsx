@@ -2,8 +2,10 @@ import { useSelector } from "react-redux";
 import { fullName, getAge } from "../../../../../../../services/utilities";
 
 export default function Patient() {
-  const { patient } = useSelector(({ consultations }) => consultations);
-  console.log("here patient", patient);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { patient } = appointment;
 
   const today = new Date();
 

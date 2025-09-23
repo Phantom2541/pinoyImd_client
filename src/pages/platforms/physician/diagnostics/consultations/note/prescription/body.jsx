@@ -1,5 +1,5 @@
 import { MDBIcon } from "mdbreact";
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import Signature from "./../../../../../../../assets/templateSampleSignature.png";
 
 export default function Body() {

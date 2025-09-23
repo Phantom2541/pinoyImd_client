@@ -8,7 +8,10 @@ import {
 
 const Header = () => {
   const { activePlatform = {}, auth = {} } = useSelector(({ auth }) => auth);
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { patient } = appointment;
   const { fullName: name, dob, isMale, mobile, address } = patient || {};
 
   const companyName = activePlatform?.branch?.companyId?.name || "";

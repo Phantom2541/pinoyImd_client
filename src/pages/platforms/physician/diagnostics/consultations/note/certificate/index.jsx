@@ -26,9 +26,11 @@ export default function MedicalCertificate({
     width: 700,
     height: 530,
   });
-  const { patient } = useSelector(({ consultations }) => consultations),
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
-    { fullName: name, isMale, dob, address, createdAt } = patient;
+    { fullName: name, isMale, dob, address } = appointment?.patient || {};
   const logoURL =
     `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
       activePlatform.branch.companyId.name
