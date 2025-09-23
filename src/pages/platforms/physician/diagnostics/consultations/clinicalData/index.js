@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import Laboratory from "./laboratory";
-import Radiology from "./radiology";
+import Diagnostics from "./diagnostics";
 import Vital from "./vital";
 import { useSelector } from "react-redux";
 
 const Blank = ({ task }) => <div>{task} is not working</div>;
 
 const toolsMap = {
-  laboratory: Laboratory,
-  radiology: Radiology,
+  laboratory: Diagnostics,
+  radiology: Diagnostics,
   vital: Vital,
 };
 

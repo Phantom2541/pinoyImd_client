@@ -21,6 +21,7 @@ import {
   UPDATE,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
+import Spinner from "../../../../../components/spinner";
 
 export default function Modal({
   show,
@@ -31,7 +32,7 @@ export default function Modal({
   willCreate,
   selected,
 }) {
-  const { isLoading } = useSelector(({ preferences }) => preferences),
+  const { formSubmitted } = useSelector(({ preferences }) => preferences),
     [form, setForm] = useState({
       lo: 0,
       hi: 0,
@@ -74,8 +75,6 @@ export default function Modal({
     });
 
   const handleQuery = () => {
-    toggle();
-
     if (willCreate)
       return dispatch(
         SAVE({
@@ -87,14 +86,14 @@ export default function Modal({
             userId: auth._id,
           },
         })
-      );
+      ).then(() => toggle());
 
     dispatch(
       UPDATE({
         token,
         data: form,
       })
-    );
+    ).then(() => toggle());
   };
 
   const validateDevelopment = () => {
@@ -208,7 +207,7 @@ export default function Modal({
             <MDBCol>
               <MDBInput
                 required
-                value={snug}
+                value={String(snug) || ""}
                 onChange={(e) => handleChange("snug", Number(e.target.value))}
                 type="number"
                 label="Minimum Allowable Value"
@@ -223,7 +222,7 @@ export default function Modal({
             <MDBCol>
               <MDBInput
                 required
-                value={lo}
+                value={String(lo) || ""}
                 onChange={(e) => handleChange("lo", Number(e.target.value))}
                 type="number"
                 label="Normal Range (Min)"
@@ -232,7 +231,7 @@ export default function Modal({
             <MDBCol>
               <MDBInput
                 required
-                value={hi}
+                value={String(hi) || ""}
                 onChange={(e) => handleChange("hi", Number(e.target.value))}
                 type="number"
                 label="Normal Range (Max)"
@@ -254,7 +253,7 @@ export default function Modal({
           <MDBRow className="mb-0">
             <MDBCol>
               <MDBInput
-                value={warn}
+                value={String(warn) || ""}
                 onChange={(e) => handleChange("warn", Number(e.target.value))}
                 required
                 type="number"
@@ -263,7 +262,7 @@ export default function Modal({
             </MDBCol>
             <MDBCol>
               <MDBInput
-                value={alert}
+                value={String(alert) || ""}
                 onChange={(e) => handleChange("alert", Number(e.target.value))}
                 required
                 type="number"
@@ -272,7 +271,7 @@ export default function Modal({
             </MDBCol>
             <MDBCol>
               <MDBInput
-                value={critical}
+                value={String(critical) || ""}
                 onChange={(e) =>
                   handleChange("critical", Number(e.target.value))
                 }
@@ -285,12 +284,13 @@ export default function Modal({
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              {willCreate ? "submit" : "update"}
+              {willCreate ? "submit" : "update"}{" "}
+              <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
           </div>
         </form>

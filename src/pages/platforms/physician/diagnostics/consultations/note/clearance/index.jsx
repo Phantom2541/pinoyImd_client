@@ -19,19 +19,16 @@ const certificateData = {
   endDate: "August 21, 2025",
 };
 
-export default function Clearance({
-  active,
-  buttonRefs,
-
-  togglePanel,
-}) {
+export default function Clearance({ active, buttonRefs, togglePanel }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {
     width: 700,
     height: 530,
   });
-  const { patient } = useSelector(({ consultations }) => consultations),
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
-    { fullName: name, isMale, dob, address } = patient;
+    { fullName: name, isMale, dob, address } = appointment?.patient || {};
   const logoURL =
     `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
       activePlatform.branch.companyId.name

@@ -13,14 +13,17 @@ export default function DiagHistory({ department = "", setSlide = () => {} }) {
 
   useEffect(() => {
     const _sections = [];
-    const dept = getDepartment(department)?.toLowerCase();
-    const activeDept = appointment?.[dept] || {};
+    const dept = getDepartment(department);
+    const activeDept = appointment?.[dept?.toLowerCase()] || {};
     const { images = [], ...rest } = activeDept || {};
     Object.entries(rest).forEach(([key, secs]) => {
       if (secs?.length > 0) {
         secs.forEach((sec) => {
+          console.log("sec", sec);
+
           _sections.push({
-            section: Templates.getComponentName(sec),
+            dept,
+            section: Templates.getComponentName(sec, dept),
             isImg: false,
             dealId: key,
           });
@@ -32,12 +35,15 @@ export default function DiagHistory({ department = "", setSlide = () => {} }) {
         _sections.push({
           ...img,
           isImg: true,
+          dept,
         });
       });
     }
     setSections(_sections);
   }, [appointment]);
   if (!sections || sections.length === 0) return null;
+
+  console.log("sections", sections);
 
   const { patient, activeDiag } = appointment || {};
 

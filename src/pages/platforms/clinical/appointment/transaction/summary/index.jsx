@@ -22,7 +22,7 @@ const Summary = () => {
     dispatch = useDispatch();
 
   const { patient } = selected;
-
+  console.log("selected", selected);
   const handleSubmit = (e) => {
     e.preventDefault();
     const items = cart.map((item) => {
@@ -41,6 +41,7 @@ const Summary = () => {
       userId: auth._id,
       patient: patient._id,
       appointment: selected._id,
+      consultation: selected?.consultation?._id,
       payment,
       discount,
       cash,

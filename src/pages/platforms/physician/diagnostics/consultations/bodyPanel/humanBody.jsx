@@ -5,6 +5,8 @@ import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import DiagHistory from "./diagHistory";
 import { SetPATIENT } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { getDepartment } from "../../../../../../services/utilities";
+import { Templates } from "../../../../../../services/fakeDb";
 
 export default function HumanBody({ setSlide, slide }) {
   const { patient: appointment } = useSelector(
@@ -101,7 +103,41 @@ export default function HumanBody({ setSlide, slide }) {
       window.removeEventListener("scroll", update, true);
       if (bodyRef.current) bodyRef.current.removeEventListener("load", update);
     };
-  }, []);
+    // eslint-disable-next-line
+  }, [patient]);
+
+  useEffect(() => {
+    setSlide("");
+    // eslint-disable-next-line
+  }, [appointment?._id]);
+
+  const handleDefaultResult = (dept) => {
+    const department = getDepartment(dept);
+    const { images = [], ...rest } =
+      appointment[department.toLowerCase()] || {};
+
+    if (!images.length && !Object.keys(rest).length) return false;
+    var activeDiag = {};
+    const results = Object.keys(rest);
+    if (results.length > 0) {
+      const keyRest = results[0];
+      const firstRest = rest[keyRest];
+      activeDiag = {
+        dept: department,
+        dealId: keyRest,
+        section: Templates.getComponentName(firstRest[0], department),
+        isImg: false,
+      };
+    } else {
+      activeDiag = {
+        ...images[0],
+        dept: department,
+        isImg: true,
+      };
+    }
+
+    dispatch(SetPATIENT({ ...appointment, activeDiag }));
+  };
 
   return (
     <div
@@ -212,6 +248,12 @@ export default function HumanBody({ setSlide, slide }) {
                 setSlide(isSameSelction ? "" : text);
                 if (isSameSelction) {
                   dispatch(SetPATIENT({ ...appointment, activeDiag: {} }));
+                } else {
+                  if (["Laboratory", "Radiology"].includes(text)) {
+                    handleDefaultResult(text);
+                  } else {
+                    dispatch(SetPATIENT({ ...appointment, activeDiag: {} }));
+                  }
                 }
               }}
               className={`${slide === text ? "active" : ""} ${
