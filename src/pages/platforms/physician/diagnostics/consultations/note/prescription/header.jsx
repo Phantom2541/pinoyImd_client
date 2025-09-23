@@ -1,7 +1,11 @@
-import React from "react";
+import { useSelector } from "react-redux";
 import LOGO from "./../../../../../../../assets/iMD.png";
+import { capitalize } from "../../../../../../../services/utilities";
 
 export default function Header() {
+  const { auth } = useSelector(({ auth }) => auth);
+  const { fullName = {} } = auth;
+  const { fname, lname, postnominal = "" } = fullName;
   return (
     <div className="checkup-data-prescription-card-header">
       <img
@@ -11,8 +15,10 @@ export default function Header() {
       />
       <div className="checkup-data-prescription-card-info">
         <div className="checkup-data-prescrption-card-fullname">
-          <span>Dr. Carl Magtalas</span>
-          <small>MSIT,RN,RMP,FCPS</small>
+          <span>
+            Dr. {capitalize(fname)} {capitalize(lname)}
+          </span>
+          <small>{postnominal}</small>
         </div>
         <div className="checkup-data-prescription-card-contact">
           <span>+63 927 342 2159</span>

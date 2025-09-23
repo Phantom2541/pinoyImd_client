@@ -3,11 +3,18 @@ import React, { useRef, useEffect, useState } from "react";
 import Signature from "./../../../../../../../assets/templateSampleSignature.png";
 import { useDispatch, useSelector } from "react-redux";
 import { SetPATIENT } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  capitalize,
+  Cloudinary,
+} from "../../../../../../../services/utilities";
 
 export default function Body({ toggle = () => {} }) {
   const { patient: appointment } = useSelector(
     ({ appointments }) => appointments
   );
+  const { auth } = useSelector(({ auth }) => auth);
+  const { fullName = {} } = auth;
+  const { fname, lname } = fullName;
   const { consultation = {} } = appointment || {};
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
@@ -137,7 +144,12 @@ export default function Body({ toggle = () => {} }) {
         ...appointment,
         consultation: {
           ...consultation,
-          prescription: { mode, notes: value, fontSize },
+          prescription: {
+            ...consultation?.prescription,
+            mode,
+            notes: value,
+            fontSize,
+          },
         },
       })
     );
@@ -217,8 +229,16 @@ export default function Body({ toggle = () => {} }) {
       </button>
 
       <div className="checkup-data-prescription-card-body-signature">
-        <img alt="signature" src={Signature} draggable={false} />
-        <span>Dr. Kevin magtalas</span>
+        <img
+          alt="signature"
+          src={`${Cloudinary.getEndpoint()}/${auth?.sid}/users/${
+            auth?.email
+          }/signature.png`}
+          draggable={false}
+        />
+        <span>
+          Dr. {capitalize(fname)} {capitalize(lname)}
+        </span>
       </div>
     </div>
   );

@@ -68,7 +68,13 @@ export default function Clearance({ active, buttonRefs, togglePanel }) {
         <div className="checkup-data-clearance-card-body">
           <div className="checkup-data-clearance-card-body-date">
             <span>Date:</span>
-            <span>{certificateData.endDate}</span>
+            <span>
+              {new Date().toLocaleDateString("en-US", {
+                month: "short", // o 'long' kung gusto full month name
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
           </div>
           <img alt="caducues" src={CADUCEUS} />
           <label>TO WHOMSOEVER IT MAY CONCERN</label>
