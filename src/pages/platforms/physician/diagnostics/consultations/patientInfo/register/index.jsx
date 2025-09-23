@@ -15,6 +15,7 @@ import { generateEmail } from "../../../../../../../services/utilities";
 import {
   SAVE,
   SetCLUSTER,
+  SetPATIENT,
 } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import Spinner from "../../../../../../../components/spinner";
 
@@ -61,6 +62,7 @@ export default function Register({ searchValue, show, toggle = () => {} }) {
       } else {
         _cluster.push(payload);
       }
+      dispatch(SetPATIENT(payload));
       dispatch(SetCLUSTER(_cluster));
       const newParams = new URLSearchParams(location.search);
       newParams.set("ehrId", payload?._id); // add if missing, replace if exists
