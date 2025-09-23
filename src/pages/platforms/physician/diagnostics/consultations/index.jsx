@@ -22,10 +22,13 @@ import {
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
-  const { isLoading } = useSelector(({ appointments }) => appointments);
+  const { isLoading, cluster, isUpdateDone } = useSelector(
+    ({ appointments }) => appointments
+  );
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
+  const schedule = params.get("sched");
 
   const [activePanels, setActivePanels] = useState({
     request: false,
@@ -85,6 +88,9 @@ export default function Consultations() {
   };
 
   if (isLoading || !ehrId) return <Skeleton ehrId={ehrId} />;
+
+  if (!isUpdateDone && ehrId && !cluster.length)
+    return <Skeleton isDone={true} schedule={schedule} />;
 
   return (
     <div className="checkup-data-container">

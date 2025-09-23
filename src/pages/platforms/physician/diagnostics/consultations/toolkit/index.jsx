@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./style.css";
 import Case from "../case";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,17 +6,15 @@ import { useLocation, useHistory } from "react-router-dom";
 
 import utils from "./utils";
 import {
+  DONE,
   SetPATIENT,
-  UPDATE,
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { socket } from "../../../../../../services/utilities";
-import Spinner from "../../../../../../components/spinner";
 export default function Toolkit({ activePanels }) {
   const { token } = useSelector(({ auth }) => auth);
   const {
     cluster = [],
     patient: appointment,
-    formSubmitted,
+    isUpdateDone,
   } = useSelector(({ appointments }) => appointments);
   const [activePage, setActivePage] = useState(1);
   const [activeQn, setActiveQn] = useState(-1);
@@ -79,18 +77,19 @@ export default function Toolkit({ activePanels }) {
   };
 
   const handleDone = () => {
+    const { consultation } = appointment;
+    const { cases = [] } = consultation || {};
+    const casesIds = cases.map((item) => item._id) || [];
     dispatch(
-      UPDATE({
+      DONE({
         token,
-        data: { _id: appointment._id, status: "done" },
+        data: {
+          status: "done",
+          ...appointment,
+          consultation: { ...consultation, cases: casesIds },
+        },
       })
-    ).then((action) => {
-      const { payload } = action;
-      socket.emit("send_checkup_done", {
-        data: payload,
-        roomID: payload?.userId,
-      });
-    });
+    );
   };
 
   const disabledPrev = cluster[0]?.qn === activeQn;
@@ -136,9 +135,9 @@ export default function Toolkit({ activePanels }) {
 
       <div className="checkup-data-toolkit-buttons">
         <button
-          disabled={disabledPrev}
+          disabled={disabledPrev || isUpdateDone}
           className="checkup-data-toolkit-button prev mr-1"
-          style={{ opacity: disabledPrev ? 0.5 : 1 }}
+          style={{ opacity: disabledPrev || isUpdateDone ? 0.5 : 1 }}
           onClick={handlePrev}
         >
           <span data-hover="«">Prev</span>
@@ -171,17 +170,18 @@ export default function Toolkit({ activePanels }) {
         <button
           className="checkup-data-toolkit-button next ml-1"
           onClick={() => handleNext()}
-          disabled={disabledNext}
-          style={{ opacity: disabledNext ? 0.5 : 1 }}
+          disabled={disabledNext || isUpdateDone}
+          style={{ opacity: disabledNext || isUpdateDone ? 0.5 : 1 }}
         >
           <span data-hover="»">Next</span>
         </button>
         <button
           className="checkup-data-toolkit-button done"
-          disabled={formSubmitted}
+          disabled={isUpdateDone}
+          style={{ opacity: isUpdateDone ? 0.5 : 1 }}
         >
-          <span data-hover="✓" onClick={handleDone}>
-            Done <Spinner formSubmitted={formSubmitted} />
+          <span data-hover={"✓"} onClick={handleDone}>
+            Done
           </span>
         </button>
       </div>
