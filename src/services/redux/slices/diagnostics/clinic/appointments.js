@@ -661,7 +661,8 @@ export const reduxSlice = createSlice({
           collections.findIndex(({ _id }) => _id === payload._id);
 
         const apptIndex = getIndex(state.cluster);
-        state.patient = state.cluster[apptIndex + 1] || {};
+        state.patient =
+          state.cluster[apptIndex + 1] || state.cluster[apptIndex - 1] || {};
         const updateCollections = (collections) => {
           const index = getIndex(collections);
           collections.splice(index, 1);

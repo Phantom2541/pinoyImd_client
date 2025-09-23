@@ -57,23 +57,23 @@ export default function Platforms() {
 
       Swal.fire({
         title: `<div style="font-size:20px; font-weight:700; color:#2c3e50; margin-bottom:8px;">
-                ✅ Checkup Completed
+                ✅ Consultation is done
               </div>`,
         html: `
         <div style="padding:10px; background:#f8f9fa; border-radius:6px; text-align:left;">
-          <p style="margin:0 0 8px 0; font-size:16px; font-weight:600; color:#e74c3c;">
-            Patient: ${patientName}
+          <p style="margin:0 0 8px 0; font-size:25px; font-weight:600; color:#e74c3c;" class="text-center">
+            ${patientName}
           </p>
-          <p style="margin:0 0 6px 0; font-size:15px; font-weight:500; color:#2c3e50;">
+          <p style="margin:0 0 6px 0; font-size:17px; font-weight:500; color:#2c3e50;" class="text-center">
             Patient No: <span style="color:#2980b9; font-weight:600;">${patientNo}</span>
           </p>
         </div>
         <div style="margin-top:12px; font-size:13px; color:#7f8c8d; text-align:center;">
-          Please acknowledge to stop the notification.
+        Please proceed with the payment
         </div>
       `,
         icon: "info",
-        confirmButtonText: "Acknowledge",
+        confirmButtonText: "Got it",
         confirmButtonColor: "#3085d6",
         allowOutsideClick: false,
         allowEscapeKey: false,

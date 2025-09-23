@@ -5,7 +5,6 @@ import {
   MDBTable,
   MDBTableHead,
   MDBTableBody,
-  MDBBtn,
 } from "mdbreact";
 import {
   UPDATE,
@@ -39,12 +38,16 @@ const Body = () => {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+  const sortedData = [...filtered].sort((a, b) => {
+    const order = { done: 1, confirmed: 2 };
+    return (order[a.status] || 99) - (order[b.status] || 99);
+  });
+
+  const paginatedData = sortedData.slice(startIndex, endIndex);
 
   const statusColors = {
     draft: "info",
     confirmed: "primary",
-    done: "success",
     cancelled: "danger",
   };
 

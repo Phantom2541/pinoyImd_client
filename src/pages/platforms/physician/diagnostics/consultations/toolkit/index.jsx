@@ -9,6 +9,7 @@ import {
   DONE,
   SetPATIENT,
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import Swal from "sweetalert2";
 export default function Toolkit({ activePanels }) {
   const { token } = useSelector(({ auth }) => auth);
   const {
@@ -80,6 +81,26 @@ export default function Toolkit({ activePanels }) {
     const { consultation } = appointment;
     const { cases = [] } = consultation || {};
     const casesIds = cases.map((item) => item._id) || [];
+
+    if (casesIds.length === 0) {
+      return Swal.fire({
+        title: "⚠️ Action Required",
+        html: `
+      <div style="font-size: 1.1rem; line-height: 1.5; text-align: left;">
+        <p>
+          Before completing this check-up, you need to <b>create or select at least one case</b> for the patient.
+        </p>
+        <p style="margin-top: 0.5rem; color: #555;">
+          A case record is required so the doctor can properly document the consultation details.
+        </p>
+      </div>
+    `,
+        icon: "warning",
+        confirmButtonText: "Got it",
+        confirmButtonColor: "#f59e0b", // amber color
+        allowOutsideClick: false,
+      });
+    }
     dispatch(
       DONE({
         token,
