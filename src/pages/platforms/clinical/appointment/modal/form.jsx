@@ -138,34 +138,41 @@ export function ChecklistSection({
     <div>
       {step.items.map((item) => {
         let checked = false;
-        let value = "";
+        let details = "";
+        let date = "";
+        let freq = "";
 
-        // if (step.code === "PSHx") {
-        //   const surgeriesObj = form.surgeries || {};
-        //   checked = surgeriesObj.hasOwnProperty(item.label);
-        //   value = surgeriesObj[item.label] || "";
-        // } else {
-        checked = Object.keys(form[baseKey] || {}).includes(item.label);
-        value = form[baseKey]?.[item.label] || "";
-        // }
-
-        const freq = form[baseKey]?.[item.label] || "";
+        if (["PSHx", "PMHx"].includes(step.code)) {
+          const arr = form[baseKey] || [];
+          const entry = arr.find(
+            (c) =>
+              c.name?.toLowerCase().trim() === item.label.toLowerCase().trim()
+          );
+          checked = !!entry;
+          details = entry?.details || "";
+          date = entry?.date || "";
+        } else if (step.code === "socialHistory") {
+          const arr = form.habits || [];
+          const entry = arr.find((h) => h.name === item.label);
+          checked = !!entry;
+          freq = entry?.freq || "";
+        }
 
         return (
           <div key={item.label} className="mb-3">
             <CheckboxRow
               label={item.label}
               checked={checked}
-              onClick={() => handleCheck(baseKey, item.label, !checked)}
+              onClick={() => handleCheck(baseKey, item.label)}
               style={{ marginLeft: "150px" }}
             />
 
-            {/* PMHx & PSHx → show textbox */}
+            {/* conditions & surgeries → details + date */}
             {checked && ["PMHx", "PSHx"].includes(step.code) && (
               <div style={{ marginLeft: "10.9rem" }}>
                 <input
                   type="text"
-                  value={value.split("-")[0] || ""}
+                  value={details}
                   onChange={(e) =>
                     handleTextChange(
                       baseKey,
@@ -179,7 +186,7 @@ export function ChecklistSection({
                 />
 
                 <MDBDatePicker
-                  valueDefault={value.split("-")[1] || new Date()}
+                  valueDefault={date || new Date()}
                   getValue={(val) =>
                     handleTextChange(baseKey, item.label, "date", val)
                   }
@@ -189,7 +196,7 @@ export function ChecklistSection({
               </div>
             )}
 
-            {/* socialHistory → show frequency choices */}
+            {/* habits → frequency */}
             {checked && step.code === "socialHistory" && (
               <div style={{ marginLeft: "200px", marginTop: "4px" }}>
                 {frequencies.map((f) => (
@@ -197,9 +204,7 @@ export function ChecklistSection({
                     key={f}
                     label={f}
                     checked={freq === f}
-                    onClick={() =>
-                      handleFrequency(baseKey, item.label, f, freq === f)
-                    }
+                    onClick={() => handleFrequency(item.label, f)}
                   />
                 ))}
               </div>

@@ -62,8 +62,7 @@
       { "label": "Nulligravida" },
       { "label": "Primigravida" },
       {
-        "label": "Multigravida",
-        "children": ["Gravida", "Term", "Preterm", "Abortion", "Living"]
+        "label": "Multigravida"
       }
     ]
   }

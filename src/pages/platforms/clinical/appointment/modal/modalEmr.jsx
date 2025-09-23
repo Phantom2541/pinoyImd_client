@@ -19,40 +19,51 @@ import { FamilyRootSystem, ChecklistSection, ObGyneSection } from "./form";
 import "./style.css";
 import Spinner from "../../../../../components/spinner";
 import { fullName } from "../../../../../services/utilities";
+
 const _form = {
   familyHistory: {
     Mother: [],
     Father: [],
   },
-  habits: {},
-  conditions: {},
-  surgeries: {},
+  habits: [], // now array of { name, freq }
+  conditions: [], // array of { name, details, date }
+  surgeries: [], // array of { name, details, date }
 };
+
 export default function Modal() {
   const {
-      showModalEhr,
-      willCreateEhr,
-      selected,
-      formSubmitted = false,
-    } = useSelector(({ appointments }) => appointments),
-    { token } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(_form),
-    [step, setStep] = useState(0),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+    showModalEhr,
+    willCreateEhr,
+    selected,
+    formSubmitted = false,
+  } = useSelector(({ appointments }) => appointments);
+
+  const { token } = useSelector(({ auth }) => auth);
+  const [form, setForm] = useState(_form);
+  const [step, setStep] = useState(0);
+  const { addToast } = useToasts();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (showModalEhr) {
-      // Merge selected with default _form to ensure surgeries exists
       setForm({
         ..._form,
         ...selected,
-        surgeries: selected?.surgeries || {}, // ensure surgeries key exists
+        // ensure arrays, even if Mongo returned object
+        conditions: Array.isArray(selected?.conditions)
+          ? selected.conditions
+          : Object.values(selected?.conditions || {}),
+        surgeries: Array.isArray(selected?.surgeries)
+          ? selected.surgeries
+          : Object.values(selected?.surgeries || {}),
+        habits: Array.isArray(selected?.habits)
+          ? selected.habits
+          : Object.values(selected?.habits || {}),
       });
     }
   }, [showModalEhr, selected]);
-
   console.log("form", form);
+  console.log("selected", selected);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,25 +85,35 @@ export default function Modal() {
     });
   };
 
+  // Toggle items (conditions, surgeries, habits)
   const handleCheck = (code, label) => {
     setForm((prev) => {
-      const current = prev[code] || {};
-      const newCurrent = { ...current };
-
-      if (newCurrent.hasOwnProperty(label)) {
-        delete newCurrent[label];
-      } else {
-        newCurrent[label] = "";
+      if (["conditions", "surgeries"].includes(code)) {
+        const current = prev[code] || [];
+        const exists = current.find((c) => c.name === label);
+        return {
+          ...prev,
+          [code]: exists
+            ? current.filter((c) => c.name !== label)
+            : [...current, { name: label, details: "", date: "" }],
+        };
       }
 
-      return {
-        ...prev,
-        [code]: newCurrent,
-      };
+      if (code === "habits") {
+        const current = prev.habits || [];
+        const exists = current.find((h) => h.name === label);
+        return {
+          ...prev,
+          habits: exists
+            ? current.filter((h) => h.name !== label)
+            : [...current, { name: label, freq: "" }],
+        };
+      }
+
+      return prev;
     });
   };
 
-  // For PMHx textbox values
   const formatDate = (value) => {
     if (!value) return "";
     const d = new Date(value);
@@ -102,34 +123,31 @@ export default function Modal() {
     return `${year}/${month}/${day}`; // YYYY/MM/DD
   };
 
+  // Update text/date for conditions and surgeries
   const handleTextChange = (baseKey, label, field, newValue) => {
-    setForm((prev) => {
-      const prevVal = prev[baseKey]?.[label] || "";
-      const [prevDetails = "", prevDate = ""] = prevVal.split("-");
-
-      const details = field === "details" ? newValue : prevDetails;
-      const date = field === "date" ? formatDate(newValue) : prevDate;
-
-      let combined = details;
-      if (date) combined = `${details}-${date}`;
-
-      return {
-        ...prev,
-        [baseKey]: {
-          ...prev[baseKey],
-          [label]: combined,
-        },
-      };
-    });
+    if (["conditions", "surgeries"].includes(baseKey)) {
+      setForm((prev) => {
+        const updated = (prev[baseKey] || []).map((item) => {
+          if (item.name !== label) return item;
+          return {
+            ...item,
+            details: field === "details" ? newValue : item.details,
+            date: field === "date" ? formatDate(newValue) : item.date,
+          };
+        });
+        return { ...prev, [baseKey]: updated };
+      });
+    }
   };
 
-  // For socialHistory frequency selection
-  function handleFrequency(code, label, value) {
-    const _form = { ...form };
-    const current = _form[code] ? { ..._form[code] } : {};
-    current[label] = value;
-    setForm({ ..._form, [code]: current });
-  }
+  const handleFrequency = (label, value) => {
+    setForm((prev) => {
+      const updated = (prev.habits || []).map((h) =>
+        h.name === label ? { ...h, freq: value } : h
+      );
+      return { ...prev, habits: updated };
+    });
+  };
 
   const handleSelectRoot = (key, value, isChecked) => {
     const roots = [...(form?.familyHistory[key] || [])];
@@ -220,7 +238,6 @@ export default function Modal() {
             )}
           </div>
 
-          {/* Navigation */}
           <div className="d-flex justify-content-center">
             <MDBBtn
               type="button"
@@ -236,7 +253,7 @@ export default function Modal() {
                 type="button"
                 color="info"
                 onClick={(e) => {
-                  e.preventDefault(); // stop accidental submit
+                  e.preventDefault();
                   setStep(step + 1);
                 }}
               >
