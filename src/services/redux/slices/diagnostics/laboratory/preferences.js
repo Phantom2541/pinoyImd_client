@@ -14,6 +14,7 @@ const initialState = {
   template: "",
   isSuccess: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -159,19 +160,16 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(SAVE.pending, (state) => {
-        // state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        state.message = success;
-        state.isSuccess = true;
-        state.isLoading = false;
 
         const targetId = payload.serviceId;
 
@@ -195,12 +193,15 @@ export const reduxSlice = createSlice({
 
         // Save to localStorage
         localStorage.setItem("preferences", JSON.stringify(state.collections));
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
       })
 
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {
@@ -261,25 +262,32 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload
-        );
 
-        state.collections.splice(index, 1);
+        const updateCollections = (collections) => {
+          const service = collections.find(
+            (item) => item.id === payload.serviceId
+          );
+          const { references } = service;
+          const index = references.findIndex(
+            (item) => item._id === payload._id
+          );
+          references.splice(index, 1);
+        };
+        updateCollections(state.collections);
+        updateCollections(state.cluster);
+        updateCollections(state.filtered);
+        localStorage.setItem("preferences", JSON.stringify(state.collections));
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
       });
   },
 });
