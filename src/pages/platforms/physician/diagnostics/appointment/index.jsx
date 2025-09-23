@@ -7,6 +7,9 @@ import { CHECKUP } from "../../../../../services/redux/slices/diagnostics/clinic
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
+import ResultsModal from "../../../clinical/appointment/results";
+import Modal from "../../../clinical/appointment/modal/modalEmr";
+import VitalSign from "../../../clinical/appointment/modal/vitalsigns";
 const Collapsable = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ appointments }) => appointments),
@@ -27,13 +30,18 @@ const Collapsable = () => {
   }, [dispatch, token, auth]);
 
   return (
-    <MDBAnimation type="bounceInDown">
-      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <Header />
-        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-        <Footer />
-      </MDBCard>
-    </MDBAnimation>
+    <>
+      <MDBAnimation type="bounceInDown">
+        <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+          <Header />
+          <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
+          <Footer />
+        </MDBCard>
+      </MDBAnimation>
+      <ResultsModal />
+      <Modal />
+      <VitalSign />
+    </>
   );
 };
 

@@ -11,7 +11,7 @@ const RequestForm = () => {
   const dispatch = useDispatch();
 
   const { consultation = {} } = appointment;
-  const { request = {} } = consultation;
+  const { request = {} } = consultation || {};
   const { services = [] } = request;
   const toggleItem = (item) => {
     var _services = [...(services || [])];
