@@ -97,7 +97,7 @@
 
 .checkup-data-note-save {
   position: absolute;
-  bottom: 0;
+  bottom: -1.2rem !important;
   right: -70px;
   border: none;
   color: white;

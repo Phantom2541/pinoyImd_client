@@ -1,14 +1,21 @@
 import { MDBIcon } from "mdbreact";
-import { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Signature from "./../../../../../../../assets/templateSampleSignature.png";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPATIENT } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
-export default function Body() {
+export default function Body({ toggle = () => {} }) {
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { consultation = {} } = appointment || {};
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [mode, setMode] = useState("draw"); // "draw" or "type"
   const [pencilCursor, setPencilCursor] = useState("auto");
   const [fontSize, setFontSize] = useState(16); // default font size
+  const dispatch = useDispatch();
 
   // --- setup canvas for draw mode
   useEffect(() => {
@@ -113,6 +120,29 @@ export default function Body() {
       if (editor) editor.innerHTML = "";
     }
   };
+  const getDrawingValue = () => {
+    if (!canvasRef.current) return "";
+    return canvasRef.current.toDataURL("image/png"); // ito ang string ng image
+  };
+
+  const handleSave = () => {
+    var value = "";
+    if (mode === "draw") {
+      value = getDrawingValue();
+    } else {
+      value = document.getElementById("editor").innerHTML;
+    }
+    dispatch(
+      SetPATIENT({
+        ...appointment,
+        consultation: {
+          ...consultation,
+          prescription: { mode, notes: value, fontSize },
+        },
+      })
+    );
+    toggle();
+  };
 
   return (
     <div
@@ -158,7 +188,7 @@ export default function Body() {
 
       {/* Coupon bond style type mode */}
       <div
-        className="checkup-data-prescription-card-body-type"
+        className="checkup-data-prescription-card-body-type mt-5"
         id="editor"
         contentEditable={mode === "type"}
         suppressContentEditableWarning={true}
@@ -179,6 +209,13 @@ export default function Body() {
           display: mode === "draw" ? "block" : "none",
         }}
       />
+      <button
+        className="checkup-data-note-save bg-success"
+        onClick={handleSave}
+      >
+        Save
+      </button>
+
       <div className="checkup-data-prescription-card-body-signature">
         <img alt="signature" src={Signature} draggable={false} />
         <span>Dr. Kevin magtalas</span>

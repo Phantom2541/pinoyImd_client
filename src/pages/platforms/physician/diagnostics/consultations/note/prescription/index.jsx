@@ -22,9 +22,8 @@ export default function Prescription({ active, buttonRefs, togglePanel }) {
       <div className="checkup-data-prescription-card">
         <Header />
         <Patient />
-        <Body />
+        <Body toggle={() => togglePanel("prescription")} />
         <Footer />
-        <button className="checkup-data-note-save bg-success">Save</button>
       </div>
     </div>
   );
