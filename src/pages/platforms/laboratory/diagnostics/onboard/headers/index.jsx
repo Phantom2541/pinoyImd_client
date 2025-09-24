@@ -27,20 +27,13 @@ export default function Header() {
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
       const timezone = Intl.DateTimeFormat().resolvedOptions()?.timeZone;
-      const now = new Date();
-      const createdAt = `${(now.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${now
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${now.getFullYear()}`;
+
       dispatch(
         BROWSE({
           key: {
             branchId: activePlatform?.branchId,
-            // createdAt,
             department: activePlatform?.department,
-            // timezone,
+            timezone,
           },
           token,
         })

@@ -81,7 +81,7 @@ export default function Modal() {
     }
   }, [show, selected]);
 
-  const normalize = (value) =>
+  const normalize = (value = "") =>
     value
       .toLowerCase()
       .trim()
@@ -96,10 +96,11 @@ export default function Modal() {
     );
 
     setIsDuplicate(isExist);
-    setForm({ ...form, displayname: name });
+    setForm({ ...form, displayname: name, name });
   };
 
   const validateCode = (code) => {
+    if (!code) return false;
     const isExist = [...collections].some(
       (branch) =>
         normalize(branch.code) === normalize(code) &&
