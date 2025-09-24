@@ -37,7 +37,6 @@ export default function Branches() {
         platform: "patron",
       },
     };
-    console.log("ativePlatform", activePlatform);
 
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };
@@ -57,13 +56,13 @@ export default function Branches() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {branches?.map(({ name, _id }, index) => (
+        {branches?.map(({ name, _id, displayname }, index) => (
           <MDBDropdownItem
             active={_id === activePlatform?.branchId}
             key={`branch-${index}`}
             onClick={() => handleActiveBranch(_id)}
           >
-            {capitalize(name)}
+            {capitalize(name || displayname)}
           </MDBDropdownItem>
         ))}
       </MDBDropdownMenu>
