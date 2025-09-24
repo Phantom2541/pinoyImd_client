@@ -1060,7 +1060,7 @@
     "hi_ssx": "Usually asymptomatic (high enzyme activity has no clinical significance)",
     "department": "LAB",
     "frequency": "As ordered (newborn screening, suspected hemolysis)",
-    "preference": "Gender",
+    "preference": "gender",
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 4,
@@ -4086,7 +4086,7 @@
     "specimen": "Blood sample",
     "template": 2,
     "purpose": "To evaluate acid-base status and bicarbonate levels.",
-    "preference": "Gender"
+    "preference": "gender"
   },
   {
     "id": 396,
@@ -4130,7 +4130,7 @@
     "specimen": "Blood sample",
     "template": 2,
     "purpose": "To assess folate levels in blood.",
-    "preference": "Gender"
+    "preference": "gender"
   },
   {
     "id": 401,
@@ -4275,5 +4275,15 @@
     "specimen": "CT images (abdomen and pelvis)",
     "template": 4,
     "purpose": "To evaluate abdominal organs, detect masses, or trauma-related changes."
+  },
+  {
+    "id": 415,
+    "name": "Urine Microalbumin",
+    "department": "LAB",
+    "frequency": "As requested by physician",
+    "preparation": "Collect midstream urine sample.",
+    "specimen": "Urine sample",
+    "template": 2,
+    "purpose": "To detect microalbuminuria; calculate microalbumin-creatinine ratio."
   }
 ]

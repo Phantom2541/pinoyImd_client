@@ -1,4 +1,3 @@
-import React from "react";
 import { Services } from "./../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
@@ -19,33 +18,80 @@ export default function Chemistry({ task, setTask }) {
       _name = Number(name),
       _value = Number(value);
 
-    if (_name !== 16)
-      return setTask({
-        ...task,
-        packages: { ...packages, [name]: _value },
-      });
+    // Default: just update the value
+    let updatedPackages = { ...packages, [name]: _value };
 
-    // Get values
-    const chole = packages["14"], // Total Cholesterol
-      tg = packages["15"], // Triglycerides
-      hdl = Number(_value.toFixed(1)); // HDL Cholesterol (input)
+    // --- Lipid panel ---
+    if (_name === 16) {
+      // HDL input triggers lipid calculations
+      const chole = packages["14"]; // Total Cholesterol
+      const tg = packages["15"]; // Triglycerides
+      const hdl = Number(_value.toFixed(1));
 
-    // Compute
-    const vldl = tg / 5;
-    const ldl = chole - hdl - vldl;
-    const lhr = Number((ldl / hdl).toFixed(2)); // LDL/HDL ratio
-    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
+      const vldl = tg / 5;
+      const ldl = chole - hdl - vldl;
+      const lhr = Number((ldl / hdl).toFixed(2));
+      const chr = Number((chole / hdl).toFixed(2));
+
+      updatedPackages = {
+        ...updatedPackages,
+        16: _value,
+        17: ldl.toFixed(1), // LDL
+        18: vldl.toFixed(1), // VLDL
+        19: chr, // TC/HDL ratio
+        47: lhr, // LDL/HDL ratio
+      };
+    }
+    // --- Bilirubin ---
+    if (_name === 33) {
+      // 34 = indirect, 33 = direct, total = 32
+      const total = packages["32"] ?? 0;
+      const direct = packages["33"] ?? 0;
+      updatedPackages["34"] = Number((total - direct).toFixed(2));
+    }
+    // --- Total Protein ---
+    if (_name === 38) {
+      // 36 = albumin, 37 = globulin, total = 35
+      const albumin = packages["36"] ?? 0;
+      const globulin = packages["37"] ?? 0;
+      updatedPackages["35"] = Number((albumin + globulin).toFixed(2));
+    }
+    // TPAG // Albumin[36] : Globulin[37] Ratio
+    if (_name === 37) {
+      const albumin = packages["36"] ?? 0;
+      const globulin = packages["37"] ?? 0;
+      updatedPackages["38"] = globulin
+        ? Number((albumin / globulin).toFixed(2))
+        : 0;
+    }
+    // 396 // Urine Albumin[358] : Creatinine[20] Ratio
+    if (_name === 358) {
+      const albumin = packages["358"] ?? 0;
+      const creatinine = packages["20"] ?? 0;
+      updatedPackages["396"] = creatinine
+        ? Number((albumin / creatinine).toFixed(2))
+        : 0;
+    }
+    // 397 // Urine Protein[359] : Creatinine[20] Ratio
+    if (_name === 359) {
+      const protein = packages["359"] ?? 0; // Urine Protein
+      const creatinine = packages["20"] ?? 0; // Creatinine
+      updatedPackages["397"] = creatinine
+        ? Number((protein / creatinine).toFixed(2))
+        : 0;
+    }
+    // 398 // Urine Microalbumin[360] : Creatinine[20] Ratio
+    if (_name === 415) {
+      const microalbumin = packages["415"] ?? 0; // Urine Microalbumin
+      const creatinine = packages["20"] ?? 0; // Creatinine
+      updatedPackages["398"] = creatinine
+        ? Number((microalbumin / creatinine).toFixed(2))
+        : 0;
+    }
 
     setTask({
       ...task,
-      packages: {
-        ...packages,
-        16: _value,
-        17: ldl.toFixed(1),
-        18: vldl.toFixed(1),
-        19: chr,
-        47: lhr,
-      },
+      packages: updatedPackages,
     });
   };
 
