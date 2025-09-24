@@ -23,6 +23,7 @@ const ATTIRE_OPTIONS = [
 
 export default function Modal({
   show,
+  isStatic = false,
   toggle,
   modalSize,
   img,
@@ -121,8 +122,10 @@ export default function Modal({
 
       const finishDownload = () => {
         const result = canvas.toDataURL(`image/${ext}`);
-        if (isUpload) handleUpload(result);
-        else {
+        if (isUpload) {
+          handleUpload(result);
+          if (isStatic) toggle();
+        } else {
           const link = document.createElement("a");
           link.href = result;
           link.download = `image.${ext}`;

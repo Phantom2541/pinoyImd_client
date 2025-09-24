@@ -1,19 +1,44 @@
 import React from "react";
 import usePanelPosition from "../panelPosition";
+import { MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
+import "./../style.css";
+import CADUCEUS from "./../../../../../../../assets/caduceus.png";
+import {
+  billingAddress,
+  Cloudinary,
+  contacts,
+  fullName,
+  getAge,
+  properFullname,
+} from "../../../../../../../services/utilities";
 
-export default function Clearance({
-  active,
-  buttonRefs,
-  patient,
-  doctor,
-  purpose,
-  date,
-}) {
+const certificateData = {
+  diagnosis: "Pneumonia",
+  startDate: "August 1, 2025",
+  endDate: "August 21, 2025",
+};
+
+export default function Clearance({ active, buttonRefs, togglePanel }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {
-    width: 600,
-    height: 460,
+    width: 700,
+    height: 530,
   });
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
+    { auth, activePlatform } = useSelector(({ auth }) => auth),
+    { fullName: name, isMale, dob, address } = appointment?.patient || {};
+  const logoURL =
+    `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+      activePlatform.branch.companyId.name
+    )}/logo` || "";
+  const signUrl =
+    `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
 
+  const companyname = activePlatform.branch.companyId.name || "";
+  const branchaddress = activePlatform.branch.address || "";
+  const branchcontact = activePlatform.branch.contacts.mobile || "";
   return (
     <div
       style={{
@@ -21,53 +46,75 @@ export default function Clearance({
       }}
       className="checkup-data-clearance"
     >
-      <div
-        style={{
-          width: "600px",
-          padding: "20px",
-          backgroundColor: "white",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          borderRadius: "10px",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
+      <MDBIcon
+        icon="times"
+        className="checkup-data-note-close"
+        onClick={() => togglePanel("clearance")}
+      />
+      <div className="checkup-data-clearance-card">
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h2 style={{ margin: 0 }}>ABC Medical Clinic</h2>
-          <p style={{ margin: 0 }}>123 Main St., Quezon City</p>
-          <hr style={{ margin: "10px 0" }} />
-          <h3 style={{ textDecoration: "underline", margin: 0 }}>
-            MEDICAL CLEARANCE
-          </h3>
+        <div className="checkup-data-clearance-card-header">
+          <img src={logoURL} alt="" />
+          <span>{companyname}</span>
+          <span>{billingAddress(branchaddress)}</span>
+          <span>Contact: {contacts(branchcontact)}</span>
         </div>
+        {/* Title */}
+        <h1 className="checkup-data-clearance-card-title">
+          Medical Certificate
+        </h1>
 
         {/* Body */}
-        <div style={{ lineHeight: 1.6 }}>
-          <p>
-            This is to certify that <b>{patient?.name || "________________"}</b>
-            , {patient?.age ? `${patient.age} years old` : "___ years old"},{" "}
-            {patient?.gender || "______"} has undergone medical examination at
-            this clinic.
-          </p>
+        <div className="checkup-data-clearance-card-body">
+          <div className="checkup-data-clearance-card-body-date">
+            <span>Date:</span>
+            <span>
+              {new Date().toLocaleDateString("en-US", {
+                month: "short", // o 'long' kung gusto full month name
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+          <img alt="caducues" src={CADUCEUS} />
+          <label>TO WHOMSOEVER IT MAY CONCERN</label>
 
-          <p>
-            Purpose of clearance: <b>{purpose || "____________________"}</b>
-          </p>
+          <div className="checkup-data-clearance-card-body-text">
+            <span>
+              This is to certify that Mr/Mrs.&nbsp;
+              <span className="checkup-data-clearance-card-body-data width-50">
+                {fullName(name)}
+              </span>
+              &nbsp; Male/Female&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {isMale ? "Male" : "Female"}
+              </span>
+              &nbsp;Age&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {getAge(dob)}
+              </span>
+              &nbsp;years, residing at&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {billingAddress(address)}
+              </span>
+              , was examined at this clinic and is found to be
+              <span className="checkup-data-clearance-card-body-data">
+                medically fit
+              </span>{" "}
+              to engage in
+              <span className="checkup-data-clearance-card-body-data">
+                work/school/sports/travel
+              </span>
+              .
+            </span>
+          </div>
 
-          <p>
-            Date of issuance: <b>{date || "__________"}</b>
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div style={{ textAlign: "right", marginTop: "30px" }}>
-          <p>______________________________</p>
-          <p>
-            <b>{doctor?.name || "Dr. Juan Dela Cruz"}</b>
-          </p>
-          <p>
-            Lic. No.: <b>{doctor?.license || "000000"}</b>
-          </p>
+          {/* Doctor */}
+          <div className="checkup-data-clearance-card-body-doctor">
+            <span>{properFullname(auth.fullName)}</span>
+            <span>Physician/Examiner</span>
+            <img alt="signature" src={signUrl} />
+          </div>
         </div>
       </div>
     </div>

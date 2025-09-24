@@ -1,26 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBPagination, MDBPageItem, MDBPageNav } from "mdbreact";
-import { setActivePage } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
+import TableRowCount from "../../../../../components/pagination/rows";
+import Pagination from "../../../../../components/pagination";
+import {
+  SetMaxPage,
+  SetActivePage,
+} from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
 
-export default function Footer() {
+const Footer = () => {
   const dispatch = useDispatch();
-  const { filtered, activePage, maxPage } = useSelector(
+  const { maxPage } = useSelector(({ auth }) => auth);
+  const { isLoading, totalPages, activePage } = useSelector(
     ({ clinicMenus }) => clinicMenus
   );
-  const totalPages = Math.ceil(filtered.length / maxPage);
 
-  if (totalPages <= 1) return null;
+  useEffect(() => {
+    if (maxPage) {
+      dispatch(SetMaxPage(maxPage));
+    }
+  }, [dispatch, maxPage]);
+
+  const handlePageChange = (action) => {
+    const newPage =
+      typeof action === "number" ? action : activePage + (action ? 1 : -1);
+    if (newPage >= 1 && newPage <= totalPages) {
+      dispatch(SetActivePage(newPage));
+    }
+  };
 
   return (
-    <MDBPagination circle className="mb-0 mt-2 justify-content-center">
-      {Array.from({ length: totalPages }).map((_, i) => (
-        <MDBPageItem key={i} active={i + 1 === activePage}>
-          <MDBPageNav onClick={() => dispatch(setActivePage(i + 1))}>
-            {i + 1}
-          </MDBPageNav>
-        </MDBPageItem>
-      ))}
-    </MDBPagination>
+    <div className="mb-auto d-flex justify-content-between align-items-center px-4">
+      <TableRowCount disablePageSelect={false} />
+      <Pagination
+        isLoading={isLoading}
+        total={totalPages}
+        page={activePage}
+        setPage={handlePageChange}
+      />
+    </div>
   );
-}
+};
+
+export default Footer;

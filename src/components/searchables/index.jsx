@@ -12,3 +12,4 @@ export { default as SelectUser } from "./ao";
 export { default as Search } from "./search";
 export { default as FilterProducts } from "./filterProducts";
 export { default as Notification } from "./notification";
+export { default as SearchClinicMenus } from "./clinicMenus";

@@ -1,65 +1,125 @@
 import usePanelPosition from "../panelPosition";
+import { MDBIcon } from "mdbreact";
+import CADUCEUS from "./../../../../../../../assets/caduceus.png";
+import { useSelector } from "react-redux";
+import {
+  billingAddress,
+  contacts,
+  properFullname,
+  Cloudinary,
+  getAge,
+  fullName,
+} from "../../../../../../../services/utilities";
+
+const certificateData = {
+  diagnosis: "Pneumonia",
+  startDate: "August 1, 2025",
+  endDate: "August 21, 2025",
+};
 
 export default function MedicalCertificate({
-  patient,
-  doctor,
-  diagnosis,
-  date,
   active,
   buttonRefs,
+  togglePanel,
 }) {
-  const style = usePanelPosition(active, buttonRefs.clearance, {
-    width: 800,
-    height: 483,
+  const style = usePanelPosition(active, buttonRefs.medcert, {
+    width: 700,
+    height: 530,
   });
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
+    { auth, activePlatform } = useSelector(({ auth }) => auth),
+    { fullName: name, isMale, dob, address } = appointment?.patient || {};
+  const { consultation = {} } = appointment;
+  const { prescription } = consultation || {};
+  const logoURL =
+    `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+      activePlatform.branch.companyId.name
+    )}/logo` || "";
+  const signUrl =
+    `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
+
+  const companyname = activePlatform.branch.companyId.name || "";
+  const branchaddress = activePlatform.branch.address || "";
+  const branchcontact = activePlatform.branch.contacts.mobile || "";
+
   return (
     <div style={style} className="checkup-data-clearance">
-      <div
-        className="medical-cert border p-6 bg-white shadow-md rounded-xl"
-        style={{
-          width: "800px",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
+      <MDBIcon
+        icon="times"
+        className="checkup-data-note-close"
+        onClick={() => togglePanel("medcert")}
+      />
+      <div className="checkup-data-clearance-card">
         {/* Header */}
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold">ABC Medical Clinic</h2>
-          <p>123 Main St., Quezon City</p>
-          <p>Contact: (02) 1234-5678</p>
-          <hr className="my-4" />
-          <h3 className="text-lg font-semibold underline">
-            MEDICAL CERTIFICATE
-          </h3>
+        <div className="checkup-data-clearance-card-header">
+          <img src={logoURL} alt="" />
+          <span>{companyname}</span>
+          <span>{billingAddress(branchaddress)}</span>
+          <span>Contact: {contacts(branchcontact)}</span>
         </div>
+
+        {/* Title */}
+        <h1 className="checkup-data-clearance-card-title">
+          Medical Certificate
+        </h1>
 
         {/* Body */}
-        <div className="leading-relaxed text-justify mb-8">
-          <p>
-            This is to certify that <b>{patient?.name || "________________"}</b>
-            , {patient?.age ? `${patient.age} years old` : "___ years old"},{" "}
-            {patient?.gender || "______"} was examined and treated at this
-            clinic on <b>{date || "_________"}</b>.
-          </p>
+        <div className="checkup-data-clearance-card-body">
+          <div className="checkup-data-clearance-card-body-date">
+            <span>Date:</span>
+            <span>
+              {new Date().toLocaleDateString("en-US", {
+                month: "short", // o 'long' kung gusto full month name
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+          <img alt="caducues" src={CADUCEUS} />
+          <label>TO WHOMSOEVER IT MAY CONCERN</label>
 
-          <p className="mt-4">
-            Findings/Diagnosis: <b>{diagnosis || "____________________"}</b>
-          </p>
+          <div className="checkup-data-clearance-card-body-text">
+            <span>
+              This is to certify that Mr/Mrs.&nbsp;
+              <span className="checkup-data-clearance-card-body-data width-50">
+                {fullName(name)}
+              </span>
+              &nbsp; Male/Female&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {isMale ? "Male" : "Female"}
+              </span>
+              &nbsp;Age&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {getAge(dob)}
+              </span>
+              &nbsp;years, residing at&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {billingAddress(address)}
+              </span>
+              &nbsp;was under my treatment since&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {certificateData.startDate}
+              </span>
+              &nbsp; Suffering from&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {prescription?.diagnosis || ""}
+              </span>
+              . He/She is/was advised treatment or rest for this period&nbsp;
+              <span className="checkup-data-clearance-card-body-data">
+                {certificateData.endDate}
+              </span>
+              .
+            </span>
+          </div>
 
-          <p className="mt-4">
-            He/She is advised to take a rest/sick leave for{" "}
-            <b>{patient?.restDays || "____"}</b> day(s).
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div className="text-right mt-12">
-          <p>______________________________</p>
-          <p>
-            <b>{doctor?.name || "Dr. Juan Dela Cruz"}</b>
-          </p>
-          <p>
-            Lic. No.: <b>{doctor?.license || "000000"}</b>
-          </p>
+          {/* Doctor */}
+          <div className="checkup-data-clearance-card-body-doctor">
+            <span>{properFullname(auth.fullName)}</span>
+            <span>Physician/Examiner</span>
+            <img alt="signature" src={signUrl || ""} />
+          </div>
         </div>
       </div>
     </div>

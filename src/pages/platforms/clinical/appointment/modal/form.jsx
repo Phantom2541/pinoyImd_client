@@ -1,4 +1,5 @@
 // Sections.jsx
+import { MDBDatePicker } from "mdbreact";
 import React from "react";
 
 // Reusable checkbox row
@@ -69,8 +70,9 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
 
           {side.items.map((item, i) => {
             const y = getY(i);
-            const key = `${step.code}-${side.label}`;
-            const checked = (form[key] || []).includes(item);
+            const key = `${side.label}`;
+            const value = form?.familyHistory[key] || [];
+            const checked = Array.isArray(value) ? value.includes(item) : false;
 
             return (
               <g
@@ -117,19 +119,97 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
 }
 
 // ----------------- ChecklistSection -----------------
-export function ChecklistSection({ step, form, handleCheck }) {
+export function ChecklistSection({
+  step,
+  form,
+  handleCheck,
+  handleTextChange,
+  handleFrequency,
+}) {
+  const frequencies = ["Daily", "Once a week", "Twice a week", "Occasional"];
+  const keys = {
+    PSHx: "surgeries",
+    PMHx: "conditions",
+    socialHistory: "habits",
+  };
+  const baseKey = keys[step.code];
+
   return (
     <div>
       {step.items.map((item) => {
-        const checked = (form[step.code] || []).includes(item.label);
+        let checked = false;
+        let details = "";
+        let date = "";
+        let freq = "";
+
+        if (["PSHx", "PMHx"].includes(step.code)) {
+          const arr = form[baseKey] || [];
+          const entry = arr.find(
+            (c) =>
+              c.name?.toLowerCase().trim() === item.label.toLowerCase().trim()
+          );
+          checked = !!entry;
+          details = entry?.details || "";
+          date = entry?.date || "";
+        } else if (step.code === "socialHistory") {
+          const arr = form.habits || [];
+          const entry = arr.find((h) => h.name === item.label);
+          checked = !!entry;
+          freq = entry?.freq || "";
+        }
+
         return (
-          <CheckboxRow
-            key={item.label}
-            label={item.label}
-            checked={checked}
-            onClick={() => handleCheck(step.code, item.label, !checked)}
-            style={{ marginLeft: "150px" }}
-          />
+          <div key={item.label} className="mb-3">
+            <CheckboxRow
+              label={item.label}
+              checked={checked}
+              onClick={() => handleCheck(baseKey, item.label)}
+              style={{ marginLeft: "150px" }}
+            />
+
+            {/* conditions & surgeries → details + date */}
+            {checked && ["PMHx", "PSHx"].includes(step.code) && (
+              <div style={{ marginLeft: "10.9rem" }}>
+                <input
+                  type="text"
+                  value={details}
+                  onChange={(e) =>
+                    handleTextChange(
+                      baseKey,
+                      item.label,
+                      "details",
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter details"
+                  className="border px-2 py-1 mb-1"
+                />
+
+                <MDBDatePicker
+                  valueDefault={date || new Date()}
+                  getValue={(val) =>
+                    handleTextChange(baseKey, item.label, "date", val)
+                  }
+                  className="mt-1"
+                  style={{ width: "10rem" }}
+                />
+              </div>
+            )}
+
+            {/* habits → frequency */}
+            {checked && step.code === "socialHistory" && (
+              <div style={{ marginLeft: "200px", marginTop: "4px" }}>
+                {frequencies.map((f) => (
+                  <CheckboxRow
+                    key={f}
+                    label={f}
+                    checked={freq === f}
+                    onClick={() => handleFrequency(item.label, f)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         );
       })}
     </div>
@@ -147,7 +227,6 @@ export function ObGyneSection({ step, form, handleCheck, handleNumber }) {
 
         return (
           <div key={item.label} className="mb-2">
-            {/* Checkbox row */}
             <CheckboxRow
               label={item.label}
               checked={isChecked}
@@ -155,7 +234,6 @@ export function ObGyneSection({ step, form, handleCheck, handleNumber }) {
               style={{ marginLeft: "150px" }}
             />
 
-            {/* Show children inputs only when Multigravida is active */}
             {item.label === "Multigravida" && isChecked && item.children && (
               <div className="grid grid-cols-2 gap-2 ml-6 mt-2">
                 {item.children.map((field) => (

@@ -1,56 +1,34 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Search } from "../../../../../components/searchables";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { useToasts } from "react-toast-notifications";
+import { MDBView } from "mdbreact";
 import {
   BROWSE,
   SetFILTERED,
-  RESET,
-  toggleModal,
+  SetCREATE,
 } from "../../../../../services/redux/slices/diagnostics/clinic/clinicMenus";
-import { TIEUPS } from "../../../../../services/redux/slices/assets/persons/physicians";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const {
-    filtered = [],
-    collections = [],
-    message,
-    isSuccess,
-  } = useSelector(({ clinicMenus }) => clinicMenus);
+  const { filtered = [], collections = [] } = useSelector(
+    ({ clinicMenus }) => clinicMenus
+  );
   const dispatch = useDispatch();
-  const { addToast } = useToasts();
+
+  const physicians = Array.isArray(activePlatform.branch.physicians)
+    ? activePlatform.branch.physicians.map((p) => p._id)
+    : [];
 
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
-
-    return () => dispatch(RESET());
-  }, [token, activePlatform, dispatch]);
-
-  // fetch menus
-  useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
-
-    return () => dispatch(RESET());
-  }, [token, activePlatform?.branchId, dispatch]);
-
-  // notifications + auto refresh
-  // useEffect(() => {
-  //   if (message) {
-  //     addToast(message, { appearance: isSuccess ? "success" : "error" });
-
-  //     // refresh table if success
-  //     if (isSuccess && token && activePlatform?.branchId) {
-  //       dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
-  //       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
-  //     }
-
-  //     dispatch(RESET());
-  //   }
-  // }, [message, isSuccess, addToast, dispatch, token, activePlatform?.branchId]);
+    if (token && physicians.length > 0) {
+      dispatch(
+        BROWSE({
+          token,
+          key: { physicianId: physicians }, // send all IDs
+        })
+      );
+    }
+  }, [token, dispatch]);
 
   return (
     <MDBView
@@ -66,22 +44,11 @@ const Header = () => {
         <Search
           collections={collections}
           setFiltered={(items) => dispatch(SetFILTERED(items))}
+          haveAction={true}
           reset={() => dispatch(SetFILTERED(collections))}
-          haveAction={false}
+          hideButton={true}
+          handleAdd={() => dispatch(SetCREATE())}
         />
-        <MDBBtn
-          color="success"
-          size="sm"
-          rounded
-          className="ml-2"
-          onClick={() =>
-            dispatch(
-              toggleModal({ showModal: true, willCreate: true, selected: null })
-            )
-          }
-        >
-          <MDBIcon icon="plus" /> Add
-        </MDBBtn>
       </div>
     </MDBView>
   );

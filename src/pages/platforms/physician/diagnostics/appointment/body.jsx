@@ -1,6 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { MDBBadge, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
-import { UPDATE } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  MDBBadge,
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBIcon,
+} from "mdbreact";
+import { useHistory } from "react-router-dom";
+import {
+  SetRESULT,
+  setShowModalEhr,
+  setShowModalVs,
+  UPDATE,
+} from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../../services/utilities";
 import {
   EditableField,
@@ -9,9 +21,16 @@ import {
 import visitTypes from "./visitTypes.json";
 import { Templates } from "../../../../../services/fakeDb";
 const Body = () => {
-  const { filtered, activePage, maxPage, formSubmitted, isSuccess } =
-      useSelector(({ appointments }) => appointments),
+  const {
+      filtered,
+      activePage,
+      maxPage,
+      formSubmitted,
+      isSuccess,
+      activeSched,
+    } = useSelector(({ appointments }) => appointments),
     { token } = useSelector(({ auth }) => auth),
+    history = useHistory(),
     dispatch = useDispatch();
 
   const handleUpdate = (data) => dispatch(UPDATE({ token, data }));
@@ -29,10 +48,15 @@ const Body = () => {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+  const sortedData = [...filtered].sort((a, b) => {
+    const order = { done: 1, confirmed: 2 };
+    return (order[a.status] || 99) - (order[b.status] || 99);
+  });
+
+  const paginatedData = sortedData.slice(startIndex, endIndex);
 
   return (
-    <MDBTable bordered className="m-0 p-0">
+    <MDBTable bordered className="m-0 p-0" small>
       <MDBTableHead>
         <tr>
           <th>No.</th>
@@ -43,115 +67,215 @@ const Body = () => {
           <th className="text-center" title="electronic Medical Records">
             eMR
           </th>
-          <th title="Vital Sign">VS</th>
+          <th className="text-center">VS</th>
           <th>Remarks</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        {paginatedData.map((item, index) => {
-          const {
-            patient,
-            remarks,
-            status,
-            lab,
-            rad,
-            qn,
-            visitType,
-            ehr,
-            consultation,
-            _id,
-          } = item;
+        {paginatedData.length > 0 ? (
+          paginatedData.map((item, index) => {
+            const {
+              patient,
+              remarks,
+              status,
+              qn,
+              visitType,
+              lab = {},
+              rad = {},
+              ehr,
+              consultation,
+              _id,
+            } = item;
+            const hasLab = Object.keys(lab).length > 0;
+            const hasRad = Object.keys(rad).length > 0;
 
-          return (
-            <tr key={index}>
-              <td>{qn}</td>
-              <td>
-                {fullName(patient?.fullName)}{" "}
-                <MDBBadge
-                  color={status === "confirmed" ? "success" : "info"}
-                  className="ml-2"
-                >
+            return (
+              <tr key={index}>
+                <td>{qn}</td>
+                <td>
+                  <div className="d-flex align-items-center">
+                    <div>
+                      {fullName(patient?.fullName)}{" "}
+                      <MDBBadge
+                        color={status === "confirmed" ? "success" : "info"}
+                        className="ml-2"
+                      >
+                        <EditableSelect
+                          preValue={status}
+                          keyForText="status"
+                          animation
+                          animationStyle={{
+                            width: "10rem",
+                            marginLeft: "-.3rem",
+                            marginTop: "-.4rem",
+                          }}
+                          className="mb-n3"
+                          keyForValue="status"
+                          isEditable
+                          collections={["draft", "confirmed", "cancelled"]}
+                          fieldData={{
+                            _id,
+                            status: status,
+                          }}
+                          onSave={handleUpdate}
+                          formSubmitted={formSubmitted}
+                          isSuccess={isSuccess}
+                        />
+                      </MDBBadge>
+                    </div>
+                    {status === "confirmed" && (
+                      <span
+                        style={{ fontSize: "22px" }}
+                        className="d-block mt-n2 mb-n2 ml-2 cursor-pointer"
+                        onClick={() => {
+                          history.push(
+                            `/physician/diagnostics/consultations?ehrId=${_id}&sched=${activeSched}`
+                          );
+                        }}
+                      >
+                        👀
+                      </span>
+                    )}
+                  </div>
+                </td>
+                <td>
                   <EditableSelect
-                    preValue={status}
-                    keyForText="status"
-                    keyForValue="status"
+                    animation
+                    animationStyle={{
+                      width: "15rem",
+                      marginLeft: "-.3rem",
+                      marginTop: "0.2rem",
+                    }}
+                    className="mb-n3"
+                    preValue={visitType}
+                    keyForText="visitType"
+                    keyForValue="visitType"
                     isEditable
-                    collections={["draft", "confirmed", "cancelled"]}
+                    collections={visitTypes}
                     fieldData={{
                       _id,
-                      status: status,
+                      visitType: visitType,
                     }}
                     onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
                   />
-                </MDBBadge>
-              </td>
-              <td>
-                <EditableSelect
-                  preValue={visitType}
-                  keyForText="visitType"
-                  keyForValue="visitType"
-                  isEditable
-                  collections={visitTypes}
-                  fieldData={{
-                    _id,
-                    visitType: visitType,
+                </td>
+                <td className="text-center">
+                  <MDBIcon
+                    size="lg"
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "lab" }))
+                    }
+                    icon={hasLab ? "eye" : "plus"}
+                    title={
+                      !hasLab
+                        ? "Add Laboratory Result"
+                        : "View Laboratory Result"
+                    }
+                    className={`text-${
+                      hasLab ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
+                  />
+
+                  {/* 
+                      <EditableSelect
+                    collections={Templates.getComponents("LAB")}
+                    preValues={Templates.getWordByIndices(lab, "components")}
+                    keyForText="lab"
+                    keyForValue="lab"
+                    onSave={handleIndicesUpdate}
+                    isEditable
+                    multiple={true}
+                    fieldData={{
+                      _id,
+                      lab: Templates.getWordByIndices(lab, "components"),
+                    }}
+                  /> */}
+                </td>
+                <td className="text-center">
+                  <MDBIcon
+                    size="lg"
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "rad" }))
+                    }
+                    icon={hasRad ? "eye" : "plus"}
+                    title={
+                      !hasRad ? "Add Radiology Result" : "View Radiology Result"
+                    }
+                    className={`text-${
+                      hasRad ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
+                  />
+                  {/* <EditableSelect
+                    collections={Templates.getComponents("RAD")}
+                    preValues={Templates.getWordByIndices(
+                      rad,
+                      "components",
+                      "RAD"
+                    )}
+                    keyForText="rad"
+                    keyForValue="rad"
+                    onSave={handleIndicesUpdate}
+                    isEditable
+                    multiple={true}
+                    fieldData={{
+                      _id,
+                      rad: Templates.getWordByIndices(rad, "components", "RAD"),
+                    }}
+                  /> */}
+                </td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  className="text-center"
+                  onClick={() => {
+                    dispatch(setShowModalEhr({ ...ehr, patient: patient }));
                   }}
-                  onSave={handleUpdate}
-                  formSubmitted={formSubmitted}
-                  isSuccess={isSuccess}
-                />
-              </td>
-              <td className="text-center">
-                <EditableSelect
-                  collections={Templates.getComponents("LAB")}
-                  preValues={Templates.getWordByIndices(lab, "components")}
-                  keyForText="lab"
-                  keyForValue="lab"
-                  onSave={handleIndicesUpdate}
-                  isEditable
-                  multiple={true}
-                  fieldData={{
-                    _id,
-                    lab: Templates.getWordByIndices(lab, "components"),
+                >
+                  {ehr ? "yes" : "no"}
+                </td>
+
+                <td
+                  style={{ cursor: "pointer" }}
+                  className="text-center"
+                  onClick={() => {
+                    dispatch(
+                      setShowModalVs({
+                        ...consultation,
+                        appointment: _id,
+                        patient: patient,
+                      })
+                    );
                   }}
-                />
-              </td>
-              <td className="text-center">
-                <EditableSelect
-                  collections={Templates.getComponents("RAD")}
-                  preValues={Templates.getWordByIndices(
-                    rad,
-                    "components",
-                    "RAD"
-                  )}
-                  keyForText="rad"
-                  keyForValue="rad"
-                  onSave={handleIndicesUpdate}
-                  isEditable
-                  multiple={true}
-                  fieldData={{
-                    _id,
-                    rad: Templates.getWordByIndices(rad, "components", "RAD"),
-                  }}
-                />
-              </td>
-              <td>{ehr ? "yes" : "no"}</td>
-              <td>{consultation ? "yes" : "no"} </td>
-              <td>
-                <EditableField
-                  type="text"
-                  keyForValue="remarks"
-                  fieldData={{ _id, remarks: remarks }}
-                  onSave={handleUpdate}
-                  formSubmitted={formSubmitted}
-                  isSuccess={isSuccess}
-                />
-              </td>
-            </tr>
-          );
-        })}
+                >
+                  {consultation ? "yes" : "no"}{" "}
+                </td>
+                <td>
+                  <EditableField
+                    type="text"
+                    keyForValue="remarks"
+                    fieldData={{ _id, remarks: remarks }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
+                </td>
+              </tr>
+            );
+          })
+        ) : (
+          <tr>
+            <td colSpan={8} className="text-center py-3">
+              <p className="mb-0 text-muted fst-italic">
+                <span className="fw-semibold text-dark">
+                  No Appointment Record
+                </span>{" "}
+                found for{" "}
+                <span className="fw-bold text-primary">{activeSched}</span>
+              </p>
+            </td>
+          </tr>
+        )}
       </MDBTableBody>
     </MDBTable>
   );

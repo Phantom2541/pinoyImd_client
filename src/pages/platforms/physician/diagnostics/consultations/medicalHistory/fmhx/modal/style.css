@@ -1,0 +1,36 @@
+.appEhr-fmhx-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.appEhr-parent-row {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.appEhr-parent-col {
+  width: 200px;
+  padding: 0 1rem;
+}
+
+.appEhr-center-line {
+  width: 2px;
+  background: black;
+  margin: 0 1rem;
+}
+
+.appEhr-line-to-center {
+  position: absolute;
+  top: 50%;
+  right: -1rem; /* for Mother side */
+  width: 1rem;
+  height: 2px;
+  background: black;
+}
+
+.appEhr-parent-col:last-child .appEhr-line-to-center {
+  left: -1rem; /* for Father side */
+  right: auto;
+}

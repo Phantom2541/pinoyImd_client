@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react";
-import Laboratory from "./laboratory";
-import Radiology from "./radiology";
+import Diagnostics from "./diagnostics";
 import Vital from "./vital";
+import { useSelector } from "react-redux";
 
 const Blank = ({ task }) => <div>{task} is not working</div>;
 
 const toolsMap = {
-  laboratory: Laboratory,
-  radiology: Radiology,
+  laboratory: Diagnostics,
+  radiology: Diagnostics,
   vital: Vital,
 };
 
 const order = ["laboratory", "radiology", "vital"];
 
-export default function ToolsSwitcher({ task, ...props }) {
+export default function ToolsSwitcher({ task }) {
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
   const [current, setCurrent] = useState(task);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState("left");
-
-  const vitalSigns = {
-    temperature: "36.6°C",
-    pulse: "80 bpm",
-    bloodPressure: "120/80 mmHg",
-    respiration: "18 breaths/min",
-    weight: 70,
-    height: 1.75,
-  };
+  const { consultation = {} } = appointment || {};
 
   useEffect(() => {
     if (!task || task === current) return;
@@ -53,7 +48,7 @@ export default function ToolsSwitcher({ task, ...props }) {
           animating ? `exit-${direction}` : `enter-${direction}`
         }`}
       >
-        <Component task={current} vitalSigns={vitalSigns} />
+        <Component task={current} vitalSigns={consultation?.vitals || {}} />
       </div>
     </div>
   );

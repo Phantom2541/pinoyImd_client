@@ -272,7 +272,7 @@ const Patient = ({
         </td>
         <td>
           {!isHover ? (
-            HMO.getName(deal.hmo)
+            HMO.getName(deal?.cardHolder?.company?.name)
           ) : (
             <>
               <MDBBtnGroup>

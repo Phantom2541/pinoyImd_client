@@ -101,6 +101,7 @@ export default function Modal() {
         branchId: activePlatform.branchId,
         hasRead: false,
       };
+
       switch (key) {
         case "Miscellaneous":
           const panelAvail = bucket.filter((test) => panel.includes(test));
@@ -130,7 +131,7 @@ export default function Modal() {
           }
           break;
         case "Ultrasound":
-        case "Xray":
+        case "X-ray":
           await Promise.all(
             bucket.map((test) =>
               saveRequest(lowercaseKey, {

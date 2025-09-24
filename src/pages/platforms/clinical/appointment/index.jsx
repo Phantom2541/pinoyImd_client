@@ -6,8 +6,11 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import Modal from "./modal/modalEmr";
+import VitalSign from "./modal/vitalsigns";
 import { BROWSE } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import PatientModal from "./patient";
+import ResultsModal from "./results";
+import TransactionModal from "./transaction";
 
 const Index = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -41,7 +44,10 @@ const Index = () => {
         </MDBCard>
       </MDBAnimation>
       <Modal />
+      <VitalSign />
       <PatientModal />
+      <ResultsModal />
+      <TransactionModal />
     </>
   );
 };

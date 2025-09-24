@@ -9,6 +9,9 @@ import {
 import {
   UPDATE,
   setShowModalEhr,
+  setShowModalVs,
+  SetRESULT,
+  SetTRANSAC,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../services/utilities";
 import {
@@ -35,16 +38,21 @@ const Body = () => {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+  const sortedData = [...filtered].sort((a, b) => {
+    const order = { done: 1, confirmed: 2 };
+    return (order[a.status] || 99) - (order[b.status] || 99);
+  });
+
+  const paginatedData = sortedData.slice(startIndex, endIndex);
 
   const statusColors = {
     draft: "info",
-    confirmed: "success",
+    confirmed: "primary",
     cancelled: "danger",
   };
 
   return (
-    <MDBTable bordered className="m-0 p-0">
+    <MDBTable bordered className="m-0 p-0" small>
       <MDBTableHead>
         <tr>
           {!activeSched && <th>Schedule</th>}
@@ -67,26 +75,35 @@ const Body = () => {
               patient,
               remarks,
               status,
-              hasLab,
-              hasRadiology,
               qn,
               visitType,
               ehr,
               consultation,
               _id,
               sched,
+              lab = {},
+              rad = {},
             } = item;
+            const hasLab = Object.keys(lab).length > 0;
+            const hasRad = Object.keys(rad).length > 0;
             return (
               <tr key={index}>
                 {!activeSched && <td>{sched}</td>}
                 <td>{qn}</td>
                 <td>
-                  {fullName(patient?.fullName)}{" "}
+                  {fullName(patient?.fullName)}
                   <MDBBadge
                     color={statusColors[status] || "info"}
                     className="ml-2"
                   >
                     <EditableSelect
+                      animation
+                      animationStyle={{
+                        width: "10rem",
+                        marginLeft: "-.3rem",
+                        marginTop: "-.4rem",
+                      }}
+                      className="mb-n3"
                       preValue={status}
                       keyForText="status"
                       keyForValue="status"
@@ -98,12 +115,29 @@ const Body = () => {
                       isSuccess={isSuccess}
                     />
                   </MDBBadge>
+
+                  {status === "done" && (
+                    <MDBIcon
+                      icon="cash-register"
+                      onClick={() => dispatch(SetTRANSAC(item))}
+                      size="lg"
+                      className="ml-3 cursor-pointer"
+                      title="Transaction"
+                    />
+                  )}
                 </td>
                 <td>
                   <EditableSelect
+                    animation
+                    animationStyle={{
+                      width: "15rem",
+                      marginLeft: "-.3rem",
+                      marginTop: "0.2rem",
+                    }}
                     preValue={visitType}
                     keyForText="visitType"
                     keyForValue="visitType"
+                    className="mb-n3"
                     isEditable
                     collections={visitTypes}
                     fieldData={{
@@ -118,31 +152,66 @@ const Body = () => {
                 <td className="text-center">
                   <MDBIcon
                     size="lg"
-                    icon={hasLab ? "check" : "times"}
-                    style={{ color: hasLab ? "green" : "black" }}
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "lab" }))
+                    }
+                    icon={hasLab ? "eye" : "plus"}
+                    title={
+                      !hasLab
+                        ? "Add Laboratory Result"
+                        : "View Laboratory Result"
+                    }
+                    className={`text-${
+                      hasLab ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
                   />
                 </td>
                 <td className="text-center">
                   <MDBIcon
                     size="lg"
-                    icon={hasRadiology ? "check" : "times"}
-                    style={{ color: hasRadiology ? "green" : "black" }}
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "rad" }))
+                    }
+                    icon={hasRad ? "eye" : "plus"}
+                    title={
+                      !hasRad ? "Add Radiology Result" : "View Radiology Result"
+                    }
+                    className={`text-${
+                      hasRad ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
                   />
                 </td>
                 <td
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    console.log("Clicked cell:", ehr);
-                    dispatch(setShowModalEhr(ehr));
+                    dispatch(setShowModalEhr({ ...ehr, patient: patient }));
                   }}
                 >
                   {ehr ? "yes" : "no"}
                 </td>
 
-                <td>{consultation ? "yes" : "no"} </td>
-                <td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    dispatch(
+                      setShowModalVs({
+                        ...consultation,
+                        appointment: _id,
+                        patient: patient,
+                      })
+                    );
+                  }}
+                >
+                  {consultation ? "yes" : "no"}{" "}
+                </td>
+                <td className="position-relative">
                   <EditableField
                     type="text"
+                    animation
+                    animationStyle={{
+                      width: "15rem",
+                      marginTop: "-0.4rem",
+                    }}
                     keyForValue="remarks"
                     fieldData={{ _id, remarks: remarks }}
                     onSave={handleUpdate}

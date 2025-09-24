@@ -16,7 +16,11 @@ export default function Search({
     [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    if (!hideButton && haveAction) setShowBtn(true);
+    if (!hideButton && haveAction) {
+      setShowBtn(true);
+    } else {
+      setShowBtn(false);
+    }
   }, [hideButton, haveAction]);
 
   const debouncedSearch = useMemo(() => {
@@ -53,7 +57,7 @@ export default function Search({
           placeholder="Search..."
           onChange={({ target }) => handleChange(target.value)}
           autoCorrect="off"
-          className="search"
+          className="search  "
           type="search"
           id="item-search"
           spellCheck={false}

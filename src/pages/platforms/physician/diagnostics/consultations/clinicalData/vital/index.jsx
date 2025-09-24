@@ -1,5 +1,27 @@
 import "./../style.css";
 
+const vitalsConfig = {
+  temp: {
+    label: "Temperature",
+    unit: "°C",
+  },
+  bp: {
+    label: "Blood Pressure",
+    unit: "mmHg",
+  },
+  rr: {
+    label: "Respiratory Rate",
+    unit: "breaths/min",
+  },
+  pr: {
+    label: "Pulse Rate",
+    unit: "bpm",
+  },
+  hr: {
+    label: "Heart Rate",
+    unit: "bpm",
+  },
+};
 export default function VitalSign({ vitalSigns }) {
   if (!vitalSigns) {
     return (
@@ -18,12 +40,15 @@ export default function VitalSign({ vitalSigns }) {
         <h2>Vital Signs</h2>
         <table className="vital-signs-table">
           <tbody>
-            {Object.entries(otherVitals).map(([key, value]) => (
-              <tr key={key}>
-                <td className="vital-label">{formatLabel(key)}</td>
-                <td className="vital-value">{value}</td>
-              </tr>
-            ))}
+            {Object.entries(otherVitals).map(([key, value]) => {
+              const { label, unit } = vitalsConfig[key];
+              return (
+                <tr key={key}>
+                  <td className="vital-label">{label}</td>
+                  <td className="vital-value">{`${value} ${unit}`}</td>
+                </tr>
+              );
+            })}
             {bmi && (
               <tr>
                 <td className="vital-label">BMI</td>

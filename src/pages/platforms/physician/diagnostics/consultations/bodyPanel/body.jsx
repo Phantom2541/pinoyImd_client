@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToolsSwitcher from "../clinicalData";
 import HistorySwitcher from "../medicalHistory";
 import HumanBody from "./humanBody";
+import { useSelector } from "react-redux";
 
 export default function Body() {
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
   const [slide, setSlide] = useState("");
 
   const getTranslate = () => {
@@ -16,6 +20,10 @@ export default function Body() {
     }
     return "-33.3333%"; // fallback center
   };
+
+  useEffect(() => {
+    console.log("appointment changed:", appointment?._id);
+  }, [appointment]);
 
   return (
     <div className="checkup-data-body">

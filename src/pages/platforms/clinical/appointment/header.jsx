@@ -31,7 +31,7 @@ const Header = () => {
             value={activePhysician?._id}
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
           >
-            <option value="all">All</option>
+            <option value="">All</option>
             {activePlatform.branch.physicians.map((user) => {
               const isExisting = physicians.some(({ _id }) => _id === user._id);
               return (
@@ -48,23 +48,25 @@ const Header = () => {
           </select>
         </div>
       </div>
-      <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center ml-n5">
-        <span className="mr-2">Schedule:</span>
-        <select
-          className="form-control bg-light"
-          value={activeSched}
-          onChange={({ target }) => {
-            dispatch(SetSCHED({ sched: target.value }));
-          }}
-        >
-          <option value="">All</option>
-          {scheds.map((sched) => (
-            <option key={sched} value={sched}>
-              {sched}
-            </option>
-          ))}
-        </select>
-      </div>
+      {activePhysician?._id && (
+        <div className="white-text mx-3 text-nowrap mt-0 d-flex align-items-center ml-n5">
+          <span className="mr-2">Schedule:</span>
+          <select
+            className="form-control bg-light"
+            value={activeSched}
+            onChange={({ target }) => {
+              dispatch(SetSCHED({ sched: target.value }));
+            }}
+          >
+            <option value="">All</option>
+            {scheds.map((sched) => (
+              <option key={sched} value={sched}>
+                {sched}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <Search
         setFiltered={(items) => {
           dispatch(SetFILTERED(items));

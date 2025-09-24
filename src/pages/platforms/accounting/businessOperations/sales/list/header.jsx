@@ -35,7 +35,8 @@ const Header = () => {
           token,
           key: {
             branchId: activePlatform?.branchId,
-            createdAt,
+            startDate: createdAt,
+            endDate: createdAt,
           },
         })
       );

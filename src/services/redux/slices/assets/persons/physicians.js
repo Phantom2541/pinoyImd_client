@@ -7,6 +7,7 @@ const initialState = {
   collections: [],
   filtered: [],
   searchResults: [],
+  physicians: [],
   isSuccess: false,
   isLoading: false,
   formSubmitted: false,
@@ -348,6 +349,10 @@ export const reduxSlice = createSlice({
         state.collections = payload;
         state.filtered = payload;
         state.isLoading = false;
+
+        state.physicians = (payload || [])
+          .filter((item) => item.status === "active")
+          .map((item) => item._id);
       })
       .addCase(TIEUPS.rejected, (state, action) => {
         const { error } = action;

@@ -34,6 +34,22 @@
     "code": "PSHx",
     "title": "Past Surgical History",
     "items": [
+      { "label": "Appendectomy" },
+      { "label": "Cholecystectomy" },
+      { "label": "Hernia Repair" },
+      { "label": "Cataract Extraction" },
+      { "label": "Tonsillectomy" },
+      { "label": "Coronary Artery Bypass Graft (CABG)" },
+      { "label": "Angioplasty with Stent" },
+      { "label": "Total Knee Replacement" },
+      { "label": "Total Hip Replacement" },
+      { "label": "Fracture Fixation (ORIF)" }
+    ]
+  },
+  {
+    "code": "socialHistory",
+    "title": "Habits",
+    "items": [
       { "label": "Smoking Hx" },
       { "label": "Alcohol Intake" },
       { "label": "Illicit Drug Use" }
@@ -46,8 +62,7 @@
       { "label": "Nulligravida" },
       { "label": "Primigravida" },
       {
-        "label": "Multigravida",
-        "children": ["Gravida", "Term", "Preterm", "Abortion", "Living"]
+        "label": "Multigravida"
       }
     ]
   }

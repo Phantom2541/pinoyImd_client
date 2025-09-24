@@ -143,7 +143,7 @@ const set = {
           source = {},
           physicianId = {},
           createdAt,
-          hmo = "",
+          cardHolder = {},
         } = array[i] || {};
         // Build richText with A., B., C. labels in bold
         const menu = cart.flatMap((service, _) => {
@@ -176,7 +176,7 @@ const set = {
           { richText: menu },
           { richText: servicesInclusion },
           amount,
-          HMO.getName(hmo),
+          HMO.getName(cardHolder?.company?.name),
         ];
 
         let _prevCol = 0;

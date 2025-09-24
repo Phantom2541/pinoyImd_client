@@ -8,7 +8,10 @@ import {
 
 const Header = () => {
   const { activePlatform = {}, auth = {} } = useSelector(({ auth }) => auth);
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { patient } = appointment;
   const { fullName: name, dob, isMale, mobile, address } = patient || {};
 
   const companyName = activePlatform?.branch?.companyId?.name || "";
@@ -33,7 +36,7 @@ const Header = () => {
           <tr>
             <th
               colSpan={3}
-              style={{ fontSize: "1rem" }}
+              style={{ fontSize: "1.2rem", fontWeight: "bold" }}
               className="laboratoryRequestForm-font text-center"
             >
               PATIENT REQUEST FORM
@@ -45,32 +48,55 @@ const Header = () => {
 
           <tr>
             <td colSpan={3} style={cellStyle}>
-              <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
-                Name: {fullName(name) || ""}
+              <span style={{ fontSize: ".8rem" }}>Name:&nbsp;</span>
+              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+                {fullName(name).toLowerCase() || ""}
               </span>
             </td>
           </tr>
 
           <tr style={{ height: "30px" }}>
             <td style={cellStyle}>
-              Date of Birth:{" "}
-              {dob ? new Date(dob).toLocaleDateString("en-US") : ""}
+              <span style={{ fontSize: ".8rem" }}>Date of Birth:&nbsp;</span>
+              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+                {dob ? new Date(dob).toLocaleDateString("en-US") : ""}
+              </span>
             </td>
 
             <td style={cellStyle}>
-              Sex: {isMale === true ? "Male" : isMale === false ? "Female" : ""}
+              <span style={{ fontSize: ".8rem" }}>Sex:&nbsp;</span>
+              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+                {isMale === true ? "Male" : isMale === false ? "Female" : ""}
+              </span>
             </td>
 
-            <td style={cellStyle}>CP#: {mobile || ""}</td>
+            <td style={cellStyle}>
+              <span style={{ fontSize: ".8rem" }}>CP#:&nbsp;</span>
+              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+                {mobile || ""}
+              </span>
+            </td>
           </tr>
 
           <tr style={{ height: "20px" }}>
             <td colSpan={2} style={cellStyle}>
-              Address: {address ? billingAddress(address) : ""}
+              <span style={{ fontSize: ".8rem" }}> Address:&nbsp;</span>
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: ".9rem",
+                  textTransform: "capitalize",
+                }}
+              >
+                {address ? billingAddress(address) : ""}
+              </span>
             </td>
             <td style={cellStyle}>
-              Physician: {auth?.fullName?.title || ""}
-              {properFullname(auth?.fullName)}
+              <span style={{ fontSize: ".8rem" }}>Physician:&nbsp;</span>
+              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+                {auth?.fullName?.title || ""}
+                {properFullname(auth?.fullName)}
+              </span>
             </td>
           </tr>
         </tbody>
@@ -83,7 +109,6 @@ const cellStyle = {
   border: "1px solid #000",
   padding: "6px",
   fontSize: "1rem",
-  fontWeight: "bold",
 };
 
 export default Header;

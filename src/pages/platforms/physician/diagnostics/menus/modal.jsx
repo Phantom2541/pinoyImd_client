@@ -18,103 +18,67 @@ import { useToasts } from "react-toast-notifications";
 import { properFullname } from "../../../../../services/utilities";
 
 export default function Modal() {
-  const { show, selected, willCreate, isLoading } = useSelector(
+  const { showModal, selected, willCreate, isLoading } = useSelector(
       ({ clinicMenus }) => clinicMenus
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered = [] } = useSelector(({ physicians }) => physicians),
-    [form, setForm] = useState(selected || {}),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  console.log("filtered", filtered);
+  const physicians = activePlatform.branch.physicians || "";
 
+  // Initialize form when selected changes
   useEffect(() => {
     if (selected) {
       setForm(selected);
-    } else if (willCreate) {
-      setForm({
-        service: "",
-        description: "",
-        srp: "",
-        discountable: false,
-        doctor: "",
-        doctorFee: "",
-      });
+    } else {
+      setForm({});
     }
-  }, [selected, willCreate]);
+  }, [selected]);
 
-  // Handle update
-  const handleUpdate = () => {
-    if (isEqual(form, selected)) {
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-
-    dispatch(
-      UPDATE({
-        data: { ...form, _id: selected._id },
-        token,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        addToast("Clinic menu updated successfully", {
-          appearance: "success",
-        });
-        dispatch(toggleModal());
-      })
-      .catch(() =>
-        addToast("Failed to update clinic menu", { appearance: "error" })
-      );
-  };
-
-  // Handle create
-  const handleCreate = () => {
-    dispatch(
-      SAVE({
-        data: form,
-        token,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        addToast("Clinic menu created successfully", {
-          appearance: "success",
-        });
-        dispatch(toggleModal());
-      })
-      .catch(() =>
-        addToast("Failed to create clinic menu", { appearance: "error" })
-      );
-  };
-
-  // Handle form submit
-  const handleSubmit = (e) => {
+  // SUBMIT
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (willCreate) return handleCreate();
-    handleUpdate();
+
+    try {
+      // 🔒 Validation: block if doctor has no clinic
+      if (!form.clinicId) {
+        return addToast("This doctor has not yet registered a clinic.", {
+          appearance: "error",
+        });
+      }
+
+      if (willCreate) {
+        await dispatch(SAVE({ data: form, token }));
+        setForm({});
+      } else {
+        if (isEqual(form, selected)) {
+          return addToast("No changes found, skipping update.", {
+            appearance: "info",
+          });
+        }
+        await dispatch(UPDATE({ data: form, token }));
+      }
+      // ✅ Slice will handle closing the modal
+    } catch (err) {
+      addToast(err.message || "Failed to save/update.", {
+        appearance: "error",
+      });
+    }
   };
 
-  // Handle change
+  // STATE HELPERS
   const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: value,
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    });
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Get field value safely
-  const handleValue = (key) => form[key] || "";
+  const handleValue = (key) => form[key] ?? "";
 
-  // Close modal
   const handleClose = () => dispatch(toggleModal());
 
   return (
-    <MDBModal isOpen={show} toggle={handleClose} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
@@ -126,11 +90,18 @@ export default function Modal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBInput
+            label="Professional Fee"
+            type="number"
+            value={handleValue("professionalFee")}
+            onChange={(e) => handleChange("professionalFee", e.target.value)}
+          />
+
+          <MDBInput
             label="Services/Procedure"
             type="text"
-            value={handleValue("service")}
+            value={handleValue("abbreviation")}
             required
-            onChange={(e) => handleChange("service", e.target.value)}
+            onChange={(e) => handleChange("abbreviation", e.target.value)}
           />
 
           <MDBInput
@@ -149,38 +120,41 @@ export default function Modal() {
             onChange={(e) => handleChange("srp", e.target.value)}
           />
 
-          <div className="d-flex align-items-center mb-3">
+          <div className="form-check mb-3">
             <input
               type="checkbox"
-              checked={form.discountable || false}
+              className="form-check-input"
+              id="discountable"
+              checked={!!form.discountable}
               onChange={(e) => handleChange("discountable", e.target.checked)}
             />
-            <label className="ml-2">Discountable</label>
+            <label className="form-check-label" htmlFor="discountable">
+              Discountable
+            </label>
           </div>
+
           <small>Doctor / Specialist</small>
           <select
             className="form-control mb-3"
-            value={form.doctor || ""}
-            onChange={(e) => handleChange("doctor", e.target.value)}
+            value={form.physicianId || ""}
+            onChange={(e) => {
+              const { _id, clinic } =
+                physicians.find((doc) => doc._id === e.target.value) || {};
+
+              setForm((prev) => ({
+                ...prev,
+                physicianId: _id || "",
+                clinicId: clinic?._id || "",
+              }));
+            }}
           >
             <option value="">-- Select Doctor --</option>
-            {filtered.map((doc) => {
-              const displayName = properFullname(doc.user?.fullName) || {};
-
-              return (
-                <option key={doc._id} value={doc._id}>
-                  {displayName}
-                </option>
-              );
-            })}
+            {physicians.map(({ _id, fullName }) => (
+              <option key={_id} value={_id}>
+                {properFullname(fullName) || ""}
+              </option>
+            ))}
           </select>
-
-          <MDBInput
-            label="Doctor’s Fee"
-            type="number"
-            value={handleValue("doctorFee")}
-            onChange={(e) => handleChange("doctorFee", e.target.value)}
-          />
 
           <div className="text-center mb-1-half">
             <MDBBtn

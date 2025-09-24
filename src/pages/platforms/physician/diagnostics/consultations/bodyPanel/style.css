@@ -46,3 +46,11 @@
 .history-list span.female:hover {
   color: #e83e8c;
 }
+
+.history-list span.male.active {
+  color: #007bff;
+}
+
+.history-list span.female.active {
+  color: #e83e8c;
+}

@@ -1,0 +1,201 @@
+.checkup-data-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  grid-template-rows: auto 1fr auto 50px;
+  grid-template-areas:
+    "image   patient"
+    "image   patient"
+    "image   prescription"
+    "toolkit toolkit";
+  gap: 10px;
+  height: calc(100vh - 23vh);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* shimmer overlay */
+.checkup-data-skeleton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 0%,
+    #f8f8f8 20%,
+    #e0e0e0 40%,
+    #e0e0e0 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  z-index: 1;
+
+  /* mask para makita lang sa skeleton blocks */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.checkup-data-skeleton-sidebar {
+  grid-area: patient;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  border-radius: 3px;
+  overflow-y: auto;
+}
+
+.checkup-data-skeleton-body {
+  grid-area: image;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.checkup-data-skeleton-note {
+  grid-area: prescription;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  height: 50px;
+}
+
+.checkup-data-skeleton-case {
+  grid-area: toolkit;
+  background-color: white;
+
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.checkup-data-skeleton-body,
+.checkup-data-skeleton-sidebar,
+.checkup-data-skeleton-note,
+.checkup-data-skeleton-case {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #e0e0e0; /* base background like FB */
+  opacity: 0.8;
+}
+
+/* shimmering overlay */
+.checkup-data-skeleton-body::after,
+.checkup-data-skeleton-sidebar::after,
+.checkup-data-skeleton-note::after,
+.checkup-data-skeleton-case::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 0%,
+    #f6f6f6 20%,
+    #e0e0e0 40%,
+    #e0e0e0 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0.4;
+  animation: shimmer-diagonal 5s infinite linear;
+}
+
+@keyframes shimmer-diagonal {
+  0% {
+    background-position: -250% -250%;
+  }
+  100% {
+    background-position: 250% 250%;
+  }
+}
+
+.checkup-data-lab-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* generic shimmering box */
+.checkup-data-skeleton-box {
+  position: relative;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.checkup-data-skeleton-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 0%,
+    #f6f6f6 20%,
+    #e0e0e0 40%,
+    #e0e0e0 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0.6;
+  animation: checkup-data-shimmer 4s infinite linear;
+}
+
+@keyframes checkup-data-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* header */
+.checkup-data-lab-skeleton-header {
+  height: 80px;
+  width: 100%;
+}
+
+/* patient info lines */
+.checkup-data-lab-skeleton-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.checkup-data-lab-skeleton-info .checkup-data-skeleton-box {
+  height: 14px;
+}
+
+/* section title */
+.checkup-data-lab-skeleton-section-title {
+  height: 20px;
+  width: 250px;
+  margin: 10px 0;
+}
+
+/* table rows (2 columns) */
+.checkup-data-lab-skeleton-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.checkup-data-lab-skeleton-table .checkup-data-skeleton-box {
+  height: 14px;
+}
+
+.checkup-data-lab-skeleton-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 150px; /* adjust to match actual sidebar width */
+  margin-top: 20px;
+}
+
+.checkup-data-lab-skeleton-sidebar-item {
+  height: 20px;
+  width: 100%;
+  border-radius: 4px;
+}

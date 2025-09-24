@@ -67,9 +67,11 @@ const Stub = ({ sale, companyId }) => {
   const isMixed = payment === "mixed";
   const cashOut = amount - refNo?.amount || 0;
   const hasCashOut = cashOut > 0 && isMixed && pp === "cash";
+
   const isCardHolder = Boolean(
     cardHolder?.company?.name || cardHolder?.company?.ref
   );
+
   const change = hasCashOut ? cash - cashOut : cash - amount;
 
   return (

@@ -8,7 +8,7 @@ import "./requestForm.css";
 export default function RequestForm({ active, buttonRefs, togglePanel }) {
   const style = usePanelPosition(active, buttonRefs.request, {
     width: 507,
-    height: 700,
+    height: 600,
   });
 
   return (
@@ -22,7 +22,7 @@ export default function RequestForm({ active, buttonRefs, togglePanel }) {
         style={{
           width: "100%",
           height: "100%",
-          maxHeight: "700px",
+          maxHeight: "600px",
           overflow: "auto",
         }}
       >
