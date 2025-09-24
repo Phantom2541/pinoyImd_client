@@ -39,6 +39,11 @@ export default function Card({ item, index }) {
     );
   };
 
+  const getDay = (_createdAt) => {
+    const date = new Date(_createdAt);
+    return date.toLocaleDateString("en-US", { weekday: "short" });
+  };
+
   return (
     <MDBCol className="p-2" md="4" key={index}>
       <div className="sales-card" key={index}>
@@ -61,12 +66,18 @@ export default function Card({ item, index }) {
 
           <div className="d-flex items-center">
             <div className="sales-card-info mr-4">
-              <small>Time Charge</small>
-              <span>{new Date(createdAt).toLocaleTimeString()}</span>
+              <small>Charged</small>
+              <span>
+                {getDay(createdAt)} {new Date(createdAt).toLocaleTimeString()}
+              </span>
             </div>
             <div className="sales-card-info">
-              <small>Time Rendered</small>
-              <span>{at ? new Date(at).toLocaleTimeString() : "-"}</span>
+              <small>Rendered</small>
+              <span>
+                {at
+                  ? `${getDay(at)} ${new Date(at).toLocaleTimeString()}`
+                  : "-"}
+              </span>
             </div>
           </div>
           {edit ? (
