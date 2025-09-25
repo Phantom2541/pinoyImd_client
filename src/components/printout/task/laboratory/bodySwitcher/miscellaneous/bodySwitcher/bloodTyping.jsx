@@ -4,7 +4,7 @@ export default function BloodTyping({ task, fontSize }) {
   const { results } = task;
   const aboType = types[results?.bt];
   return (
-    <div className="pl-5 offset-1" style={{ fontSize: `${fontSize}rem` }}>
+    <div className="pl-5 offset-1 mt-2" style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>
         <h6>BLOOD TYPING :</h6>
         <div className="mb-3">

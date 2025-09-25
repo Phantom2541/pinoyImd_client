@@ -1333,7 +1333,7 @@
     "frequency": "As ordered (suspected anemia, leukemia, or infections)",
     "preparation": "No special preparation required",
     "specimen": "EDTA whole blood",
-    "template": 10,
+    "template": 12,
     "preference": "None",
     "purpose": "To evaluate blood cell morphology and diagnose hematologic disorders.",
     "organ": ["Blood", "Bone Marrow"]

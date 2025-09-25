@@ -29,9 +29,7 @@ export default function Miscellaneous() {
 
   // ✅ Corrected way to check if packages include 146 or 11
   const hasSpecialPackage = packages.some((pkg) => [146, 11].includes(pkg));
-  const hasKit = !packages.includes(121) && !packages.includes(66); //blood typing =121 , Widal =66
-  console.log("hasKit", hasKit, packages);
-
+  const hasKit = !packages.includes(121) && !packages.includes(66); //blood typing =66 , Widal =121
   return (
     <MDBContainer>
       {/* If no special package, show the tab buttons */}

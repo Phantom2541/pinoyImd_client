@@ -68,24 +68,11 @@ export default function Modal() {
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
     const { _id, customerId, ssx, forms: oldForms, pn } = deal;
-    // const sentOut = [...collections].find(
-    //   ({ vendors }) => vendors?._id === outSourceId
-    // );
 
     localStorage.setItem(
       "inhouse",
       JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
     );
-    // localStorage.setItem(
-    //   "outsource_request",
-    //   JSON.stringify({
-    //     deal: { ...deal, ssx },
-    //     sentOut,
-    //     isRad: department === "RAD",
-    //     outsources: outsource,
-    //   })
-    // );
-    // localStorage.setItem("ssx", JSON.stringify(ssx));
 
     const deptIndexMap = {
       LAB: 0,

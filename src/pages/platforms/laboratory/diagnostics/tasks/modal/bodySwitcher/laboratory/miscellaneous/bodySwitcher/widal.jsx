@@ -1,25 +1,11 @@
 import { MDBTable } from "mdbreact";
 import { EditableSelect } from "../../../../../../../../../../components/customizable";
-import { useState } from "react";
-const widalAntigens = [
-  { name: "O-somatic (TO) antigen", abbr: "TO" },
-  { name: "H-somatic (TH) antigen", abbr: "TH" },
-  { name: "O-somatic (AO) antigen", abbr: "AO" },
-  { name: "H-somatic (AH) antigen", abbr: "AH" },
-  { name: "O-somatic (BO) antigen", abbr: "BO" },
-  { name: "H-somatic (BH) antigen", abbr: "BH" },
-];
+import { Widal } from "../../../../../../../../../../services/fakeDb/diagnostics";
 
-const interpretation = {
-  "<1:40": "Normal",
-  "1:40": "High",
-  "1:80": "Warning",
-  "1:160": "Positive",
-  "1:320": "Maximum",
-};
-
-const Widal = () => {
-  const [form, setForm] = useState({});
+const WDL = ({ task, setTask = () => {} }) => {
+  const { results = {} } = task;
+  const handleChange = (titer, result) =>
+    setTask({ ...task, results: { ...results, [titer]: result } });
   return (
     <MDBTable small>
       <thead>
@@ -30,21 +16,21 @@ const Widal = () => {
         </tr>
       </thead>
       <tbody>
-        {widalAntigens.map(({ name, abbr }, index) => (
+        {Widal.collections.map(({ name, abbr }, index) => (
           <tr key={index}>
             <td className="text-left">{name}</td>
             <td className="text-left">
               <div style={{ width: "5rem" }} className="m-0 p-0 mt-n2 mb-n2">
                 <EditableSelect
-                  inputClassName="m-0 p-0"
-                  collections={["<1:40", "1:40", "1:80", "1:160", "1:320"]}
-                  value={form[abbr] || ""}
-                  onChange={(e) => setForm({ ...form, [abbr]: e })}
+                  inputClassName="m-0 p-0 "
+                  collections={Widal.titers}
+                  preValue={results[abbr] || ""}
+                  onChange={(e) => handleChange(abbr, e)}
                 />
               </div>
             </td>
             <td className="text-left">
-              {form[abbr] && interpretation[form[abbr]]}
+              {Widal.get.interpretation(results[abbr] || "")}
             </td>
           </tr>
         ))}
@@ -53,4 +39,4 @@ const Widal = () => {
   );
 };
 
-export default Widal;
+export default WDL;

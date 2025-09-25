@@ -84,7 +84,6 @@ const Services = {
       // Get the readable component name for the template ID and department
       const key = Templates.getComponentName(templateId, department);
       // const key = Templates.getComponentIndex(templateId, department);
-      console.log("key", key);
       // Fallback in case key is undefined
       const resolvedKey = key || "Unknown";
 
