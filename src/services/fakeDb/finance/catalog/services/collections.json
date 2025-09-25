@@ -1940,7 +1940,7 @@
   },
   {
     "id": 120,
-    "name": "TYPHOID / TYPHIDOT Test",
+    "name": "TYPHIDOT Test",
     "abbreviation": "Typhoid IgG & IgM",
     "lo_ssx": "Negative: No fever or gastrointestinal symptoms",
     "hi_ssx": "Positive: Fever, headache, abdominal pain, diarrhea, malaise",
@@ -1955,7 +1955,7 @@
   },
   {
     "id": 121,
-    "name": "TYPHOID / Widal Test",
+    "name": "Widal Test",
     "abbreviation": "Widal",
     "lo_ssx": "Negative: No fever or gastrointestinal symptoms",
     "hi_ssx": "Positive: Fever, headache, abdominal pain, diarrhea, malaise",
