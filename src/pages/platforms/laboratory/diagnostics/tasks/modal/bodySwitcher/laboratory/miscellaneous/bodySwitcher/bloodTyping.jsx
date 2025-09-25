@@ -15,7 +15,7 @@ export default function BloodTyping({ task, setTask }) {
   };
 
   return (
-    <MDBRow>
+    <MDBRow className="mt-2">
       {/* Blood Type */}
       <MDBCol md="6">
         <label className="font-weight-bold">Blood Type</label>

@@ -96,12 +96,10 @@ const Footer = () => {
   };
 
   const hasDoneChecker = (_id = "") => {
-    console.log("selected?.diagnostic", selected);
-
     const diagnostics = Object.values(selected?.diagnostic)
       .flat(Infinity)
-      .filter((item) => item._id !== _id);
-    return diagnostics.every(({ hasDone = false }) => hasDone);
+      .filter((item = {}) => item?._id !== _id);
+    return diagnostics?.every((item) => item?.hasDone);
   };
 
   const handleSave = (hasDone) => {

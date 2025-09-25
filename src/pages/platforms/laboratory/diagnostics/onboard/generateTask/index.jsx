@@ -46,8 +46,6 @@ export default function Modal() {
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data, isStaticPath = false) => {
     try {
-      console.log("template", template);
-
       const _department = ["Laboratory", "Radiology"].includes(
         activePlatform.department
       )
