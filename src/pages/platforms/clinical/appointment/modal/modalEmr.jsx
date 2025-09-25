@@ -222,7 +222,7 @@ export default function Modal() {
   const { patient } = selected;
 
   return (
-    <MDBModal isOpen={showModalEhr} toggle={handleClose} backdrop size="fluid">
+    <MDBModal isOpen={showModalEhr} toggle={handleClose} backdrop size="md">
       <MDBModalHeader
         toggle={handleClose}
         className="appEhr light-blue darken-3 white-text"
