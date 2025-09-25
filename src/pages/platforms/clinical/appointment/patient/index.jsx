@@ -130,7 +130,6 @@ export default function PatientModal() {
           },
         };
       } catch (err) {
-        console.error("Upload failed:", err);
         return; // stop pag failed ang upload
       }
     }
