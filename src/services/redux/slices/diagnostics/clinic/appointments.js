@@ -335,6 +335,7 @@ export const reduxSlice = createSlice({
         conditions = {},
         surgeries = {},
         obGyneHistory = {},
+        patient = {},
       } = payload || {};
 
       const ehr = {
@@ -342,6 +343,7 @@ export const reduxSlice = createSlice({
         habits: socialHistory?.habits || {},
         conditions,
         surgeries,
+        isMale: patient?.isMale,
         obGyneHistory,
         patient: payload?.patient,
       };

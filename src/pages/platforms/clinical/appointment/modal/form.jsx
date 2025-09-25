@@ -217,44 +217,109 @@ export function ChecklistSection({
 }
 
 // ----------------- ObGyneSection -----------------
-export function ObGyneSection({ step, form, handleCheck, handleNumber }) {
-  const selected = form[step.code]?.selected || "";
+export function ObGyneSection({ step, form, handleNumber, handleTextChange }) {
+  const sectionData = form[step.code] || {};
+  const gtpalData = sectionData.gtpal || {};
+
+  const obGyneKeyMap = {
+    "At what age did you have your first menstruation": "menarche",
+    "When was your last menstrual period?": "lmp",
+    "Are you currently using any method of contraception?": "contraception",
+  };
+
+  const gtpalItem = Array.isArray(step.items)
+    ? step.items.find((item) => item.label.toLowerCase() === "gtpal")
+    : null;
+  console.log("gtpalItem", gtpalItem);
+
+  const gtpalFieldMap = {
+    "How many times have you been pregnant?": "gravida",
+    "How many reached 9 months or full term?": "term",
+    "Any preterm deliveries?": "preterm",
+    "Any miscarriages or abortions?": "abortion",
+    "How many living children?": "living",
+  };
 
   return (
-    <>
-      {step.items.map((item) => {
-        const isChecked = selected === item.label;
+    <div className="space-y-4">
+      {/* Regular labels with input */}
+      {step.items
+        ?.filter((item) => item.label.toLowerCase() !== "gtpal")
+        .map((item) => {
+          const key = obGyneKeyMap[item.label] || item.label;
+          return (
+            <div key={item.label} className="flex items-center mb-1">
+              <label className="w-80 text-sm mb-1 mt-1">{item.label}</label>
 
-        return (
-          <div key={item.label} className="mb-2">
-            <CheckboxRow
-              label={item.label}
-              checked={isChecked}
-              onClick={() => handleCheck(step.code, item.label, !isChecked)}
-              style={{ marginLeft: "150px" }}
-            />
+              {key === "lmp" ? (
+                <MDBDatePicker
+                  valueDefault={sectionData.lmp || new Date()}
+                  getValue={(val) =>
+                    handleTextChange(step.code, "lmp", "date", val)
+                  }
+                  className="mt-1 mb-1"
+                  style={{ width: "10rem" }}
+                />
+              ) : (
+                <input
+                  type={key === "menarche" ? "number" : "text"}
+                  className="border ml-2 text-center"
+                  style={{
+                    width: key === "menarche" ? "5rem" : "8rem",
+                  }}
+                  value={sectionData[key] || ""}
+                  onChange={(e) =>
+                    key === "menarche"
+                      ? handleNumber(step.code, key, e.target.value)
+                      : handleTextChange(step.code, key, "text", e.target.value)
+                  }
+                />
+              )}
+            </div>
+          );
+        })}
 
-            {item.label === "Multigravida" && isChecked && item.children && (
-              <div className="grid grid-cols-2 gap-2 ml-6 mt-2">
-                {item.children.map((field) => (
-                  <label key={field} className="block text-sm">
-                    {field}:{" "}
-                    <input
-                      type="number"
-                      min="0"
-                      className="border p-1 w-20"
-                      value={form[step.code]?.[field] || ""}
-                      onChange={(e) =>
-                        handleNumber(step.code, field, e.target.value)
-                      }
-                    />
-                  </label>
-                ))}
-              </div>
-            )}
+      {/* GTPAL block */}
+      {gtpalItem && (
+        <div className="mt-1">
+          {/* Inputs with labels */}
+          <div className="flex flex-col gap-3">
+            {gtpalItem.children.map((child) => {
+              const key = gtpalFieldMap[child.label];
+
+              return (
+                <div key={key} className="flex items-center gap-2">
+                  {/* show the label */}
+                  <label className="w-64">{child.label}</label>
+
+                  {/* input field */}
+                  <input
+                    type="number"
+                    min="0"
+                    className="border ml-2 text-center"
+                    style={{ width: "5rem" }}
+                    value={gtpalData[key] || ""}
+                    onChange={(e) =>
+                      handleNumber(step.code, key, e.target.value)
+                    }
+                  />
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
-    </>
+
+          {/* Compact GTPAL display */}
+          <h5>
+            <strong>
+              <div className="text-lg mt-2 center">
+                G{gtpalData.gravida || 0} T{gtpalData.term || 0} P
+                {gtpalData.preterm || 0} A{gtpalData.abortion || 0} L
+                {gtpalData.living || 0}
+              </div>
+            </strong>
+          </h5>
+        </div>
+      )}
+    </div>
   );
 }

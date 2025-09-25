@@ -56,13 +56,21 @@
     ]
   },
   {
-    "code": "OB Gyne Hx",
+    "code": "obGyneHistory",
     "title": "Obstetrical History",
     "items": [
-      { "label": "Nulligravida" },
-      { "label": "Primigravida" },
+      { "label": "At what age did you have your first menstruation" },
+      { "label": "When was your last menstrual period?" },
+      { "label": "Are you currently using any method of contraception?" },
       {
-        "label": "Multigravida"
+        "label": "GTPAL",
+        "children": [
+          { "label": "How many times have you been pregnant?" },
+          { "label": "How many reached 9 months or full term?" },
+          { "label": "Any preterm deliveries?" },
+          { "label": "Any miscarriages or abortions?" },
+          { "label": "How many living children?" }
+        ]
       }
     ]
   }
