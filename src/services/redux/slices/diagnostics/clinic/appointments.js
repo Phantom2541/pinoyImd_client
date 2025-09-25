@@ -308,7 +308,6 @@ export const reduxSlice = createSlice({
     },
 
     SetDIAGNOSTIC: (state, { payload }) => {
-      console.log("diagnostic payload", payload);
       state.diagnostic = payload;
     },
     SetEDIT: (state, { payload }) => {
@@ -327,8 +326,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     setShowModalEhr: (state, { payload }) => {
-      console.log("showModalEhr payload", payload);
-
       const {
         familyHistory = {},
         socialHistory = {},
@@ -585,7 +582,6 @@ export const reduxSlice = createSlice({
           const index = collections.findIndex(
             (item) => item.patient?._id === payload.patient
           );
-          console.log("index", index);
           if (index > -1) {
             collections[index] = { ...collections[index], ehr: payload };
           }
