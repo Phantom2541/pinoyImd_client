@@ -124,11 +124,12 @@ export default function Modal() {
   };
 
   // Update text/date for conditions and surgeries
-  const handleTextChange = (baseKey, label, field, newValue) => {
-    if (["conditions", "surgeries"].includes(baseKey)) {
-      setForm((prev) => {
+  const handleTextChange = (baseKey, labelOrKey, field, newValue) => {
+    setForm((prev) => {
+      // case 1: conditions/surgeries (array)
+      if (["conditions", "surgeries"].includes(baseKey)) {
         const updated = (prev[baseKey] || []).map((item) => {
-          if (item.name !== label) return item;
+          if (item.name !== labelOrKey) return item;
           return {
             ...item,
             details: field === "details" ? newValue : item.details,
@@ -136,8 +137,18 @@ export default function Modal() {
           };
         });
         return { ...prev, [baseKey]: updated };
-      });
-    }
+      }
+
+      // case 2: OB Gyne Hx (object)
+      const prevSection = prev[baseKey] || {};
+      return {
+        ...prev,
+        [baseKey]: {
+          ...prevSection,
+          [labelOrKey]: field === "date" ? formatDate(newValue) : newValue,
+        },
+      };
+    });
   };
 
   const handleFrequency = (label, value) => {
@@ -167,12 +178,27 @@ export default function Modal() {
 
   const handleNumber = (section, field, value) => {
     setForm((prev) => {
-      const current = prev[section] || { selected: [] };
+      const current = prev[section] || {};
+      const gtpalFields = ["gravida", "term", "preterm", "abortion", "living"];
+
+      if (gtpalFields.includes(field)) {
+        return {
+          ...prev,
+          [section]: {
+            ...current,
+            gtpal: {
+              ...(current.gtpal || {}),
+              [field]: Number(value),
+            },
+          },
+        };
+      }
+
       return {
         ...prev,
         [section]: {
           ...current,
-          [field]: Number(value),
+          [field]: value, // menarche, lmp, contraception
         },
       };
     });
@@ -180,12 +206,23 @@ export default function Modal() {
 
   const handleClose = () => dispatch(TOGGLEEMR());
 
-  const steps = dataEhr;
+  const steps = dataEhr.filter(
+    (s) => !(s.code === "obGyneHistory" && form.isMale === true)
+  );
+
   const currentStep = steps[step];
+
+  // prevent out-of-range errors
+  useEffect(() => {
+    if (step >= steps.length) {
+      setStep(steps.length - 1); // clamp to last available step
+    }
+  }, [steps, step, setStep]);
+
   const { patient } = selected;
 
   return (
-    <MDBModal isOpen={showModalEhr} toggle={handleClose} backdrop size="ml">
+    <MDBModal isOpen={showModalEhr} toggle={handleClose} backdrop size="md">
       <MDBModalHeader
         toggle={handleClose}
         className="appEhr light-blue darken-3 white-text"
@@ -228,12 +265,13 @@ export default function Modal() {
                 handleFrequency={handleFrequency}
               />
             )}
-            {currentStep.code === "OB Gyne Hx" && (
+            {currentStep.code === "obGyneHistory" && (
               <ObGyneSection
                 step={currentStep}
                 form={form}
                 handleCheck={handleCheck}
                 handleNumber={handleNumber}
+                handleTextChange={handleTextChange}
               />
             )}
           </div>
