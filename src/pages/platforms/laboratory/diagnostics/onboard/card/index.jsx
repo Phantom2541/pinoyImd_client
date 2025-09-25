@@ -68,14 +68,19 @@ export default function Card({ item, index }) {
             <div className="sales-card-info mr-4">
               <small>Charged</small>
               <span>
-                {getDay(createdAt)} {new Date(createdAt).toLocaleTimeString()}
+                {getDay(createdAt) === getDay(new Date())
+                  ? ""
+                  : getDay(createdAt)}{" "}
+                {new Date(createdAt).toLocaleTimeString()}
               </span>
             </div>
             <div className="sales-card-info">
               <small>Rendered</small>
               <span>
                 {at
-                  ? `${getDay(at)} ${new Date(at).toLocaleTimeString()}`
+                  ? `${
+                      getDay(at) === getDay(new Date()) ? "" : getDay(at)
+                    } ${new Date(at).toLocaleTimeString()}`
                   : "-"}
               </span>
             </div>

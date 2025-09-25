@@ -59,7 +59,7 @@ export const TASKS = createAsyncThunk(
   `${url}/tasks`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/dailyTasks`, token, key);
+      return axioKit.universal(`${url}/tasks`, token, key);
     } catch (error) {
       const message =
         (error.response &&
