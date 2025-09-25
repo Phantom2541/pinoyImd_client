@@ -19,3 +19,4 @@ export { default as References } from "./references";
 export { default as Templates } from "./templates";
 export { default as RadiologyHealthy } from "./radiology";
 export { default as Widal } from "./widal";
+export { default as Pbs } from "./pbs";

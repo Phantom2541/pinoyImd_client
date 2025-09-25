@@ -41,7 +41,7 @@ const componentMap = {
   Analysis,
   Bacteriology,
   Compatibility,
-  Pbs,
+  PBS: Pbs,
   Seminogram,
   PE,
   MC,

@@ -93,9 +93,6 @@ export default function Modal() {
     };
 
     for (const key in _forms) {
-      console.log("key", key);
-      console.log("_forms", _forms);
-
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
       let requestData = {
