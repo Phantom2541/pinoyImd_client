@@ -4280,10 +4280,26 @@
     "id": 415,
     "name": "Urine Microalbumin",
     "department": "LAB",
-    "frequency": "As requested by physician",
-    "preparation": "Collect midstream urine sample.",
-    "specimen": "Urine sample",
+    "frequency": "As requested by the physician",
+    "preparation": "Collect a clean-catch midstream urine sample.",
+    "specimen": "Urine",
+    "preference": "gender",
     "template": 2,
-    "purpose": "To detect microalbuminuria; calculate microalbumin-creatinine ratio."
+    "purpose": "For early detection of kidney damage (microalbuminuria), especially in patients with diabetes or hypertension; may be used with urine creatinine to calculate the albumin-to-creatinine ratio (ACR)."
+  },
+  {
+    "id": 416,
+    "name": "Lipoprotein A",
+    "abbreviation": "Lp(a)",
+    "department": "Laboratory",
+    "frequency": "As requested by the physician",
+    "preparation": "Fasting for 9–12 hours prior to blood collection is recommended.",
+    "specimen": "Serum",
+    "preference": "gender",
+    "template": 2,
+    "purpose": "To assess cardiovascular risk by measuring Lipoprotein (a) levels; elevated Lp(a) is associated with increased risk of atherosclerosis, coronary artery disease, and stroke.",
+    "ssx": "Often asymptomatic; high levels are a risk factor for premature cardiovascular disease, atherosclerosis, coronary artery disease, and stroke.",
+    "lo_ssx": "Low or normal Lp(a) levels indicate no significant additional cardiovascular risk from this marker.",
+    "hi_ssx": "Elevated Lp(a) levels are associated with increased risk of atherosclerosis, coronary artery disease, myocardial infarction, and stroke."
   }
 ]
