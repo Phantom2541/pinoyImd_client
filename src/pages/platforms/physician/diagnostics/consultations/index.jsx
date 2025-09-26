@@ -11,6 +11,7 @@ import RequestForm from "./note/forms";
 import Prescription from "./note/prescription";
 import Toolkit from "./toolkit";
 import Skeleton from "./skeleton/main";
+import Modal from "./medicalHistory/modal";
 import "./style.css";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -95,6 +96,7 @@ export default function Consultations() {
   return (
     <div className="checkup-data-container">
       <Body />
+      <Modal />
       <Patient activePanels={activePanels} />
       <Note
         togglePanel={togglePanel}

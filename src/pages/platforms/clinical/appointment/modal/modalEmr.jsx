@@ -43,6 +43,7 @@ export default function Modal() {
   const [step, setStep] = useState(0);
   const { addToast } = useToasts();
   const dispatch = useDispatch();
+  console.log("form", form);
 
   useEffect(() => {
     if (showModalEhr) {
@@ -62,8 +63,6 @@ export default function Modal() {
       });
     }
   }, [showModalEhr, selected]);
-  console.log("form", form);
-  console.log("selected", selected);
 
   const handleSubmit = (e) => {
     e.preventDefault();
