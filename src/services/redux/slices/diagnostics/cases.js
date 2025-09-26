@@ -34,6 +34,19 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
+export const PSH = createAsyncThunk(
+  `${url}/psh`,
+  async ({ token, key }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/psh`, token, key);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const SAVE = createAsyncThunk(
   `${url}/save`,
   async ({ data, token }, thunkAPI) => {
@@ -119,6 +132,24 @@ export const casesSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        state.message = action.payload || "Browse failed";
+        state.isLoading = false;
+      })
+
+      .addCase(PSH.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PSH.fulfilled, (state, action) => {
+        const { payload = [], success } = action.payload || {};
+        state.collections = state.filtered = payload;
+        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(PSH.rejected, (state, action) => {
         state.message = action.payload || "Browse failed";
         state.isLoading = false;
       })

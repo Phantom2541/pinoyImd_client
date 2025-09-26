@@ -1,21 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../style.css";
 import DraggableList, { useDragAndDrop } from "../dragAndDrop";
+import { useDispatch, useSelector } from "react-redux";
+import { PSH } from "../../../../../../../services/redux/slices/diagnostics/cases";
 
-export default function PSHx({ pastSurgicalHistory }) {
+export default function PSHx({ pastSurgicalHistory, patient }) {
+  console.log("PSHx pastSurgicalHistory", pastSurgicalHistory);
+  console.log("PSHx patient", patient);
+  const { token } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ cases }) => cases);
   const [expanded, setExpanded] = useState(null);
   const dragDrop = useDragAndDrop(pastSurgicalHistory || []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (patient && patient._id) {
+      dispatch(PSH({ token, key: { pId: patient._id } }));
+    }
+  }, [patient, token, dispatch]);
 
   const toggleExpand = (index) => {
     setExpanded(expanded === index ? null : index);
   };
 
   // Auto-sort by year (latest first)
-  const sortedHistory = [...pastSurgicalHistory].sort(
+  const sortedHistory = [...collections].sort(
     (a, b) => Number(b.year) - Number(a.year)
   );
 
-  if (!pastSurgicalHistory || pastSurgicalHistory.length === 0) {
+  if (!collections || collections.length === 0) {
     return (
       <div className="checkup-data-pmh-container">
         No past surgical history available.
