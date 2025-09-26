@@ -18,8 +18,7 @@ import {
   EditableField,
   EditableSelect,
 } from "../../../../../components/customizable";
-import visitTypes from "./visitTypes.json";
-import { Templates } from "../../../../../services/fakeDb";
+import { Templates, VisityType } from "../../../../../services/fakeDb";
 const Body = () => {
   const {
       filtered,
@@ -148,15 +147,17 @@ const Body = () => {
                     }}
                     className="mb-n3"
                     preValue={visitType}
-                    keyForText="visitType"
-                    keyForValue="visitType"
+                    keyForText="label"
+                    keyForValue="value"
                     isEditable
-                    collections={visitTypes}
+                    collections={VisityType.collections}
                     fieldData={{
                       _id,
-                      visitType: visitType,
+                      label: VisityType.getLabel(visitType),
                     }}
-                    onSave={handleUpdate}
+                    onSave={(data) =>
+                      handleUpdate({ ...data, visitType: data.value })
+                    }
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
                   />

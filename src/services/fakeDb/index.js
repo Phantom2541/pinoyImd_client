@@ -42,8 +42,10 @@ import Quotes from "./quotes";
 import ValidID from "./validID";
 //RAD HEALTHY CLIENT CHOICES
 import RadHC from "./diagnostics/radiology";
+import VisityType from "./visitType";
 
 export {
+  VisityType,
   Suffixes,
   Calendar,
   Microexam,

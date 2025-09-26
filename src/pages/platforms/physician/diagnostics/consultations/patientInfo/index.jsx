@@ -21,6 +21,7 @@ import {
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { useState } from "react";
 import Register from "./register";
+import { VisityType } from "../../../../../../services/fakeDb";
 
 export default function Patient({ activePanels }) {
   const { token, auth } = useSelector(({ auth }) => auth),
@@ -209,36 +210,13 @@ export default function Patient({ activePanels }) {
           Reason for Visit:
         </label>
         <EditableSelect
-          collections={[
-            { value: "initial", label: "New Consultation" },
-            { value: "follow_up", label: "Follow-up Consultation" },
-            { value: "ape", label: "Annual Physical Examination (APE)" },
-            { value: "peme", label: "Pre-Employment Medical Examination" },
-            { value: "poe", label: "Pre-Operative Evaluation" },
-            { value: "med-clear", label: "Outpatient Medical Clearance" },
-            { value: "med-cert", label: "Medical Certificate Issuance" },
-            {
-              value: "second_opinion",
-              label: "Consultation for Second Opinion",
-            },
-            {
-              value: "ongoing_treatment",
-              label: "Ongoing Treatment / Monitoring",
-            },
-            {
-              value: "ph_follow_up",
-              label: "Post-Hospital / Discharge Follow-up",
-            },
-            { value: "referral", label: "Referral from Another Physician" },
-            { value: "s_ref", label: "Specialist Referral" },
-            { value: "diagnostic_review", label: "Diagnostic Result Review" },
-            { value: "wellness_check", label: "Wellness / Preventive Check" },
-            { value: "health_screening", label: "Health Screening" },
-            { value: "emergency", label: "Emergency Case (extra, optional)" },
-          ]}
+          collections={VisityType.collections}
           keyForValue="value"
           keyForText="label"
-          preValue={patient?.reasonForVisit}
+          preValue={appointment?.visitType}
+          onChange={(value) =>
+            dispatch(SetPATIENT({ ...appointment, visitType: value }))
+          }
         />
       </div>
       <Register
