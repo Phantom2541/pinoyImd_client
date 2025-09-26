@@ -3,21 +3,27 @@ import "../style.css";
 import DraggableList, { useDragAndDrop } from "../dragAndDrop";
 import { useDispatch, useSelector } from "react-redux";
 import { PSH } from "../../../../../../../services/redux/slices/diagnostics/cases";
+import {
+  capitalize,
+  dateFormat,
+} from "../../../../../../../services/utilities";
 
 export default function PSHx({ pastSurgicalHistory, patient }) {
-  console.log("PSHx pastSurgicalHistory", pastSurgicalHistory);
-  console.log("PSHx patient", patient);
   const { token } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ cases }) => cases);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
   const [expanded, setExpanded] = useState(null);
+  const [surgicals, setSurgicals] = useState([]);
   const dragDrop = useDragAndDrop(pastSurgicalHistory || []);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (patient && patient._id) {
-      dispatch(PSH({ token, key: { pId: patient._id } }));
-    }
-  }, [patient, token, dispatch]);
+    const { cases = [] } = appointment || {};
+    const _surgicals = cases.filter((c) => c.category === "surgical");
+    setSurgicals(_surgicals);
+  }, [appointment]);
 
   const toggleExpand = (index) => {
     setExpanded(expanded === index ? null : index);
@@ -28,60 +34,84 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
     (a, b) => Number(b.year) - Number(a.year)
   );
 
-  if (!collections || collections.length === 0) {
+  if (!surgicals || surgicals.length === 0) {
     return (
       <div className="checkup-data-pmh-container">
         No past surgical history available.
       </div>
     );
   }
-
+  console.log("expanded", expanded);
   return (
     <div className="checkup-data-mh-container">
       <div className="pshx-container">
         <h2 className="pshx-title">Past Surgical History</h2>
         <div className="pshx-timeline">
-          {sortedHistory.map((surgery, index) => (
-            <div
-              key={index}
-              className={`pshx-item ${expanded === index ? "expanded" : ""}`}
-              onClick={() => toggleExpand(index)}
-            >
-              <div className="pshx-dot" />
-              <div className="pshx-content">
-                <div className="pshx-header">
-                  <span className="pshx-procedure">{surgery.procedure}</span>
-                  <span className="pshx-date">{surgery.year}</span>
-                </div>
-                <div
-                  className={`pshx-body ${
-                    expanded === index ? "show" : "hide"
-                  }`}
-                >
-                  {surgery.hospital && (
-                    <p>
-                      <strong>Hospital:</strong> {surgery.hospital}
-                    </p>
-                  )}
-                  {surgery.surgeon && (
-                    <p>
-                      <strong>Surgeon:</strong> {surgery.surgeon}
-                    </p>
-                  )}
-                  {surgery.complication && (
-                    <p className="pshx-complication">
-                      <strong>Complication:</strong> {surgery.complication}
-                    </p>
-                  )}
-                  {surgery.remarks && (
-                    <p>
-                      <strong>Remarks:</strong> {surgery.remarks}
-                    </p>
-                  )}
+          {surgicals.map((surgery, index) => {
+            const { items = [] } = surgery;
+            console.log("items", items);
+            return (
+              <div
+                key={index}
+                className={`pshx-item ${expanded === index ? "expanded" : ""}`}
+                onClick={() => toggleExpand(index)}
+              >
+                <div className="pshx-dot" />
+                <div className="pshx-content">
+                  <div className="pshx-header">
+                    <span className="pshx-procedure">
+                      {capitalize(surgery.title)}
+                    </span>
+                  </div>
+                  <div
+                    className={`pshx-body ${
+                      expanded === index ? "show" : "hide"
+                    }`}
+                  >
+                    {items.map((item, i) => {
+                      const {
+                        physician = {},
+                        hospital = "",
+                        remarks = "",
+                        diagnosis = "",
+                      } = item;
+                      return (
+                        <div key={`${i}-${item._id}`} className="ml-3">
+                          <p>
+                            <strong>Hospital:</strong> {hospital}
+                            <span className="pshx-date ml-2">
+                              {dateFormat(surgery.createdAt)}
+                            </span>
+                          </p>
+                          {physician?.name && (
+                            <p>
+                              <strong>
+                                {physician?.specialization
+                                  ? capitalize(physician.specialization)
+                                  : "Surgeon"}
+                                :
+                              </strong>{" "}
+                              {physician.name}
+                            </p>
+                          )}
+                          {diagnosis && (
+                            <p className="pshx-complication">
+                              <strong>Diagnosis:</strong> {diagnosis}
+                            </p>
+                          )}
+                          {remarks && (
+                            <p>
+                              <strong>Remarks:</strong> {remarks}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
