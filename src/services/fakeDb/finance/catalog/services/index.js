@@ -75,9 +75,6 @@ const Services = {
     return uniqueDepartments.length > 0 ? uniqueDepartments : [];
   },
   getTemplates: (pks, department) => {
-    console.log("pks", pks);
-    console.log("department", department);
-
     const cluster = collections.filter(({ id }) => pks.includes(id));
     const templates = cluster.map(({ template }) => template);
     const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
@@ -87,7 +84,6 @@ const Services = {
       // Get the readable component name for the template ID and department
       const key = Templates.getComponentName(templateId, department);
       // const key = Templates.getComponentIndex(templateId, department);
-      console.log("key", key);
       // Fallback in case key is undefined
       const resolvedKey = key || "Unknown";
 

@@ -1,0 +1,8 @@
+[
+  { "name": "O-somatic (TO) antigen", "abbr": "TO" },
+  { "name": "H-somatic (TH) antigen", "abbr": "TH" },
+  { "name": "O-somatic (AO) antigen", "abbr": "AO" },
+  { "name": "H-somatic (AH) antigen", "abbr": "AH" },
+  { "name": "O-somatic (BO) antigen", "abbr": "BO" },
+  { "name": "H-somatic (BH) antigen", "abbr": "BH" }
+]

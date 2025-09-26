@@ -17,7 +17,7 @@ export default function Cluster({ task, fontSize }) {
   return (
     <div className="pl-5 mb-5" style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>
-        <h6>Results :</h6>
+        <h6> Results :</h6>
         <div>
           {services.map((service, i) => (
             <MDBCol size="12" className="offset-1" key={`cluster-${i}`}>

@@ -1,11 +1,10 @@
-import React from "react";
 import BloodTyping from "./bloodTyping";
 import Cluster from "./cluster";
 import Dengue from "./dengue";
 import Pregnancy from "./pregnancy";
 import Ogtt from "./ogtt";
 import Gloucose from "./hba1c";
-
+import Widal from "./widal";
 export default function BodySwitcher({ task, fontSize }) {
   const handleSwitch = () => {
     const { data = [] } = task;
@@ -19,6 +18,7 @@ export default function BodySwitcher({ task, fontSize }) {
     if (data.includes(77) || data.includes(120)) return Dengue;
 
     if (data.includes(11)) return Gloucose;
+    if (data.includes(121)) return Widal;
 
     return Cluster;
   };

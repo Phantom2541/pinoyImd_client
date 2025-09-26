@@ -24,7 +24,7 @@ const componentMap = {
   analysis: Analysis,
   bacteriology: Bacteriology,
   compatibility: Compatibility,
-  pbs: Pbs,
+  "pheripheral blood smear": Pbs,
   seminogram: Seminogram,
 };
 

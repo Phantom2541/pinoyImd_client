@@ -4,7 +4,15 @@ import { Categories } from "../../../../services/fakeDb";
 import { formColor } from "../../../../services/utilities";
 
 export default function Header({ task }) {
-  const { category, patient, source, referral, form, updatedAt } = task;
+  const {
+    category,
+    patient,
+    source,
+    referral,
+    form,
+    updatedAt,
+    packages = [],
+  } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";
   // const patientName = `${pFull.lname.toUpperCase()},${pFull.fname.toUpperCase()} ${
@@ -74,7 +82,10 @@ export default function Header({ task }) {
         color={formColor(form)}
         className="text-uppercase text-center py-0 mb-1 mt-2"
       >
-        <h5 style={{ letterSpacing: "30px" }} className="mb-0 fw-bold">
+        <h5
+          style={{ letterSpacing: packages.includes(87) ? "20px" : "30px" }}
+          className="mb-0 fw-bold"
+        >
           {form}
         </h5>
       </MDBAlert>

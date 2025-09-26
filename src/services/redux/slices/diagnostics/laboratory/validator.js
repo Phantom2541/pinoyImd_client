@@ -176,7 +176,9 @@ export const reduxSlice = createSlice({
       }
     },
     SetVALIDATOR: (state, { payload }) => {
-      const form = capitalize(payload?.form);
+      const { form: _form } = payload;
+      const form =
+        _form === "Pheripheral Blood Smear" ? _form : capitalize(payload?.form);
       const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
         : "_id";
