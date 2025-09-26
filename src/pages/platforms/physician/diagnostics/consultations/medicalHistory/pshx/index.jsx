@@ -36,8 +36,10 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
 
   if (!surgicals || surgicals.length === 0) {
     return (
-      <div className="checkup-data-pmh-container">
-        No past surgical history available.
+      <div className="checkup-data-pmh-container d-flex justify-content-center">
+        <div className="d-flex justify-content-center mb-3">
+          <h3 className="m-auto">No past surgical procedures recorded.</h3>
+        </div>
       </div>
     );
   }
