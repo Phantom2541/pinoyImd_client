@@ -7,6 +7,7 @@ const initialState = {
   filter: [],
   paginated: [],
   patient: {},
+  patientId: null,
   physician: "",
   activeSched: "",
   activePhysician: { _id: null },
@@ -29,6 +30,7 @@ const initialState = {
   showModalEhr: false,
   showModalVs: false,
   willCreateVs: false,
+  showModalMiniEhr: false,
 
   /**
    * pagination
@@ -325,6 +327,10 @@ export const reduxSlice = createSlice({
       state.willCreate = true;
       state.showModal = true;
     },
+    setMiniEhrModal: (state, { payload }) => {
+      state.selected = payload;
+      state.showModalMiniEhr = true;
+    },
     setShowModalEhr: (state, { payload }) => {
       const {
         familyHistory = {},
@@ -449,6 +455,9 @@ export const reduxSlice = createSlice({
     TOGGLEEMR: (state) => {
       state.showModalEhr = !state.showModalEhr;
     },
+    TOGGLEMINIEMR: (state) => {
+      state.showModalMiniEhr = !state.showModalMiniEhr;
+    },
     TOGGLEVS: (state) => {
       state.showModalVs = !state.showModalVs;
     },
@@ -538,6 +547,7 @@ export const reduxSlice = createSlice({
         state.patient = payload;
         state.isSuccess = success;
         state.isLoading = false;
+        state.patientId = payload.patient._id;
       })
       .addCase(FIND.rejected, (state, action) => {
         const { error } = action;
@@ -578,6 +588,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SET_EMR.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+
         const updateCollections = (collections) => {
           const index = collections.findIndex(
             (item) => item.patient?._id === payload.patient
@@ -588,6 +599,7 @@ export const reduxSlice = createSlice({
         };
         updateCollections(state.collections);
         updateCollections(state.filtered);
+
         state.formSubmitted = false;
         state.message = success;
         state.isSuccess = true;
@@ -782,12 +794,14 @@ export const {
   SetCREATE,
   setShowModalEhr,
   setShowModalVs,
+  setMiniEhrModal,
   SetEDIT,
   SetFILTER,
   SetPAGE,
   TOGGLE_PATIENT_MODAL,
   TOGGLE_RESULT_MODAL,
   TOGGLE,
+  TOGGLEMINIEMR,
   TOGGLEEMR,
   TOGGLEVS,
   TOGGLE_TRANSAC_MODAL,

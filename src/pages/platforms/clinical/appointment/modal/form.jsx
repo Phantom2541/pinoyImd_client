@@ -74,6 +74,7 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
     const mergedList = Array.from(allDiseases);
     setItems({ Mother: mergedList, Father: mergedList });
   }, [step.items, form?.familyHistory]);
+  console.log("mergedList", items);
 
   const sides = [
     { label: "Mother", align: "end", dx: -20, dir: -1 },
@@ -97,45 +98,60 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
   return (
     <>
       <svg width="600" height={height}>
-        {sides.map(({ label, align, dx, dir }) =>
-          items[label].map((item, i) => {
-            const y = startY + i * itemHeight;
-            const checked = form?.familyHistory?.[label]?.includes(item);
-            const labelWidth = item.length * 8.5;
+        {sides.map(({ label, align, dx, dir }) => (
+          <g key={label}>
+            {/* Label at the top of each column */}
+            <text
+              x={rootX + dx}
+              y={startY - 30} // position above the first disease
+              textAnchor={align}
+              fontSize={25}
+              fontWeight="bold"
+              fill="black"
+            >
+              {label.toUpperCase()}
+            </text>
 
-            return (
-              <g
-                key={`${label}-${item}`}
-                style={{ cursor: "pointer" }}
-                onClick={() => handleCheck(label, item, !checked)}
-              >
-                <text x={rootX + dx} y={y} textAnchor={align} fontSize={17}>
-                  {item}
-                </text>
-                {checked && (
-                  <>
-                    <line
-                      x1={rootX}
-                      y1={20}
-                      x2={rootX}
-                      y2={y - 2}
-                      stroke="red"
-                      strokeWidth={2}
-                    />
-                    <line
-                      x1={rootX}
-                      y1={y}
-                      x2={rootX + dir * (labelWidth + 20)}
-                      y2={y}
-                      stroke="red"
-                      strokeWidth={2}
-                    />
-                  </>
-                )}
-              </g>
-            );
-          })
-        )}
+            {/* Diseases for that parent */}
+            {items[label].map((item, i) => {
+              const y = startY + i * itemHeight;
+              const checked = form?.familyHistory?.[label]?.includes(item);
+              const labelWidth = item.length * 8.5;
+
+              return (
+                <g
+                  key={`${label}-${item}`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleCheck(label, item, !checked)}
+                >
+                  <text x={rootX + dx} y={y} textAnchor={align} fontSize={17}>
+                    {item}
+                  </text>
+                  {checked && (
+                    <>
+                      <line
+                        x1={rootX}
+                        y1={20}
+                        x2={rootX}
+                        y2={y - 2}
+                        stroke="red"
+                        strokeWidth={2}
+                      />
+                      <line
+                        x1={rootX}
+                        y1={y}
+                        x2={rootX + dir * (labelWidth + 20)}
+                        y2={y}
+                        stroke="red"
+                        strokeWidth={2}
+                      />
+                    </>
+                  )}
+                </g>
+              );
+            })}
+          </g>
+        ))}
       </svg>
 
       <div className="mt-3 d-flex gap-2">
@@ -146,7 +162,11 @@ export function FamilyRootSystem({ step, form, handleCheck }) {
           value={newDisease}
           onChange={(e) => setNewDisease(e.target.value)}
         />
-        <button className="btn btn-sm btn-info" onClick={handleAddDisease}>
+        <button
+          type="button"
+          className="btn btn-sm btn-info"
+          onClick={handleAddDisease}
+        >
           Add
         </button>
       </div>
@@ -173,12 +193,16 @@ export function ChecklistSection({
   const [newItem, setNewItem] = useState("");
   const lastItemRef = useRef(null);
   const inputRef = useRef(null);
+  console.log("baseKey", baseKey);
+  console.log("form", form);
+  console.log("step", step);
 
   useEffect(() => {
     const initialItems =
       step.code === "socialHistory"
         ? (form.habits || []).map((h) => ({ label: h.name }))
         : (form[baseKey] || []).map((c) => ({ label: c.name }));
+    console.log("initialItems", initialItems);
 
     const stepItems = (step.items || []).map((i) =>
       typeof i === "string" ? { label: i } : i
@@ -187,6 +211,7 @@ export function ChecklistSection({
     const merged = [
       ...new Set([...stepItems, ...initialItems].map((i) => i.label)),
     ].map((label) => ({ label }));
+    console.log("merged", merged);
 
     setItems(merged);
     setNewItem("");
@@ -218,13 +243,15 @@ export function ChecklistSection({
     <div>
       {items.map((item, idx) => {
         const entry =
-          step.code === "socialHistory"
-            ? form.habits?.find((h) => h.name === item.label)
-            : form[baseKey]?.find(
+          step?.code === "socialHistory"
+            ? form?.habits?.find?.((h) => h?.name === item?.label)
+            : Array.isArray(form?.[baseKey])
+            ? form[baseKey].find?.(
                 (c) =>
-                  c.name?.toLowerCase().trim() ===
-                  item.label.toLowerCase().trim()
-              );
+                  c?.name?.toLowerCase?.().trim?.() ===
+                  item?.label?.toLowerCase?.().trim?.()
+              )
+            : undefined;
 
         const checked = !!entry;
         const details = entry?.details || "";
@@ -264,6 +291,7 @@ export function ChecklistSection({
               <div className="mt-1 d-flex flex-column ml-6">
                 <TextInput
                   value={details}
+                  style={{ width: "100%" }}
                   onChange={(val) =>
                     handleTextChange(baseKey, item.label, "details", val)
                   }

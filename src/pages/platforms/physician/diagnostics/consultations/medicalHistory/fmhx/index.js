@@ -1,5 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
+import { useDispatch } from "react-redux";
+import { setMiniEhrModal } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   console.log("FMHx rendered with:", familyHistory);
@@ -10,6 +12,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   const rowRefs = useRef({});
   const motherBoxRefs = useRef({});
   const fatherBoxRefs = useRef({});
+  const dispatch = useDispatch();
 
   const [lines, setLines] = useState([]);
 
@@ -131,8 +134,8 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
 
   return (
     <div className="checkup-data-mh-container">
-      <MDBBtn color="success" size="sm">
-        <MDBIcon icon="plus" className="cursor-pointer" />
+      <MDBBtn onClick={() => dispatch(setMiniEhrModal({ familyHistory }))}>
+        <MDBIcon icon="plus" />
       </MDBBtn>
       <div className="checkup-data-fmhx-container">
         <label className="checkup-data-fmhx-title">Family History</label>
