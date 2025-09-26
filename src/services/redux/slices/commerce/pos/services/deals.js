@@ -366,7 +366,9 @@ export const LABRESULT = createAsyncThunk(
         ? data.department
         : "clinic";
       return await axioKit.save(
-        `diagnostics/${department.toLowerCase()}/result/${data.form.toLowerCase()}`,
+        `diagnostics/${department.toLowerCase()}/result/${data.form
+          .replace(/\s+/g, "")
+          .toLowerCase()}`,
         data,
         token
       );

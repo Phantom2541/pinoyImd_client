@@ -1,4 +1,3 @@
-import React from "react";
 import BloodTyping from "./bloodTyping";
 import Cluster from "./cluster";
 import Dengue from "./dengue";

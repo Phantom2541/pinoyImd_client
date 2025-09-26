@@ -41,7 +41,7 @@ const componentMap = {
   Analysis,
   Bacteriology,
   Compatibility,
-  PBS: Pbs,
+  "Pheripheral Blood Smear": Pbs,
   Seminogram,
   PE,
   MC,
