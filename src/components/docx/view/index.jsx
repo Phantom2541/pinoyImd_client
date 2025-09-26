@@ -1,4 +1,3 @@
-import React from "react";
 import draftToHtml from "draftjs-to-html";
 
 const DocxView = ({ content }) => {
