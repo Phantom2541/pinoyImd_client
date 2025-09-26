@@ -5,6 +5,7 @@ import Dengue from "./dengue";
 import Pregnancy from "./pregnancy";
 import Ogtt from "./ogtt";
 import HBa1c from "./hba1c";
+import widal from "./widal";
 
 const packageComponentMap = {
   11: HBa1c,
@@ -22,6 +23,7 @@ const packageComponentMap = {
   138: Pregnancy,
   139: Pregnancy,
   146: Ogtt,
+  121: widal,
 };
 
 export default function BodySwitcher({ task, setTask }) {

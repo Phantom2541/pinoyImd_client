@@ -40,7 +40,8 @@ const Footer = ({ setShowHC = () => {} }) => {
   const hasDoneChecker = (_id = "") => {
     const diagnostics = Object.values(selected?.diagnostic)
       .flat(Infinity)
-      .filter((item) => item._id !== _id);
+      .filter((item) => item)
+      .filter((item) => item?._id !== _id);
     return diagnostics.every(({ hasDone = false }) => hasDone);
   };
 

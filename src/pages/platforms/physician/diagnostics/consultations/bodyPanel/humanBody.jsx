@@ -2,10 +2,18 @@ import { useRef, useEffect, useState } from "react";
 import BODY from "./../../../../../../assets/checkup/humanBody.png";
 import History from "./history";
 import "./style.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import DiagHistory from "./diagHistory";
+import { SetPATIENT } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { getDepartment } from "../../../../../../services/utilities";
+import { Templates } from "../../../../../../services/fakeDb";
 
 export default function HumanBody({ setSlide, slide }) {
-  const { patient } = useSelector(({ consultations }) => consultations);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const dispatch = useDispatch();
+  const { patient } = appointment || {};
 
   const containerRef = useRef(null);
   const bodyRef = useRef(null);
@@ -95,7 +103,41 @@ export default function HumanBody({ setSlide, slide }) {
       window.removeEventListener("scroll", update, true);
       if (bodyRef.current) bodyRef.current.removeEventListener("load", update);
     };
-  }, []);
+    // eslint-disable-next-line
+  }, [patient]);
+
+  useEffect(() => {
+    setSlide("");
+    // eslint-disable-next-line
+  }, [appointment?._id]);
+
+  const handleDefaultResult = (dept) => {
+    const department = getDepartment(dept);
+    const { images = [], ...rest } =
+      appointment[department.toLowerCase()] || {};
+
+    if (!images.length && !Object.keys(rest).length) return false;
+    var activeDiag = {};
+    const results = Object.keys(rest);
+    if (results.length > 0) {
+      const keyRest = results[0];
+      const firstRest = rest[keyRest];
+      activeDiag = {
+        dept: department,
+        dealId: keyRest,
+        section: Templates.getComponentName(firstRest[0], department),
+        isImg: false,
+      };
+    } else {
+      activeDiag = {
+        ...images[0],
+        dept: department,
+        isImg: true,
+      };
+    }
+
+    dispatch(SetPATIENT({ ...appointment, activeDiag }));
+  };
 
   return (
     <div
@@ -163,9 +205,9 @@ export default function HumanBody({ setSlide, slide }) {
               >
                 {text}
               </button>
+              <History items={contentMap[text]} />
 
               {/* render the correct items for this label */}
-              <History items={contentMap[text]} />
             </div>
           ))}
       </div>
@@ -201,7 +243,19 @@ export default function HumanBody({ setSlide, slide }) {
           <div key={text} className="history-group">
             <button
               ref={(el) => (textRefs.current[text] = el)}
-              onClick={() => setSlide(slide === text ? "" : text)}
+              onClick={() => {
+                const isSameSelction = slide === text;
+                setSlide(isSameSelction ? "" : text);
+                if (isSameSelction) {
+                  dispatch(SetPATIENT({ ...appointment, activeDiag: {} }));
+                } else {
+                  if (["Laboratory", "Radiology"].includes(text)) {
+                    handleDefaultResult(text);
+                  } else {
+                    dispatch(SetPATIENT({ ...appointment, activeDiag: {} }));
+                  }
+                }
+              }}
               className={`${slide === text ? "active" : ""} ${
                 patient?.isMale ? "male" : "female"
               }`}
@@ -209,7 +263,11 @@ export default function HumanBody({ setSlide, slide }) {
               {text}
             </button>
 
-            <History items={contentMap[text]} />
+            {["Laboratory", "Radiology"].includes(text) ? (
+              <DiagHistory department={text} setSlide={setSlide} />
+            ) : (
+              <History items={contentMap[text]} />
+            )}
           </div>
         ))}
       </div>

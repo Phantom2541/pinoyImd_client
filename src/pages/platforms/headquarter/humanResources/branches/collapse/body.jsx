@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MDBTable,
   MDBTableHead,
@@ -23,18 +22,14 @@ export default function Collapsable({ branch = {} }) {
     dispatch = useDispatch();
 
   let filteredPersonnels = personnels
-    .map((p, index) => ({ ...p, index }))
-    .filter((p) => p.status?.toLowerCase() === "active");
+    .filter((p) => p.status?.toLowerCase() === "active")
+    .sort((a, b) => {
+      if (a.user?._id === ao) return -1; // AO first
+      if (b.user?._id === ao) return 1;
+      return 0; // keep relative order of others
+    });
 
-  // Step 2: find AO personnel (even if not active)
-  const aoUser = personnels
-    .map((p, index) => ({ ...p, index }))
-    .find((p) => p.user._id === ao);
-
-  // Step 3: add AO user to top if exists and not already in the list
-  if (aoUser && !filteredPersonnels.some((p) => p._id === aoUser._id)) {
-    filteredPersonnels = [aoUser, ...filteredPersonnels];
-  }
+  console.log("ao", ao);
 
   // const
   const style = {
@@ -125,6 +120,8 @@ export default function Collapsable({ branch = {} }) {
       }
     });
   };
+
+  console.log("filtered Personnels", filteredPersonnels);
   return (
     <MDBTable>
       <MDBTableHead>
@@ -136,12 +133,12 @@ export default function Collapsable({ branch = {} }) {
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        {Array.isArray(filteredPersonnels) &&
+        {filteredPersonnels.length > 0 ? (
           filteredPersonnels?.map((personnel, index) => {
             const { user = {}, contract = { designation: -1 } } =
               personnel || {};
 
-            const isAO = branch.ao === user._id;
+            const isAO = branch?.ao === user?._id;
             return (
               <tr key={index} style={style}>
                 <td style={style}>
@@ -160,7 +157,7 @@ export default function Collapsable({ branch = {} }) {
                 <td style={style}>
                   {Policy.getPositions(contract?.designation)}
                 </td>
-                <td style={style}>{user.email}</td>
+                <td style={style}>{user?.email}</td>
                 {/* 👩‍💼 */}
                 <td>
                   {!isAO && (
@@ -188,7 +185,22 @@ export default function Collapsable({ branch = {} }) {
                 </td>
               </tr>
             );
-          })}
+          })
+        ) : (
+          <tr>
+            <td colSpan={4} className="text-center py-6 bg-gray-50">
+              <div className="flex flex-col items-center justify-center space-y-2">
+                <MDBIcon
+                  fas
+                  icon="user-slash"
+                  size="2x"
+                  className="grey-text"
+                />
+                <h6 className="grey-text italic mt-2">No Personnel</h6>
+              </div>
+            </td>
+          </tr>
+        )}
       </MDBTableBody>
     </MDBTable>
   );

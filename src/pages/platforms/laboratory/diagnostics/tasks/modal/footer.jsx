@@ -96,12 +96,10 @@ const Footer = () => {
   };
 
   const hasDoneChecker = (_id = "") => {
-    console.log("selected?.diagnostic", selected);
-
     const diagnostics = Object.values(selected?.diagnostic)
       .flat(Infinity)
-      .filter((item) => item._id !== _id);
-    return diagnostics.every(({ hasDone = false }) => hasDone);
+      .filter((item = {}) => item?._id !== _id);
+    return diagnostics?.every((item) => item?.hasDone);
   };
 
   const handleSave = (hasDone) => {
@@ -122,7 +120,7 @@ const Footer = () => {
       dr = findPhysicianId(task.signatories[1]?._id);
     }
 
-    const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
+    var data = ["xray", "ultrasound", "miscellaneous"].includes(form)
       ? (() => {
           const { _id, ...rest } = task;
           return {
@@ -138,14 +136,17 @@ const Footer = () => {
           department,
           signatories: [head || null, dr || null, auth._id || null],
         };
-
-    const allDiagHasDone = hasDoneChecker(data?._id) && hasDone;
+    data = { ...data, hasDone: data.signatories.every((item) => item) };
+    const allDiagHasDone = hasDoneChecker(data?._id) && data.hasDone;
     const status = allDiagHasDone ? "done" : "onProcess";
     setIsLoading(true);
     dispatch(
       LABRESULT({
         token,
-        data,
+        data: {
+          ...data,
+          form,
+        },
         status,
       })
     ).then(({ payload }) => {
@@ -164,7 +165,7 @@ const Footer = () => {
   };
 
   return (
-    <div className="text-center mb-1-half border-top pt-2">
+    <div className="text-center mb-1-half border-top pt-2 mt-3">
       <textarea
         placeholder="Remarks"
         value={task?.remarks}

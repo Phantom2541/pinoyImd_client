@@ -7,7 +7,12 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useHistory } from "react-router-dom";
-import { UPDATE } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SetRESULT,
+  setShowModalEhr,
+  setShowModalVs,
+  UPDATE,
+} from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { fullName } from "../../../../../services/utilities";
 import {
   EditableField,
@@ -43,7 +48,12 @@ const Body = () => {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+  const sortedData = [...filtered].sort((a, b) => {
+    const order = { done: 1, confirmed: 2 };
+    return (order[a.status] || 99) - (order[b.status] || 99);
+  });
+
+  const paginatedData = sortedData.slice(startIndex, endIndex);
 
   return (
     <MDBTable bordered className="m-0 p-0" small>
@@ -57,7 +67,7 @@ const Body = () => {
           <th className="text-center" title="electronic Medical Records">
             eMR
           </th>
-          <th title="Vital Sign">VS</th>
+          <th className="text-center">VS</th>
           <th>Remarks</th>
         </tr>
       </MDBTableHead>
@@ -68,14 +78,16 @@ const Body = () => {
               patient,
               remarks,
               status,
-              lab,
-              rad,
               qn,
               visitType,
+              lab = {},
+              rad = {},
               ehr,
               consultation,
               _id,
             } = item;
+            const hasLab = Object.keys(lab).length > 0;
+            const hasRad = Object.keys(rad).length > 0;
 
             return (
               <tr key={index}>
@@ -91,6 +103,13 @@ const Body = () => {
                         <EditableSelect
                           preValue={status}
                           keyForText="status"
+                          animation
+                          animationStyle={{
+                            width: "10rem",
+                            marginLeft: "-.3rem",
+                            marginTop: "-.4rem",
+                          }}
+                          className="mb-n3"
                           keyForValue="status"
                           isEditable
                           collections={["draft", "confirmed", "cancelled"]}
@@ -121,6 +140,13 @@ const Body = () => {
                 </td>
                 <td>
                   <EditableSelect
+                    animation
+                    animationStyle={{
+                      width: "15rem",
+                      marginLeft: "-.3rem",
+                      marginTop: "0.2rem",
+                    }}
+                    className="mb-n3"
                     preValue={visitType}
                     keyForText="visitType"
                     keyForValue="visitType"
@@ -136,7 +162,24 @@ const Body = () => {
                   />
                 </td>
                 <td className="text-center">
-                  <EditableSelect
+                  <MDBIcon
+                    size="lg"
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "lab" }))
+                    }
+                    icon={hasLab ? "eye" : "plus"}
+                    title={
+                      !hasLab
+                        ? "Add Laboratory Result"
+                        : "View Laboratory Result"
+                    }
+                    className={`text-${
+                      hasLab ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
+                  />
+
+                  {/* 
+                      <EditableSelect
                     collections={Templates.getComponents("LAB")}
                     preValues={Templates.getWordByIndices(lab, "components")}
                     keyForText="lab"
@@ -148,10 +191,23 @@ const Body = () => {
                       _id,
                       lab: Templates.getWordByIndices(lab, "components"),
                     }}
-                  />
+                  /> */}
                 </td>
                 <td className="text-center">
-                  <EditableSelect
+                  <MDBIcon
+                    size="lg"
+                    onClick={() =>
+                      dispatch(SetRESULT({ ...item, department: "rad" }))
+                    }
+                    icon={hasRad ? "eye" : "plus"}
+                    title={
+                      !hasRad ? "Add Radiology Result" : "View Radiology Result"
+                    }
+                    className={`text-${
+                      hasRad ? "warning" : "primary"
+                    } shadow-lg cursor-pointer`}
+                  />
+                  {/* <EditableSelect
                     collections={Templates.getComponents("RAD")}
                     preValues={Templates.getWordByIndices(
                       rad,
@@ -167,10 +223,33 @@ const Body = () => {
                       _id,
                       rad: Templates.getWordByIndices(rad, "components", "RAD"),
                     }}
-                  />
+                  /> */}
                 </td>
-                <td>{ehr ? "yes" : "no"}</td>
-                <td>{consultation ? "yes" : "no"} </td>
+                <td
+                  style={{ cursor: "pointer" }}
+                  className="text-center"
+                  onClick={() => {
+                    dispatch(setShowModalEhr({ ...ehr, patient: patient }));
+                  }}
+                >
+                  {ehr ? "yes" : "no"}
+                </td>
+
+                <td
+                  style={{ cursor: "pointer" }}
+                  className="text-center"
+                  onClick={() => {
+                    dispatch(
+                      setShowModalVs({
+                        ...consultation,
+                        appointment: _id,
+                        patient: patient,
+                      })
+                    );
+                  }}
+                >
+                  {consultation ? "yes" : "no"}{" "}
+                </td>
                 <td>
                   <EditableField
                     type="text"

@@ -1,9 +1,15 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fullName, getAge } from "../../../../../../../services/utilities";
+import { SetPATIENT } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function Patient() {
-  const { patient } = useSelector(({ consultations }) => consultations);
-  console.log("here patient", patient);
+  const { patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { patient, consultation = {} } = appointment;
+  const { vitals = {} } = consultation || {};
+  const { prescription = {} } = consultation || {};
+  const dispatch = useDispatch();
 
   const today = new Date();
 
@@ -44,13 +50,38 @@ export default function Patient() {
         </div>
         <div className="checkup-data-prescription-card-input">
           <label>Weight:</label>
-          <input type="text" value="85 kg" />
+          <input
+            type="text"
+            value={vitals?.weight ? `${vitals?.weight} kg` : ""}
+          />
         </div>
       </div>
       <div className="checkup-data-prescription-card-patient-info-row">
         <div className="checkup-data-prescription-card-input">
           <label>diagnosis:</label>
-          <input type="text" value="diabetes" />
+          <input
+            type="text"
+            placeholder="Enter Diagnosis"
+            value={prescription?.diagnosis || ""}
+            onChange={({ target }) => {
+              const updatedPrescription = {
+                ...prescription,
+                diagnosis: target.value,
+              };
+
+              const updatedConsultation = {
+                ...consultation,
+                prescription: updatedPrescription,
+              };
+
+              const updatedAppointment = {
+                ...appointment,
+                consultation: updatedConsultation,
+              };
+
+              dispatch(SetPATIENT(updatedAppointment));
+            }}
+          />
         </div>
       </div>
     </div>

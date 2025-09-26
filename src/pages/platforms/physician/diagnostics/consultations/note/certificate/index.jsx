@@ -26,9 +26,13 @@ export default function MedicalCertificate({
     width: 700,
     height: 530,
   });
-  const { patient } = useSelector(({ consultations }) => consultations),
+  const { patient: appointment } = useSelector(
+      ({ appointments }) => appointments
+    ),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
-    { fullName: name, isMale, dob, address, createdAt } = patient;
+    { fullName: name, isMale, dob, address } = appointment?.patient || {};
+  const { consultation = {} } = appointment;
+  const { prescription } = consultation || {};
   const logoURL =
     `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
       activePlatform.branch.companyId.name
@@ -65,7 +69,13 @@ export default function MedicalCertificate({
         <div className="checkup-data-clearance-card-body">
           <div className="checkup-data-clearance-card-body-date">
             <span>Date:</span>
-            <span>{certificateData.endDate}</span>
+            <span>
+              {new Date().toLocaleDateString("en-US", {
+                month: "short", // o 'long' kung gusto full month name
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
           </div>
           <img alt="caducues" src={CADUCEUS} />
           <label>TO WHOMSOEVER IT MAY CONCERN</label>
@@ -94,7 +104,7 @@ export default function MedicalCertificate({
               </span>
               &nbsp; Suffering from&nbsp;
               <span className="checkup-data-clearance-card-body-data">
-                {certificateData.diagnosis}
+                {prescription?.diagnosis || ""}
               </span>
               . He/She is/was advised treatment or rest for this period&nbsp;
               <span className="checkup-data-clearance-card-body-data">

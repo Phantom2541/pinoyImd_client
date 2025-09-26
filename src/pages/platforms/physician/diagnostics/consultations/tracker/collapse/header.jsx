@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCollapseHeader } from "mdbreact";
 import { useDispatch } from "react-redux";
 import { dateFormat, collapse } from "../../../../../../../services/utilities";

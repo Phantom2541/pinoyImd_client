@@ -6,8 +6,8 @@ export default function Dengue({ task, fontSize }) {
     <div className="offset-1" style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>
         <h6>
-          {task.data.includes(77) && "DENGUE SCREENING"}
-          {task.data.includes(120) && "TYPHOID ANTIBODY"}
+          {task.data.includes(77) && "DENGUE SCREENING "}
+          {task.data.includes(120) && "TYPHOID ANTIBODY "}
           RESULTS :
         </h6>
         <div>

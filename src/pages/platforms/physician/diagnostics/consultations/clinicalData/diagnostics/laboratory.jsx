@@ -1,14 +1,7 @@
-import Tracker from "../../tracker";
-import { MDBCol, MDBRow } from "mdbreact";
-import { useState, useEffect } from "react";
 import Header from "../../../../../../../components/printout/task/laboratory/header";
 import { Banner } from "../../../../../../../services/utilities";
 import BodySwitcher from "../../../../../../../components/printout/task/laboratory/bodySwitcher";
 import Signatories from "../../../../../../../components/printout/task/laboratory/signatories";
-import "./printout.css";
-import "./style.css";
-import LabRadSkeleton from "../../skeleton/rablad";
-
 function chunkArray(array, size) {
   const result = [];
   const entries = Object.entries(array);
@@ -18,7 +11,7 @@ function chunkArray(array, size) {
   return result;
 }
 
-const Printout = ({ task, onloaded, setOnloaded }) => {
+const Laboratory = ({ task, onloaded, setOnloaded }) => {
   const { branchId, remarks, signatories, packages } = task;
   const chunks = chunkArray(packages, 23); // adjust row count per page here
   return (
@@ -67,56 +60,4 @@ const Printout = ({ task, onloaded, setOnloaded }) => {
   );
 };
 
-export default function Laboratory() {
-  const [task, setTask] = useState({ _id: "" });
-  const [onloaded, setOnloaded] = useState(false);
-
-  // component
-  useEffect(() => {
-    const handler = () => {
-      setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-    };
-
-    window.addEventListener("taskPrintout-change", handler);
-    return () => window.removeEventListener("taskPrintout-change", handler);
-  }, []);
-  if (task?._id)
-    return (
-      <MDBRow className="h-100">
-        <MDBCol md="10" className="p-1 h-100" style={{ overflow: "auto" }}>
-          <Printout task={task} onloaded={onloaded} setOnloaded={setOnloaded} />
-        </MDBCol>
-        <MDBCol md="2" className="p-1">
-          <Tracker />
-        </MDBCol>
-      </MDBRow>
-    );
-
-  return (
-    // <>
-    //   <LabRadSkeleton />
-    // </>
-
-    <MDBRow className="h-100">
-      <MDBCol md="10" className="p-1">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "70vh", // full viewport height
-            fontSize: "3rem", // big text
-            fontWeight: "bold",
-            color: "#555", // subtle gray color
-            textAlign: "center",
-          }}
-        >
-          Laboratory Results is Empty
-        </div>
-      </MDBCol>
-      <MDBCol md="2" className="p-1">
-        <Tracker />
-      </MDBCol>
-    </MDBRow>
-  );
-}
+export default Laboratory;

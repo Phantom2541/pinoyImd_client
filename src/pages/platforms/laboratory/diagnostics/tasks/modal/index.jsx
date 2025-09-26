@@ -27,7 +27,7 @@ export default function Modal() {
           color={formColor(task?.form)}
           className="text-uppercase fw-bold"
         >
-          <h5 style={{ letterSpacing: "30px" }} className="mb-0">
+          <h5 style={{ letterSpacing: "19px" }} className="mb-0">
             {task?.form}
           </h5>
         </MDBAlert>

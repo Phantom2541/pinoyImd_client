@@ -274,6 +274,8 @@ export default function Body() {
     }
   };
 
+  console.log("crper", cropperUser);
+
   return (
     <div className="signatories-section position-relative">
       <div
@@ -372,11 +374,12 @@ export default function Body() {
                     ) : (
                       <button
                         className="signatories-card-signature-upload-btn"
-                        onClick={() =>
+                        onClick={() => {
+                          setCropperUser(user);
                           document
                             .getElementById(`file-upload-${email}`)
-                            .click()
-                        }
+                            .click();
+                        }}
                       >
                         Upload Signature
                       </button>
@@ -412,7 +415,7 @@ export default function Body() {
                               }
                             />
                             <span className="signatories-cropper-guide">
-                              {fullName(cropperUser.fullName)}
+                              {fullName(cropperUser?.fullName)}
                             </span>
                           </div>
                           <div className="signatories-cropper-controls">

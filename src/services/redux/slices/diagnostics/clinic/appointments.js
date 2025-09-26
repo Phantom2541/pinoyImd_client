@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit, socket } from "../../../../utilities";
 
 const url = "/diagnostics/clinic/appointments";
 
@@ -38,6 +38,7 @@ const initialState = {
   totalPages: 0,
   activePage: 1,
   formSubmitted: false,
+  isSavingDone: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -142,6 +143,19 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   }
 });
 
+export const DONE = createAsyncThunk(`${url}/done`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token, "done");
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const SET_EMR = createAsyncThunk(`${url}/set_emr`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token, "setEMR");
@@ -231,16 +245,33 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetDONE_CHECKUP: (state, { payload }) => {
-      if (state.collections.length > 0) {
-        const updateCollections = (collections) => {
-          const index = collections.findIndex(({ _id }) => _id === payload);
-          if (index > -1) {
-            collections[index] = { ...collections[index], status: "done" };
+      if (state.roster.length > 0) {
+        const clinicIndex = state.roster.findIndex(
+          ({ _id }) => _id === payload.clinic
+        );
+
+        if (clinicIndex > -1) {
+          const appointments = state.roster[clinicIndex]?.appointments || [];
+          const appointmentIndex = appointments.findIndex(
+            ({ _id }) => _id === payload._id
+          );
+
+          if (appointmentIndex > -1) {
+            state.roster[clinicIndex].appointments[appointmentIndex] = payload;
           }
-        };
-        updateCollections(state.collections);
-        updateCollections(state.filtered);
+        }
       }
+      const updateCollections = (collections) => {
+        if (collections.length > 0) {
+          const index = collections.findIndex(({ _id }) => _id === payload._id);
+          if (index > -1) {
+            collections[index] = payload;
+          }
+        }
+      };
+
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
     },
     SetSETTLED: (state, { payload }) => {
       const update = (collections) => {
@@ -277,7 +308,6 @@ export const reduxSlice = createSlice({
     },
 
     SetDIAGNOSTIC: (state, { payload }) => {
-      console.log("diagnostic payload", payload);
       state.diagnostic = payload;
     },
     SetEDIT: (state, { payload }) => {
@@ -300,12 +330,18 @@ export const reduxSlice = createSlice({
         familyHistory = {},
         socialHistory = {},
         conditions = {},
+        surgeries = {},
+        obGyneHistory = {},
+        patient = {},
       } = payload || {};
 
       const ehr = {
         familyHistory,
         habits: socialHistory?.habits || {},
         conditions,
+        surgeries,
+        isMale: patient?.isMale,
+        obGyneHistory,
         patient: payload?.patient,
       };
       state.selected = ehr;
@@ -546,7 +582,6 @@ export const reduxSlice = createSlice({
           const index = collections.findIndex(
             (item) => item.patient?._id === payload.patient
           );
-          console.log("index", index);
           if (index > -1) {
             collections[index] = { ...collections[index], ehr: payload };
           }
@@ -619,11 +654,41 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.formSubmitted = false;
       })
-      .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+      .addCase(DONE.pending, (state) => {
         state.isSuccess = false;
+        state.isUpdateDone = true;
         state.message = "";
       })
+      .addCase(DONE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const getIndex = (collections) =>
+          collections.findIndex(({ _id }) => _id === payload._id);
+
+        const apptIndex = getIndex(state.cluster);
+        state.patient =
+          state.cluster[apptIndex + 1] || state.cluster[apptIndex - 1] || {};
+        const updateCollections = (collections) => {
+          const index = getIndex(collections);
+          collections.splice(index, 1);
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        updateCollections(state.cluster);
+        socket.emit("send_checkup_done", {
+          data: payload,
+          roomID: payload?.userId,
+        });
+        state.isUpdateDone = false;
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(DONE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isSuccess = false;
+        state.isUpdateDone = false;
+      })
+
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success } = action;
         const index = state.collections.findIndex(
@@ -704,6 +769,7 @@ export function sortSchedules(schedules) {
 }
 
 export const {
+  SetDONE_CHECKUP,
   SetPATIENT,
   SetSETTLED,
   SetTRANSAC,

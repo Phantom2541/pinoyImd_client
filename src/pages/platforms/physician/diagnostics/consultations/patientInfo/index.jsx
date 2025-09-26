@@ -4,7 +4,6 @@ import {
   EditableSelect,
   EditableUser,
 } from "../../../../../../components/customizable";
-import PROFILE from "./../../../../../../assets/male.jpg";
 import {
   Cloudinary,
   fullAddress,
@@ -18,6 +17,7 @@ import Swal from "sweetalert2";
 import {
   SAVE,
   SetCLUSTER,
+  SetPATIENT,
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { useState } from "react";
 import Register from "./register";
@@ -117,6 +117,7 @@ export default function Patient({ activePanels }) {
             confirmButtonText: "OK",
           });
           dispatch(SetCLUSTER(_cluster));
+          dispatch(SetPATIENT(payload));
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         console.log("Appointment creation canceled.");

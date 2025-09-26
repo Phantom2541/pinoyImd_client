@@ -37,6 +37,7 @@ const Records = () => {
             key: {
               customerId: patient?._id,
               department: department === "lab" ? "Laboratory" : "Radiology",
+              isClinic: true,
               limit: 10,
             },
           })
@@ -50,7 +51,7 @@ const Records = () => {
       }
     }
     return () => dispatch(RESET());
-  }, [dispatch, token, patient, show, department]);
+  }, [dispatch, token, patient, show, department, selected]);
 
   if (isLoading) {
     return (
