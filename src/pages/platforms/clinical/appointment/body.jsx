@@ -18,7 +18,7 @@ import {
   EditableField,
   EditableSelect,
 } from "../../../../components/customizable";
-import visitTypes from "./visitTypes";
+import { VisityType } from "../../../../services/fakeDb";
 const Body = () => {
   const {
       filtered,
@@ -84,6 +84,7 @@ const Body = () => {
               lab = {},
               rad = {},
             } = item;
+            console.log(visitType);
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
             return (
@@ -130,21 +131,23 @@ const Body = () => {
                   <EditableSelect
                     animation
                     animationStyle={{
-                      width: "15rem",
+                      width: "19rem",
                       marginLeft: "-.3rem",
                       marginTop: "0.2rem",
                     }}
                     preValue={visitType}
-                    keyForText="visitType"
-                    keyForValue="visitType"
+                    keyForText="label"
+                    keyForValue="value"
                     className="mb-n3"
                     isEditable
-                    collections={visitTypes}
+                    collections={VisityType.collections}
                     fieldData={{
                       _id,
-                      visitType: visitType,
+                      label: VisityType.getLabel(visitType),
                     }}
-                    onSave={handleUpdate}
+                    onSave={(data) =>
+                      handleUpdate({ ...data, visitType: data.value })
+                    }
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
                   />
