@@ -1,9 +1,71 @@
-import { MDBCol, MDBDatePicker, MDBInput, MDBRow } from "mdbreact";
+import { MDBBtn, MDBCol, MDBDatePicker, MDBInput, MDBRow } from "mdbreact";
 import { EditableSelect } from "../../../../../../../components/customizable";
 
 const Details = ({ form, setForm = () => {} }) => {
   return (
     <>
+      <MDBRow>
+        <MDBCol>
+          <MDBInput
+            label="Hospital"
+            required
+            value={form?.hospital}
+            onChange={({ target }) =>
+              setForm({ ...form, hospital: target.value })
+            }
+          />
+        </MDBCol>
+      </MDBRow>
+      <MDBRow>
+        <MDBCol>
+          <MDBInput
+            label="Physician"
+            value={form?.physician?.name}
+            onChange={({ target }) =>
+              setForm({
+                ...form,
+                physician: { ...form.physician, name: target.value },
+              })
+            }
+          />
+        </MDBCol>
+        <MDBCol>
+          <MDBInput
+            label="Specialization"
+            value={form?.physician?.specialization}
+            onChange={({ target }) =>
+              setForm({
+                ...form,
+                physician: { ...form.physician, specialization: target.value },
+              })
+            }
+          />
+        </MDBCol>
+        <MDBCol>
+          <div className="d-flex">
+            <div className="flex-grow-1">
+              <MDBInput
+                label="Assigned date"
+                value={form?.physician?.specialization}
+                onChange={({ target }) =>
+                  setForm({
+                    ...form,
+                    physician: {
+                      ...form.physician,
+                      specialization: target.value,
+                    },
+                  })
+                }
+              />
+            </div>
+            <div className="d-flex align-items-center ms-2">
+              <MDBBtn size="sm" className="px-2">
+                ADD
+              </MDBBtn>
+            </div>
+          </div>
+        </MDBCol>
+      </MDBRow>
       <MDBRow>
         <MDBCol>
           <MDBInput
@@ -15,6 +77,8 @@ const Details = ({ form, setForm = () => {} }) => {
             }
           />
         </MDBCol>
+      </MDBRow>
+      <MDBRow>
         <MDBCol>
           <div style={{ marginTop: "3px" }}>
             <EditableSelect
@@ -47,42 +111,7 @@ const Details = ({ form, setForm = () => {} }) => {
           />
         </MDBCol>
       </MDBRow>
-      <MDBRow>
-        <MDBCol>
-          <MDBInput
-            label="Hospital"
-            required
-            value={form?.hospital}
-            onChange={({ target }) =>
-              setForm({ ...form, hospital: target.value })
-            }
-          />
-        </MDBCol>
-        <MDBCol>
-          <MDBInput
-            label="Physician"
-            value={form?.physician?.name}
-            onChange={({ target }) =>
-              setForm({
-                ...form,
-                physician: { ...form.physician, name: target.value },
-              })
-            }
-          />
-        </MDBCol>
-        <MDBCol>
-          <MDBInput
-            label="Specialization"
-            value={form?.physician?.specialization}
-            onChange={({ target }) =>
-              setForm({
-                ...form,
-                physician: { ...form.physician, specialization: target.value },
-              })
-            }
-          />
-        </MDBCol>
-      </MDBRow>
+
       <MDBRow>
         <MDBCol>
           <MDBInput

@@ -25,7 +25,7 @@ import Details from "./details";
 const _form = {
   title: "",
   description: "",
-  caseSumarry: "",
+  caseSummary: "",
   category: "medical",
 };
 const _details = {

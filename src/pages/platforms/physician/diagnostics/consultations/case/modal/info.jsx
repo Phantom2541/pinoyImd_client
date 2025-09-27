@@ -48,9 +48,9 @@ export default function Information({
             type="textarea"
             label="Case Summary"
             required
-            value={form.caseSumarry}
+            value={form.caseSummary}
             onChange={({ target }) =>
-              setForm({ ...form, caseSumarry: target.value })
+              setForm({ ...form, caseSummary: target.value })
             }
           />
         </MDBCol>
