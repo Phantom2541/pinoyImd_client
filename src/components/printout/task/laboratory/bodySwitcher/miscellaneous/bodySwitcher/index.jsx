@@ -22,6 +22,7 @@ export default function BodySwitcher({ task, fontSize }) {
   //   139: Cluster,
   //   146: Ogtt,
   //   121: widal,
+  //   337: Cluster,
   const handleSwitch = () => {
     const { data = [] } = task;
     if (data.includes(11)) return Gloucose;
@@ -32,7 +33,7 @@ export default function BodySwitcher({ task, fontSize }) {
 
     if (data.includes(146)) return Ogtt;
 
-    if (data.includes(77) || data.includes(120)) return Dengue;
+    if (data.includes(77) || data.includes(101) || data.includes(120)) return Dengue;
 
     if (data.includes(121)) return Widal;
 
