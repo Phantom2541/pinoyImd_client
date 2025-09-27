@@ -63,6 +63,7 @@ const Body = () => {
         <tr>
           {!activeSched && <th>Schedule</th>}
           <th>No.</th>
+          <th>Img</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -71,6 +72,7 @@ const Body = () => {
             eMR
           </th>
           <th title="Vital Sign">VS</th>
+          <th>Contact number</th>
           <th>Remarks</th>
         </tr>
       </MDBTableHead>

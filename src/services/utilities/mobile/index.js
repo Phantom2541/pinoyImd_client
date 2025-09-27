@@ -1,19 +1,32 @@
 const contacts = (contact) => {
   if (!contact) return "-";
 
-  // Remove all non-digit characters
-  const digits = contact.replace(/\D/g, "");
+  let digits = contact.replace(/\D/g, "");
 
-  // If starts with 0 and has enough length, convert to +63 and slice accordingly
-  if (digits.startsWith("0") && digits.length >= 11) {
-    const number = digits.slice(1); // remove leading 0
-    return `+63 ${number.slice(0, 3)}-${number.slice(3, 6)}-${number.slice(
-      6,
-      10
-    )}`;
+  if (digits.startsWith("0") && digits.length === 11) {
+    digits = "63" + digits.slice(1);
+  } else if (digits.startsWith("9") && digits.length === 10) {
+    digits = "63" + digits;
+  } else if (digits.startsWith("63") && digits.length === 12) {
+    // valid
+  } else {
+    return (
+      <>
+        <div
+          style={{ fontSize: "1em", color: "gray", margin: 0, lineHeight: 1 }}
+        >
+          {contact.slice(0, 4)}&nbsp;
+          {contact.slice(4, 8)}-{contact.slice(8, 12)}
+        </div>
+        <div
+          style={{ color: "red", fontWeight: "bold", margin: 0, lineHeight: 1 }}
+        >
+          Invalid number
+        </div>
+      </>
+    );
   }
 
-  // Else return as is with basic formatting (for numbers not starting with 0)
   return `+${digits.slice(0, 2)} ${digits.slice(2, 5)}-${digits.slice(
     5,
     8

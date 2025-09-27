@@ -13,7 +13,7 @@ import {
   setShowModalVs,
   UPDATE,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { fullName } from "../../../../../services/utilities";
+import { fullName, mobile } from "../../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
@@ -59,6 +59,7 @@ const Body = () => {
       <MDBTableHead>
         <tr>
           <th>No.</th>
+          <th>Img</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -67,6 +68,7 @@ const Body = () => {
             eMR
           </th>
           <th className="text-center">VS</th>
+          <th>Contact number</th>
           <th>Remarks</th>
         </tr>
       </MDBTableHead>
@@ -85,12 +87,23 @@ const Body = () => {
               consultation,
               _id,
             } = item;
+
+            console.log("patient", patient);
+
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
 
             return (
               <tr key={index}>
                 <td>{qn}</td>
+                <td>
+                  <img
+                    src={patient?.avatar}
+                    alt="avatar"
+                    className="rounded-circle"
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                </td>
                 <td>
                   <div className="d-flex align-items-center">
                     <div>
@@ -251,6 +264,7 @@ const Body = () => {
                 >
                   {consultation ? "yes" : "no"}{" "}
                 </td>
+                <td>{mobile(patient?.mobile)}</td>
                 <td>
                   <EditableField
                     type="text"
