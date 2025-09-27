@@ -11,8 +11,10 @@ export default function PMHx({ pastMedicalHistory }) {
 
   if (!pastMedicalHistory || pastMedicalHistory.length === 0) {
     return (
-      <div className="checkup-data-pmh-container">
-        No past medical history available.
+      <div className="checkup-data-pmh-container d-flex justify-content-center">
+        <div className="d-flex justify-content-center mb-3">
+          <h3 className="m-auto">No past surgical procedures recorded.</h3>
+        </div>
       </div>
     );
   }
