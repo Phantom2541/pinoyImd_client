@@ -145,7 +145,7 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
             </div>
           </form>
         ) : (
-          <div>
+          <form onSubmit={handleSubmit}>
             <Details form={details} setForm={setDetails} />
             <div className="d-flex justify-content-between">
               <MDBBtn
@@ -177,7 +177,6 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
                     type="submit"
                     rounded
                     disabled={formSubmitted}
-                    onClick={handleSubmit}
                   >
                     Save
                     {form.hasDetails && formSubmitted && (
@@ -187,7 +186,7 @@ export default function Modal({ show, toggle = () => {}, defaultCase = "" }) {
                 </MDBBtnGroup>
               </div>
             </div>
-          </div>
+          </form>
         )}
       </MDBModalBody>
     </MDBModal>

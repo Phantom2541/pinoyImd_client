@@ -7,6 +7,7 @@ import {
   capitalize,
   dateFormat,
 } from "../../../../../../../services/utilities";
+import { MDBIcon } from "mdbreact";
 
 export default function PSHx({ pastSurgicalHistory, patient }) {
   const { token } = useSelector(({ auth }) => auth);
@@ -64,6 +65,16 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
                     <span className="pshx-procedure">
                       {capitalize(surgery.title)}
                     </span>
+                    <button
+                      size="sm"
+                      style={{
+                        marginRight: "-5px",
+                      }}
+                      // color="white"
+                      className="search-add-btn ml-2 py-1 "
+                    >
+                      <MDBIcon icon="plus" size="sm" />
+                    </button>
                   </div>
                   <div
                     className={`pshx-body ${
