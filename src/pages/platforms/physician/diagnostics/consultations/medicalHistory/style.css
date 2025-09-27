@@ -527,8 +527,9 @@
 }
 
 .pshx-body.show {
-  max-height: 500px; /* enough space */
+  max-height: 300px; /* enough space */
   opacity: 1;
+  overflow-y: auto;
 }
 
 .pshx-complication {

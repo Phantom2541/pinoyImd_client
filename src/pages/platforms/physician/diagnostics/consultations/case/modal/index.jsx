@@ -32,14 +32,11 @@ const _details = {
   diagnosis: "",
   status: "active",
   date: {
-    start: new Date().toISOString().split("T")[0],
-    end: new Date().toISOString().split("T")[0],
+    start: "",
+    end: "",
   },
   hospital: "",
-  physician: {
-    name: "",
-    specialization: "",
-  },
+  ap: [],
   remarks: "",
 };
 const steps = ["Information", "Details"];
