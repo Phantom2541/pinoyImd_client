@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { useToasts } from "react-toast-notifications";
 import { SET_EMR } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
@@ -12,6 +13,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   const motherBoxRefs = useRef({});
   const fatherBoxRefs = useRef({});
   const dispatch = useDispatch();
+  const { addToast } = useToasts();
 
   const [fhx, setFhx] = useState(familyHistory);
   const [lines, setLines] = useState([]);
@@ -125,7 +127,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   }, [fhx, mergedRows.length]);
 
   /** Update state + persist with SET_EMR */
-  const persist = async (newFhx) => {
+  const persist = async (newFhx, action = "update") => {
     setFhx(newFhx);
     try {
       await dispatch(
@@ -134,8 +136,15 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
           token,
         })
       ).unwrap();
+
+      if (action === "add") {
+        addToast("Disease added successfully", { appearance: "success" });
+      } else if (action === "remove") {
+        addToast("Disease removed successfully", { appearance: "info" });
+      }
     } catch (err) {
       console.error("Update failed", err);
+      addToast("Failed to update family history", { appearance: "error" });
     }
   };
 
@@ -170,13 +179,13 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
       newFhx.Mother.push(disease);
       newFhx.Father.push(disease);
     }
-    persist(newFhx);
+    persist(newFhx, "add");
   };
 
   const handleRemove = (disease, parent) => {
     Swal.fire({
-      title: `Remove ${disease}?`,
-      text: `This disease is under ${parent}.`,
+      title: `you want to remove ${disease}?`,
+      text: `Are you sure you want to remove this disease is under ${parent}?.`,
       showCancelButton: true,
       confirmButtonText: "Remove",
       icon: "warning",
@@ -186,7 +195,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
           Mother: mother.filter((d) => !(parent === "Mother" && d === disease)),
           Father: father.filter((d) => !(parent === "Father" && d === disease)),
         };
-        persist(newFhx);
+        persist(newFhx, "remove");
       }
     });
   };
