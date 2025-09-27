@@ -6,7 +6,11 @@ import { useToasts } from "react-toast-notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { EditableField } from "../../../../../../../components/customizable";
-import { handleAddObGyneHistory } from "./obSweet";
+import {
+  handleAddObGyneHistory,
+  handleAddPregnancy,
+  handleRemovePregnancy,
+} from "./obSweet";
 import { MDBBtn } from "mdbreact";
 
 export default function OBGyneHx({ obGyneHistory }) {
@@ -80,97 +84,20 @@ export default function OBGyneHx({ obGyneHistory }) {
   };
 
   const handleAdd = async () => {
-    const { value } = await Swal.fire({
-      title: "Add Pregnancy",
-      width: "450px",
-      html: `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
-        <label class="smSweetOB-label">
-          Gestational Age (weeks)
-          <input id="swal-gestationalAge" type="number" class="smSweetOB-input";">
-        </label>
-
-        <label class="smSweetOB-label">
-          Birth Date
-          <input id="swal-birthDate" type="date" class="smSweetOB-input";">
-        </label>
-
-        <label class="smSweetOB-label">
-          Outcome
-          <select id="swal-outcome" class="smSweetOB-input";">
-            <option value="alive">Alive</option>
-            <option value="stillbirth">Stillbirth</option>
-            <option value="deceased">Deceased</option>
-          </select>
-        </label>
-
-        <label class="smSweetOB-label">
-          Delivery
-          <select id="swal-delivery" class="smSweetOB-input";">
-            <option value="normal">Normal</option>
-            <option value="cesarean">Cesarean</option>
-          </select>
-        </label>
-
-        <label class="smSweetOB-label">
-          Sex
-          <select id="swal-sex" class="smSweetOB-input";">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="unknown">Unknown</option>
-          </select>
-        </label>
-
-        <label class="smSweetOB-label">
-          Birth Weight (grams)
-          <input id="swal-birthWeight" type="number" class="smSweetOB-input";">
-        </label>
-
-        <label style="grid-column: span 2;">
-          Complications (comma separated)
-          <input id="swal-complications" class="wdSweetOB-input";">
-        </label>
-      </div>
-      `,
-      focusConfirm: false,
-      preConfirm: () => {
-        const $ = (id) => document.getElementById(id).value;
-        return {
-          gestationalAge: parseInt($("ga"), 10) || null,
-          outcome: $("outcome"),
-          delivery: $("delivery"),
-          sex: $("sex"),
-          birthWeight: parseInt($("bw"), 10) || null,
-          complications: $("comp")
-            .split(",")
-            .map((c) => c.trim())
-            .filter(Boolean),
-        };
-      },
-      showCancelButton: true,
-    });
-
-    if (!value) return;
-    const newList = [...pregnancies, value];
-    persist(newList, "add");
+    const newPreg = await handleAddPregnancy();
+    if (newPreg) {
+      const newList = [...pregnancies, newPreg];
+      persist(newList, "add");
+    }
   };
 
-  const handleRemove = (index) => {
-    const pregnancy = pregnancies[index];
-    Swal.fire({
-      title: `Remove Pregnancy #${index + 1}?`,
-      text: `Gestational Age: ${pregnancy.gestationalAge} weeks, Date: ${pregnancy.birthDate}`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Remove",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        const newList = pregnancies.filter((_, i) => i !== index);
-        persist(newList, "remove");
-      }
-    });
+  const handleRemove = async (index) => {
+    const confirmed = await handleRemovePregnancy(index, pregnancies[index]);
+    if (confirmed) {
+      const newList = pregnancies.filter((_, i) => i !== index);
+      persist(newList, "remove");
+    }
   };
-
   const handleUpdate = (data) => {
     const updatedHistory = { ...ObHistory, ...data };
     setObHistory(updatedHistory);
@@ -232,11 +159,12 @@ export default function OBGyneHx({ obGyneHistory }) {
       p.complications && p.complications.length > 0
         ? p.complications.join(", ")
         : "None";
+
+    const bw = p.birthWeight ? `${p.birthWeight}g` : ""; // only add g if value exists
+
     return `Pregnancy #${idx + 1}: Outcome - ${p.outcome}, Delivery - ${
       p.delivery
-    }, Sex - ${p.sex}, Birth Weight - ${
-      p.birthWeight
-    }g, Complications - ${comp}, Birth Date - ${p.birthDate}`;
+    }, Sex - ${p.sex}, Birth Weight - ${bw}, Complications - ${comp}`;
   });
 
   const obFields = [
@@ -322,6 +250,7 @@ export default function OBGyneHx({ obGyneHistory }) {
           handleDragEnd={handleDragEnd}
           handleAdd={handleAdd}
           handleRemove={handleRemove}
+          date={items[dragIndex]?.date}
           handleEdit={(index, newValue) => {
             const updated = [...items];
             updated[index] = {

@@ -12,7 +12,7 @@ export default function Body() {
 
   const getTranslate = () => {
     if (!slide) return "-33.3333%"; // default center
-    if (["FMHx", "PMHx", "PSHx", "OB Gyne Hx"].includes(slide)) {
+    if (["FMHx", "PMHx", "PSHx", "SHx", "OB Gyne Hx"].includes(slide)) {
       return "0"; // medicalHistory → right panel
     }
     if (["Laboratory", "Radiology", "Vital"].includes(slide)) {
