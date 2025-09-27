@@ -18,6 +18,7 @@ import {
   Cloudinary,
   fullName,
   mobile,
+  PresetImage,
 } from "../../../../../services/utilities";
 import {
   EditableField,
@@ -109,10 +110,12 @@ const Body = () => {
                   <img
                     src={photoURL}
                     alt="avatar"
-                    className="rounded-circle"
-                    style={{ width: "50px", height: "50px" }}
+                    className="rounded-circle mx-auto  z-depth-1"
+                    style={{ width: "35px", height: "35px" }}
+                    onError={(e) =>
+                      (e.target.src = PresetImage(patient.isMale))
+                    }
                   />{" "}
-                  */}
                 </td>
                 <td>
                   <div className="d-flex align-items-center">
