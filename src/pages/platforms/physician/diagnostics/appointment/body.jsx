@@ -24,10 +24,7 @@ import {
   EditableSelect,
 } from "../../../../../components/customizable";
 import { Templates, VisityType } from "../../../../../services/fakeDb";
-import {
-  UPLOAD,
-  RESET,
-} from "../../../../../services/redux/slices/assets/persons/auth";
+
 const Body = () => {
   const {
       filtered,
@@ -101,9 +98,9 @@ const Body = () => {
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
 
-            const photoURL = `${Cloudinary.getEndpoint()}/users/${
-              patient?.email
-            }/profile`;
+            const photoURL = `${Cloudinary.getEndpoint()}/${
+              patient?.pid || ""
+            }/users/${patient?.email}/profile`;
 
             return (
               <tr key={index}>
