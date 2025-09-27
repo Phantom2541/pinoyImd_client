@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../style.css";
-import DraggableList, { useDragAndDrop } from "../dragAndDrop";
 import { useDispatch, useSelector } from "react-redux";
-import { PSH } from "../../../../../../../services/redux/slices/diagnostics/cases";
+import { SetITEM } from "../../../../../../../services/redux/slices/diagnostics/cases";
 import {
   capitalize,
   dateFormat,
 } from "../../../../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
 
-export default function PSHx({ pastSurgicalHistory, patient }) {
-  const { token } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ cases }) => cases);
+export default function PSHx() {
   const { patient: appointment } = useSelector(
     ({ appointments }) => appointments
   );
   const [expanded, setExpanded] = useState(null);
   const [surgicals, setSurgicals] = useState([]);
-  const dragDrop = useDragAndDrop(pastSurgicalHistory || []);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,11 +25,6 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
   const toggleExpand = (index) => {
     setExpanded(expanded === index ? null : index);
   };
-
-  // Auto-sort by year (latest first)
-  const sortedHistory = [...collections].sort(
-    (a, b) => Number(b.year) - Number(a.year)
-  );
 
   if (!surgicals || surgicals.length === 0) {
     return (
@@ -52,7 +43,6 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
         <div className="pshx-timeline">
           {surgicals.map((surgery, index) => {
             const { items = [] } = surgery;
-            console.log("items", items);
             return (
               <div
                 key={index}
@@ -70,6 +60,10 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
                       style={{
                         marginRight: "-5px",
                       }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(SetITEM(surgery));
+                      }}
                       // color="white"
                       className="search-add-btn ml-2 py-1 "
                     >
@@ -84,18 +78,74 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
                     {items.map((item, i) => {
                       const {
                         physician = {},
+                        ap = [],
+                        date = { start: "", end: "" },
                         hospital = "",
                         remarks = "",
                         diagnosis = "",
-                      } = item;
+                        status = "",
+                      } = item || {};
+                      const { start = "", end = "" } = date;
                       return (
-                        <div key={`${i}-${item._id}`} className="ml-3">
+                        <div
+                          key={`${i}-${item._id}`}
+                          className="ml-3 pshx-item-body"
+                        >
+                          {i !== 0 && (
+                            <div
+                              className="mb-3"
+                              style={{
+                                border: "1px  solid #9f9c9cff",
+                              }}
+                            ></div>
+                          )}
                           <p>
                             <strong>Hospital:</strong> {hospital}
-                            <span className="pshx-date ml-2">
-                              {dateFormat(surgery.createdAt)}
-                            </span>
+                            {start && (
+                              <span
+                                className="pshx-date ml-2"
+                                title={`${dateFormat(start)} ${
+                                  end ? ` - ${dateFormat(end)}` : ""
+                                }`}
+                              >
+                                {new Date(start).toLocaleString("en-US", {
+                                  year: "numeric",
+                                  month: "long",
+                                })}
+                              </span>
+                            )}
                           </p>
+                          {diagnosis && (
+                            <p className="pshx-complication">
+                              <strong>Diagnosis:</strong> {diagnosis}
+                            </p>
+                          )}
+                          <p className="pshx-complication">
+                            <strong>Status:</strong> {capitalize(status)}
+                          </p>
+                          {ap.length > 0 && (
+                            <p>
+                              <strong>Attending Physician:</strong>{" "}
+                              {ap.map((a, index) => {
+                                const {
+                                  name = "",
+                                  specialization = "",
+                                  assignedDate = "",
+                                } = a || {};
+                                return (
+                                  <div key={a?._id} className="ml-3">
+                                    <span style={{ fontWeight: 500 }}>
+                                      {index + 1}.
+                                    </span>{" "}
+                                    {specialization && `${specialization}: `}
+                                    {name}
+                                    {assignedDate &&
+                                      `, ${dateFormat(assignedDate)}`}
+                                  </div>
+                                );
+                              })}
+                            </p>
+                          )}
                           {physician?.name && (
                             <p>
                               <strong>
@@ -107,11 +157,7 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
                               {physician.name}
                             </p>
                           )}
-                          {diagnosis && (
-                            <p className="pshx-complication">
-                              <strong>Diagnosis:</strong> {diagnosis}
-                            </p>
-                          )}
+
                           {remarks && (
                             <p>
                               <strong>Remarks:</strong> {remarks}
