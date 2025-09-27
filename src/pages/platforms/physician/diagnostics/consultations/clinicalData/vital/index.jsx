@@ -23,9 +23,22 @@ const vitalsConfig = {
   },
 };
 export default function VitalSign({ vitalSigns }) {
-  if (!vitalSigns) {
+  if (!vitalSigns || Object.keys(vitalSigns).length === 0) {
     return (
-      <div className="vital-sign-container">No vital signs available.</div>
+      <div className="checkup-data-pmh-container d-flex flex-column justify-content-center align-items-center text-center h-100">
+        <h3 className="mb-3">No vital signs registered.</h3>
+
+        <div style={{ marginTop: "5px", lineHeight: "1.8" }}>
+          <span style={{ fontWeight: "bold" }}>BP:</span> ______ mmHg <br />
+          <span style={{ fontWeight: "bold" }}>PR/HR:</span> ______ bpm <br />
+          <span style={{ fontWeight: "bold" }}>RR:</span> ______ cpm <br />
+          <span style={{ fontWeight: "bold" }}>Temp:</span> ______ °C <br />
+          <span style={{ fontWeight: "bold" }}>Ht:</span> ______ cm <br />
+          <span style={{ fontWeight: "bold" }}>Wt:</span> ______ kg <br />
+        </div>
+
+        <h3 className="mt-3">Please add vital signs.</h3>
+      </div>
     );
   }
 
