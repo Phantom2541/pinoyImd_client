@@ -44,6 +44,7 @@ export default function Patient({ activePanels }) {
   const meters = (feet * 12 + (inches || 0)) * 0.0254;
   const rawBmi = vitals.weight / meters ** 2;
   const bmi = Number.isFinite(rawBmi) ? rawBmi.toFixed(2) : 0;
+  console.log("appointment", appointment);
 
   const setPatient = (patient) => {
     Swal.fire({
@@ -230,12 +231,26 @@ export default function Patient({ activePanels }) {
         <label style={{ color: patient?.isMale ? "#007bff" : "#e83e8c" }}>
           Diagnosis :
         </label>
-        <EditableField
+        {/* <EditableField
           keyForValue="value"
           keyForText="label"
-          onChange={(value) =>
-            dispatch(SetPATIENT({ ...appointment, diagnosis: value }))
+          onChange={(value) => {
+            console.log(`value`, value);
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value }));
+          }}
+          isSuccess={isSuccess}
+          formSubmitted={formSubmitted}
+        /> */}
+        <EditableField
+          fieldData={{
+            diagnosis: appointment?.diagnosis || "",
+          }}
+          placeholder="Diagnosis"
+          onSave={(value) =>
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value.diagnosis }))
           }
+          isSuccess={isSuccess}
+          formSubmitted={formSubmitted}
         />
       </div>
       <Register

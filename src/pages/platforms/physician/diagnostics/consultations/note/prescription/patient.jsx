@@ -62,7 +62,7 @@ export default function Patient() {
           <input
             type="text"
             placeholder="Enter Diagnosis"
-            value={prescription?.diagnosis || ""}
+            value={appointment?.diagnosis || ""}
             onChange={({ target }) => {
               const updatedPrescription = {
                 ...prescription,
