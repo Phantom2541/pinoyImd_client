@@ -159,11 +159,12 @@ export default function OBGyneHx({ obGyneHistory }) {
       p.complications && p.complications.length > 0
         ? p.complications.join(", ")
         : "None";
+
+    const bw = p.birthWeight ? `${p.birthWeight}g` : ""; // only add g if value exists
+
     return `Pregnancy #${idx + 1}: Outcome - ${p.outcome}, Delivery - ${
       p.delivery
-    }, Sex - ${p.sex}, Birth Weight - ${
-      p.birthWeight
-    }g, Complications - ${comp}`;
+    }, Sex - ${p.sex}, Birth Weight - ${bw}, Complications - ${comp}`;
   });
 
   const obFields = [
