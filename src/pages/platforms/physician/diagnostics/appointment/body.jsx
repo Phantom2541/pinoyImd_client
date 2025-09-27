@@ -18,13 +18,16 @@ import {
   Cloudinary,
   fullName,
   mobile,
-  PresetImage,
 } from "../../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
 } from "../../../../../components/customizable";
 import { Templates, VisityType } from "../../../../../services/fakeDb";
+import {
+  UPLOAD,
+  RESET,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 const Body = () => {
   const {
       filtered,
@@ -59,6 +62,7 @@ const Body = () => {
   });
 
   const paginatedData = sortedData.slice(startIndex, endIndex);
+  console.log("paginatedData", paginatedData);
 
   return (
     <MDBTable bordered className="m-0 p-0" small>
@@ -97,32 +101,21 @@ const Body = () => {
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
 
+            const photoURL = `${Cloudinary.getEndpoint()}/users/${
+              patient?.email
+            }/profile`;
+
             return (
               <tr key={index}>
                 <td>{qn}</td>
                 <td>
                   <img
-                    src={`${Cloudinary.getEndpoint()}/${
-                      patient?.pid || ""
-                    }/users/${patient?.email}/profile`}
-                    className="rounded-circle z-depth-1"
-                    style={{
-                      width: "35px",
-                      height: "35px",
-                      marginRight: "10px",
-                    }}
-                    alt=" avatar"
-                    onError={(e) =>
-                      (e.target.src = PresetImage(patient.isMale))
-                    }
-                  />
-
-                  {/* <img
-                    src={patient?.avatar}
+                    src={photoURL}
                     alt="avatar"
                     className="rounded-circle"
                     style={{ width: "50px", height: "50px" }}
-                  /> */}
+                  />{" "}
+                  */}
                 </td>
                 <td>
                   <div className="d-flex align-items-center">
