@@ -5,6 +5,7 @@ import {
   MDBTableHead,
   MDBTableBody,
   MDBIcon,
+  MDBAvatar,
 } from "mdbreact";
 import { useHistory } from "react-router-dom";
 import {
@@ -13,7 +14,12 @@ import {
   setShowModalVs,
   UPDATE,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { fullName, mobile } from "../../../../../services/utilities";
+import {
+  Cloudinary,
+  fullName,
+  mobile,
+  PresetImage,
+} from "../../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
@@ -59,7 +65,7 @@ const Body = () => {
       <MDBTableHead>
         <tr>
           <th>No.</th>
-          <th>Img</th>
+          <th>Profile</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -88,8 +94,6 @@ const Body = () => {
               _id,
             } = item;
 
-            console.log("patient", patient);
-
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
 
@@ -98,11 +102,27 @@ const Body = () => {
                 <td>{qn}</td>
                 <td>
                   <img
+                    src={`${Cloudinary.getEndpoint()}/${
+                      patient?.pid || ""
+                    }/users/${patient?.email}/profile`}
+                    className="rounded-circle z-depth-1"
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      marginRight: "10px",
+                    }}
+                    alt=" avatar"
+                    onError={(e) =>
+                      (e.target.src = PresetImage(patient.isMale))
+                    }
+                  />
+
+                  {/* <img
                     src={patient?.avatar}
                     alt="avatar"
                     className="rounded-circle"
                     style={{ width: "50px", height: "50px" }}
-                  />
+                  /> */}
                 </td>
                 <td>
                   <div className="d-flex align-items-center">
