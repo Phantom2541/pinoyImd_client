@@ -2,47 +2,9 @@ import { useEffect, useState } from "react";
 import PMHx from "./pmhx";
 import FMHx from "./fmhx";
 import PSHx from "./pshx";
+import SHx from "./shx";
 import OBGyneHx from "./obGyneHx";
 import { useSelector } from "react-redux";
-
-const familyHistory = {
-  mother: [
-    "Diabetes",
-    "Hypertension",
-    "Asthma",
-    "Breast Cancer",
-    "Arthritis",
-    "Stroke",
-    "Tuberculosis",
-    "Migraine",
-    "Osteoporosis",
-    "Glaucoma",
-    "Alzheimer’s Disease",
-    "Thyroid Disorder",
-    "Depression",
-    "Obesity",
-    "Gout",
-    "Anemia",
-  ],
-  father: [
-    "Heart Disease",
-    "Cancer",
-    "Asthma",
-    "Lung Disease",
-    "Stroke",
-    "Kidney Disease",
-    "Arthritis",
-    "Diabetes",
-    "Parkinson’s Disease",
-    "Liver Disease",
-    "High Cholesterol",
-    "Peptic Ulcer",
-    "Epilepsy",
-    "Obesity",
-    "Prostate Cancer",
-    "Hepatitis",
-  ],
-};
 
 const pastMedicalHistory = {
   "Chronic Illnesses": [
@@ -147,10 +109,11 @@ const historyMap = {
   pmhx: PMHx,
   fmhx: FMHx,
   pshx: PSHx,
+  shx: SHx,
   obgynehx: OBGyneHx,
 };
 
-const order = ["pmhx", "fmhx", "pshx", "obgynehx"];
+const order = ["pmhx", "fmhx", "pshx", "shx", "obgynehx"];
 
 export default function HistorySwitcher({ task }) {
   const { patient } = useSelector(({ appointments }) => appointments);
@@ -159,6 +122,7 @@ export default function HistorySwitcher({ task }) {
   const [direction, setDirection] = useState("left");
 
   const { ehr = {} } = patient || {};
+  console.log(`ehr`, ehr);
 
   useEffect(() => {
     if (!task || task === current) return;
@@ -193,6 +157,7 @@ export default function HistorySwitcher({ task }) {
           pastMedicalHistory={pastMedicalHistory}
           patient={patient?.patient}
           pastSurgicalHistory={pastSurgicalHistory}
+          shx={ehr?.socialHistory || {}}
           obGyneHistory={obGyneHistory}
           fontSize="1rem"
         />

@@ -97,7 +97,6 @@ const Patient = ({
           <div style={{ minWidth: "8rem" }}>
             <EditableField
               fieldData={{ _id: deal?._id, ssx: deal?.ssx }}
-              keyForValue="ssx"
               placeholder="SSX"
               displayTag="h6"
               onSave={(data) => onSave(data)}
