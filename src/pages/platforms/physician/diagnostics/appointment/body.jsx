@@ -13,12 +13,20 @@ import {
   setShowModalVs,
   UPDATE,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { fullName, mobile } from "../../../../../services/utilities";
+import {
+  Cloudinary,
+  fullName,
+  mobile,
+} from "../../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
 } from "../../../../../components/customizable";
 import { Templates, VisityType } from "../../../../../services/fakeDb";
+import {
+  UPLOAD,
+  RESET,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 const Body = () => {
   const {
       filtered,
@@ -53,6 +61,7 @@ const Body = () => {
   });
 
   const paginatedData = sortedData.slice(startIndex, endIndex);
+  console.log("paginatedData", paginatedData);
 
   return (
     <MDBTable bordered className="m-0 p-0" small>
@@ -88,17 +97,19 @@ const Body = () => {
               _id,
             } = item;
 
-            console.log("patient", patient);
-
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
+
+            const photoURL = `${Cloudinary.getEndpoint()}/users/${
+              patient?.email
+            }/profile`;
 
             return (
               <tr key={index}>
                 <td>{qn}</td>
                 <td>
                   <img
-                    src={patient?.avatar}
+                    src={photoURL}
                     alt="avatar"
                     className="rounded-circle"
                     style={{ width: "50px", height: "50px" }}
