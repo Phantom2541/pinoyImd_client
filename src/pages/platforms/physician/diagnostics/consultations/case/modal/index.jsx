@@ -4,14 +4,10 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBRow,
-  MDBCol,
-  MDBInput,
   MDBBtn,
   MDBBtnGroup,
 } from "mdbreact";
 import { fullName } from "../../../../../../../services/utilities";
-import { EditableSelect } from "../../../../../../../components/customizable";
 import { useEffect, useState } from "react";
 import { SAVE } from "../../../../../../../services/redux/slices/diagnostics/cases";
 import Spinner from "../../../../../../../components/spinner";

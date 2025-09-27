@@ -1,12 +1,4 @@
-import {
-  MDBBtn,
-  MDBCol,
-  MDBDatePicker,
-  MDBIcon,
-  MDBInput,
-  MDBRow,
-  MDBTable,
-} from "mdbreact";
+import { MDBCol, MDBIcon, MDBInput, MDBRow, MDBTable } from "mdbreact";
 import { EditableSelect } from "../../../../../../../components/customizable";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

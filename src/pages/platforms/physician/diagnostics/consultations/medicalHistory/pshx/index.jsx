@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../style.css";
-import DraggableList, { useDragAndDrop } from "../dragAndDrop";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  PSH,
-  SetITEM,
-} from "../../../../../../../services/redux/slices/diagnostics/cases";
+import { SetITEM } from "../../../../../../../services/redux/slices/diagnostics/cases";
 import {
   capitalize,
   dateFormat,
 } from "../../../../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
-import CaseModal from "./modal";
 
-export default function PSHx({ pastSurgicalHistory, patient }) {
-  const { token } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ cases }) => cases);
+export default function PSHx() {
   const { patient: appointment } = useSelector(
     ({ appointments }) => appointments
   );
   const [expanded, setExpanded] = useState(null);
   const [surgicals, setSurgicals] = useState([]);
-  const dragDrop = useDragAndDrop(pastSurgicalHistory || []);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,11 +25,6 @@ export default function PSHx({ pastSurgicalHistory, patient }) {
   const toggleExpand = (index) => {
     setExpanded(expanded === index ? null : index);
   };
-
-  // Auto-sort by year (latest first)
-  const sortedHistory = [...collections].sort(
-    (a, b) => Number(b.year) - Number(a.year)
-  );
 
   if (!surgicals || surgicals.length === 0) {
     return (
