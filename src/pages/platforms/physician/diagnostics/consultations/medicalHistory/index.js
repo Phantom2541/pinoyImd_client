@@ -221,6 +221,7 @@ export default function HistorySwitcher({ task }) {
           task={current}
           familyHistory={ehr?.familyHistory || {}}
           pastMedicalHistory={pastMedicalHistory}
+          patient={patient?.patient}
           pastSurgicalHistory={pastSurgicalHistory}
           obGyneHistory={ehr?.obGyneHistory}
           fontSize="1rem"

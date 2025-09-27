@@ -19,8 +19,10 @@ import {
   EditableSelect,
 } from "../../../../components/customizable";
 import { VisityType } from "../../../../services/fakeDb";
+import { useEffect } from "react";
 const Body = () => {
   const {
+      collections,
       filtered,
       activePage,
       maxPage,
@@ -31,9 +33,13 @@ const Body = () => {
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleUpdate = (data) => {
-    dispatch(UPDATE({ token, data }));
-  };
+  const handleUpdate = (data) => dispatch(UPDATE({ token, data }));
+
+  useEffect(() => {
+    console.log("filtered", filtered);
+    console.log("collections", collections);
+  }, [filtered, collections]);
+
   // Pagination
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -57,6 +63,7 @@ const Body = () => {
         <tr>
           {!activeSched && <th>Schedule</th>}
           <th>No.</th>
+          <th>Img</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -65,6 +72,7 @@ const Body = () => {
             eMR
           </th>
           <th title="Vital Sign">VS</th>
+          <th>Contact number</th>
           <th>Remarks</th>
         </tr>
       </MDBTableHead>

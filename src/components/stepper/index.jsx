@@ -32,7 +32,9 @@ const Stepper = ({ steps = [], activeStep = 0 }) => {
         </div>
 
         {steps.map((step, index) => {
-          const { icon = "", label = "" } = step;
+          const isObject = typeof step === "object";
+          const { icon = "", label = "" } = step || {};
+          const baseLabel = isObject ? label : step;
           return (
             <div key={index}>
               <div
@@ -60,7 +62,7 @@ const Stepper = ({ steps = [], activeStep = 0 }) => {
                     transform: `translateX(-50%)`,
                   }}
                 >
-                  {label}
+                  {baseLabel}
                 </div>
               </div>
             </div>

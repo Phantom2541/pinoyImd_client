@@ -15,15 +15,18 @@ const packageComponentMap = {
   69: Cluster, // RPR
   70: Cluster, // HBsAg
   77: Dengue,
-  84: Pregnancy,
-  99: Pregnancy,
-  120: Dengue,
-  132: Pregnancy,
-  134: Pregnancy,
-  138: Pregnancy,
-  139: Pregnancy,
-  146: Ogtt,
+  84: Cluster,
+  93: Cluster,
+  99: Cluster,
+  101: Dengue, 
+  120: Dengue, 
   121: widal,
+  132: Cluster,
+  134: Cluster,
+  138: Cluster,
+  139: Cluster, 
+  146: Ogtt,
+  337: Cluster, 
 };
 
 export default function BodySwitcher({ task, setTask }) {

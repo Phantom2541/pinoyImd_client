@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   EditableSelect,
   EditableUser,
+  EditableField,
 } from "../../../../../../components/customizable";
 import {
   Cloudinary,
@@ -22,6 +23,7 @@ import {
 import { useState } from "react";
 import Register from "./register";
 import { VisityType } from "../../../../../../services/fakeDb";
+import diagnostic from "../../../../../../services/fakeDb/sidebars/diagnostics/diagnostic";
 
 export default function Patient({ activePanels }) {
   const { token, auth } = useSelector(({ auth }) => auth),
@@ -216,6 +218,23 @@ export default function Patient({ activePanels }) {
           preValue={appointment?.visitType}
           onChange={(value) =>
             dispatch(SetPATIENT({ ...appointment, visitType: value }))
+          }
+        />
+      </div>
+      <div
+        className="checkup-data-patient-reason"
+        style={{
+          borderColor: patient?.isMale ? "#007bff" : "#e83e8c",
+        }}
+      >
+        <label style={{ color: patient?.isMale ? "#007bff" : "#e83e8c" }}>
+          Diagnosis :
+        </label>
+        <EditableField
+          keyForValue="value"
+          keyForText="label"
+          onChange={(value) =>
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value }))
           }
         />
       </div>

@@ -131,7 +131,7 @@ export default function Case() {
               <Search
                 hideButton={caseCollections.length > 0}
                 setFiltered={(items) => setCases(items)}
-                reset={() => dispatch(SetFILTERED(caseCollections))}
+                reset={() => setCases(caseCollections)}
                 collections={caseCollections}
                 handleAdd={(value) => {
                   setShow(true);
@@ -143,7 +143,7 @@ export default function Case() {
               cases.map((item) => (
                 <button
                   className={`w-100 ${
-                    selectedCases.some((val) => val._id === item._id)
+                    selectedCases.some((val) => val?._id === item?._id)
                       ? "selected"
                       : ""
                   } ${patient?.isMale ? "male" : "female"}`}
