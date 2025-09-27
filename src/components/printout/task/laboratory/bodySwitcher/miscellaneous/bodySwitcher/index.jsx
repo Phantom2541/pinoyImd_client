@@ -14,6 +14,7 @@ export default function BodySwitcher({ task, fontSize }) {
   //   70: Cluster, // HBsAg
   //   77: Dengue,
   //   84: Cluster,
+  //   93: Cluster,
   //   99: Cluster,
   //   120: Dengue, 
   //   132: Cluster,

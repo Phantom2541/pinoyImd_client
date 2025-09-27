@@ -16,6 +16,7 @@ const packageComponentMap = {
   70: Cluster, // HBsAg
   77: Dengue,
   84: Cluster,
+  93: Cluster,
   99: Cluster,
   101: Dengue, 
   120: Dengue, 

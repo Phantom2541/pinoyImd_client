@@ -1243,7 +1243,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "equal",
     "purpose": "To quantify hepatitis B surface antigen levels for monitoring infection status and treatment response.",
     "organ": []
   },
@@ -1409,7 +1409,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "equal",
     "purpose": "To quantify antibodies against hepatitis C virus and help evaluate exposure or chronic infection.",
     "organ": ["Blood", "Immune System", "Liver"]
   },
@@ -1499,7 +1499,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "gender",
     "purpose": "To evaluate androgen status and diagnose hormonal imbalances.",
     "organ": ["Testes", "Blood"]
   },
@@ -1619,7 +1619,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6,
+    "template": 4,
     "purpose": "To detect recent or acute Helicobacter pylori infection.",
     "organ": []
   },
@@ -4086,7 +4086,7 @@
     "specimen": "Blood sample",
     "template": 2,
     "purpose": "To evaluate acid-base status and bicarbonate levels.",
-    "preference": "gender"
+    "preference": "equal"
   },
   {
     "id": 396,
