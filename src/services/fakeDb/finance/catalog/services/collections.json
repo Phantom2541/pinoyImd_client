@@ -1641,14 +1641,14 @@
   {
     "id": 101,
     "name": "LEPTOSPIRA IGG/IGM",
-    "abbreviation": "",
+    "abbreviation": "Leptospirosis",
     "lo_ssx": null,
     "hi_ssx": "Positive result indicates current or past leptospira infection.",
     "department": "LAB",
     "frequency": null,
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6,
+    "template": 4,
     "preference": "gender",
     "purpose": "To detect current or past leptospira infection.",
     "organ": []

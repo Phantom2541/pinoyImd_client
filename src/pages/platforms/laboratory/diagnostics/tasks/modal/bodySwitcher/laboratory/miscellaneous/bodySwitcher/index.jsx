@@ -17,13 +17,15 @@ const packageComponentMap = {
   77: Dengue,
   84: Cluster,
   99: Cluster,
+  101: Dengue, 
   120: Dengue, 
+  121: widal,
   132: Cluster,
   134: Cluster,
   138: Cluster,
-  139: Cluster,
+  139: Cluster, 
   146: Ogtt,
-  121: widal,
+  337: Cluster, 
 };
 
 export default function BodySwitcher({ task, setTask }) {

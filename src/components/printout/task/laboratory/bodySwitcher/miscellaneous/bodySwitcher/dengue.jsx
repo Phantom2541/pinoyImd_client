@@ -7,6 +7,7 @@ export default function Dengue({ task, fontSize }) {
       <MDBCol>
         <h6>
           {task.data.includes(77) && "DENGUE SCREENING "}
+          {task.data.includes(101) && "LEPTOSPIRA IGG/IGM "}
           {task.data.includes(120) && "TYPHOID ANTIBODY "}
           RESULTS :
         </h6>

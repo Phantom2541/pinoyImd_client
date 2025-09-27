@@ -8,7 +8,7 @@ import { Services } from "../../../../../../../services/fakeDb";
 // HAV :131
 //   84: Cluster,
 //   99: Cluster,
-const test = [68, 69, 70,84, 97, 99, 131, 132, 134, 138,139 ];
+const test = [68, 69, 70,84, 97, 99, 131, 132, 134, 138,139,337 ];
 
 export default function Cluster({ task, fontSize }) {
   const { results } = task;
