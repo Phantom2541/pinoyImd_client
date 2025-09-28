@@ -33,6 +33,7 @@ const EditableField = ({
   enableEditMode = true,
   formSubmitted = false,
   localUpdate = false,
+  utility = {},
 }) => {
   const [editedData, setEditedData] = useState({});
   const { addToast } = useToasts();
@@ -88,12 +89,24 @@ const EditableField = ({
     ? editedData[effectiveKeyForValue]
     : fieldData[keyForText || effectiveKeyForValue];
 
+  const applyUtility = () => {
+    if (typeof utility === "function") {
+      return utility(rawValue);
+    }
+    if (typeof utility.format === "function") {
+      return utility.format(rawValue);
+    }
+    return null;
+  };
+
   const formattedText =
-    (isMoney
-      ? currency.format(rawValue)
-      : isCapitalize
-      ? capitalize(rawValue)
-      : rawValue) || "N/A";
+    (applyUtility() ??
+      (isMoney
+        ? currency.format(rawValue)
+        : isCapitalize
+        ? capitalize(rawValue)
+        : rawValue)) ||
+    "N/A";
 
   // Auto-resize textarea on edit
   useEffect(() => {
