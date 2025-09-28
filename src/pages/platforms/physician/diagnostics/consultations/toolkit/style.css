@@ -100,6 +100,10 @@
   background-color: #28a745;
   width: 130px;
 }
+.checkup-data-toolkit-button.halt {
+  background-color: red;
+  width: 130px;
+}
 
 .checkup-data-toolkit-button span {
   cursor: pointer;

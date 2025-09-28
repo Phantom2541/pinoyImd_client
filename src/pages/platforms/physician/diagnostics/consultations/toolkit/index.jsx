@@ -220,12 +220,21 @@ export default function Toolkit({ activePanels }) {
           <span data-hover="»">Next</span>
         </button>
         <button
-          className="checkup-data-toolkit-button done"
+          className="checkup-data-toolkit-button done ml-5"
           disabled={isUpdateDone}
           style={{ opacity: isUpdateDone ? 0.5 : 1 }}
         >
           <span data-hover={"✓"} onClick={handleDone}>
             Done
+          </span>
+        </button>
+        <button
+          className="checkup-data-toolkit-button halt"
+          disabled={isUpdateDone}
+          style={{ opacity: isUpdateDone ? 0.5 : 1 }}
+        >
+          <span data-hover={"✓"} onClick={handleDone}>
+            Halt
           </span>
         </button>
       </div>
