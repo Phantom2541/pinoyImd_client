@@ -8,6 +8,7 @@ import {
   MDBIcon,
   MDBMask,
   MDBView,
+  MDBAvatar,
 } from "mdbreact";
 import { useHistory } from "react-router-dom";
 import {
@@ -20,6 +21,7 @@ import {
   Cloudinary,
   fullName,
   mobile,
+  PresetImage,
 } from "../../../../../services/utilities";
 import {
   EditableField,
@@ -123,7 +125,7 @@ const Body = () => {
       <MDBTableHead>
         <tr>
           <th>No.</th>
-          <th>Img</th>
+          <th>Profile</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -156,7 +158,9 @@ const Body = () => {
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
 
-            const photoURL = `${Cloudinary.getEndpoint()}/users/${email}/profile`;
+            const photoURL = `${Cloudinary.getEndpoint()}/${
+              patient?.pid || ""
+            }/users/${patient?.email}/profile`;
 
             return (
               <tr key={index}>
@@ -167,6 +171,9 @@ const Body = () => {
                       <img
                         src={preview || photoURL}
                         alt="avatar"
+                        onError={(e) =>
+                          (e.target.src = PresetImage(patient.isMale))
+                        }
                         className="rounded-circle"
                         style={{
                           width: "50px",
