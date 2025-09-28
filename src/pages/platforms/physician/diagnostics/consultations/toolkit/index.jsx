@@ -197,9 +197,13 @@ export default function Toolkit({ activePanels }) {
         </button>
         <div
           style={{ width: "17rem" }}
-          className="d-flex justify-content-center"
+          className="d-flex justify-content-center align-items-end"
         >
-          {activePage > 1 && <span style={{ fontWeight: 500 }}>...</span>}
+          {activePage > 1 && (
+            <span style={{ fontWeight: 500 }} className="mx-1">
+              ...
+            </span>
+          )}
           {visible.map((patient, index) => {
             const { qn, status = "" } = patient;
             const disabled = !["confirmed", "done", "halt"].includes(status);
@@ -218,7 +222,9 @@ export default function Toolkit({ activePanels }) {
             );
           })}
           {activePage < totalPages && (
-            <span style={{ fontWeight: 500 }}>...</span>
+            <span style={{ fontWeight: 500 }} className="mx-1">
+              ...
+            </span>
           )}
         </div>
         <button

@@ -284,8 +284,6 @@ export const reduxSlice = createSlice({
       update(state.filtered);
     },
     SetPATIENT: (state, { payload }) => {
-      console.log("payload", payload);
-
       state.patient = payload;
     },
     SetPHYSICIAN: (state, { payload }) => {

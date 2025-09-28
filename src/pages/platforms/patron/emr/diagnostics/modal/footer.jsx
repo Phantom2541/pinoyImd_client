@@ -96,8 +96,6 @@ const Footer = () => {
         data,
       })
     ).then(({ payload }) => {
-      console.log("payload", payload);
-
       setIsLoading(false);
       dispatch(SetVALIDATOR(payload?.item || payload?.payload));
       dispatch(SetMODAL(false));

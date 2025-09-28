@@ -318,8 +318,6 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
     },
     SetPricelist: (state, { payload }) => {
-      console.log("payload", payload);
-
       state.showPriceModal = true;
       state.selected = payload;
     },
@@ -372,7 +370,6 @@ export const reduxSlice = createSlice({
       state.page = payload;
     },
     SETSOURCES: (state, { payload }) => {
-      console.log("payload", payload);
       state.collections = payload;
     },
     /**
