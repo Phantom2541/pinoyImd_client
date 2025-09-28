@@ -44,7 +44,6 @@ export default function Patient({ activePanels }) {
   const meters = (feet * 12 + (inches || 0)) * 0.0254;
   const rawBmi = vitals.weight / meters ** 2;
   const bmi = Number.isFinite(rawBmi) ? rawBmi.toFixed(2) : 0;
-  console.log("appointment", appointment);
 
   const setPatient = (patient) => {
     Swal.fire({

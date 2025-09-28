@@ -81,7 +81,6 @@ export default function EditableSelect({
   onSave = () => {}, //this function is use to editable mode to get the edited data
   _key = "",
 }) {
-  console.log("formSubmitted", formSubmitted);
   const [editedData, setEditedData] = useState(null);
   const { addToast } = useToasts();
 

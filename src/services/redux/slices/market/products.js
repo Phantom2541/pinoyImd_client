@@ -226,7 +226,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("payload", payload);
 
         const index = state.collections.findIndex(
           (item) => item?._id === action.payload
