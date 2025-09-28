@@ -145,10 +145,20 @@ export default function Modal({ show, selected, willCreate }) {
   };
 
   const handleSectionChange = (section) => {
-    setForm({
-      ...form,
-      section,
-    });
+    console.log(section);
+
+    if (section === "2 Dimensional Echo") {
+      section = "2DEcho";
+      setForm({
+        ...form,
+        section,
+      });
+    } else {
+      setForm({
+        ...form,
+        section,
+      });
+    }
   };
 
   const { user = {} } =

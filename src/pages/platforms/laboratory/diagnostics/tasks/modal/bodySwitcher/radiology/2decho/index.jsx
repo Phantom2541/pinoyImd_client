@@ -1,143 +1,74 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import {
-  MDBCard,
-  MDBCardBody,
+  MDBTabContent,
+  MDBTabPane,
   MDBNav,
   MDBNavItem,
   MDBNavLink,
-  MDBTabContent,
-  MDBTabPane,
+  MDBContainer,
+  MDBCard,
+  MDBCardBody,
 } from "mdbreact";
-import {
-  SetSELECTED,
-  SetTASK,
-} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import { Services } from "../../../../../../../../../services/fakeDb/index.js";
-import Images from "../images.jsx";
+
+// Component imports
+import Cellcount from "./mMode";
+// import Diffcount from "./diffcount";
+// import Rci from "./rci";
+// import Platelet from "./platelet";
+// import ClottingFactor from "./clottingFactor";
+// import SpecialTest from "./speciaTest"; // Check spelling: should this be "specialTest"?
 
 export default function TwoDEcho() {
-  const dispatch = useDispatch();
-  const { task } = useSelector(({ validator }) => validator);
+  const { task } = useSelector(({ validator }) => validator),
+    [activeTab, setActiveTab] = useState("CELL COUNT");
 
-  const [description, setDescription] = useState("");
-  const [impression, setImpression] = useState("");
-  const [activeTab, setActiveTab] = useState("images");
+  const { packages = [] } = task;
 
-  const descTimeout = useRef(null);
-  const impTimeout = useRef(null);
+  // Define tab structure in the order you want them to appear
+  const orderedTabs = [
+    { name: "CELL COUNT", component: Cellcount, key: 58 },
+    // { name: "DIFF COUNT", component: Diffcount, key: 58 },
+    // { name: "PLATELET", component: Platelet, key: 59 },
+    // { name: "RCI", component: Rci, key: 58 },
+    // { name: "CLOTTING FACTOR", component: ClottingFactor, key: 60 },
+    // { name: "SPECIAL TEST", component: SpecialTest, key: 62 },
+    // { name: "SPECIAL TEST", component: SpecialTest, key: 63 },
+  ];
 
-  // Load values from task
-  useEffect(() => {
-    if (task?.description) {
-      try {
-        const parsed = JSON.parse(task.description);
-        setDescription(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setDescription(task.description);
-      }
-    }
-    if (task?.impression) {
-      try {
-        const parsed = JSON.parse(task.impression);
-        setImpression(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setImpression(task.impression);
-      }
-    }
-  }, [task?.description, task?.impression]);
-
-  const delayedSave = useCallback(
-    (field, value, timeoutRef) => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        const updatedTask = {
-          ...task,
-          [field]: value,
-        };
-        dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-        dispatch(SetSELECTED({ form: task?.form, deal: updatedTask }));
-      }, 500);
-    },
-    [dispatch, task]
-  );
+  // Filter only tabs relevant to current packages
+  const availableTabs = orderedTabs.filter((tab) => packages.includes(tab.key));
 
   return (
-    <div className="mx-auto mt-n2">
-      {Services.getName(task?.packages)}
+    <MDBContainer>
       <MDBNav color="primary" tabs className="nav-justified">
-        <MDBNavItem>
-          <MDBNavLink
-            link
-            active={activeTab === "results"}
-            to="#!"
-            onClick={() => setActiveTab("results")}
-          >
-            Description
-          </MDBNavLink>
-        </MDBNavItem>
-        <MDBNavItem>
-          <MDBNavLink
-            link
-            active={activeTab === "kit"}
-            to="#!"
-            onClick={() => setActiveTab("kit")}
-          >
-            Impression
-          </MDBNavLink>
-        </MDBNavItem>
-        <MDBNavItem>
-          <MDBNavLink
-            link
-            active={activeTab === "images"}
-            to="#!"
-            onClick={() => setActiveTab("images")}
-          >
-            Images
-          </MDBNavLink>
-        </MDBNavItem>
+        {availableTabs.map((tab, index) => (
+          <MDBNavItem key={`nav-${index}`}>
+            <MDBNavLink
+              link
+              active={tab.name === activeTab}
+              to="#!"
+              onClick={() => setActiveTab(tab.name)}
+            >
+              {tab.name}
+            </MDBNavLink>
+          </MDBNavItem>
+        ))}
       </MDBNav>
-
       <MDBCard>
         <MDBCardBody>
-          <MDBTabContent activeItem={activeTab} className="pt-0">
-            <MDBTabPane tabId="results">
-              <textarea
-                className="form-control mt-3 border"
-                style={{
-                  minHeight: "200px",
-                  overflowY: "auto",
-                  maxHeight: "300px",
-                }}
-                value={description}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setDescription(val);
-                  delayedSave("description", val, descTimeout);
-                }}
-              />
-            </MDBTabPane>
-
-            <MDBTabPane tabId="kit">
-              <textarea
-                className="form-control mt-3 border"
-                style={{
-                  minHeight: "200px",
-                  overflowY: "auto",
-                  maxHeight: "300px",
-                }}
-                value={impression}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setImpression(val);
-                  delayedSave("impression", val, impTimeout);
-                }}
-              />
-            </MDBTabPane>
-            <Images />
+          <MDBTabContent activeItem={activeTab}>
+            {availableTabs.map((tab, index) => (
+              <MDBTabPane key={`pane-${index}`} tabId={tab.name}>
+                <tab.component
+                  setActiveTab={setActiveTab}
+                  activeTab={activeTab}
+                />
+              </MDBTabPane>
+            ))}
           </MDBTabContent>
         </MDBCardBody>
       </MDBCard>
-    </div>
+    </MDBContainer>
   );
 }

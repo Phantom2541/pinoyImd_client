@@ -112,10 +112,11 @@ const Tasks = ({ key, form, obj, index, customer }) => {
             <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
           </MDBBtn>
 
-          {!!signatories.length &&
+          {(!!signatories.length &&
             signatories[0] &&
             signatories[1] &&
-            hasDone && (
+            hasDone) ||
+            (form === "2DEcho" && (
               <MDBBtn
                 onClick={() => {
                   const selectedTask = {
@@ -135,7 +136,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
               >
                 <MDBIcon icon="print" />
               </MDBBtn>
-            )}
+            ))}
         </MDBBtnGroup>
       </td>
     </tr>

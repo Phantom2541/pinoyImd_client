@@ -87,6 +87,7 @@ const Footer = ({ setShowHC = () => {} }) => {
   const handleDisablePost = () => {
     const { signatories = [] } = task;
     const [dr = null, head = null] = signatories;
+    if (task.form === "2DEcho") return false;
     if (!dr || !head) return true;
     if (task.form === "Ecg") return task.findings ? false : true;
     return task.description && task.impression ? false : true;
@@ -111,9 +112,9 @@ const Footer = ({ setShowHC = () => {} }) => {
       {/* Button Layout */}
       <div className="d-flex justify-content-between align-items-center my-2">
         {/* Left: Healthy Client Button (if applicable) */}
-        <MDBBtn onClick={() => setShowHC(true)} color="success">
+        {/* <MDBBtn onClick={() => setShowHC(true)} color="success">
           Healthy client
-        </MDBBtn>
+        </MDBBtn> */}
 
         {/* Right: Save & Post Buttons */}
         <div className="ml-auto">
