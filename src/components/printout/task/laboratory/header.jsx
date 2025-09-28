@@ -83,7 +83,12 @@ export default function Header({ task }) {
         className="text-uppercase text-center py-0 mb-1 mt-2"
       >
         <h5
-          style={{ letterSpacing: packages.includes(87) ? "20px" : "30px" }}
+          style={{
+            letterSpacing:
+              Array.isArray(packages) && packages?.includes(87)
+                ? "20px"
+                : "30px",
+          }}
           className="mb-0 fw-bold"
         >
           {form}
