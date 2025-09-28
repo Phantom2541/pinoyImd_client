@@ -11,6 +11,7 @@ import {
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import Swal from "sweetalert2";
 import { fullName } from "../../../../../../services/utilities";
+import formattedQn from "../../../../../../services/utilities/formattedQn";
 export default function Toolkit({ activePanels }) {
   const { token } = useSelector(({ auth }) => auth);
   const {
@@ -126,7 +127,45 @@ export default function Toolkit({ activePanels }) {
           DONE({
             token,
             data: {
-              status: "done",
+              ...appointment,
+              consultation: { ...consultation, cases: casesIds },
+            },
+          })
+        );
+      }
+    });
+  };
+
+  const handleHalt = () => {
+    const { consultation } = appointment;
+    const { cases = [] } = consultation || {};
+    const casesIds = cases.map((item) => item._id) || [];
+    Swal.fire({
+      title: `Are you sure?`,
+      html: `
+      <div style="font-size: 1.1rem; line-height: 1.5; text-align: center;">
+        You are about to <b>halt</b> the consultation for 
+        <b>${fullName(appointment?.patient?.fullName) || "this patient"}</b>.
+        <br/><br/>
+        You can return to this patient later at any time.
+        <br/>
+        Once halted, the system will automatically move on to the next patient.
+      </div>
+    `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, halt this patient",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#f59e0b", // amber / warning
+      cancelButtonColor: "#ef4444", // red
+      focusCancel: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          DONE({
+            token,
+            data: {
+              isDone: false,
               ...appointment,
               consultation: { ...consultation, cases: casesIds },
             },
@@ -138,36 +177,6 @@ export default function Toolkit({ activePanels }) {
 
   const disabledPrev = cluster[0]?.qn === activeQn;
   const disabledNext = cluster[cluster.length - 1]?.qn === activeQn;
-
-  const formattedQn = (qn) => {
-    const qnStr = String(qn);
-    const main = qnStr.split(".")[0];
-
-    const related = cluster
-      .map((item) => String(item.qn))
-      .filter((q) => q === main || q.startsWith(main + "."))
-      .sort((a, b) => {
-        if (a === main) return -1;
-        if (b === main) return 1;
-        const aSuffix = a.slice(main.length + 1);
-        const bSuffix = b.slice(main.length + 1);
-        const aNum = Number(aSuffix);
-        const bNum = Number(bSuffix);
-        if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) return aNum - bNum;
-        return aSuffix.localeCompare(bSuffix);
-      });
-
-    // only main and no subs -> keep as-is
-    if (related.length === 1 && qnStr === main) return main;
-    // main present -> main becomes A
-    if (qnStr === main) return `${main}A`;
-
-    const idx = related.indexOf(qnStr);
-    if (idx === -1) return qnStr; // fallback
-
-    // idx 0 = main -> A, idx 1 = first sub -> B, ...
-    return `${main}${String.fromCharCode(65 + idx)}`;
-  };
 
   return (
     <div
@@ -193,17 +202,18 @@ export default function Toolkit({ activePanels }) {
           {activePage > 1 && <span style={{ fontWeight: 500 }}>...</span>}
           {visible.map((patient, index) => {
             const { qn, status = "" } = patient;
-            const disabled = status !== "confirmed";
+            const disabled = !["confirmed", "done", "halt"].includes(status);
 
             return (
               <button
                 className={`checkup-data-toolkit-pagination-item mx-1 d-flex justify-content-center ${
-                  disabled && "disabled "
-                } ${qn === activeQn && "active"}`}
+                  disabled && "disabled"
+                } ${qn === activeQn && "active"} ${status}`}
                 onClick={() => handleSetQN(patient)}
                 key={index}
+                title={status}
               >
-                <span>{formattedQn(qn)}</span>
+                <span>{formattedQn(qn, cluster)}</span>
               </button>
             );
           })}
@@ -223,20 +233,22 @@ export default function Toolkit({ activePanels }) {
           className="checkup-data-toolkit-button done ml-5"
           disabled={isUpdateDone}
           style={{ opacity: isUpdateDone ? 0.5 : 1 }}
+          onClick={handleDone}
         >
-          <span data-hover={"✓"} onClick={handleDone}>
-            Done
+          <span data-hover={"✓"}>
+            {appointment.status === "done" ? "Update" : "Done"}
           </span>
         </button>
-        <button
-          className="checkup-data-toolkit-button halt"
-          disabled={isUpdateDone}
-          style={{ opacity: isUpdateDone ? 0.5 : 1 }}
-        >
-          <span data-hover={"✓"} onClick={handleDone}>
-            Halt
-          </span>
-        </button>
+        {appointment.status === "confirmed" && (
+          <button
+            className="checkup-data-toolkit-button halt"
+            disabled={isUpdateDone}
+            style={{ opacity: isUpdateDone ? 0.5 : 1 }}
+            onClick={handleHalt}
+          >
+            <span data-hover={"⏸"}>Halt</span>
+          </button>
+        )}
       </div>
     </div>
   );

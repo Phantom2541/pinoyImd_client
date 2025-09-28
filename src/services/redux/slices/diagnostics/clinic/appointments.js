@@ -674,24 +674,52 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DONE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload, isDone = true } = action.payload;
         const getIndex = (collections) =>
           collections.findIndex(({ _id }) => _id === payload._id);
+        const findNext = (startIdx, dir) => {
+          let idx = startIdx + dir;
+          while (
+            idx >= 0 &&
+            idx < state.cluster.length &&
+            !["confirmed", "halt"].includes(state.cluster[idx]?.status)
+          ) {
+            idx += dir;
+          }
+          return idx >= 0 && idx < state.cluster.length ? idx : -1;
+        };
 
         const apptIndex = getIndex(state.cluster);
-        state.patient =
-          state.cluster[apptIndex + 1] || state.cluster[apptIndex - 1] || {};
+        let nextIdx = findNext(apptIndex, +1);
+
+        // Step 2: kung wala, try backward
+        if (nextIdx === -1) {
+          nextIdx = findNext(apptIndex, -1);
+        }
+
+        // Step 3: kung wala pa rin, manatili sa kasalukuyan
+        if (nextIdx === -1) {
+          nextIdx = apptIndex;
+        }
+
+        state.patient = state.cluster[nextIdx]
+          ? JSON.parse(JSON.stringify(state.cluster[nextIdx]))
+          : {};
+
         const updateCollections = (collections) => {
           const index = getIndex(collections);
-          collections.splice(index, 1);
+          collections[index] = { ...collections[index], ...payload };
+          // collections.splice(index, 1);
         };
         updateCollections(state.collections);
         updateCollections(state.filtered);
         updateCollections(state.cluster);
-        socket.emit("send_checkup_done", {
-          data: payload,
-          roomID: payload?.userId,
-        });
+        if (isDone) {
+          socket.emit("send_checkup_done", {
+            data: payload,
+            roomID: payload?.userId,
+          });
+        }
         state.isUpdateDone = false;
         state.message = success;
         state.isSuccess = true;
