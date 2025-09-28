@@ -6,6 +6,7 @@ const formColor = (form = "") =>
     parasitology: "success",
     hematology: "danger",
     coagulation: "danger",
+    "pheripheral blood smear": "danger",
   }[String(form).toLowerCase()] || "primary");
 
 export default formColor;

@@ -18,7 +18,7 @@ const EditableField = ({
   className = "form-control form-control-sm",
   classNameTxt = "",
   placeholder = "-",
-  keyForValue = "",
+  keyForValue, // optional
   keyForText = "",
   type = "text",
   width = "13rem",
@@ -33,12 +33,17 @@ const EditableField = ({
   enableEditMode = true,
   formSubmitted = false,
   localUpdate = false,
+  utility = {},
 }) => {
   const [editedData, setEditedData] = useState({});
   const { addToast } = useToasts();
   const [instanceId] = useState(() => Math.random().toString(36).substr(2, 9));
   const textareaRef = useRef(null);
   const displayRef = useRef(null);
+
+  // auto-detect editable key if not provided
+  const effectiveKeyForValue =
+    keyForValue || Object.keys(fieldData).find((k) => k !== "_id");
 
   useEffect(() => {
     if (!formSubmitted) {
@@ -58,14 +63,14 @@ const EditableField = ({
   }, [instanceId]);
 
   const handleCheck = () => {
-    if (fieldData[keyForValue] === editedData[keyForValue]) {
+    if (fieldData[effectiveKeyForValue] === editedData[effectiveKeyForValue]) {
       setEditedData({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     } else {
-      const { editingKey, ...fileredData } = editedData;
-      onSave(fileredData);
+      const { editingKey, ...filteredData } = editedData;
+      onSave(filteredData);
       if (localUpdate) {
         setEditedData({});
       }
@@ -74,17 +79,34 @@ const EditableField = ({
 
   const isEditable =
     enableEditMode &&
-    keyForValue === editedData?.editingKey &&
+    effectiveKeyForValue === editedData?.editingKey &&
     fieldData?._id === editedData?._id;
 
   const Tag = tagMap[displayTag] || "h6";
-  const text = fieldData[keyForText || keyForValue];
+
+  // dito fix:
+  const rawValue = isEditable
+    ? editedData[effectiveKeyForValue]
+    : fieldData[keyForText || effectiveKeyForValue];
+
+  const applyUtility = () => {
+    if (typeof utility === "function") {
+      return utility(rawValue);
+    }
+    if (typeof utility.format === "function") {
+      return utility.format(rawValue);
+    }
+    return null;
+  };
+
   const formattedText =
-    (isMoney
-      ? currency.format(fieldData[keyForText || keyForValue])
-      : isCapitalize
-      ? capitalize(text)
-      : text) || "N/A";
+    (applyUtility() ??
+      (isMoney
+        ? currency.format(rawValue)
+        : isCapitalize
+        ? capitalize(rawValue)
+        : rawValue)) ||
+    "N/A";
 
   // Auto-resize textarea on edit
   useEffect(() => {
@@ -119,9 +141,12 @@ const EditableField = ({
                 resize: "none",
               }}
               className={className}
-              value={editedData[keyForValue] || ""}
+              value={editedData[effectiveKeyForValue] || ""}
               onChange={({ target }) => {
-                setEditedData({ ...editedData, [keyForValue]: target.value });
+                setEditedData({
+                  ...editedData,
+                  [effectiveKeyForValue]: target.value,
+                });
                 target.style.height = "auto";
                 target.style.height = `${target.scrollHeight}px`;
               }}
@@ -131,10 +156,13 @@ const EditableField = ({
               placeholder={placeholder}
               style={inputStyle}
               className={className}
-              value={editedData[keyForValue] || ""}
+              value={editedData[effectiveKeyForValue] || ""}
               type={type}
               onChange={({ target }) =>
-                setEditedData({ ...editedData, [keyForValue]: target.value })
+                setEditedData({
+                  ...editedData,
+                  [effectiveKeyForValue]: target.value,
+                })
               }
             />
           )}
@@ -186,7 +214,10 @@ const EditableField = ({
                 detail: { excludeId: instanceId },
               })
             );
-            setEditedData({ ...fieldData, editingKey: keyForValue });
+            setEditedData({
+              ...fieldData,
+              editingKey: effectiveKeyForValue,
+            });
           }}
           className={`cursor-pointer editableFied-text ${classNameTxt}`}
         >

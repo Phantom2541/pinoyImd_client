@@ -220,7 +220,6 @@ export const reduxSlice = createSlice({
       localStorage.setItem("physicians", JSON.stringify(physicians));
     },
     SetFILTERED: (state, { payload }) => {
-      console.log("payload", payload);
       state.filtered = payload;
     },
     TOGGLE: (state) => {
@@ -251,7 +250,6 @@ export const reduxSlice = createSlice({
       state.message = "";
     },
     SET_COLLECTIONS: (state, { payload }) => {
-      console.log("payload", payload);
       state.collections = [...payload];
       state.filtered = [...payload];
     },

@@ -120,7 +120,7 @@ const Footer = () => {
       dr = findPhysicianId(task.signatories[1]?._id);
     }
 
-    const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
+    var data = ["xray", "ultrasound", "miscellaneous"].includes(form)
       ? (() => {
           const { _id, ...rest } = task;
           return {
@@ -136,14 +136,19 @@ const Footer = () => {
           department,
           signatories: [head || null, dr || null, auth._id || null],
         };
+    data = { ...data, hasDone: data.signatories.every((item) => item) };
+    const allDiagHasDone = hasDoneChecker(data?._id) && data.hasDone;
+    // const status = allDiagHasDone ? "done" : "onProcess";
+    const status = "onProcess";
 
-    const allDiagHasDone = hasDoneChecker(data?._id) && hasDone;
-    const status = allDiagHasDone ? "done" : "onProcess";
     setIsLoading(true);
     dispatch(
       LABRESULT({
         token,
-        data,
+        data: {
+          ...data,
+          form,
+        },
         status,
       })
     ).then(({ payload }) => {
@@ -162,7 +167,7 @@ const Footer = () => {
   };
 
   return (
-    <div className="text-center mb-1-half border-top pt-2">
+    <div className="text-center mb-1-half border-top pt-2 mt-3">
       <textarea
         placeholder="Remarks"
         value={task?.remarks}

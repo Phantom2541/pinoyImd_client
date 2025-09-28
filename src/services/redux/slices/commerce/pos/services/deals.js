@@ -366,7 +366,9 @@ export const LABRESULT = createAsyncThunk(
         ? data.department
         : "clinic";
       return await axioKit.save(
-        `diagnostics/${department.toLowerCase()}/result/${data.form.toLowerCase()}`,
+        `diagnostics/${department.toLowerCase()}/result/${data.form
+          .replace(/\s+/g, "")
+          .toLowerCase()}`,
         data,
         token
       );
@@ -1062,7 +1064,6 @@ export const reduxSlice = createSlice({
       .addCase(INSOURCES.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
         state.collections = state.filtered = payload;
-        console.log("payload", payload);
 
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;

@@ -19,8 +19,6 @@ export default function DiagHistory({ department = "", setSlide = () => {} }) {
     Object.entries(rest).forEach(([key, secs]) => {
       if (secs?.length > 0) {
         secs.forEach((sec) => {
-          console.log("sec", sec);
-
           _sections.push({
             dept,
             section: Templates.getComponentName(sec, dept),
@@ -40,10 +38,8 @@ export default function DiagHistory({ department = "", setSlide = () => {} }) {
       });
     }
     setSections(_sections);
-  }, [appointment]);
+  }, [appointment, department]);
   if (!sections || sections.length === 0) return null;
-
-  console.log("sections", sections);
 
   const { patient, activeDiag } = appointment || {};
 
@@ -72,7 +68,7 @@ export default function DiagHistory({ department = "", setSlide = () => {} }) {
               );
             }}
           >
-            {it?.section} {it?.isImg && "- Soft Copy"}
+            {it?.section} {it?.isImg && "- Hard Copy"}
           </span>
         );
       })}

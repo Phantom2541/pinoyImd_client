@@ -13,14 +13,16 @@ import {
   SetRESULT,
   SetTRANSAC,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { fullName } from "../../../../services/utilities";
+import { Cloudinary, fullName } from "../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
 } from "../../../../components/customizable";
-import visitTypes from "./visitTypes";
+import { VisityType } from "../../../../services/fakeDb";
+import { useEffect } from "react";
 const Body = () => {
   const {
+      collections,
       filtered,
       activePage,
       maxPage,
@@ -32,8 +34,40 @@ const Body = () => {
     dispatch = useDispatch();
 
   const handleUpdate = (data) => {
-    dispatch(UPDATE({ token, data }));
+    console.log("update request:", data);
+
+    const { _id, ...rest } = data;
+
+    // check if this is a patient field (mobile, email, etc.)
+    if (
+      "mobile" in rest ||
+      "email" in rest ||
+      "dob" in rest ||
+      "fullName" in rest
+    ) {
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id, // appointment id
+            patient: {
+              _id: data.patientId || data._id, // explicitly pass patientId
+              ...rest,
+            },
+          },
+        })
+      );
+    } else {
+      // normal appointment update
+      dispatch(UPDATE({ token, data }));
+    }
   };
+
+  useEffect(() => {
+    console.log("filtered", filtered);
+    console.log("collections", collections);
+  }, [filtered, collections]);
+
   // Pagination
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -57,6 +91,7 @@ const Body = () => {
         <tr>
           {!activeSched && <th>Schedule</th>}
           <th>No.</th>
+          <th>Img</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -65,6 +100,7 @@ const Body = () => {
             eMR
           </th>
           <th title="Vital Sign">VS</th>
+          <th>Contact number</th>
           <th>Remarks</th>
         </tr>
       </MDBTableHead>
@@ -84,12 +120,25 @@ const Body = () => {
               lab = {},
               rad = {},
             } = item;
+            console.log(visitType);
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
+
+            const photoURL = `${Cloudinary.getEndpoint()}/users/${
+              patient?.email
+            }/profile`;
             return (
               <tr key={index}>
                 {!activeSched && <td>{sched}</td>}
                 <td>{qn}</td>
+                <td>
+                  <img
+                    src={photoURL}
+                    alt="avatar"
+                    className="rounded-circle"
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                </td>
                 <td>
                   {fullName(patient?.fullName)}
                   <MDBBadge
@@ -126,25 +175,28 @@ const Body = () => {
                     />
                   )}
                 </td>
+
                 <td>
                   <EditableSelect
                     animation
                     animationStyle={{
-                      width: "15rem",
+                      width: "19rem",
                       marginLeft: "-.3rem",
                       marginTop: "0.2rem",
                     }}
                     preValue={visitType}
-                    keyForText="visitType"
-                    keyForValue="visitType"
+                    keyForText="label"
+                    keyForValue="value"
                     className="mb-n3"
                     isEditable
-                    collections={visitTypes}
+                    collections={VisityType.collections}
                     fieldData={{
                       _id,
-                      visitType: visitType,
+                      label: VisityType.getLabel(visitType),
                     }}
-                    onSave={handleUpdate}
+                    onSave={(data) =>
+                      handleUpdate({ ...data, visitType: data.value })
+                    }
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
                   />
@@ -203,6 +255,21 @@ const Body = () => {
                   }}
                 >
                   {consultation ? "yes" : "no"}{" "}
+                </td>
+                <td>
+                  {" "}
+                  <EditableField
+                    type="number"
+                    keyForValue="mobile"
+                    fieldData={{
+                      _id,
+                      patientId: patient?._id,
+                      mobile: patient?.mobile,
+                    }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
                 </td>
                 <td className="position-relative">
                   <EditableField

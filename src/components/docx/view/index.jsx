@@ -1,5 +1,5 @@
-import React from "react";
 import draftToHtml from "draftjs-to-html";
+import "./style.css"
 
 const DocxView = ({ content }) => {
   let html = "<p>No content</p>";

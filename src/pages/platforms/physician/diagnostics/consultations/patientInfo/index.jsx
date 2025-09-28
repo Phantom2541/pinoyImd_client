@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   EditableSelect,
   EditableUser,
+  EditableField,
 } from "../../../../../../components/customizable";
 import {
   Cloudinary,
@@ -21,6 +22,8 @@ import {
 } from "../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { useState } from "react";
 import Register from "./register";
+import { VisityType } from "../../../../../../services/fakeDb";
+import diagnostic from "../../../../../../services/fakeDb/sidebars/diagnostics/diagnostic";
 
 export default function Patient({ activePanels }) {
   const { token, auth } = useSelector(({ auth }) => auth),
@@ -209,36 +212,44 @@ export default function Patient({ activePanels }) {
           Reason for Visit:
         </label>
         <EditableSelect
-          collections={[
-            { value: "initial", label: "New Consultation" },
-            { value: "follow_up", label: "Follow-up Consultation" },
-            { value: "ape", label: "Annual Physical Examination (APE)" },
-            { value: "peme", label: "Pre-Employment Medical Examination" },
-            { value: "poe", label: "Pre-Operative Evaluation" },
-            { value: "med-clear", label: "Outpatient Medical Clearance" },
-            { value: "med-cert", label: "Medical Certificate Issuance" },
-            {
-              value: "second_opinion",
-              label: "Consultation for Second Opinion",
-            },
-            {
-              value: "ongoing_treatment",
-              label: "Ongoing Treatment / Monitoring",
-            },
-            {
-              value: "ph_follow_up",
-              label: "Post-Hospital / Discharge Follow-up",
-            },
-            { value: "referral", label: "Referral from Another Physician" },
-            { value: "s_ref", label: "Specialist Referral" },
-            { value: "diagnostic_review", label: "Diagnostic Result Review" },
-            { value: "wellness_check", label: "Wellness / Preventive Check" },
-            { value: "health_screening", label: "Health Screening" },
-            { value: "emergency", label: "Emergency Case (extra, optional)" },
-          ]}
+          collections={VisityType.collections}
           keyForValue="value"
           keyForText="label"
-          preValue={patient?.reasonForVisit}
+          preValue={appointment?.visitType}
+          onChange={(value) =>
+            dispatch(SetPATIENT({ ...appointment, visitType: value }))
+          }
+        />
+      </div>
+      <div
+        className="checkup-data-patient-reason"
+        style={{
+          borderColor: patient?.isMale ? "#007bff" : "#e83e8c",
+        }}
+      >
+        <label style={{ color: patient?.isMale ? "#007bff" : "#e83e8c" }}>
+          Diagnosis :
+        </label>
+        {/* <EditableField
+          keyForValue="value"
+          keyForText="label"
+          onChange={(value) => {
+            console.log(`value`, value);
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value }));
+          }}
+          isSuccess={isSuccess}
+          formSubmitted={formSubmitted}
+        /> */}
+        <EditableField
+          fieldData={{
+            diagnosis: appointment?.diagnosis || "",
+          }}
+          placeholder="Diagnosis"
+          onSave={(value) =>
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value.diagnosis }))
+          }
+          isSuccess={isSuccess}
+          formSubmitted={formSubmitted}
         />
       </div>
       <Register

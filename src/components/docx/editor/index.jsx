@@ -1,5 +1,6 @@
-import React from "react";
 import { Editor } from "react-draft-wysiwyg";
+
+import "./style.css";
 
 export default function DocxEditor({
   editorState,
@@ -7,11 +8,14 @@ export default function DocxEditor({
   _style = {},
   _className = "",
 }) {
+  // @kevin
   return (
     <Editor
-      editorStyle={_style}
+      editorStyle={{ ..._style }}
       wrapperClassName={`${_className} cursor-text`}
       editorState={editorState}
+      editorClassName="editorClassName"
+      toolbarClassName="toolbarClassName"
       onEditorStateChange={setEditorState}
     />
   );
