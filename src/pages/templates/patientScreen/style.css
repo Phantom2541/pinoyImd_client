@@ -1,0 +1,154 @@
+.patient-screen-container{
+      display: grid;
+  grid-template-areas:
+    "video number";
+  grid-template-columns: 1fr 500px;
+  grid-template-rows: 1fr  ;
+height: calc(100vh - 23vh);
+
+  gap: 10px;
+  position: relative;
+
+}
+
+.patient-screen-video{
+    grid-area: video;
+    background-color: white;
+    box-shadow: 0 0 7px rgba(0,0,0,0.2);
+}
+
+.patient-screen-number{
+    grid-area: number;
+
+     background-color: white;
+    box-shadow: 0 0 7px rgba(0,0,0,0.2);
+}
+
+
+/* FOOTER */
+.patient-screen-marquee {
+ position: absolute;
+ left: 0;
+ bottom: 0;
+ width: 100%;
+  background: #004080;
+  color: yellow;
+  font-weight: bold;
+  padding: 8px;
+  /* display: none; */
+}
+
+.fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background: #004080;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.fullscreen-btn:hover {
+  background: #0066cc;
+}
+
+.patient-screen-now-serving-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.patient-screen-now-serving-container label {
+    font-size: 4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #dff9fb; /* soft aqua */
+    color: #0a7eb0; /* strong clinic blue */
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 4px solid #1abc9c; /* teal accent */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.patient-screen-now-serving {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    font-size: 3.2rem;
+    font-weight: 700;
+    background-color: #ffffff;
+    color: #1abc9c; /* bright teal highlight */
+    text-transform: uppercase;
+    padding: 25px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.patient-screen-waiting-patient-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    margin-top: 40px;
+    background-color: #fdfefe;
+    color: #34495e;
+    border: 1px solid #e0f0f0;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    width: 90%;
+}
+
+.patient-screen-waiting-patient-title {
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    color: #0a7eb0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.patien-screen-waiting-patient-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.patien-screen-waiting-patient-wrapper div {
+    background: linear-gradient(135deg, #e8f9f7, #ffffff);
+    font-size: 1.6rem;
+    width: 100%;
+    padding: 12px 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 40px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: 1px solid #bceae3;
+    border-radius: 10px;
+    color: #16a085;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.patien-screen-waiting-patient-wrapper div:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.patien-screen-waiting-patient-wrapper div span:first-child {
+    width: 50px;
+    font-weight: 700;
+    color: #0a7eb0;
+}
