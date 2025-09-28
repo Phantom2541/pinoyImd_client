@@ -4119,7 +4119,8 @@
     "specimen": "Urine sample",
     "template": 2,
     "purpose": "To detect microalbuminuria; calculate microalbumin-creatinine ratio.",
-    "note": "Only ratio needed"
+    "note": "Only ratio needed",
+    "preference":"equal"
   },
   {
     "id": 399,
