@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import {
   MDBBadge,
   MDBTable,
   MDBTableHead,
   MDBTableBody,
   MDBIcon,
+  MDBMask,
+  MDBView,
 } from "mdbreact";
 import { useHistory } from "react-router-dom";
 import {
@@ -27,6 +30,7 @@ import {
   UPLOAD,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/auth";
+import { ImageCropper } from "../../../../../components/images";
 const Body = () => {
   const {
       filtered,
@@ -39,8 +43,60 @@ const Body = () => {
     { token } = useSelector(({ auth }) => auth),
     history = useHistory(),
     dispatch = useDispatch();
+  const [preview, setPreview] = useState("");
+  const [showImgCropper, setShowImgCropper] = useState(false);
 
-  const handleUpdate = (data) => dispatch(UPDATE({ token, data }));
+  useEffect(() => {
+    setShowImgCropper(false);
+    dispatch(RESET());
+  }, [dispatch]);
+
+  const handleUpdate = (data) => {
+    const { _id, ...rest } = data;
+
+    // check if this is a patient field (mobile, email, etc.)
+    if (
+      "mobile" in rest ||
+      "email" in rest ||
+      "dob" in rest ||
+      "fullName" in rest
+    ) {
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id, // appointment id
+            patient: {
+              _id: data.patientId || data._id, // explicitly pass patientId
+              ...rest,
+            },
+          },
+        })
+      );
+    } else {
+      // normal appointment update
+      dispatch(UPDATE({ token, data }));
+    }
+  };
+
+  const handleUpload = (base64, email) => {
+    const formData = Cloudinary.buildFileForm(
+      base64,
+      `users/${email}`,
+      "profile"
+    );
+
+    setPreview(formData);
+    console.log("formData", formData);
+
+    dispatch(
+      UPLOAD({
+        data: formData,
+        token,
+      })
+    );
+  };
+
   const handleIndicesUpdate = (data) => {
     ["lab", "rad"].forEach((key) => {
       const items = data[key];
@@ -61,7 +117,6 @@ const Body = () => {
   });
 
   const paginatedData = sortedData.slice(startIndex, endIndex);
-  console.log("paginatedData", paginatedData);
 
   return (
     <MDBTable bordered className="m-0 p-0" small>
@@ -96,29 +151,52 @@ const Body = () => {
               consultation,
               _id,
             } = item;
+            const { fullName: name, email, mobile } = patient;
 
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
 
-            const photoURL = `${Cloudinary.getEndpoint()}/users/${
-              patient?.email
-            }/profile`;
+            const photoURL = `${Cloudinary.getEndpoint()}/users/${email}/profile`;
 
             return (
               <tr key={index}>
                 <td>{qn}</td>
                 <td>
-                  <img
-                    src={photoURL}
-                    alt="avatar"
-                    className="rounded-circle"
-                    style={{ width: "50px", height: "50px" }}
-                  />
+                  <MDBView hover={!showImgCropper}>
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={preview || photoURL}
+                        alt="avatar"
+                        className="rounded-circle"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <MDBMask overlay="grey-strong d-flex align-items-center">
+                        <ImageCropper
+                          key={patient?._id || index}
+                          inputId={`cropImage-${patient?._id || index}`} // unique id
+                          handleUpload={(base64) => handleUpload(base64, email)}
+                          setIsShow={(show) => setShowImgCropper(show)}
+                          cropSize={{ width: 200, height: 200 }}
+                          modalSize="md"
+                          isUpload
+                          label={
+                            <MDBIcon icon="upload" title="Upload new photo" />
+                          }
+                          accept={".png,.jpg,.jpeg"}
+                        />
+                      </MDBMask>
+                    </div>
+                  </MDBView>
                 </td>
+
                 <td>
                   <div className="d-flex align-items-center">
                     <div>
-                      {fullName(patient?.fullName)}{" "}
+                      {fullName(name)}{" "}
                       <MDBBadge
                         color={status === "confirmed" ? "success" : "info"}
                         className="ml-2"
@@ -275,7 +353,21 @@ const Body = () => {
                 >
                   {consultation ? "yes" : "no"}{" "}
                 </td>
-                <td>{mobile(patient?.mobile)}</td>
+                <td>
+                  {" "}
+                  <EditableField
+                    type="number"
+                    keyForValue="mobile"
+                    fieldData={{
+                      _id,
+                      patientId: patient?._id,
+                      mobile: mobile,
+                    }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
+                </td>
                 <td>
                   <EditableField
                     type="text"

@@ -13,7 +13,7 @@ import {
   SetRESULT,
   SetTRANSAC,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { fullName } from "../../../../services/utilities";
+import { Cloudinary, fullName } from "../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
@@ -33,7 +33,35 @@ const Body = () => {
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleUpdate = (data) => dispatch(UPDATE({ token, data }));
+  const handleUpdate = (data) => {
+    console.log("update request:", data);
+
+    const { _id, ...rest } = data;
+
+    // check if this is a patient field (mobile, email, etc.)
+    if (
+      "mobile" in rest ||
+      "email" in rest ||
+      "dob" in rest ||
+      "fullName" in rest
+    ) {
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id, // appointment id
+            patient: {
+              _id: data.patientId || data._id, // explicitly pass patientId
+              ...rest,
+            },
+          },
+        })
+      );
+    } else {
+      // normal appointment update
+      dispatch(UPDATE({ token, data }));
+    }
+  };
 
   useEffect(() => {
     console.log("filtered", filtered);
@@ -95,10 +123,22 @@ const Body = () => {
             console.log(visitType);
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
+
+            const photoURL = `${Cloudinary.getEndpoint()}/users/${
+              patient?.email
+            }/profile`;
             return (
               <tr key={index}>
                 {!activeSched && <td>{sched}</td>}
                 <td>{qn}</td>
+                <td>
+                  <img
+                    src={photoURL}
+                    alt="avatar"
+                    className="rounded-circle"
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                </td>
                 <td>
                   {fullName(patient?.fullName)}
                   <MDBBadge
@@ -135,6 +175,7 @@ const Body = () => {
                     />
                   )}
                 </td>
+
                 <td>
                   <EditableSelect
                     animation
@@ -214,6 +255,21 @@ const Body = () => {
                   }}
                 >
                   {consultation ? "yes" : "no"}{" "}
+                </td>
+                <td>
+                  {" "}
+                  <EditableField
+                    type="number"
+                    keyForValue="mobile"
+                    fieldData={{
+                      _id,
+                      patientId: patient?._id,
+                      mobile: patient?.mobile,
+                    }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
                 </td>
                 <td className="position-relative">
                   <EditableField
