@@ -10,7 +10,8 @@ export default function ImageCropper({
   setIsShow = () => {},
   handleUpload = () => {},
   isUpload = false,
-  isStatic = false, //if true after the upload automatically close the modal
+  isStatic = false,
+  inputId = "cropImage", // default keeps old behavior
 }) {
   const [show, setShow] = useState(false),
     [img, setImg] = useState(null),
@@ -20,19 +21,15 @@ export default function ImageCropper({
 
   const handleChange = ({ target }) => {
     const file = target.files[0];
-
     if (!file) return;
-
     if (!file.type.includes("image")) return;
     if (file.type.includes("png")) setExt("png");
 
     const reader = new FileReader();
-
     reader.onload = ({ target }) => {
       setImg(target.result);
       setShow(true);
     };
-
     reader.readAsDataURL(file);
     target.value = null;
   };
@@ -43,11 +40,11 @@ export default function ImageCropper({
 
   return (
     <>
-      <label htmlFor="cropImage" className="btn btn-primary btn-sm btn-rounded">
+      <label htmlFor={inputId} className="btn btn-primary btn-sm btn-rounded">
         {label}
       </label>
       <input
-        id="cropImage"
+        id={inputId}
         onChange={handleChange}
         type="file"
         className="d-none"

@@ -1,4 +1,4 @@
-import patron from "./patron";
+// import patron from "./patron";
 import manager from "./manager";
 import accreditation from "./accreditation";
 import admissions from "./admissions";
@@ -33,7 +33,7 @@ const diagnostics = {
   accounting,
   accreditation,
   manager,
-  patron,
+  // patron,
   diagnostic,
   laboratory,
   radiology,

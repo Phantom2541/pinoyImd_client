@@ -1,0 +1,60 @@
+import { fullName, getAge } from "../../../../services/utilities";
+
+export default function Patient({ note }) {
+  const { patient, consultation = {} } = note;
+  const { vitals = {}, diagnosis = "" } = consultation || {};
+
+  const today = new Date();
+
+  // kuha ng buwan, araw, at taon
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  const year = today.getFullYear();
+
+  // final format MM/DD/YYYY
+  const formattedDate = `${month}/${day}/${year}`;
+
+  return (
+    <div className="checkup-data-prescription-card-patient-info">
+      <div className="checkup-data-prescription-card-patient-info-row">
+        <div className="checkup-data-prescription-card-input">
+          <label>name:</label>
+          <input
+            type="text"
+            value={fullName(patient?.fullName).toLowerCase()}
+          />
+        </div>
+        <div
+          className="checkup-data-prescription-card-input"
+          style={{ width: "35%" }}
+        >
+          <label>date:</label>
+          <input type="text" value={formattedDate} />
+        </div>
+      </div>
+      <div className="checkup-data-prescription-card-patient-info-row">
+        <div className="checkup-data-prescription-card-input">
+          <label>Age:</label>
+          <input type="text" value={getAge(patient?.dob)} />
+        </div>
+        <div className="checkup-data-prescription-card-input">
+          <label>Gender:</label>
+          <input type="text" value={patient?.isMale ? "Male" : "Female"} />
+        </div>
+        <div className="checkup-data-prescription-card-input">
+          <label>Weight:</label>
+          <input
+            type="text"
+            value={vitals?.weight ? `${vitals?.weight} kg` : ""}
+          />
+        </div>
+      </div>
+      <div className="checkup-data-prescription-card-patient-info-row">
+        <div className="checkup-data-prescription-card-input">
+          <label>diagnosis:</label>
+          <input type="text" value={diagnosis || ""} />
+        </div>
+      </div>
+    </div>
+  );
+}
