@@ -1,16 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./style.css";
 
 export default function PatientScreen() {
   const screenRef = useRef(null);
 
-  // Sample state (pwede galing backend or props)
+  // State para sa now serving & waiting patients
   const [nowServing, setNowServing] = useState({ number: 4, name: "Kevin" });
   const [waitingPatients, setWaitingPatients] = useState([
-    { number: 5, name: "Carl" },
     { number: 6, name: "Nick" },
+    { number: 5, name: "Carl" },
+    { number: 99, name: "Evelyn" },
+    { number: 99, name: "Evelyn" },
+
     { number: 99, name: "Evelyn" },
   ]);
+
+  // State para malaman kung fullscreen
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleFullscreen = () => {
     if (screenRef.current) {
@@ -22,12 +28,26 @@ export default function PatientScreen() {
     }
   };
 
+  // Listener para malaman kung nagbago fullscreen state
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+    };
+  }, []);
+
   return (
     <div className="patient-screen-container" ref={screenRef}>
-      {/* Fullscreen Button */}
-      <button className="fullscreen-btn" onClick={handleFullscreen}>
-        ⛶ Fullscreen
-      </button>
+      {/* Fullscreen Button (hide kapag fullscreen) */}
+      {!isFullscreen && (
+        <button className="fullscreen-btn" onClick={handleFullscreen}>
+          ⛶ Fullscreen
+        </button>
+      )}
 
       {/* Video */}
       <div className="patient-screen-video">

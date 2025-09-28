@@ -5,9 +5,9 @@
   grid-template-columns: 1fr 500px;
   grid-template-rows: 1fr  ;
 height: calc(100vh - 23vh);
-
   gap: 10px;
   position: relative;
+  background-color: #eeeeee;
 
 }
 
@@ -29,12 +29,14 @@ height: calc(100vh - 23vh);
 .patient-screen-marquee {
  position: absolute;
  left: 0;
- bottom: 0;
+ bottom: 10px;
  width: 100%;
   background: #004080;
   color: yellow;
   font-weight: bold;
   padding: 8px;
+  display: flex;
+  align-items: center;
   /* display: none; */
 }
 
