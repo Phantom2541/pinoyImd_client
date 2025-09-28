@@ -19,3 +19,4 @@ export { default as RequestClearancePrint } from "./laboratoryCleranceForm";
 export { default as MedicalExaminationClearance } from "./certificate";
 export { default as MenuPriceList } from "./menuPricelist";
 export { default as contract } from "./contract";
+export { default as NotesPrintout } from "./notes";
