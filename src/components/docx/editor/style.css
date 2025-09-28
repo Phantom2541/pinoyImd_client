@@ -1,10 +1,11 @@
-.editor-block {
-  margin: 0;
-  line-height: 0;
-  display: block;
-}
 .public-DraftStyleDefault-block {
-  position: relative;
-  white-space: pre-wrap;
-  caret-color: black !important; /* force blinking caret */
+  margin: 0 !important;
+
+}
+
+.editorClassName {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-x: hidden !important;
+  word-break: break-all !important;
 }

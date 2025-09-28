@@ -2,47 +2,9 @@ import { useEffect, useState } from "react";
 import PMHx from "./pmhx";
 import FMHx from "./fmhx";
 import PSHx from "./pshx";
+import SHx from "./shx";
 import OBGyneHx from "./obGyneHx";
 import { useSelector } from "react-redux";
-
-const familyHistory = {
-  mother: [
-    "Diabetes",
-    "Hypertension",
-    "Asthma",
-    "Breast Cancer",
-    "Arthritis",
-    "Stroke",
-    "Tuberculosis",
-    "Migraine",
-    "Osteoporosis",
-    "Glaucoma",
-    "Alzheimer’s Disease",
-    "Thyroid Disorder",
-    "Depression",
-    "Obesity",
-    "Gout",
-    "Anemia",
-  ],
-  father: [
-    "Heart Disease",
-    "Cancer",
-    "Asthma",
-    "Lung Disease",
-    "Stroke",
-    "Kidney Disease",
-    "Arthritis",
-    "Diabetes",
-    "Parkinson’s Disease",
-    "Liver Disease",
-    "High Cholesterol",
-    "Peptic Ulcer",
-    "Epilepsy",
-    "Obesity",
-    "Prostate Cancer",
-    "Hepatitis",
-  ],
-};
 
 const pastMedicalHistory = {
   "Chronic Illnesses": [
@@ -123,23 +85,53 @@ const pastSurgicalHistory = [
   },
 ];
 
-const obGyneHistory = [
-  { order: 1, outcome: "Alive", deliveryType: "Cesarean", gestationWeeks: 39 },
-  {
-    order: 2,
-    outcome: "Deceased",
-    deliveryType: "Cesarean",
-    gestationWeeks: 38,
-  },
-  { order: 3, outcome: "Alive", deliveryType: "Cesarean", gestationWeeks: 37 },
-  {
-    order: 4,
-    outcome: "Stillbirth",
-    deliveryType: "Cesarean",
-    gestationWeeks: 36,
-  },
-  { order: 5, outcome: "Alive", deliveryType: "Normal", gestationWeeks: 39 },
-];
+const obGyneHistory = {
+  menarche: 13,
+  lmp: "2025-08-20",
+  contraception: "IUD",
+  pregnancy: [
+    {
+      gestationalAge: 40,
+      outcome: "alive",
+      delivery: "normal",
+      sex: "male",
+      birthWeight: 3400,
+      complications: [],
+    },
+    {
+      gestationalAge: 38,
+      outcome: "alive",
+      delivery: "cesarean",
+      sex: "female",
+      birthWeight: 3200,
+      complications: ["gestational diabetes"],
+    },
+    {
+      gestationalAge: 18,
+      outcome: "deceased",
+      delivery: "normal",
+      sex: "unknown",
+      birthWeight: 150,
+      complications: ["spontaneous abortion"],
+    },
+    {
+      gestationalAge: 36,
+      outcome: "stillbirth",
+      delivery: "cesarean",
+      sex: "male",
+      birthWeight: 2500,
+      complications: ["placental abruption"],
+    },
+    {
+      gestationalAge: 39,
+      outcome: "alive",
+      delivery: "normal",
+      sex: "female",
+      birthWeight: 3300,
+      complications: [],
+    },
+  ],
+};
 
 const Blank = ({ task }) => <div>{task} is not working</div>;
 
@@ -147,10 +139,11 @@ const historyMap = {
   pmhx: PMHx,
   fmhx: FMHx,
   pshx: PSHx,
+  shx: SHx,
   obgynehx: OBGyneHx,
 };
 
-const order = ["pmhx", "fmhx", "pshx", "obgynehx"];
+const order = ["pmhx", "fmhx", "pshx", "shx", "obgynehx"];
 
 export default function HistorySwitcher({ task }) {
   const { patient } = useSelector(({ appointments }) => appointments);
@@ -178,7 +171,6 @@ export default function HistorySwitcher({ task }) {
 
   const sanitized = current?.toLowerCase().replace(/\s+/g, "");
   const Comp = historyMap[sanitized] || Blank;
-
   return (
     <div className="tools-switcher-container">
       <div
@@ -193,7 +185,8 @@ export default function HistorySwitcher({ task }) {
           pastMedicalHistory={pastMedicalHistory}
           patient={patient?.patient}
           pastSurgicalHistory={pastSurgicalHistory}
-          obGyneHistory={obGyneHistory}
+          shx={ehr?.socialHistory || {}}
+          obGyneHistory={ehr?.obGyneHistory}
           fontSize="1rem"
         />
       </div>

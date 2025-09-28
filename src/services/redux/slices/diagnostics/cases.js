@@ -12,11 +12,12 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   formSubmitted: false,
+  showItem: false,
+  selected: {},
   message: "",
   gui: {
     showForm: false,
   },
-  selected: {},
 };
 
 // THUNKS
@@ -39,6 +40,19 @@ export const PSH = createAsyncThunk(
   async ({ token, key }, thunkAPI) => {
     try {
       return await axioKit.universal(`${url}/psh`, token, key);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const ADD_ITEM = createAsyncThunk(
+  `${url}/add_item`,
+  async ({ data, token }, thunkAPI) => {
+    try {
+      return await axioKit.save(url, data, token, "add_item");
     } catch (error) {
       const message =
         error.response?.data?.message || error.message || error.toString();
@@ -97,6 +111,10 @@ export const casesSlice = createSlice({
       state.filtered = payload;
       state.totalPages = Math.ceil(payload.length / state.maxPage);
     },
+    SetITEM: (state, { payload }) => {
+      state.selected = payload;
+      state.showItem = true;
+    },
     SetCOLLECTIONS: (state, { payload }) => {
       state.collections = payload;
     },
@@ -110,6 +128,9 @@ export const casesSlice = createSlice({
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
       state.gui = { ...state.gui, showForm: true };
+    },
+    TOGGLE_ITEM: (state) => {
+      state.showItem = !state.showItem;
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -172,6 +193,22 @@ export const casesSlice = createSlice({
         state.formSubmitted = false;
       })
 
+      .addCase(ADD_ITEM.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(ADD_ITEM.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(ADD_ITEM.rejected, (state, action) => {
+        state.message = action.payload || "Save failed";
+        state.formSubmitted = false;
+      })
+
       .addCase(UPDATE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
@@ -206,6 +243,8 @@ export const casesSlice = createSlice({
 });
 
 export const {
+  SetITEM,
+  TOGGLE_ITEM,
   SetFILTERED,
   SetCOLLECTIONS,
   SetMaxPage,

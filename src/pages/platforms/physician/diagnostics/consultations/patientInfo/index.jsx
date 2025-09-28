@@ -230,12 +230,26 @@ export default function Patient({ activePanels }) {
         <label style={{ color: patient?.isMale ? "#007bff" : "#e83e8c" }}>
           Diagnosis :
         </label>
-        <EditableField
+        {/* <EditableField
           keyForValue="value"
           keyForText="label"
-          onChange={(value) =>
-            dispatch(SetPATIENT({ ...appointment, diagnosis: value }))
+          onChange={(value) => {
+            console.log(`value`, value);
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value }));
+          }}
+          isSuccess={isSuccess}
+          formSubmitted={formSubmitted}
+        /> */}
+        <EditableField
+          fieldData={{
+            diagnosis: appointment?.diagnosis || "",
+          }}
+          placeholder="Diagnosis"
+          onSave={(value) =>
+            dispatch(SetPATIENT({ ...appointment, diagnosis: value.diagnosis }))
           }
+          isSuccess={isSuccess}
+          formSubmitted={formSubmitted}
         />
       </div>
       <Register

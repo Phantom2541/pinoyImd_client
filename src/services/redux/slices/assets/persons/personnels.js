@@ -767,7 +767,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATEGUARDIAN.fulfilled, (state, action) => {
         const { success, payload } = action;
-        console.log("payload", payload);
 
         const index = state.collections.findIndex(
           (item) => item._id === payload._id

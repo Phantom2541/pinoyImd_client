@@ -1,4 +1,3 @@
-import React from "react";
 import usePanelPosition from "../panelPosition";
 import { MDBIcon } from "mdbreact";
 import { useSelector } from "react-redux";
@@ -12,12 +11,6 @@ import {
   getAge,
   properFullname,
 } from "../../../../../../../services/utilities";
-
-const certificateData = {
-  diagnosis: "Pneumonia",
-  startDate: "August 1, 2025",
-  endDate: "August 21, 2025",
-};
 
 export default function Clearance({ active, buttonRefs, togglePanel }) {
   const style = usePanelPosition(active, buttonRefs.clearance, {

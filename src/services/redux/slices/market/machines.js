@@ -207,7 +207,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("payload", payload);
 
         state.collections = state.filtered = payload; // Fix typo
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;

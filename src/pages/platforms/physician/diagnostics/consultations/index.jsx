@@ -20,6 +20,7 @@ import {
   GET_BY_SCHED,
   SetCLUSTER,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import CaseModal from "./medicalHistory/pshx/modal";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
@@ -94,43 +95,47 @@ export default function Consultations() {
     return <Skeleton isDone={true} schedule={schedule} />;
 
   return (
-    <div className="checkup-data-container">
-      <Body />
-      <Modal />
-      <Patient activePanels={activePanels} />
-      <Note
-        togglePanel={togglePanel}
-        buttonRefs={buttonRefs}
-        activePanels={activePanels}
-      />
-      <Toolkit activePanels={activePanels} />
+    <>
+      <div className="checkup-data-container">
+        <Body />
+        <Modal />
+        <Patient activePanels={activePanels} />
+        <Note
+          togglePanel={togglePanel}
+          buttonRefs={buttonRefs}
+          activePanels={activePanels}
+        />
+        <Toolkit activePanels={activePanels} />
 
-      <div
-        className={`checkup-data-note-mask ${
-          Object.values(activePanels).some(Boolean) && "active"
-        }`}
-      />
+        <div
+          className={`checkup-data-note-mask ${
+            Object.values(activePanels).some(Boolean) && "active"
+          }`}
+        />
 
-      <Prescription
-        togglePanel={togglePanel}
-        active={activePanels.prescription}
-        buttonRefs={buttonRefs}
-      />
-      <RequestForm
-        active={activePanels.request}
-        buttonRefs={buttonRefs}
-        togglePanel={togglePanel}
-      />
-      <Certificate
-        active={activePanels.medcert}
-        buttonRefs={buttonRefs}
-        togglePanel={togglePanel}
-      />
-      <Clearance
-        active={activePanels.clearance}
-        buttonRefs={buttonRefs}
-        togglePanel={togglePanel}
-      />
-    </div>
+        <Prescription
+          togglePanel={togglePanel}
+          active={activePanels.prescription}
+          buttonRefs={buttonRefs}
+        />
+        <RequestForm
+          active={activePanels.request}
+          buttonRefs={buttonRefs}
+          togglePanel={togglePanel}
+        />
+        <Certificate
+          active={activePanels.medcert}
+          buttonRefs={buttonRefs}
+          togglePanel={togglePanel}
+        />
+        <Clearance
+          active={activePanels.clearance}
+          buttonRefs={buttonRefs}
+          togglePanel={togglePanel}
+        />
+      </div>
+
+      <CaseModal />
+    </>
   );
 }

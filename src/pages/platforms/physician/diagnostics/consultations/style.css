@@ -9,6 +9,7 @@
     "toolkit toolkit";
   gap: 10px;
   height: calc(100vh - 23vh);
+  min-height: 650px;
   user-select: none;
   position: relative;
 }

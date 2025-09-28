@@ -4,14 +4,10 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBRow,
-  MDBCol,
-  MDBInput,
   MDBBtn,
   MDBBtnGroup,
 } from "mdbreact";
 import { fullName } from "../../../../../../../services/utilities";
-import { EditableSelect } from "../../../../../../../components/customizable";
 import { useEffect, useState } from "react";
 import { SAVE } from "../../../../../../../services/redux/slices/diagnostics/cases";
 import Spinner from "../../../../../../../components/spinner";
@@ -25,21 +21,18 @@ import Details from "./details";
 const _form = {
   title: "",
   description: "",
-  caseSumarry: "",
+  caseSummary: "",
   category: "medical",
 };
 const _details = {
   diagnosis: "",
   status: "active",
   date: {
-    start: new Date().toISOString().split("T")[0],
-    end: new Date().toISOString().split("T")[0],
+    start: "",
+    end: "",
   },
   hospital: "",
-  physician: {
-    name: "",
-    specialization: "",
-  },
+  ap: [],
   remarks: "",
 };
 const steps = ["Information", "Details"];

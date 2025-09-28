@@ -13,13 +13,19 @@ import {
   SetRESULT,
   SetTRANSAC,
 } from "../../../../services/redux/slices/diagnostics/clinic/appointments";
-import { fullName } from "../../../../services/utilities";
+import {
+  Cloudinary,
+  formattedQn,
+  fullName,
+  PresetImage,
+} from "../../../../services/utilities";
 import {
   EditableField,
   EditableSelect,
 } from "../../../../components/customizable";
 import { VisityType } from "../../../../services/fakeDb";
 import { useEffect } from "react";
+import Notes from "./notes";
 const Body = () => {
   const {
       collections,
@@ -33,7 +39,35 @@ const Body = () => {
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleUpdate = (data) => dispatch(UPDATE({ token, data }));
+  const handleUpdate = (data) => {
+    console.log("update request:", data);
+
+    const { _id, ...rest } = data;
+
+    // check if this is a patient field (mobile, email, etc.)
+    if (
+      "mobile" in rest ||
+      "email" in rest ||
+      "dob" in rest ||
+      "fullName" in rest
+    ) {
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id, // appointment id
+            patient: {
+              _id: data.patientId || data._id, // explicitly pass patientId
+              ...rest,
+            },
+          },
+        })
+      );
+    } else {
+      // normal appointment update
+      dispatch(UPDATE({ token, data }));
+    }
+  };
 
   useEffect(() => {
     console.log("filtered", filtered);
@@ -92,49 +126,73 @@ const Body = () => {
               lab = {},
               rad = {},
             } = item;
-            console.log(visitType);
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
+
+            const photoURL = `${Cloudinary.getEndpoint()}/${
+              patient?.pid || ""
+            }/users/${patient?.email}/profile`;
             return (
               <tr key={index}>
                 {!activeSched && <td>{sched}</td>}
-                <td>{qn}</td>
+                {/* <td>{formattedQn(qn, filtered)}</td> */}
+                <td>{formattedQn(qn, filtered)}</td>
+
+                <td>
+                  <img
+                    src={photoURL}
+                    alt="avatar"
+                    className="rounded-circle"
+                    onError={(e) =>
+                      (e.target.src = PresetImage(patient.isMale))
+                    }
+                    style={{ width: "40px", height: "40px" }}
+                  />
+                </td>
                 <td>
                   {fullName(patient?.fullName)}
-                  <MDBBadge
-                    color={statusColors[status] || "info"}
-                    className="ml-2"
-                  >
-                    <EditableSelect
-                      animation
-                      animationStyle={{
-                        width: "10rem",
-                        marginLeft: "-.3rem",
-                        marginTop: "-.4rem",
-                      }}
-                      className="mb-n3"
-                      preValue={status}
-                      keyForText="status"
-                      keyForValue="status"
-                      isEditable
-                      collections={Object.keys(statusColors)}
-                      fieldData={{ _id, status }}
-                      onSave={handleUpdate}
-                      formSubmitted={formSubmitted}
-                      isSuccess={isSuccess}
-                    />
-                  </MDBBadge>
 
-                  {status === "done" && (
-                    <MDBIcon
-                      icon="cash-register"
-                      onClick={() => dispatch(SetTRANSAC(item))}
-                      size="lg"
-                      className="ml-3 cursor-pointer"
-                      title="Transaction"
-                    />
-                  )}
+                  <div>
+                    <MDBBadge
+                      color={statusColors[status] || "info"}
+                      className="ml-2"
+                    >
+                      <EditableSelect
+                        animation
+                        animationStyle={{
+                          width: "10rem",
+                          marginLeft: "-.3rem",
+                          marginTop: "-.4rem",
+                        }}
+                        className="mb-n3"
+                        preValue={status}
+                        keyForText="status"
+                        keyForValue="status"
+                        isEditable
+                        collections={Object.keys(statusColors)}
+                        fieldData={{ _id, status }}
+                        onSave={handleUpdate}
+                        formSubmitted={formSubmitted}
+                        isSuccess={isSuccess}
+                      />
+                    </MDBBadge>
+
+                    {status === "done" && (
+                      <>
+                        <Notes appointment={item} />
+
+                        <MDBIcon
+                          icon="cash-register"
+                          onClick={() => dispatch(SetTRANSAC(item))}
+                          size="lg"
+                          className="ml-3 cursor-pointer"
+                          title="Transaction"
+                        />
+                      </>
+                    )}
+                  </div>
                 </td>
+
                 <td>
                   <EditableSelect
                     animation
@@ -214,6 +272,21 @@ const Body = () => {
                   }}
                 >
                   {consultation ? "yes" : "no"}{" "}
+                </td>
+                <td>
+                  {" "}
+                  <EditableField
+                    type="number"
+                    keyForValue="mobile"
+                    fieldData={{
+                      _id,
+                      patientId: patient?._id,
+                      mobile: patient?.mobile,
+                    }}
+                    onSave={handleUpdate}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                  />
                 </td>
                 <td className="position-relative">
                   <EditableField

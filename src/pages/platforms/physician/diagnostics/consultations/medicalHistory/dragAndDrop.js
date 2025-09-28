@@ -1,6 +1,7 @@
 // DragAndDrop.js
 import { useState, memo } from "react";
 import { EditableField } from "../../../../../../components/customizable";
+import { MDBBtn } from "mdbreact";
 
 // Custom hook
 export function useDragAndDrop(initialItems = []) {
@@ -45,6 +46,8 @@ export function useDragAndDrop(initialItems = []) {
     setItems(updated);
   };
 
+  // NEW: remove handler
+
   return {
     items,
     setItems,
@@ -70,6 +73,7 @@ const DraggableItem = memo(
     handleDrop,
     handleDragEnd,
     handleEdit,
+    handleRemove,
   }) => (
     <>
       {placeholderIndex === index && (
@@ -86,11 +90,30 @@ const DraggableItem = memo(
         onDrop={handleDrop}
         onDragEnd={handleDragEnd}
         className="checkup-data-draggable-item"
-        style={{ opacity: dragIndex === index ? 0 : 1 }}
+        style={{
+          opacity: dragIndex === index ? 0 : 1,
+          display: "flex", // put items in a row
+          alignItems: "center", // vertical align
+          gap: "6px", // space between X and text
+        }}
       >
+        <button
+          onClick={() => handleRemove(index)}
+          style={{
+            color: "red",
+            border: "none",
+            background: "transparent",
+            fontSize: "16px",
+            cursor: "pointer",
+            lineHeight: 1,
+          }}
+        >
+          ×
+        </button>
+
         <EditableField
           classNameTxt="checkup-data-draggable-item-text"
-          fieldData={{ value: item }} // wrap string into object
+          fieldData={{ value: item }}
           keyForValue="value"
           keyForText="value"
           enableEditMode={true}
@@ -110,32 +133,41 @@ export default function DraggableList({ items, ...handlers }) {
     handleDrop,
     handleDragEnd,
     handleEdit,
+    handleRemove,
+    handleAdd,
   } = handlers;
 
   return (
-    <ul className="checkup-data-draggable-list">
-      {items.map((item, index) => (
-        <DraggableItem
-          key={index}
-          item={item}
-          index={index}
-          dragIndex={dragIndex}
-          placeholderIndex={placeholderIndex}
-          handleDragStart={handleDragStart}
-          handleDragOver={handleDragOver}
-          handleDrop={handleDrop}
-          handleDragEnd={handleDragEnd}
-          handleEdit={handleEdit}
-        />
-      ))}
-      {placeholderIndex === items.length && (
-        <li
-          key="ph-end"
-          className="checkup-data-placeholder-item"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}
-        />
-      )}
-    </ul>
+    <>
+      <ul className="checkup-data-draggable-list">
+        {items.map((item, index) => (
+          <DraggableItem
+            key={index}
+            item={item}
+            index={index}
+            dragIndex={dragIndex}
+            placeholderIndex={placeholderIndex}
+            handleDragStart={handleDragStart}
+            handleDragOver={handleDragOver}
+            handleDrop={handleDrop}
+            handleDragEnd={handleDragEnd}
+            handleEdit={handleEdit}
+            handleRemove={handleRemove}
+          />
+        ))}
+        {placeholderIndex === items.length && (
+          <li
+            key="ph-end"
+            className="checkup-data-placeholder-item"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleDrop}
+          />
+        )}
+      </ul>
+      {/* Add button under list */}
+      <MDBBtn color="info" size="sm" rounded onClick={handleAdd}>
+        + Add Pregnancy
+      </MDBBtn>
+    </>
   );
 }

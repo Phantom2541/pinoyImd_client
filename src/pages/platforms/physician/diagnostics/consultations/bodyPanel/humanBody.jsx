@@ -18,7 +18,7 @@ export default function HumanBody({ setSlide, slide }) {
   const containerRef = useRef(null);
   const bodyRef = useRef(null);
 
-  const medicalHistory = ["FMHx", "PMHx", "PSHx", "OB Gyne Hx"];
+  const ehr = ["FMHx", "PMHx", "PSHx", "SHx", "OB Gyne Hx"];
   const ancillary = ["Laboratory", "Radiology", "Vital"];
 
   // <- dito ilagay ang iba't ibang laman para sa bawat button
@@ -26,6 +26,7 @@ export default function HumanBody({ setSlide, slide }) {
     FMHx: ["Diabetes (father)", "Hypertension (mother)"],
     PMHx: ["Asthma dx 2015", "Allergic rhinitis"],
     PSHx: ["Appendectomy — 2018"],
+    SHx: ["Smoker (5 pack-years)", "Occasional alcohol"],
     "OB Gyne Hx": ["G1P1", "LMP: 2025-08-01"],
     Laboratory: ["Hematology", "Chemistry", "Serology", "Urinalysis"],
     Radiology: ["Chest X-Ray", "Ultrasound abdomen"],
@@ -36,6 +37,7 @@ export default function HumanBody({ setSlide, slide }) {
     { name: "heart", style: { top: "25%", left: "42%" } },
     { name: "leftLung", style: { top: "40%", left: "42%" } },
     { name: "liver", style: { top: "60%", left: "42%" } },
+    { name: "kidney", style: { top: "70%", left: "42%" } },
     { name: "largeIntestine", style: { top: "75%", left: "42%" } },
     { name: "rightLung", style: { top: "30%", left: "54%" } },
     { name: "stomach", style: { top: "50%", left: "54%" } },
@@ -51,9 +53,10 @@ export default function HumanBody({ setSlide, slide }) {
     const rect = containerRef.current.getBoundingClientRect();
 
     const pairs = [
-      ["PMHx", "leftLung"],
       ["FMHx", "heart"],
+      ["PMHx", "leftLung"],
       ["PSHx", "liver"],
+      ["SHx", "kidney"],
       ["OB Gyne Hx", "largeIntestine"],
       ["Laboratory", "rightLung"],
       ["Radiology", "stomach"],
@@ -70,7 +73,7 @@ export default function HumanBody({ setSlide, slide }) {
       const tRect = tEl.getBoundingClientRect();
       const oRect = oEl.getBoundingClientRect();
 
-      const side = medicalHistory.includes(text) ? "right" : "left";
+      const side = ehr.includes(text) ? "right" : "left";
       const gap = 6;
 
       const x1 =
@@ -192,7 +195,7 @@ export default function HumanBody({ setSlide, slide }) {
 
       {/* Medical History Buttons + lists (always visible) */}
       <div className="checkup-data-center-image-medical-history">
-        {medicalHistory
+        {ehr
           .filter((text) => !(patient?.isMale && text === "OB Gyne Hx"))
           .map((text) => (
             <div key={text} className="history-group">
