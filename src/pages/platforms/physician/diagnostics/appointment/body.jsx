@@ -8,7 +8,6 @@ import {
   MDBIcon,
   MDBMask,
   MDBView,
-  MDBAvatar,
 } from "mdbreact";
 import { useHistory } from "react-router-dom";
 import {
@@ -20,6 +19,7 @@ import {
 import {
   Cloudinary,
   fullName,
+  getAge,
   mobile,
   PresetImage,
 } from "../../../../../services/utilities";
@@ -67,7 +67,7 @@ const Body = () => {
         UPDATE({
           token,
           data: {
-            _id, // appointment id
+            _id: data.appointmentId, // appointment id
             patient: {
               _id: data.patientId || data._id, // explicitly pass patientId
               ...rest,
@@ -89,7 +89,6 @@ const Body = () => {
     );
 
     setPreview(formData);
-    console.log("formData", formData);
 
     dispatch(
       UPLOAD({
@@ -125,7 +124,6 @@ const Body = () => {
       <MDBTableHead>
         <tr>
           <th>No.</th>
-          <th>Profile</th>
           <th>Patient</th>
           <th>Visit Type</th>
           <th className="text-center">Laboratory</th>
@@ -153,7 +151,7 @@ const Body = () => {
               consultation,
               _id,
             } = item;
-            const { fullName: name, email, mobile } = patient;
+            const { fullName: name, email, mobile: cp } = patient;
 
             const hasLab = Object.keys(lab).length > 0;
             const hasRad = Object.keys(rad).length > 0;
@@ -166,86 +164,97 @@ const Body = () => {
               <tr key={index}>
                 <td>{qn}</td>
                 <td>
-                  <MDBView hover={!showImgCropper}>
-                    <div className="d-flex align-items-center">
-                      <img
-                        src={preview || photoURL}
-                        alt="avatar"
-                        onError={(e) =>
-                          (e.target.src = PresetImage(patient.isMale))
-                        }
-                        className="rounded-circle"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                        }}
-                      />
-                      <MDBMask overlay="grey-strong d-flex align-items-center">
-                        <ImageCropper
-                          key={patient?._id || index}
-                          inputId={`cropImage-${patient?._id || index}`} // unique id
-                          handleUpload={(base64) => handleUpload(base64, email)}
-                          setIsShow={(show) => setShowImgCropper(show)}
-                          cropSize={{ width: 200, height: 200 }}
-                          modalSize="md"
-                          isUpload
-                          label={
-                            <MDBIcon icon="upload" title="Upload new photo" />
-                          }
-                          accept={".png,.jpg,.jpeg"}
-                        />
-                      </MDBMask>
-                    </div>
-                  </MDBView>
-                </td>
-
-                <td>
                   <div className="d-flex align-items-center">
+                    {/* Avatar */}
                     <div>
-                      {fullName(name)}{" "}
-                      <MDBBadge
-                        color={status === "confirmed" ? "success" : "info"}
-                        className="ml-2"
-                      >
-                        <EditableSelect
-                          preValue={status}
-                          keyForText="status"
-                          animation
-                          animationStyle={{
-                            width: "10rem",
-                            marginLeft: "-.3rem",
-                            marginTop: "-.4rem",
+                      <MDBView hover={!showImgCropper}>
+                        <img
+                          src={preview || photoURL}
+                          alt="avatar"
+                          onError={(e) =>
+                            (e.target.src = PresetImage(patient.isMale))
+                          }
+                          className="rounded-circle"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
                           }}
-                          className="mb-n3"
-                          keyForValue="status"
-                          isEditable
-                          collections={["draft", "confirmed", "cancelled"]}
-                          fieldData={{
-                            _id,
-                            status: status,
-                          }}
-                          onSave={handleUpdate}
-                          formSubmitted={formSubmitted}
-                          isSuccess={isSuccess}
                         />
-                      </MDBBadge>
+                        {/* Upload mask over image */}
+                        <MDBMask overlay="grey-strong d-flex align-items-center">
+                          <ImageCropper
+                            key={patient?._id || index}
+                            inputId={`cropImage-${patient?._id || index}`}
+                            handleUpload={(base64) =>
+                              handleUpload(base64, email)
+                            }
+                            setIsShow={(show) => setShowImgCropper(show)}
+                            cropSize={{ width: 200, height: 200 }}
+                            modalSize="md"
+                            isUpload
+                            label={
+                              <MDBIcon icon="upload" title="Upload new photo" />
+                            }
+                            accept={".png,.jpg,.jpeg"}
+                          />
+                        </MDBMask>
+                      </MDBView>
                     </div>
-                    {status === "confirmed" && (
-                      <span
-                        style={{ fontSize: "22px" }}
-                        className="d-block mt-n2 mb-n2 ml-2 cursor-pointer"
-                        onClick={() => {
-                          history.push(
-                            `/physician/diagnostics/consultations?ehrId=${_id}&sched=${activeSched}`
-                          );
-                        }}
-                      >
-                        👀
-                      </span>
-                    )}
+
+                    {/* Name + Age */}
+                    <div className="ml-3 d-flex flex-column">
+                      <span className="font-weight-bold">{fullName(name)}</span>
+                      <div className="d-flex align-items-center">
+                        {/* Age */}
+                        <small className="text-muted mr-2">
+                          {getAge(patient?.dob)}
+                        </small>
+
+                        {/* Status */}
+                        <MDBBadge
+                          color={status === "confirmed" ? "success" : "info"}
+                          className="ml-2"
+                        >
+                          <EditableSelect
+                            // preValue={status}
+                            keyForText="status"
+                            keyForValue="status"
+                            animation
+                            animationStyle={{
+                              width: "10rem",
+                              marginLeft: "-.3rem",
+                              marginTop: "-.4rem",
+                            }}
+                            className="mb-n3"
+                            isEditable
+                            collections={["draft", "confirmed", "cancelled"]}
+                            fieldData={{ _id, status }}
+                            onSave={handleUpdate}
+                            formSubmitted={formSubmitted}
+                            isSuccess={isSuccess}
+                          />
+                        </MDBBadge>
+
+                        {/* Action */}
+                        {status === "confirmed" && (
+                          <span
+                            style={{ fontSize: "22px" }}
+                            className="d-block ml-2 cursor-pointer"
+                            onClick={() => {
+                              history.push(
+                                `/physician/diagnostics/consultations?ehrId=${_id}&sched=${activeSched}`
+                              );
+                            }}
+                          >
+                            👀
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </td>
+
                 <td>
                   <EditableSelect
                     animation
@@ -287,21 +296,6 @@ const Body = () => {
                       hasLab ? "warning" : "primary"
                     } shadow-lg cursor-pointer`}
                   />
-
-                  {/* 
-                      <EditableSelect
-                    collections={Templates.getComponents("LAB")}
-                    preValues={Templates.getWordByIndices(lab, "components")}
-                    keyForText="lab"
-                    keyForValue="lab"
-                    onSave={handleIndicesUpdate}
-                    isEditable
-                    multiple={true}
-                    fieldData={{
-                      _id,
-                      lab: Templates.getWordByIndices(lab, "components"),
-                    }}
-                  /> */}
                 </td>
                 <td className="text-center">
                   <MDBIcon
@@ -317,23 +311,6 @@ const Body = () => {
                       hasRad ? "warning" : "primary"
                     } shadow-lg cursor-pointer`}
                   />
-                  {/* <EditableSelect
-                    collections={Templates.getComponents("RAD")}
-                    preValues={Templates.getWordByIndices(
-                      rad,
-                      "components",
-                      "RAD"
-                    )}
-                    keyForText="rad"
-                    keyForValue="rad"
-                    onSave={handleIndicesUpdate}
-                    isEditable
-                    multiple={true}
-                    fieldData={{
-                      _id,
-                      rad: Templates.getWordByIndices(rad, "components", "RAD"),
-                    }}
-                  /> */}
                 </td>
                 <td
                   style={{ cursor: "pointer" }}
@@ -342,9 +319,12 @@ const Body = () => {
                     dispatch(setShowModalEhr({ ...ehr, patient: patient }));
                   }}
                 >
-                  {ehr ? "yes" : "no"}
+                  {ehr ? (
+                    <MDBIcon icon="check" className="text-success" />
+                  ) : (
+                    <MDBIcon icon="times" className="text-danger" />
+                  )}
                 </td>
-
                 <td
                   style={{ cursor: "pointer" }}
                   className="text-center"
@@ -358,21 +338,24 @@ const Body = () => {
                     );
                   }}
                 >
-                  {consultation ? "yes" : "no"}{" "}
+                  {consultation ? (
+                    <MDBIcon icon="check" className="text-success" />
+                  ) : (
+                    <MDBIcon icon="times" className="text-danger" />
+                  )}
                 </td>
                 <td>
-                  {" "}
                   <EditableField
                     type="number"
-                    keyForValue="mobile"
                     fieldData={{
-                      _id,
-                      patientId: patient?._id,
-                      mobile: mobile,
+                      _id: patient?._id,
+                      mobile: cp,
+                      appointmentId: _id,
                     }}
                     onSave={handleUpdate}
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
+                    utility={(val) => mobile(val)}
                   />
                 </td>
                 <td>

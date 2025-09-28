@@ -155,6 +155,8 @@ export default function SHx({
     );
   }
 
+  console.log("habits", dataShx.habits);
+
   return (
     <div className="checkup-data-mh-container">
       <div className="checkup-data-dataShx-container">

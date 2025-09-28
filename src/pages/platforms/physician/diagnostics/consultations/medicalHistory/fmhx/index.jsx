@@ -3,10 +3,17 @@ import { MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useToasts } from "react-toast-notifications";
-import { SET_EMR } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SET_EMR,
+  SetCLUSTER,
+} from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
-  const { patientId } = useSelector(({ appointments }) => appointments);
+  const {
+    patientId,
+    cluster,
+    patient: appointment,
+  } = useSelector(({ appointments }) => appointments);
   const { token } = useSelector(({ auth }) => auth);
   const wrapperRef = useRef(null);
   const rowRefs = useRef({});
@@ -130,18 +137,26 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   const persist = async (newFhx, action = "update") => {
     setFhx(newFhx);
     try {
-      await dispatch(
+      const response = await dispatch(
         SET_EMR({
           data: { familyHistory: newFhx, patient: patientId },
           token,
         })
       ).unwrap();
-
+      console.log("response", response);
       if (action === "add") {
         addToast("Disease added successfully", { appearance: "success" });
       } else if (action === "remove") {
         addToast("Disease removed successfully", { appearance: "info" });
       }
+
+      const newCluster = [...cluster];
+      const index = newCluster.find(({ _id }) => _id === appointment._id);
+      newCluster[index] = {
+        ...newCluster[index],
+        familyHistory: response?.payload,
+      };
+      dispatch(SetCLUSTER(newCluster));
     } catch (err) {
       console.error("Update failed", err);
       addToast("Failed to update family history", { appearance: "error" });
