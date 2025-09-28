@@ -49,7 +49,7 @@ export default function Pbs() {
         _style={{
           minHeight: "200px",
           maxHeight: "300px",
-            margin: "0 !important",
+           
           overflowY: "auto",
           padding: "8px",
         }}

@@ -1,3 +1,10 @@
 .public-DraftStyleDefault-block {
   margin: 0 !important;
+
+}
+
+.editorClassName {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-x: hidden !important;
 }
