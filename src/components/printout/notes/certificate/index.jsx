@@ -7,6 +7,7 @@ import {
   getAge,
   fullName,
 } from "../../../../services/utilities";
+import QrCodeGenerator from "../../../qrCode";
 const certificateData = {
   diagnosis: "Pneumonia",
   startDate: "August 1, 2025",
@@ -95,10 +96,18 @@ export default function Certificate({ note }) {
           </div>
 
           {/* Doctor */}
-          <div className="checkup-data-clearance-card-body-doctor">
-            <span>{properFullname(physician.fullName)}</span>
-            <span>Physician/Examiner</span>
-            <img alt="signature" src={signUrl || ""} />
+          <div className="d-flex align-items-end justify-content-between  w-100">
+            <div className="checkup-data-clearance-card-body-doctor">
+              <span>{properFullname(physician.fullName)}</span>
+              <span>Physician/Examiner</span>
+              <img alt="signature" src={signUrl || ""} />
+            </div>
+            <div>
+              <QrCodeGenerator
+                value="portal/clinic/68d8ba68b5d22e3b77e0f83d/68d8ba68b5d22e3b77e0f83d"
+                size={80}
+              />
+            </div>
           </div>
         </div>
       </div>

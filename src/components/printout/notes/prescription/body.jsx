@@ -9,7 +9,7 @@ export default function Body({ note }) {
   const { consultation = {} } = note || {};
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const { prescription = {} } = consultation;
+  const { prescription = {} } = consultation || {};
   const { mode = "", fontSize, notes: notesValue } = prescription;
 
   useEffect(() => {
