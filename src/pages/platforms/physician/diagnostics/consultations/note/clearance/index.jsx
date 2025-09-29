@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import "./../style.css";
 import CADUCEUS from "./../../../../../../../assets/caduceus.png";
 import {
+  Banner,
   billingAddress,
   Cloudinary,
   contacts,
@@ -47,12 +48,16 @@ export default function Clearance({ active, buttonRefs, togglePanel }) {
       />
       <div className="checkup-data-clearance-card">
         {/* Header */}
-        <div className="checkup-data-clearance-card-header">
+        <Banner
+          company={activePlatform.branch.companyId.name}
+          branch={activePlatform.branch.name}
+        />
+        {/* <div className="checkup-data-clearance-card-header">
           <img src={logoURL} alt="" />
           <span>{companyname}</span>
           <span>{billingAddress(branchaddress)}</span>
           <span>Contact: {contacts(branchcontact)}</span>
-        </div>
+        </div> */}
         {/* Title */}
         <h1 className="checkup-data-clearance-card-title">
           Medical Certificate
