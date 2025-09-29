@@ -61,7 +61,6 @@ export default function MedicationsModal() {
         ..._cluster[pIndex],
         ehr: payload,
       };
-      console.log("patientIndex", pIndex);
       dispatch(SetPATIENT({ ...appointment, ehr: payload }));
       dispatch(SetCLUSTER(_cluster));
       toggle(payload);

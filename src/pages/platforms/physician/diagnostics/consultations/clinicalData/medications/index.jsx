@@ -3,16 +3,52 @@ import { useDispatch, useSelector } from "react-redux";
 import { TOGGLE_MEDICATION } from "../../../../../../../services/redux/slices/diagnostics/ehr";
 import { useState } from "react";
 import { capitalize } from "../../../../../../../services/utilities";
+import { EditableField } from "../../../../../../../components/customizable";
+import {
+  SET_EMR,
+  SetPATIENT,
+  SetCLUSTER,
+} from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
 const Medications = () => {
-  const { patient: appointment } = useSelector(
-    ({ appointments }) => appointments
-  );
+  const { token } = useSelector(({ auth }) => auth),
+    {
+      patient: appointment,
+      formSubmitted,
+      isSucess,
+      cluster = [],
+    } = useSelector(({ appointments }) => appointments);
   const [expanded, setExpanded] = useState(null);
   const dispatch = useDispatch();
 
-  const { ehr = {} } = appointment || {};
+  const { ehr = {}, patient } = appointment || {};
   const { medications = [] } = ehr || {};
+
+  const handleUpdate = (data) => {
+    const _medications = [...medications];
+    const index = _medications.findIndex((m) => m._id === data._id);
+    _medications[index] = {
+      ..._medications[index],
+      ...data,
+    };
+
+    dispatch(
+      SET_EMR({
+        data: { medications: _medications, patient: patient?._id },
+        token,
+      })
+    ).then((action) => {
+      const { payload } = action.payload;
+      const _cluster = [...cluster];
+      const pIndex = _cluster.findIndex((p) => p._id === appointment?._id);
+      _cluster[pIndex] = {
+        ..._cluster[pIndex],
+        ehr: payload,
+      };
+      dispatch(SetPATIENT({ ...appointment, ehr: payload }));
+      dispatch(SetCLUSTER(_cluster));
+    });
+  };
 
   return (
     <div className="checkup-data-mh-container">
@@ -35,14 +71,7 @@ const Medications = () => {
         <div className="pshx-timeline">
           {medications.length > 0 ? (
             medications.map((medication, index) => {
-              const {
-                name,
-                dosage,
-                frequency,
-                form,
-                duration = "",
-                reason = "",
-              } = medication;
+              const { name, dosage, frequency } = medication;
               return (
                 <div
                   key={index}
@@ -62,47 +91,48 @@ const Medications = () => {
                         </span>
                         <span> {capitalize(frequency)}</span>
                       </div>
-                      {/* <button
-                        size="sm"
-                        style={{
-                          marginRight: "-5px",
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // dispatch(SetITEM(surgery));
-                        }}
-                        // color="white"
-                        className="search-add-btn ml-2 py-1 "
-                      >
-                        <MDBIcon icon="plus" size="sm" />
-                      </button> */}
                     </div>
                     <div
                       className={`pshx-body ${
                         expanded === index ? "show" : "hide"
                       }`}
                     >
-                      <p className="pshx-complication">
-                        <strong>Medicine:</strong> {capitalize(name)}
-                      </p>
-                      <p>
-                        <strong>Dosage:</strong> {capitalize(dosage)}
-                      </p>
-                      <p>
-                        <strong>Form:</strong> {capitalize(form)}
-                      </p>
-                      <p>
-                        <strong>Frequency:</strong> {capitalize(frequency)}
-                      </p>
-                      {duration && (
-                        <p>
-                          <strong>Duration:</strong> {capitalize(duration)}
-                        </p>
-                      )}
-                      {reason && (
-                        <p>
-                          <strong>Reason:</strong> {capitalize(reason)}
-                        </p>
+                      {[
+                        "name",
+                        "dosage",
+                        "form",
+                        "frequency",
+                        "duration",
+                        "reason",
+                      ].map(
+                        (key, cIdx) =>
+                          medication[key] && (
+                            <p
+                              className={`${
+                                cIdx === 0 && "pshx-complication"
+                              } d-flex align-items-center`}
+                              key={`${key}-${cIdx}`}
+                              style={{ marginBottom: "-1px" }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <strong>
+                                {cIdx === 0 ? "Medicine" : capitalize(key)}:
+                              </strong>
+                              <EditableField
+                                fieldData={{
+                                  _id: medication?._id,
+                                  [key]: medication[key],
+                                }}
+                                classNameTxt=" mt-2 ml-1 "
+                                className="form-control form-control-sm ml-1"
+                                keyForValue={key}
+                                onSave={handleUpdate}
+                                formSubmitted={formSubmitted}
+                                isSucess={isSucess}
+                              />
+                              {/* {capitalize(name)} */}
+                            </p>
+                          )
                       )}
                     </div>
                   </div>
@@ -111,7 +141,6 @@ const Medications = () => {
             })
           ) : (
             <h5 className="text-center grey-text">
-              {" "}
               <MDBIcon icon="capsules" /> No Maintenance Medication Record
             </h5>
           )}
