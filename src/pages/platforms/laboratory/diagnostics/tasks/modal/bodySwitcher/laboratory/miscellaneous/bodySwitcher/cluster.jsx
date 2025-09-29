@@ -20,7 +20,6 @@ export default function Cluster({ task, setTask }) {
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 
-  console.log("results", results);
   return (
     <MDBRow className="text-left">
       {packages.map((fk, index) => {

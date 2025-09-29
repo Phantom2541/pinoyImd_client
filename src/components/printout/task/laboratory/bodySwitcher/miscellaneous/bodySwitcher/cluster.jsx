@@ -12,13 +12,12 @@ const test = [68, 69, 70, 84, 93, 97, 99, 131, 132, 134, 138, 139, 337];
 
 export default function Cluster({ task, fontSize }) {
   const { results } = task;
-  console.log("results", results);
-  
+
   const services = Object.keys(results)
     .filter((key) => test.includes(Number(key)))
     .map((key) => Services.find(key));
   console.log("services", services);
-  
+
   return (
     <div className="pl-5 mb-5" style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>

@@ -17,9 +17,6 @@ export default function Dengue({ task, setTask }) {
 
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
-  console.log("task", task);
-  console.log("results", results);
-  console.log("task", choices);
 
   return (
     <MDBRow className="text-left">
