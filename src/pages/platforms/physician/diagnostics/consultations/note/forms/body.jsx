@@ -9,11 +9,10 @@ import {
 import { UPDATE } from "../../../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import { useToasts } from "react-toast-notifications";
 const RequestForm = ({ togglePanel }) => {
-  const { patient: appointment } = useSelector(
+  const { patient: appointment, cluster } = useSelector(
     ({ appointments }) => appointments
   );
   const { token } = useSelector(({ auth }) => auth);
-  const { cluster } = useSelector(({ appointments }) => appointments);
   const { isSuccess } = useSelector(({ consultations }) => consultations);
   const dispatch = useDispatch();
   const { addToast } = useToasts();
