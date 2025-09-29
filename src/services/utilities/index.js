@@ -35,6 +35,8 @@ import properFullname from "./properFullname";
 import calculateIndicators from "./calculateIndicators";
 import formatToSI from "./formatToSI";
 import formatNameToObj from "./formatNameToObject";
+//Clinic Numbering
+import formattedQn from "./formattedQn";
 import findReference from "./findReference";
 import isImageValid from "./isImageValid";
 import generateCode from "./generateCode";
@@ -94,6 +96,7 @@ const socket = io(ENDPOINT, {
 const PresetImage = (gender) => (gender ? Male : Female);
 
 export {
+  formattedQn,
   paymentBadge,
   generateClaimStub,
   nickname,

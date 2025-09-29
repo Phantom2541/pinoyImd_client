@@ -31,6 +31,7 @@ import {
   Rci,
   References,
   Templates,
+  Echo,
 } from "./diagnostics";
 import { Duty } from "./legend";
 import Access from "./access";
@@ -85,4 +86,5 @@ export {
   ValidID,
   Duty,
   RadHC,
+  Echo,
 };

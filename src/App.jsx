@@ -32,6 +32,7 @@ import {
   MedicalExaminationClearance,
   MenuPriceList,
   contract,
+  NotesPrintout,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -62,6 +63,7 @@ export default function App() {
       <Route path="/printout/clinicStub" exact component={ClinicStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
       <Route path="/printout/chart" exact component={ChartPrintout} />
+      <Route path="/printout/notes" exact component={NotesPrintout} />
       <Route
         path="/printout/laboratoryRequestForm"
         exact

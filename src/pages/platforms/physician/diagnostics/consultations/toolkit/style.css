@@ -28,52 +28,61 @@
   border-radius: 4px;
   border: none;
   background-color: transparent;
-  /* color: #ffffff; */
   text-align: center;
   font-size: 1rem;
   width: 30px;
   transition: all 0.5s;
   cursor: pointer;
+  color: inherit;
 }
 
+/* Disabled */
 .checkup-data-toolkit-pagination-item.disabled {
-  pointer-events: none; /* wala nang click/hover */
-  display: inline-block;
-  border-radius: 4px;
+  pointer-events: none;
+  background-color: #585a6dff;
   color: #ffffff;
-  border: none;
   opacity: 0.4;
-  background-color: #3d405b;
-  /* color: #ffffff; */
-  text-align: center;
-  font-size: 1rem;
-  width: 30px;
-  transition: all 0.5s;
-  cursor: pointer;
 }
 
+/* Done */
+.checkup-data-toolkit-pagination-item.done {
+  background-color: #28a745 !important;
+  color: #ffffff;
+  opacity: 0.5;
+}
+.checkup-data-toolkit-pagination-item.active.done {
+  opacity: 1 !important;
+}
+.checkup-data-toolkit-pagination-item.done:hover {
+  opacity: 1 !important;
+}
+
+.checkup-data-toolkit-pagination-item.halt {
+  background-color: #e4a11b !important;
+  color: #ffffff;
+  opacity: 0.5;
+}
+.checkup-data-toolkit-pagination-item.active.halt {
+  opacity: 1 !important;
+}
+
+.checkup-data-toolkit-pagination-item.halt:hover {
+  opacity: 1 !important;
+}
+
+/* Hover */
 .checkup-data-toolkit-pagination-item:hover {
   background-color: #3d405b;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  border: none;
   color: #ffffff;
-  text-align: center;
-  font-size: 1rem;
-  width: 30px;
-  transition: all 0.5s;
-  cursor: pointer;
 }
 
+/* Active */
 .checkup-data-toolkit-pagination-item.active {
   background-color: #3d405b;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-  border: none;
   color: #ffffff;
-  text-align: center;
-  font-size: 1rem;
-  width: 25px;
-  transition: all 0.5s;
-  cursor: pointer;
+  width: 25px; /* override lang yung default width */
 }
 
 /* Base button design galing sa iyo */
@@ -98,6 +107,10 @@
 
 .checkup-data-toolkit-button.done {
   background-color: #28a745;
+  width: 130px;
+}
+.checkup-data-toolkit-button.halt {
+  background-color: red;
   width: 130px;
 }
 

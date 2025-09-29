@@ -34,8 +34,6 @@ export default function StepModal() {
   const [form, setForm] = useState({});
   const stepType = Object.keys(selected || {})[0] || "";
 
-  console.log("form", form);
-
   useEffect(() => {
     if (showModalMiniEhr) setForm(selected || {});
   }, [showModalMiniEhr, selected]);

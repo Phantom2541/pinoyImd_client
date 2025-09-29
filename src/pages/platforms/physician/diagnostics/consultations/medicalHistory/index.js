@@ -152,7 +152,6 @@ export default function HistorySwitcher({ task }) {
   const [direction, setDirection] = useState("left");
 
   const { ehr = {} } = patient || {};
-  console.log(`ehr`, ehr);
 
   useEffect(() => {
     if (!task || task === current) return;
@@ -172,7 +171,6 @@ export default function HistorySwitcher({ task }) {
 
   const sanitized = current?.toLowerCase().replace(/\s+/g, "");
   const Comp = historyMap[sanitized] || Blank;
-
   return (
     <div className="tools-switcher-container">
       <div

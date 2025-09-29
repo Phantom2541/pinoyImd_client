@@ -1,0 +1,11 @@
+/* card sized ~1/4 A4 */
+.note-request-container {
+  width: 500px;
+  background: white;
+}
+
+.laboratoryRequestForm-banner-printout {
+  width: 100%;
+  max-height: 50px;
+  object-fit: fill;
+}

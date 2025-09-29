@@ -181,8 +181,8 @@ export default function Body({ toggle = () => {} }) {
       >
         <button onClick={handleReset}>🗑️ Reset</button>
 
-        <button onClick={() => setMode("draw")}>✏️ Draw</button>
-        <button onClick={() => setMode("type")}>⌨️ Type</button>
+        <button onClick={() => setMode("draw")} style={{ filter: `brightness(${mode === "draw" ? "70%" : "100%"})` }}>✏️ Draw</button>
+        <button onClick={() => setMode("type")}  style={{ filter: `brightness(${mode === "type" ? "70%" : "100%"})` }}>⌨️ Type</button>
 
         {/* Font size control */}
 

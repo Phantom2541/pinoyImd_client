@@ -1,5 +1,6 @@
 import { QRCodeCanvas } from "qrcode.react";
 import { ENDPOINT, mobile } from "../../../services/utilities";
+import QrCodeGenerator from "../../qrCode";
 
 const Footer = ({ email, companyId = "", _id = "" }) => {
   const Hr = ({ className = "" }) => (
@@ -32,21 +33,11 @@ const Footer = ({ email, companyId = "", _id = "" }) => {
         DAYS
       </div>
       <Hr />
-      <div
-        className="my-2"
-        style={{
-          width: "fit-content",
-          height: "185px",
-          border: "2px solid black",
-          padding: "5px",
-          margin: "auto",
-        }}
-      >
-        <QRCodeCanvas
-          value={`${ENDPOINT}/emr/portal/${companyId}/${_id}`}
-          size={170}
-        />
-      </div>
+
+      <QrCodeGenerator
+        value={`${ENDPOINT}/emr/portal/${companyId}/${_id}`}
+        size={170}
+      />
       <h6>Scan this QR Code </h6>
       <h6 style={{ marginTop: "-0.7rem" }}>
         To activate your acount and check the transaction status

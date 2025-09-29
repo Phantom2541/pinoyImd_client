@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -8,12 +8,11 @@ import {
   SetCLUSTER,
 } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 
-export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
-  const {
-    patientId,
-    cluster,
-    patient: appointment,
-  } = useSelector(({ appointments }) => appointments);
+export default function FMHx() {
+  const { cluster, patient: appointment } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { patient, ehr } = appointment;
   const { token } = useSelector(({ auth }) => auth);
   const wrapperRef = useRef(null);
   const rowRefs = useRef({});
@@ -22,12 +21,16 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
-  const [fhx, setFhx] = useState(familyHistory);
+  const [fhx, setFhx] = useState({ Father: [], Mother: [] });
   const [lines, setLines] = useState([]);
   const [svgHeight, setSvgHeight] = useState(0);
 
   const mother = fhx.Mother || [];
   const father = fhx.Father || [];
+
+  useEffect(() => {
+    setFhx(ehr.familyHistory);
+  }, [ehr]);
 
   /** Merge mother/father diseases row by row */
   function mergeAlternate(mArr, fArr) {
@@ -139,24 +142,22 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
     try {
       const response = await dispatch(
         SET_EMR({
-          data: { familyHistory: newFhx, patient: patientId },
+          data: { familyHistory: newFhx, patient: patient._id },
           token,
         })
       ).unwrap();
-      console.log("response", response);
+      const newCluster = [...cluster];
+      const index = newCluster.findIndex(({ _id }) => _id === appointment._id);
+      newCluster[index] = {
+        ...newCluster[index],
+        ehr: response?.payload,
+      };
+      dispatch(SetCLUSTER(newCluster));
       if (action === "add") {
         addToast("Disease added successfully", { appearance: "success" });
       } else if (action === "remove") {
         addToast("Disease removed successfully", { appearance: "info" });
       }
-
-      const newCluster = [...cluster];
-      const index = newCluster.find(({ _id }) => _id === appointment._id);
-      newCluster[index] = {
-        ...newCluster[index],
-        familyHistory: response?.payload,
-      };
-      dispatch(SetCLUSTER(newCluster));
     } catch (err) {
       console.error("Update failed", err);
       addToast("Failed to update family history", { appearance: "error" });
@@ -194,7 +195,7 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
       newFhx.Mother.push(disease);
       newFhx.Father.push(disease);
     }
-    persist(newFhx, "add");
+    await persist(newFhx, "add");
   };
 
   const handleRemove = (disease, parent) => {
@@ -204,13 +205,13 @@ export default function FMHx({ familyHistory = { Mother: [], Father: [] } }) {
       showCancelButton: true,
       confirmButtonText: "Remove",
       icon: "warning",
-    }).then((res) => {
+    }).then(async (res) => {
       if (res.isConfirmed) {
         const newFhx = {
           Mother: mother.filter((d) => !(parent === "Mother" && d === disease)),
           Father: father.filter((d) => !(parent === "Father" && d === disease)),
         };
-        persist(newFhx, "remove");
+        await persist(newFhx, "remove");
       }
     });
   };
