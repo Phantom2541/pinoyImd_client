@@ -1,33 +1,98 @@
 import { MDBIcon } from "mdbreact";
 import React, { useRef, useEffect, useState } from "react";
-import Signature from "./../../../../../../../assets/templateSampleSignature.png";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPATIENT } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import {
+  SetPATIENT,
+  SetCLUSTER,
+} from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { UPDATE } from "../../../../../../../services/redux/slices/diagnostics/clinic/consultations";
 import {
   capitalize,
   Cloudinary,
 } from "../../../../../../../services/utilities";
 
-export default function Body({ toggle = () => {} }) {
-  const { patient: appointment } = useSelector(
+export default function Body({ togglePanel }) {
+  const { patient: appointment, cluster } = useSelector(
     ({ appointments }) => appointments
   );
-  const { auth } = useSelector(({ auth }) => auth);
+  const { auth, token } = useSelector(({ auth }) => auth);
   const { fullName = {} } = auth;
   const { fname, lname } = fullName;
   const { consultation = {} } = appointment || {};
+
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
+  const editorRef = useRef(null);
+
   const [isDrawing, setIsDrawing] = useState(false);
   const [mode, setMode] = useState("draw"); // "draw" or "type"
   const [pencilCursor, setPencilCursor] = useState("auto");
-  const [fontSize, setFontSize] = useState(16); // default font size
-  const dispatch = useDispatch();
-  console.log("nick", consultation);
+  const [fontSize, setFontSize] = useState(16);
 
-  // --- setup canvas for draw mode
+  // type mode notes
+  const [typedNotes, setTypedNotes] = useState("");
+  const savedSelection = useRef(null);
+
+  const dispatch = useDispatch();
+
+  // load notes only when appointment changes
   useEffect(() => {
+    const savedNotes = appointment?.consultation?.prescription?.notes || "";
+    setTypedNotes(savedNotes);
+
+    if (editorRef.current) {
+      editorRef.current.innerHTML = savedNotes;
+    }
+  }, [appointment]);
+
+  // when switching into type mode, hydrate editor with current typedNotes
+  useEffect(() => {
+    if (mode === "type" && editorRef.current) {
+      editorRef.current.innerHTML = typedNotes || "";
+      editorRef.current.focus();
+
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+
+      const range = document.createRange();
+      range.selectNodeContents(editorRef.current);
+      range.collapse(false);
+      sel.addRange(range);
+    }
+  }, [mode]);
+
+  // save caret before leaving type mode
+  useEffect(() => {
+    if (mode !== "type" && editorRef.current) {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        savedSelection.current = sel.getRangeAt(0);
+      }
+    }
+  }, [mode]);
+
+  // restore caret when entering type mode
+  useEffect(() => {
+    if (mode === "type" && editorRef.current) {
+      editorRef.current.focus();
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      if (savedSelection.current) {
+        sel.addRange(savedSelection.current);
+      } else {
+        const range = document.createRange();
+        range.selectNodeContents(editorRef.current);
+        range.collapse(false);
+        sel.addRange(range);
+      }
+    }
+  }, [mode]);
+
+  // --- setup canvas whenever we enter draw mode
+  useEffect(() => {
+    if (mode !== "draw") return;
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const parent = canvas.parentElement;
 
     canvas.width = parent.offsetWidth;
@@ -71,29 +136,19 @@ export default function Body({ toggle = () => {} }) {
 
       const dataURL = iconCanvas.toDataURL("image/png");
       setPencilCursor(`url(${dataURL}) 2 22, auto`);
+      canvas.style.cursor = `url(${dataURL}) 2 22, auto`;
     };
 
     img.src = url;
-  }, []);
+  }, [mode, fontSize]);
 
-  // --- update cursor based on mode
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    if (mode === "draw") {
-      canvas.style.cursor = pencilCursor;
-    }
-  }, [mode, pencilCursor]);
-
-  // --- update font size (for type editor + canvas text)
+  // --- update font size
   useEffect(() => {
     if (ctxRef.current) {
       ctxRef.current.font = `${fontSize}px Arial`;
     }
-    const editor = document.getElementById("editor");
-    if (editor) {
-      editor.style.fontSize = `${fontSize}px`;
+    if (editorRef.current) {
+      editorRef.current.style.fontSize = `${fontSize}px`;
     }
   }, [fontSize]);
 
@@ -117,46 +172,48 @@ export default function Body({ toggle = () => {} }) {
     setIsDrawing(false);
   };
 
-  // --- Reset function
+  // --- Reset
   const handleReset = () => {
     if (mode === "draw") {
       const canvas = canvasRef.current;
       const ctx = ctxRef.current;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     } else {
-      const editor = document.getElementById("editor");
-      if (editor) editor.innerHTML = "";
+      setTypedNotes("");
+      if (editorRef.current) editorRef.current.innerHTML = "";
     }
   };
+
   const getDrawingValue = () => {
     if (!canvasRef.current) return "";
-    return canvasRef.current.toDataURL("image/png"); // ito ang string ng image
+    return canvasRef.current.toDataURL("image/png");
   };
-  console.log("prescription", appointment?.consultation?.prescription);
-  // --- Save function
 
   const handleSave = () => {
-    var value = "";
-    if (mode === "draw") {
-      value = getDrawingValue();
-    } else {
-      value = document.getElementById("editor").innerHTML;
-    }
-    dispatch(
-      SetPATIENT({
-        ...appointment,
-        consultation: {
-          ...consultation,
-          prescription: {
-            ...consultation?.prescription,
-            mode,
-            notes: value,
-            fontSize,
-          },
-        },
-      })
-    );
-    toggle();
+    const value = mode === "draw" ? getDrawingValue() : typedNotes;
+
+    const payload = {
+      patient: appointment.patient._id,
+      appointment: appointment._id,
+      ...consultation,
+      prescription: {
+        ...consultation?.prescription,
+        mode,
+        notes: value,
+        fontSize,
+      },
+    };
+
+    dispatch(UPDATE({ data: payload, token })).then(({ payload }) => {
+      const _cluster = [...cluster];
+      const apptIndex = _cluster.findIndex((p) => p._id === appointment?._id);
+      _cluster[apptIndex] = { ...appointment, prescription: payload };
+
+      dispatch(SetCLUSTER(_cluster));
+      dispatch(SetPATIENT({ ...appointment, consultation: payload }));
+    });
+
+    togglePanel("prescription");
   };
 
   return (
@@ -174,17 +231,15 @@ export default function Body({ toggle = () => {} }) {
         icon="prescription"
         className="checkup-data-prescription-card-body-icon2"
       />
+
       {/* Toolbar */}
       <div
         className="checkup-data-prescription-card-body-toggle"
         style={{ marginBottom: "10px", display: "flex", gap: "10px" }}
       >
         <button onClick={handleReset}>🗑️ Reset</button>
-
-        <button onClick={() => setMode("draw")} style={{ filter: `brightness(${mode === "draw" ? "70%" : "100%"})` }}>✏️ Draw</button>
-        <button onClick={() => setMode("type")}  style={{ filter: `brightness(${mode === "type" ? "70%" : "100%"})` }}>⌨️ Type</button>
-
-        {/* Font size control */}
+        <button onClick={() => setMode("draw")}>✏️ Draw</button>
+        <button onClick={() => setMode("type")}>⌨️ Type</button>
 
         {mode === "type" && (
           <select
@@ -201,29 +256,40 @@ export default function Body({ toggle = () => {} }) {
         )}
       </div>
 
-      {/* Coupon bond style type mode */}
-      <div
-        className="checkup-data-prescription-card-body-type mt-5"
-        id="editor"
-        contentEditable={mode === "type"}
-        suppressContentEditableWarning={true}
-        style={{
-          fontSize: `${fontSize}px`,
-          display: mode === "type" ? "block" : "none",
-        }}
-      />
+      {/* Type mode */}
+      {mode === "type" && (
+        <div
+          id="editor"
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning={true}
+          style={{
+            position: "absolute",
+            top: "80px",
+            left: "60px",
+            fontSize: `${fontSize}px`,
+            border: "none",
+            outline: "none",
+            background: "transparent",
+            width: "400px",
+            minHeight: "100px",
+            cursor: "text",
+          }}
+          onInput={(e) => setTypedNotes(e.currentTarget.innerHTML)}
+        />
+      )}
 
       {/* Draw mode */}
-      <canvas
-        ref={canvasRef}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        style={{
-          display: mode === "draw" ? "block" : "none",
-        }}
-      />
+      {mode === "draw" && (
+        <canvas
+          ref={canvasRef}
+          onMouseDown={startDrawing}
+          onMouseMove={draw}
+          onMouseUp={stopDrawing}
+          onMouseLeave={stopDrawing}
+        />
+      )}
+
       <button
         className="checkup-data-note-save bg-success"
         onClick={handleSave}
