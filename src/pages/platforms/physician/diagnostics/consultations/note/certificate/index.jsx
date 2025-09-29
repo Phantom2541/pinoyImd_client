@@ -11,6 +11,7 @@ import {
   fullName,
   Banner,
 } from "../../../../../../../services/utilities";
+import QrCodeGenerator from "../../../../../../../components/qrCode";
 
 const certificateData = {
   diagnosis: "Pneumonia",
@@ -118,10 +119,20 @@ export default function MedicalCertificate({
           </div>
 
           {/* Doctor */}
-          <div className="checkup-data-clearance-card-body-doctor">
-            <span>{properFullname(auth.fullName)}</span>
-            <span>Physician/Examiner</span>
-            {/* <img alt="signature" src={signUrl || ""} /> */}
+          <div
+            className="d-flex justify-content-between align-items-end w-full  w-100 "
+            style={{ marginTop: "-7px" }}
+          >
+            <div className="checkup-data-clearance-card-body-doctor">
+              <span>{properFullname(auth.fullName)}</span>
+              <span>Physician/Examiner</span>
+            </div>
+            <div style={{ marginBottom: "-5px" }}>
+              <QrCodeGenerator
+                value="portal/clinic/68d8ba68b5d22e3b77e0f83d/68d8ba68b5d22e3b77e0f83d"
+                size={80}
+              />
+            </div>
           </div>
         </div>
       </div>

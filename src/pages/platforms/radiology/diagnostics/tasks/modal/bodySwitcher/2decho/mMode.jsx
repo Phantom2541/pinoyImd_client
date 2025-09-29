@@ -14,7 +14,6 @@ export default function MMode({ setActiveTab = () => {}, activeTab = "" }) {
 
   // pull array or default
   const mmodeValues = Array.isArray(task?.mmode) ? task.mmode : [];
-  console.log("task mmode", task);
 
   // refs for inputs
   const inputRefs = useRef([]);
