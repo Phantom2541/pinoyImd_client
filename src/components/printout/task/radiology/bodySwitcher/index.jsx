@@ -14,7 +14,6 @@ const componentMap = {
 
 export default function BodySwitcher({ task }) {
   const Component = componentMap[task?.form?.toLowerCase()] || Blank;
-  console.log("task", task);
   return (
     <div>
       <Component task={task} />
