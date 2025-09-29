@@ -32,13 +32,8 @@ export default function RequestForm({ active, buttonRefs, togglePanel }) {
               <div className="laboratoryRequestForm-grid d-flex justify-content-center align-items-center">
                 <table className="laboratoryRequestForm-printout-table">
                   <Header />
-                  <Body />
+                  <Body togglePanel={togglePanel} />
                 </table>
-              </div>
-              <div style={{ textAlign: "center", marginTop: "20px" }}>
-                {/* <button onClick={handleSave}>
-                  Save xxxxxxxxxxxxxxxxxxxxxx
-                </button> */}
               </div>
             </div>
           </MDBCardBody>

@@ -647,19 +647,26 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action;
+        const updated = action.payload; // backend returns the updated appointment
         const index = state.collections.findIndex(
-          (item) => item._id === payload._id
+          (item) => item._id === updated._id
         );
-        state.collections[index] = payload;
+
+        if (index !== -1) {
+          state.collections[index] = updated;
+        } else {
+          state.collections.unshift(updated);
+        }
+
         state.filtered = state.collections.filter(
           ({ sched }) => sched === state.activeSched
         );
         state.showModal = false;
         state.formSubmitted = false;
-        state.message = success;
+        state.message = "Appointment updated successfully!";
         state.isSuccess = true;
       })
+
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;

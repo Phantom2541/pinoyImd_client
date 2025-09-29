@@ -1,45 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditableService from "../../../../../../../components/customizable/searchServices";
 import sectionsConfig from "./data.json";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPATIENT } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
-const RequestForm = () => {
+import {
+  SetCLUSTER,
+  SetPATIENT,
+} from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { UPDATE } from "../../../../../../../services/redux/slices/diagnostics/clinic/consultations";
+import { useToasts } from "react-toast-notifications";
+const RequestForm = ({ togglePanel }) => {
   const { patient: appointment } = useSelector(
     ({ appointments }) => appointments
   );
-  const [other, setOther] = useState(""); // hiwalay na input para sa "Other"'
+  const { token } = useSelector(({ auth }) => auth);
+  const { cluster } = useSelector(({ appointments }) => appointments);
+  const { isSuccess } = useSelector(({ consultations }) => consultations);
   const dispatch = useDispatch();
+  const { addToast } = useToasts();
+  const [other, setOther] = useState([]); // hiwalay na input para sa "Other"'
+  const [localServices, setLocalServices] = useState([]);
+  const mergedServices = [...localServices, ...other];
 
   const { consultation = {} } = appointment;
   const { request = {} } = consultation || {};
   const { services = [] } = request;
+
+  // Extract all IDs from sectionsConfig (flattening arrays like [14,15,16])
+  const sectionIds = sectionsConfig.flatMap((section) =>
+    section.items.flatMap((item) =>
+      Array.isArray(item.id) ? item.id : [item.id]
+    )
+  );
+
+  // Get the numbers in `services` that are NOT in `sectionIds`
+  const uniqueServices = services.filter((id) => !sectionIds.includes(id));
+
+  useEffect(() => {
+    setLocalServices(services);
+  }, [services]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      addToast("Request Saved successfully", { appearance: "success" });
+    }
+  }, [isSuccess, addToast]);
+
   const toggleItem = (item) => {
-    var _services = [...(services || [])];
-
-    // siguraduhin array ang ids
+    let _services = [...localServices];
     const ids = Array.isArray(item.id) ? item.id : [item.id];
-
-    // check kung kompleto nang naka-select lahat ng ids
     const hasAll = ids.every((id) => _services.includes(id));
 
     if (hasAll) {
-      // alisin lahat ng ids na nasa group
       _services = _services.filter((x) => !ids.includes(x));
     } else {
-      // idagdag yung wala pa (prevent duplicates)
-      const toAdd = ids.filter((id) => !_services.includes(id));
-      _services = [..._services, ...toAdd];
+      _services = [
+        ..._services,
+        ...ids.filter((id) => !_services.includes(id)),
+      ];
     }
 
-    dispatch(
-      SetPATIENT({
-        ...appointment,
-        consultation: {
-          ...consultation,
-          request: { ...request, services: _services },
-        },
-      })
-    );
+    setLocalServices(_services);
+  };
+
+  const handleSave = () => {
+    const payload = {
+      patient: appointment.patient._id,
+      appointment: appointment._id,
+      ...consultation,
+      request: { ...request, services: mergedServices },
+    };
+
+    dispatch(UPDATE({ data: payload, token })).then(({ payload }) => {
+      const _cluster = [...cluster];
+      const apptIndex = _cluster.findIndex((p) => p._id === appointment?._id);
+      _cluster[apptIndex] = { ...appointment, consultation: payload };
+
+      dispatch(SetCLUSTER(_cluster));
+      dispatch(SetPATIENT({ ...appointment, consultation: payload }));
+    });
+    togglePanel("request");
   };
 
   return (
@@ -52,7 +91,7 @@ const RequestForm = () => {
                 <Section
                   key={sec.title}
                   {...sec}
-                  selections={services}
+                  selections={mergedServices}
                   toggleItem={toggleItem}
                 />
               ))}
@@ -63,11 +102,18 @@ const RequestForm = () => {
                 <Section
                   key={sec.title}
                   {...sec}
-                  selections={services}
+                  selections={mergedServices}
                   toggleItem={toggleItem}
                 />
               ))}
             </div>
+            <button
+              className="checkup-data-note-save bg-success"
+              style={{ marginBottom: "30px" }}
+              onClick={handleSave}
+            >
+              Save
+            </button>
           </div>
           {/* Other (separate searchable input) */}
           <div style={{ marginTop: "16px" }}>
@@ -80,7 +126,11 @@ const RequestForm = () => {
             >
               Other
             </div>
-            <EditableService onSelect={setOther} displayName="name" />
+            <EditableService
+              onSelect={setOther}
+              servicesId={uniqueServices}
+              displayName="name"
+            />
           </div>
         </td>
       </tr>

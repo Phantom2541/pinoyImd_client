@@ -3,7 +3,6 @@ import {
   billingAddress,
   Cloudinary,
   fullName,
-  properFullname,
 } from "../../../../../../../services/utilities";
 
 const Header = () => {
@@ -49,7 +48,13 @@ const Header = () => {
           <tr>
             <td colSpan={3} style={cellStyle}>
               <span style={{ fontSize: ".8rem" }}>Name:&nbsp;</span>
-              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: ".8rem",
+                  textTransform: "capitalize",
+                }}
+              >
                 {fullName(name).toLowerCase() || ""}
               </span>
             </td>
@@ -58,21 +63,39 @@ const Header = () => {
           <tr style={{ height: "30px" }}>
             <td style={cellStyle}>
               <span style={{ fontSize: ".8rem" }}>Date of Birth:&nbsp;</span>
-              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: ".8rem",
+                  textTransform: "capitalize",
+                }}
+              >
                 {dob ? new Date(dob).toLocaleDateString("en-US") : ""}
               </span>
             </td>
 
             <td style={cellStyle}>
               <span style={{ fontSize: ".8rem" }}>Sex:&nbsp;</span>
-              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: ".8rem",
+                  textTransform: "capitalize",
+                }}
+              >
                 {isMale === true ? "Male" : isMale === false ? "Female" : ""}
               </span>
             </td>
 
             <td style={cellStyle}>
               <span style={{ fontSize: ".8rem" }}>CP#:&nbsp;</span>
-              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: ".8rem",
+                  textTransform: "capitalize",
+                }}
+              >
                 {mobile || ""}
               </span>
             </td>
@@ -84,7 +107,7 @@ const Header = () => {
               <span
                 style={{
                   fontWeight: "bold",
-                  fontSize: ".9rem",
+                  fontSize: ".7rem",
                   textTransform: "capitalize",
                 }}
               >
@@ -93,9 +116,14 @@ const Header = () => {
             </td>
             <td style={cellStyle}>
               <span style={{ fontSize: ".8rem" }}>Physician:&nbsp;</span>
-              <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
-                {auth?.fullName?.title || ""}
-                {properFullname(auth?.fullName)}
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontSize: ".8rem",
+                  textTransform: "capitalize",
+                }}
+              >
+                {auth?.fullName?.title || ""} {auth?.fullName?.lname}
               </span>
             </td>
           </tr>

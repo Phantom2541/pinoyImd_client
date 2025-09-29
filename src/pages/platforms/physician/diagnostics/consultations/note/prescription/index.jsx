@@ -22,7 +22,7 @@ export default function Prescription({ active, buttonRefs, togglePanel }) {
       <div className="checkup-data-prescription-card">
         <Header />
         <Patient />
-        <Body toggle={() => togglePanel("prescription")} />
+        <Body togglePanel={togglePanel} />
         <Footer />
       </div>
     </div>
