@@ -9,6 +9,7 @@ import {
   Cloudinary,
   getAge,
   fullName,
+  Banner,
 } from "../../../../../../../services/utilities";
 
 const certificateData = {
@@ -33,12 +34,9 @@ export default function MedicalCertificate({
     { fullName: name, isMale, dob, address } = appointment?.patient || {};
   const { consultation = {} } = appointment;
   const { prescription } = consultation || {};
-  const logoURL =
-    `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-      activePlatform.branch.companyId.name
-    )}/logo` || "";
-  const signUrl =
-    `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
+
+  // const signUrl =
+  //   `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
 
   const companyname = activePlatform.branch.companyId.name || "";
   const branchaddress = activePlatform.branch.address || "";
@@ -53,12 +51,17 @@ export default function MedicalCertificate({
       />
       <div className="checkup-data-clearance-card">
         {/* Header */}
-        <div className="checkup-data-clearance-card-header">
-          <img src={logoURL} alt="" />
-          <span>{companyname}</span>
+        {/* <div className="checkup-data-clearance-card-header"> */}
+        <Banner
+          company={activePlatform.branch.companyId.name}
+          branch={activePlatform.branch.name}
+        />
+
+        {/* <img src={logoURL} alt="" /> */}
+        {/* <span>{companyname}</span>
           <span>{billingAddress(branchaddress)}</span>
           <span>Contact: {contacts(branchcontact)}</span>
-        </div>
+        </div> */}
 
         {/* Title */}
         <h1 className="checkup-data-clearance-card-title">
@@ -118,7 +121,7 @@ export default function MedicalCertificate({
           <div className="checkup-data-clearance-card-body-doctor">
             <span>{properFullname(auth.fullName)}</span>
             <span>Physician/Examiner</span>
-            <img alt="signature" src={signUrl || ""} />
+            {/* <img alt="signature" src={signUrl || ""} /> */}
           </div>
         </div>
       </div>

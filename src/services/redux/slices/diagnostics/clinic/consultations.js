@@ -30,6 +30,31 @@ export const GET_PATIENT = createAsyncThunk(
     }
   }
 );
+export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
+  try {
+    return axioKit.save(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const reduxSlice = createSlice({
   name: url,
@@ -57,6 +82,58 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(SAVE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
+
+        state.showModal = false;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+        state.isSuccess = false;
+      })
+      .addCase(UPDATE.pending, (state) => {
+        state.isSuccess = false;
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(UPDATE.fulfilled, (state, action) => {
+        // const updated = action.payload; // backend returns the updated appointment
+        // const index = state.collections.findIndex(
+        //   (item) => item._id === updated._id
+        // );
+
+        // if (index !== -1) {
+        //   state.collections[index] = updated;
+        // } else {
+        //   state.collections.unshift(updated);
+        // }
+
+        // state.filtered = state.collections.filter(
+        //   ({ sched }) => sched === state.activeSched
+        // );
+        state.showModal = false;
+        state.formSubmitted = false;
+        state.message = "Appointment updated successfully!";
+        state.isSuccess = true;
+      })
+
+      .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isSuccess = false;
+        state.formSubmitted = false;
       });
   },
 });

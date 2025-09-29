@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { debounce } from "lodash";
 import Services from "../../../services/fakeDb/finance/catalog/services";
 import { MDBIcon } from "mdbreact";
@@ -8,12 +8,20 @@ const EditableServices = ({
   onSelect = () => {},
   emptyLabel = "Click here to select a service",
   displayName = "abbreviation",
+  servicesId = [],
 }) => {
   const [searchKey, setSearchKey] = useState("");
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
+  useEffect(() => {
+    if (servicesId.length) {
+      setSelected(
+        Services.collections.filter((s) => servicesId.includes(s.id))
+      );
+    }
+  }, [servicesId]);
   const debouncedSearch = useMemo(
     () =>
       debounce((key) => {

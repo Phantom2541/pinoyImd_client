@@ -23,6 +23,7 @@ export default function Body({ toggle = () => {} }) {
   const [pencilCursor, setPencilCursor] = useState("auto");
   const [fontSize, setFontSize] = useState(16); // default font size
   const dispatch = useDispatch();
+  console.log("nick", consultation);
 
   // --- setup canvas for draw mode
   useEffect(() => {
@@ -131,6 +132,8 @@ export default function Body({ toggle = () => {} }) {
     if (!canvasRef.current) return "";
     return canvasRef.current.toDataURL("image/png"); // ito ang string ng image
   };
+  console.log("prescription", appointment?.consultation?.prescription);
+  // --- Save function
 
   const handleSave = () => {
     var value = "";
