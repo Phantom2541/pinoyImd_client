@@ -5,11 +5,11 @@ const url = "diagnostics/ehr";
 
 const initialState = {
   patient: {},
+  selected: {},
+  showMedication: false,
   branch: {},
   isSuccess: false,
-  // main loading
   isLoading: false,
-  // form loading
   message: "",
 };
 
@@ -35,6 +35,16 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+    },
+    SetMEDICATION: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    TOGGLE_MEDICATION: (state) => {
+      state.showMedication = !state.showMedication;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.isLoading = false;
@@ -61,6 +71,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, TOGGLE_MEDICATION, SetSELECTED, SetMEDICATION } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

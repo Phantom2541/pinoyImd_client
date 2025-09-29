@@ -15,13 +15,13 @@ const EditableServices = ({
   const [selected, setSelected] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    if (servicesId.length) {
-      setSelected(
-        Services.collections.filter((s) => servicesId.includes(s.id))
-      );
-    }
-  }, [servicesId]);
+  // useEffect(() => {
+  //   if (servicesId.length) {
+  //     setSelected(
+  //       Services.collections.filter((s) => servicesId.includes(s.id))
+  //     );
+  //   }
+  // }, [servicesId]);
   const debouncedSearch = useMemo(
     () =>
       debounce((key) => {

@@ -34,9 +34,9 @@ const RequestForm = ({ togglePanel }) => {
   // Get the numbers in `services` that are NOT in `sectionIds`
   const uniqueServices = services.filter((id) => !sectionIds.includes(id));
 
-  useEffect(() => {
-    setLocalServices(services);
-  }, [services]);
+  // useEffect(() => {
+  //   setLocalServices(services);
+  // }, [services]);
 
   useEffect(() => {
     if (isSuccess) {

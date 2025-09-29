@@ -19,7 +19,7 @@ export default function HumanBody({ setSlide, slide }) {
   const bodyRef = useRef(null);
 
   const ehr = ["FMHx", "PMHx", "PSHx", "SHx", "OB Gyne Hx"];
-  const ancillary = ["Laboratory", "Radiology", "Vital"];
+  const ancillary = ["Laboratory", "Radiology", "Vital", "Medications"];
 
   // <- dito ilagay ang iba't ibang laman para sa bawat button
   const contentMap = {
@@ -40,6 +40,7 @@ export default function HumanBody({ setSlide, slide }) {
     { name: "kidney", style: { top: "70%", left: "42%" } },
     { name: "largeIntestine", style: { top: "75%", left: "42%" } },
     { name: "rightLung", style: { top: "30%", left: "54%" } },
+    { name: "rightLiver", style: { top: "60%", left: "54%" } },
     { name: "stomach", style: { top: "50%", left: "54%" } },
     { name: "smallIntestine", style: { top: "67%", left: "54%" } },
   ];
@@ -60,7 +61,8 @@ export default function HumanBody({ setSlide, slide }) {
       ["OB Gyne Hx", "largeIntestine"],
       ["Laboratory", "rightLung"],
       ["Radiology", "stomach"],
-      ["Vital", "smallIntestine"],
+      ["Vital", "rightLiver"],
+      ["Medications", "smallIntestine"],
     ];
 
     return pairs.flatMap(([text, organ]) => {

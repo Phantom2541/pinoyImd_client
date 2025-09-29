@@ -21,6 +21,7 @@ import {
   SetCLUSTER,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import CaseModal from "./medicalHistory/pshx/modal";
+import MedicationsModal from "./clinicalData/medications/modal";
 
 export default function Consultations() {
   const { token } = useSelector(({ auth }) => auth);
@@ -136,6 +137,7 @@ export default function Consultations() {
       </div>
 
       <CaseModal />
+      <MedicationsModal />
     </>
   );
 }

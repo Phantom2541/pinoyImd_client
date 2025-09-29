@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Diagnostics from "./diagnostics";
 import Vital from "./vital";
 import { useSelector } from "react-redux";
+import Medications from "./medications";
 
 const Blank = ({ task }) => <div>{task} is not working</div>;
 
@@ -9,9 +10,10 @@ const toolsMap = {
   laboratory: Diagnostics,
   radiology: Diagnostics,
   vital: Vital,
+  medications: Medications,
 };
 
-const order = ["laboratory", "radiology", "vital"];
+const order = ["laboratory", "radiology", "vital", "medications"];
 
 export default function ToolsSwitcher({ task }) {
   const { patient: appointment } = useSelector(

@@ -15,7 +15,7 @@ export default function Body() {
     if (["FMHx", "PMHx", "PSHx", "SHx", "OB Gyne Hx"].includes(slide)) {
       return "0"; // medicalHistory → right panel
     }
-    if (["Laboratory", "Radiology", "Vital"].includes(slide)) {
+    if (["Laboratory", "Radiology", "Vital", "Medications"].includes(slide)) {
       return "-50%"; // ancillary → left panel
     }
     return "-33.3333%"; // fallback center
