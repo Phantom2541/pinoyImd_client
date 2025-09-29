@@ -1,19 +1,12 @@
-export default function ECG({ fontSize = "16px", task }) {
+import { MDBTable } from "mdbreact";
+import MMMode from "./mmMode";
+import Volumes from "./volumes";
+import Parameters from "./parameters";
+import Diastolic from "./diastolic";
+
+export default function TwoDEcho({ fontSize = "16px", task }) {
   if (!task) return <div>No task data provided</div>;
-
-  const { findings = "", services } = task;
-
-  const formatText = (text) => {
-    return text
-      .replace(/\\n/g, "\n") // handles escaped newlines if needed
-      .split("\n")
-      .map((line, index) => (
-        <p key={index} style={{ margin: "0 0 5px 0", textIndent: "20px" }}>
-          {line.trim()}
-        </p>
-      ));
-  };
-
+  console.log("task in 2decho", task);
   return (
     <div
       style={{
@@ -26,18 +19,21 @@ export default function ECG({ fontSize = "16px", task }) {
         // justifyContent: "space-between",
       }}
     >
-      <div
-        style={{ display: "flex", alignItems: "flex-start", marginTop: "20px" }}
-      >
-        <span style={{ color: "red", fontWeight: "bold", marginRight: "8px" }}>
-          •
-        </span>
-        <span style={{ fontWeight: "bold", color: "red" }}>
-          {services.name.toUpperCase()}
-        </span>
-      </div>
-
-      <div style={{ marginTop: "10px" }}>{formatText(findings)}</div>
+      <MDBTable small>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th className="text-center">Result</th>
+            <th className="text-center">Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <MMMode task={task} />
+          <Volumes task={task} />
+          <Parameters task={task} />
+          <Diastolic task={task} />
+        </tbody>
+      </MDBTable>
     </div>
   );
 }
