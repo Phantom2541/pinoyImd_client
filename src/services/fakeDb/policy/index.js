@@ -3,6 +3,7 @@ import collections from "./collections.json";
 const Policy = {
   collections,
   getDepartment: (pk) => {
+    //get department using designation
     if (pk < 0) {
       console.warn("Unknown Department");
       return "";

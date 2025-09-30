@@ -351,7 +351,7 @@ export const reduxSlice = createSlice({
     SetPAYROLL: (state, { payload }) => {
       const updateCollections = (collections) => {
         const index = collections?.findIndex(
-          ({ user }) => user?._id === payload?.particular
+          ({ user }) => user?._id === payload?.particular?._id
         );
         collections[index]?.payroll.push(payload);
       };

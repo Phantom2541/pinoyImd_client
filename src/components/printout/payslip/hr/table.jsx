@@ -52,7 +52,7 @@ export default function Table() {
               {currency.format(rate.monthly)}
             </td>
             <td className="py-0   px-1 ">Cash Advance</td>
-            <td className="py-0   px-1  ">
+            <td className="py-0   px-1  text-right ">
               {" "}
               {currency.format(deduction?.ca)}{" "}
             </td>
