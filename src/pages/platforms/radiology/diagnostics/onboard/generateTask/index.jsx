@@ -51,9 +51,15 @@ export default function Modal() {
       )
         ? activePlatform.department
         : "clinic"; // default fallback just in case
+
+      console.log("template", template);
       const url = isStaticPath
         ? template
-        : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
+        : `/diagnostics/${_department.toLowerCase()}/result/${
+            template === "2 dimensional echo"
+              ? "2DEcho"
+              : template.replace(/\s+/g, "")
+          }`;
       axioKit.save(url, data, token);
     } catch (error) {
       console.error("Error saving request:", error);
@@ -89,6 +95,8 @@ export default function Modal() {
         ),
       ],
     };
+
+    console.log("forms", _forms);
 
     for (const key in _forms) {
       const lowercaseKey = key.toLowerCase();
