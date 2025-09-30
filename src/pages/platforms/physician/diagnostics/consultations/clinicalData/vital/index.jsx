@@ -42,20 +42,12 @@ export default function VitalSign() {
     ({ appointments }) => appointments
   );
   const { token } = useSelector(({ auth }) => auth);
-  const { isSuccess } = useSelector(({ consultations }) => consultations);
   const dispatch = useDispatch();
-  const { addToast } = useToasts();
 
   const vitalSigns = appointment?.consultation?.vitals || {};
 
-  useEffect(() => {
-    if (isSuccess) {
-      addToast("Vital signs successfully updated.", { appearance: "success" });
-    }
-  }, [isSuccess, addToast]);
-
   const handleAdd = async () => {
-    const vitals = await handleAddVitals(vitalsConfig);
+    const vitals = await handleAddVitals(vitalsConfig, vitalSigns);
 
     if (vitals) {
       const payload = {
@@ -107,7 +99,9 @@ export default function VitalSign() {
   return (
     <div className="vital-sign-container">
       <div className="vital-signs-wrapper">
-        <h2>Vital Signs</h2>
+        <h2 onClick={handleAdd} style={{ cursor: "pointer" }}>
+          Vital Signs
+        </h2>
         <table className="vital-signs-table">
           <tbody>
             {Object.entries(otherVitals).map(([key, value]) => {

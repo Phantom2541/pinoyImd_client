@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export async function handleAddVitals(vitalsConfig) {
+export async function handleAddVitals(vitalsConfig, currentVitals = {}) {
   const { value: formValues } = await Swal.fire({
     title: "Add Vital Signs",
     width: "450px",
@@ -9,13 +9,15 @@ export async function handleAddVitals(vitalsConfig) {
         ${Object.entries(vitalsConfig)
           .map(
             ([key, { label, unit, hint }]) => `
+            
               <label class="smSweetOB-label">
                 ${label} (${unit})
                 <input 
                   id="swal-${key}" 
-                  type="text" 
+                  type="${key === "bp" ? "text" : "number"}" 
                   class="smSweetOB-input"
                   placeholder="${hint || ""}"
+                  value="${currentVitals[key] ?? ""}" 
                 />
               </label>
             `
@@ -28,6 +30,7 @@ export async function handleAddVitals(vitalsConfig) {
             type="number" 
             class="smSweetOB-input"
             placeholder="1 ft = 30.48 cm"
+            value="${currentVitals.height ?? ""}" 
           />
         </label>
         <label class="smSweetOB-label">
@@ -37,6 +40,7 @@ export async function handleAddVitals(vitalsConfig) {
             type="number" 
             class="smSweetOB-input"
             placeholder="1 kg ≈ 2.205 lbs"
+            value="${currentVitals.weight ?? ""}" 
           />
         </label>
       </div>
@@ -82,6 +86,7 @@ export async function handleAddVitals(vitalsConfig) {
 
   return formValues;
 }
+
 // bmi.js
 export function computeBMI({ height, weight }) {
   if (!height || !weight) return null;
