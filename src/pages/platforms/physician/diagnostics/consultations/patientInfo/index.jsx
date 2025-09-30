@@ -41,7 +41,7 @@ export default function Patient({ activePanels }) {
   const history = useHistory();
   const { consultation = {}, patient = {} } = appointment || {};
   const { vitals } = consultation || {};
-  const { height, weight } = vitals || {};
+  const { height = {}, weight = {} } = vitals || {};
   // const [feet, inches] = String(vitals?.height)?.split("'").map(Number);
   // const meters = (feet * 12 + (inches || 0)) * 0.0254;
   // const rawBmi = vitals.weight / meters ** 2;
@@ -176,11 +176,11 @@ export default function Patient({ activePanels }) {
       >
         <div>
           <span>Height</span>
-          <span>{(parseFloat(vitals.height) / 100).toFixed(2)} m</span>
+          <span>{(parseFloat(vitals?.height) / 100).toFixed(2)} m</span>
         </div>
         <div>
           <span>Weight</span>
-          <span>{vitals.weight} kg</span>
+          <span>{vitals?.weight} kg</span>
         </div>
         <div>
           <span>BMI</span>
