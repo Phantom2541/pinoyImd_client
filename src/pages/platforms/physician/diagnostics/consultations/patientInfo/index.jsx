@@ -24,6 +24,7 @@ import { useState } from "react";
 import Register from "./register";
 import { VisityType } from "../../../../../../services/fakeDb";
 import diagnostic from "../../../../../../services/fakeDb/sidebars/diagnostics/diagnostic";
+import { computeBMI } from "../clinicalData/vital/sweetVs";
 
 export default function Patient({ activePanels }) {
   const { token, auth } = useSelector(({ auth }) => auth),
@@ -39,11 +40,13 @@ export default function Patient({ activePanels }) {
   const location = useLocation();
   const history = useHistory();
   const { consultation = {}, patient = {} } = appointment || {};
-  const { vitals = { height: 0, weight: 0 } } = consultation || {};
-  const [feet, inches] = String(vitals?.height)?.split("'").map(Number);
-  const meters = (feet * 12 + (inches || 0)) * 0.0254;
-  const rawBmi = vitals.weight / meters ** 2;
-  const bmi = Number.isFinite(rawBmi) ? rawBmi.toFixed(2) : 0;
+  const { vitals } = consultation || {};
+  const { height = {}, weight = {} } = vitals || {};
+  // const [feet, inches] = String(vitals?.height)?.split("'").map(Number);
+  // const meters = (feet * 12 + (inches || 0)) * 0.0254;
+  // const rawBmi = vitals.weight / meters ** 2;
+  // const bmi = Number.isFinite(rawBmi) ? rawBmi.toFixed(2) : 0;
+  const bmi = computeBMI({ height, weight });
 
   const setPatient = (patient) => {
     Swal.fire({
@@ -173,13 +176,11 @@ export default function Patient({ activePanels }) {
       >
         <div>
           <span>Height</span>
-          <span>
-            {feet}'{inches}"
-          </span>
+          <span>{(parseFloat(vitals?.height) / 100).toFixed(2)} m</span>
         </div>
         <div>
           <span>Weight</span>
-          <span>{vitals.weight} kg</span>
+          <span>{vitals?.weight} kg</span>
         </div>
         <div>
           <span>BMI</span>

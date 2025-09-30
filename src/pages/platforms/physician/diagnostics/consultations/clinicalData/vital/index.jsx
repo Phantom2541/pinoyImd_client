@@ -1,28 +1,73 @@
 import "./../style.css";
+import { UPDATE } from "../../../../../../../services/redux/slices/diagnostics/clinic/consultations";
+import {
+  SetCLUSTER,
+  SetPATIENT,
+} from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
+import { useDispatch, useSelector } from "react-redux";
+import { useToasts } from "react-toast-notifications";
+import { useEffect } from "react";
+import { MDBBtn, MDBIcon } from "mdbreact";
+import { handleAddVitals, computeBMI, classifyBMI, bmiColor } from "./sweetVs";
 
 const vitalsConfig = {
   temp: {
     label: "Temperature",
     unit: "°C",
+    hint: "Normal: 36.5 – 37.5 ",
   },
   bp: {
     label: "Blood Pressure",
     unit: "mmHg",
+    hint: "Normal: ~120/80",
   },
   rr: {
     label: "Respiratory Rate",
-    unit: "breaths/min",
+    unit: "brpm",
+    hint: "Normal: 12 – 20",
   },
   pr: {
     label: "Pulse Rate",
     unit: "bpm",
+    hint: "Normal: 60 – 100",
   },
   hr: {
     label: "Heart Rate",
     unit: "bpm",
+    hint: "Normal: 60 – 100",
   },
 };
-export default function VitalSign({ vitalSigns }) {
+export default function VitalSign() {
+  const { patient: appointment, cluster } = useSelector(
+    ({ appointments }) => appointments
+  );
+  const { token } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
+
+  const vitalSigns = appointment?.consultation?.vitals || {};
+
+  const handleAdd = async () => {
+    const vitals = await handleAddVitals(vitalsConfig, vitalSigns);
+
+    if (vitals) {
+      const payload = {
+        patient: appointment.patient._id,
+        appointment: appointment._id,
+        ...appointment.consultation,
+        vitals,
+      };
+
+      dispatch(UPDATE({ data: payload, token })).then(({ payload }) => {
+        const _cluster = [...cluster];
+        const apptIndex = _cluster.findIndex((p) => p._id === appointment?._id);
+        _cluster[apptIndex] = { ...appointment, consultation: payload };
+
+        dispatch(SetCLUSTER(_cluster));
+        dispatch(SetPATIENT({ ...appointment, consultation: payload }));
+      });
+    }
+  };
+
   if (!vitalSigns || Object.keys(vitalSigns).length === 0) {
     return (
       <div className="checkup-data-pmh-container d-flex flex-column justify-content-center align-items-center text-center h-100">
@@ -38,19 +83,25 @@ export default function VitalSign({ vitalSigns }) {
         </div>
 
         <h3 className="mt-3">Please add vital signs.</h3>
+        <MDBBtn rounded color="primary" size="sm" onClick={handleAdd}>
+          <MDBIcon icon="plus" /> Add
+        </MDBBtn>
       </div>
     );
   }
 
   const { weight, height, ...otherVitals } = vitalSigns;
+  console.log("Vital signs: ", vitalSigns);
 
-  // Compute BMI: weight(kg) / (height(m)^2)
-  const bmi = weight && height ? (weight / (height * height)).toFixed(2) : null;
-
+  const bmi = computeBMI({ height, weight });
+  const bmiClass = classifyBMI(bmi);
+  const bmiStyle = bmiColor(bmi);
   return (
     <div className="vital-sign-container">
       <div className="vital-signs-wrapper">
-        <h2>Vital Signs</h2>
+        <h2 onClick={handleAdd} style={{ cursor: "pointer" }}>
+          Vital Signs
+        </h2>
         <table className="vital-signs-table">
           <tbody>
             {Object.entries(otherVitals).map(([key, value]) => {
@@ -65,16 +116,8 @@ export default function VitalSign({ vitalSigns }) {
             {bmi && (
               <tr>
                 <td className="vital-label">BMI</td>
-                <td
-                  className={`vital-value ${
-                    bmi < 18.5
-                      ? "vital-bmi-warning"
-                      : bmi >= 25
-                      ? "vital-bmi-danger"
-                      : "vital-bmi-normal"
-                  }`}
-                >
-                  {bmi}
+                <td className={`vital-value ${bmiStyle}`}>
+                  {bmi} ({bmiClass})
                 </td>
               </tr>
             )}
