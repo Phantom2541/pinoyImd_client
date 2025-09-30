@@ -16,7 +16,6 @@ export default function Cluster({ task, fontSize }) {
   const services = Object.keys(results)
     .filter((key) => test.includes(Number(key)))
     .map((key) => Services.find(key));
-  console.log("services", services);
 
   return (
     <div className="pl-5 mb-5" style={{ fontSize: `${fontSize}rem` }}>
