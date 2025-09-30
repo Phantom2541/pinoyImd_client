@@ -1,16 +1,26 @@
 import { useSelector } from "react-redux";
 import LOGO from "./../../../../../../../assets/iMD.png";
-import { capitalize } from "../../../../../../../services/utilities";
+import {
+  capitalize,
+  Cloudinary,
+  contacts,
+} from "../../../../../../../services/utilities";
 
 export default function Header() {
-  const { auth } = useSelector(({ auth }) => auth);
-  const { fullName = {} } = auth;
+  const { auth, activePlatform } = useSelector(({ auth }) => auth);
+  const { fullName = {}, mobile, email } = auth;
   const { fname, lname, postnominal = "" } = fullName;
+
+  const logoURL =
+    `${Cloudinary.getEndpoint()}/companies/${
+      activePlatform.branch.companyId.name
+    }/logo` || "";
+
   return (
     <div className="checkup-data-prescription-card-header">
       <img
         alt="logo"
-        src={LOGO}
+        src={logoURL || LOGO}
         className="checkup-data-prescription-card-logo"
       />
       <div className="checkup-data-prescription-card-info">
@@ -21,8 +31,8 @@ export default function Header() {
           <small>{postnominal}</small>
         </div>
         <div className="checkup-data-prescription-card-contact">
-          <span>+63 927 342 2159</span>
-          <span>sample@gmail.com</span>
+          <span>{contacts(mobile)}</span>
+          <span>{email}</span>
           <span>www.PinoyiMD.com</span>
         </div>
       </div>
