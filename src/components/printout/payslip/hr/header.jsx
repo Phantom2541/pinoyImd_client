@@ -37,6 +37,7 @@ const Header = ({ payslip, branch }) => {
   const { user = {}, contract = {} } = payslip || {};
 
   const designation = Policy.getPosition(Number(contract.designation));
+  const department = Policy.getDepartment(Number(contract.designation));
   return (
     <thead>
       <tr>
@@ -81,14 +82,21 @@ const Header = ({ payslip, branch }) => {
       </tr>
       <tr>
         <th colSpan={2} className="py-2 p-1">
-          <div className="d-flex justify-content-between payslip-name-printout">
-            Name: <u className="font-weight-bold">{fullName(user?.fullName)}</u>
+          <div className="d-flex  payslip-name-printout">
+            Name:{" "}
+            <u className="font-weight-bold ml-1">{fullName(user?.fullName)}</u>
           </div>
         </th>
         <th colSpan={2} className="p-1" style={{ width: "2rem" }}>
-          <div className="d-flex justify-content-between payslip-designation-printout">
+          <div className="d-flex  payslip-designation-printout">
+            Department:
+            <u className="font-weight-bold ml-1">{department?.toUpperCase()}</u>
+          </div>
+          <div className="d-flex  payslip-designation-printout">
             Designation:
-            <u className="font-weight-bold">{designation?.toUpperCase()}</u>
+            <u className="font-weight-bold ml-1">
+              {designation?.toUpperCase()}
+            </u>
           </div>
         </th>
       </tr>

@@ -236,7 +236,7 @@ const Body = () => {
                 <tr key={`payroll-${index + 1}`}>
                   <td>{index + 1}.</td>
                   <td>
-                    <p className="fw-bold mb-1 text-capitalize">
+                    <p className="fw-bold mb-0 text-capitalize">
                       {capitalize(fullName(user.fullName))}
                     </p>
                     <p className="text-muted mb-0">
