@@ -27,13 +27,17 @@ export default function Profile() {
   const handleLogout = () => {
     const { branch = {} } = activePlatform || {};
     const { companyId: company = "" } = branch || {};
-    var companyId = company?._id;
+    var companyId = company?._id || "";
     const fakeDB = localStorage.getItem("companyId");
     if (fakeDB && !company?._id) {
       companyId = fakeDB.replace(/"/g, "");
     }
     localStorage.clear();
-    history.push(`/subscribers/${companyId}`);
+    if (companyId !== "null" && companyId !== null) {
+      history.push(`/subscribers/${companyId}`);
+    } else {
+      history.push(`/`);
+    }
     clearSiteData();
   };
   const isEmployed = employment.isEmployed(activePlatform?.branch?.status);
