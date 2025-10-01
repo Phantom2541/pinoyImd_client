@@ -216,6 +216,27 @@ export default function Body({ togglePanel }) {
     togglePanel("prescription");
   };
 
+  const MAX_HEIGHT = 250;
+
+  const handleInput = (e) => {
+    const el = e.currentTarget;
+
+    if (el.scrollHeight > MAX_HEIGHT) {
+      // revert to last safe content
+      el.innerHTML = typedNotes;
+
+      // restore caret
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } else {
+      setTypedNotes(el.innerHTML);
+    }
+  };
+
   return (
     <div
       className="checkup-data-prescription-card-body"
@@ -238,8 +259,23 @@ export default function Body({ togglePanel }) {
         style={{ marginBottom: "10px", display: "flex", gap: "10px" }}
       >
         <button onClick={handleReset}>🗑️ Reset</button>
-        <button onClick={() => setMode("draw")}>✏️ Draw</button>
-        <button onClick={() => setMode("type")}>⌨️ Type</button>
+        <button
+          onClick={() => setMode("draw")}
+          style={{
+            backgroundColor: mode === "draw" ? "#0b1996ff" : "#307ae7ff",
+          }}
+        >
+          ✏️ Draw
+        </button>
+
+        <button
+          onClick={() => setMode("type")}
+          style={{
+            backgroundColor: mode === "type" ? "#0b1996ff" : "#307ae7ff",
+          }}
+        >
+          ⌨️ Type
+        </button>
 
         {mode === "type" && (
           <select
@@ -265,17 +301,18 @@ export default function Body({ togglePanel }) {
           suppressContentEditableWarning={true}
           style={{
             position: "absolute",
-            top: "80px",
-            left: "60px",
+            top: "20px",
+            left: "70px",
             fontSize: `${fontSize}px`,
             border: "none",
             outline: "none",
             background: "transparent",
-            width: "400px",
-            minHeight: "100px",
+            width: "300px",
+            height: "250px",
             cursor: "text",
+            overflow: "hidden",
           }}
-          onInput={(e) => setTypedNotes(e.currentTarget.innerHTML)}
+          onInput={handleInput}
         />
       )}
 

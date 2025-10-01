@@ -91,7 +91,6 @@ export default function VitalSign() {
   }
 
   const { weight, height, ...otherVitals } = vitalSigns;
-  console.log("Vital signs: ", vitalSigns);
 
   const bmi = computeBMI({ height, weight });
   const bmiClass = classifyBMI(bmi);
