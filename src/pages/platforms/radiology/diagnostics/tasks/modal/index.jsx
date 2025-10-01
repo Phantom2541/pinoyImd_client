@@ -9,14 +9,15 @@ import { useState } from "react";
 import HealthyClientChoices from "./hcChoices.jsx";
 export default function Modal() {
   const { task, showModal } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    { form = "" } = task || {};
 
   const [showHC, setShowHC] = useState(false);
-
+  console.log("task", task);
   return (
     <>
       <MDBModal
-        size="xl"
+        size={form === "2DEcho" ? "xl" : "lg"}
         isOpen={showModal}
         toggle={() => dispatch(TOGGLE("task"))}
         backdrop
