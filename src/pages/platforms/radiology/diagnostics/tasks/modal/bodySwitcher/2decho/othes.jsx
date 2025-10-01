@@ -15,14 +15,14 @@ export default function TissueDopler({
   const dispatch = useDispatch();
 
   // pull array or default
-  const tissueValues = Array.isArray(task?.tissue) ? task.tissue : [];
+  const othersValues = Array.isArray(task?.others) ? task.others : [];
 
   // refs for inputs
   const inputRefs = useRef([]);
 
   // auto-focus when modal opens
   useEffect(() => {
-    if (showModal && activeTab === "Tissue") {
+    if (showModal && activeTab === "Others") {
       setTimeout(() => {
         inputRefs.current?.[0]?.[0]?.focus();
       }, 400);
@@ -33,28 +33,24 @@ export default function TissueDopler({
     const numericValue = value === "" ? "" : parseFloat(value);
 
     // clone and pad to match Echo.tissue length
-    const updated = [...tissueValues];
+    const updated = [...othersValues];
     updated[index] = Array.isArray(updated[index]) ? [...updated[index]] : [];
 
     updated[index][cIdx] = numericValue;
 
     const newTask = {
       ...task,
-      tissue: updated,
+      others: updated,
     };
     // ensure full length
-    const padded = Array(Echo.TissueDoppler.length) // number of rows
-      .fill("")
-      .map((_, i) =>
-        Array(3)
-          .fill("")
-          .map((__, j) =>
-            Array.isArray(updated[i]) ? updated[i][j] ?? "" : ""
-          )
-      );
+    const padded = Echo.Others.map((items, i) =>
+      items.map((__, j) =>
+        Array.isArray(updated[i]) ? updated[i][j] ?? "" : ""
+      )
+    );
 
     dispatch(SetTASK({ form: task?.form, task: newTask }));
-    dispatch(SetPARAMS({ key: "tissue", value: padded }));
+    dispatch(SetPARAMS({ key: "others", value: padded }));
   };
 
   const handleKeyDown = (e, rowIdx, colIdx) => {
@@ -76,37 +72,51 @@ export default function TissueDopler({
   };
 
   return (
-    <MDBTable hover responsive className="mb-0" small>
+    <MDBTable responsive className="mb-0" small bordered>
+      <thead>
+        <tr>
+          <th>TAPSE:</th>
+          <th>VALUES</th>
+          <th className="text-nowrap">LA VOLUME (BIPLANE) RESULT</th>
+          <th>VALUES</th>
+          <th>LV MASS & LV MASS INDEX</th>
+        </tr>
+      </thead>
       <tbody>
-        {Echo.TissueDoppler.map((item, index) => (
-          <tr key={index}>
-            <td>{item}</td>
-            {new Array(3).fill("").map((_, i) => {
-              const extensions = ["E:", "A:"];
-
-              return (
-                <td key={i}>
-                  <span style={{ fontWeight: 400 }}> {extensions[i]} </span>
+        {Echo.Others.map((items, rowIdx) => (
+          <tr key={rowIdx}>
+            {items.map((item, colIdx) => (
+              <td key={colIdx}>
+                <div className="d-flex align-items-center justify-content-between">
+                  <span
+                    className={`text-nowrap ${item ? "mr-2" : ""} `}
+                    style={{ fontWeight: 400 }}
+                  >
+                    {item ? `${item}: ` : ""}
+                  </span>
                   <input
                     type="number"
-                    className="sectInput  text-center fw-bold mr-1"
+                    className="sectInput text-center fw-bold "
                     ref={(el) => {
-                      if (!inputRefs.current[index]) {
-                        inputRefs.current[index] = [];
+                      if (!inputRefs.current[rowIdx]) {
+                        inputRefs.current[rowIdx] = [];
                       }
-                      inputRefs.current[index][i] = el;
+                      inputRefs.current[rowIdx][colIdx] = el;
                     }}
                     value={
-                      Array.isArray(tissueValues[index])
-                        ? tissueValues[index][i] ?? ""
+                      Array.isArray(othersValues[rowIdx])
+                        ? othersValues[rowIdx][colIdx] ?? ""
                         : ""
                     }
-                    onChange={(e) => handleChange(e.target.value, index, i)}
-                    onKeyDown={(e) => handleKeyDown(e, index, i)}
+                    style={{ width: item ? "7rem" : "100%" }}
+                    onChange={(e) =>
+                      handleChange(e.target.value, rowIdx, colIdx)
+                    }
+                    onKeyDown={(e) => handleKeyDown(e, rowIdx, colIdx)}
                   />
-                </td>
-              );
-            })}
+                </div>
+              </td>
+            ))}
           </tr>
         ))}
       </tbody>

@@ -22,20 +22,19 @@ export default function Volumes({ setActiveTab = () => {}, activeTab = "" }) {
   useEffect(() => {
     if (showModal && activeTab === "Volumes") {
       setTimeout(() => {
-        inputRefs.current[0]?.focus();
+        inputRefs.current?.[0]?.[0]?.focus();
       }, 400);
     }
   }, [showModal, activeTab]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const index = Number(name);
-
+  const handleChange = (value, index, cIdx) => {
     const numericValue = value === "" ? "" : parseFloat(value);
 
-    // clone and pad to match Echo.Volumes length
     const updated = [...volumeValues];
-    updated[index] = numericValue;
+    updated[index] = Array.isArray(updated[index]) ? [...updated[index]] : [];
+
+    // dito na tayo mag-assign safely
+    updated[index][cIdx] = numericValue;
 
     // ensure full length
     const padded = Array(Echo.Volumes.length)
@@ -51,15 +50,20 @@ export default function Volumes({ setActiveTab = () => {}, activeTab = "" }) {
     dispatch(SetPARAMS({ key: "volume", value: padded }));
   };
 
-  const handleKeyDown = (e, index) => {
+  const handleKeyDown = (e, rowIdx, colIdx) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const nextInput = inputRefs.current[index + 1];
-      if (nextInput) {
-        nextInput.focus();
-        nextInput.select();
+
+      // hanapin next input (col muna, tapos row)
+      const nextCol = colIdx + 1;
+      if (inputRefs.current[rowIdx]?.[nextCol]) {
+        inputRefs.current[rowIdx][nextCol].focus();
+        inputRefs.current[rowIdx][nextCol].select();
+      } else if (inputRefs.current[rowIdx + 1]?.[0]) {
+        inputRefs.current[rowIdx + 1][0].focus();
+        inputRefs.current[rowIdx + 1][0].select();
       } else {
-        setActiveTab("Volumes"); // stay in same tab
+        setActiveTab("Parameters"); // move to next tab
       }
     }
   };
@@ -75,20 +79,32 @@ export default function Volumes({ setActiveTab = () => {}, activeTab = "" }) {
       </thead>
       <tbody>
         {Echo.Volumes.map((field, index) => {
-          const val = volumeValues[index] ?? "";
+          const val = volumeValues[index] ?? [];
           return (
             <tr key={`echo-volume-${index}`}>
               <td className="py-1">{field.title}</td>
               <td className="py-1">
-                <input
-                  type="number"
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  name={index}
-                  value={val}
-                  onChange={handleChange}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="sectInput w-100 text-center fw-bold"
-                />
+                <div className="d-flex">
+                  {new Array(2).fill(0).map((_, i) => (
+                    <input
+                      key={`echo-volume-${index}-${i}`}
+                      type="number"
+                      ref={(el) => {
+                        if (!inputRefs.current[index]) {
+                          inputRefs.current[index] = [];
+                        }
+                        inputRefs.current[index][i] = el;
+                      }}
+                      name={index}
+                      value={val[i] ?? ""}
+                      onChange={({ target }) =>
+                        handleChange(target.value, index, i)
+                      }
+                      onKeyDown={(e) => handleKeyDown(e, index, i)}
+                      className="sectInput w-100 text-center fw-bold mr-1"
+                    />
+                  ))}
+                </div>
               </td>
               <td className="py-1">
                 <Markup content={field.range} />

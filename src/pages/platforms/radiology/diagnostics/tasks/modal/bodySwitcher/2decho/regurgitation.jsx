@@ -5,7 +5,6 @@ import {
   SetTASK,
 } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
-import { Markup } from "interweave";
 import { Echo } from "../../../../../../../../services/fakeDb";
 
 export default function Regurgitation({
@@ -16,7 +15,7 @@ export default function Regurgitation({
   const dispatch = useDispatch();
 
   // pull array or default
-  const regurValues = Array.isArray(task?.eco?.regur) ? task.eco.regur : [];
+  const regurValues = Array.isArray(task?.regur) ? task.regur : [];
 
   // refs for inputs
   const inputRefs = useRef([]);
@@ -25,102 +24,86 @@ export default function Regurgitation({
   useEffect(() => {
     if (showModal && activeTab === "Regurgitation") {
       setTimeout(() => {
-        inputRefs.current[0]?.focus();
+        inputRefs.current?.[0]?.[0]?.focus();
       }, 400);
     }
   }, [showModal, activeTab]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const index = Number(name);
-
+  const handleChange = (value, index, cIdx) => {
     const numericValue = value === "" ? "" : parseFloat(value);
 
     // clone and pad to match Echo.Regurgitation length
     const updated = [...regurValues];
-    updated[index] = numericValue;
+    updated[index] = Array.isArray(updated[index]) ? [...updated[index]] : [];
 
-    // ensure full length
-    const padded = Array(Echo.Regurgitation.length)
-      .fill("")
-      .map((_, i) => updated[i] ?? "");
+    updated[index][cIdx] = numericValue;
 
     const newTask = {
       ...task,
-      eco: {
-        ...task.eco,
-        regur: padded,
-      },
+      regur: updated,
     };
+    // ensure full length
+    const padded = Array(Echo.Regurgitation.length) // number of rows
+      .fill("")
+      .map((_, i) =>
+        Array(3)
+          .fill("")
+          .map((__, j) =>
+            Array.isArray(updated[i]) ? updated[i][j] ?? "" : ""
+          )
+      );
 
     dispatch(SetTASK({ form: task?.form, task: newTask }));
-    dispatch(SetPARAMS({ key: "eco.regur", value: padded }));
+    dispatch(SetPARAMS({ key: "regur", value: padded }));
   };
 
-  const handleKeyDown = (e, index) => {
+  const handleKeyDown = (e, rowIdx, colIdx) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const nextInput = inputRefs.current[index + 1];
-      if (nextInput) {
-        nextInput.focus();
-        nextInput.select();
+
+      // hanapin next input (col muna, tapos row)
+      const nextCol = colIdx + 1;
+      if (inputRefs.current[rowIdx]?.[nextCol]) {
+        inputRefs.current[rowIdx][nextCol].focus();
+        inputRefs.current[rowIdx][nextCol].select();
+      } else if (inputRefs.current[rowIdx + 1]?.[0]) {
+        inputRefs.current[rowIdx + 1][0].focus();
+        inputRefs.current[rowIdx + 1][0].select();
       } else {
-        setActiveTab("Volumes"); // move to next tab
+        setActiveTab("Tissue"); // move to next tab
       }
     }
   };
-
   return (
-    <MDBTable hover responsive className="mb-0">
+    <MDBTable hover responsive className="mb-0" small>
       <tbody>
-        <tr>
-          <td>TRUCUSPID REGURGITATION</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>MITRAL REGURGITATION</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>AORTIC/LVOT REGURGITATION</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>PULMONIC REGURGITATION</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
+        {Echo.Regurgitation.map((regur, index) => (
+          <tr key={index}>
+            <td>{regur}</td>
+            {new Array(3).fill("").map((_, cIdx) => (
+              <td>
+                <input
+                  type="number"
+                  ref={(el) => {
+                    if (!inputRefs.current[index]) {
+                      inputRefs.current[index] = [];
+                    }
+                    inputRefs.current[index][cIdx] = el;
+                  }}
+                  name={index}
+                  value={
+                    Array.isArray(regurValues[index])
+                      ? regurValues[index][cIdx] ?? ""
+                      : ""
+                  }
+                  onChange={(e) => handleChange(e.target.value, index, cIdx)}
+                  onKeyDown={(e) => handleKeyDown(e, index, cIdx)}
+                  className="w-100 sectInput text-center fw-bold"
+                />
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </MDBTable>
   );

@@ -5,7 +5,6 @@ import {
   SetTASK,
 } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
-import { Markup } from "interweave";
 import { Echo } from "../../../../../../../../services/fakeDb";
 
 export default function Flow({ setActiveTab = () => {}, activeTab = "" }) {
@@ -13,7 +12,7 @@ export default function Flow({ setActiveTab = () => {}, activeTab = "" }) {
   const dispatch = useDispatch();
 
   // pull array or default
-  const flowValues = Array.isArray(task?.eco?.flow) ? task.eco.flow : [];
+  const flowValues = Array.isArray(task?.flow) ? task.flow : [];
 
   // refs for inputs
   const inputRefs = useRef([]);
@@ -22,193 +21,124 @@ export default function Flow({ setActiveTab = () => {}, activeTab = "" }) {
   useEffect(() => {
     if (showModal && activeTab === "Flow") {
       setTimeout(() => {
-        inputRefs.current[0]?.focus();
+        inputRefs.current?.[0]?.[0]?.focus();
       }, 400);
     }
   }, [showModal, activeTab]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const index = Number(name);
-
+  const handleChange = (value, index, cIdx) => {
     const numericValue = value === "" ? "" : parseFloat(value);
 
     // clone and pad to match Echo.FlowDoppler length
     const updated = [...flowValues];
-    updated[index] = numericValue;
+    updated[index] = Array.isArray(updated[index]) ? [...updated[index]] : [];
 
-    // ensure full length
-    const padded = Array(Echo.FlowDoppler.length)
-      .fill("")
-      .map((_, i) => updated[i] ?? "");
+    updated[index][cIdx] = numericValue;
 
     const newTask = {
       ...task,
-      eco: {
-        ...task.eco,
-        flow: padded,
-      },
+      flow: updated,
     };
+    // ensure full length
+    const padded = Array(Echo.FlowDoppler.length) // number of rows
+      .fill("")
+      .map((_, i) =>
+        Array(7) // 7 columns
+          .fill("")
+          .map((__, j) =>
+            Array.isArray(updated[i]) ? updated[i][j] ?? "" : ""
+          )
+      );
 
     dispatch(SetTASK({ form: task?.form, task: newTask }));
     dispatch(SetPARAMS({ key: "eco.flow", value: padded }));
   };
 
-  const handleKeyDown = (e, index) => {
+  const handleKeyDown = (e, rowIdx, colIdx) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const nextInput = inputRefs.current[index + 1];
-      if (nextInput) {
-        nextInput.focus();
-        nextInput.select();
+
+      // hanapin next input (col muna, tapos row)
+      const nextCol = colIdx + 1;
+      if (inputRefs.current[rowIdx]?.[nextCol]) {
+        inputRefs.current[rowIdx][nextCol].focus();
+        inputRefs.current[rowIdx][nextCol].select();
+      } else if (inputRefs.current[rowIdx + 1]?.[0]) {
+        inputRefs.current[rowIdx + 1][0].focus();
+        inputRefs.current[rowIdx + 1][0].select();
       } else {
-        setActiveTab("Volumes"); // move to next tab
+        setActiveTab("Regurgitation"); // move to next tab
       }
     }
   };
 
   return (
-    <table className="mb-0 table table-hover table-responsive">
+    <MDBTable small responsive bordered>
       <thead>
         <tr>
-          <th className="py-1">Valve</th>
-          <th className="py-1">Vmax(m/s)</th>
-          <th className="py-1">Peak Gradient (mmHg)</th>
-          <th className="py-1">Mean Gradient (mmHg)</th>
-          <th className="py-1">Vti(cm)</th>
-          <th className="py-1" colSpan="3">
+          <th className="py-1" rowSpan={2}>
+            Valve
+          </th>
+          <th className="py-1" rowSpan={2}>
+            Vmax (m/s)
+          </th>
+          <th className="py-1" rowSpan={2}>
+            Peak Gradient (mmHg)
+          </th>
+          <th className="py-1" rowSpan={2}>
+            Mean Gradient (mmHg)
+          </th>
+          <th className="py-1" rowSpan={2}>
+            Vti (cm)
+          </th>
+          <th className="py-1" colSpan={3}>
             Reguritation
           </th>
         </tr>
         <tr>
-          <th className="py-1" colSpan="5" />
           <th className="py-1">Vti (cm)</th>
           <th className="py-1">Vmax (m/s)</th>
           <th className="py-1">VC (mm)</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>TRICUSPID</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>MITRAL</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>AORTIC</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>PULMONIC</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
-        <tr>
-          <td>{`PAT=(NV>10)`}</td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-          <td>
-            <input type="number" />
-          </td>
-        </tr>
+        {Echo.FlowDoppler.map((_, index) => {
+          return (
+            <tr key={index}>
+              <td
+                className="py-1 text-nowrap text-left"
+                style={{ fontWeight: 400 }}
+              >
+                {Echo.FlowDoppler[index]}
+              </td>
+              {new Array(7).fill("").map((_, i) => (
+                <td className="py-1" key={`${index}-${i}`}>
+                  <input
+                    type="number"
+                    name={index}
+                    style={{ width: "7rem" }}
+                    value={
+                      Array.isArray(flowValues[index])
+                        ? flowValues[index][i] ?? ""
+                        : ""
+                    }
+                    onChange={({ target }) =>
+                      handleChange(target.value, index, i)
+                    }
+                    onKeyDown={(e) => handleKeyDown(e, index, i)}
+                    ref={(el) => {
+                      if (!inputRefs.current[index]) {
+                        inputRefs.current[index] = [];
+                      }
+                      inputRefs.current[index][i] = el;
+                    }}
+                  />
+                </td>
+              ))}
+            </tr>
+          );
+        })}
       </tbody>
-    </table>
+    </MDBTable>
   );
 }

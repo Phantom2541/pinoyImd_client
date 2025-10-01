@@ -6,11 +6,20 @@ const MMMode = ({ task }) => {
   return (
     <>
       <tr>
-        <th colSpan={4} className="py-1">
-          <span className="fw-bold" style={{ fontSize: "1.2rem" }}>
-            MM Mode
-          </span>
-        </th>
+        {[
+          "M-MODE",
+          "NORMAL RANGE",
+          "VALUE",
+          "VOLUMES",
+          "NORMAL-RANGE",
+          "EQUIVALENT",
+        ].map((field, index) => (
+          <th key={`echo-mmMode-${index}`} className="py-1">
+            <span className="fw-bold" style={{ fontSize: "1rem" }}>
+              {field}
+            </span>
+          </th>
+        ))}
       </tr>
       {Echo.Mmode.map((field, index) => {
         const val = mmode[index] ?? "";

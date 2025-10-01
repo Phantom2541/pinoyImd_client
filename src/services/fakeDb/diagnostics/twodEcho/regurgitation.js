@@ -1,8 +1,8 @@
-// Regurgitation
-export const RegurgitationFields = [
-  { title: "Tricuspid Regurgitation", range: "" },
-  { title: "Mitral Regurgitation", range: "" },
-  { title: "Aortic/IVOT Regurgitation", range: "" },
-  { title: "Pulmonic Regurgitation", range: "" },
+const RegurgitationFields = [
+  "Tricuspid Regurgitation",
+  "Mitral Regurgitation",
+  "Aortic/IVOT Regurgitation",
+  "Pulmonic Regurgitation",
 ];
+
 export default RegurgitationFields;

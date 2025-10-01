@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import {
   MDBTabContent,
   MDBTabPane,
@@ -16,10 +15,11 @@ import MMode from "./mMode";
 import Volumes from "./volumes";
 import Paramets from "./paramets";
 import Diastolic from "./diastolic";
-// import Flow from "./flowDoppler";
-// import Regurgitation from "./regurgitation";
-// import TissueDopler from "./tissueDopler";
-// import ExtraVal from "./extraVal";
+import Flow from "./flowDoppler";
+import Regurgitation from "./regurgitation";
+import TissueDopler from "./tissueDopler";
+import Others from "./othes";
+import Images from "../images";
 
 export default function TwoDEcho() {
   // default to MMode
@@ -31,10 +31,10 @@ export default function TwoDEcho() {
     { name: "Volumes", component: Volumes },
     { name: "Parameters", component: Paramets },
     { name: "Diastolic", component: Diastolic },
-    // { name: "Flow", component: Flow },
-    // { name: "Regurgitation", component: Regurgitation },
-    // { name: "Tissue Dopler", component: TissueDopler },
-    // { name: "Extra Value", component: ExtraVal },
+    { name: "Flow", component: Flow },
+    { name: "Regurgitation", component: Regurgitation },
+    { name: "Tissue", component: TissueDopler },
+    { name: "Others", component: Others },
   ];
 
   return (
@@ -53,6 +53,17 @@ export default function TwoDEcho() {
             </MDBNavLink>
           </MDBNavItem>
         ))}
+
+        <MDBNavItem>
+          <MDBNavLink
+            link
+            active={"Personnel" === activeTab}
+            to="#!"
+            onClick={() => setActiveTab("Personnel")}
+          >
+            Personnel
+          </MDBNavLink>
+        </MDBNavItem>
       </MDBNav>
 
       {/* Tab content */}
@@ -67,6 +78,7 @@ export default function TwoDEcho() {
                 />
               </MDBTabPane>
             ))}
+            <Images tabId="Personnel" isEcho={true} />
           </MDBTabContent>
         </MDBCardBody>
       </MDBCard>

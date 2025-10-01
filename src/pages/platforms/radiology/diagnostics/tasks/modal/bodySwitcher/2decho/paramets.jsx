@@ -20,7 +20,7 @@ export default function Paramets({ setActiveTab = () => {}, activeTab = "" }) {
 
   // auto-focus when modal opens
   useEffect(() => {
-    if (showModal && activeTab === "paramets") {
+    if (showModal && activeTab === "Parameters") {
       setTimeout(() => {
         inputRefs.current[0]?.focus();
       }, 400);
@@ -59,7 +59,7 @@ export default function Paramets({ setActiveTab = () => {}, activeTab = "" }) {
         nextInput.focus();
         nextInput.select();
       } else {
-        setActiveTab("paramets"); // move to next tab
+        setActiveTab("Diastolic"); // move to next tab
       }
     }
   };

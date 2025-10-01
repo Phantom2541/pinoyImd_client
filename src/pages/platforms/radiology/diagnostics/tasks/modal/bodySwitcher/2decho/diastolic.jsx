@@ -59,7 +59,7 @@ export default function Diastolic({ setActiveTab = () => {}, activeTab = "" }) {
         nextInput.focus();
         nextInput.select();
       } else {
-        setActiveTab("Volumes"); // move to next tab
+        setActiveTab("Flow"); // move to next tab
       }
     }
   };

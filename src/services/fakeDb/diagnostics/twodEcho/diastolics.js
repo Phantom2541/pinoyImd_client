@@ -1,13 +1,11 @@
 // DIASTOLIC FUNCTION
 export const DiastolicFields = [
-  { title: "MV E", range: "(cm/s)" },
-  { title: "MV A", range: "(cm/s)" },
-  { title: "MV E/A", range: "" },
-  { title: "DT", range: "(ms)" },
-  { title: "E′ (Septal)", range: "(cm/s)" },
-  { title: "E/E′ (Septal)", range: "" },
-  { title: "E′ (Lateral)", range: "(cm/s)" },
-  { title: "E/E′ (Lateral)", range: "" },
-  { title: "E/E′ (Average)", range: "" },
+  { title: "IVRT", range: ".89mm/sec 40YRS" },
+  { title: "DT", range: "160-240 m/sec." },
+  { title: "PV (A) WAVE", range: "<25/sec." },
+  { title: "PV (5) FLOW", range: "m/sec." },
+  { title: "PV (D) FLOW", range: "m/sec." },
+  { title: "S/D RATIO", range: "" },
+  { title: "IVC (D)", range: "" },
 ];
 export default DiastolicFields;

@@ -16,7 +16,7 @@ export default function Modal() {
   return (
     <>
       <MDBModal
-        size="lg"
+        size="xl"
         isOpen={showModal}
         toggle={() => dispatch(TOGGLE("task"))}
         backdrop

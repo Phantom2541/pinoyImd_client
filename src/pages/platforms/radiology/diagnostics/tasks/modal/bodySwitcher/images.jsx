@@ -6,7 +6,7 @@ import { fullName, gDrive } from "../../../../../../../services/utilities";
 import Swal from "sweetalert2";
 import EditableSelect from "../../../../../../../components/customizable/editableSelect";
 
-const Images = () => {
+const Images = ({ tabId = "images", isEcho = false }) => {
   const { task, heads } = useSelector(({ validator }) => validator);
   const { auth } = useSelector(({ auth }) => auth);
   const { collections: physicians } = useSelector(
@@ -66,7 +66,7 @@ const Images = () => {
         encoder,
       ],
     };
-    console.log("updatedTask", updatedTask, value);
+
     dispatch(
       SetTASK({
         task: updatedTask,
@@ -75,7 +75,7 @@ const Images = () => {
     );
   };
   return (
-    <MDBTabPane tabId="images">
+    <MDBTabPane tabId={tabId}>
       <div className="mt-5">
         <div className="d-flex  mb-2 w-100 mt-3">
           <div className="w-100 text-left mr-3">
@@ -115,57 +115,61 @@ const Images = () => {
             />
           </div>
         </div>
-        {!task?.fileId ? (
-          <div className="d-flex align-items-center mt-3">
-            <input
-              value={link}
-              onChange={({ target }) => setLink(target.value)}
-              className="form-control "
-              style={{ width: "87%" }}
-              placeholder="Paste Google Drive Link e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing"
-            />
-            <MDBBtn size="sm" color="primary" onClick={handleOpenLink}>
-              Open
-            </MDBBtn>
-          </div>
-        ) : (
-          <div className="position-relative">
-            <MDBBtn
-              size="sm"
-              color="danger"
-              rounded
-              title="Change image"
-              onClick={() => {
-                setLink("");
-                dispatch(
-                  SetTASK({
-                    task: { ...task, fileId: "" },
-                    form: task.form,
-                  })
-                );
-              }}
-              style={{ top: 0, right: "5px" }}
-              className="position-absolute px-2 py-1"
-            >
-              <MDBIcon icon="times" />
-            </MDBBtn>
-
-            {/* Container with maxHeight and scroll */}
-            <div style={{ maxHeight: "16rem", overflow: "auto" }}>
-              <a
-                href={gDrive.view(task.fileId)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  alt="Ecg"
-                  src={gDrive.view(task.fileId)}
-                  className="w-100 rounded shadow-sm"
-                  style={{ display: "block", cursor: "pointer" }}
+        {!isEcho && (
+          <>
+            {!task?.fileId ? (
+              <div className="d-flex align-items-center mt-3">
+                <input
+                  value={link}
+                  onChange={({ target }) => setLink(target.value)}
+                  className="form-control "
+                  style={{ width: "87%" }}
+                  placeholder="Paste Google Drive Link e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing"
                 />
-              </a>
-            </div>
-          </div>
+                <MDBBtn size="sm" color="primary" onClick={handleOpenLink}>
+                  Open
+                </MDBBtn>
+              </div>
+            ) : (
+              <div className="position-relative">
+                <MDBBtn
+                  size="sm"
+                  color="danger"
+                  rounded
+                  title="Change image"
+                  onClick={() => {
+                    setLink("");
+                    dispatch(
+                      SetTASK({
+                        task: { ...task, fileId: "" },
+                        form: task.form,
+                      })
+                    );
+                  }}
+                  style={{ top: 0, right: "5px" }}
+                  className="position-absolute px-2 py-1"
+                >
+                  <MDBIcon icon="times" />
+                </MDBBtn>
+
+                {/* Container with maxHeight and scroll */}
+                <div style={{ maxHeight: "16rem", overflow: "auto" }}>
+                  <a
+                    href={gDrive.view(task.fileId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      alt="Ecg"
+                      src={gDrive.view(task.fileId)}
+                      className="w-100 rounded shadow-sm"
+                      style={{ display: "block", cursor: "pointer" }}
+                    />
+                  </a>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </MDBTabPane>
