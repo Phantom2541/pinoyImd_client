@@ -296,19 +296,6 @@ export default function Body({ togglePanel }) {
       >
         Save
       </button>
-
-      <div className="checkup-data-prescription-card-body-signature">
-        <img
-          alt="signature"
-          src={`${Cloudinary.getEndpoint()}/${auth?.sid}/users/${
-            auth?.email
-          }/signature.png`}
-          draggable={false}
-        />
-        <span>
-          Dr. {capitalize(fname)} {capitalize(lname)}
-        </span>
-      </div>
     </div>
   );
 }

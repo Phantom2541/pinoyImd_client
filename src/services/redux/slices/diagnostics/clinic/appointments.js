@@ -403,12 +403,7 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetCLUSTER: (state, { payload }) => {
-      const { clinic, sched } = state.patient;
       state.cluster = payload;
-      localStorage.setItem(
-        `appointment-${clinic}-${sched}`,
-        JSON.stringify(payload)
-      );
     },
     SetRESULT: (state, { payload }) => {
       state.selected = payload;

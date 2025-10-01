@@ -216,7 +216,7 @@ const setAP = (state, payload) => {
     .filter((platform) => platform?.toLowerCase() !== "physician");
 
   const branch = branches?.find((branch) => branch?._id === branchId);
-  const { contract = { designation: -1 }, status } = branch || {};
+  const { contract = { designation: -1 }, status, clinic } = branch || {};
   const isEmployed = employment.isEmployed(isPhysician ? "active" : status);
   const designation = isPhysician ? 122 : contract?.designation;
   const department = Policy.getDepartment(designation) || "";
@@ -232,6 +232,7 @@ const setAP = (state, payload) => {
     role,
     isPhysician,
     position: designation,
+    clinic,
     ...(!isEmployed && { platform: "" }),
   };
   localStorage.setItem("activePlatform", JSON.stringify(activePlatform));

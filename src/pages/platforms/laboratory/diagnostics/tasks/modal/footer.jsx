@@ -138,8 +138,7 @@ const Footer = () => {
         };
     data = { ...data, hasDone: data.signatories.every((item) => item) };
     const allDiagHasDone = hasDoneChecker(data?._id) && data.hasDone;
-    // const status = allDiagHasDone ? "done" : "onProcess";
-    const status = "onProcess";
+    const status = allDiagHasDone ? "done" : "onProcess";
 
     setIsLoading(true);
     dispatch(

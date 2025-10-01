@@ -19,12 +19,13 @@ import {
   FIND as GET_APPOINTMENT,
   GET_BY_SCHED,
   SetCLUSTER,
+  SetPATIENT,
 } from "../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import CaseModal from "./medicalHistory/pshx/modal";
 import MedicationsModal from "./clinicalData/medications/modal";
 
 export default function Consultations() {
-  const { token } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { isLoading, cluster, isUpdateDone } = useSelector(
     ({ appointments }) => appointments
   );
@@ -32,6 +33,8 @@ export default function Consultations() {
   const params = new URLSearchParams(location.search);
   const ehrId = params.get("ehrId");
   const schedule = params.get("sched");
+
+  const { clinic = {} } = activePlatform || {};
 
   const [activePanels, setActivePanels] = useState({
     request: false,
@@ -43,31 +46,22 @@ export default function Consultations() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      GET_APPOINTMENT({
-        token,
-        key: { _id: ehrId || "636d37e0187c30ab0f611ce4" },
-      })
-    )
-      .then((action) => {
-        const { payload } = action.payload;
-        const { clinic, sched } = payload;
-        dispatch(
-          GET_BY_SCHED({
-            token,
-            key: { clinic, sched },
-          })
-        ).then((action) => {
-          const { payload } = action?.payload;
-
-          dispatch(SetCLUSTER(payload));
-        });
-      })
-      .catch((error) => {
-        console.log("error", error.message);
+    if (clinic?._id) {
+      dispatch(
+        GET_BY_SCHED({
+          token,
+          key: { clinic: clinic?._id, sched: schedule },
+        })
+      ).then((action) => {
+        const { payload } = action?.payload;
+        const activeAppt = payload.find((p) => p?._id === ehrId);
+        dispatch(SetPATIENT(activeAppt));
+        dispatch(SetCLUSTER(payload));
       });
+    }
+
     // eslint-disable-next-line
-  }, [token, dispatch]);
+  }, [token, dispatch, clinic?._id]);
 
   const buttonRefs = {
     request: useRef(),

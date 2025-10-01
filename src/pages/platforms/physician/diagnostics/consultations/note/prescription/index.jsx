@@ -5,10 +5,11 @@ import Patient from "./patient";
 import Body from "./body";
 import Footer from "./footer";
 import { MDBIcon } from "mdbreact";
+import History from "./history";
 
 export default function Prescription({ active, buttonRefs, togglePanel }) {
   const style = usePanelPosition(active, buttonRefs.prescription, {
-    width: "4.25in",
+    width: "8.5in",
     height: "5.5in",
   });
 
@@ -19,11 +20,19 @@ export default function Prescription({ active, buttonRefs, togglePanel }) {
         className="checkup-data-note-close"
         onClick={() => togglePanel("prescription")}
       />
-      <div className="checkup-data-prescription-card">
-        <Header />
-        <Patient />
-        <Body togglePanel={togglePanel} />
-        <Footer />
+      <div className="d-flex align-items-center h-full h-100">
+        <div
+          className="checkup-data-prescription-card"
+          style={{ borderRight: "1px solid #ccc" }}
+        >
+          <History />
+        </div>
+        <div className="checkup-data-prescription-card">
+          {/* <Header /> */}
+          <Patient />
+          <Body togglePanel={togglePanel} />
+          <Footer />
+        </div>
       </div>
     </div>
   );
