@@ -16,7 +16,7 @@ const Quantitative = () => {
             style={{
               width: `${width}%`,
               borderRight:
-                index == 0 && results?.length > 1 && "1px solid #dee2e6",
+                index === 0 && results?.length > 1 && "1px solid #dee2e6",
             }}
           >
             {result || ""}
