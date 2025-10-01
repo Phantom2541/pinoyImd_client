@@ -202,7 +202,7 @@ export default function ClaimStub() {
       }
       setTimeout(() => {
         window.print();
-      }, 2000);
+      }, 500);
     } catch (error) {
       console.error("Failed to parse claimStub:", error);
     }

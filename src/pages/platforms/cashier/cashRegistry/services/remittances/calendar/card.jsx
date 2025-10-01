@@ -20,7 +20,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
   } = item;
   const isRemitted = !!collector;
   const { cash, ...rest } = breakdown;
-  const nonCash = Object.entries(rest);
+  const nonCash = Object.entries(rest).filter(([_, value]) => value);
   const net = (opening.sum || 0) + cash - expenses;
 
   return (

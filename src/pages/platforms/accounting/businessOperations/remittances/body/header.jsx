@@ -81,8 +81,8 @@ const Header = () => {
           token,
           key: {
             branch: activePlatform?.branchId,
-            startDate,
-            endDate,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
           },
         })
       );

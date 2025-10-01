@@ -91,6 +91,7 @@ const Images = ({ tabId = "images", isEcho = false }) => {
                   fullName: fullName(user.fullName),
                   _id: user._id,
                 }))}
+              preValue={head?._id || head || null}
               keyForText="fullName"
               keyForValue="_id"
               label="Technician"
@@ -107,6 +108,7 @@ const Images = ({ tabId = "images", isEcho = false }) => {
                   fullName: fullName(user.fullName),
                   _id: user._id,
                 }))}
+              preValue={dr?._id || dr || null}
               keyForText="fullName"
               parentClassName="w-100"
               keyForValue="_id"

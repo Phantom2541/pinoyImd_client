@@ -15,7 +15,7 @@ import {
   Miscellaneous,
   Pbs,
 } from "./laboratory";
-import { Xray, Ecg, Ultrasound } from "./radiology";
+import { Xray, Ecg, Ultrasound, Echo } from "./radiology";
 import { PE, MC } from "./clinic";
 
 const Blank = () => {
@@ -41,6 +41,7 @@ const componentMap = {
   Xray,
   Ecg,
   Ultrasound,
+  "2DEcho": Echo,
   // Clinic
   PE,
   MC,
