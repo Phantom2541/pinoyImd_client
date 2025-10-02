@@ -13,6 +13,7 @@ import RawResult from "./rawResult";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import TypingResult from "./typingResult";
 const Echo = () => {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
@@ -28,20 +29,10 @@ const Echo = () => {
   // Load values from task
   useEffect(() => {
     if (task?.description) {
-      try {
-        const parsed = JSON.parse(task.description);
-        setDescription(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setDescription(task.description);
-      }
+      setDescription(task.description);
     }
     if (task?.impression) {
-      try {
-        const parsed = JSON.parse(task.impression);
-        setImpression(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setImpression(task.impression);
-      }
+      setImpression(task.impression);
     }
   }, [task?.description, task?.impression]);
 
@@ -62,7 +53,7 @@ const Echo = () => {
   return (
     <MDBRow>
       <MDBCol md="6">
-        <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+        <div style={{ maxHeight: "440px", overflowY: "auto" }}>
           <RawResult />
         </div>
       </MDBCol>
@@ -94,16 +85,9 @@ const Echo = () => {
           <MDBCardBody>
             <MDBTabContent activeItem={activeTab} className="pt-0">
               <MDBTabPane tabId="results">
-                <textarea
-                  className="form-control mt-3 border"
-                  style={{
-                    minHeight: "285px",
-                    overflowY: "auto",
-                    maxHeight: "285px",
-                  }}
+                <TypingResult
                   value={description}
-                  onChange={(e) => {
-                    const val = e.target.value;
+                  onChange={(val) => {
                     setDescription(val);
                     delayedSave("description", val, descTimeout);
                   }}
@@ -111,16 +95,9 @@ const Echo = () => {
               </MDBTabPane>
 
               <MDBTabPane tabId="kit">
-                <textarea
-                  className="form-control mt-3 border"
-                  style={{
-                    minHeight: "285px",
-                    overflowY: "auto",
-                    maxHeight: "285px",
-                  }}
+                <TypingResult
                   value={impression}
-                  onChange={(e) => {
-                    const val = e.target.value;
+                  onChange={(val) => {
                     setImpression(val);
                     delayedSave("impression", val, impTimeout);
                   }}

@@ -92,7 +92,7 @@ const Footer = ({ setShowHC = () => {} }) => {
     if (task.form === "Ecg") return task.findings ? false : true;
     return task.description && task.impression ? false : true;
   };
-
+  console.log("task", task.form);
   return (
     <div className="text-center mb-1-half border-top pt-2">
       <textarea
@@ -119,17 +119,19 @@ const Footer = ({ setShowHC = () => {} }) => {
         {/* Right: Save & Post Buttons */}
         <div className="ml-auto">
           <MDBBtnGroup>
-            <MDBBtn
-              disabled={isLoading || handleDisablePost()}
-              id="task-post-btn"
-              onClick={() => {
-                if (task?.form === "Hematology") return computeHemaDiff(true);
-                handleSave(true);
-              }}
-              color="success"
-            >
-              Post
-            </MDBBtn>
+            {task.form !== "2DEcho" && (
+              <MDBBtn
+                disabled={isLoading || handleDisablePost()}
+                id="task-post-btn"
+                onClick={() => {
+                  if (task?.form === "Hematology") return computeHemaDiff(true);
+                  handleSave(true);
+                }}
+                color="success"
+              >
+                Post
+              </MDBBtn>
+            )}
             <MDBBtn
               disabled={isLoading}
               onClick={() => {
