@@ -3087,7 +3087,7 @@
     "hi_ssx": "Fatigue, confusion, kidney stones, arrhythmias",
     "department": "LAB",
     "frequency": null,
-    "preference": "gender",
+    "preference": "equal",
     "preparation": "none",
     "specimen": "SERUM",
     "template": 2,
@@ -4120,7 +4120,7 @@
     "template": 2,
     "purpose": "To detect microalbuminuria; calculate microalbumin-creatinine ratio.",
     "note": "Only ratio needed",
-    "preference":"equal"
+    "preference": "equal"
   },
   {
     "id": 399,
