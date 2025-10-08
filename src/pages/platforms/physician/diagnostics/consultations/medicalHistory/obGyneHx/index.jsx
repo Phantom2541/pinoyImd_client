@@ -12,9 +12,10 @@ import {
 } from "./obSweet";
 import { MDBBtn } from "mdbreact";
 
-export default function OBGyneHx({ obGyneHistory }) {
+export default function OBGyneHx() {
   const { token } = useSelector(({ auth }) => auth);
-  const { patientId, formSubmitted, isSuccess } = useSelector(
+
+  const { formSubmitted, isSuccess, patientId, obGyneHistory } = useSelector(
     ({ appointments }) => appointments
   );
 
@@ -23,6 +24,7 @@ export default function OBGyneHx({ obGyneHistory }) {
   const [pregnancies, setPregnancies] = useState(
     obGyneHistory?.pregnancy || []
   );
+  console.log("patient", obGyneHistory);
 
   // hook for drag/drop
   const dragDrop = useDragAndDrop(pregnancies);
@@ -127,7 +129,7 @@ export default function OBGyneHx({ obGyneHistory }) {
   }, [pregnancies, setItems]);
 
   // early return
-  if (pregnancies.length === 0) {
+  if (obGyneHistory.length === 0) {
     return (
       <div className="checkup-data-mh-container">
         No OB-Gyne history available.
@@ -139,7 +141,7 @@ export default function OBGyneHx({ obGyneHistory }) {
   }
 
   // ---- GTPAL calculations ----
-  const gravida = items.length;
+  const gravida = items?.length;
   const termBirths = items?.filter(
     (p) => p.outcome === "alive" && p.gestationalAge >= 37
   ).length;

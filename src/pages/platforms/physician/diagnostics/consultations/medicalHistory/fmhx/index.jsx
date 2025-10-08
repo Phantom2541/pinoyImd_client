@@ -25,11 +25,11 @@ export default function FMHx() {
   const [lines, setLines] = useState([]);
   const [svgHeight, setSvgHeight] = useState(0);
 
-  const mother = fhx.Mother || [];
-  const father = fhx.Father || [];
+  const mother = fhx?.Mother || [];
+  const father = fhx?.Father || [];
 
   useEffect(() => {
-    setFhx(ehr.familyHistory);
+    setFhx(ehr?.familyHistory);
   }, [ehr]);
 
   /** Merge mother/father diseases row by row */
@@ -69,14 +69,14 @@ export default function FMHx() {
 
   /** measure positions for svg lines */
   const measure = () => {
-    const wrapper = wrapperRef.current;
+    const wrapper = wrapperRef?.current;
     if (!wrapper) return;
-    const wrapperRect = wrapper.getBoundingClientRect();
+    const wrapperRect = wrapper?.getBoundingClientRect();
     const newLines = [];
     let maxY = 0;
 
     mergedRows.forEach(([m, f], idx) => {
-      const rowEl = rowRefs.current[idx];
+      const rowEl = rowRefs?.current[idx];
       if (!rowEl) return;
       const rowRect = rowEl.getBoundingClientRect();
       const y = rowRect.top - wrapperRect.top + rowRect.height / 2;
@@ -142,12 +142,12 @@ export default function FMHx() {
     try {
       const response = await dispatch(
         SET_EMR({
-          data: { familyHistory: newFhx, patient: patient._id },
+          data: { familyHistory: newFhx, patient: patient?._id },
           token,
         })
       ).unwrap();
       const newCluster = [...cluster];
-      const index = newCluster.findIndex(({ _id }) => _id === appointment._id);
+      const index = newCluster.findIndex(({ _id }) => _id === appointment?._id);
       newCluster[index] = {
         ...newCluster[index],
         ehr: response?.payload,
@@ -208,8 +208,12 @@ export default function FMHx() {
     }).then(async (res) => {
       if (res.isConfirmed) {
         const newFhx = {
-          Mother: mother.filter((d) => !(parent === "Mother" && d === disease)),
-          Father: father.filter((d) => !(parent === "Father" && d === disease)),
+          Mother: mother?.filter(
+            (d) => !(parent === "Mother" && d === disease)
+          ),
+          Father: father?.filter(
+            (d) => !(parent === "Father" && d === disease)
+          ),
         };
         await persist(newFhx, "remove");
       }
