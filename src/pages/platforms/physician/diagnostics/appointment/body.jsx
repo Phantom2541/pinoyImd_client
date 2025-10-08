@@ -147,6 +147,7 @@ const Body = () => {
               visitType,
               lab = {},
               rad = {},
+              sched = "",
               ehr,
               consultation,
               _id,
@@ -243,7 +244,7 @@ const Body = () => {
                             className="d-block ml-2 cursor-pointer"
                             onClick={() => {
                               history.push(
-                                `/physician/diagnostics/consultations?ehrId=${_id}&sched=${activeSched}`
+                                `/physician/diagnostics/consultations?ehrId=${_id}&sched=${sched}`
                               );
                             }}
                           >

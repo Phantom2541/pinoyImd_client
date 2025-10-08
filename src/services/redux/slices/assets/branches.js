@@ -9,6 +9,7 @@ const initialState = {
   physicians: [],
   formSubmitted: false,
   didSearch: false,
+  showClone: false,
   selected: {},
   ct: {},
   page: 0,
@@ -352,6 +353,9 @@ export const reduxSlice = createSlice({
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
+    },
+    TOGGLE_CLONE: (state) => {
+      state.showCloneModal = !state.showCloneModal;
     },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
@@ -698,6 +702,7 @@ export const {
   RESET,
   SetMaxPage,
   SetActivePAGE,
+  TOGGLE_CLONE,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

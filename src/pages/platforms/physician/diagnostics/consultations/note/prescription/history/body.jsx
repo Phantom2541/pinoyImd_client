@@ -14,10 +14,10 @@ export default function Body({ consultation }) {
       document.getElementById("editor").innerHTML = notesValue;
       document.getElementById("editor").style.fontSize = fontSize;
     } else {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(notesValue, 0, 0); // no stretching
+      const canvas = canvasRef?.current;
+      const ctx = canvas?.getContext("2d");
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx?.drawImage(notesValue, 0, 0); // no stretching
     }
   }, [mode, notesValue]);
 

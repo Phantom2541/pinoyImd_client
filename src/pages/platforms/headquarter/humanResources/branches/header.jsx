@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import {
   BROWSE,
   SetFILTERED,
@@ -29,11 +29,15 @@ const Header = () => {
       cascade
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+      <div className="d-flex justify-items-center">
         <span className="white-text mx-3 text-nowrap mt-0">
           {filtered.length} Branches
         </span>
       </div>
+      <MDBBtn size="sm" color="light" className="fw-bold px-2" rounded>
+        <MDBIcon far icon="clone" className="mr-2" />
+        Clone Product & Services
+      </MDBBtn>
       <div>
         <Search
           handleAdd={(value) => dispatch(SetSELECTED({ name: value }))}

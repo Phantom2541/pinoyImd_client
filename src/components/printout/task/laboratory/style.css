@@ -50,7 +50,8 @@
   table,
   th,
   td {
-    font-size: 0.95rem !important;
+    font-size: 1rem !important;
+    vertical-align: middle !important;
   }
 
   .laboratory-remarks {

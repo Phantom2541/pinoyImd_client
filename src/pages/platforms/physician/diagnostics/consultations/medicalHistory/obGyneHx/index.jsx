@@ -1,6 +1,5 @@
 import "../style.css";
 import DraggableList, { useDragAndDrop } from "../dragAndDrop";
-import Swal from "sweetalert2";
 import { SET_EMR } from "../../../../../../../services/redux/slices/diagnostics/clinic/appointments";
 import { useToasts } from "react-toast-notifications";
 import { useDispatch, useSelector } from "react-redux";
@@ -111,7 +110,7 @@ export default function OBGyneHx({ obGyneHistory }) {
   };
 
   const {
-    items,
+    items = [],
     dragIndex,
     placeholderIndex,
     handleDragStart,
@@ -124,7 +123,7 @@ export default function OBGyneHx({ obGyneHistory }) {
 
   // keep drag/drop items in sync with pregnancies
   useEffect(() => {
-    setItems(pregnancies);
+    setItems(pregnancies || {});
   }, [pregnancies, setItems]);
 
   // early return
@@ -141,20 +140,20 @@ export default function OBGyneHx({ obGyneHistory }) {
 
   // ---- GTPAL calculations ----
   const gravida = items.length;
-  const termBirths = items.filter(
+  const termBirths = items?.filter(
     (p) => p.outcome === "alive" && p.gestationalAge >= 37
   ).length;
-  const pretermBirths = items.filter(
+  const pretermBirths = items?.filter(
     (p) =>
       p.outcome === "alive" && p.gestationalAge < 37 && p.gestationalAge >= 20
   ).length;
-  const abortions = items.filter(
+  const abortions = items?.filter(
     (p) => p.gestationalAge < 20 || p.outcome === "deceased"
   ).length;
-  const livingChildren = items.filter((p) => p.outcome === "alive").length;
+  const livingChildren = items?.filter((p) => p.outcome === "alive").length;
 
   // ---- Display strings for GUI ----
-  const itemTexts = items.map((p, idx) => {
+  const itemTexts = items?.map((p, idx) => {
     const comp =
       p.complications && p.complications.length > 0
         ? p.complications.join(", ")
