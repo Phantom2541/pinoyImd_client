@@ -5,13 +5,12 @@ import HumanBody from "./humanBody";
 import { useSelector } from "react-redux";
 
 export default function Body() {
-  const { patient: appointment } = useSelector(
-    ({ appointments }) => appointments
-  );
+  const { patient: appointment } = useSelector(({ appointments }) => appointments);
 
   const [slide, setSlide] = useState("");
-  const [isHovered, setIsHovered] = useState(false); // 🧠 Track if mouse is inside Body
   const scrollTimeout = useRef(null);
+  const bodyRef = useRef(null);
+  const humanRef = useRef(null); // 👈 Reference to HumanBody container
 
   // 🧬 Gender-based sections
   const gender = appointment?.patient?.gender?.toLowerCase?.() || "male";
@@ -34,10 +33,21 @@ export default function Body() {
     return "-33.3333%"; // fallback center
   };
 
-  // 🖱️ Scroll logic
+  // 🖱️ Scroll logic only active when inside HumanBody
   useEffect(() => {
     const handleScroll = (e) => {
-      if (!isHovered) return; // 🚫 Ignore scrolls outside Body
+      if (!humanRef.current || !bodyRef.current) return;
+
+      // check if mouse is over HumanBody area
+      const rect = humanRef.current.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
+      if (!inside) return; // ❌ only scroll-switch when inside HumanBody
+
       e.preventDefault();
 
       if (scrollTimeout.current) return;
@@ -50,10 +60,8 @@ export default function Body() {
       let nextIndex = currentIndex;
 
       if (delta > 0) {
-        // scroll down
         nextIndex = currentIndex < sections.length - 1 ? currentIndex + 1 : 0;
       } else if (delta < 0) {
-        // scroll up
         nextIndex = currentIndex > 0 ? currentIndex - 1 : sections.length - 1;
       }
 
@@ -62,18 +70,10 @@ export default function Body() {
 
     window.addEventListener("wheel", handleScroll, { passive: false });
     return () => window.removeEventListener("wheel", handleScroll);
-  }, [slide, sections, isHovered]);
-
-  useEffect(() => {
-    console.log("appointment changed:", appointment?._id);
-  }, [appointment]);
+  }, [slide, sections]);
 
   return (
-    <div
-      className="checkup-data-body"
-      onMouseEnter={() => setIsHovered(true)}  // ✅ Activate scroll logic
-      onMouseLeave={() => setIsHovered(false)} // ✅ Deactivate scroll logic
-    >
+    <div className="checkup-data-body" ref={bodyRef}>
       <div
         className="checkup-data-body-slide"
         style={{
@@ -88,6 +88,7 @@ export default function Body() {
           style={{
             marginRight: "auto",
             width: slide ? "calc(100% - 600px)" : "100%",
+            overflowY: "auto",
           }}
         >
           <HistorySwitcher task={slide} />
@@ -96,6 +97,7 @@ export default function Body() {
         {/* Human Body / Image Panel */}
         <div
           className="checkup-data-body-slide-image"
+          ref={humanRef} // 👈 Attach ref here
           style={{
             width: slide ? "600px" : "100%",
             transition: `width 0.5s ease ${slide ? "0.2s" : "0s"}`,
@@ -110,6 +112,7 @@ export default function Body() {
           style={{
             marginRight: "auto",
             width: slide ? "calc(100% - 600px)" : "100%",
+            overflowY: "auto",
           }}
         >
           <ToolsSwitcher task={slide} />
