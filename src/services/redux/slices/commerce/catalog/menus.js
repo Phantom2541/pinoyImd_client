@@ -6,7 +6,7 @@ const url = "commerce/catalog/menus";
 const initialState = {
   collections: [],
   clone: {
-    by: {
+    from: {
       _id: "",
       collections: [],
     },
@@ -55,6 +55,24 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const CLONE = createAsyncThunk(
+  `${url}/clone`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "clone");
     } catch (error) {
       const message =
         (error.response &&
@@ -193,6 +211,23 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+
+      .addCase(CLONE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(CLONE.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(CLONE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {

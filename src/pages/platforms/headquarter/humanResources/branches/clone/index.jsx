@@ -5,22 +5,24 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
+  MDBBtn,
 } from "mdbreact";
 import { TOGGLE_CLONE } from "../../../../../../services/redux/slices/assets/branches";
 import { useDispatch, useSelector } from "react-redux";
 import Bucket from "./bucket";
-import { capitalize } from "../../../../../../services/utilities";
-import { SetCLONE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
-
+import {
+  CLONE,
+  SetCLONE,
+} from "../../../../../../services/redux/slices/commerce/catalog/menus";
+import Header from "./header";
+import Spinner from "../../../../../../components/spinner";
+import utils from "./utils";
 export default function CloneModal() {
-  const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     { showCloneModal: show, collections: branches } = useSelector(
       ({ branches }) => branches
     ),
-    { clone = {} } = useSelector(({ menus }) => menus),
+    { clone = {}, formSubmitted } = useSelector(({ menus }) => menus),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,12 +30,26 @@ export default function CloneModal() {
       const mainBranch = branches.find((branch) => branch?.isMain) || {};
       if (mainBranch?._id) {
         const { _id = "", menus = [] } = mainBranch || {};
-        dispatch(SetCLONE({ ...clone, by: { _id, collections: menus } }));
+        dispatch(
+          SetCLONE({ ...clone, from: { _id, collections: utils.sort(menus) } })
+        );
       }
     }
-  }, [show, branches]);
+    // eslint-disable-next-line
+  }, [show, branches, dispatch]);
 
   const toggle = useCallback(() => dispatch(TOGGLE_CLONE()), [dispatch]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { from, ...rest } = clone;
+    // dispatch(CLONE({ token, data: { clone: { ...rest.to } } })).then(() => {
+    //   toggle();
+    //   dispatch(
+    //     SetCLONE({ from: { collections: [] }, to: { collections: [] } })
+    //   );
+    // });
+  };
 
   return (
     <MDBModal size="xl" isOpen={show} toggle={toggle} backdrop>
@@ -45,46 +61,27 @@ export default function CloneModal() {
         Clone Product & Services
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <MDBRow className="mb-2">
-          <MDBCol>
-            <MDBCard>
-              <MDBCardBody className="m-0 p-1 border border-info bg-light">
-                <div className="d-flex align-items-center">
-                  <h6 className="text-nowrap mt-2 mr-2">Clone By</h6>
-                  <select className="form-control form-control-sm">
-                    <option value={""}>Select Branch</option>
-                    {branches.map((item, index) => (
-                      <option key={index} value={item._id}>
-                        {capitalize(item.name)} {item.isMain ? "(Main)" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-          <MDBCol>
-            <MDBCard>
-              <MDBCardBody className="m-0 p-1 border border-info bg-light">
-                <div className="d-flex align-items-center">
-                  <h6 className="text-nowrap mt-2 mr-2">Clone To</h6>
-                  <select className="form-control form-control-sm">
-                    <option value={""}>Select Branch</option>
-                    {branches.map((item, index) => (
-                      <option key={index} value={item._id}>
-                        {capitalize(item.name)} {item.isMain ? "(Main)" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-        <MDBRow>
-          <Bucket identifier="by" />
-          <Bucket identifier="to" />
-        </MDBRow>
+        <form onSubmit={handleSubmit}>
+          <MDBRow className="mb-1">
+            <Header identifier="from" />
+            <Header identifier="to" />
+          </MDBRow>
+          <MDBRow>
+            <Bucket identifier="from" />
+            <Bucket identifier="to" />
+          </MDBRow>
+          {/* <div className="text-center">
+            <MDBBtn
+              className="mt-4"
+              color="primary"
+              rounded
+              type="submit"
+              disabled={clone?.to?.collections?.length === 0 || formSubmitted}
+            >
+              Save <Spinner formSubmitted={formSubmitted} />
+            </MDBBtn>
+          </div> */}
+        </form>
       </MDBModalBody>
     </MDBModal>
   );
