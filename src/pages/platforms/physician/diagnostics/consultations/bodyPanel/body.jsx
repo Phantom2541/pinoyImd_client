@@ -10,9 +10,10 @@ export default function Body() {
   );
 
   const [slide, setSlide] = useState("");
+  const [isHovered, setIsHovered] = useState(false); // 🧠 Track if mouse is inside Body
   const scrollTimeout = useRef(null);
 
-  // 🧠 Compute gender-based sections
+  // 🧬 Gender-based sections
   const gender = appointment?.patient?.gender?.toLowerCase?.() || "male";
 
   const sections = useMemo(() => {
@@ -36,9 +37,10 @@ export default function Body() {
   // 🖱️ Scroll logic
   useEffect(() => {
     const handleScroll = (e) => {
+      if (!isHovered) return; // 🚫 Ignore scrolls outside Body
       e.preventDefault();
-      if (scrollTimeout.current) return;
 
+      if (scrollTimeout.current) return;
       scrollTimeout.current = setTimeout(() => {
         scrollTimeout.current = null;
       }, 500);
@@ -60,14 +62,18 @@ export default function Body() {
 
     window.addEventListener("wheel", handleScroll, { passive: false });
     return () => window.removeEventListener("wheel", handleScroll);
-  }, [slide, sections]);
+  }, [slide, sections, isHovered]);
 
   useEffect(() => {
     console.log("appointment changed:", appointment?._id);
   }, [appointment]);
 
   return (
-    <div className="checkup-data-body">
+    <div
+      className="checkup-data-body"
+      onMouseEnter={() => setIsHovered(true)}  // ✅ Activate scroll logic
+      onMouseLeave={() => setIsHovered(false)} // ✅ Deactivate scroll logic
+    >
       <div
         className="checkup-data-body-slide"
         style={{
