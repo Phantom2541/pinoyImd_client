@@ -5,6 +5,17 @@ const url = "commerce/catalog/menus";
 
 const initialState = {
   collections: [],
+  clone: {
+    by: {
+      _id: "",
+      collections: [],
+    },
+    to: {
+      _id: "",
+      collections: [],
+    },
+  },
+
   filtered: [],
   menuList: [],
   maxPage: 5,
@@ -105,7 +116,10 @@ export const reduxSlice = createSlice({
 
       // state.isSuccess = true;
     },
-  
+    SetCLONE: (state, { payload }) => {
+      state.clone = payload;
+    },
+
     SetCOLLECTIONS: (state, { payload }) => {
       state.collections = payload;
     },
@@ -132,7 +146,7 @@ export const reduxSlice = createSlice({
         const { payload, success } = action.payload;
 
         state.collections = state.filtered = payload;
-        state.menuList = payload.filter(item => item.opd > 0)
+        state.menuList = payload.filter((item) => item.opd > 0);
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
@@ -209,7 +223,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetFILTERED, SetCOLLECTIONS, SetMaxPage, SetActivePAGE, RESET,SetMENUS } =
-  reduxSlice.actions;
+export const {
+  SetFILTERED,
+  SetCOLLECTIONS,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+  SetMENUS,
+  SetCLONE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;
