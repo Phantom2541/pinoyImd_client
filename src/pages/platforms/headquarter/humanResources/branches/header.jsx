@@ -5,6 +5,7 @@ import {
   BROWSE,
   SetFILTERED,
   SetSELECTED,
+  TOGGLE_CLONE,
 } from "../../../../../services/redux/slices/assets/branches";
 import Search from "../../../../../components/searchables/search";
 
@@ -19,7 +20,10 @@ const Header = () => {
       dispatch(
         BROWSE({
           token,
-          key: { companyId: activePlatform?.branch?.companyId._id },
+          key: {
+            companyId: activePlatform?.branch?.companyId._id,
+            isHeadQuarter: true,
+          },
         })
       );
   }, [dispatch, activePlatform?.branch?.companyId?._id, token]);
@@ -34,7 +38,13 @@ const Header = () => {
           {filtered.length} Branches
         </span>
       </div>
-      <MDBBtn size="sm" color="light" className="fw-bold px-2" rounded>
+      <MDBBtn
+        size="sm"
+        color="light"
+        className="fw-bold px-2"
+        rounded
+        onClick={() => dispatch(TOGGLE_CLONE())}
+      >
         <MDBIcon far icon="clone" className="mr-2" />
         Clone Product & Services
       </MDBBtn>
