@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import ToolsSwitcher from "../clinicalData";
 import HistorySwitcher from "../medicalHistory";
 import HumanBody from "./humanBody";
@@ -12,18 +12,15 @@ export default function Body() {
   const [slide, setSlide] = useState("");
   const scrollTimeout = useRef(null);
 
-  // Order ng lahat ng sections sa scroll sequence
-  const sections = [
-    "FMHx",
-    "PMHx",
-    "PSHx",
-    "SHx",
-    "OB Gyne Hx",
-    "Laboratory",
-    "Radiology",
-    "Vital",
-    "Medications",
-  ];
+  // 🧠 Compute gender-based sections
+  const gender = appointment?.patient?.gender?.toLowerCase?.() || "male";
+
+  const sections = useMemo(() => {
+    const base = ["FMHx", "PMHx", "PSHx", "SHx"];
+    const withOB = [...base, "OB Gyne Hx", "Laboratory", "Radiology", "Vital", "Medications"];
+    const withoutOB = [...base, "Laboratory", "Radiology", "Vital", "Medications"];
+    return gender === "female" ? withOB : withoutOB;
+  }, [gender]);
 
   const getTranslate = () => {
     if (!slide) return "-33.3333%"; // default center
@@ -36,12 +33,10 @@ export default function Body() {
     return "-33.3333%"; // fallback center
   };
 
-  // 👉 Scroll event logic
+  // 🖱️ Scroll logic
   useEffect(() => {
     const handleScroll = (e) => {
       e.preventDefault();
-
-      // debounce para hindi mabilis mag-skip ng sections
       if (scrollTimeout.current) return;
 
       scrollTimeout.current = setTimeout(() => {
@@ -65,7 +60,7 @@ export default function Body() {
 
     window.addEventListener("wheel", handleScroll, { passive: false });
     return () => window.removeEventListener("wheel", handleScroll);
-  }, [slide]);
+  }, [slide, sections]);
 
   useEffect(() => {
     console.log("appointment changed:", appointment?._id);
