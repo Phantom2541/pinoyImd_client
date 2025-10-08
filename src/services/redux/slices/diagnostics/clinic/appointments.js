@@ -7,6 +7,7 @@ const initialState = {
   filter: [],
   paginated: [],
   patient: {},
+  obGyneHistory: {},
   patientId: null,
   physician: "",
   activeSched: "",
@@ -285,6 +286,8 @@ export const reduxSlice = createSlice({
     },
     SetPATIENT: (state, { payload }) => {
       state.patient = payload;
+      state.patientId = payload?.patient?._id;
+      state.obGyneHistory = payload?.ehr?.obGyneHistory;
     },
     SetPHYSICIAN: (state, { payload }) => {
       if (!payload) {

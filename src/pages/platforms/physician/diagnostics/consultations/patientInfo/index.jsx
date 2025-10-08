@@ -35,6 +35,7 @@ export default function Patient({ activePanels }) {
       cluster = [],
     } = useSelector(({ appointments }) => appointments),
     dispatch = useDispatch();
+
   const [isRegister, setIsRegister] = useState(false),
     [searchValue, setSearchValue] = useState({});
   const location = useLocation();

@@ -4,24 +4,29 @@ import Swal from "sweetalert2";
 export async function handleAddObGyneHistory() {
   const { value: formValues } = await Swal.fire({
     title: "Add OB-Gyne History",
-    width: "600px",
+    width: "450px",
     html: `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
-        <label class="smSweetOB-label">
-          Menarche (age)
-          <input id="swal-menarche" type="number" class="smSweetOB-input">
-        </label>
+      <div>
+      <div class="d-flex ">
+  <label class="smSweetOB-label">
+    Menarche (age)
+    <input id="swal-menarche" type="number" class="smSweetOB-input">
+  </label>
 
-        <label class="smSweetOB-label">
-          Last Menstrual Period
-          <input id="swal-lmp" type="date" class="smSweetOB-input">
-        </label>
+  <label class="smSweetOB-label ml-2">
+    Last Menstrual Period
+    <input id="swal-lmp" type="date" class="smSweetOB-input">
+  </label>
+</div>
+<div>
+  <label class="smSweetOB-label" style="grid-column: span 2;">
+    Contraception
+    <input id="swal-contraception" class="wdSweetOB-input">
+  </label>
 
-        <label class="smSweetOB-label">
-          Contraception
-          <input id="swal-contraception" class="wdSweetOB-input">
-        </label>
-      </div>
+
+</div>
+
     `,
     focusConfirm: false,
     showCancelButton: true,
