@@ -6,20 +6,24 @@ import {
   MDBIcon,
   MDBTable,
 } from "mdbreact";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { globalSearch } from "../../../../../../services/utilities";
-import dragAndDrop from "../../../../../../assets/drag-and-drop.png";
-import { SetCLONE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
+import { globalSearch } from "../../../../../../../services/utilities";
+import dragAndDrop from "../../../../../../../assets/drag-and-drop.png";
+import {
+  SetCLONE,
+  SetCLONE_WARNING,
+} from "../../../../../../../services/redux/slices/commerce/catalog/menus";
 import Swal from "sweetalert2";
-import { capitalize } from "lodash";
+import { capitalize, over } from "lodash";
+import utils from "../utils";
 
 const Bucket = ({ identifier = "from" }) => {
   const [clusters, setClusters] = useState([]);
   const { clone } = useSelector(({ menus }) => menus);
   const { collections = [] } = clone[identifier] || {};
+  const { collections: branches } = useSelector(({ branches }) => branches);
   const dispatch = useDispatch();
-  const length = collections.length;
 
   const containerRef = useRef(null);
 
@@ -80,15 +84,6 @@ const Bucket = ({ identifier = "from" }) => {
       dragPreview.clientWidth / 2,
       dragPreview.clientHeight / 2
     );
-    if (!clone?.to?._id) {
-      Swal.fire({
-        icon: "warning",
-        title: "Select a Target Branch",
-        text: "Please choose the branch where you want to clone the data before proceeding.",
-        confirmButtonText: "Got it!",
-      });
-      return;
-    }
 
     e.dataTransfer.setData(
       "application/json",
@@ -99,18 +94,82 @@ const Bucket = ({ identifier = "from" }) => {
   const moveItem = (fromKey, toKey, item) => {
     const fromCollections = [...clone[fromKey].collections];
     const toCollections = [...clone[toKey].collections];
-    const itemName = item.name || item.abbreviation;
+    const itemName = utils.getName(item);
 
     const index = fromCollections.findIndex(
-      (c) => (c.name || c.abbreviation) === itemName
+      (c) => utils.getName(c) === itemName
     );
-    const isExist = toCollections.some(
-      (c) => (c.name || c.abbreviation) === itemName
+    const isExistInTo = toCollections.some(
+      (c) => utils.getName(c) === itemName && !c.deleted
     );
-    if (index > -1 && isExist) {
-      // fromCollections.splice(index, 1);
-    } else if (!isExist) {
-      toCollections.unshift(item);
+    const isOverwrite = toCollections.some(
+      (c) =>
+        utils.getName(c) === itemName &&
+        item._id !== c._id &&
+        !c.deleted &&
+        !c.overwrite
+    );
+    if (isOverwrite) {
+      const fromBranchName =
+        utils.getBranchName(clone?.from?._id, branches) ||
+        "General Tinio Branch";
+      const toBranchName =
+        utils.getBranchName(clone?.to?._id, branches) || "Pantabangan Branch";
+
+      Swal.fire({
+        icon: "warning",
+        title: "Overwrite Confirmation",
+        html: `
+    <p style="font-size: 15px; line-height: 1.5;">
+      The menu item <strong>${utils.getName(item)}</strong> already exists in 
+      <strong>${toBranchName}</strong>.<br><br>
+      If you proceed, the existing information in 
+      <strong>${toBranchName}</strong> will be <b>replaced</b> with the one from 
+      <strong>${fromBranchName}</strong>.<br><br>
+      Are you sure you want to overwrite it?
+    </p>
+  `,
+        showCancelButton: true,
+        confirmButtonText: "Yes, overwrite it",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Proceed with overwrite
+          const toIndex = toCollections.findIndex(
+            (c) => utils.getName(c) === itemName
+          );
+          const { _id, ...rest } = item;
+          toCollections[toIndex] = {
+            ...rest,
+            overwrite: true,
+            new: false,
+            deleted: false,
+            _id: toCollections[toIndex]?._id,
+          };
+
+          dispatch(
+            SetCLONE({
+              ...clone,
+              [toKey]: { ...clone[toKey], collections: toCollections },
+            })
+          );
+        }
+      });
+      return; // stop further execution
+    }
+
+    if (!isExistInTo) {
+      const { _id, ...rest } = item;
+
+      toCollections[index] = {
+        ...rest,
+        deleted: false,
+        overwrite: false,
+        new: true,
+      };
     }
 
     dispatch(
@@ -126,6 +185,15 @@ const Bucket = ({ identifier = "from" }) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("application/json");
     if (!data) return;
+    if (!clone?.to?._id) {
+      Swal.fire({
+        icon: "warning",
+        title: "Select a Target Branch",
+        text: "Please choose the branch where you want to clone the data before proceeding.",
+        confirmButtonText: "Got it!",
+      });
+      return;
+    }
     const { item, fromList } = JSON.parse(data);
     if (fromList === toList) return;
     moveItem(fromList, toList, item);
@@ -133,7 +201,27 @@ const Bucket = ({ identifier = "from" }) => {
   const isFrom = identifier === "from";
 
   const handleAction = () => {
-    const cloneCollections = isFrom ? clone?.from?.collections : [];
+    const { from = {}, to = {} } = clone;
+    const { collections = [] } = from;
+    const overwriteItems = to.collections.filter((toItem) => {
+      const match = collections.find(
+        (fromItem) =>
+          utils.getName(fromItem) === utils.getName(toItem) &&
+          fromItem._id !== toItem._id &&
+          !fromItem.deleted &&
+          !fromItem.overwrite &&
+          fromItem._id
+      );
+      return match && !toItem.overwrite && !toItem.deleted && toItem._id;
+    });
+
+    const cloneCollections = isFrom
+      ? collections
+      : new Array(collections.length).fill({});
+
+    if (isFrom && overwriteItems.length > 0) {
+      return dispatch(SetCLONE_WARNING(overwriteItems));
+    }
     dispatch(
       SetCLONE({
         ...clone,
@@ -145,8 +233,10 @@ const Bucket = ({ identifier = "from" }) => {
 
   const handleRemove = (item) => {
     const menus = [...clone[identifier].collections];
-    const index = menus.findIndex((m) => m._id === item._id);
-    menus.splice(index, 1);
+    const index = menus.findIndex(
+      (m) => utils.getName(m) === utils.getName(item)
+    );
+    menus[index] = { ...item, deleted: true, overwrite: false, new: false };
     dispatch(
       SetCLONE({
         ...clone,
@@ -154,6 +244,11 @@ const Bucket = ({ identifier = "from" }) => {
       })
     );
   };
+
+  const length = collections.filter(
+    (item) => !item?.deleted && Object.keys(item).length
+  ).length;
+
   return (
     <MDBCol
       onDrop={(e) => handleDrop(e, identifier)}
@@ -189,6 +284,7 @@ const Bucket = ({ identifier = "from" }) => {
                       <MDBBtn
                         size="sm"
                         onClick={handleAction}
+                        disabled={!clone?.to?._id}
                         className="px-2"
                         color={isFrom ? "success" : "danger"}
                       >
@@ -213,10 +309,13 @@ const Bucket = ({ identifier = "from" }) => {
                       identifier === "from" ? to.collections : from.collections;
                     const isExist = others?.some(
                       (c) =>
-                        (c.name || c.abbreviation) ===
-                        (collection.name || collection.abbreviation)
+                        utils.getName(c) === utils.getName(collection) &&
+                        !c.deleted
                     );
-                    const isDummy = collection?._id ? false : true;
+                    const isDummy =
+                      Object.keys(collection).length && !collection.deleted
+                        ? false
+                        : true;
                     return (
                       <tr key={collection._id}>
                         <td
@@ -237,7 +336,9 @@ const Bucket = ({ identifier = "from" }) => {
                                 style={{ fontWeight: "400" }}
                                 className="ml-1"
                               >
-                                {capitalize(name || abbreviation)}
+                                {isDummy
+                                  ? ""
+                                  : capitalize(name || abbreviation)}
                               </span>
                             </div>
                             {!isDummy && (
@@ -245,7 +346,7 @@ const Bucket = ({ identifier = "from" }) => {
                                 size="sm"
                                 color="danger"
                                 rounded
-                                className="px-2 m-0 py-1"
+                                className="px-2 m-0 py-0"
                                 onClick={() => handleRemove(collection)}
                               >
                                 <MDBIcon icon="minus" />
@@ -290,6 +391,9 @@ const Bucket = ({ identifier = "from" }) => {
               </tbody>
             </MDBTable>
           </div>
+          {/* <MDBBtn size="sm" color="warning" block disabled={!clone}>
+            <MDBIcon icon="sync" className="mr-1" /> UNDO CHANGES
+          </MDBBtn> */}
         </MDBCardBody>
       </MDBCard>
     </MDBCol>

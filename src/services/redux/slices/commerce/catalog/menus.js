@@ -15,7 +15,8 @@ const initialState = {
       collections: [],
     },
   },
-
+  showCloneWarning: false,
+  overwriteItems: [], //for cloning items
   filtered: [],
   menuList: [],
   maxPage: 5,
@@ -136,6 +137,15 @@ export const reduxSlice = createSlice({
     },
     SetCLONE: (state, { payload }) => {
       state.clone = payload;
+    },
+
+    SetCLONE_WARNING: (state, { payload }) => {
+      state.overwriteItems = payload;
+      state.showCloneWarning = true;
+    },
+
+    TOGGLE_CLONE_WARNING: (state) => {
+      state.showCloneWarning = !state.showCloneWarning;
     },
 
     SetCOLLECTIONS: (state, { payload }) => {
@@ -266,6 +276,8 @@ export const {
   RESET,
   SetMENUS,
   SetCLONE,
+  SetCLONE_WARNING,
+  TOGGLE_CLONE_WARNING,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

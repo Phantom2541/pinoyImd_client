@@ -1,0 +1,169 @@
+import { useCallback } from "react";
+import {
+  MDBModal,
+  MDBModalBody,
+  MDBIcon,
+  MDBModalHeader,
+  MDBBtn,
+} from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  SetCLONE,
+  TOGGLE_CLONE_WARNING,
+} from "../../../../../../../services/redux/slices/commerce/catalog/menus";
+import utils from "../utils";
+import { capitalize } from "../../../../../../../services/utilities";
+export default function CloneWarning() {
+  const { token } = useSelector(({ auth }) => auth),
+    {
+      showCloneWarning: show,
+      overwriteItems,
+      clone,
+    } = useSelector(({ menus }) => menus),
+    { collections: branches } = useSelector(({ branches }) => branches),
+    dispatch = useDispatch();
+
+  const toggle = () => dispatch(TOGGLE_CLONE_WARNING());
+  const { from, to } = clone;
+
+  const collectionsWithoutOverwrite = () =>
+    [...from.collections].filter(
+      (item) =>
+        !overwriteItems.some((m) => utils.getName(m) === utils.getName(item)) &&
+        Object.keys(item).length
+    );
+
+  const handleSubmit = (isOverwrite = false) => {
+    const fromCollections = [...from.collections];
+    const existingCollections = [...to.collections];
+
+    const arrangeDatas = (collections, isNew = true) => {
+      collections
+        .filter((m) => Object.keys(m).length)
+        .forEach((item) => {
+          const index = fromCollections.findIndex(
+            (m) => utils.getName(m) === utils.getName(item)
+          );
+          const baseItem = isNew ? item : { ...fromCollections[index] };
+          const { _id, ...rest } = baseItem;
+          console.log("index", index, baseItem);
+          if (index > -1) {
+            existingCollections[index] = {
+              ...rest,
+              overwrite: isNew ? false : true,
+              deleted: false,
+              new: isNew ? true : false,
+            };
+          }
+        });
+    };
+
+    arrangeDatas(collectionsWithoutOverwrite(), true);
+
+    if (isOverwrite) {
+      arrangeDatas(overwriteItems, false);
+    }
+    dispatch(
+      SetCLONE({ ...clone, to: { ...to, collections: existingCollections } })
+    );
+    toggle();
+  };
+
+  return (
+    <MDBModal
+      size="md"
+      isOpen={show}
+      toggle={toggle}
+      backdrop
+      className="mt-5"
+      tabIndex="3"
+    >
+      <MDBModalHeader toggle={toggle} className="red darken-3 white-text">
+        <MDBIcon icon="clone" className="mr-2" />
+        Clone Confirmation
+      </MDBModalHeader>
+      <MDBModalBody className="mb-0">
+        <p
+          style={{
+            marginBottom: "12px",
+            fontSize: "15px",
+            lineHeight: "1.6",
+          }}
+        >
+          The following menus already exist in{" "}
+          <strong style={{ color: "#007bff" }}>
+            {utils.getBranchName(to._id, branches)}
+          </strong>{" "}
+          and will be <b style={{ color: "#d9534f" }}>overwritten</b> by menus
+          from{" "}
+          <strong style={{ color: "#007bff" }}>
+            {utils.getBranchName(from._id, branches)}
+          </strong>
+          .
+        </p>
+        <p>
+          Menus to be overwritten <strong>({overwriteItems.length})</strong>
+        </p>
+
+        <div
+          style={{
+            maxHeight: "150px",
+            overflowY: "auto",
+            border: "1px solid #dee2e6",
+            borderRadius: "8px",
+            padding: "10px",
+            backgroundColor: "#f8f9fa",
+            marginTop: "10px",
+            marginBottom: "10px",
+            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
+          }}
+        >
+          <ul
+            style={{
+              listStyleType: "none",
+              padding: 0,
+              margin: 0,
+            }}
+          >
+            {overwriteItems.map((item, index) => (
+              <li
+                key={index}
+                style={{
+                  padding: "6px 0",
+                  borderBottom:
+                    index !== overwriteItems.length - 1
+                      ? "1px solid #ddd"
+                      : "none",
+                  color: "#343a40",
+                  fontSize: "14px",
+                }}
+              >
+                • {capitalize(utils.getName(item))}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p
+          style={{
+            marginTop: "14px",
+            fontSize: "14px",
+            lineHeight: "1.6",
+          }}
+        >
+          Would you like to <b>overwrite</b> these existing menus or <b>skip</b>{" "}
+          them and only clone new ones?
+        </p>
+        <div className="d-flex justify-content-center">
+          <MDBBtn color="info" onClick={() => handleSubmit(true)}>
+            Overwrite
+          </MDBBtn>
+          <MDBBtn color="primary" onClick={() => handleSubmit(false)}>
+            Skip Duplicates
+          </MDBBtn>
+        </div>
+      </MDBModalBody>
+    </MDBModal>
+  );
+}

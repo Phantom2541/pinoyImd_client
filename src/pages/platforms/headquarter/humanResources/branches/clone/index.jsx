@@ -17,6 +17,7 @@ import {
 import Header from "./header";
 import Spinner from "../../../../../../components/spinner";
 import utils from "./utils";
+import CloneWarning from "./bucket/modal";
 export default function CloneModal() {
   const { token } = useSelector(({ auth }) => auth),
     { showCloneModal: show, collections: branches } = useSelector(
@@ -82,6 +83,7 @@ export default function CloneModal() {
             </MDBBtn>
           </div> */}
         </form>
+        <CloneWarning />
       </MDBModalBody>
     </MDBModal>
   );

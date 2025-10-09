@@ -1,3 +1,5 @@
+import { capitalize } from "../../../../../../services/utilities";
+
 const utils = {
   changeTo: (menus, BASE_LENGTH, fromCollections) => {
     // Create base array
@@ -59,12 +61,12 @@ const utils = {
           fromCollections,
           finalToCollections.length
         ),
-        ...(isFrom && { _id: newBranch }),
+        ...(isFrom && { _id: newBranch, deleted: [] }),
       },
       to: {
         ...to,
         collections: finalToCollections,
-        ...(!isFrom && { _id: newBranch }),
+        ...(!isFrom && { _id: newBranch, deleted: [] }),
       },
     };
   },
@@ -93,6 +95,10 @@ const utils = {
 
   serialize: (text) => text?.toLowerCase()?.replace(/\s+/g, "").trim(),
   getName: (obj) => utils.serialize(obj?.name || obj?.abbreviation),
+  getBranchName: (branchId, branches) => {
+    const branch = branches.find((b) => b._id === branchId);
+    return capitalize(branch?.name || branch?.displayName);
+  },
 };
 
 export default utils;
