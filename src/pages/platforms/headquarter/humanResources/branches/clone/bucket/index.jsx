@@ -111,10 +111,11 @@ const Bucket = ({ identifier = "from" }) => {
     );
     if (isOverwrite) {
       const fromBranchName =
-        utils.getBranchName(clone?.from?._id, branches) ||
+        utils.getBranchName(clone?.[fromKey]?._id, branches) ||
         "General Tinio Branch";
       const toBranchName =
-        utils.getBranchName(clone?.to?._id, branches) || "Pantabangan Branch";
+        utils.getBranchName(clone?.[toKey]?._id, branches) ||
+        "Pantabangan Branch";
 
       Swal.fire({
         icon: "warning",
