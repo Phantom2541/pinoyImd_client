@@ -129,7 +129,9 @@ const Bucket = ({ identifier = "from" }) => {
         title: "Overwrite Confirmation",
         html: `
     <p style="font-size: 15px; line-height: 1.5;">
-      The menu item <strong>${utils.getName(item)}</strong> already exists in 
+      The ${clone.type} item <strong style="font-size: 22px;">${utils
+          .getName(item)
+          ?.toUpperCase()}</strong> already exists in 
       <strong>${toBranchName}</strong>.<br><br>
       If you proceed, the existing information in 
       <strong>${toBranchName}</strong> will be <b>replaced</b> with the one from 
