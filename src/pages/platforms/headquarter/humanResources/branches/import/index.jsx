@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import * as XLSX from "xlsx";
 import {
   MDBModal,
@@ -10,10 +10,8 @@ import {
   MDBTypography,
   MDBBtn,
 } from "mdbreact";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
-
 import {
   IMPORT,
   TOGGLE_IMPORT,
@@ -30,8 +28,8 @@ export default function ImportModal() {
     [branchId, setBranchId] = useState(""),
     [uploadKey, setUploadKey] = useState(Date.now()),
     [extracted, setExtracted] = useState([]),
-    dispatch = useDispatch();
-  const { addToast } = useToasts();
+    dispatch = useDispatch(),
+    { addToast } = useToasts();
 
   const toggle = () => dispatch(TOGGLE_IMPORT());
 
