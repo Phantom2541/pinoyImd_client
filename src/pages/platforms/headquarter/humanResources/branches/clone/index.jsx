@@ -39,17 +39,60 @@ export default function CloneModal() {
     // eslint-disable-next-line
   }, [show, branches, dispatch]);
 
+  useEffect(() => {
+    const _clone = utils.changeBranch(
+      "from",
+      clone?.from?._id,
+      clone,
+      branches,
+      true
+    );
+
+    dispatch(SetCLONE(_clone));
+    //eslint-disable-next-line
+  }, [clone.type, dispatch]);
   const toggle = useCallback(() => dispatch(TOGGLE_CLONE()), [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { from, ...rest } = clone;
-    // dispatch(CLONE({ token, data: { clone: { ...rest.to } } })).then(() => {
-    //   toggle();
-    //   dispatch(
-    //     SetCLONE({ from: { collections: [] }, to: { collections: [] } })
-    //   );
-    // });
+    const { from, to } = clone;
+    const getChanges = (key, obj) => obj.collections.filter((m) => m[key]);
+    const fromNew = getChanges("new", from);
+    const toNew = getChanges("new", to);
+    const fromOverwrite = getChanges("overwrite", from);
+    const toOverwrite = getChanges("overwrite", to);
+    const toDeleted = to.deleted;
+    const fromDeleted = from.deleted;
+
+    dispatch(
+      CLONE({
+        token,
+        data: {
+          type: clone.type,
+          from: {
+            branchId: from._id,
+            new: fromNew,
+            overwrite: fromOverwrite,
+            deleted: fromDeleted,
+          },
+          to: {
+            branchId: to._id,
+            new: toNew,
+            overwrite: toOverwrite,
+            deleted: toDeleted,
+          },
+        },
+      })
+    ).then(() => {
+      toggle();
+      dispatch(
+        SetCLONE({
+          from: { collections: [], type: "menus", _id: "" },
+          to: { collections: [], type: "menus", _id: "" },
+          type: "menus",
+        })
+      );
+    });
   };
 
   return (
@@ -64,14 +107,14 @@ export default function CloneModal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBRow className="mb-1">
-            <Header identifier="from" />
+            <Header identifier="from" isMain />
             <Header identifier="to" />
           </MDBRow>
           <MDBRow>
             <Bucket identifier="from" />
             <Bucket identifier="to" />
           </MDBRow>
-          {/* <div className="text-center">
+          <div className="text-center">
             <MDBBtn
               className="mt-4"
               color="primary"
@@ -81,7 +124,7 @@ export default function CloneModal() {
             >
               Save <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
-          </div> */}
+          </div>
         </form>
         <CloneWarning />
       </MDBModalBody>

@@ -4,7 +4,7 @@ import { capitalize } from "../../../../../../services/utilities";
 import { SetCLONE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import utils from "./utils";
 
-const Header = ({ identifier = "to" }) => {
+const Header = ({ identifier = "to", isMain = false }) => {
   const { collections: branches } = useSelector(({ branches }) => branches);
   const { clone } = useSelector(({ menus }) => menus);
   const dispatch = useDispatch();
@@ -14,30 +14,12 @@ const Header = ({ identifier = "to" }) => {
   );
 
   const handleChangeBranch = (value) => {
-    // const { from = {}, to = {} } = clone;
-    // const fromCollections = [...from.collections];
-    // const toCollections = [...to.collections];
-    // const cluster = isFrom ? toCollections : fromCollections;
-
-    // const { menus = [] } =
-    //   branches.find((branch) => branch._id === value) || {};
     const _clone = utils.changeBranch(identifier, value, clone, branches);
-    console.log("_clone", _clone);
     dispatch(SetCLONE(_clone));
-    // dispatch(
-    //   SetCLONE({
-    //     ...clone,
-    //     [identifier]: {
-    //       ...clone?.[identifier],
-    //       _id: value,
-    //       collections: menus,
-    //     },
-    //   })
-    // );
   };
   return (
     <>
-      <MDBCol>
+      <MDBCol key={identifier}>
         <MDBCard style={{ borderRadius: "5px" }} className="border border-info">
           <MDBCardBody className="m-0 p-1 ">
             <div className="d-flex align-items-center">
@@ -50,13 +32,36 @@ const Header = ({ identifier = "to" }) => {
                 value={clone?.[identifier]?._id}
                 onChange={(e) => handleChangeBranch(e.target.value)}
               >
-                <option value={""}>Select Branch</option>
+                <option value={""} disabled>
+                  Select Branch
+                </option>
                 {filteredBranches.map((item, index) => (
                   <option key={index} value={item._id}>
                     {capitalize(item.name)} {item.isMain ? "(Main)" : ""}
                   </option>
                 ))}
               </select>
+              {isMain && (
+                <select
+                  className="form-control form-control-sm bg-light ml-3"
+                  style={{ width: "7rem" }}
+                  value={clone?.type}
+                  onChange={({ target }) => {
+                    dispatch(
+                      SetCLONE({
+                        ...clone,
+                        type: target.value,
+                        from: { ...clone.from, deleted: [] },
+                        to: { ...clone.to, deleted: [] },
+                      })
+                    );
+                    console.log(clone);
+                  }}
+                >
+                  <option value={"menus"}>Menus</option>
+                  <option value={"services"}>Services</option>
+                </select>
+              )}
             </div>
           </MDBCardBody>
         </MDBCard>

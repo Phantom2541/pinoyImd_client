@@ -7,13 +7,16 @@ const initialState = {
   collections: [],
   clone: {
     from: {
+      type: "menus",
       _id: "",
       collections: [],
     },
     to: {
+      type: "menus",
       _id: "",
       collections: [],
     },
+    type: "menus",
   },
   showCloneWarning: false,
   overwriteItems: [], //for cloning items

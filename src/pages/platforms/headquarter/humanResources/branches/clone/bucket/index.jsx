@@ -8,14 +8,17 @@ import {
 } from "mdbreact";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { globalSearch } from "../../../../../../../services/utilities";
+import {
+  currency,
+  globalSearch,
+} from "../../../../../../../services/utilities";
 import dragAndDrop from "../../../../../../../assets/drag-and-drop.png";
 import {
   SetCLONE,
   SetCLONE_WARNING,
 } from "../../../../../../../services/redux/slices/commerce/catalog/menus";
 import Swal from "sweetalert2";
-import { capitalize, over } from "lodash";
+import { capitalize } from "lodash";
 import utils from "../utils";
 
 const Bucket = ({ identifier = "from" }) => {
@@ -24,7 +27,6 @@ const Bucket = ({ identifier = "from" }) => {
   const { collections = [] } = clone[identifier] || {};
   const { collections: branches } = useSelector(({ branches }) => branches);
   const dispatch = useDispatch();
-
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -92,6 +94,11 @@ const Bucket = ({ identifier = "from" }) => {
   };
 
   const moveItem = (fromKey, toKey, item) => {
+    const isSameItem = clone[toKey].collections.some(
+      (c) => c.deleted === false && c.oldId === item._id
+    );
+    if (isSameItem) return;
+    if (item.deleted) return;
     const fromCollections = [...clone[fromKey].collections];
     const toCollections = [...clone[toKey].collections];
     const itemName = utils.getName(item);
@@ -107,15 +114,15 @@ const Bucket = ({ identifier = "from" }) => {
         utils.getName(c) === itemName &&
         item._id !== c._id &&
         !c.deleted &&
-        !c.overwrite
+        !c.overwrite &&
+        item.branchId !== clone?.[toKey]?._id
     );
+    const deletedTo = [...(clone?.[toKey]?.deleted || [])];
     if (isOverwrite) {
       const fromBranchName =
-        utils.getBranchName(clone?.[fromKey]?._id, branches) ||
-        "General Tinio Branch";
+        utils.getBranchName(clone?.[fromKey]?._id, branches) || "";
       const toBranchName =
-        utils.getBranchName(clone?.[toKey]?._id, branches) ||
-        "Pantabangan Branch";
+        utils.getBranchName(clone?.[toKey]?._id, branches) || "";
 
       Swal.fire({
         icon: "warning",
@@ -163,21 +170,38 @@ const Bucket = ({ identifier = "from" }) => {
     }
 
     if (!isExistInTo) {
-      const { _id, ...rest } = item;
-
+      const oldItem = { ...toCollections[index] };
+      const isDeletedOld = oldItem?.deleted;
+      //kapag ang scenario is nilagay niya sa kabilang cluster tas dinelete niya sa kaniya
+      //then yung sa isang cluster na pinalagyan niya is ibinalik lang ulit sa kaniya
+      //para kung undo lang ibig sabihin wlang changes
+      const isUndo = item?.branchId === clone?.[toKey]?._id;
+      const { _id = "", ...rest } = item;
       toCollections[index] = {
         ...rest,
         deleted: false,
-        overwrite: false,
-        new: true,
+        overwrite: isUndo ? false : isDeletedOld ? true : false,
+        new: isUndo ? false : isDeletedOld ? false : true,
+        oldId: _id,
+        ...(isDeletedOld && { _id: oldItem?._id }),
       };
+      if (isDeletedOld) {
+        //kung deleted na yung dati niya..hindi na siya idedelete iooverride nalang ng bago
+        //then tatanggalin yung data niya dun sa deleted list
+        const deletedIndex = deletedTo.findIndex((d) => d._id === oldItem?._id);
+        deletedTo.splice(deletedIndex, 1);
+      }
     }
 
     dispatch(
       SetCLONE({
         ...clone,
         [fromKey]: { ...clone[fromKey], collections: fromCollections },
-        [toKey]: { ...clone[toKey], collections: toCollections },
+        [toKey]: {
+          ...clone[toKey],
+          collections: toCollections,
+          deleted: deletedTo,
+        },
       })
     );
   };
@@ -216,8 +240,36 @@ const Bucket = ({ identifier = "from" }) => {
       return match && !toItem.overwrite && !toItem.deleted && toItem._id;
     });
 
+    const deletedTo = isFrom
+      ? [...(clone?.to?.deleted || [])]
+      : utils.sort(
+          branches.find((branch) => branch._id === clone?.to?._id)?.[clone.type]
+        );
+
     const cloneCollections = isFrom
-      ? collections
+      ? collections.map((item) => {
+          //ichcheck muna yung deleted ng clone.to
+          //kapag yung item ng icoclone is nandun sa deleted to tatanggalin siya dun
+          //then yung bagong icoclone na item is magiging overwrite true na siya
+          const index = deletedTo.findIndex(
+            (d) => utils.getName(d) === utils.getName(item)
+          );
+
+          const deletedId = index > -1 ? deletedTo[index]?._id : null;
+
+          if (index > -1) {
+            deletedTo.splice(index, 1);
+          }
+          const { _id, ...rest } = item;
+
+          return {
+            ...rest,
+            overwrite: index > -1 ? true : false,
+            new: index > -1 ? false : true,
+            deleted: false,
+            ...(index > -1 && { _id: deletedId }),
+          };
+        })
       : new Array(collections.length).fill({});
 
     if (isFrom && overwriteItems.length > 0) {
@@ -226,22 +278,46 @@ const Bucket = ({ identifier = "from" }) => {
     dispatch(
       SetCLONE({
         ...clone,
-        to: { ...clone.to, collections: cloneCollections },
+        to: {
+          ...clone.to,
+          collections: cloneCollections,
+          //remove all get the orginal menus from branches then declare as deleted
+          deleted: deletedTo,
+        },
       })
     );
   };
   const handleDragOver = (e) => e.preventDefault();
 
   const handleRemove = (item) => {
+    const deleted = [...(clone[identifier]?.deleted || [])];
     const menus = [...clone[identifier].collections];
     const index = menus.findIndex(
       (m) => utils.getName(m) === utils.getName(item)
     );
     menus[index] = { ...item, deleted: true, overwrite: false, new: false };
+    if (item.branchId === clone?.[identifier]?._id || item?.overwrite) {
+      deleted.push(item);
+    }
     dispatch(
       SetCLONE({
         ...clone,
-        [identifier]: { ...clone[identifier], collections: menus },
+        [identifier]: { ...clone[identifier], collections: menus, deleted },
+      })
+    );
+  };
+
+  const handleUndo = () => {
+    const _clone = utils.changeBranch(
+      identifier,
+      clone?.[identifier]?._id,
+      clone,
+      branches
+    );
+    dispatch(
+      SetCLONE({
+        ..._clone,
+        [identifier]: { ..._clone?.[identifier], deleted: [] },
       })
     );
   };
@@ -249,6 +325,11 @@ const Bucket = ({ identifier = "from" }) => {
   const length = collections.filter(
     (item) => !item?.deleted && Object.keys(item).length
   ).length;
+
+  const changes =
+    collections.filter(
+      (item) => (item?.new || item?.overwrite) && Object.keys(item).length
+    ).length + clone?.[identifier]?.deleted?.length || 0;
 
   return (
     <MDBCol
@@ -260,20 +341,21 @@ const Bucket = ({ identifier = "from" }) => {
           <div
             id={`${identifier}-bucket`}
             style={{
-              maxHeight: "300px",
+              maxHeight: "400px",
               overflow: "auto",
-              minHeight: "300px",
+              minHeight: "400px",
             }}
             ref={containerRef}
           >
             <MDBTable small>
               <thead className="sticky" style={{ top: "0", zIndex: 1 }}>
                 <tr>
-                  <th className="fw-bold py-1">
+                  <th className="fw-bold py-1" colSpan={3}>
                     <div className="d-flex align-items-center w-100 ">
                       <div className="d-flex align-items-center flex-grow-1">
                         <span className="text-nowrap mr-2">
-                          Menus {length ? `(${length})` : ``}
+                          {capitalize(clone?.type)}{" "}
+                          {length ? `(${length})` : ``}
                         </span>
                         <input
                           type="search"
@@ -318,18 +400,19 @@ const Bucket = ({ identifier = "from" }) => {
                         ? false
                         : true;
                     return (
-                      <tr key={collection._id}>
-                        <td
-                          onDrop={(e) => handleDrop(e, identifier)}
-                          onDragOver={handleDragOver}
-                          className={`cursor-pointer ${isDummy && "bg-light"} ${
-                            !isExist && !isDummy && "bg-info text-white"
-                          }`}
-                          draggable
-                          onDragStart={(e) =>
-                            handleDragStart(e, collection, identifier)
-                          }
-                        >
+                      <tr
+                        key={`${collection._id}-${index}-${identifier}`}
+                        onDrop={(e) => handleDrop(e, identifier)}
+                        onDragOver={handleDragOver}
+                        className={`cursor-pointer ${isDummy && "bg-light"} ${
+                          !isExist && !isDummy && "bg-info text-white"
+                        }`}
+                        draggable
+                        onDragStart={(e) =>
+                          handleDragStart(e, collection, identifier)
+                        }
+                      >
+                        <td>
                           <div className="d-flex align-items-center justify-content-between">
                             <div>
                               {index + 1}.
@@ -342,18 +425,25 @@ const Bucket = ({ identifier = "from" }) => {
                                   : capitalize(name || abbreviation)}
                               </span>
                             </div>
-                            {!isDummy && (
-                              <MDBBtn
-                                size="sm"
-                                color="danger"
-                                rounded
-                                className="px-2 m-0 py-0"
-                                onClick={() => handleRemove(collection)}
-                              >
-                                <MDBIcon icon="minus" />
-                              </MDBBtn>
-                            )}
                           </div>
+                        </td>
+                        <td style={{ fontWeight: 400 }}>
+                          {!isDummy && (
+                            <span>{currency.format(collection?.opd)}</span>
+                          )}
+                        </td>
+                        <td>
+                          {!isDummy && (
+                            <MDBBtn
+                              size="sm"
+                              color="danger"
+                              rounded
+                              className="px-2 m-0 py-0 float-right"
+                              onClick={() => handleRemove(collection)}
+                            >
+                              <MDBIcon icon="minus" />
+                            </MDBBtn>
+                          )}
                         </td>
                       </tr>
                     );
@@ -392,9 +482,18 @@ const Bucket = ({ identifier = "from" }) => {
               </tbody>
             </MDBTable>
           </div>
-          {/* <MDBBtn size="sm" color="warning" block disabled={!clone}>
-            <MDBIcon icon="sync" className="mr-1" /> UNDO CHANGES
-          </MDBBtn> */}
+          <MDBBtn
+            size="sm"
+            color="warning"
+            block
+            disabled={changes === 0}
+            onClick={handleUndo}
+            className="fw-bold"
+            style={{ fontSize: ".7rem" }}
+          >
+            <MDBIcon icon="sync" className="mr-1" /> UNDO{" "}
+            {changes ? `(${changes})` : ""} CHANGES{" "}
+          </MDBBtn>
         </MDBCardBody>
       </MDBCard>
     </MDBCol>

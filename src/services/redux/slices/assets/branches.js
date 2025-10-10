@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
+import { Services } from "../../../fakeDb";
 
 const url = "assets/branches";
 
@@ -398,7 +399,13 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = state.filtered = payload;
+        state.collections = state.filtered = payload.map((item) => ({
+          ...item,
+          services: item.services.map((s) => ({
+            ...s,
+            ...Services.find(s.serviceId),
+          })),
+        }));
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
 

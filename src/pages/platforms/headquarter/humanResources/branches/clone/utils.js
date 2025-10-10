@@ -1,9 +1,24 @@
 import { capitalize } from "../../../../../../services/utilities";
-
+const getCorrectCollections = (obj, activeType, branches) => {
+  if (!obj._id) return [];
+  const { collections = [] } = obj;
+  if (obj.type === activeType) {
+    return [...collections];
+  } else {
+    return [
+      ...(branches.find((branch) => branch._id === obj._id)?.[activeType] ||
+        []),
+    ];
+  }
+};
 const utils = {
   changeTo: (menus, BASE_LENGTH, fromCollections) => {
-    // Create base array
-    const newArray = Array.from({ length: BASE_LENGTH }, () => ({}));
+    const fromLength = fromCollections.length;
+    const isMoreThanFrom = menus.length > fromLength;
+    const newArray = Array.from(
+      { length: isMoreThanFrom ? fromLength : BASE_LENGTH },
+      () => ({})
+    );
     // Fill matched indices
     menus.forEach((item) => {
       const index = fromCollections.findIndex(
@@ -25,15 +40,24 @@ const utils = {
     if (length <= 0) return menus;
     return [...menus, ...Array.from({ length }, () => ({}))];
   },
-  changeBranch: (identifier, newBranch, clone, branches) => {
-    const { from = {}, to = {} } = clone;
-    const { menus: actMenus = [] } =
-      branches.find((branch) => branch._id === newBranch) || {};
+
+  changeBranch: (
+    identifier,
+    newBranch,
+    clone,
+    branches,
+    isInitialize = false
+  ) => {
+    const { from = {}, to = {}, type } = clone;
+    const found = branches.find((branch) => branch._id === newBranch) || {};
+    const actMenus = found[type] || [];
     const isFrom = identifier === "from";
 
-    const toCollections = utils.removeDummy(isFrom ? to.collections : actMenus);
+    const toCollections = utils.sort(
+      isFrom ? getCorrectCollections(to, type, branches) : actMenus
+    );
     const fromCollections = utils.sort(
-      utils.removeDummy(isFrom ? actMenus : from.collections)
+      isFrom ? actMenus : getCorrectCollections(from, type, branches)
     );
 
     const BASE_LENGTH = Math.max(
@@ -47,12 +71,6 @@ const utils = {
       BASE_LENGTH,
       fromCollections
     );
-
-    console.log(
-      "fromCollections",
-      utils.changeFrom(fromCollections, finalToCollections.length)
-    );
-
     return {
       ...clone,
       from: {
@@ -61,12 +79,15 @@ const utils = {
           fromCollections,
           finalToCollections.length
         ),
-        ...(isFrom && { _id: newBranch, deleted: [] }),
+        ...((isFrom || from.type !== type) && { _id: newBranch, deleted: [] }),
+        type,
       },
       to: {
         ...to,
         collections: finalToCollections,
-        ...(!isFrom && { _id: newBranch, deleted: [] }),
+        ...((!isFrom || to.type !== type) &&
+          !isInitialize && { _id: newBranch, deleted: [] }),
+        type,
       },
     };
   },
@@ -91,7 +112,6 @@ const utils = {
           self.findIndex((m) => utils.getName(m) === utils.getName(item)) &&
         Object.keys(item).length
     ),
-  removeDummy: (arr) => utils.removeDuplicate(utils.sort(arr)),
 
   serialize: (text) => text?.toLowerCase()?.replace(/\s+/g, "").trim(),
   getName: (obj) => utils.serialize(obj?.name || obj?.abbreviation),
