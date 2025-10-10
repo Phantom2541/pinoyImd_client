@@ -1,3 +1,4 @@
+import { Services } from "../../../../../../services/fakeDb";
 import { capitalize } from "../../../../../../services/utilities";
 const getCorrectCollections = (obj, activeType, branches) => {
   if (!obj._id) return [];
@@ -118,6 +119,27 @@ const utils = {
   getBranchName: (branchId, branches) => {
     const branch = branches.find((b) => b._id === branchId);
     return capitalize(branch?.name || branch?.displayName);
+  },
+  findBranch: (branchId, branches) => branches.find((b) => b._id === branchId),
+  finalizeItemsOfBranch: (branch, type, newItems = []) => {
+    const existingItems = [...(branch[type] || [])];
+    if (newItems?.length === 0) return [...existingItems];
+    newItems.forEach((obj) => {
+      const index = existingItems.findIndex((i) => i._id === obj._id);
+      const item =
+        type === "services"
+          ? { ...obj, ...(Services.find(obj.serviceId) || {}) }
+          : obj;
+      if (index === -1) existingItems.push(item);
+      if (index > -1) {
+        if (item?.deletedAt) {
+          existingItems.splice(index, 1);
+        } else {
+          existingItems[index] = item;
+        }
+      }
+    });
+    return existingItems;
   },
 };
 

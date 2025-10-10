@@ -4,7 +4,7 @@ import { capitalize } from "../../../../../../services/utilities";
 import { SetCLONE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import utils from "./utils";
 
-const Header = ({ identifier = "to", isMain = false }) => {
+const Header = ({ identifier = "to", isMain = false, title = "" }) => {
   const { collections: branches } = useSelector(({ branches }) => branches);
   const { clone } = useSelector(({ menus }) => menus);
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const Header = ({ identifier = "to", isMain = false }) => {
           <MDBCardBody className="m-0 p-1 ">
             <div className="d-flex align-items-center">
               <h6 className="text-nowrap mt-2 mr-2" style={{ fontWeight: 500 }}>
-                Clone {capitalize(identifier)}
+                {title}
               </h6>
               <select
                 className="form-control form-control-sm bg-light"

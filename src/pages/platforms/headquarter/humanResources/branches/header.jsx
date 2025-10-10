@@ -11,7 +11,9 @@ import Search from "../../../../../components/searchables/search";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
-    { filtered, collections } = useSelector(({ branches }) => branches),
+    { filtered, collections, isLoading } = useSelector(
+      ({ branches }) => branches
+    ),
     dispatch = useDispatch();
 
   //initial values
@@ -43,6 +45,7 @@ const Header = () => {
         color="light"
         className="fw-bold px-2"
         rounded
+        disabled={isLoading}
         onClick={() => dispatch(TOGGLE_CLONE())}
       >
         <MDBIcon far icon="clone" className="mr-2" />

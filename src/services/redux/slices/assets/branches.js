@@ -347,6 +347,10 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    //this is for cloning
+    SetUPDATED_ITEMS_COLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+    },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
 
@@ -375,7 +379,7 @@ export const reduxSlice = createSlice({
       }
       state.collections = payload;
       state.filtered = payload.filter(
-        ({ department }) => department === state.department
+        ({ department }) => department === state?.department
       );
     },
     SetDepartment: (state, { payload }) => {
@@ -401,7 +405,7 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload.map((item) => ({
           ...item,
-          services: item.services.map((s) => ({
+          services: item?.services?.map((s) => ({
             ...s,
             ...Services.find(s.serviceId),
           })),
@@ -710,6 +714,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE_CLONE,
+  SetUPDATED_ITEMS_COLLECTIONS,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

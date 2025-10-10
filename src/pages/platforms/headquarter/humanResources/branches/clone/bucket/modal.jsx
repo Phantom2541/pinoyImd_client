@@ -58,7 +58,7 @@ export default function CloneWarning() {
               const deletedIndex = deletedTo.findIndex(
                 (d) => utils.getName(d) === utils.getName(item)
               );
-              const isExistInDeleted = index > -1;
+              const isExistInDeleted = deletedIndex > -1;
 
               //kapag existing sa deleted magiging overwrite siya kapag hinid naman magiging new siya
               existingCollections[index] = {

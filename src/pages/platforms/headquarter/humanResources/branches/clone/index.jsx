@@ -7,7 +7,10 @@ import {
   MDBRow,
   MDBBtn,
 } from "mdbreact";
-import { TOGGLE_CLONE } from "../../../../../../services/redux/slices/assets/branches";
+import {
+  SetUPDATED_ITEMS_COLLECTIONS,
+  TOGGLE_CLONE,
+} from "../../../../../../services/redux/slices/assets/branches";
 import { useDispatch, useSelector } from "react-redux";
 import Bucket from "./bucket";
 import {
@@ -32,7 +35,17 @@ export default function CloneModal() {
       if (mainBranch?._id) {
         const { _id = "", menus = [] } = mainBranch || {};
         dispatch(
-          SetCLONE({ ...clone, from: { _id, collections: utils.sort(menus) } })
+          SetCLONE({
+            ...clone,
+            from: {
+              _id,
+              collections: utils.sort(menus),
+              type: "menus",
+              deleted: [],
+            },
+            to: { _id: "", collections: [], deleted: [], type: "menus" },
+            type: "menus",
+          })
         );
       }
     }
@@ -40,17 +53,19 @@ export default function CloneModal() {
   }, [show, branches, dispatch]);
 
   useEffect(() => {
-    const _clone = utils.changeBranch(
-      "from",
-      clone?.from?._id,
-      clone,
-      branches,
-      true
-    );
+    if (show && clone?.from?._id) {
+      const _clone = utils.changeBranch(
+        "from",
+        clone?.from?._id,
+        clone,
+        branches,
+        true
+      );
 
-    dispatch(SetCLONE(_clone));
+      dispatch(SetCLONE(_clone));
+    }
     //eslint-disable-next-line
-  }, [clone.type, dispatch]);
+  }, [clone.type, dispatch, show]);
   const toggle = useCallback(() => dispatch(TOGGLE_CLONE()), [dispatch]);
 
   const handleSubmit = (e) => {
@@ -83,18 +98,45 @@ export default function CloneModal() {
           },
         },
       })
-    ).then(() => {
-      toggle();
+    ).then(({ payload }) => {
+      const { data } = payload;
+      const { from: src = {}, to: client = {} } = clone;
+      const fromBranch = utils.findBranch(src._id, branches);
+      const toBranch = utils.findBranch(client._id, branches);
+      const changes = [
+        {
+          branchId: src._id,
+          items: utils.finalizeItemsOfBranch(fromBranch, clone.type, data.from),
+        },
+        {
+          branchId: client._id,
+          items: utils.finalizeItemsOfBranch(toBranch, clone.type, data.to),
+        },
+      ];
+      const _branches = [...branches];
+
+      changes
+        .filter(({ items = [] }) => items.length)
+        .forEach(({ branchId, items }) => {
+          const index = _branches.findIndex((b) => b._id === branchId);
+          console.log("updated index", index);
+          if (index > -1) {
+            _branches[index] = { ..._branches[index], [clone.type]: items };
+          }
+        });
+
+      dispatch(SetUPDATED_ITEMS_COLLECTIONS(_branches));
       dispatch(
         SetCLONE({
-          from: { collections: [], type: "menus", _id: "" },
-          to: { collections: [], type: "menus", _id: "" },
+          from: { collections: [], type: "menus", _id: "", deleted: [] },
+          to: { collections: [], type: "menus", _id: "", deleted: [] },
           type: "menus",
         })
       );
+      toggle();
     });
   };
-
+  console.log("clone", clone);
   return (
     <MDBModal size="xl" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
@@ -107,8 +149,8 @@ export default function CloneModal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBRow className="mb-1">
-            <Header identifier="from" isMain />
-            <Header identifier="to" />
+            <Header identifier="from" isMain title="Source Clone" />
+            <Header identifier="to" title="Client" />
           </MDBRow>
           <MDBRow>
             <Bucket identifier="from" />
