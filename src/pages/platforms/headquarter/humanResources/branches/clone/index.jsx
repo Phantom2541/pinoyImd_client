@@ -12,6 +12,8 @@ import {
   TOGGLE_CLONE,
 } from "../../../../../../services/redux/slices/assets/branches";
 import { useDispatch, useSelector } from "react-redux";
+import { useToasts } from "react-toast-notifications";
+
 import Bucket from "./bucket";
 import {
   CLONE,
@@ -28,6 +30,7 @@ export default function CloneModal() {
     ),
     { clone = {}, formSubmitted } = useSelector(({ menus }) => menus),
     dispatch = useDispatch();
+  const { addToast } = useToasts();
 
   useEffect(() => {
     if (show) {
@@ -134,6 +137,9 @@ export default function CloneModal() {
         })
       );
       toggle();
+      addToast("Successfully Cloned.", {
+        appearance: "success",
+      });
     });
   };
   console.log("clone", clone);
