@@ -9,8 +9,8 @@ const preferences = {
       ageGap: "Conception to birth(approx. 40 weeks)",
     },
     {
-      name: "Newborn",
-      tagalog: "Bagong Silang",
+      name: "Neonatal",
+      tagalog: "Bagong Silang (Newborn)",
       minDay: 0,
       maxDay: 27,
       ageGap: "0–27 days",

@@ -7,15 +7,39 @@ import {
 import { MDBTable } from "mdbreact";
 import { Cellcount as CellCount } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
+import preferences from "../../../../../../../../../services/fakeDb/diagnostics/references";
+
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 
 export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
-  const { task, selected, showModal } = useSelector(
-      ({ validator }) => validator
-    ),
+  const {
+      task,
+      selected = {},
+      showModal,
+    } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
+  const dob = selected?.customerId?.dob;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
+  const gender = selected.customerId?.isMale ? "Male" : "Female";
+
   const { cc = [] } = task,
-    { Preferences, Abbreviation, Title } = CellCount;
+    { Abbreviation, Title, Si } = CellCount;
 
   // 1. Create array of refs for inputs
   const inputRefs = useRef([]);
@@ -56,7 +80,6 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       }
     }
   };
-  console.log(selected);
 
   return (
     <MDBTable hover responsive className="mb-0">
@@ -69,16 +92,13 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       </thead>
       <tbody>
         {(!!cc.length ? cc : [0, 0, 0, 0]).map((cell, index) => {
-          const { lo, hi, unit } =
-            Preferences[
-              selected.customerId
-                ? selected.customerId?.isMale
-                  ? "Male"
-                  : "Female"
-                : selected.patient?.isMale
-                ? "Male"
-                : "Female"
-            ][Abbreviation[index]];
+          const cellRef =
+            development === "adult"
+              ? Si.cells[Abbreviation[index]][development][gender]
+              : Si.cells[Abbreviation[index]][development];
+
+          const { lo, hi, unit } = cellRef || {};
+
           let color = "";
           if (!isNaN(cell)) {
             if (cell < lo) color = "blue";
