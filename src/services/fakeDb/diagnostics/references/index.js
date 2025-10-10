@@ -22,6 +22,20 @@ const References = {
       (d) => days >= d.minDay && days <= d.maxDay
     );
   },
+
+  getDevelopmentByBirthDate(dob) {
+    if (!dob) return null;
+
+    const bd = new Date(dob);
+    if (isNaN(bd)) return null;
+
+    const now = new Date();
+    const ageInDays = Math.floor((now - bd) / (1000 * 60 * 60 * 24));
+
+    return preferences.development.find(
+      (d) => ageInDays >= d.minDay && ageInDays <= d.maxDay
+    );
+  },
 };
 
 export default References;

@@ -10,12 +10,32 @@ import {
 } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 import { useEffect, useRef } from "react";
+import preferences from "../../../../../../../../../services/fakeDb/diagnostics/references";
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 
 export default function Rci({ activeTab, setActiveTab = () => {} }) {
-  const { task } = useSelector(({ validator }) => validator),
+  const { task, selected = {} } = useSelector(({ validator }) => validator),
     dispatch = useDispatch(),
-    { Preferences } = Cellcount,
+    { Si } = Cellcount,
     { Category } = RCI;
+
+  const dob = selected?.customerId?.dob;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
 
   const inputRefs = useRef([]);
 
@@ -80,7 +100,7 @@ export default function Rci({ activeTab, setActiveTab = () => {} }) {
       <tbody>
         {(!!task.rci.length ? task.rci : [0, 0, 0, 0]).map((value, index) => {
           const category = Category[index],
-            { lo, hi, unit } = Preferences.rci[category];
+            { lo, hi, unit } = Si.rci[category][development];
 
           return (
             <tr key={`rci-${index}`}>

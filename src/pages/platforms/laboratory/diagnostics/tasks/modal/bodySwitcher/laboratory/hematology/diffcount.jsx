@@ -9,7 +9,21 @@ import {
   Diffcount as DiffCount,
   Cellcount,
 } from "./../../../../../../../../../services/fakeDb";
+import preferences from "../../../../../../../../../services/fakeDb/diagnostics/references";
 
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 const _dc = {
   a: 0,
   b: 0,
@@ -20,12 +34,17 @@ const _dc = {
 };
 
 export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
-  const { task } = useSelector(({ validator }) => validator),
+  const { task, selected = {} } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   const { dc = _dc } = task,
-    { Preferences } = Cellcount,
+    { Conventionals } = Cellcount,
     { Category } = DiffCount;
+  const dob = selected?.customerId?.dob;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
 
   const inputRefs = useRef([]);
 
@@ -87,11 +106,8 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
       </thead>
       <tbody>
         {Object.entries(dc).map(([key, value], index) => {
-          console.log("diff", Preferences.differentials);
-          console.log("cat", Category[index]);
-
           const category = Category[index],
-            { lo, hi } = Preferences.differentials[category];
+            { lo, hi } = Conventionals.differentials[category][development];
 
           return (
             <tr key={`diff-${index}`}>
