@@ -216,9 +216,13 @@ export default function CloneWarning() {
           <MDBBtn color="info" onClick={() => handleSubmit(true)}>
             Overwrite
           </MDBBtn>
-          <MDBBtn color="primary" onClick={() => handleSubmit(false)}>
-            Skip Duplicates
-          </MDBBtn>
+          {collectionsWithoutOverwrite().length ? (
+            <MDBBtn color="primary" onClick={() => handleSubmit(false)}>
+              Skip Duplicates
+            </MDBBtn>
+          ) : (
+            ""
+          )}
         </div>
       </MDBModalBody>
     </MDBModal>

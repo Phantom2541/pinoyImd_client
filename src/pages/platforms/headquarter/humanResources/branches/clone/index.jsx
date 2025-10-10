@@ -142,7 +142,6 @@ export default function CloneModal() {
       });
     });
   };
-  console.log("clone", clone);
   return (
     <MDBModal size="xl" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
