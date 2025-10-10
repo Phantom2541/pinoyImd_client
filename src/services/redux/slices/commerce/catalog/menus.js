@@ -171,9 +171,6 @@ export const reduxSlice = createSlice({
       state.showCloneWarning = true;
     },
 
-    SetIMPORT: (state, { payload }) => {
-      state.import = payload;
-    },
     TOGGLE_IMPORT: (state) => {
       state.showImport = !state.showImport;
     },
@@ -327,7 +324,6 @@ export const {
   SetCLONE,
   SetCLONE_WARNING,
   TOGGLE_CLONE_WARNING,
-  SetIMPORT,
   TOGGLE_IMPORT,
 } = reduxSlice.actions;
 
