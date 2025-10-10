@@ -28,6 +28,7 @@ export default function ImportModal() {
     { showImport: show, formSubmitted } = useSelector(({ menus }) => menus),
     { collections: branches } = useSelector(({ branches }) => branches),
     [branchId, setBranchId] = useState(""),
+    [uploadKey, setUploadKey] = useState(Date.now()),
     [extracted, setExtracted] = useState([]),
     dispatch = useDispatch();
   const { addToast } = useToasts();
@@ -236,11 +237,15 @@ export default function ImportModal() {
           <div>
             <span style={{ fontWeight: 400 }}>Upload Excel File</span>
             <input
+              key={uploadKey}
               id="file-upload"
               type="file"
               accept=".xlsx, .xls"
               className="form-control mb-2"
-              onChange={handleFileUpload}
+              onChange={(e) => {
+                handleFileUpload(e);
+                setUploadKey(Date.now()); // force re-render
+              }}
             />
           </div>
 
