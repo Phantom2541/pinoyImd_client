@@ -18,7 +18,13 @@ const initialState = {
     },
     type: "menus",
   },
+  import: {
+    branchId: "",
+    file: "",
+    collections: [],
+  },
   showCloneWarning: false,
+  showImport: false,
   overwriteItems: [], //for cloning items
   filtered: [],
   menuList: [],
@@ -59,6 +65,24 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const IMPORT = createAsyncThunk(
+  `${url}/import`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "importMS");
     } catch (error) {
       const message =
         (error.response &&
@@ -147,6 +171,12 @@ export const reduxSlice = createSlice({
       state.showCloneWarning = true;
     },
 
+    SetIMPORT: (state, { payload }) => {
+      state.import = payload;
+    },
+    TOGGLE_IMPORT: (state) => {
+      state.showImport = !state.showImport;
+    },
     TOGGLE_CLONE_WARNING: (state) => {
       state.showCloneWarning = !state.showCloneWarning;
     },
@@ -203,6 +233,22 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+      .addCase(IMPORT.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(IMPORT.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(IMPORT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.formSubmitted = false;
@@ -281,6 +327,8 @@ export const {
   SetCLONE,
   SetCLONE_WARNING,
   TOGGLE_CLONE_WARNING,
+  SetIMPORT,
+  TOGGLE_IMPORT,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

@@ -7,6 +7,7 @@ import Body from "./collapse";
 import Footer from "./footer";
 import Modal from "./modal/index";
 import CloneModal from "./clone";
+import ImportModal from "./import";
 const Branches = () => {
   const { isLoading } = useSelector(({ branches }) => branches);
 
@@ -21,6 +22,7 @@ const Branches = () => {
       </MDBAnimation>
       <Modal />
       <CloneModal />
+      <ImportModal />
     </>
   );
 };

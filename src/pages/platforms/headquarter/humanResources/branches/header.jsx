@@ -8,6 +8,7 @@ import {
   TOGGLE_CLONE,
 } from "../../../../../services/redux/slices/assets/branches";
 import Search from "../../../../../components/searchables/search";
+import { TOGGLE_IMPORT } from "../../../../../services/redux/slices/commerce/catalog/menus";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
@@ -40,17 +41,30 @@ const Header = () => {
           {filtered.length} Branches
         </span>
       </div>
-      <MDBBtn
-        size="sm"
-        color="light"
-        className="fw-bold px-2"
-        rounded
-        disabled={isLoading}
-        onClick={() => dispatch(TOGGLE_CLONE())}
-      >
-        <MDBIcon far icon="clone" className="mr-2" />
-        Clone Product & Services
-      </MDBBtn>
+      <div>
+        <MDBBtn
+          size="sm"
+          color="light"
+          className="fw-bold px-2"
+          rounded
+          disabled={isLoading}
+          onClick={() => dispatch(TOGGLE_CLONE())}
+        >
+          <MDBIcon far icon="clone" className="mr-2" />
+          Clone Product & Services
+        </MDBBtn>
+        <MDBBtn
+          size="sm"
+          color="light"
+          className="fw-bold px-2"
+          rounded
+          disabled={isLoading}
+          onClick={() => dispatch(TOGGLE_IMPORT())}
+        >
+          <MDBIcon fas icon="file-import" className="mr-2" />
+          Import Menus Excel
+        </MDBBtn>
+      </div>
       <div>
         <Search
           handleAdd={(value) => dispatch(SetSELECTED({ name: value }))}

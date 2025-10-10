@@ -29,8 +29,6 @@ export default function Collapsable({ branch = {} }) {
       return 0; // keep relative order of others
     });
 
-  console.log("ao", ao);
-
   // const
   const style = {
     border: "black !important",
@@ -121,7 +119,6 @@ export default function Collapsable({ branch = {} }) {
     });
   };
 
-  console.log("filtered Personnels", filteredPersonnels);
   return (
     <MDBTable>
       <MDBTableHead>
