@@ -9,29 +9,37 @@ import {
   MDBCardBody,
   MDBTypography,
   MDBBtn,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import {
   IMPORT,
+  SetEXTRACTED,
   TOGGLE_IMPORT,
 } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import Swal from "sweetalert2";
-import ExtractedData from "./extractedData";
+import ExtractedData from "./extracted";
 import Spinner from "../../../../../../components/spinner";
 import { SetUPDATED_ITEMS_COLLECTIONS } from "../../../../../../services/redux/slices/assets/branches";
 
 export default function ImportModal() {
   const { token } = useSelector(({ auth }) => auth),
-    { showImport: show, formSubmitted } = useSelector(({ menus }) => menus),
+    {
+      showImport: show,
+      formSubmitted,
+      extracted,
+    } = useSelector(({ menus }) => menus),
     { collections: branches } = useSelector(({ branches }) => branches),
     [branchId, setBranchId] = useState(""),
     [uploadKey, setUploadKey] = useState(Date.now()),
-    [extracted, setExtracted] = useState([]),
     dispatch = useDispatch(),
     { addToast } = useToasts();
 
   const toggle = () => dispatch(TOGGLE_IMPORT());
+
+  const setExtracted = (datas) => dispatch(SetEXTRACTED(datas));
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -198,7 +206,7 @@ export default function ImportModal() {
 
   return (
     <MDBModal
-      size={hasExtracted ? "lg" : "md"}
+      size={hasExtracted ? "xl" : "md"}
       isOpen={show}
       toggle={toggle}
       backdrop
@@ -212,40 +220,44 @@ export default function ImportModal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <span className="d-block" style={{ fontWeight: 400 }}>
-              Branch:
-            </span>
-            <select
-              required
-              className="form-control ml-1 "
-              value={branchId}
-              onChange={({ target }) => setBranchId(target.value)}
-            >
-              <option value={""} disabled>
-                Select a branch
-              </option>
-              {branches.map((branch) => (
-                <option key={branch._id} value={branch._id}>
-                  {branch.name || branch.displayName}
+          <MDBRow>
+            <MDBCol md={hasExtracted ? 6 : 12}>
+              <span className="d-block" style={{ fontWeight: 400 }}>
+                Branch:
+              </span>
+              <select
+                required
+                className="form-control ml-1 "
+                value={branchId}
+                onChange={({ target }) => setBranchId(target.value)}
+              >
+                <option value={""} disabled>
+                  Select a branch
                 </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <span style={{ fontWeight: 400 }}>Upload Excel File</span>
-            <input
-              key={uploadKey}
-              id="file-upload"
-              type="file"
-              accept=".xlsx, .xls"
-              className="form-control mb-2"
-              onChange={(e) => {
-                handleFileUpload(e);
-                setUploadKey(Date.now()); // force re-render
-              }}
-            />
-          </div>
+                {branches.map((branch) => (
+                  <option key={branch._id} value={branch._id}>
+                    {branch.name || branch.displayName}
+                  </option>
+                ))}
+              </select>
+            </MDBCol>
+            <MDBCol md={hasExtracted ? 6 : 12}>
+              <div className={hasExtracted ? "" : "mt-2"}>
+                <span style={{ fontWeight: 400 }}>Upload Excel File</span>
+                <input
+                  key={uploadKey}
+                  id="file-upload"
+                  type="file"
+                  accept=".xlsx, .xls"
+                  className="form-control mb-2"
+                  onChange={(e) => {
+                    handleFileUpload(e);
+                    setUploadKey(Date.now()); // force re-render
+                  }}
+                />
+              </div>
+            </MDBCol>
+          </MDBRow>
 
           {hasExtracted && (
             <>
@@ -257,7 +269,7 @@ export default function ImportModal() {
                     are automatically skipped to avoid incomplete data.
                   </MDBTypography>
 
-                  <ExtractedData extracted={extracted} />
+                  <ExtractedData />
                 </MDBCardBody>
               </MDBCard>
               <div className="text-center mt-3">

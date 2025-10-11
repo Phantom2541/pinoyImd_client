@@ -18,11 +18,7 @@ const initialState = {
     },
     type: "menus",
   },
-  import: {
-    branchId: "",
-    file: "",
-    collections: [],
-  },
+  extracted: [], // extracted datas for import of menus in excel
   showCloneWarning: false,
   showImport: false,
   overwriteItems: [], //for cloning items
@@ -170,6 +166,28 @@ export const reduxSlice = createSlice({
       state.overwriteItems = payload;
       state.showCloneWarning = true;
     },
+    SetEXTRACTED: (state, { payload }) => {
+      state.extracted = payload;
+    },
+    SetUNTAGGED_SERVICE: (state, { payload }) => {
+      const { _id: index, serviceID } = payload; //the value of _id is index of extracted data
+      const _extracted = [...state.extracted];
+      const menu = { ..._extracted[index] };
+      const packages = [...(menu.packages || [])];
+      packages.splice(serviceID, 1);
+      _extracted[index] = { ...menu, packages };
+      state.extracted = _extracted;
+    },
+    SetSERVICES: (state, { payload }) => {
+      const { services, _id: index } = payload; //the value of _id is index of extracted data
+      const _extracted = [...state.extracted];
+      const existingPackages = [...(_extracted[index].packages || [])];
+
+      const selectedIds = services.map(({ id }) => id);
+      const ids = [...new Set([...selectedIds, ...existingPackages])];
+      _extracted[index] = { ..._extracted[index], packages: ids };
+      state.extracted = _extracted;
+    },
 
     TOGGLE_IMPORT: (state) => {
       state.showImport = !state.showImport;
@@ -316,12 +334,15 @@ export const reduxSlice = createSlice({
 
 export const {
   SetFILTERED,
+  SetEXTRACTED,
   SetCOLLECTIONS,
   SetMaxPage,
   SetActivePAGE,
   RESET,
   SetMENUS,
   SetCLONE,
+  SetSERVICES,
+  SetUNTAGGED_SERVICE,
   SetCLONE_WARNING,
   TOGGLE_CLONE_WARNING,
   TOGGLE_IMPORT,
