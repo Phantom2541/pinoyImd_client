@@ -74,7 +74,10 @@ const ServiceDatas = ({ isOpen, _id, packages = [] }) => {
                           className="m-0 px-2 py-1"
                           onClick={() =>
                             dispatch(
-                              SetUNTAGGED_SERVICE({ _id, serviceID: idx })
+                              SetUNTAGGED_SERVICE({
+                                _id,
+                                serviceID: service.id,
+                              })
                             )
                           }
                         >

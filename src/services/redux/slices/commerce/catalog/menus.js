@@ -174,7 +174,8 @@ export const reduxSlice = createSlice({
       const _extracted = [...state.extracted];
       const menu = { ..._extracted[index] };
       const packages = [...(menu.packages || [])];
-      packages.splice(serviceID, 1);
+      const pckgIdx = packages.findIndex((item) => item === serviceID);
+      packages.splice(pckgIdx, 1);
       _extracted[index] = { ...menu, packages };
       state.extracted = _extracted;
     },
