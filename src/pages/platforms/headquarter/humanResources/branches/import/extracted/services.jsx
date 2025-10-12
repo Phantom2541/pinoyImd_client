@@ -17,7 +17,7 @@ const ServiceDatas = ({ isOpen, _id, packages = [] }) => {
 
   return (
     <tr className="border-left border-right border-bottom border-black ">
-      <td colSpan={3}>
+      <td colSpan={4}>
         <MDBCollapse
           id={`collapse-${_id}`}
           isOpen={isOpen}

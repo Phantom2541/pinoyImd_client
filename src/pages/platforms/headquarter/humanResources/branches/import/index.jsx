@@ -52,7 +52,34 @@ export default function ImportModal() {
 
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
+
+      // 🧩 Handle merged cells (fill them with their top-left value)
+      const merges = sheet["!merges"] || [];
+      for (const merge of merges) {
+        const start = merge.s;
+        const end = merge.e;
+        const topLeft = XLSX.utils.encode_cell(start);
+        const value = sheet[topLeft]?.v;
+
+        if (value !== undefined) {
+          // Fill vertically and horizontally
+          for (let R = start.r; R <= end.r; R++) {
+            for (let C = start.c; C <= end.c; C++) {
+              const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+              if (!sheet[cellRef]) {
+                sheet[cellRef] = { t: "s", v: value };
+              } else if (C !== start.c) {
+                // Ensure horizontal merge text consistency
+                sheet[cellRef].v = value;
+              }
+            }
+          }
+        }
+      }
+
+      // 🔄 Convert to rows AFTER filling merges
       const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+      console.log("rows", rows);
 
       if (!rows.length) {
         Swal.fire({
@@ -84,25 +111,22 @@ export default function ImportModal() {
           icon: "error",
           title: "⚠️ Missing Required Columns",
           html: `
-          Please make sure your Excel file has columns named:<br><br>
-          <b>Name</b> and <b>Price</b>.<br><br>
-          These columns are required for importing.
-        `,
+        Please make sure your Excel file has columns named:<br><br>
+        <b>Name</b> and <b>Price</b>.<br><br>
+        These columns are required for importing.
+      `,
         });
         setExtracted([]);
-
         return;
       }
 
       const headers = rows[headerRowIndex].map((h) =>
-        h.toString().trim().toLowerCase()
+        h.toString().replace(/\s+/g, "").trim().toLowerCase()
       );
 
       const nameIndex = headers.findIndex((h) => h.includes("name"));
       const priceIndex = headers.findIndex((h) => h.includes("price"));
       const descIndex = headers.findIndex((h) => h.includes("description"));
-
-      // ⚠️ Check missing required columns
       const missing = [];
       if (nameIndex === -1) missing.push("Name");
       if (priceIndex === -1) missing.push("Price");
@@ -112,23 +136,26 @@ export default function ImportModal() {
           icon: "error",
           title: "⚠️ Missing Required Columns",
           html: `
-          Please make sure your Excel file includes:<br><br>
-          <b>Required:</b> Name, Price<br>
-          <b>Optional:</b> Description<br><br>
-          <b>Missing:</b> ${missing.join(", ")}
-        `,
+        Please make sure your Excel file includes:<br><br>
+        <b>Required:</b> Name, Price<br>
+        <b>Optional:</b> Description<br><br>
+        <b>Missing:</b> ${missing.join(", ")}
+      `,
         });
         setExtracted([]);
-
         return;
       }
 
       const dataRows = rows.slice(headerRowIndex + 1).filter((row) => {
         const nameVal = row[nameIndex]?.toString().trim();
-        const priceVal = row[priceIndex]?.toString().trim();
+        const priceVal = row[priceIndex];
 
-        if (!nameVal || !priceVal) return false;
-        if (!/\d/.test(priceVal)) return false;
+        if (!nameVal || priceVal == null || priceVal === "") return false;
+
+        if (priceVal instanceof Date) return false;
+
+        const num = Number(priceVal);
+        if (isNaN(num)) return false;
 
         return true;
       });
@@ -143,13 +170,10 @@ export default function ImportModal() {
         return;
       }
 
-      // 🧾 Extract only from the rows AFTER the header row
       const extracted = dataRows.map((row) => {
-        // 🧹 Clean name
         const rawName = row[nameIndex] ? row[nameIndex].toString().trim() : "";
         const cleanName = rawName.replace(/^[\d.\s-]+/, "").trim();
 
-        // 💰 Clean price
         let rawPrice = row[priceIndex] ? row[priceIndex].toString().trim() : "";
         const cleanPrice = rawPrice.replace(/[^\d.]/g, ""); // keep only numbers and dots
 
@@ -164,11 +188,9 @@ export default function ImportModal() {
       const seenNames = new Set();
 
       for (const item of extracted) {
-        // linisin name bago i-compare
         const normalizedName = item.abbreviation
-          .toLowerCase() // ignore case
-          .replace(/\s+/g, ""); // tanggal lahat ng spaces
-
+          .toLowerCase()
+          .replace(/\s+/g, "");
         if (!seenNames.has(normalizedName)) {
           seenNames.add(normalizedName);
           uniqueExtracted.push(item);
@@ -203,7 +225,7 @@ export default function ImportModal() {
   };
 
   const hasExtracted = extracted.length > 0;
-
+  console.log("extracted", extracted);
   return (
     <MDBModal
       size={hasExtracted ? "xl" : "md"}

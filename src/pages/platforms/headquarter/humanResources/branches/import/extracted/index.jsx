@@ -18,9 +18,11 @@ const ExtractedData = () => {
       <MDBTable small className="mb-0">
         <thead className="sticky" style={{ top: "0", zIndex: 3 }}>
           <tr>
-            <th style={{ width: "70%", fontWeight: 600 }} className="py-1">
+            <th style={{ width: "40%", fontWeight: 600 }} className="py-1">
               Menus ({extracted.length})
             </th>
+            <th className="py-1">Description</th>
+
             <th style={{ width: "20%" }} className="py-1">
               Price
             </th>
@@ -30,7 +32,7 @@ const ExtractedData = () => {
         <tbody>
           {extracted.length > 0 ? (
             extracted.map((item, index) => {
-              const { packages = [] } = item;
+              const { packages = [], description = "" } = item;
               const isOpen = activeId === index;
 
               return (
@@ -48,6 +50,7 @@ const ExtractedData = () => {
                         {item.abbreviation}
                       </span>
                     </td>
+                    <td>{description}</td>
                     <td
                       className="text-end "
                       style={{
