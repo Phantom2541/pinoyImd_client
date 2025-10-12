@@ -50,7 +50,14 @@ const ExtractedData = () => {
                         {item.abbreviation}
                       </span>
                     </td>
-                    <td>{description}</td>
+                    <td
+                      style={{
+                        fontWeight: isOpen ? 500 : 400,
+                        color: isOpen ? "blue" : "",
+                      }}
+                    >
+                      {description}
+                    </td>
                     <td
                       className="text-end "
                       style={{
