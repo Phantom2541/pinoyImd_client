@@ -225,7 +225,6 @@ export default function ImportModal() {
   };
 
   const hasExtracted = extracted.length > 0;
-  console.log("extracted", extracted);
   return (
     <MDBModal
       size={hasExtracted ? "xl" : "md"}
