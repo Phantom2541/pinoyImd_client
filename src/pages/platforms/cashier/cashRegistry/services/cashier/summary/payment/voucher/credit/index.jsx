@@ -1,13 +1,13 @@
 import CareOf from "../../careOf";
 
-const Credit = ({ refNo = {}, setRefNo = () => {}, isMixed = false }) => {
+const Credit = ({ refNo = {}, setRefNo = () => {} }) => {
   const { pp = "cash" } = refNo || {};
 
   // condition kung dapat ipakita si Credit
 
   const shouldShow = pp !== "cash";
 
-  if (!shouldShow || !isMixed) return null;
+  if (!shouldShow) return null;
 
   return (
     <>
@@ -35,7 +35,11 @@ const Credit = ({ refNo = {}, setRefNo = () => {}, isMixed = false }) => {
           </select>
         </td>
       </tr>
-      <CareOf refNo={refNo} setRefNo={setRefNo} />
+      <tr>
+        <td colSpan={2}>
+          <CareOf refNo={refNo} setRefNo={setRefNo} />
+        </td>
+      </tr>
     </>
   );
 };

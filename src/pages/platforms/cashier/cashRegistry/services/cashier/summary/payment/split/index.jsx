@@ -21,13 +21,16 @@ const Split = ({ refNo, setRefNo = () => {}, chargeAmount = 0 }) => {
             {careOf.pp !== "gcash" && <option value={"gcash"}>Gcash</option>}
           </select>
         </td>
-        <td className="py-1">
+        <td className="p-0">
           <input
-            placeholder="Amount"
+            placeholder={pp === "gcash" ? "Reference No." : "Amount"}
             required
-            value={String(refNo.amount || "")}
+            value={String(refNo[pp === "gcash" ? "number" : "amount"] || "")}
             onChange={({ target }) =>
-              setRefNo({ ...refNo, amount: Number(target.value) })
+              setRefNo({
+                ...refNo,
+                [pp === "gcash" ? "number" : "amount"]: Number(target.value),
+              })
             }
           />
         </td>
@@ -71,11 +74,11 @@ const Split = ({ refNo, setRefNo = () => {}, chargeAmount = 0 }) => {
             <input
               placeholder="Reference No."
               required
-              value={careOf.number}
+              value={String(careOf.number)}
               onChange={({ target }) =>
                 setRefNo({
                   ...refNo,
-                  careOf: { ...careOf, number: target.value },
+                  careOf: { ...careOf, number: Number(target.value) },
                 })
               }
             />

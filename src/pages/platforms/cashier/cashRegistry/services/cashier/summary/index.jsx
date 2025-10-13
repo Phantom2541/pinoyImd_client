@@ -88,8 +88,9 @@ export default function Summary() {
     setIsMixed(payment === "mixed");
   }, [payment]);
   const checkout = async () => {
-    const baseRefNo = utils.buildRefNo(refNo, payment, amount, cardHolder);
-    const _cash = utils.hasCash(refNo, payment, amount) ? cash : 0;
+    const baseRefNo = utils.build(refNo, payment, amount, cardHolder);
+    const _cash =
+      utils.hasCash(refNo, payment, amount) && payment !== "mixed" ? cash : 0;
     let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
@@ -160,33 +161,31 @@ export default function Summary() {
       );
     selected = removeUndefinedValues(selected);
 
-    console.log("selected", selected);
-
-    // try {
-    //   await dispatch(SAVE({ token, data: selected })).then(
-    //     ({ payload: data }) => {
-    //       const { payload, register } = data;
-    //       selected._id = payload._id;
-    //       dispatch(SetPrinting({ status: true, selected }));
-    //       if (register.isRegister) {
-    //         dispatch(ADD_AFFILIATED(register));
-    //         dispatch(ADD_PHYSICIAN(register.physician));
-    //       }
-    //     }
-    //   );
-    //   dispatch(RESET_CARDHOLDER());
-    //   dispatch(SETCART());
-    //   setRefNo(_refNo);
-    //   addToast("Transaction completed successfully", { appearance: "info" });
-    // } catch (error) {
-    //   addToast("Transaction failed", { appearance: "error" });
-    // } finally {
-    //   setCash(0);
-    //   dispatch(RESET());
-    //   dispatch(RESET_INSOURCE());
-    //   // 🔥 Dispatch the event
-    //   window.dispatchEvent(new Event("reset-ui"));
-    // }
+    try {
+      await dispatch(SAVE({ token, data: selected })).then(
+        ({ payload: data }) => {
+          const { payload, register } = data;
+          selected._id = payload._id;
+          dispatch(SetPrinting({ status: true, selected }));
+          if (register.isRegister) {
+            dispatch(ADD_AFFILIATED(register));
+            dispatch(ADD_PHYSICIAN(register.physician));
+          }
+        }
+      );
+      dispatch(RESET_CARDHOLDER());
+      dispatch(SETCART());
+      setRefNo(_refNo);
+      addToast("Transaction completed successfully", { appearance: "info" });
+    } catch (error) {
+      addToast("Transaction failed", { appearance: "error" });
+    } finally {
+      setCash(0);
+      dispatch(RESET());
+      dispatch(RESET_INSOURCE());
+      // 🔥 Dispatch the event
+      window.dispatchEvent(new Event("reset-ui"));
+    }
   };
 
   const showAlert = (text) => {
@@ -206,8 +205,7 @@ export default function Summary() {
     e.preventDefault();
     const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
     const { name = "", ref = "" } = company || {};
-    const { careOf = {}, pp = "", amount: creditCovered } = refNo;
-    console.log("pp", pp);
+    const { careOf = {}, pp = "" } = refNo;
     if (
       careOf.pp === "co" &&
       !careOf.user &&
@@ -247,26 +245,24 @@ export default function Summary() {
       );
     }
 
-    // if (!allServicesHavePrices(cart, category, hmo)) {
-    //   Swal.fire({
-    //     title: "Service Validator?",
-    //     text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
-    //     icon: "error",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#d33",
-    //     confirmButtonText: "Yes, proceed",
-    //   }).then(async (result) => {
-    //     if (result.isConfirmed) {
-    //       await checkout();
-    //     }
-    //   });
-    // } else {
-    await checkout();
-    // }
+    if (!allServicesHavePrices(cart, category, hmo)) {
+      Swal.fire({
+        title: "Service Validator?",
+        text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, proceed",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await checkout();
+        }
+      });
+    } else {
+      await checkout();
+    }
   };
-
-  console.log("refNo", refNo);
 
   return (
     <form onSubmit={handleCheckout}>
@@ -317,13 +313,14 @@ export default function Summary() {
                   const { name, ref } = company;
                   const isCardHolder = Boolean(name || ref);
                   const careOfPP =
-                    payment === "mixed"
-                      ? "gcash"
+                    _payment === "mixed"
+                      ? "cash"
                       : isCardHolder ||
                         _payment === "cash" ||
                         _payment === "downpayment"
                       ? "cash"
                       : "co";
+
                   setPayment(_payment);
                   setRefNo({
                     ..._refNo,
@@ -339,20 +336,19 @@ export default function Summary() {
               </select>
             </td>
           </tr>
-          <Payment
-            payment={payment}
-            refNo={refNo}
-            setRefNo={setRefNo}
-            chargeAmount={amount}
-            isMixed={isMixed}
-          />
-          {/* <SplitBill
-            chargeAmount={amount}
-            isMixed={isMixed}
-            refNo={refNo}
-            setRefNo={setRefNo}
-          /> */}
-          {["cash", "downpayment"].includes(payment) &&
+          {["voucher", "mixed"].includes(payment) && (
+            <Payment
+              payment={payment}
+              refNo={refNo}
+              setRefNo={setRefNo}
+              chargeAmount={amount}
+              isMixed={isMixed}
+              setCash={setCash}
+              cash={cash}
+            />
+          )}
+
+          {["cash", "downpayment", "voucher"].includes(payment) &&
           refNo.pp === "cash" &&
           refNo.amount < amount ? (
             <tr>
@@ -382,9 +378,6 @@ export default function Summary() {
             ""
           )}
 
-          {/* <tr>
-            <td colSpan="2" className="td-skip" />
-          </tr> */}
           <tr>
             <td className="p-0">
               <button

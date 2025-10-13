@@ -24,7 +24,7 @@ const Voucher = ({
 
   return (
     <>
-      {isMixed && isCardHolder && (
+      {isCardHolder && (
         <>
           {[
             { label: "Tracking No.", key: "number" },
@@ -56,7 +56,7 @@ const Voucher = ({
           ))}
         </>
       )}
-      {isMixed && debtAmount < chargeAmount ? (
+      {debtAmount < chargeAmount ? (
         <tr>
           <td style={{ fontSize: "0.8rem" }}>Patient Payable</td>
           <td className="p-0">

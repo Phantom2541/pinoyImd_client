@@ -1,8 +1,13 @@
 const utils = {
-  buildRefNo: (refNo, paymentMethod, chargeAmount, cardHolder) => {
-    if (paymentMethod !== "mixed" && paymentMethod !== "voucher") return null;
-    if (paymentMethod === "voucher")
-      return { amount: chargeAmount, pp: "cash" };
+  build: (refNo, paymentMethod, chargeAmount, cardHolder) => {
+    if (!["mixed", "voucher"].includes(paymentMethod)) return null;
+    if (paymentMethod === "mixed") return utils.splitBill(refNo, chargeAmount);
+    return utils.voucher(refNo, paymentMethod, chargeAmount, cardHolder);
+  },
+  voucher: (refNo, paymentMethod, chargeAmount, cardHolder) => {
+    if (paymentMethod !== "voucher") return null;
+    // if (paymentMethod === "voucher")
+    //   return { amount: chargeAmount, pp: "cash" };
 
     const { company = {} } = cardHolder || {};
     const isCardHolder = Boolean(company?.name || company?.ref);
@@ -31,6 +36,45 @@ const utils = {
       ...(pp === "co" &&
         careOfAmount > 0 && { careOf: { ...careOf, amount: careOfAmount } }),
     };
+  },
+  splitBill: (refNo, chargeAmount) => {
+    const { pp = "", careOf = {} } = refNo;
+    var _refNo = { ...refNo };
+    if (pp === "gcash") {
+      const { amount = 0 } = careOf;
+      _refNo = { ...refNo, amount: chargeAmount - amount };
+    } else {
+      _refNo = {
+        ...refNo,
+        amount:
+          refNo.amount > chargeAmount
+            ? chargeAmount
+            : chargeAmount - refNo.amount,
+      };
+    }
+
+    const { amount } = refNo;
+
+    // if(careOf.pp === "co"){
+
+    // }
+    _refNo = {
+      ...refNo,
+      careOf: { ...careOf, amount: chargeAmount - amount },
+    };
+
+    if (careOf.pp === "co") {
+    }
+
+    if (careOf.pp !== "co") {
+      const { user, ...rest } = careOf;
+      _refNo = {
+        ...refNo,
+        careOf: { ...rest },
+      };
+    }
+
+    return _refNo;
   },
   hasCash: (refNo = {}, paymentMethod, chargeAmount = 0) => {
     const { pp = "cash", amount } = refNo || {};
