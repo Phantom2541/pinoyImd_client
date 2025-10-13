@@ -211,11 +211,11 @@ export default function ImportModal() {
     e.preventDefault();
     const _extracted = extracted.map((item) => ({ ...item, branchId }));
     dispatch(IMPORT({ data: { data: _extracted }, token })).then(
-      ({ payload }) => {
+      ({ payload = [] }) => {
         const _branches = [...branches];
         const index = _branches.findIndex((item) => item._id === branchId);
         if (index > -1) {
-          const menus = [...(_branches[index].menus || []), ...payload];
+          const menus = [...(_branches[index].menus || []), ...(payload || [])];
           _branches[index] = { ..._branches[index], menus };
           dispatch(SetUPDATED_ITEMS_COLLECTIONS(_branches));
         }
