@@ -55,16 +55,10 @@ const utils = {
 
     const { amount } = refNo;
 
-    // if(careOf.pp === "co"){
-
-    // }
     _refNo = {
       ...refNo,
       careOf: { ...careOf, amount: chargeAmount - amount },
     };
-
-    if (careOf.pp === "co") {
-    }
 
     if (careOf.pp !== "co") {
       const { user, ...rest } = careOf;
