@@ -197,7 +197,11 @@ export default function ImportModal() {
         }
       }
 
-      setExtracted(uniqueExtracted);
+      setExtracted(
+        uniqueExtracted.sort((a, b) =>
+          a.abbreviation.localeCompare(b.abbreviation)
+        )
+      );
     };
 
     reader.readAsArrayBuffer(file);
@@ -205,23 +209,23 @@ export default function ImportModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const _extracted = extracted.map((item) => ({ ...item, branchId }));
-    // dispatch(IMPORT({ data: { data: _extracted }, token })).then(
-    //   ({ payload }) => {
-    //     const _branches = [...branches];
-    //     const index = _branches.findIndex((item) => item._id === branchId);
-    //     if (index > -1) {
-    //       const menus = [...(_branches[index].menus || []), ...payload];
-    //       _branches[index] = { ..._branches[index], menus };
-    //       dispatch(SetUPDATED_ITEMS_COLLECTIONS(_branches));
-    //     }
-    //     addToast("Menus imported successfully", { appearance: "success" });
-    //     document.getElementById("file-upload").value = "";
-    //     toggle();
-    //     setBranchId("");
-    //     setExtracted([]);
-    //   }
-    // );
+    const _extracted = extracted.map((item) => ({ ...item, branchId }));
+    dispatch(IMPORT({ data: { data: _extracted }, token })).then(
+      ({ payload }) => {
+        const _branches = [...branches];
+        const index = _branches.findIndex((item) => item._id === branchId);
+        if (index > -1) {
+          const menus = [...(_branches[index].menus || []), ...payload];
+          _branches[index] = { ..._branches[index], menus };
+          dispatch(SetUPDATED_ITEMS_COLLECTIONS(_branches));
+        }
+        addToast("Menus imported successfully", { appearance: "success" });
+        document.getElementById("file-upload").value = "";
+        toggle();
+        setBranchId("");
+        setExtracted([]);
+      }
+    );
   };
 
   const hasExtracted = extracted.length > 0;
