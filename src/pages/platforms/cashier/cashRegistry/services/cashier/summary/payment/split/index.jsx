@@ -27,7 +27,7 @@ const Split = ({ refNo, setRefNo = () => {}, chargeAmount = 0 }) => {
             required
             value={String(refNo.amount || "")}
             onChange={({ target }) =>
-              setRefNo({ ...refNo, amount: target.value })
+              setRefNo({ ...refNo, amount: Number(target.value) })
             }
           />
         </td>

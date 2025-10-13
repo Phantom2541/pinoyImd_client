@@ -1,19 +1,25 @@
-import React from "react";
 import { MDBTable } from "mdbreact";
+import { useSelector } from "react-redux";
+import { findReference } from "../../../../../../../../../../services/utilities";
 
 export default function Gloucose({ task, setTask }) {
-  const { results = false } = task;
+  const { results = false, patient } = task,
+    { collections: services } = useSelector(({ preferences }) => preferences);
 
   const handleChange = (value) =>
     setTask({ ...task, results: { ...results, hba1c: value } });
 
-  const getColorClass = (value) => {
-    const num = parseFloat(value);
-    if (isNaN(num)) return "";
-    if (num < 4) return "text-primary fw-bold"; // Low → Blue
-    if (num > 6) return "text-danger fw-bold"; // High → Red
-    return "text-dark fw-bold"; // Normal → Black
-  };
+  const service = services.find((s) => s.id === Number(11)) || {};
+  const { preference, references } = service;
+  const { lo, hi, units, _id } = findReference(
+    // warn, alert, critical i remove it for now in desctructuring because the referenceColor is not working
+    11,
+    patient?.isMale,
+    patient?.dob,
+    preference,
+    references
+  );
+  const color = results.hba1c < lo ? "blue" : results.hba1c > hi && "red";
 
   return (
     <>
@@ -38,14 +44,28 @@ export default function Gloucose({ task, setTask }) {
             <td className="py-1">
               <input
                 type="number"
+                style={{
+                  color,
+                }}
                 name="hb"
                 value={results.hba1c || ""}
                 onChange={(e) => handleChange(e.target.value)}
-                className={`w-100 text-center ${getColorClass(results.hba1c)}`}
+                className={`w-100 text-center fw-bold`}
               />
             </td>
-            <td className="py-1">4 - 6</td>
-            <td className="py-1 text-capitalize">%</td>
+            {_id ? (
+              <>
+                <td className="py-1">{!lo ? `< ${hi}` : `${lo} - ${hi}`}</td>
+                <td className="py-1 text-capitalize">{units}</td>
+              </>
+            ) : (
+              <>
+                <td colSpan={2} className="py-1">
+                  No Miscellaneous reference found, please inform the admin
+                  first
+                </td>
+              </>
+            )}
           </tr>
         </tbody>
       </MDBTable>

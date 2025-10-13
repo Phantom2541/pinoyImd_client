@@ -1,16 +1,20 @@
 import { MDBTable } from "mdbreact";
+import { findReference } from "../../../../../../../services/utilities";
 
 export default function Gloucose({ task, fontSize }) {
-  const { results } = task;
+  const { results, services, patient } = task;
 
-  // color logic for HbA1c
-  const getColorClass = (value, lo = 4, hi = 6) => {
-    const num = parseFloat(value);
-    if (isNaN(num)) return "text-dark fw-bold";
-    if (num < lo) return "text-primary fw-bold"; // Low = Blue
-    if (num > hi) return "text-danger fw-bold"; // High = Red
-    return "text-dark fw-bold"; // Normal = Black
-  };
+  const service = services.find((s) => s.id === 11) || {};
+  const { preference, references } = service;
+  const { lo, hi, units } = findReference(
+    // warn, alert, critical i remove it for now in desctructuring because the referenceColor is not working
+    11,
+    patient?.isMale,
+    patient?.dob,
+    preference,
+    references
+  );
+  const color = results.hba1c < lo ? "blue" : results.hba1c > hi && "red";
 
   return (
     <div style={{ fontSize: `${fontSize}rem` }}>
@@ -33,10 +37,12 @@ export default function Gloucose({ task, fontSize }) {
         <tbody>
           <tr>
             <td>GLYCOSYLATED HEMOGLOBIN</td>
-            <td className={getColorClass(results.hba1c)}>
+            <td style={{ color }} className="fw-bold">
               <b>{results.hba1c}</b>
             </td>
-            <td>4 - 6 %</td>
+            <td>
+              {lo} - {hi} {units}
+            </td>
           </tr>
         </tbody>
       </MDBTable>

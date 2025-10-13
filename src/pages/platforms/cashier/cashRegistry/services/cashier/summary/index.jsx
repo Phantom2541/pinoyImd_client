@@ -160,31 +160,33 @@ export default function Summary() {
       );
     selected = removeUndefinedValues(selected);
 
-    try {
-      await dispatch(SAVE({ token, data: selected })).then(
-        ({ payload: data }) => {
-          const { payload, register } = data;
-          selected._id = payload._id;
-          dispatch(SetPrinting({ status: true, selected }));
-          if (register.isRegister) {
-            dispatch(ADD_AFFILIATED(register));
-            dispatch(ADD_PHYSICIAN(register.physician));
-          }
-        }
-      );
-      dispatch(RESET_CARDHOLDER());
-      dispatch(SETCART());
-      setRefNo(_refNo);
-      addToast("Transaction completed successfully", { appearance: "info" });
-    } catch (error) {
-      addToast("Transaction failed", { appearance: "error" });
-    } finally {
-      setCash(0);
-      dispatch(RESET());
-      dispatch(RESET_INSOURCE());
-      // 🔥 Dispatch the event
-      window.dispatchEvent(new Event("reset-ui"));
-    }
+    console.log("selected", selected);
+
+    // try {
+    //   await dispatch(SAVE({ token, data: selected })).then(
+    //     ({ payload: data }) => {
+    //       const { payload, register } = data;
+    //       selected._id = payload._id;
+    //       dispatch(SetPrinting({ status: true, selected }));
+    //       if (register.isRegister) {
+    //         dispatch(ADD_AFFILIATED(register));
+    //         dispatch(ADD_PHYSICIAN(register.physician));
+    //       }
+    //     }
+    //   );
+    //   dispatch(RESET_CARDHOLDER());
+    //   dispatch(SETCART());
+    //   setRefNo(_refNo);
+    //   addToast("Transaction completed successfully", { appearance: "info" });
+    // } catch (error) {
+    //   addToast("Transaction failed", { appearance: "error" });
+    // } finally {
+    //   setCash(0);
+    //   dispatch(RESET());
+    //   dispatch(RESET_INSOURCE());
+    //   // 🔥 Dispatch the event
+    //   window.dispatchEvent(new Event("reset-ui"));
+    // }
   };
 
   const showAlert = (text) => {
@@ -260,7 +262,7 @@ export default function Summary() {
     //     }
     //   });
     // } else {
-    //   await checkout();
+    await checkout();
     // }
   };
 

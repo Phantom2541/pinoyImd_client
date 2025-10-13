@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable } from "mdbreact";
 export default function Gloucose({ task, fontSize }) {
   const { results } = task;
