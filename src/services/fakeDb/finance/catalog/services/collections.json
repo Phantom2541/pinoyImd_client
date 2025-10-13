@@ -1505,7 +1505,7 @@
   },
   {
     "id": 74,
-    "name": "Pancreatic Cancer Marker",
+    "name": "Pancreatic and Gastrointestinal Cancer Marker",
     "abbreviation": "CA 19-9",
     "lo_ssx": "Normal: low levels, no clinical significance",
     "hi_ssx": "Elevated in pancreatic cancer, cholangiocarcinoma, hepatobiliary disease. Symptoms: jaundice, weight loss, abdominal pain",
@@ -1671,7 +1671,7 @@
   {
     "id": 103,
     "name": "BREAST CA QUANTI",
-    "abbreviation": "",
+    "abbreviation": "CA15-3",
     "lo_ssx": null,
     "hi_ssx": "Elevated levels may indicate presence of breast carcinoma.",
     "department": "LAB",
@@ -4302,5 +4302,20 @@
     "ssx": "Often asymptomatic; high levels are a risk factor for premature cardiovascular disease, atherosclerosis, coronary artery disease, and stroke.",
     "lo_ssx": "Low or normal Lp(a) levels indicate no significant additional cardiovascular risk from this marker.",
     "hi_ssx": "Elevated Lp(a) levels are associated with increased risk of atherosclerosis, coronary artery disease, myocardial infarction, and stroke."
+  },
+  {
+    "id": 420,
+    "name": "Adrenocorticotropic Hormone",
+    "abbreviation": "ACTH",
+    "department": "Laboratory",
+    "frequency": "As requested by the physician",
+    "preparation": "Patient should fast for 9–12 hours prior to specimen collection. Blood should be collected between 7:00–9:00 AM in a chilled EDTA tube, kept on ice, and transported immediately to the laboratory for processing.",
+    "specimen": "Plasma (EDTA)",
+    "preference": "none",
+    "template": 2,
+    "purpose": "To assess the function of the pituitary and adrenal glands by measuring ACTH concentration. This test helps diagnose adrenal insufficiency, Cushing’s syndrome, and other disorders affecting cortisol production and regulation.",
+    "ssx": "Symptoms related to abnormal ACTH levels may include fatigue, muscle weakness, weight loss or gain, low or high blood pressure, changes in skin pigmentation, and features of cortisol excess such as central obesity and moon facies.",
+    "lo_ssx": "Low ACTH levels suggest secondary adrenal insufficiency due to pituitary or hypothalamic dysfunction, or suppression from exogenous corticosteroid therapy or adrenal tumors producing excess cortisol.",
+    "hi_ssx": "High ACTH levels may indicate primary adrenal insufficiency (Addison’s disease), pituitary overproduction (Cushing’s disease), or ectopic ACTH secretion by non-pituitary tumors such as small-cell lung carcinoma."
   }
 ]
