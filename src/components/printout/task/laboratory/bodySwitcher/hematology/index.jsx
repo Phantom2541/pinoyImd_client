@@ -12,11 +12,19 @@ export default function Hematology({ task }) {
       <CellCount
         cc={cc}
         isMale={patient.isMale ? "Male" : "Female"}
+        dob={patient.dob}
         style={style}
         apc={apc}
       />
-      <DiffCount dc={dc} style={style} />
-      <Rci rci={rci} style={style} troupe={troupe} ct={ct} bt={bt} />
+      <DiffCount dc={dc} style={style} dob={patient.dob} />
+      <Rci
+        rci={rci}
+        style={style}
+        troupe={troupe}
+        ct={ct}
+        bt={bt}
+        dob={patient.dob}
+      />
     </div>
   );
 }

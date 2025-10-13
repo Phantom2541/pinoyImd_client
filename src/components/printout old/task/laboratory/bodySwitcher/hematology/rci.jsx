@@ -7,7 +7,7 @@ const options = ["00", "15", "30", "45"];
 
 export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
   const { Category } = RCI,
-    { Preferences } = Cellcount;
+    { Conventionals } = Cellcount;
 
   return (
     <MDBTable hover bordered responsive className="mb-0">
@@ -30,7 +30,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
       <tbody>
         {rci?.map((value, index) => {
           const category = Category[index],
-            reference = Preferences.rci[category],
+            reference = Conventionals.rci[category],
             { lo, hi, unit } = reference,
             color = value < lo ? "blue" : value > hi && "red";
 

@@ -1,13 +1,37 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
 import { Cellcount, Rci as RCI } from "../../../../../../../services/fakeDb";
-// import { calculateIndicators } from "../../../../../services/utilities";
+import preferences from "../../../../../../../services/fakeDb/diagnostics/references";
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 
 const options = ["00", "15", "30", "45"];
 
-export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
+export default function Rci({
+  rci = [],
+  style,
+  troupe,
+  ct = [],
+  bt = [],
+  dob,
+}) {
   const { Category } = RCI,
-    { Preferences } = Cellcount;
+    { Si } = Cellcount;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
 
   return (
     <MDBTable hover bordered responsive className="mb-0">
@@ -53,7 +77,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
       <tbody>
         {rci.map((value, index) => {
           const category = Category[index],
-            reference = Preferences.rci[category],
+            reference = Si.rci[category][development],
             { lo, hi, unit } = reference,
             color = value < lo ? "blue" : value > hi && "red";
 

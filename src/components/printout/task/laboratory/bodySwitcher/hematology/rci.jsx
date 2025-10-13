@@ -1,12 +1,30 @@
 import { MDBTable } from "mdbreact";
 import { Cellcount, Rci as RCI } from "../../../../../../services/fakeDb";
 // import { calculateIndicators } from "../../../../../../services/utilities";
+import preferences from "./../../../../../../services/fakeDb/diagnostics/references";
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 
 const options = ["00", "15", "30", "45"];
 
-export default function Rci({ rci = [], style, troupe }) {
+export default function Rci({ rci = [], style, troupe, dob }) {
   const { Category } = RCI,
-    { Preferences } = Cellcount;
+    { Si } = Cellcount;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
 
   const { bt = [], ct = [] } = troupe || {};
 
@@ -31,8 +49,7 @@ export default function Rci({ rci = [], style, troupe }) {
       <tbody>
         {rci.map((value, index) => {
           const category = Category[index],
-            reference = Preferences.rci[category],
-            { lo, hi, unit } = reference,
+            { lo, hi, unit } = Si.rci[category][development],
             color = value < lo ? "blue" : value > hi && "red";
 
           return (

@@ -1,9 +1,9 @@
 const calculateIndicators = (reference, value) => {
-  const { critical, alert, warn } = reference;
+  const { crical, alert, warn } = reference;
 
-  if (!critical) return null;
+  if (!crical) return null;
 
-  if (value >= critical) return "***";
+  if (value >= crical) return "***";
   if (value >= alert) return "**";
   if (value >= warn) return "*";
 
