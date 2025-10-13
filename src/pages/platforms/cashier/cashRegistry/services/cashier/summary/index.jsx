@@ -205,11 +205,11 @@ export default function Summary() {
     const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
     const { name = "", ref = "" } = company || {};
     const { careOf = {}, pp = "", amount: creditCovered } = refNo;
+    console.log("pp", pp);
     if (
-      pp === "co" &&
+      careOf.pp === "co" &&
       !careOf.user &&
-      payment === "mixed" &&
-      creditCovered < amount
+      (payment === "mixed" || payment === "voucher")
     ) {
       const category = {
         bm: "Board Member",
@@ -264,6 +264,8 @@ export default function Summary() {
     // }
   };
 
+  console.log("refNo", refNo);
+
   return (
     <form onSubmit={handleCheckout}>
       <table className="summary-table">
@@ -312,15 +314,18 @@ export default function Summary() {
                   const { company = {} } = cardHolder || {};
                   const { name, ref } = company;
                   const isCardHolder = Boolean(name || ref);
+                  const careOfPP =
+                    payment === "mixed"
+                      ? "gcash"
+                      : isCardHolder ||
+                        _payment === "cash" ||
+                        _payment === "downpayment"
+                      ? "cash"
+                      : "co";
                   setPayment(_payment);
                   setRefNo({
                     ..._refNo,
-                    pp:
-                      isCardHolder ||
-                      _payment === "cash" ||
-                      _payment === "downpayment"
-                        ? "cash"
-                        : "co",
+                    pp: careOfPP,
                   });
                 }}
               >
@@ -345,7 +350,7 @@ export default function Summary() {
             refNo={refNo}
             setRefNo={setRefNo}
           /> */}
-          {["cash", "mixed", "downpayment"].includes(payment) &&
+          {["cash", "downpayment"].includes(payment) &&
           refNo.pp === "cash" &&
           refNo.amount < amount ? (
             <tr>
