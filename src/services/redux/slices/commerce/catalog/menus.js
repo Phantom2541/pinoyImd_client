@@ -189,7 +189,12 @@ export const reduxSlice = createSlice({
       _extracted[index] = { ..._extracted[index], packages: ids };
       state.extracted = _extracted;
     },
-
+    SetUPDATED_MENU: (state, { payload }) => {
+      const { _id, data } = payload;
+      const _menus = [...state.extracted];
+      _menus[_id] = { ..._menus[_id], ...data };
+      state.extracted = _menus;
+    },
     TOGGLE_IMPORT: (state) => {
       state.showImport = !state.showImport;
     },
@@ -334,6 +339,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetUPDATED_MENU,
   SetFILTERED,
   SetEXTRACTED,
   SetCOLLECTIONS,

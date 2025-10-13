@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import Credit from "../credit";
+import Credit from "./credit";
 import { useEffect } from "react";
 
-const SplitBill = ({
+const Voucher = ({
   refNo = {},
   isMixed = false,
   chargeAmount = 0,
@@ -89,4 +89,4 @@ const SplitBill = ({
   );
 };
 
-export default SplitBill;
+export default Voucher;

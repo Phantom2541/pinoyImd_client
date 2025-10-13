@@ -1,18 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
-import { Notification } from "../../../../../../../../components/searchables";
-import { SEARCH as SEARCH_PHYSICIAN } from "../../../../../../../../services/redux/slices/assets/persons/physicians";
-import { SEARCH as SEARCH_PERSONNELS } from "../../../../../../../../services/redux/slices/assets/persons/personnels";
+import { Notification } from "../../../../../../../../../../components/searchables";
+import { SEARCH as SEARCH_PHYSICIAN } from "../../../../../../../../../../services/redux/slices/assets/persons/physicians";
+import { SEARCH as SEARCH_PERSONNELS } from "../../../../../../../../../../services/redux/slices/assets/persons/personnels";
 import {
   employment,
   formatNameToObj,
   fullName,
-} from "../../../../../../../../services/utilities";
+} from "../../../../../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { MDBAnimation, MDBIcon, MDBProgress } from "mdbreact";
 
 import "./style.css";
-import { Policy } from "../../../../../../../../services/fakeDb";
+import { Policy } from "../../../../../../../../../../services/fakeDb";
 const emoji = {
   physician: {
     male: "👨‍⚕️",

@@ -1,4 +1,4 @@
-import Holder from "./holder";
+import CareOf from "../../careOf";
 
 const Credit = ({ refNo = {}, setRefNo = () => {}, isMixed = false }) => {
   const { pp = "cash" } = refNo || {};
@@ -35,7 +35,7 @@ const Credit = ({ refNo = {}, setRefNo = () => {}, isMixed = false }) => {
           </select>
         </td>
       </tr>
-      <Holder refNo={refNo} setRefNo={setRefNo} />
+      <CareOf refNo={refNo} setRefNo={setRefNo} />
     </>
   );
 };

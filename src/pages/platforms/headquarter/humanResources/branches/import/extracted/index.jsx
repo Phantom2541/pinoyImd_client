@@ -1,13 +1,16 @@
 import { MDBBtn, MDBTable } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import React from "react";
 import Services from "./services";
+import { EditableField } from "../../../../../../../components/customizable";
+import { SetUPDATED_MENU } from "../../../../../../../services/redux/slices/commerce/catalog/menus";
 
 const ExtractedData = () => {
   const { extracted } = useSelector(({ menus }) => menus);
   const [activeId, setActiveId] = useState(-1);
+  const dispatch = useDispatch();
   return (
     <div
       style={{
@@ -18,7 +21,7 @@ const ExtractedData = () => {
       <MDBTable small className="mb-0">
         <thead className="sticky" style={{ top: "0", zIndex: 3 }}>
           <tr>
-            <th style={{ width: "40%", fontWeight: 600 }} className="py-1">
+            <th style={{ width: "30%", fontWeight: 600 }} className="py-1">
               Menus ({extracted.length})
             </th>
             <th className="py-1">Description</th>
@@ -32,23 +35,36 @@ const ExtractedData = () => {
         <tbody>
           {extracted.length > 0 ? (
             extracted.map((item, index) => {
-              const { packages = [], description = "" } = item;
+              const { packages = [] } = item;
               const isOpen = activeId === index;
 
               return (
                 <React.Fragment key={index}>
                   <tr key={index}>
-                    <td>
-                      {index + 1}.
-                      <span
-                        style={{
-                          fontWeight: isOpen ? 500 : 400,
-                          color: isOpen ? "blue" : "",
-                        }}
-                        className="ml-1"
-                      >
-                        {item.abbreviation}
-                      </span>
+                    <td
+                      style={{
+                        color: isOpen ? "blue" : "",
+                        fontWeight: isOpen ? 600 : 400,
+                      }}
+                    >
+                      <div className="d-flex align-items-center ">
+                        <span className="mt-n2 mr-1">{index + 1}.</span>
+                        <EditableField
+                          isCapitalize={false}
+                          fieldData={{
+                            _id: index,
+                            abbreviation: item.abbreviation,
+                          }}
+                          keyForValue={"abbreviation"}
+                          keyForText="abbreviation"
+                          onSave={(item) =>
+                            dispatch(
+                              SetUPDATED_MENU({ data: item, _id: index })
+                            )
+                          }
+                          localUpdate
+                        />
+                      </div>
                     </td>
                     <td
                       style={{
@@ -56,7 +72,20 @@ const ExtractedData = () => {
                         color: isOpen ? "blue" : "",
                       }}
                     >
-                      {description}
+                      <EditableField
+                        fieldData={{
+                          _id: index,
+                          description: item.description,
+                        }}
+                        isCapitalize={false}
+                        width="20rem"
+                        keyForValue={"description"}
+                        keyForText="description"
+                        onSave={(item) =>
+                          dispatch(SetUPDATED_MENU({ data: item, _id: index }))
+                        }
+                        localUpdate
+                      />
                     </td>
                     <td
                       className="text-end "
@@ -65,7 +94,20 @@ const ExtractedData = () => {
                         color: isOpen ? "blue" : "",
                       }}
                     >
-                      {currency.format(item.opd)}
+                      <EditableField
+                        fieldData={{
+                          _id: index,
+                          opd: item.opd,
+                        }}
+                        width="9rem"
+                        isMoney
+                        keyForValue={"opd"}
+                        keyForText="opd"
+                        onSave={(item) =>
+                          dispatch(SetUPDATED_MENU({ data: item, _id: index }))
+                        }
+                        localUpdate
+                      />
                     </td>
                     <td>
                       <div className="m-0 p-0 d-flex align-items-center justify-content-end">

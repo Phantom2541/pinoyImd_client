@@ -26,7 +26,8 @@ import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/asset
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import RollingNumber from "../../../../../../../components/rollingNumber";
 import utils from "./utils";
-import SplitBill from "./splitBill";
+import SplitBill from "./payment/voucher";
+import Payment from "./payment";
 
 const _refNo = {
   number: "",
@@ -34,8 +35,10 @@ const _refNo = {
   pp: "cash", //cash or credit patient Payable
   careOf: {
     category: "employee",
+    number: "", //reference number for gcash
     user: "",
     amount: 0,
+    pp: "gcash",
   },
 };
 
@@ -202,7 +205,6 @@ export default function Summary() {
     const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
     const { name = "", ref = "" } = company || {};
     const { careOf = {}, pp = "", amount: creditCovered } = refNo;
-    console.log("pppppppp", pp);
     if (
       pp === "co" &&
       !careOf.user &&
@@ -243,23 +245,23 @@ export default function Summary() {
       );
     }
 
-    if (!allServicesHavePrices(cart, category, hmo)) {
-      Swal.fire({
-        title: "Service Validator?",
-        text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
-        icon: "error",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, proceed",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await checkout();
-        }
-      });
-    } else {
-      await checkout();
-    }
+    // if (!allServicesHavePrices(cart, category, hmo)) {
+    //   Swal.fire({
+    //     title: "Service Validator?",
+    //     text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
+    //     icon: "error",
+    //     showCancelButton: true,
+    //     confirmButtonColor: "#3085d6",
+    //     cancelButtonColor: "#d33",
+    //     confirmButtonText: "Yes, proceed",
+    //   }).then(async (result) => {
+    //     if (result.isConfirmed) {
+    //       await checkout();
+    //     }
+    //   });
+    // } else {
+    //   await checkout();
+    // }
   };
 
   return (
@@ -330,12 +332,19 @@ export default function Summary() {
               </select>
             </td>
           </tr>
-          <SplitBill
+          <Payment
+            payment={payment}
+            refNo={refNo}
+            setRefNo={setRefNo}
+            chargeAmount={amount}
+            isMixed={isMixed}
+          />
+          {/* <SplitBill
             chargeAmount={amount}
             isMixed={isMixed}
             refNo={refNo}
             setRefNo={setRefNo}
-          />
+          /> */}
           {["cash", "mixed", "downpayment"].includes(payment) &&
           refNo.pp === "cash" &&
           refNo.amount < amount ? (
@@ -366,9 +375,9 @@ export default function Summary() {
             ""
           )}
 
-          <tr>
+          {/* <tr>
             <td colSpan="2" className="td-skip" />
-          </tr>
+          </tr> */}
           <tr>
             <td className="p-0">
               <button
