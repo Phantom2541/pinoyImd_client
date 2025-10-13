@@ -1,7 +1,8 @@
 import CareOf from "../careOf";
 
-const Split = ({ refNo, setRefNo = () => {} }) => {
-  const { careOf = {}, pp = "" } = refNo || {};
+const Split = ({ refNo, setRefNo = () => {}, chargeAmount = 0 }) => {
+  const { careOf = {}, pp = "", amount = 0 } = refNo || {};
+  const psMinAmt = chargeAmount - amount;
   return (
     <>
       <tr>
@@ -16,14 +17,15 @@ const Split = ({ refNo, setRefNo = () => {} }) => {
             value={pp}
             onChange={(e) => setRefNo({ ...refNo, pp: e.target.value })}
           >
-            <option>Cash</option>
-            {careOf.pp !== "gcash" && <option>Gcash</option>}
+            <option value={"cash"}>Cash</option>
+            {careOf.pp !== "gcash" && <option value={"gcash"}>Gcash</option>}
           </select>
         </td>
         <td className="py-1">
           <input
             placeholder="Amount"
-            value={String(refNo.amount)}
+            required
+            value={String(refNo.amount || "")}
             onChange={({ target }) =>
               setRefNo({ ...refNo, amount: target.value })
             }
@@ -46,7 +48,7 @@ const Split = ({ refNo, setRefNo = () => {} }) => {
             }
           >
             <option value={"co"}>Care Of</option>
-            <option value={"gcash"}>Gcash</option>
+            {pp !== "gcash" && <option value={"gcash"}>Gcash</option>}
           </select>
         </td>
         <td className="p-0">
@@ -68,6 +70,7 @@ const Split = ({ refNo, setRefNo = () => {} }) => {
           ) : (
             <input
               placeholder="Reference No."
+              required
               value={careOf.number}
               onChange={({ target }) =>
                 setRefNo({
@@ -93,8 +96,10 @@ const Split = ({ refNo, setRefNo = () => {} }) => {
             <td>
               <input
                 required
+                min={psMinAmt}
+                type="number"
                 placeholder="Amount"
-                value={String(careOf.amount) || ""}
+                value={String(careOf.amount || "") || ""}
                 onChange={({ target }) =>
                   setRefNo({
                     ...refNo,
