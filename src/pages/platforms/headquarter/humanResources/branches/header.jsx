@@ -51,7 +51,7 @@ const Header = () => {
           onClick={() => dispatch(TOGGLE_CLONE())}
         >
           <MDBIcon far icon="clone" className="mr-2" />
-          Clone Product & Services
+          Clone Menus & Services
         </MDBBtn>
         <MDBBtn
           size="sm"
@@ -62,7 +62,7 @@ const Header = () => {
           onClick={() => dispatch(TOGGLE_IMPORT())}
         >
           <MDBIcon fas icon="file-import" className="mr-2" />
-          Import Menus Excel
+          Import Menus (Excel)
         </MDBBtn>
       </div>
       <div>

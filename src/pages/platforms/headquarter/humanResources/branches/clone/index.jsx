@@ -149,7 +149,7 @@ export default function CloneModal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="clone" className="mr-2" />
-        Clone Product & Services
+        Clone Menus & Services
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
