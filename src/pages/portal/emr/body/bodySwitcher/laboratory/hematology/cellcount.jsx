@@ -8,6 +8,7 @@ export default function CellCount({ cc, isMale, style, apc }) {
 
   const parseValue = (value) =>
     value <= 2 ? value.toFixed(2) : value < 10 ? value.toFixed(1) : value;
+  const reference = Preferences[isMale];
 
   return (
     <MDBTable hover bordered responsive className="mb-0">
@@ -54,7 +55,6 @@ export default function CellCount({ cc, isMale, style, apc }) {
         {/* CC/Cell Count */}
         {cc.map((cell, index) => {
           const _cell = Number(cell),
-            reference = Preferences[isMale],
             { lo, hi, unit } = reference[Abbreviation[index]],
             color = _cell < lo ? "blue" : _cell > hi && "red",
             indicators = calculateIndicators(
