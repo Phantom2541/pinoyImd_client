@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import "./style.css";
 import {
   BROWSE,
@@ -10,6 +10,7 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import { Calendars } from "../../../../../../components/header";
 import { currency } from "../../../../../../services/utilities";
+import MonhtlyReport from "../../../../../../services/utilities/export/excel/monthlyReport";
 
 const Header = () => {
   const {
@@ -134,6 +135,16 @@ const Header = () => {
           <strong className={remittedClass}>{currency.format(remitted)}</strong>{" "}
           ({balanceMessage})
         </span>
+        <MDBBtn
+          size="sm"
+          className="px-2 py-1 p-0"
+          color="light"
+          title="Export to Excel"
+          onClick={() => MonhtlyReport({ deals })}
+          style={{ fontSize: "1rem" }}
+        >
+          <MDBIcon icon="file-excel" />
+        </MDBBtn>
       </div>
     </MDBView>
   );

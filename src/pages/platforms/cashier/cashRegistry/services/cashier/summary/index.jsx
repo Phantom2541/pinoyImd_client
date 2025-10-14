@@ -261,8 +261,6 @@ export default function Summary() {
     }
   };
 
-  console.log("refNo", refNo);
-
   return (
     <form onSubmit={handleCheckout}>
       <table className="summary-table">
