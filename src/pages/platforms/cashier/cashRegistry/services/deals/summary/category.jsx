@@ -46,26 +46,34 @@ export default function Payments() {
       } = item;
       const { careOf = {}, pp = "cash" } = refNo;
       const { type: chType = "" } = cardHolder;
-      const isMixed = payment === "mixed" || payment === "voucher";
-      const baseAmount = isMixed
+      const isMixed = payment === "mixed";
+      const isVoucher = payment === "voucher";
+      const baseAmount = isVoucher
         ? refNo?.amount + (careOf?.amount || 0)
         : amount;
 
-      const totalsKey = isMixed ? "voucher" : payment;
+      totals[payment] = (totals[payment] || 0) + baseAmount;
 
-      totals[totalsKey] = (totals[totalsKey] || 0) + baseAmount;
+      if (isMixed) {
+        //for computation of total in mixed payment
+        totals[refNo?.pp] = (totals[refNo?.pp] || 0) + refNo?.amount;
+        if (refNo?.careOf?.pp === "gcash") {
+          totals["gcash"] = (totals["gcash"] || 0) + refNo?.careOf?.amount;
+        }
+      }
 
-      if (isMixed && pp === "cash") {
+      if (isVoucher && pp === "cash") {
         const mixedCash = amount - refNo?.amount;
         totals.cash += mixedCash || 0;
       }
 
       //patient payable is paid by care of
-      if (isMixed && pp === "co") {
+      if ((isMixed || isVoucher) && careOf?.pp === "co") {
         summary["care"] += careOf?.amount || 0;
+        totals.voucher += careOf?.amount || 0;
       }
 
-      if (isMixed && chType && summary.hasOwnProperty(chType)) {
+      if (isVoucher && chType && summary.hasOwnProperty(chType)) {
         summary[chType] += refNo?.amount || 0;
       }
     });

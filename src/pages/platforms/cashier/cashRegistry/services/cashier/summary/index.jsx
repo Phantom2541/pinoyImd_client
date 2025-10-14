@@ -26,7 +26,6 @@ import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/asset
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import RollingNumber from "../../../../../../../components/rollingNumber";
 import utils from "./utils";
-import SplitBill from "./payment/voucher";
 import Payment from "./payment";
 
 const _refNo = {
@@ -263,6 +262,8 @@ export default function Summary() {
     }
   };
 
+  console.log("refNo", refNo);
+
   return (
     <form onSubmit={handleCheckout}>
       <table className="summary-table">
@@ -345,7 +346,7 @@ export default function Summary() {
 
           {["cash", "downpayment", "voucher"].includes(payment) &&
           refNo.pp === "cash" &&
-          refNo.amount < amount ? (
+          (refNo?.amount < amount || !refNo.amount) ? (
             <tr>
               <td style={{ fontSize: "1rem" }}>Amount ₱</td>
               <td className="p-0">

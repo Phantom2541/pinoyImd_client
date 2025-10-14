@@ -10,7 +10,7 @@ const PaymentDetails = ({ deal = {} }) => {
   const { payment, amount, refNo = {}, cash = 0 } = deal;
 
   const arrangePayment = () => {
-    if (payment === "mixed" || payment === "voucher") {
+    if (payment === "voucher") {
       const { company } = cardHolder;
       const isCardHolder = Boolean(company?.name || company?.ref);
       const { careOf = {} } = refNo;
@@ -34,6 +34,30 @@ const PaymentDetails = ({ deal = {} }) => {
               { method: "tendered", amount: cash },
             ]
           : []),
+      ];
+    }
+
+    if (payment === "mixed") {
+      const { careOf = {} } = refNo;
+      const { user = {} } = careOf;
+      const { lname = "", fname = "" } = user?.fullName || {};
+      return [
+        { method: refNo.pp, amount: refNo.amount },
+        ...(careOf.pp === "co"
+          ? [
+              {
+                method: "co",
+                name: `${fname} ${lname[0]}.`,
+                isCare: true,
+                careAmount: careOf?.amount,
+              },
+            ]
+          : [
+              {
+                method: "gcash",
+                amount: careOf?.amount,
+              },
+            ]),
       ];
     }
 

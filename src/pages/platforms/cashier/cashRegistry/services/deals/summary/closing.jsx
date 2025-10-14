@@ -87,20 +87,34 @@ export default function Vouchers() {
       collections.forEach(({ cart, amount, payment, refNo }) => {
         const { careOf = {}, amount: debtAmount, pp = "cash" } = refNo || {};
         if (payment && amount) {
-          const isVoucher = payment === "voucher" || payment === "mixed";
-          const basePayment = isVoucher ? "voucher" : payment;
-          const baseAmount = isVoucher ? debtAmount || 0 : amount;
+          const isMixed = payment === "mixed";
+          const isVoucher = payment === "voucher";
 
-          if (!paymentSummary[basePayment]) {
-            paymentSummary[basePayment] = 0;
-          }
+          const basePayment = isVoucher
+            ? "voucher"
+            : isMixed //because in mixed we have a gcash and cash
+            ? refNo.pp
+            : payment;
+
+          const baseAmount = isVoucher || isMixed ? debtAmount || 0 : amount;
 
           paymentSummary[basePayment] =
             (paymentSummary[basePayment] || 0) + baseAmount;
 
-          paymentSummary.co = (paymentSummary?.co || 0) + (careOf?.amount || 0);
+          if (isMixed && careOf.pp === "gcash") {
+            //for split(2) GCASH
+            paymentSummary.gcash =
+              (paymentSummary.gcash || 0) + (careOf.amount || 0);
+          }
+
+          if (careOf.pp === "co") {
+            //for care off add the amount in vouchers
+            paymentSummary.voucher =
+              (paymentSummary?.voucher || 0) + (careOf?.amount || 0);
+          }
 
           if (isVoucher && pp === "cash") {
+            //for voucher
             paymentSummary.cash =
               (paymentSummary?.cash || 0) + (amount - debtAmount || 0);
           }
