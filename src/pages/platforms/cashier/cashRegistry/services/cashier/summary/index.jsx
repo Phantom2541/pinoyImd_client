@@ -5,7 +5,6 @@ import {
   capitalize,
   computeGD,
   currency,
-  paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories, Payments } from "../../../../../../../services/fakeDb";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../../services/redux/slices/assets/persons/users";
