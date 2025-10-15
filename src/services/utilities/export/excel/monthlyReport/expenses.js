@@ -1,5 +1,5 @@
 import fullName from "../../../fullName";
-import { Privileges, Services } from "../../../../fakeDb";
+import { Statements } from "../../../../fakeDb";
 import currency from "../../../currency";
 import { dateFormat, ENDPOINT } from "../../..";
 import Months from "../../../../fakeDb/calendar/months";
@@ -53,6 +53,19 @@ const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     return result;
   };
 
+const getVendorOrParticular = (payable = {}) => {
+  console.log("payable", payable);
+  if (!payable?._id) return "-";
+  const { particular = {}, supplier = {} } = payable || {};
+  if (!particular && !supplier) return "-";
+  const { vendors = {} } = supplier || {};
+  return particular?._id
+    ? fullName(particular.fullName)
+    : vendors?._id
+    ? `${vendors?.name || vendors?.displayname} `
+    : `${supplier?.name || supplier?.displayname}`;
+};
+
 const set = {
   banner: async ({ worksheet, workbook }) => {
     // Load image from public folder
@@ -73,7 +86,7 @@ const set = {
       console.error("Failed to add image to Excel:", err);
     }
   },
-  header: ({ worksheet, gross, config }) => {
+  header: ({ worksheet, totalExpenses, config }) => {
     const border = {
       top: { style: "thin" },
       left: { style: "thin" },
@@ -104,14 +117,14 @@ const set = {
       },
       {
         mergeCell: "I5:L5",
-        label: "Total Patients",
-        value: config.patientsCount,
+        label: "Number of Expenses",
+        value: config.expensesCount,
       },
 
       {
         mergeCell: "M5:T5",
-        value: currency.format(gross),
-        label: "Gross",
+        value: currency.format(totalExpenses),
+        label: "Total Expenses",
       },
     ];
     for (const { mergeCell, value, label, position } of datas) {
@@ -120,7 +133,7 @@ const set = {
 
     worksheet.mergeCells("A6:T6");
     const title = worksheet.getCell("A6");
-    title.value = "PATIENTS REPORT";
+    title.value = "EXPENSES REPORT";
     title.font = { bold: true, size: 22 };
     title.border = border;
     title.alignment = { horizontal: "center" };
@@ -131,9 +144,9 @@ const set = {
 
     let startPos = 7;
     for (let i = 0; i < vouchers.length; i++) {
-      const { deals, date } = vouchers[i];
+      const { expenses = [], date } = vouchers[i];
       const dateCell = worksheet.getCell(`A${startPos}`);
-      const amount = deals.reduce((acc, item) => acc + item.amount, 0);
+      const amount = expenses.reduce((acc, item) => acc + item.amount, 0);
       dateCell.value = `${date} | ${currency.format(amount)}`;
       dateCell.font = { color: { argb: "FFFFFFFF" }, size: 15 };
       dateCell.fill = {
@@ -150,21 +163,19 @@ const set = {
 
       worksheet.mergeCells(`A${startPos}:T${startPos}`);
       startPos++;
-      startPos = processArray(deals, startPos);
+      startPos = processArray(expenses, startPos);
     }
 
     function processArray(array, startPos) {
       let headerCol = 0;
 
       const headers = [
-        { text: "Patient", space: 4 },
-        { text: "Category" },
-        { text: "Menu", space: 3 },
-        { text: "Services inclusion", space: 3 },
-        { text: "Amount" },
-        { text: "Discount" },
-        { text: "Privillege" },
-        { text: "Time" },
+        { text: "Particular/Vendor", space: 4 },
+        { text: "Statement", space: 4 },
+        { text: "Amount", space: 2 },
+        { text: "Remarks", space: 4 },
+        { text: "Payor", space: 4 },
+        { text: "Time", space: 2 },
       ];
       for (let j = 0; j < headers.length; j++) {
         const { text, space = 2 } = headers[j];
@@ -195,31 +206,17 @@ const set = {
       }
       startPos++;
       for (let i = 0; i < array.length; i++) {
-        const {
-          customerId,
-          category,
-          cart,
-          amount,
-          discount,
-          privilege,
-          createdAt,
-        } = array[i];
+        const { userId, fsId, amount, createdAt, payableId } = array[i];
         let maxLength = 0;
 
-        const menus = cart.map(({ abbreviation }) => abbreviation).join(", ");
-        const services = cart
-          .flatMap(({ menuId }) => Services.whereInAbbr(menuId.packages))
-          .join(", ");
-        const customer = fullName(customerId?.fullName);
-        const genderIcon = customerId?.isMale ? "\u2642" : "\u2640";
+        const payor = fullName(userId?.fullName);
+        const genderIcon = userId?.isMale ? "\u2642" : "\u2640";
         const element = [
-          `${i + 1}.  ${genderIcon} ${customer}`,
-          category,
-          menus,
-          services,
+          `${i + 1}. ${getVendorOrParticular(payableId)}`,
+          Statements.getName(fsId),
           amount,
-          discount,
-          Privileges[privilege],
+          payableId?.remarks || "",
+          `${genderIcon} ${payor}`,
           new Date(createdAt).toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "numeric",
@@ -230,28 +227,16 @@ const set = {
         let _prevCol = 0;
         for (let j = 0; j < element.length; j++) {
           const value = element[j];
-          const { space = 2 } = headers[j];
+          const { space = 2 } = headers[j] || {};
           const cellPos = `${getAlpha(_prevCol)}${startPos}`;
 
           const cell = worksheet.getCell(cellPos);
-          if ([4, 5].includes(j)) {
+          if (j === 2) {
             cell.numFmt = '"₱"#,##0.00';
           }
-          if (j === 2 || j === 3) {
-            cell.value = {
-              richText: [
-                {
-                  font: {
-                    size: 11,
-                  }, // adjust font size here
-                  text: value,
-                },
-              ],
-            };
-          } else {
-            cell.value = value;
-            cell.font = { size: 13 };
-          }
+
+          cell.value = value;
+          cell.font = { size: 13 };
 
           cell.value = value;
           cell.alignment = {
@@ -324,30 +309,30 @@ const set = {
 };
 
 // options list
-const Patients = async ({ deals = [], workbook, config }) => {
-  if (!deals.length) return;
+const Patients = async ({ expenses: _expenses = [], workbook, config }) => {
+  if (!_expenses.length) return;
+  const expenses = [..._expenses].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
+  const groupExpenses = expenses.reduce((acc, deal) => {
+    const date = new Date(deal.createdAt).toISOString().split("T")[0]; // extract YYYY-MM-DD
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(deal);
+    return acc;
+  }, {});
 
-  const groupDeals = [...deals]
-    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-    .reduce((acc, deal) => {
-      const date = new Date(deal.createdAt).toISOString().split("T")[0]; // extract YYYY-MM-DD
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(deal);
-      return acc;
-    }, {});
-
-  const groupedArray = Object.entries(groupDeals).map(([date, dls]) => ({
+  const groupedArray = Object.entries(groupExpenses).map(([date, exp]) => ({
     date: dateFormat(date),
-    deals: dls.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)),
+    expenses: exp,
   }));
-  const gross = deals.reduce((acc, deal) => acc + deal.amount, 0);
-  const worksheet = workbook.addWorksheet("Patients");
-
+  //   const gross = deals.reduce((acc, deal) => acc + deal.amount, 0);
+  const worksheet = workbook.addWorksheet("Expenses");
+  const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   await set.banner({ worksheet, workbook });
   set.header({
     worksheet,
-    gross,
-    config: { ...config, patientsCount: deals.length },
+    totalExpenses,
+    config: { ...config, expensesCount: expenses.length },
   });
   set.main({
     worksheet,
@@ -355,11 +340,12 @@ const Patients = async ({ deals = [], workbook, config }) => {
   });
   const datesLength = groupedArray.length * 2;
   const dealsLength = groupedArray.reduce(
-    (acc, curr) => (acc += curr.deals?.length),
+    (acc, curr) => (acc += curr.expenses?.length),
     0
   );
 
   const skip = dealsLength + datesLength + 6;
+
   set.footer({ worksheet, skip, createdBy: config.createdBy });
 
   // Save the workbook
