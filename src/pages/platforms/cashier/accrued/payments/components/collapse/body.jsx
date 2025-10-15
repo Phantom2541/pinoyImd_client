@@ -29,11 +29,12 @@ export default function Collapsable({ deals = [] }) {
             category,
             particular: par,
             supplier: supp,
+            breakdown,
           } = deal;
 
           const particular = payableId?.particular || par;
           const supplier = payableId?.supplier || supp;
-
+          const baseAmount = fsId === 13 ? breakdown?.net : amount;
           return (
             <tr key={index}>
               <td>
@@ -46,7 +47,7 @@ export default function Collapsable({ deals = [] }) {
                 <small>Category :{category}</small>
               </td>
               <td>
-                <h6>{currency.format(amount)}</h6>
+                <h6>{currency.format(baseAmount)}</h6>
                 <small>Remarks : {remarks}</small>
               </td>
             </tr>
@@ -56,29 +57,3 @@ export default function Collapsable({ deals = [] }) {
     </MDBTable>
   );
 }
-
-// return (
-//   <>
-//     <MDBRow>
-//       <MDBCol md={6}>
-//         <h5>Deductions</h5>
-//         {Object.entries(deduction || {}).map(([key, value]) => (
-//           <div key={key} className="d-flex justify-content-between">
-//             <span>{key.charAt(0).toUpperCase() + key.slice(1)}:</span>
-//             <MDBBadge color="danger">{value}</MDBBadge>
-//           </div>
-//         ))}
-//       </MDBCol>
-
-//       <MDBCol md={6}>
-//         <h5>Earnings</h5>
-//         {Object.entries(earn || {}).map(([key, value]) => (
-//           <div key={key} className="d-flex justify-content-between">
-//             <span>{key.charAt(0).toUpperCase() + key.slice(1)}:</span>
-//             <MDBBadge color="success">{value}</MDBBadge>
-//           </div>
-//         ))}
-//       </MDBCol>
-//     </MDBRow>
-//   </>
-// );

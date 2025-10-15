@@ -1,5 +1,5 @@
 import fullName from "../../../fullName";
-import { Privileges, Services } from "../../../../fakeDb";
+import { Categories, Privileges, Services } from "../../../../fakeDb";
 import currency from "../../../currency";
 import { dateFormat, ENDPOINT } from "../../..";
 import Months from "../../../../fakeDb/calendar/months";
@@ -157,14 +157,14 @@ const set = {
       let headerCol = 0;
 
       const headers = [
+        { text: "Time" },
         { text: "Patient", space: 4 },
         { text: "Category" },
-        { text: "Menu", space: 3 },
-        { text: "Services inclusion", space: 3 },
-        { text: "Amount" },
-        { text: "Discount" },
         { text: "Privillege" },
-        { text: "Time" },
+        { text: "Menu", space: 3 },
+        { text: "Services", space: 3 },
+        { text: "Discount" },
+        { text: "Amount" },
       ];
       for (let j = 0; j < headers.length; j++) {
         const { text, space = 2 } = headers[j];
@@ -213,18 +213,18 @@ const set = {
         const customer = fullName(customerId?.fullName);
         const genderIcon = customerId?.isMale ? "\u2642" : "\u2640";
         const element = [
-          `${i + 1}.  ${genderIcon} ${customer}`,
-          category,
-          menus,
-          services,
-          amount,
-          discount,
-          Privileges[privilege],
           new Date(createdAt).toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "numeric",
             hour12: true,
           }),
+          `${genderIcon} ${customer}`,
+          Categories.find(({ abbr }) => category === abbr).name,
+          Privileges[privilege],
+          menus,
+          services,
+          discount,
+          amount,
         ];
 
         let _prevCol = 0;
@@ -234,10 +234,10 @@ const set = {
           const cellPos = `${getAlpha(_prevCol)}${startPos}`;
 
           const cell = worksheet.getCell(cellPos);
-          if ([4, 5].includes(j)) {
+          if ([6, 7].includes(j)) {
             cell.numFmt = '"₱"#,##0.00';
           }
-          if (j === 2 || j === 3) {
+          if (j === 4 || j === 5) {
             cell.value = {
               richText: [
                 {
@@ -330,7 +330,9 @@ const Patients = async ({ deals = [], workbook, config }) => {
   const groupDeals = [...deals]
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
     .reduce((acc, deal) => {
-      const date = new Date(deal.createdAt).toISOString().split("T")[0]; // extract YYYY-MM-DD
+      const date = new Date(deal.createdAt).toLocaleDateString("en-CA", {
+        timeZone: "Asia/Manila",
+      });
       if (!acc[date]) acc[date] = [];
       acc[date].push(deal);
       return acc;

@@ -1,4 +1,4 @@
-import { currency, dateFormat, ENDPOINT } from "../../..";
+import { currency, ENDPOINT } from "../../..";
 import Months from "../../../../fakeDb/calendar/months";
 
 const border = {
@@ -275,18 +275,27 @@ const dailySales = async ({ deals = [], workbook, config }) => {
   const groupDeals = [...deals]
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
     .reduce((acc, deal) => {
-      const date = new Date(deal.createdAt).toISOString().split("T")[0]; // extract YYYY-MM-DD
+      const date = new Date(deal.createdAt).toLocaleDateString("en-CA", {
+        timeZone: "Asia/Manila",
+      });
       if (!acc[date]) acc[date] = [];
       acc[date].push(deal);
       return acc;
     }, {});
 
-  const sales = Object.entries(groupDeals).map(([date, dls]) => ({
-    date: dateFormat(date),
-    patientsCount: dls?.length,
-    discount: dls.reduce((acc, curr) => acc + curr.discount, 0),
-    sale: dls.reduce((acc, curr) => acc + curr.amount, 0),
-  }));
+  const sales = Object.entries(groupDeals).map(([date, dls]) => {
+    const d = new Date(date);
+    const day = d.getDate(); // e.g., 5
+    const weekday = d.toLocaleDateString("en-US", { weekday: "long" }); // e.g., Monday
+
+    return {
+      date: `${weekday} (${day})`,
+      patientsCount: dls?.length,
+      discount: dls.reduce((acc, curr) => acc + curr.discount, 0),
+      sale: dls.reduce((acc, curr) => acc + curr.amount, 0),
+    };
+  });
+
   const gross = deals.reduce((acc, deal) => acc + deal.amount, 0);
 
   await set.banner({ worksheet, workbook });

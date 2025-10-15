@@ -127,14 +127,15 @@ const arrangePaymentsByDate = (state, collections) => {
   const groupByDate = collections.reduce((groups, item) => {
     const date = dateFormat(item.createdAt);
     const index = groups.findIndex((group) => group.date === date);
-
+    const isPayroll = item.fsId === 13;
+    const baseAmount = isPayroll ? item?.breakdown?.net : item.amount;
     if (index > -1) {
       groups[index].deals.push({ ...item, isSelected: false });
-      groups[index].sum += item.amount;
+      groups[index].sum += baseAmount;
     } else {
       groups.push({
         date,
-        sum: item.amount,
+        sum: baseAmount,
         deals: [{ ...item, isSelected: false }],
         isSelected: false,
       });

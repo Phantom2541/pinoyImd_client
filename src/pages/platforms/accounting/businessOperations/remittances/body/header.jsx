@@ -222,11 +222,11 @@ const Header = () => {
         <MDBBtn
           size="sm"
           className="px-2 py-1 p-0"
-          color="light"
+          color="primary"
           disabled={disableExport}
           title="Export to Excel"
           onClick={handleExport}
-          style={{ fontSize: "1rem" }}
+          style={{ fontSize: "1.2rem" }}
         >
           <MDBIcon icon="file-excel" />
         </MDBBtn>

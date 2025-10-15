@@ -142,7 +142,14 @@ export default function Modal() {
       payCycle === 1 ? { day: isAquincena ? 15 : lastDay } : { day: lastDay };
 
     const date = new Date(year, month - 1 + (offset.month || 0), offset.day);
-    date.setHours(0, 0, 0, 0); // Set oras to 00:00:00
+    const now = new Date();
+    date.setHours(
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds(),
+      now.getMilliseconds()
+    );
+
     return date;
   };
 

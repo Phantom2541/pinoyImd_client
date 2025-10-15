@@ -54,7 +54,6 @@ const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   };
 
 const getVendorOrParticular = (payable = {}) => {
-  console.log("payable", payable);
   if (!payable?._id) return "-";
   const { particular = {}, supplier = {} } = payable || {};
   if (!particular && !supplier) return "-";
@@ -146,7 +145,11 @@ const set = {
     for (let i = 0; i < vouchers.length; i++) {
       const { expenses = [], date } = vouchers[i];
       const dateCell = worksheet.getCell(`A${startPos}`);
-      const amount = expenses.reduce((acc, item) => acc + item.amount, 0);
+      const amount = expenses.reduce((acc, item) => {
+        const { breakdown, amount, fsId } = item;
+        const baseAmount = fsId === 13 ? breakdown?.net : amount;
+        return acc + baseAmount;
+      }, 0);
       dateCell.value = `${date} | ${currency.format(amount)}`;
       dateCell.font = { color: { argb: "FFFFFFFF" }, size: 15 };
       dateCell.fill = {
@@ -171,11 +174,11 @@ const set = {
 
       const headers = [
         { text: "Particular/Vendor", space: 4 },
+        { text: "Time", space: 2 },
         { text: "Statement", space: 4 },
         { text: "Amount", space: 2 },
         { text: "Remarks", space: 4 },
         { text: "Payor", space: 4 },
-        { text: "Time", space: 2 },
       ];
       for (let j = 0; j < headers.length; j++) {
         const { text, space = 2 } = headers[j];
@@ -206,22 +209,34 @@ const set = {
       }
       startPos++;
       for (let i = 0; i < array.length; i++) {
-        const { userId, fsId, amount, createdAt, payableId } = array[i];
+        const {
+          userId,
+          fsId,
+          amount,
+          createdAt,
+          payableId,
+          particular,
+          breakdown = {},
+        } = array[i];
         let maxLength = 0;
-
+        const isPayroll = fsId === 13;
         const payor = fullName(userId?.fullName);
         const genderIcon = userId?.isMale ? "\u2642" : "\u2640";
         const element = [
-          `${i + 1}. ${getVendorOrParticular(payableId)}`,
-          Statements.getName(fsId),
-          amount,
-          payableId?.remarks || "",
-          `${genderIcon} ${payor}`,
+          `${i + 1}. ${
+            isPayroll
+              ? fullName(particular?.fullName)
+              : getVendorOrParticular(payableId)
+          }`,
           new Date(createdAt).toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "numeric",
             hour12: true,
           }),
+          Statements.getName(fsId),
+          isPayroll ? breakdown.net : amount,
+          payableId?.remarks || "",
+          `${genderIcon} ${payor}`,
         ];
 
         let _prevCol = 0;
@@ -231,7 +246,7 @@ const set = {
           const cellPos = `${getAlpha(_prevCol)}${startPos}`;
 
           const cell = worksheet.getCell(cellPos);
-          if (j === 2) {
+          if (j === 3) {
             cell.numFmt = '"₱"#,##0.00';
           }
 
@@ -315,7 +330,9 @@ const Patients = async ({ expenses: _expenses = [], workbook, config }) => {
     (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
   );
   const groupExpenses = expenses.reduce((acc, deal) => {
-    const date = new Date(deal.createdAt).toISOString().split("T")[0]; // extract YYYY-MM-DD
+    const date = new Date(deal.createdAt).toLocaleDateString("en-CA", {
+      timeZone: "Asia/Manila",
+    });
     if (!acc[date]) acc[date] = [];
     acc[date].push(deal);
     return acc;
