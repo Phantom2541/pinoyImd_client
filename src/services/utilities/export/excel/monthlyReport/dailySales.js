@@ -195,7 +195,7 @@ const set = {
           cell.value = value;
 
           cell.alignment = {
-            horizontal: "left",
+            horizontal: j === 1 ? "center" : "left",
             vertical: "middle",
             wrapText: true,
           };

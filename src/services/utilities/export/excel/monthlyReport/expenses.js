@@ -344,7 +344,11 @@ const Patients = async ({ expenses: _expenses = [], workbook, config }) => {
   }));
   //   const gross = deals.reduce((acc, deal) => acc + deal.amount, 0);
   const worksheet = workbook.addWorksheet("Expenses");
-  const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+  const totalExpenses = expenses.reduce((acc, curr) => {
+    const { breakdown, amount, fsId } = curr;
+    const baseAmount = fsId === 13 ? breakdown.net : amount;
+    return acc + baseAmount;
+  }, 0);
   await set.banner({ worksheet, workbook });
   set.header({
     worksheet,
