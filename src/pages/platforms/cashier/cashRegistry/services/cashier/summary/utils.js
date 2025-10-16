@@ -15,7 +15,7 @@ const utils = {
     const creditCoveredEnough = creditCovered >= chargeAmount;
 
     var finalAmount = 0;
-    if (pp === "co" || paymentMethod === "voucher") {
+    if (pp === "co") {
       finalAmount = chargeAmount;
     } else if (creditCoveredEnough) {
       finalAmount = chargeAmount;
@@ -42,29 +42,34 @@ const utils = {
     var _refNo = { ...refNo };
     if (pp === "gcash") {
       const { amount = 0 } = careOf;
-      _refNo = { ...refNo, amount: chargeAmount - amount };
+      const amt = chargeAmount - amount;
+      const total = amt > -1 ? amt : 0;
+      _refNo = { ...refNo, amount: total };
     } else {
+      const { number, ...rest } = refNo;
+      const amt = refNo.amount > chargeAmount ? chargeAmount : refNo.amount;
       _refNo = {
-        ...refNo,
-        amount:
-          refNo.amount > chargeAmount
-            ? chargeAmount
-            : chargeAmount - refNo.amount,
+        ...rest,
+        amount: amt,
       };
     }
 
-    const { amount } = refNo;
-
-    _refNo = {
-      ...refNo,
-      careOf: { ...careOf, amount: chargeAmount - amount },
-    };
-
-    if (careOf.pp !== "co") {
-      const { user, ...rest } = careOf;
+    if (careOf.pp === "gcash") {
+      const { user, category, ...rest } = careOf;
+      const amt = chargeAmount - refNo.amount || 0;
+      const total = amt > -1 ? amt : 0;
       _refNo = {
-        ...refNo,
-        careOf: { ...rest },
+        ..._refNo,
+        careOf: { ...rest, amount: total },
+      };
+    } else {
+      const { number, ...rest } = careOf;
+      const otherAmt = _refNo.pp === "cash" ? _refNo.amount : 0;
+      const remaining = chargeAmount - otherAmt;
+      const amt = careOf.amount > remaining ? remaining : careOf.amount;
+      _refNo = {
+        ..._refNo,
+        careOf: { ...rest, amount: amt },
       };
     }
 
@@ -77,7 +82,6 @@ const utils = {
     if (["downpayment", "cash"].includes(paymentMethod)) {
       return true;
     }
-    if (paymentMethod === "voucher") return false;
     if (creditCoveredEnough) return false;
 
     if (pp === "cash") return true;

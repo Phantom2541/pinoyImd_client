@@ -47,6 +47,30 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   );
 };
 
+const handleMixedLabel = ({ refNo }) => {
+  const { pp = "cash", amount = 0, careOf = {} } = refNo || {};
+  const split1IsCash = pp === "cash";
+  const split2IsGCash = careOf.pp === "gcash";
+
+  return (
+    <>
+      <Text
+        title={capitalize(split1IsCash ? "Cash" : "Gcash")}
+        value={currency.format(amount)}
+      />
+      <Hr />
+      <Text
+        title={split2IsGCash ? "GCash" : "C/O"}
+        value={
+          split2IsGCash
+            ? currency.format(careOf.amount)
+            : `${careOfName(careOf)} (${currency.format(careOf.amount)})`
+        }
+      />
+    </>
+  );
+};
+
 const Stub = ({ sale, companyId }) => {
   const {
       _id,
@@ -64,9 +88,10 @@ const Stub = ({ sale, companyId }) => {
     } = sale,
     { fullName = {}, address = {}, email = "" } = customer || {};
   const { careOf = {}, pp = "cash" } = refNo || {};
+  const isVoucher = payment === "voucher";
   const isMixed = payment === "mixed";
   const cashOut = amount - refNo?.amount || 0;
-  const hasCashOut = cashOut > 0 && isMixed && pp === "cash";
+  const hasCashOut = cashOut > 0 && isVoucher && pp === "cash";
 
   const isCardHolder = Boolean(
     cardHolder?.company?.name || cardHolder?.company?.ref
@@ -132,24 +157,24 @@ const Stub = ({ sale, companyId }) => {
           <Text title={"Patient Share"} value={currency.format(cashOut)} />
         </>
       )}
-      <Text
-        title={capitalize(
-          payment === "cash" || hasCashOut
-            ? "Tendered"
-            : payment === "mixed"
-            ? "voucher"
-            : payment
-        )}
-        value={
-          payment === "cash" || hasCashOut
-            ? currency.format(cash)
-            : currency.format(refNo.amount)
-        }
-      />
+      {isMixed ? (
+        handleMixedLabel(sale)
+      ) : (
+        <Text
+          title={capitalize(
+            payment === "cash" || hasCashOut ? "Tendered" : payment
+          )}
+          value={
+            payment === "cash" || hasCashOut
+              ? currency.format(cash)
+              : currency.format(refNo.amount)
+          }
+        />
+      )}
       {(payment === "cash" || hasCashOut) && change > 0 && (
         <Text title="Change" value={currency.format(change)} />
       )}
-      {isMixed && (
+      {isVoucher && (
         <>
           {isCardHolder && (
             <>

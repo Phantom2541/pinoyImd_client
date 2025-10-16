@@ -99,7 +99,7 @@ const Split = ({ refNo, setRefNo = () => {}, chargeAmount = 0 }) => {
             <td>
               <input
                 required
-                min={psMinAmt}
+                min={refNo.pp === "gcash" ? 0 : psMinAmt}
                 type="number"
                 placeholder="Amount"
                 value={String(careOf.amount || "") || ""}

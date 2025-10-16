@@ -2,12 +2,7 @@ import { useSelector } from "react-redux";
 import Credit from "./credit";
 import { useEffect } from "react";
 
-const Voucher = ({
-  refNo = {},
-  isMixed = false,
-  chargeAmount = 0,
-  setRefNo = () => {},
-}) => {
+const Voucher = ({ refNo = {}, chargeAmount = 0, setRefNo = () => {} }) => {
   const { cardHolder = {} } = useSelector(({ pos }) => pos);
   const { company = {} } = cardHolder || {};
   const { name, ref } = company;
@@ -66,7 +61,7 @@ const Voucher = ({
                 setRefNo({
                   ...refNo,
                   pp: target.value,
-                  careOf: { ...refNo.careOf, user: "" },
+                  careOf: { ...refNo.careOf, user: "", pp: target.value },
                 })
               }
             >
@@ -79,12 +74,7 @@ const Voucher = ({
         ""
       )}
 
-      <Credit
-        refNo={refNo}
-        setRefNo={setRefNo}
-        isMixed={isMixed && debtAmount < chargeAmount}
-        amount={chargeAmount}
-      />
+      <Credit refNo={refNo} setRefNo={setRefNo} amount={chargeAmount} />
     </>
   );
 };

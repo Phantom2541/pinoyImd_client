@@ -36,31 +36,6 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
         {!isLoading ? (
           <>
             <div className="sales-card-info mt-3">
-              {gross > 0 && (
-                <div className="d-flex align-items-center justify-content-between mb-1">
-                  <h6
-                    className={`mb-0 text-right `}
-                    style={{ whiteSpace: "nowrap", fontWeight: 400 }}
-                  >
-                    Sales:
-                  </h6>
-                  <div
-                    style={{
-                      flexGrow: 1,
-                      borderBottom: "1px dashed #999",
-                      margin: "0 10px",
-                    }}
-                  />
-
-                  <h6
-                    className={`mb-0 text-right`}
-                    style={{ whiteSpace: "nowrap", fontWeight: 400 }}
-                  >
-                    {currency.format(gross)}
-                  </h6>
-                </div>
-              )}
-
               {nonCash.length > 0 && (
                 <>
                   <div
@@ -124,30 +99,44 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                   value: breakdown?.cash ? breakdown?.cash : 0,
                 },
                 {
+                  label: "Sales",
+                  // value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  value: gross,
+                  fw: 600,
+                },
+                {
                   label: " Add: FC",
                   value: opening.sum,
+                  isFC: true,
                   title: "Floating Cash",
                 },
                 {
-                  label: "Total:",
+                  label: "COH",
                   value: breakdown?.cash + opening.sum,
+                  isCOH: true,
+                  fw: 600,
                 },
-                { label: "Expenses", value: expenses, cn: "text-danger" },
+                {
+                  label: "Expenses",
+                  value: expenses,
+                  cn: "text-danger",
+                },
               ]
                 .filter(({ value }) => value > 0)
-                .map(({ label, value, cn }, idx) => (
+                .map(({ label, value, cn, fw = 400, isFC = false }, idx) => (
                   <div
                     className="d-flex align-items-center justify-content-between mb-1"
                     key={idx}
-                    style={
-                      label === " Add: FC"
-                        ? { borderBottom: "1px solid #999" }
-                        : null
-                    }
+                    style={{
+                      ...(isFC && { borderBottom: "1px solid #999" }),
+                    }}
                   >
                     <h6
-                      className={`mb-0 text-right ${cn}`}
-                      style={{ whiteSpace: "nowrap", fontWeight: 400 }}
+                      className={`mb-0 text-right ${cn} `}
+                      style={{
+                        whiteSpace: "nowrap",
+                        fontWeight: fw,
+                      }}
                     >
                       {label}:
                     </h6>
@@ -162,7 +151,10 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
 
                     <h6
                       className={`mb-0 text-right ${cn}`}
-                      style={{ whiteSpace: "nowrap", fontWeight: 400 }}
+                      style={{
+                        whiteSpace: "nowrap",
+                        fontWeight: fw,
+                      }}
                     >
                       {currency.format(value)}
                     </h6>

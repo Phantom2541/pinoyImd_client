@@ -5,7 +5,6 @@ import {
   capitalize,
   computeGD,
   currency,
-  paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories, Payments } from "../../../../../../../services/fakeDb";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../../services/redux/slices/assets/persons/users";
@@ -26,7 +25,6 @@ import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/asset
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import RollingNumber from "../../../../../../../components/rollingNumber";
 import utils from "./utils";
-import SplitBill from "./payment/voucher";
 import Payment from "./payment";
 
 const _refNo = {
@@ -59,7 +57,7 @@ export default function Summary() {
       cardHolder,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
-    [isMixed, setIsMixed] = useState(false),
+    [isVoucher, setIsVoucher] = useState(false),
     [refNo, setRefNo] = useState(_refNo),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
@@ -85,7 +83,7 @@ export default function Summary() {
   }, [cardHolder]);
 
   useEffect(() => {
-    setIsMixed(payment === "mixed");
+    setIsVoucher(payment === "voucher");
   }, [payment]);
   const checkout = async () => {
     const baseRefNo = utils.build(refNo, payment, amount, cardHolder);
@@ -160,7 +158,6 @@ export default function Summary() {
         })
       );
     selected = removeUndefinedValues(selected);
-
     try {
       await dispatch(SAVE({ token, data: selected })).then(
         ({ payload: data }) => {
@@ -205,7 +202,7 @@ export default function Summary() {
     e.preventDefault();
     const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
     const { name = "", ref = "" } = company || {};
-    const { careOf = {}, pp = "" } = refNo;
+    const { careOf = {} } = refNo;
     if (
       careOf.pp === "co" &&
       !careOf.user &&
@@ -282,7 +279,6 @@ export default function Summary() {
                 <RollingNumber value={gross} duration={1000} />
               </div>
             </td>
-            {/* <td className="table-price">{currency.format(gross)}</td> */}
           </tr>
           <tr>
             <td style={{ fontSize: "1rem" }}>Discount</td>
@@ -291,7 +287,6 @@ export default function Summary() {
                 <RollingNumber value={discount} duration={1000} />
               </div>
             </td>
-            {/* <td className="table-price">{currency.format(discount)}</td> */}
           </tr>
           <tr>
             <td style={{ fontSize: "1rem" }}>Net Amount</td>
@@ -300,7 +295,6 @@ export default function Summary() {
                 <RollingNumber value={amount} duration={1000} />
               </div>
             </td>
-            {/* <td className="table-price">{currency.format(amount)}</td> */}
           </tr>
           <tr>
             <td style={{ fontSize: "1rem" }}>Payment</td>
@@ -342,7 +336,6 @@ export default function Summary() {
               refNo={refNo}
               setRefNo={setRefNo}
               chargeAmount={amount}
-              isMixed={isMixed}
               setCash={setCash}
               cash={cash}
             />
@@ -350,23 +343,23 @@ export default function Summary() {
 
           {["cash", "downpayment", "voucher"].includes(payment) &&
           refNo.pp === "cash" &&
-          refNo.amount < amount ? (
+          (refNo?.amount < amount || !refNo.amount) ? (
             <tr>
               <td style={{ fontSize: "1rem" }}>Amount ₱</td>
               <td className="p-0">
                 <input
                   type="number"
-                  min={isMixed ? amount - refNo.amount : amount}
+                  min={isVoucher ? amount - refNo.amount : amount}
                   value={String(cash || "")}
                   onChange={({ target }) => setCash(Number(target.value))}
                   placeholder={
-                    isMixed
+                    isVoucher
                       ? `Amount ${currency.format(amount - refNo.amount)}`
                       : "Amount"
                   }
                   required
                   title={
-                    isMixed
+                    isVoucher
                       ? `Amount ${currency.format(amount - refNo.amount)}`
                       : "Amount "
                   }

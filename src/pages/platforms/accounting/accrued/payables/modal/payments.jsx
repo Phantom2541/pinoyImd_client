@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -71,9 +71,6 @@ export default function PaymentModal() {
 
   // Handle update function
   const handleUpdate = () => {
-    console.log("handle update form", form);
-    console.log("handle update selected", selected);
-
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
@@ -92,8 +89,6 @@ export default function PaymentModal() {
 
   // Handle create function
   const handleCreate = () => {
-    console.log("handle create form", form);
-    console.log("handle create selected", selected);
     dispatch(SAVE({ data: form, token }));
   };
 

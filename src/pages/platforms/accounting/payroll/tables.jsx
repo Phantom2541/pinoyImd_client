@@ -169,13 +169,13 @@ const Body = () => {
     }
   };
 
-  const getDay = (createdAt) => {
-    const date = new Date(createdAt);
+  const getDay = (salaryPaid) => {
+    const date = new Date(salaryPaid);
     return date.getDate();
   };
   const canBePaidThisQuarter = (payrolls) => {
-    return payrolls?.some(({ createdAt }) => {
-      const date = new Date(createdAt);
+    return payrolls?.some(({ salaryPaid }) => {
+      const date = new Date(salaryPaid);
       //this is paid quarter
       const createdQuarter = Math.floor(date.getMonth() / 3) + 1;
       //current quarter base on the current month in header
@@ -217,13 +217,13 @@ const Body = () => {
               );
 
               const akinsenas = payroll?.find(
-                ({ createdAt, breakdown }) =>
-                  getMonth(createdAt) === month - 1 && breakdown?.isAquincena
+                ({ salaryPaid, breakdown }) =>
+                  getMonth(salaryPaid) === month - 1 && breakdown?.isAquincena
               );
-              const katapusan = payroll?.find(({ createdAt, breakdown }) => {
-                const day = getDay(createdAt);
+              const katapusan = payroll?.find(({ salaryPaid, breakdown }) => {
+                const day = getDay(salaryPaid);
                 const pc = Number(contract?.pc);
-                const isSameMonth = getMonth(createdAt) === month - 1;
+                const isSameMonth = getMonth(salaryPaid) === month - 1;
 
                 return pc === 1
                   ? day > 15 && !breakdown?.isAquincena && isSameMonth
@@ -268,7 +268,7 @@ const Body = () => {
                               handlePayslip({
                                 ...personnel,
                                 breakdown: akinsenas?.breakdown,
-                                datePaid: akinsenas?.createdAt,
+                                datePaid: akinsenas?.salaryPaid,
                               })
                             }
                             color="warning"
@@ -305,7 +305,7 @@ const Body = () => {
                             handlePayslip({
                               ...personnel,
                               breakdown: katapusan?.breakdown,
-                              datePaid: katapusan?.createdAt,
+                              datePaid: katapusan?.salaryPaid,
                             })
                           }
                           color="warning"

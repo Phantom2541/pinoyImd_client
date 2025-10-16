@@ -142,7 +142,8 @@ export default function Modal() {
       payCycle === 1 ? { day: isAquincena ? 15 : lastDay } : { day: lastDay };
 
     const date = new Date(year, month - 1 + (offset.month || 0), offset.day);
-    date.setHours(0, 0, 0, 0); // Set oras to 00:00:00
+    date.setHours(0, 0, 0, 0);
+
     return date;
   };
 
@@ -179,7 +180,7 @@ export default function Modal() {
           particular: selected?.user?._id,
           userId: auth._id,
           branchId: selected?.branch._id,
-          createdAt: formattedCreatedAt(),
+          salaryPaid: formattedCreatedAt(),
           fsId: 13,
         },
         token,
