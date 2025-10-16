@@ -2,9 +2,9 @@ import Dashboard from "../../../../pages/platforms/accounting/dashboard";
 
 import {
   Vouchers,
-  Payables,
+  // Payables,
   Receivables,
-  Payments,
+  // Payments,
   SOA,
   Reseco,
   ClearancePay,
@@ -12,6 +12,7 @@ import {
   Menus,
   Services,
 } from "../../../../pages/platforms/accounting";
+import { Payables, Payments } from "../../../../pages/platforms/cashier";
 import {
   Membership,
   Contract,
