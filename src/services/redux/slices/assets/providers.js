@@ -31,6 +31,7 @@ const contractCategories = [
 ];
 const initialState = {
   collections: [],
+  filtered: [],
   hotlines: [],
   categories: categories,
   contractCategories,
@@ -52,7 +53,6 @@ const initialState = {
   /**
    * Footer
    */
-  filtered: [],
   maxPage: 5,
   activePage: 1,
   totalPages: 0,
@@ -400,6 +400,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
+
         state.collections = data;
         state.filtered = data;
         state.isSuccess = true;
@@ -537,14 +538,13 @@ export const reduxSlice = createSlice({
         var _collections = state.collections;
         const index = _collections.findIndex((item) => item._id === data._id);
         _collections[index] = data;
-        state.filtered = _collections.filter(({ contract, status }) => {
-          if (state.category) {
-            return (contract || status) === state.category;
-          } else {
-            return true;
-          }
-        });
+
+        var _filtered = state.filtered;
+        const findex = _filtered.findIndex((item) => item._id === data._id);
+        _filtered[findex] = data;
+
         state.collections = _collections;
+        state.filtered = _filtered;
         state.isSuccess = true;
         state.formSubmitted = false;
       })

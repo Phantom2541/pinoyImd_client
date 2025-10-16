@@ -8,6 +8,8 @@ import {
   MDBModalHeader,
   MDBInput,
   MDBTypography,
+  MDBCol,
+  MDBRow,
 } from "mdbreact";
 import {
   SAVE,
@@ -115,14 +117,12 @@ export default function Modal() {
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
-
           <MDBInput
             label="Abbreviation"
             value={form?.abbr}
             required
             onChange={(e) => handleChange("abbr", e.target.value)}
           />
-
           <MDBInput
             label="Number"
             value={form?.number}
@@ -133,6 +133,23 @@ export default function Modal() {
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.25rem",
+              fontSize: "0.8rem",
+            }}
+          >
+            Status
+          </label>
+          <select
+            value={form?.status}
+            onChange={(e) => handleChange("status", e.target.value)}
+          >
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="denied">Denied</option>
+          </select>
 
           <div className="text-center mb-1-half">
             <MDBBtn

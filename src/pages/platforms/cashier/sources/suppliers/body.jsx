@@ -17,6 +17,7 @@ const Body = () => {
       ({ providers }) => providers
     ),
     dispatch = useDispatch();
+  console.log("filtered", filtered);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
@@ -58,12 +59,14 @@ const Body = () => {
           <th>Name</th>
           <th>Mobile</th>
           <th>Address</th>
+          <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((supplier, index) => {
-          const { _id, displayname, name, abbr, number, address } = supplier;
+          const { _id, displayname, name, abbr, number, address, status } =
+            supplier;
 
           return (
             <tr key={_id}>
@@ -86,6 +89,7 @@ const Body = () => {
               </td>
               <td>{mobile(number)}</td>
               <td>{address}</td>
+              <td>{status}</td>
               <td className="text-center">
                 <MDBBtnGroup>
                   <MDBBtn

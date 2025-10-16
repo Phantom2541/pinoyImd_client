@@ -84,7 +84,9 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { number } = form;
-    if (number.length < 11) {
+
+    // Only validate if a number is provided
+    if (number && number.length > 0 && number.length < 11) {
       return Swal.fire({
         title: "Invalid Phone Number",
         text: "Please check and correct the phone number format. It seems to be incorrect.",
@@ -93,6 +95,8 @@ export default function Modal() {
         confirmButtonText: "OK",
       });
     }
+
+    // Proceed to create or update
     willCreate ? handleCreate() : handleUpdate();
   };
 
@@ -179,6 +183,23 @@ export default function Modal() {
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.25rem",
+              fontSize: "0.8rem",
+            }}
+          >
+            Status
+          </label>
+          <select
+            value={form?.status}
+            onChange={(e) => handleChange("status", e.target.value)}
+          >
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="denied">Denied</option>
+          </select>
 
           {/* Submit button */}
           <div className="text-center mb-1-half">
