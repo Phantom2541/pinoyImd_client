@@ -4452,5 +4452,20 @@
     "template": 6,
     "purpose": "To quantitatively determine IgM or IgG antibodies to Epstein–Barr Virus, aiding in the diagnosis of acute, recent, or past EBV infection.",
     "organ": ["immune system", "lymphatic system"]
+  },
+  {
+    "id": 429,
+    "name": "Gamma-Glutamyl Transferase (GGT)",
+    "abbreviation": "GGT",
+    "lo_ssx": "",
+    "hi_ssx": "",
+    "department": "LAB",
+    "frequency": "As requested / Liver function test panel",
+    "preference": "equal",
+    "preparation": "Fasting for 8–10 hours is recommended. Avoid alcohol for at least 24 hours prior to test.",
+    "specimen": "Serum (2 mL)",
+    "template": 6,
+    "purpose": "To measure gamma-glutamyl transferase levels for assessing liver function and detecting bile duct disorders, alcohol abuse, or hepatocellular damage.",
+    "organ": ["liver", "biliary system"]
   }
 ]
