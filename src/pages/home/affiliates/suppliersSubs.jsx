@@ -36,73 +36,81 @@ export default function SuppliersSubs() {
       <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay=".5s">
         <h1 className="affiliates-title">Suppliers</h1>
       </MDBAnimation>
-      <Swiper
-        className="affiliates-swiper"
-        modules={[Autoplay]}
-        loop={!isFewSlides}
-        speed={4000}
-        autoplay={
-          !isFewSlides
-            ? {
-                delay: 0,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-                reverseDirection: false,
-              }
-            : false
-        }
-        allowTouchMove={true}
-        spaceBetween={0}
-        slidesPerView={slidesPerView}
-        centeredSlides={isFewSlides}
-        breakpoints={{
-          0: { slidesPerView: 2, spaceBetween: 15 },
-          576: { slidesPerView: 2, spaceBetween: 15 },
-          1200: { slidesPerView: 3, spaceBetween: 25 },
-          1600: { slidesPerView: 4, spaceBetween: 30 },
-        }}
-      >
-        {supplierCompanies.map((item, index) => {
-          const { branches = [] } = item;
+      {supplierCompanies?.length > 0 && (
+        <Swiper
+          className="affiliates-swiper"
+          modules={[Autoplay]}
+          loop={!isFewSlides}
+          speed={4000}
+          autoplay={
+            !isFewSlides
+              ? {
+                  delay: 0,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                  reverseDirection: false,
+                }
+              : false
+          }
+          allowTouchMove={true}
+          spaceBetween={0}
+          slidesPerView={slidesPerView}
+          centeredSlides={isFewSlides}
+          breakpoints={{
+            0: { slidesPerView: 2, spaceBetween: 15 },
+            576: { slidesPerView: 2, spaceBetween: 15 },
+            1200: { slidesPerView: 3, spaceBetween: 25 },
+            1600: { slidesPerView: 4, spaceBetween: 30 },
+          }}
+        >
+          {supplierCompanies.map((item, index) => {
+            const { branches = [] } = item;
 
-          // Get first main branch (or undefined)
-          const mainBranch = branches.find((branch) => branch.isMain === true);
-          const address = mainBranch?.address || {};
-          const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-            item.name
-          )}/profile/logo`;
-          console.log("here", item);
-          return (
-            <SwiperSlide key={item._id || index}>
-              <div className="affiliates-logo-wrapper">
-                <MDBAnimation reveal type="flipInX" duration="1.5s" delay=".5s">
-                  <BgRemover
-                    className="affiliates-logo"
-                    src={logoUrl}
-                    alt={item.name}
-                    fallback={fallbackLogo}
-                  />
-                </MDBAnimation>
-                <MDBAnimation
-                  className="affiliates-logo-info"
-                  reveal
-                  type="fadeInUp"
-                  duration="1.5s"
-                  delay="1s"
-                >
-                  <span className="affiliates-logo-name">{item.name}</span>
-                  <span className="affiliates-logo-subname">
-                    {item.subName}
-                  </span>
-                  <small className="affiliates-logo-address">
-                    {address.city}
-                  </small>
-                </MDBAnimation>
-              </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+            // Get first main branch (or undefined)
+            const mainBranch = branches.find(
+              (branch) => branch.isMain === true
+            );
+            const address = mainBranch?.address || {};
+            const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+              item.name
+            )}/profile/logo`;
+            return (
+              <SwiperSlide key={item._id || index}>
+                <div className="affiliates-logo-wrapper">
+                  <MDBAnimation
+                    reveal
+                    type="flipInX"
+                    duration="1.5s"
+                    delay=".5s"
+                  >
+                    <BgRemover
+                      className="affiliates-logo"
+                      src={logoUrl}
+                      alt={item.name}
+                      fallback={fallbackLogo}
+                    />
+                  </MDBAnimation>
+                  <MDBAnimation
+                    className="affiliates-logo-info"
+                    reveal
+                    type="fadeInUp"
+                    duration="1.5s"
+                    delay="1s"
+                  >
+                    <span className="affiliates-logo-name">{item.name}</span>
+                    <span className="affiliates-logo-subname">
+                      {item.subName}
+                    </span>
+                    <small className="affiliates-logo-address">
+                      {address.city}
+                    </small>
+                  </MDBAnimation>
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      )}
     </div>
   );
 }

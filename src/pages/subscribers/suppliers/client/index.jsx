@@ -21,36 +21,38 @@ export default function Client() {
       <div className="supplier-client-title">
         <h1>Healthcare Institutions We Support</h1>
       </div>
-      <Swiper
-        modules={[Autoplay]}
-        loop={true}
-        speed={4000}
-        autoplay={{
-          delay: 0,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        allowTouchMove={true}
-        spaceBetween={0}
-        slidesPerView={7}
-        breakpoints={{
-          0: { slidesPerView: 3, spaceBetween: 10 },
-          576: { slidesPerView: 3, spaceBetween: 15 },
-          768: { slidesPerView: 3, spaceBetween: 20 },
-          1200: { slidesPerView: 4, spaceBetween: 25 },
-          1600: { slidesPerView: 7, spaceBetween: 30 },
-        }}
-      >
-        {images.map((id, index) => (
-          <SwiperSlide key={index}>
-            <img
-              src={`https://drive.google.com/thumbnail?id=${id}`}
-              alt={id}
-              className="supplier-client-image"
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {images.length > 0 && (
+        <Swiper
+          modules={[Autoplay]}
+          loop={true}
+          speed={4000}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          allowTouchMove={true}
+          spaceBetween={0}
+          slidesPerView={7}
+          breakpoints={{
+            0: { slidesPerView: 3, spaceBetween: 10 },
+            576: { slidesPerView: 3, spaceBetween: 15 },
+            768: { slidesPerView: 3, spaceBetween: 20 },
+            1200: { slidesPerView: 4, spaceBetween: 25 },
+            1600: { slidesPerView: 7, spaceBetween: 30 },
+          }}
+        >
+          {images.map((id, index) => (
+            <SwiperSlide key={index}>
+              <img
+                src={`https://drive.google.com/thumbnail?id=${id}`}
+                alt={id}
+                className="supplier-client-image"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </div>
   );
 }

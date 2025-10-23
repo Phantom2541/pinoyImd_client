@@ -34,7 +34,7 @@ export default function Partners() {
         Accredited HMO Partners
       </h1>
 
-      {!showAll && (
+      {!showAll && partners?.length > 0 && (
         <Swiper
           className="subscriber-partners-wrapper"
           modules={[Autoplay]}

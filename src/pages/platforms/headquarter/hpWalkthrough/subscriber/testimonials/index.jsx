@@ -197,64 +197,66 @@ export default function Testimonials() {
               duration="1500ms"
               className="subscriber-testimonials-sliderContainer"
             >
-              <Swiper
-                modules={[Autoplay]}
-                direction="vertical"
-                loop={true}
-                speed={5000}
-                autoplay={{
-                  delay: 0,
-                  disableOnInteraction: false,
-                  pauseOnMouseEnter: false,
-                }}
-                allowTouchMove={false}
-                spaceBetween={0}
-                slidesPerView={4}
-                style={{ height: "600px" }}
-              >
-                {testimonials.map((t, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="subscriber-testimonials-sliderCard">
-                      <img src={AVATAR} alt={t.name} />
-                      <div className="subscriber-testimonials-review">
-                        <div
-                          className="subscriber-testimonials-star-rating"
-                          onMouseLeave={handleMouseLeave}
-                        >
-                          {[0, 1, 2, 3, 4].map((_, index) => {
-                            let className = "subscriber-testimonials-star";
-                            if (displayValue >= index + 1) {
-                              className += " full";
-                            } else if (displayValue >= index + 0.5) {
-                              className += " half";
-                            }
+              {testimonials.length > 0 && (
+                <Swiper
+                  modules={[Autoplay]}
+                  direction="vertical"
+                  loop={true}
+                  speed={5000}
+                  autoplay={{
+                    delay: 0,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: false,
+                  }}
+                  allowTouchMove={false}
+                  spaceBetween={0}
+                  slidesPerView={4}
+                  style={{ height: "600px" }}
+                >
+                  {testimonials.map((t, index) => (
+                    <SwiperSlide key={index}>
+                      <div className="subscriber-testimonials-sliderCard">
+                        <img src={AVATAR} alt={t.name} />
+                        <div className="subscriber-testimonials-review">
+                          <div
+                            className="subscriber-testimonials-star-rating"
+                            onMouseLeave={handleMouseLeave}
+                          >
+                            {[0, 1, 2, 3, 4].map((_, index) => {
+                              let className = "subscriber-testimonials-star";
+                              if (displayValue >= index + 1) {
+                                className += " full";
+                              } else if (displayValue >= index + 0.5) {
+                                className += " half";
+                              }
 
-                            return (
-                              <span
-                                key={index}
-                                className={className}
-                                onMouseMove={(e) => handleMouseMove(e, index)}
-                                onClick={(e) => handleClick(e, index)}
-                              >
-                                ★
-                              </span>
-                            );
-                          })}
+                              return (
+                                <span
+                                  key={index}
+                                  className={className}
+                                  onMouseMove={(e) => handleMouseMove(e, index)}
+                                  onClick={(e) => handleClick(e, index)}
+                                >
+                                  ★
+                                </span>
+                              );
+                            })}
+                          </div>
+                          <span className="subscriber-testimonials-review-text">
+                            "{t.review}"
+                          </span>
+                          <span className="subscriber-testimonials-review-name">
+                            - {t.name}
+                          </span>
                         </div>
-                        <span className="subscriber-testimonials-review-text">
-                          "{t.review}"
-                        </span>
-                        <span className="subscriber-testimonials-review-name">
-                          - {t.name}
-                        </span>
+                        <button className="subscriber-testimonials-review-deleteBtn bg-danger">
+                          <MDBIcon icon="trash" />
+                        </button>
                       </div>
-                      <button className="subscriber-testimonials-review-deleteBtn bg-danger">
-                        <MDBIcon icon="trash" />
-                      </button>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
             </MDBAnimation>
 
             <MDBAnimation

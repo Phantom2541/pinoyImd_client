@@ -17,46 +17,48 @@ export default function DiagnosticsSubs() {
   return (
     <div className="affiliates-section">
       <h1 className="affiliates-title">Our Diagnostics Subscribers</h1>
-      <Swiper
-        className="affiliates-swiper"
-        modules={[Autoplay]}
-        loop={true}
-        speed={4000}
-        autoplay={{
-          delay: 0,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-          reverseDirection: true,
-        }}
-        allowTouchMove={true}
-        spaceBetween={0}
-        slidesPerView={7}
-        breakpoints={{
-          0: { slidesPerView: 3, spaceBetween: 10 },
-          576: { slidesPerView: 3, spaceBetween: 10 },
-          1200: { slidesPerView: 4, spaceBetween: 25 },
-          1600: { slidesPerView: 6, spaceBetween: 30 },
-        }}
-      >
-        {diagnosticCompanies.map((item, index) => {
-          const logoUrl = `${Cloudinary.getEndpoint()}/${
-            item?.lid || ""
-          }/companies/${encodeURIComponent(item.name)}/profile/logo`;
+      {diagnosticCompanies?.length > 0 && (
+        <Swiper
+          className="affiliates-swiper"
+          modules={[Autoplay]}
+          loop={true}
+          speed={4000}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+            reverseDirection: true,
+          }}
+          allowTouchMove={true}
+          spaceBetween={0}
+          slidesPerView={7}
+          breakpoints={{
+            0: { slidesPerView: 3, spaceBetween: 10 },
+            576: { slidesPerView: 3, spaceBetween: 10 },
+            1200: { slidesPerView: 4, spaceBetween: 25 },
+            1600: { slidesPerView: 6, spaceBetween: 30 },
+          }}
+        >
+          {diagnosticCompanies.map((item, index) => {
+            const logoUrl = `${Cloudinary.getEndpoint()}/${
+              item?.lid || ""
+            }/companies/${encodeURIComponent(item.name)}/profile/logo`;
 
-          return (
-            <SwiperSlide key={item._id || index}>
-              <div className="affiliates-logo-wrapper">
-                <BgRemover
-                  className="affiliates-logo"
-                  src={logoUrl}
-                  alt={item.name}
-                  fallback={fallbackLogo}
-                />
-              </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+            return (
+              <SwiperSlide key={item._id || index}>
+                <div className="affiliates-logo-wrapper">
+                  <BgRemover
+                    className="affiliates-logo"
+                    src={logoUrl}
+                    alt={item.name}
+                    fallback={fallbackLogo}
+                  />
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      )}
     </div>
   );
 }

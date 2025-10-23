@@ -52,56 +52,58 @@ export default function Testimonials() {
               delay="1s"
               className="homePage-testiminials-sliderContainer hide"
             >
-              <Swiper
-                modules={[Autoplay]}
-                direction="vertical"
-                loop={true}
-                speed={5000}
-                autoplay={{
-                  delay: 0,
-                  disableOnInteraction: false,
-                  pauseOnMouseEnter: false,
-                }}
-                allowTouchMove={false}
-                spaceBetween={0}
-                slidesPerView={4}
-                style={{ height: "600px" }}
-              >
-                {shuffledTestimonials1.map((t, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="homePage-testiminials-sliderCard">
-                      <img
-                        src={t.image}
-                        alt={t.name}
-                        onError={(e) => (e.target.src = LOGO)}
-                      />
-                      <div className="homePage-testimonials-review">
-                        <div className="homePage-testimonials-star-rating">
-                          {[0, 1, 2, 3, 4].map((_, i) => {
-                            let className = "homePage-testimonials-star";
-                            if (t.rating >= i + 1) {
-                              className += " full";
-                            } else if (t.rating >= i + 0.5) {
-                              className += " half";
-                            }
-                            return (
-                              <span key={i} className={className}>
-                                ★
-                              </span>
-                            );
-                          })}
+              {shuffledTestimonials1?.length > 0 && (
+                <Swiper
+                  modules={[Autoplay]}
+                  direction="vertical"
+                  loop={true}
+                  speed={5000}
+                  autoplay={{
+                    delay: 0,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: false,
+                  }}
+                  allowTouchMove={false}
+                  spaceBetween={0}
+                  slidesPerView={4}
+                  style={{ height: "600px" }}
+                >
+                  {shuffledTestimonials1.map((t, index) => (
+                    <SwiperSlide key={index}>
+                      <div className="homePage-testiminials-sliderCard">
+                        <img
+                          src={t.image}
+                          alt={t.name}
+                          onError={(e) => (e.target.src = LOGO)}
+                        />
+                        <div className="homePage-testimonials-review">
+                          <div className="homePage-testimonials-star-rating">
+                            {[0, 1, 2, 3, 4].map((_, i) => {
+                              let className = "homePage-testimonials-star";
+                              if (t.rating >= i + 1) {
+                                className += " full";
+                              } else if (t.rating >= i + 0.5) {
+                                className += " half";
+                              }
+                              return (
+                                <span key={i} className={className}>
+                                  ★
+                                </span>
+                              );
+                            })}
+                          </div>
+                          <span className="homePage-testimonials-review-text">
+                            "{t.review}"
+                          </span>
+                          <span className="homePage-testimonials-review-name">
+                            - {t.name}
+                          </span>
                         </div>
-                        <span className="homePage-testimonials-review-text">
-                          "{t.review}"
-                        </span>
-                        <span className="homePage-testimonials-review-name">
-                          - {t.name}
-                        </span>
                       </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
             </MDBAnimation>
             <MDBAnimation
               reveal
