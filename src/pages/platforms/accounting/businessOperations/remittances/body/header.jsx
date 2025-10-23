@@ -38,8 +38,6 @@ const Header = () => {
   const disableExport =
     isLoadingDeals || isLoadingPayments || (!deals.length && payments.length);
 
-  console.log(deals, payments);
-
   useEffect(() => {
     if (deals) {
       const totalSales = deals
@@ -49,14 +47,33 @@ const Header = () => {
 
       const totalPreExpenses = deals
         .filter((item) => !item.deletedAt)
-        .reduce(
-          (acc, item) =>
-            acc + (item?.cart?.reduce((a, b) => a + (b?.capital || 0), 0) || 0),
-          0
-        );
+        .reduce((acc, item) => {
+          const cartSum =
+            item?.cart?.reduce((a, b) => {
+              const capital = b?.capital || 0;
+
+              if (capital && typeof capital === "object") {
+                // kung object, i-sum lahat ng values niya
+                const objectSum = Object.values(capital).reduce(
+                  (objAcc, val) => objAcc + Number(val || 0),
+                  0
+                );
+                return a + objectSum;
+              } else {
+                // kung number or string, i-convert sa number at idagdag
+                return a + Number(capital || 0);
+              }
+            }, 0) || 0;
+
+          return acc + cartSum;
+        }, 0);
+
+      setPreExpenses(totalPreExpenses);
       setPreExpenses(totalPreExpenses);
     }
   }, [deals]);
+
+  console.log(deals.map((d) => d));
 
   useEffect(() => {
     if (remittances) {
