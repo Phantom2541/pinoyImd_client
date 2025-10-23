@@ -424,10 +424,10 @@ const Si = {
       adult: { snug: 0, lo: 28, hi: 32, crical: 37, unit: "fmol" },
     },
     MCHC: {
-      neonate: { snug: 0, lo: 0.28, hi: 0.32, crical: 0.45, unit: "mmol/L" },
-      infant: { snug: 0, lo: 0.29, hi: 0.31, crical: 0.44, unit: "mmol/L" },
-      child: { snug: 0, lo: 0.33, hi: 0.35, crical: 0.4, unit: "mmol/L" },
-      adult: { snug: 0, lo: 0.32, hi: 0.36, crical: 0.46, unit: "mmol/L" },
+      neonate: { snug: 0, lo: 280, hi: 320, critical: 450, unit: "g/L" },
+      infant: { snug: 0, lo: 290, hi: 310, critical: 440, unit: "g/L" },
+      child: { snug: 0, lo: 330, hi: 350, critical: 400, unit: "g/L" },
+      adult: { snug: 0, lo: 320, hi: 360, critical: 460, unit: "g/L" },
     },
     RDWc: {
       neonate: { snug: 0, lo: 11.5, hi: 14.5, crical: 16.5, unit: "%" },
