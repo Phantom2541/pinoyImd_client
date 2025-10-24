@@ -22,7 +22,7 @@ export default function Coagulation({ task }) {
         </tr>
       </thead>
       <tbody>
-        {packages?.includes(53) && <Protime pt={[pt[0], pt[1]]} />}
+        {packages?.includes(53) && <Protime pt={pt} />}
         {packages?.includes(54) && <APTT aptt={aptt} />}
       </tbody>
     </MDBTable>

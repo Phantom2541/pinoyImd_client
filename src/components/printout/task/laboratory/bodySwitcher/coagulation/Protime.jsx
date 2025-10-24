@@ -1,6 +1,9 @@
-const references = ["11.0-13.0 sec.", "10.7-14.1 sec.", "0.8-1.1 %"];
+const references = ["11.0-13.0 sec.", "10.7-14.1 sec.", "0.8-1.1 %", ""];
+const labels = ["Patient", "Control", "INR", "%Activity"];
+const los = [11.0, 10.7, 0.8];
+const his = [13.0, 14.1, 1.1];
 
-const Protime = ({ pt = [0, 0] }) => {
+const Protime = ({ pt = [0, 0, 0, 0] }) => {
   return (
     <>
       <tr>
@@ -9,14 +12,24 @@ const Protime = ({ pt = [0, 0] }) => {
         </td>
       </tr>
       {pt.map((item = 0, index) => {
-        const hi = index === 0 ? 13.0 : 14.1;
-        const lo = index === 0 ? 11.0 : 10.7;
+        const hi = his[index];
+        const lo = los[index];
+        const label = labels[index];
         return (
           <tr key={index}>
-            <td className="py-0">{index === 0 ? "Patient" : "Control"}</td>
+            <td className="py-0">{label}</td>
             <td
               className="py-0 fw-bold text-center"
-              style={{ color: item > hi ? "red" : item < lo ? "blue" : "" }}
+              style={{
+                color:
+                  index <= 2
+                    ? item > hi
+                      ? "red"
+                      : item < lo
+                      ? "blue"
+                      : ""
+                    : "",
+              }}
             >
               {item}
             </td>
@@ -24,22 +37,6 @@ const Protime = ({ pt = [0, 0] }) => {
           </tr>
         );
       })}
-      <tr>
-        <td className="py-0">INR</td>
-        <td
-          className="py-0 fw-bold text-center"
-          style={{ color: pt[2] > 1.1 ? "red" : pt[2] < 0.8 ? "blue" : "" }}
-        >
-          {pt[2] ? pt[2].toFixed(2) : 0}
-        </td>
-        <td className="py-0">{references[2]}</td>
-      </tr>
-      <tr>
-        <td className="py-0">%Activity</td>
-        <td className="py-0 fw-bold text-center">
-          {`${pt[3] ? pt[3].toFixed(2) : 0} %`}
-        </td>
-      </tr>
     </>
   );
 };
