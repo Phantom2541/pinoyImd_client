@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { useSelector, useDispatch } from "react-redux";
 import { SetTASK } from "./../../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
@@ -6,8 +6,6 @@ import { SetTASK } from "./../../../../../../../../../../services/redux/slices/d
 const Protime = () => {
   // const { theme } = useSelector(({ auth }) => auth),
   const { task } = useSelector(({ validator }) => validator),
-    [inr, setInr] = useState(0),
-    [percent, setPercent] = useState(0),
     [pt, setPt] = useState([0, 0]),
     dispatch = useDispatch();
 
@@ -16,27 +14,32 @@ const Protime = () => {
     setPt(_pt);
   }, [task]);
 
-  useEffect(() => {
-    if (!!task.pt && task.pt[0] > 0 && task.pt[1] > 0) {
-      const _inr = task.pt[0] / task.pt[1];
-      setInr(_inr.toFixed(2));
-
-      const _per = (task.pt[1] / task.pt[0]) * 100;
-      setPercent(_per.toFixed(2));
-    } else {
-      setInr(0);
-      setPercent(0);
-    }
-  }, [task]);
+  const computeINR_ACTIVE = (pt) => {
+    const _pt = [...pt];
+    const _inr = pt[0] / pt[1];
+    const _per = (pt[1] / pt[0]) * 100;
+    _pt[2] = _inr.toFixed(2);
+    _pt[3] = _per.toFixed(2);
+    return _pt;
+  };
 
   const handlePt = (e) => {
     const { name, value } = e.target;
     let _pt = [...(pt || [])];
+    const numValue = parseFloat(value) || 0; // ✅ fallback sa 0 kapag empty
+
     if (name === "patient") {
-      _pt[0] = parseFloat(value);
+      _pt[0] = numValue;
+      _pt = computeINR_ACTIVE(_pt);
+    } else if (name === "control") {
+      _pt[1] = numValue;
+      _pt = computeINR_ACTIVE(_pt);
+    } else if (name === "inr") {
+      _pt[2] = numValue;
     } else {
-      _pt[1] = parseFloat(value);
+      _pt[3] = numValue;
     }
+
     dispatch(SetTASK({ task: { ...task, pt: _pt }, form: task.form }));
   };
   return (
@@ -94,12 +97,15 @@ const Protime = () => {
               label="INR"
               icon="cog"
               group
+              type="number"
               style={{
                 fontWeight: 500,
-                color: inr > 1.1 ? "red" : inr < 0.8 ? "blue" : "black",
+                color: pt[2] > 1.1 ? "red" : pt[2] < 0.8 ? "blue" : "black",
               }}
               step="0.01"
-              value={inr}
+              name="inr"
+              value={pt[2]}
+              onChange={handlePt}
               readonly
             />
           </td>
@@ -111,12 +117,14 @@ const Protime = () => {
             <MDBInput
               label="%Activity"
               icon="cog"
+              type="number"
               style={{
                 fontWeight: 500,
               }}
               group
               step="0.01"
-              value={`${percent} %`}
+              value={pt[3]}
+              onChange={handlePt}
               readonly
             />
           </td>

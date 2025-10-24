@@ -1,8 +1,6 @@
 const references = ["11.0-13.0 sec.", "10.7-14.1 sec.", "0.8-1.1 %"];
 
 const Protime = ({ pt = [0, 0] }) => {
-  const value = pt[1] ? pt[0] / pt[1] : 0;
-  const INR = value.toFixed(2);
   return (
     <>
       <tr>
@@ -30,16 +28,16 @@ const Protime = ({ pt = [0, 0] }) => {
         <td className="py-0">INR</td>
         <td
           className="py-0 fw-bold text-center"
-          style={{ color: INR > 1.1 ? "red" : INR < 0.8 ? "blue" : "" }}
+          style={{ color: pt[2] > 1.1 ? "red" : pt[2] < 0.8 ? "blue" : "" }}
         >
-          {INR}
+          {pt[2] ? pt[2].toFixed(2) : 0}
         </td>
         <td className="py-0">{references[2]}</td>
       </tr>
       <tr>
         <td className="py-0">%Activity</td>
         <td className="py-0 fw-bold text-center">
-          {`${pt[0] ? ((pt[1] / pt[0]) * 100).toFixed(2) : 0} %`}
+          {`${pt[3] ? pt[3].toFixed(2) : 0} %`}
         </td>
       </tr>
     </>
