@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pinoy-imd.technowiz.work/sitemap.xml
