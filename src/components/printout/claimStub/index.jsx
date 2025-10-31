@@ -6,7 +6,6 @@ import {
 } from "../../../services/utilities";
 import { Privileges } from "../../../services/fakeDb";
 import Header from "./header";
-import { useSelector } from "react-redux";
 import Body from "./body";
 import Footer from "./footer";
 
@@ -71,7 +70,7 @@ const handleMixedLabel = ({ refNo }) => {
   );
 };
 
-const Stub = ({ sale, companyId }) => {
+const Stub = ({ sale }) => {
   const {
       _id,
       createdAt = "",
@@ -85,6 +84,7 @@ const Stub = ({ sale, companyId }) => {
       cart = [],
       refNo = {},
       cardHolder = {},
+      companyId,
     } = sale,
     { fullName = {}, address = {}, email = "" } = customer || {};
   const { careOf = {}, pp = "cash" } = refNo || {};
@@ -213,10 +213,7 @@ const Stub = ({ sale, companyId }) => {
 };
 
 export default function ClaimStub() {
-  const { activePlatform } = useSelector(({ auth }) => auth),
-    { branch = {} } = activePlatform,
-    { companyId = {} } = branch,
-    [sale, setSale] = useState({});
+  const [sale, setSale] = useState({});
 
   useEffect(() => {
     try {
@@ -234,10 +231,9 @@ export default function ClaimStub() {
   }, []);
 
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
-
   return (
     <>
-      <Stub sale={sale} companyId={companyId?._id} />
+      <Stub sale={sale} />
     </>
   );
 }

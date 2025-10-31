@@ -15,6 +15,7 @@ export default function Summary({ summaryRef }) {
     year,
     day: baseDay,
   } = useSelector(({ remittances }) => remittances);
+  const { company } = useSelector(({ auth }) => auth);
   const { collections, isLoading } = useSelector(({ deals }) => deals);
   const [selectedCashier, setSelectedCashier] = useState("");
   const [day, setDay] = useState(1);
@@ -155,7 +156,12 @@ export default function Summary({ summaryRef }) {
     const { customerId: customer, cashierId: cashier } = transaction;
     localStorage.setItem(
       "claimStub",
-      JSON.stringify({ ...transaction, customer, cashier: cashier.fullName })
+      JSON.stringify({
+        ...transaction,
+        customer,
+        cashier: cashier.fullName,
+        companyId: company._id,
+      })
     );
     window.open(
       "/printout/claimstub",

@@ -1,4 +1,3 @@
-import { QRCodeCanvas } from "qrcode.react";
 import { ENDPOINT, mobile } from "../../../services/utilities";
 import QrCodeGenerator from "../../qrCode";
 

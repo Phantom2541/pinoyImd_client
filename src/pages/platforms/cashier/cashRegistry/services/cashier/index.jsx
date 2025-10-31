@@ -18,7 +18,9 @@ import {
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
 
 export default function Cashier() {
-  const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
+  const { activePlatform, token, auth, company } = useSelector(
+    ({ auth }) => auth
+  );
   const { transaction, isSuccess } = useSelector(({ deals }) => deals);
   const dispatch = useDispatch();
   const hasFetched = useRef(false),
@@ -58,14 +60,17 @@ export default function Cashier() {
 
   useEffect(() => {
     if (transaction?._id !== "default" && isSuccess) {
-      localStorage.setItem("claimStub", JSON.stringify(transaction));
+      localStorage.setItem(
+        "claimStub",
+        JSON.stringify({ ...transaction, companyId: company?._id })
+      );
       window.open(
         "/printout/claimstub",
         "Claim Stub",
         "top=100px,left=100px,width=550px,height=750px"
       );
     }
-  }, [transaction, isSuccess]);
+  }, [transaction, isSuccess, company]);
 
   useEffect(() => {
     const physiciansLocal = localStorage.getItem("physicians");

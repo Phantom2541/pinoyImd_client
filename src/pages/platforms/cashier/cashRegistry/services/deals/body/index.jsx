@@ -23,7 +23,9 @@ import PickPhysician from "../../../../../../../components/searchables/physician
 import PaymentDetails from "./paymentDetails";
 import "./style.css";
 const Tables = () => {
-  const { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, maxPage, activePlatform, company } = useSelector(
+      ({ auth }) => auth
+    ),
     {
       collections,
       filtered,
@@ -79,7 +81,10 @@ const Tables = () => {
   // Sample generateStub function
 
   const handlePrintout = (selected) => {
-    localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
+    localStorage.setItem(
+      "claimStub",
+      JSON.stringify(generateStub({ ...selected, companyId: company._id }))
+    );
     setTimeout(() => {
       window.open(
         "/printout/claimstub",
