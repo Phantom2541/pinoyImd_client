@@ -15,9 +15,6 @@ const ICard = ({ match = {} }) => {
     [flipped, setFlipped] = useState(false),
     dispatch = useDispatch();
 
-  console.log("info", info);
-  console.log("brance", branch);
-
   // fetch personnel info
   useEffect(() => {
     localStorage.setItem("companyId", companyId);
