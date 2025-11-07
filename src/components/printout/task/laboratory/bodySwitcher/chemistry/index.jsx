@@ -52,7 +52,10 @@ export default function Chemistry({ task, fontSize }) {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(packages).map(([fk, value], index) => {
+        {Object.entries(packages).map(([fk, res], index) => {
+          const parts = res.split(/([<>])/);
+          const value = parts[2] ?? parts[0];
+          const operator = parts[2] ? parts[1] : "";
           const {
               name = "",
               preference,
@@ -96,14 +99,14 @@ export default function Chemistry({ task, fontSize }) {
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
-                {CI_value}
+                {operator} {CI_value}
               </td>
               <td className="py-1">
                 {!lo ? `< ${hi}` : `${lo} - ${hi}`} {units}
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
-                {SI_value}
+                {operator} {SI_value}
               </td>
               <td style={style} className="py-0">
                 {SI_reference}&nbsp;

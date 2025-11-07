@@ -1,14 +1,10 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SetPackages,
   SetTASK,
 } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
-import {
-  findReference,
-  referenceColor,
-} from "./../../../../../../../../../services/utilities";
+import { findReference } from "./../../../../../../../../../services/utilities";
 
 export default function Serology() {
   const { task, params } = useSelector(({ validator }) => validator),
@@ -45,15 +41,18 @@ export default function Serology() {
       </thead>
       <tbody>
         {Object.entries(packages).map(([key, value], index) => {
+          const parts = value.split(/[<>]/);
+          const result = parts[1] ?? parts[0];
           const service = collections.find((s) => s.id === Number(key)) || {};
           const { preference, abbreviation, name, references } = service;
-          const { lo, hi, warn, alert, critical, units, _id } = findReference(
+          const { lo, hi, units, _id } = findReference(
             key,
             patient?.isMale,
             patient?.dob,
             preference,
             references
           );
+
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
@@ -61,13 +60,27 @@ export default function Serology() {
               </td>
               <td className="py-1">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal" // shows numeric keyboard with . on mobile
+                  pattern="[0-9<>.]*" // allows 0-9, <, >, and .
                   style={{
-                    color: referenceColor(Number(value), critical, alert, warn),
+                    color: result > hi ? "red" : result < lo ? "blue" : "black",
+                    // color: referenceColor(
+                    //   Number(parts[1]),
+                    //   critical,
+                    //   alert,
+                    //   warn
+                    // ),
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={(e) => handleChange(e.target)}
+                  onChange={(e) => {
+                    // ✅ Allow digits, <, >, and only one decimal point
+                    const cleaned = e.target.value
+                      .replace(/[^0-9<>.]/g, "") // keep only numbers, <, >, and .
+                      .replace(/(\..*)\./g, "$1"); // prevent typing more than one decimal point
+                    handleChange({ name: key, value: cleaned });
+                  }}
                   className="w-100 text-center fw-bold"
                 />
               </td>
