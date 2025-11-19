@@ -1469,7 +1469,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "gender",
     "purpose": "To evaluate cardiac muscle injury, especially myocardial infarction.",
     "organ": ["Skeletal Muscles"]
   },
@@ -1514,7 +1514,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "gender",
     "purpose": "To monitor pancreatic cancer and other gastrointestinal malignancies.",
     "organ": ["Pancreas", "Blood"]
   },
@@ -1559,7 +1559,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "gender",
     "purpose": "To monitor colorectal and other gastrointestinal cancers.",
     "organ": ["Colon", "Liver", "Blood"]
   },
@@ -1574,7 +1574,7 @@
     "preparation": "No special preparation required",
     "specimen": "Serum",
     "template": 6,
-    "preference": "None",
+    "preference": "gender",
     "purpose": "To monitor ovarian cancer and evaluate pelvic masses.",
     "organ": ["Ovaries", "Blood"]
   },
