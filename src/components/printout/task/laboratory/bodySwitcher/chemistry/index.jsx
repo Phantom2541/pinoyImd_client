@@ -53,7 +53,7 @@ export default function Chemistry({ task, fontSize }) {
       </thead>
       <tbody>
         {Object.entries(packages).map(([fk, res], index) => {
-          const parts = res.split(/([<>])/);
+          const parts = String(res).split(/([<>])/);
           const value = parts[2] ?? parts[0];
           const operator = parts[2] ? parts[1] : "";
           const {
