@@ -9,8 +9,10 @@ export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     // [showModal, setShowModal] = useState(false),
-    dispatch = useDispatch(),
-    department = menu?.department[0];
+    dispatch = useDispatch();
+  const { department: dept = [] } = menu;
+
+  const department = dept[0] || "";
 
   // const toggleModal = () => setShowModal(!showModal);
 
