@@ -107,7 +107,7 @@ export default function Rci({
             <span className="ml-2"> Bleeding Time</span>
           </td>
           <td style={style} className="py-0 fw-bold">
-            {bt[0] && `${bt[0]} ${options[bt[1]]}`}
+            {bt[0] && `${troupe?.bt[0]}min :${options[troupe?.bt[1]]} sec.`}
           </td>
           <td style={style} className="py-0">
             2-4 mins
@@ -118,7 +118,7 @@ export default function Rci({
             <span className="ml-2"> Clotting Time</span>
           </td>
           <td style={{ ...style, width: "30%" }} className="py-0 fw-bold">
-            {ct[0] && `${ct[0]} ${options[ct[1]]}`}
+            {ct[0] && `${troupe?.ct[0]}min :${options[troupe?.ct[1]]} sec. `}
           </td>
           <td style={style} className="py-0">
             2-4 mins
@@ -128,7 +128,7 @@ export default function Rci({
           <td style={style} className="py-0">
             <span className="ml-2"> Reticulocytes</span>
           </td>
-          <td style={style} className="py-0 fw-bold">
+          <td style={style} className="py-0 fw-bold text-center">
             {troupe?.retic > 0 && troupe?.retic}
           </td>
           <td style={style} className="py-0">
@@ -139,7 +139,7 @@ export default function Rci({
           <td style={style} className="py-0">
             <span className="ml-2">ESR</span>
           </td>
-          <td style={style} className="py-0 fw-bold">
+          <td style={style} className="py-0 fw-bold text-center">
             {troupe?.esr > 0 && troupe?.esr}
           </td>
           <td style={style} className="py-0">

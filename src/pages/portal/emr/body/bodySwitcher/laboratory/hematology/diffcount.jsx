@@ -1,11 +1,28 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
 import { Cellcount, Diffcount } from "../../../../../../../services/fakeDb";
-
-export default function DiffCount({ dc, style }) {
+import preferences from "../../../../../../../services/fakeDb/diagnostics/references";
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
+export default function DiffCount({ dc, style, dob }) {
   const { Category } = Diffcount,
-    { Preferences } = Cellcount;
+    { Conventionals } = Cellcount;
 
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
   return (
     <MDBTable hover bordered responsive className="mb-0">
       <thead>
@@ -48,9 +65,9 @@ export default function DiffCount({ dc, style }) {
         </tr>
       </thead>
       <tbody>
-        {Object.values(dc).map((diff, index) => {
+        {Object.values(dc || {}).map((diff, index) => {
           const category = Category[index],
-            { lo, hi } = Preferences.differentials[category],
+            { lo, hi } = Conventionals.differentials[category][development],
             color = diff < lo ? "blue" : diff > hi && "red";
 
           return (

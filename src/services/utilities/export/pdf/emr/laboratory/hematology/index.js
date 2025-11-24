@@ -2,8 +2,24 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { Cellcount, Diffcount, Rci as RCI } from "../../../../../../fakeDb";
 import utils from "../../utils";
+import preferences from "../../../../../../fakeDb/diagnostics/references";
+import calculateIndicators from "../../../../../calculateIndicators";
 
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
+
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 
 const parseValue = (value) =>
   value <= 2 ? value.toFixed(2) : value < 10 ? value.toFixed(1) : value;
@@ -33,7 +49,8 @@ function convertSuperscriptHTML(unit) {
 
 export const Hematology = async ({ task, form, result }) => {
   const { patient, cc, dc, rci, apc, troupe, signatories } = task;
-  const { Preferences, Abbreviation, Title } = Cellcount;
+  const { dob } = patient;
+  const { Abbreviation, Title, Si } = Cellcount;
   const isMale = patient.isMale ? "Male" : "Female";
   const imageBase64 = await utils.getImage(result);
 
@@ -47,15 +64,31 @@ export const Hematology = async ({ task, form, result }) => {
   ];
 
   const cellCountRows = cc.map((cell, index) => {
-    const _cell = Number(cell),
-      reference = Preferences[isMale],
-      { lo, hi, unit } = reference[Abbreviation[index]],
-      color = _cell < lo ? "blue" : _cell > hi ? "red" : undefined;
+    const devString = preferences.getDevelopmentByBirthDate(dob).name;
+    const development =
+      Object.entries(devGroups).find(([, arr]) =>
+        arr.includes(devString)
+      )?.[0] || "neonate";
+    const gender = isMale ? "Male" : "Female";
+
+    const cellRef =
+      development === "adult"
+        ? Si.cells[Abbreviation[index]][development][gender]
+        : Si.cells[Abbreviation[index]][development];
+
+    const { lo, hi, unit } = cellRef || {};
+
+    const color = cell < lo ? "blue" : cell > hi && "red",
+      numCell = Number(cell),
+      indicators = calculateIndicators(
+        cellRef,
+        !isNaN(numCell) ? numCell.toFixed(numCell < 20 ? 2 : 0) : ""
+      );
 
     return [
       { text: Title[index] || "" },
       {
-        text: _cell.toFixed(_cell < 20 ? 2 : 0).toString(),
+        text: `${numCell.toFixed(cell < 20 ? 2 : 0)} ${indicators || ""}`,
         alignment: "center",
         bold: true,
         color,
@@ -80,9 +113,19 @@ export const Hematology = async ({ task, form, result }) => {
   ]);
 
   const diffCountRows = Object.values(dc).map((val, idx) => {
-    const category = Diffcount.Category[idx] || "";
-    const { lo, hi } = Cellcount?.Preferences?.differentials[category] || "";
-    const color = val < lo ? "blue" : val > hi ? "red" : undefined;
+    const { Category } = Diffcount,
+      { Conventionals } = Cellcount;
+
+    const devString = preferences.getDevelopmentByBirthDate(dob).name;
+    const development =
+      Object.entries(devGroups).find(([, arr]) =>
+        arr.includes(devString)
+      )?.[0] || "neonate";
+
+    const category = Category[idx],
+      { lo, hi } = Conventionals.differentials[category][development],
+      color = val < lo ? "blue" : val > hi && "red";
+
     return [
       category,
       {
