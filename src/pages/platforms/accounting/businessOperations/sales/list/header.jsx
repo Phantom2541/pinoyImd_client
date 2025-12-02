@@ -24,19 +24,24 @@ const Header = () => {
   // Initial Fetch for Collections
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const createdAt = new Date().toLocaleDateString(undefined, {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const date = new Intl.DateTimeFormat("en-CA", {
+        timeZone: timezone,
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-      });
+      })
+        .format(new Date())
+        .replace(/\//g, "-");
 
       dispatch(
         BROWSE({
           token,
           key: {
             branchId: activePlatform?.branchId,
-            startDate: createdAt,
-            endDate: createdAt,
+            startDate: date,
+            endDate: date,
+            timezone,
           },
         })
       );
