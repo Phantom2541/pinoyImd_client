@@ -67,6 +67,20 @@ const Header = ({ deal, index, totalDeals }) => {
           style={{ rotate: `${activeCOLAPSE === index ? 0 : 90}deg` }}
           className="fa fa-angle-down transition-all"
         />
+        {deal?.ssx && (
+          <div
+            style={{
+              fontSize: "1rem",
+              marginBottom: "-10px",
+              marginTop: "0.5rem",
+            }}
+          >
+            <span className="grey-text">SSX:</span>
+            <span style={{ color: "blue" }} className="ml-1">
+              {capitalize(deal?.ssx)}
+            </span>
+          </div>
+        )}
       </MDBCollapseHeader>
     </div>
   );
