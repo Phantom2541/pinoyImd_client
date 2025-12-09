@@ -27,8 +27,6 @@ const Card = ({
   const week = txt?.slice(0, 3);
   const isToday = dateCell.toDateString() === today.toDateString();
 
-  console.log("items", items);
-
   useEffect(() => {
     setActiveCell(day === Number(num));
   }, [day, num]);

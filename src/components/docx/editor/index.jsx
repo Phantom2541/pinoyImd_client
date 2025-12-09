@@ -8,7 +8,6 @@ export default function DocxEditor({
   _style = {},
   _className = "",
 }) {
-  // @kevin
   return (
     <Editor
       editorStyle={{ ..._style }}
