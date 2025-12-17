@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SetPARAMS,
@@ -12,100 +13,106 @@ import {
 } from "mdbreact";
 
 const _troupe = {
-    bt: [],
-    ct: [],
-  },
-  options = ["00", "15", "30", "45"];
+  bt: [],
+  ct: [],
+};
+const options = ["00", "15", "30", "45"];
 
-export default function ClottingFactor() {
-  const { task } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
-  const { troupe = _troupe, packages } = task,
-    { bt, ct } = troupe;
+export default function ClottingFactor({
+  activeTab = "",
+  setActiveTab = () => {},
+}) {
+  const dispatch = useDispatch();
+  const inputRef = useRef(null); // Reference to the input
+  const { task } = useSelector(({ validator }) => validator);
+  const { troupe = _troupe, packages = [] } = task;
+  useEffect(() => {
+    if (activeTab === "CLOTTING FACTOR") inputRef.current.focus();
+  }, [activeTab]);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === "Tab") {
+      e.preventDefault();
+      const packages = task?.packages || [];
+
+      const hasRetic = packages.includes(62);
+      const hasESR = packages.includes(63);
+
+      if (hasRetic || hasESR) {
+        setActiveTab("SPECIAL TEST");
+      } else {
+        document.getElementById("task-post-btn")?.click();
+      }
+    }
+  };
 
   const handleChange = (key, index, value) => {
-    const arr = [...troupe[key]];
-
+    const arr = [...(troupe[key] || [])];
     arr[index] = value;
+    const updatedTroupe = { ...troupe, [key]: arr };
+
     dispatch(
-      SetTASK({
-        form: task?.form,
-        task: { ...task, troupe: { ...troupe, [key]: arr } },
-      })
+      SetTASK({ form: task?.form, task: { ...task, troupe: updatedTroupe } })
     );
-    dispatch(SetPARAMS({ key: "troupe", value: { ...troupe, [key]: arr } }));
+    dispatch(SetPARAMS({ key: "troupe", value: updatedTroupe }));
+  };
+
+  const renderRow = (label, key, refRange) => {
+    return (
+      <tr>
+        <td className="py-2 align-middle">{label}</td>
+        <td className="py-2">
+          <div className="d-flex gap-2 align-items-center">
+            <input
+              type="number"
+              ref={key === "bt" ? inputRef : null}
+              value={String(troupe[key]?.[0] || "")}
+              onChange={(e) => handleChange(key, 0, Number(e.target.value))}
+              onKeyDown={handleKeyDown} // 👈 Added
+              className="form-control text-center fw-bold"
+              style={{ maxWidth: "80px" }}
+            />
+            <span className="fw-bold">:</span>
+            <MDBSelect
+              getValue={(e) => handleChange(key, 1, Number(e[0]))}
+              onKeyDown={handleKeyDown} // 👈 Added
+              className="ml-2"
+              style={{ maxWidth: "100px" }}
+              search
+            >
+              <MDBSelectInput
+                selected={
+                  troupe[key]?.[1] !== undefined
+                    ? `Seconds: ${options[troupe[key][1]]} sec.`
+                    : "Select Seconds"
+                }
+              />
+              <MDBSelectOptions>
+                {options.map((option, index) => (
+                  <MDBSelectOption key={`${key}-${index}`} value={index}>
+                    {option} sec.
+                  </MDBSelectOption>
+                ))}
+              </MDBSelectOptions>
+            </MDBSelect>
+          </div>
+        </td>
+        <td className="py-2 align-middle">{refRange}</td>
+      </tr>
+    );
   };
 
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
         <tr>
-          <th className="py-1">Category</th>
-          <th className="py-1">Result</th>
-          <th className="py-1">Reference</th>
+          <th className="py-2">Category</th>
+          <th className="py-2">Result</th>
+          <th className="py-2">Reference</th>
         </tr>
       </thead>
-      <tbody style={{ height: "300px" }}>
-        {packages.includes(60) && (
-          <tr>
-            <td className="py-1">Bleeding Time</td>
-            <td className="py-1 d-flex align-items-center">
-              <input
-                type="number"
-                value={String(bt[0] || 0)}
-                onChange={(e) => handleChange("bt", 0, Number(e.target.value))}
-                className="w-50 h-100 text-center fw-bold my-0 py-0"
-              />
-              <MDBSelect
-                getValue={(e) => handleChange("bt", 1, Number(e[0]))}
-                className="colorful-select dropdown-primary hidden-md-down w-50 my-0 py-0"
-              >
-                <MDBSelectInput
-                  selected={`Bleeding Time${bt[1] && `: ${bt[1]}`}`}
-                />
-                <MDBSelectOptions>
-                  {options.map((option, index) => (
-                    <MDBSelectOption key={`bt-${index}`} value={String(index)}>
-                      <span className="d-none">Bleeding Time: </span>
-                      {option} sec.
-                    </MDBSelectOption>
-                  ))}
-                </MDBSelectOptions>
-              </MDBSelect>
-            </td>
-            <td className="py-1">2-4 min</td>
-          </tr>
-        )}
-        {packages.includes(61) && (
-          <tr>
-            <td className="py-1">Clotting Time</td>
-            <td className="py-1 d-flex align-items-center">
-              <input
-                type="number"
-                value={String(ct[0] || 0)}
-                onChange={(e) => handleChange("ct", 0, Number(e.target.value))}
-                className="w-50 h-100 text-center fw-bold my-0 py-0"
-              />
-              <MDBSelect
-                getValue={(e) => handleChange("ct", 1, Number(e[0]))}
-                className="colorful-select dropdown-primary hidden-md-down w-50 my-0 py-0"
-              >
-                <MDBSelectInput
-                  selected={`Clotting Time${ct[1] && `: ${ct[1]}`}`}
-                />
-                <MDBSelectOptions>
-                  {options.map((option, index) => (
-                    <MDBSelectOption key={`bt-${index}`} value={String(index)}>
-                      <span className="d-none">Clotting Time: </span>
-                      {option} sec.
-                    </MDBSelectOption>
-                  ))}
-                </MDBSelectOptions>
-              </MDBSelect>
-            </td>
-            <td className="py-1">2-4 min</td>
-          </tr>
-        )}
+      <tbody>
+        {packages.includes(60) && renderRow("Bleeding Time", "bt", "2–4 min")}
+        {packages.includes(61) && renderRow("Clotting Time", "ct", "2–4 min")}
       </tbody>
     </MDBTable>
   );

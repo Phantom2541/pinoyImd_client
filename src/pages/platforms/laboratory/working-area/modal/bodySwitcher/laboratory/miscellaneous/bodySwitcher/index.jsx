@@ -5,6 +5,7 @@ import Dengue from "./dengue";
 import Pregnancy from "./pregnancy";
 import Ogtt from "./ogtt";
 import HBa1c from "./hba1c";
+import widal from "./widal";
 
 const packageComponentMap = {
   11: HBa1c,
@@ -14,15 +15,25 @@ const packageComponentMap = {
   69: Cluster, // RPR
   70: Cluster, // HBsAg
   77: Dengue,
-  84: Pregnancy,
-  120: Dengue,
+  84: Cluster,
+  93: Cluster,
+  99: Cluster,
+  101: Dengue, 
+  120: Dengue, 
+  121: widal,
+  132: Cluster,
+  134: Cluster,
+  138: Cluster,
+  139: Cluster, 
   146: Ogtt,
+  337: Cluster, 
 };
 
 export default function BodySwitcher({ task, setTask }) {
   const Component = task?.packages?.find((pkg) => packageComponentMap[pkg])
     ? packageComponentMap[task.packages.find((pkg) => packageComponentMap[pkg])]
     : Cluster;
+  console.log("Rendering component for task:", task);
 
   return <Component task={task} setTask={setTask} />;
 }

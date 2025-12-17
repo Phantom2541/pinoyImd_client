@@ -4,7 +4,7 @@ import {
   SetTASK,
 } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
-import { ResultInRange } from "../../../../../../../../services/fakeDb";
+import { ResultInRange } from "./../../../../../../../../services/fakeDb";
 
 export default function Chemical() {
   const { task } = useSelector(({ validator }) => validator);
@@ -37,12 +37,18 @@ export default function Chemical() {
           <label htmlFor="">{label}</label>
           <select
             value={ce[index] ?? ""}
+            style={{
+              color: !!ce[index] && "red",
+              fontWeight: !!ce[index] && 600,
+            }}
             className="form-control mb-2"
             onChange={(e) => handleSelectChange(index, e.target.value)}
           >
-            <option value="">Select...</option>
+            <option value="" style={{ color: "black" }}>
+              Select...
+            </option>
             {ResultInRange.map((choice, i) => (
-              <option key={i} value={i}>
+              <option key={i} value={i} style={{ color: "black" }}>
                 {choice}
               </option>
             ))}

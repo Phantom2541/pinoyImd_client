@@ -78,6 +78,8 @@ const Tasks = ({ key, form, obj, index, customer, deal }) => {
     remarks,
   };
 
+  // console.log("record task", task);
+
   const handleEntry = () => dispatch(SetTASK({ task }));
 
   const isEmptyEntry = _packages.length === 0;

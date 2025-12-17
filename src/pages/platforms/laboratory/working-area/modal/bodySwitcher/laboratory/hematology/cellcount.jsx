@@ -1,21 +1,45 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SetPARAMS,
   SetTASK,
 } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
-import { Cellcount as CellCount } from "../../../../../../../../services/fakeDb";
+import { Cellcount as CellCount } from "./../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
+import preferences from "../../../../../../../../services/fakeDb/diagnostics/references";
+
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 
 export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
-  const { task, selected, showModal } = useSelector(
-      ({ validator }) => validator
-    ),
+  const {
+      task,
+      selected = {},
+      showModal,
+    } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
+  const dob = selected?.customerId?.dob;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
+  const gender = selected.customerId?.isMale ? "Male" : "Female";
+
   const { cc = [] } = task,
-    { Preferences, Abbreviation, Title } = CellCount;
+    { Abbreviation, Title, Si } = CellCount;
 
   // 1. Create array of refs for inputs
   const inputRefs = useRef([]);
@@ -28,6 +52,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       }, 400);
     }
   }, [showModal, activeTab]);
+
   const handleChange = (e) => {
     const { name, value } = e.target,
       _name = Number(name),
@@ -43,14 +68,13 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
     dispatch(SetTASK({ form: task?.form, task: { ...task, cc: _cells } }));
     dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
-  console.log("selected", selected);
   const handleKeyDown = (e, index) => {
     if (e.key === "Enter") {
-      console.log("index", index);
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {
         nextInput.focus();
+        nextInput.select();
       } else {
         setActiveTab("DIFF COUNT");
       }
@@ -68,10 +92,18 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       </thead>
       <tbody>
         {(!!cc.length ? cc : [0, 0, 0, 0]).map((cell, index) => {
-          const { lo, hi, unit } =
-            Preferences[selected.customerId.isMale ? "Male" : "Female"][
-              Abbreviation[index]
-            ];
+          const cellRef =
+            development === "adult"
+              ? Si.cells[Abbreviation[index]][development][gender]
+              : Si.cells[Abbreviation[index]][development];
+
+          const { lo, hi, unit } = cellRef || {};
+
+          let color = "";
+          if (!isNaN(cell)) {
+            if (cell < lo) color = "blue";
+            else if (cell > hi) color = "red";
+          }
 
           return (
             <tr key={`cell-${index}`}>
@@ -80,20 +112,12 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
                 <input
                   type="number"
                   ref={(el) => (inputRefs.current[index] = el)}
-                  style={{
-                    color: cell
-                      ? cell < lo
-                        ? "red"
-                        : cell > hi
-                        ? "red"
-                        : ""
-                      : "",
-                  }}
+                  style={{ color }}
                   name={index}
                   value={String(cell)}
                   onChange={handleChange}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-100 text-center fw-bold"
+                  className="sectInput w-100 text-center fw-bold"
                 />
               </td>
               <td className="py-1">

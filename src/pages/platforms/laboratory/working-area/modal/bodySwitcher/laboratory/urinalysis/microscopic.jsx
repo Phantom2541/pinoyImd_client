@@ -8,7 +8,7 @@ import { MDBCol, MDBRow } from "mdbreact";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
-} from "../../../../../../../../services/fakeDb";
+} from "./../../../../../../../../services/fakeDb";
 
 export default function Microscopic() {
   const { task } = useSelector(({ validator }) => validator);
@@ -65,12 +65,18 @@ export default function Microscopic() {
               /* RANGE RESULTS → SELECT */
               <select
                 value={me[index]}
+                style={{
+                  ...(Number(me[index] > 2) && {
+                    color: "red",
+                    fontWeight: "bold",
+                  }),
+                }}
                 className="form-control mb-2"
                 onChange={(e) => handleChange(index, e.target.value)}
               >
                 <option value=""></option>
                 {choices.map((choice, i) => (
-                  <option key={i} value={i}>
+                  <option key={i} value={i} style={{ color: "black" }}>
                     {choice}
                   </option>
                 ))}

@@ -1,28 +1,32 @@
+import { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
-  referenceColor,
+  // referenceColor,
   findReference,
-} from "../../../../../../../../services/utilities";
-import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import { useEffect } from "react";
-import { useState } from "react";
-
+} from "./../../../../../../../../services/utilities";
+import { SetTASK } from "./../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 export default function Chemistry() {
   const { task } = useSelector(({ validator }) => validator),
     { collections: services } = useSelector(({ preferences }) => preferences),
-    [packages, setPackages] = useState({}),
     dispatch = useDispatch();
-
-  const { key: mapKey, patient } = task || {};
-
+  const { packages = {}, key: mapKey, patient } = task || {};
+  const inputRefs = useRef([]);
   useEffect(() => {
-    setPackages(task?.packages || []);
-  }, [task.packages]);
+    const timer = setTimeout(() => {
+      const first = inputRefs.current[0];
+      if (first && first.offsetParent !== null) {
+        first.focus();
+      }
+    }, 1000); // try 1s delay temporarily
+
+    return () => clearTimeout(timer);
+  }, [mapKey]);
+
   const handleChange = (target) => {
     const { name, value } = target,
-      _name = Number(name),
-      _value = value;
+      _name = Number(name);
+    let _value = value;
 
     if (_name !== 16)
       return dispatch(
@@ -35,11 +39,16 @@ export default function Chemistry() {
         })
       );
 
-    const chole = packages["14"],
-      tg = packages["15"],
-      ldl = chole - (tg / 5 + _value),
-      vldl = tg / 5,
-      chr = Number((chole / _value).toFixed(2));
+    // Get values
+    const chole = packages["14"], // Total Cholesterol
+      tg = packages["15"], // Triglycerides
+      hdl = Number(_value); // HDL Cholesterol (input)
+
+    // Compute
+    const vldl = tg / 5;
+    const ldl = chole - hdl - vldl;
+    const lhr = Number((ldl / hdl).toFixed(2)); // LDL/HDL ratio
+    const chr = Number((chole / hdl).toFixed(2)); // TC/HDL ratio
 
     dispatch(
       SetTASK({
@@ -48,14 +57,23 @@ export default function Chemistry() {
           ...task,
           packages: {
             ...packages,
-            16: _value,
-            17: ldl,
-            18: vldl,
+            16: hdl,
+            17: ldl.toFixed(1),
+            18: vldl.toFixed(1),
             19: chr,
+            47: lhr,
           },
         },
       })
     );
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const next = inputRefs.current[index + 1];
+      if (next) next.focus();
+    }
   };
 
   return (
@@ -78,13 +96,15 @@ export default function Chemistry() {
         {Object.entries(packages).map(([key, value], index) => {
           const service = services.find((s) => s.id === Number(key)) || {};
           const { preference, abbreviation, name, references } = service;
-          const { lo, hi, warn, alert, critical, units, _id } = findReference(
+          const { lo, hi, units, _id } = findReference(
+            // warn, alert, critical i remove it for now in desctructuring because the referenceColor is not working
             Number(key),
             patient?.isMale,
             patient?.dob,
             preference,
             references
           );
+          const color = value < lo ? "blue" : value > hi && "red";
 
           return (
             <tr key={`${mapKey}-${index}`}>
@@ -94,12 +114,16 @@ export default function Chemistry() {
               <td className="py-1">
                 <input
                   type="number"
+                  step="any" // ✅ allow decimals
+                  ref={(el) => (inputRefs.current[index] = el)}
                   style={{
-                    color: referenceColor(Number(value), critical, alert, warn),
+                    // color: referenceColor(Number(value), critical, alert, warn),
+                    color,
                   }}
                   name={key}
                   value={String(value)}
                   onChange={(e) => handleChange(e.target)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

@@ -28,6 +28,7 @@ export default function Body({
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {Object.entries(tasks || {})?.map(([key, task], index) => {
             const isEmpty = !task || (Array.isArray(task) && task.length === 0);

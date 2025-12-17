@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import {
   Hematology,
-  Electrolyte,
+  // Electrolyte,
   Urinalysis,
   Compatibility,
   Chemistry,
@@ -13,6 +13,7 @@ import {
   Coagulation,
   Miscellaneous,
   Pbs,
+  // } from "../../../../../../../../client/src/pages/platforms/laboratory/diagnostics/tasks/modal/bodySwitcher/laboratory";
 } from "./laboratory";
 import { Xray, Ecg, Ultrasound } from "./radiology";
 import { PE, MC } from "./clinic";
@@ -34,7 +35,7 @@ const componentMap = {
   Analysis,
   Bacteriology,
   Compatibility,
-  Electrolyte,
+  // Electrolyte,
   Pbs,
   //Radiology
   Xray,
@@ -47,6 +48,9 @@ const componentMap = {
 
 export default function BodySwitcher() {
   const { task } = useSelector(({ validator }) => validator);
+
+  console.log("task modal", task);
+
   const Component = componentMap[task.form] || Blank;
   return <Component />;
 }

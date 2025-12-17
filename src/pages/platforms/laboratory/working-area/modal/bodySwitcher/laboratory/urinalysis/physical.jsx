@@ -4,13 +4,13 @@ import {
   SetTASK,
 } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
-// import { Select } from "../../../../../../../../components/customizable";
+// import { Select } from "./../../../../../../../../../components/customizable";
 import {
   Transparency,
   UrineColors,
   SpecificGravity,
   PH,
-} from "../../../../../../../../services/fakeDb";
+} from "./../../../../../../../../services/fakeDb";
 
 export default function Physical() {
   const { task } = useSelector(({ validator }) => validator),
@@ -42,6 +42,18 @@ export default function Physical() {
       choices: PH,
     },
   ];
+
+  const handleStyle = (index, value) => {
+    var color = "black";
+    if (index === 0) {
+      console.log("value in index 000", value);
+
+      color = value > 3 ? "red" : "black";
+    } else if (index === 1) {
+      color = value > 0 ? "red" : "black";
+    }
+    return { color, fontWeight: color !== "black" && "bold" };
+  };
   return (
     <MDBRow className="text-left">
       {physicalSelects.map(({ label, choices }, index) => {
@@ -59,13 +71,14 @@ export default function Physical() {
 
             <select
               value={pe[index]}
+              style={handleStyle(index, Number(pe[index]))}
               className="form-control mb-2"
               onChange={(e) => handleSelectChange(index, e.target.value)}
             >
               <option></option>
               {choices.map((choice, i) => {
                 return (
-                  <option key={i} value={i}>
+                  <option key={i} value={i} style={{ color: "black" }}>
                     {choice}
                   </option>
                 );

@@ -1,10 +1,11 @@
+import React from "react";
 import {
   MDBSelect,
   MDBSelectInput,
   MDBSelectOptions,
   MDBSelectOption,
 } from "mdbreact";
-import { Services } from "../../../../../../../../../services/fakeDb";
+import { Services } from "./../../../../../../../../../services/fakeDb";
 
 export default function Pregnancy({ task, setTask }) {
   const { results = false } = task;

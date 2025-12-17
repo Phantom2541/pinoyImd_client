@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 
-export default function Platelet({ activeTab = "", setActiveTab = () => {} }) {
+export default function ChemExam({ activeTab = "", setActiveTab = () => {} }) {
   const { task } = useSelector(({ validator }) => validator);
   const dispatch = useDispatch();
   const inputRef = useRef(null); // Reference to the input
@@ -32,7 +32,7 @@ export default function Platelet({ activeTab = "", setActiveTab = () => {} }) {
     }
   };
 
-  const { apc } = task;
+  const { ce } = task;
 
   return (
     <MDBTable hover responsive className="mb-0">
@@ -45,24 +45,20 @@ export default function Platelet({ activeTab = "", setActiveTab = () => {} }) {
       </thead>
       <tbody>
         <tr>
-          <td className="py-1">Platelet Count</td>
+          <td className="py-1">Semen Fructose, Qualitative</td>
           <td className="py-1">
-            <input
-              ref={inputRef}
-              type="number"
-              style={{
-                color: apc < 150 ? "blue" : apc > 400 ? "red" : "black",
-              }}
-              value={String(apc)}
-              autoFocus
+            <select
+              name="ce"
+              className="form-control"
+              value={ce}
               onChange={handleChange}
-              onKeyDown={handleKeyDown} // 👈 Added
-              className="w-100 text-center fw-bold"
-            />
+              id="ce"
+            >
+              <option value="0">Negative</option>
+              <option value="1">Positive</option>
+            </select>
           </td>
-          <td className="py-1">
-            150-450 <sup>9</sup>/L
-          </td>
+          <td className="py-1"></td>
         </tr>
       </tbody>
     </MDBTable>

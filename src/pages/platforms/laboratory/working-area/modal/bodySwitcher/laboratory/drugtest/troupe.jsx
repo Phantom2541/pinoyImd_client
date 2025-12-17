@@ -1,25 +1,39 @@
-import React from "react";
 import { MDBInput } from "mdbreact";
 
-export default function Troupe({ task, setTask, handleSelectChange }) {
-  const { method, purpose, company } = task;
+export default function Troupe({ task, handleSelectChange }) {
+  const { purpose, company } = task;
+
+  const purposeOptions = [
+    "Pre-Employment",
+    "Annual Medical Exam",
+    "Random Testing",
+    "Post-Incident / For Cause",
+    "Return to Work",
+    "LTO Requirement",
+    "Court Order / Legal Requirement",
+    "Walk-in / Personal",
+    "Others",
+  ];
 
   return (
     <>
-      <MDBInput
-        type="text"
-        label="Test Method"
-        value={method}
-        onChange={(e) => handleSelectChange("method", e.target.value)}
-        required
-      />
-      <MDBInput
-        type="text"
-        label="Purpose"
-        value={purpose}
-        onChange={(e) => handleSelectChange("purpose", e.target.value)}
-        required
-      />
+      <div className="form-group">
+        <label>Purpose</label>
+        <select
+          className="browser-default custom-select"
+          value={purpose}
+          onChange={(e) => handleSelectChange("purpose", e.target.value)}
+          required
+        >
+          <option value="">-- Select Purpose --</option>
+          {purposeOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <MDBInput
         type="text"
         label="Requesting Parties"

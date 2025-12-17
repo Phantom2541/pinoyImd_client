@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBTabContent,
@@ -12,32 +12,30 @@ import {
 } from "mdbreact";
 
 // Component imports
-import Cellcount from "./cellcount";
-import Diffcount from "./diffcount";
-import Rci from "./rci";
-import Platelet from "./platelet";
-import ClottingFactor from "./clottingFactor";
-import SpecialTest from "./speciaTest"; // Check spelling: should this be "specialTest"?
+import PhysicalExam from "./physicalExam";
+import MicroExam from "./microExam";
+import MacroExam from "./macroExam";
+import ChemExam from "./chemExam";
 
-export default function Hematology() {
+export default function Seminogram() {
   const { task } = useSelector(({ validator }) => validator),
-    [activeTab, setActiveTab] = useState("CELL COUNT");
+    [activeTab, setActiveTab] = useState("PHYSICAL EXAM");
 
   const { packages = [] } = task;
 
   // Define tab structure in the order you want them to appear
   const orderedTabs = [
-    { name: "CELL COUNT", component: Cellcount, key: 58 },
-    { name: "DIFF COUNT", component: Diffcount, key: 58 },
-    { name: "PLATELET", component: Platelet, key: 59 },
-    { name: "RCI", component: Rci, key: 58 },
-    { name: "CLOTTING FACTOR", component: ClottingFactor, key: 60 },
-    { name: "SPECIAL TEST", component: SpecialTest, key: 62 },
-    { name: "SPECIAL TEST", component: SpecialTest, key: 63 },
+    { name: "PHYSICAL EXAM", component: PhysicalExam, key: 3 },
+    { name: "MICROSCOPIC EXAM", component: MicroExam, key: 3 },
+    { name: "MORPHOLOGY", component: MacroExam, key: 3 },
+    { name: "CHEMICAL EXAM", component: ChemExam, key: 3 },
   ];
 
+  console.log("packages", packages);
   // Filter only tabs relevant to current packages
-  const availableTabs = orderedTabs.filter((tab) => packages.includes(tab.key));
+  const availableTabs = Array.isArray(packages)
+    ? orderedTabs?.filter((tab) => packages?.includes(tab.key))
+    : [];
 
   return (
     <MDBContainer>

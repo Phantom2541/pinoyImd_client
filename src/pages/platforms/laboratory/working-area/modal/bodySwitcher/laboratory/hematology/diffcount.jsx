@@ -8,8 +8,22 @@ import { MDBTable } from "mdbreact";
 import {
   Diffcount as DiffCount,
   Cellcount,
-} from "../../../../../../../../services/fakeDb";
+} from "./../../../../../../../../services/fakeDb";
+import preferences from "../../../../../../../../services/fakeDb/diagnostics/references";
 
+const devGroups = {
+  adult: [
+    "Young Adult",
+    "Adult",
+    "Middle Aged",
+    "Senior",
+    "Elderly",
+    "Geriatric",
+  ],
+  child: ["Child", "Pre-Teen", "Teenager"],
+  infant: ["Toddler", "Infant"],
+  neonate: ["Neonatal", "Fetal"],
+};
 const _dc = {
   a: 0,
   b: 0,
@@ -20,12 +34,17 @@ const _dc = {
 };
 
 export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
-  const { task } = useSelector(({ validator }) => validator),
+  const { task, selected = {} } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   const { dc = _dc } = task,
-    { Preferences } = Cellcount,
+    { Conventionals } = Cellcount,
     { Category } = DiffCount;
+  const dob = selected?.customerId?.dob;
+  const devString = preferences.getDevelopmentByBirthDate(dob).name;
+  const development =
+    Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
+    "neonate";
 
   const inputRefs = useRef([]);
 
@@ -40,18 +59,38 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
       diff = { ...dc };
 
     diff[name] = _value;
+    // Calculate total
+    const total = Object.values(diff).reduce(
+      (sum, val) => sum + (parseInt(val) || 0),
+      0
+    );
+    // Dispatch state update
     dispatch(SetTASK({ form: task?.form, task: { ...task, dc: diff } }));
     dispatch(SetPARAMS({ key: "dc", value: diff }));
+
+    // Check if total reached 100
+    if (total >= 100) {
+      if (task?.packages?.includes(59)) {
+        setActiveTab("PLATELET");
+      } else {
+        setActiveTab("RCI");
+      }
+    }
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {
         nextInput.focus();
       } else {
-        setActiveTab("RCI");
+        // Check if PLATELET tab is available in task.packages
+        if (task?.packages?.includes(59)) {
+          setActiveTab("PLATELET");
+        } else {
+          setActiveTab("RCI");
+        }
       }
     }
   };
@@ -68,7 +107,7 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
       <tbody>
         {Object.entries(dc).map(([key, value], index) => {
           const category = Category[index],
-            { lo, hi } = Preferences.differentials[category];
+            { lo, hi } = Conventionals.differentials[category][development];
 
           return (
             <tr key={`diff-${index}`}>
@@ -85,7 +124,7 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
                   style={{
                     color: value
                       ? value < lo
-                        ? "red"
+                        ? "blue"
                         : value > hi
                         ? "red"
                         : ""
