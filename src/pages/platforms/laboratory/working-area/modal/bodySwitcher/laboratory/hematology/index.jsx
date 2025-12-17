@@ -31,7 +31,7 @@ export default function Hematology() {
     { name: "DIFF COUNT", component: Diffcount, key: 58 },
     { name: "PLATELET", component: Platelet, key: 59 },
     { name: "RCI", component: Rci, key: 58 },
-    { name: "CLOTTING FACTOR", component: ClottingFactor, key: 60 },
+    { name: "CLOTTING FACTOR", component: ClottingFactor, key: 61 },
     { name: "SPECIAL TEST", component: SpecialTest, key: 62 },
     { name: "SPECIAL TEST", component: SpecialTest, key: 63 },
   ];
