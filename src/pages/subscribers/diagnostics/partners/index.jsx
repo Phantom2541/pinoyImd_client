@@ -79,6 +79,7 @@ export default function Partners() {
           <div key={index} className="subscriber-partners-container">
             <img
               src={hmo.icon}
+              loading="lazy"
               alt={hmo.abbr || `Partner ${index}`}
               style={{ height: "80px", objectFit: "contain" }}
               className="subscriber-partners-image"

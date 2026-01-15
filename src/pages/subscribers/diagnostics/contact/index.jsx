@@ -122,6 +122,7 @@ export default function ContactUs() {
             <img
               src={logoUrl}
               alt="logo"
+              loading="lazy"
               onError={(e) => (e.target.src = LOGO)}
               width="90px"
               height="90px"

@@ -34,14 +34,14 @@ export default function MissionVision() {
         {/* TOP SECTION */}
         <div className="subscriber-mission-vision-top">
           <div>
-            <img src={MISSION} alt="Mission" />
+            <img src={MISSION} alt="Mission" loading="lazy" />
           </div>
           <div>
             <h1>Our Mission</h1>
             <span>{company?.ms || "No mission provided."}</span>
           </div>
           <div>
-            <img src={VISION} alt="Vision" />
+            <img src={VISION} alt="Vision" loading="lazy" />
           </div>
         </div>
 
@@ -63,7 +63,7 @@ export default function MissionVision() {
             </ul>
           </div>
           <div>
-            <img src={logoUrl} alt="Company Logo" />
+            <img src={logoUrl} alt="Company Logo" loading="lazy" />
             <span>{company?.name || "Company"}</span>
           </div>
           <div>
@@ -88,7 +88,7 @@ export default function MissionVision() {
             </ul>
           </div>
           <div>
-            <img src={VALUE} alt="Values" />
+            <img src={VALUE} alt="Values" loading="lazy" />
           </div>
           <div>
             <h1>Our Vision</h1>

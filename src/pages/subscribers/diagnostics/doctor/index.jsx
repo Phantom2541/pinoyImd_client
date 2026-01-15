@@ -82,6 +82,7 @@ export default function Doctors() {
                     <img
                       src={`${ENDPOINT}/public/companies/${details?.name}/physicians/${user?.email}/corporate.png`}
                       alt={physician?.name}
+                      loading="lazy"
                       className="subscriber-doctors-homeimageStyle"
                       onError={(e) => {
                         e.target.src = DEFAULT;

@@ -198,7 +198,7 @@ export default function Testimonials() {
                   {testimonials.map((t, index) => (
                     <SwiperSlide key={index}>
                       <div className="subscriber-testimonials-sliderCard">
-                        <img src={AVATAR} alt={t.name} />
+                        <img src={AVATAR} alt={t.name} loading="lazy" />
                         <div className="subscriber-testimonials-review">
                           <div
                             className="subscriber-testimonials-star-rating"
@@ -263,7 +263,7 @@ export default function Testimonials() {
                 {testimonials.map((t, index) => (
                   <SwiperSlide key={index}>
                     <div className="subscriber-testimonials-sliderCard">
-                      <img src={AVATAR} alt={t.name} />
+                      <img src={AVATAR} alt={t.name} loading="lazy" />
                       <div className="subscriber-testimonials-review">
                         <div
                           className="subscriber-testimonials-star-rating"

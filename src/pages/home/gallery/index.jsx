@@ -96,14 +96,24 @@ export default function Gallery() {
         {/* LEFT SCROLL */}
         <div className="homePage-gallery-container" ref={leftTrackRef}>
           {[...teamImages, ...teamImages].map((src, i) => (
-            <img key={`team-${i}`} src={src} alt={`Team Building ${i}`} />
+            <img
+              key={`team-${i}`}
+              src={src}
+              alt={`Team Building ${i}`}
+              loading="lazy"
+            />
           ))}
         </div>
 
         {/* RIGHT SCROLL */}
         <div className="homePage-gallery-container" ref={rightTrackRef}>
           {[...firingImages, ...firingImages].map((src, i) => (
-            <img key={`firing-${i}`} src={src} alt={`Firing ${i}`} />
+            <img
+              key={`firing-${i}`}
+              src={src}
+              alt={`Firing ${i}`}
+              loading="lazy"
+            />
           ))}
         </div>
       </div>

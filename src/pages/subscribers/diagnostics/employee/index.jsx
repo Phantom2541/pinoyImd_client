@@ -189,6 +189,7 @@ export default function Employees({ match }) {
                       e.target.onerror = null;
                       e.target.src = DEFAULT;
                     }}
+                    loading="lazy"
                     alt={email}
                   />
                 </div>

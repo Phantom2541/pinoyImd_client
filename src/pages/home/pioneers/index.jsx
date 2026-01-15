@@ -97,7 +97,7 @@ export default function Pioneers() {
             className="homePage-pioneers-card"
             key={index}
           >
-            <img src={pioneer.img} alt="avatar" />
+            <img src={pioneer.img} alt="avatar" loading="lazy" />
             <span>{pioneer.name}</span>
             <p>{pioneer.role}</p>
             <div className="d-flex align-items-center" style={{ gap: "15px" }}>

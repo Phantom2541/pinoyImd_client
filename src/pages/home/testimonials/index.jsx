@@ -74,6 +74,7 @@ export default function Testimonials() {
                         <img
                           src={t.image}
                           alt={t.name}
+                          loading="lazy"
                           onError={(e) => (e.target.src = LOGO)}
                         />
                         <div className="homePage-testimonials-review">
@@ -141,6 +142,7 @@ export default function Testimonials() {
                       <img
                         src={t.image}
                         alt={t.name}
+                        loading="lazy"
                         onError={(e) => (e.target.src = LOGO)}
                       />
                       <div className="homePage-testimonials-review">

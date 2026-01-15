@@ -86,7 +86,7 @@ export default function AboutUs() {
             delay={`${index * 0.2}s`}
           >
             <div className="homePage-AboutUs-card-image">
-              <img src={item.image} alt={item.title} />
+              <img src={item.image} alt={item.title} loading="lazy" />
             </div>
             <div className="homePage-AboutUs-card-body">
               <div className="homePage-AboutUs-card-title">{item.title}</div>
