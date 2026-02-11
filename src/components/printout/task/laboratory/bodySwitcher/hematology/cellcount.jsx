@@ -21,7 +21,7 @@ export default function CellCount({ cc, isMale, style, apc, dob }) {
   const development =
     Object.entries(devGroups).find(([, arr]) => arr.includes(devString))?.[0] ||
     "neonate";
-  const gender = isMale ? "Male" : "Female";
+  const gender = isMale;
 
   const { Abbreviation, Title, Si } = CELLCOUNTS;
   const parseValue = (value) =>
@@ -52,13 +52,15 @@ export default function CellCount({ cc, isMale, style, apc, dob }) {
               ? Si.cells[Abbreviation[index]][development][gender]
               : Si.cells[Abbreviation[index]][development];
 
+          console.log("gender", gender);
+
           const { lo, hi, unit } = cellRef || {};
 
           const color = cell < lo ? "blue" : cell > hi && "red",
             numCell = Number(cell),
             indicators = calculateIndicators(
               cellRef,
-              !isNaN(numCell) ? numCell.toFixed(numCell < 20 ? 2 : 0) : ""
+              !isNaN(numCell) ? numCell.toFixed(numCell < 20 ? 2 : 0) : "",
             );
 
           return (
