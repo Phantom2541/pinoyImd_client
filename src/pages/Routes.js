@@ -64,7 +64,7 @@ export default function Routes() {
               exact
               path={childFullPath}
               component={child.component || NotExisting}
-            />
+            />,
           );
 
           renderChildren(child, childFullPath);
@@ -82,7 +82,7 @@ export default function Routes() {
             exact
             path={fullPath}
             component={component || NotExisting}
-          />
+          />,
         );
       }
     });
