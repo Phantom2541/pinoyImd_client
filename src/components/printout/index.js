@@ -20,3 +20,7 @@ export { default as MedicalExaminationClearance } from "./certificate";
 export { default as MenuPriceList } from "./menuPricelist";
 export { default as contract } from "./contract";
 export { default as NotesPrintout } from "./notes";
+export { default as Payslip } from "./payslip";
+export { default as Staff } from "./staff";
+export { default as AttendancePrint } from "./dtr";
+export { default as DutyPrintout } from "./duty";

@@ -33,15 +33,16 @@ import {
   MenuPriceList,
   contract,
   NotesPrintout,
+  Payslip,
+  Staff,
+  AttendancePrint,
+  DutyPrintout,
+  AttendancePrint,
 } from "./components/printout";
-import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import EMR from "./pages/portal/emr";
 import Subscribers from "./pages/subscribers";
-import Staff from "./components/printout/staff";
-import AttendancePrint from "./components/printout/dtr";
-import DutyPrintout from "./components/printout/duty";
 import ICard from "./pages/portal/icard";
 
 export default function App() {
