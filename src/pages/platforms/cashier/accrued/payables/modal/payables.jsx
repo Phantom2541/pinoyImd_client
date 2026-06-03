@@ -80,7 +80,7 @@ export default function ModalCreate() {
             particular: particular?._id,
           },
           token,
-        })
+        }),
       );
     }
   };
@@ -122,7 +122,8 @@ export default function ModalCreate() {
           collections={
             Array.isArray(Statements?.collections)
               ? Statements.collections.filter(
-                  (statement) => statement?.category === "expenses"
+                  (statement) =>
+                    statement?.category === "expenses" || statement?.id === 44,
                 )
               : []
           }

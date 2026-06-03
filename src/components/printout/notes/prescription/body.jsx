@@ -32,7 +32,7 @@ export default function Body({ note }) {
       };
       img.src = notesValue; // notesValue should be the Base64 image of the drawing
     }
-  }, [mode]);
+  }, [mode, fontSize, notesValue]);
 
   useEffect(() => {
     if (ctxRef.current) {

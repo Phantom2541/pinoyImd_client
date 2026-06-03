@@ -9,7 +9,12 @@ import axios from "axios";
  */
 const login = async (email, password) =>
   await axios
-    .get(`assets/persons/auth/login?email=${email}&password=${password}`)
+    .get("assets/persons/auth/login", {
+      params: {
+        email,
+        password,
+      },
+    })
     .then(({ data }) => {
       /**
        * Clear the local storage first
@@ -28,9 +33,12 @@ const login = async (email, password) =>
 
       return data;
     })
-    .catch(({ response }) => {
-      const { error, message } = response.data;
-      throw new Error(message ? `${error}: ${message}` : error);
+    .catch((error) => {
+      const { response } = error || {};
+      const { error: errorLabel, message } = response?.data || {};
+      throw new Error(
+        message ? `${errorLabel}: ${message}` : errorLabel || error.message
+      );
     });
 
 export default login;

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBRow,
@@ -13,87 +14,146 @@ import {
   MDBDatePicker,
 } from "mdbreact";
 import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { axioKit, currency } from "../../../../services/utilities";
 
-// Register the necessary components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const barChartData = {
-  labels: ["January", "February", "March", "April", "May"],
-  datasets: [
-    {
-      label: "Monthly Sales",
-      data: [124000, 191000, 12000, 55000, 72000],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255,99,132,1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
+const monthLabels = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 const barChartOptions = {
   responsive: true,
   maintainAspectRatio: true,
   scales: {
-    x: {
-      grid: {
-        display: true,
-        color: "rgba(0, 0, 0, 0.1)",
+    xAxes: [
+      {
+        barPercentage: 0.7,
+        gridLines: {
+          display: true,
+          color: "rgba(0, 0, 0, 0.08)",
+        },
+        ticks: {
+          fontColor: "#7e8591",
+        },
       },
-      ticks: {
-        fontColor: "#7e8591",
+    ],
+    yAxes: [
+      {
+        gridLines: {
+          display: true,
+          color: "rgba(0, 0, 0, 0.08)",
+        },
+        ticks: {
+          beginAtZero: true,
+          min: 0,
+          fontColor: "#7e8591",
+          callback: (value) => currency.format(value),
+        },
       },
-    },
-    y: {
-      grid: {
-        display: true,
-        color: "rgba(0, 0, 0, 0.1)",
-      },
-      ticks: {
-        beginAtZero: true,
-        min: 0,
-        fontColor: "#7e8591",
-      },
+    ],
+  },
+  legend: {
+    labels: {
+      fontColor: "#7e8591",
+      fontSize: 16,
     },
   },
-  plugins: {
-    legend: {
-      labels: {
-        fontColor: "#7e8591",
-        fontSize: 16,
-      },
+  tooltips: {
+    callbacks: {
+      label: (tooltipItem) =>
+        `Gross Sales: ${currency.format(tooltipItem.yLabel)}`,
     },
   },
 };
 
 const Transactions = () => {
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    [monthlyGrossSales, setMonthlyGrossSales] = useState(new Array(12).fill(0)),
+    [selectedYear] = useState(new Date().getFullYear());
+  const presentMonthIndex = new Date().getMonth();
+
+  useEffect(() => {
+    if (!token || !activePlatform?.branchId || !auth?._id) return;
+
+    axioKit
+      .universal(`commerce/pos/services/deals/yearly`, token, {
+        branchId: activePlatform.branchId,
+        cashierId: auth._id,
+        year: selectedYear,
+      })
+      .then((res) => {
+        const stats = res?.payload?.monthlyStatistic || [];
+        const monthlyTotals = new Array(12).fill(0);
+
+        stats.forEach((entry) => {
+          const [monthIndex, total] = Object.entries(entry || {})[0] || [];
+          if (monthIndex === undefined) return;
+
+          monthlyTotals[Number(monthIndex)] = Number(total || 0);
+        });
+
+        setMonthlyGrossSales(monthlyTotals);
+      })
+      .catch((err) => console.log(err.message));
+  }, [activePlatform?.branchId, auth?._id, selectedYear, token]);
+
+  const barChartData = useMemo(
+    () => ({
+      labels: monthLabels.slice(0, presentMonthIndex + 1),
+      datasets: [
+        {
+          label: "Gross Sales",
+          data: monthlyGrossSales.slice(0, presentMonthIndex + 1),
+          backgroundColor: [
+            "rgba(0, 121, 107, 0.18)",
+            "rgba(3, 169, 244, 0.18)",
+            "rgba(255, 193, 7, 0.18)",
+            "rgba(255, 87, 34, 0.18)",
+            "rgba(139, 195, 74, 0.18)",
+            "rgba(233, 30, 99, 0.18)",
+            "rgba(156, 39, 176, 0.18)",
+            "rgba(0, 150, 136, 0.18)",
+            "rgba(63, 81, 181, 0.18)",
+            "rgba(255, 152, 0, 0.18)",
+            "rgba(76, 175, 80, 0.18)",
+            "rgba(33, 150, 243, 0.18)",
+          ],
+          borderColor: [
+            "rgba(0, 121, 107, 1)",
+            "rgba(3, 169, 244, 1)",
+            "rgba(255, 193, 7, 1)",
+            "rgba(255, 87, 34, 1)",
+            "rgba(139, 195, 74, 1)",
+            "rgba(233, 30, 99, 1)",
+            "rgba(156, 39, 176, 1)",
+            "rgba(0, 150, 136, 1)",
+            "rgba(63, 81, 181, 1)",
+            "rgba(255, 152, 0, 1)",
+            "rgba(76, 175, 80, 1)",
+            "rgba(33, 150, 243, 1)",
+          ].slice(0, presentMonthIndex + 1),
+          borderWidth: 1,
+        },
+      ],
+    }),
+    [monthlyGrossSales, presentMonthIndex]
+  );
+
+  const yearToDateGrossSales = monthlyGrossSales.reduce(
+    (total, amount) => total + amount,
+    0
+  );
+
   return (
     <MDBCard cascade narrow>
       <MDBRow>
@@ -102,12 +162,27 @@ const Transactions = () => {
             cascade
             className="gradient-card-header light-blue lighten-1"
           >
-            <h4 className="h4-responsive mb-0 font-weight-bold">SALES</h4>
+            <h4 className="h4-responsive mb-0 font-weight-bold">
+              Gross Sales {selectedYear}
+            </h4>
           </MDBView>
           <MDBCardBody cascade className="pb-3">
             <MDBRow className="pt-3 card-body">
               <MDBCol md="12">
                 <h4>
+                  <MDBBadge className="big-badge light-blue lighten-1">
+                    Year to Date
+                  </MDBBadge>
+                </h4>
+                <div className="mt-3">
+                  <h3 className="font-weight-bold mb-1">
+                    {currency.format(yearToDateGrossSales)}
+                  </h3>
+                  <p className="grey-text mb-0">
+                    Your gross sales for {selectedYear}
+                  </p>
+                </div>
+                <h4 className="mt-4">
                   <MDBBadge className="big-badge light-blue lighten-1">
                     Data range
                   </MDBBadge>
@@ -144,6 +219,10 @@ const Transactions = () => {
                     </MDBCol>
                   </MDBRow>
                 </div>
+                <p className="grey-text mt-3 mb-0">
+                  The graph reflects your actual gross sales from January to{" "}
+                  {monthLabels[presentMonthIndex]} {selectedYear}.
+                </p>
               </MDBCol>
             </MDBRow>
           </MDBCardBody>

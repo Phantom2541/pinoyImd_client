@@ -9,6 +9,10 @@ import AMBULANCE from "./../../../../../../assets/hotline/ambulance.jpeg";
 import HOSPITAL from "./../../../../../../assets/hotline/hospital.jpg";
 import REDCROSS from "./../../../../../../assets/hotline/redcross.jpg";
 import BARANGAY from "./../../../../../../assets/hotline/barangay.jpg";
+import {
+  formatPhoneNumber,
+  getPrimaryDialNumber,
+} from "../../../../../../services/utilities/phoneNumber";
 import "./style.css";
 
 const Body = () => {
@@ -30,18 +34,6 @@ const Body = () => {
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
-
-  function formatPhoneNumber(num = "") {
-    if (!num) return "";
-    let digits = num?.replace(/\D/g, "");
-    if (digits?.startsWith("0")) {
-      digits = "+63" + digits.substring(1);
-    }
-    return digits?.replace(
-      /(\+63)(\d{3})(\d{3})(\d{4})/,
-      (_, p1, p2, p3, p4) => `${p1} ${p2} ${p3} ${p4}`
-    );
-  }
 
   const stationImages = {
     "Fire Station": FIRE,
@@ -145,7 +137,7 @@ const Body = () => {
               <div className="hotline-poster-address active">
                 <img
                   alt=""
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=tel:${formatPhoneNumber(
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=tel:${getPrimaryDialNumber(
                     selectedHotline.number
                   )}`}
                 />

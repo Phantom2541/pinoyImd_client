@@ -19,7 +19,7 @@ import { isEmpty } from "lodash";
 
 const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
-      ({ payables }) => payables
+      ({ payables }) => payables,
     ),
     [activeId, setActiveId] = useState(-1),
     dispatch = useDispatch();
@@ -118,8 +118,8 @@ const Tables = () => {
                             ? isToday
                               ? "orange"
                               : isPastDue
-                              ? "red"
-                              : "black"
+                                ? "red"
+                                : "black"
                             : "black",
                           fontWeight: isPastDue ? "bold" : "normal",
                         }}

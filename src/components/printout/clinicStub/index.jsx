@@ -4,7 +4,7 @@ import {
   capitalize,
   currency,
 } from "../../../services/utilities";
-import { Privileges } from "../../../services/fakeDb";
+// import { Privileges } from "../../../services/fakeDb";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
@@ -77,7 +77,7 @@ const Stub = ({ sale }) => {
         value={String(
           `${fullName.fname || ""} ${
             String(`${fullName.mname.charAt(0)}. `) || ""
-          }  ${fullName.lname || ""}`
+          }  ${fullName.lname || ""}`,
         ).toUpperCase()}
       />
 
@@ -122,7 +122,7 @@ const Stub = ({ sale }) => {
         value={capitalize(
           `${cashier?.fullName?.fname?.split?.(" ")[0] || ""} ${
             cashier?.fullName?.lname || ""
-          }`
+          }`,
         )}
       />
       <Hr />

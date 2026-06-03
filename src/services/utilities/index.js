@@ -77,8 +77,12 @@ import MenusToPDF from "./export/pdf/menus";
 //status
 import employment from "../fakeDb/employment";
 
-// const ENDPOINT = "http://localhost:5000";
-const ENDPOINT = window.location.origin;
+const isLocalHost = ["localhost", "127.0.0.1"].includes(
+  window.location.hostname
+);
+const ENDPOINT =
+  process.env.REACT_APP_API_URL ||
+  (isLocalHost ? "http://localhost:5000" : window.location.origin);
 
 //
 // endpoint ni kuya kevin

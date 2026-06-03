@@ -19,10 +19,10 @@ const Sales = ({ currentMonthSales, lastMonthSales }) => {
             </MDBBtn>
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
-            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
+            <h3 className="ml-4 mt-4 mb-2 font-weight-bold">
               {currency.format(Number(currentMonthSales))}
-            </h5>
-            <p className="font-small grey-text">Current Sales</p>
+            </h3>
+            <p className="font-small grey-text">Current Gross Sales</p>
           </MDBCol>
         </MDBRow>
         <MDBRow className="my-3">

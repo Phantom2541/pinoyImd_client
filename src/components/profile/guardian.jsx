@@ -1,4 +1,4 @@
-import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
+import { MDBRow, MDBCol, MDBInput, MDBSwitch } from "mdbreact";
 import { EditableUser, Select } from "../customizable";
 import { getAge } from "../../services/utilities";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,7 +8,7 @@ import swal from "sweetalert2";
 
 export default function Guardian({ handleChange, handleSubmit }) {
   const { auth, isSuccess, formSubmitted, token } = useSelector(
-    ({ auth }) => auth
+    ({ auth }) => auth,
   );
   const hasguardian = auth.guardian ? true : false;
   const [address, setAddress] = useState({});
@@ -67,7 +67,7 @@ export default function Guardian({ handleChange, handleSubmit }) {
                   onChange={(e) =>
                     handleChange(
                       "guardian.fullName.fname",
-                      e.target.value.toUpperCase()
+                      e.target.value.toUpperCase(),
                     )
                   }
                   label="First name"

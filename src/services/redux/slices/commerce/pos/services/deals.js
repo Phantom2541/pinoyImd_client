@@ -15,6 +15,7 @@ const initialState = {
   month: new Date().getMonth() + 1, // Month as a number (1-12)
   year: new Date().getFullYear(),
   collections: [],
+  lastBrowseKey: null,
   transaction: { _id: "default" },
   totalPatient: 0,
   formSubmitted: false,
@@ -979,6 +980,7 @@ export const reduxSlice = createSlice({
         state.physicians = physicianWithAmount;
         state.filteredPhysicians = physicianWithAmount;
         arrangeDealsByDate(state, payload);
+        state.lastBrowseKey = action.meta.arg?.key || null;
         state.isSuccess = success;
         state.isLoading = false;
       })

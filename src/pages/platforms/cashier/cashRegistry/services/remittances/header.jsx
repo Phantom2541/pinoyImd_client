@@ -15,9 +15,11 @@ import { Calendars } from "../../../../../../components/header";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { month, year, collections, isSuccess, message } = useSelector(
-      ({ remittances }) => remittances
+      ({ remittances }) => remittances,
     ),
     [coh, setCoh] = useState(0),
+    [sales, setSales] = useState(0),
+    [expenses, setExpenses] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -46,7 +48,7 @@ const Header = () => {
             endDate: endDate.toISOString(),
             cashier: auth?._id,
           },
-        })
+        }),
       );
     }
     return () => dispatch(RESET());
@@ -54,17 +56,27 @@ const Header = () => {
 
   useEffect(() => {
     if (collections) {
-      const sales = [...collections]?.reduce((total, collection) => {
-        if (!collection?.collector && collection.sales) {
-          const closingSum = collection?.coh || 0;
-          const openingSum = collection?.opening?.sum || 0;
+      const totals = [...collections]?.reduce(
+        (total, collection) => {
+          if (!collection?.collector && collection.sales) {
+            const grossSales = Number(collection?.sales || 0);
+            const expenseAmount = Number(collection?.expenses || 0);
+            const closingSum = collection?.coh || 0;
+            const openingSum = collection?.opening?.sum || 0;
 
-          return total + (closingSum - openingSum);
-        }
-        return total;
-      }, 0);
+            total.sales += grossSales;
+            total.expenses += expenseAmount;
+            total.collections += closingSum - openingSum;
+          }
 
-      setCoh(sales);
+          return total;
+        },
+        { sales: 0, expenses: 0, collections: 0 },
+      );
+
+      setSales(totals.sales);
+      setExpenses(totals.expenses);
+      setCoh(totals.collections);
     }
   }, [collections]);
 
@@ -77,10 +89,20 @@ const Header = () => {
         <div className="d-flex ">
           <span className="white-text mx-3 text-nowrap mt-0">
             Remittances :&nbsp;&nbsp;
+            {sales > 0 && (
+              <span style={{ color: "white" }} title="Gross sales before expenses">
+                Sales:({currency.format(sales)})&nbsp;&nbsp;
+              </span>
+            )}
+            {expenses > 0 && (
+              <span style={{ color: "white" }} title="Declared expenses deducted from cash on hand">
+                Expenses:({currency.format(expenses)})&nbsp;&nbsp;
+              </span>
+            )}
             {coh > 0 && (
               <span
                 style={{ color: "white" }}
-                title="Unremitted sales (COH - FC)"
+                title="Cash remittance after expenses and floating cash adjustment"
               >
                 Collections:({currency.format(coh)})
               </span>

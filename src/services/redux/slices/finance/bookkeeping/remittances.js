@@ -6,6 +6,7 @@ const today = new Date();
 
 const initialState = {
   collections: [],
+  lastBrowseKey: null,
   selected: {},
   deals: [],
   day: 1,
@@ -198,8 +199,10 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        const { payload } = action;
         state.collections = payload;
+        state.lastBrowseKey = action.meta.arg?.key || null;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

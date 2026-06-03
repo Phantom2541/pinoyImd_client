@@ -7,6 +7,7 @@ import {
   DESTROY,
   RESET,
 } from "../../../../../../services/redux/slices/assets/providers";
+import { formatPhoneNumber } from "../../../../../../services/utilities/phoneNumber";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -78,7 +79,7 @@ const Body = () => {
                   )}
                 </div>
               </td>
-              <td>{number} </td>
+              <td>{formatPhoneNumber(number) || "No number"}</td>
               <td>{address}</td>
               <td className="text-center">
                 <MDBBtnGroup>

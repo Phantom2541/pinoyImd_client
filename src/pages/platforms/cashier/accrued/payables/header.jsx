@@ -17,7 +17,7 @@ import CalendarPicker from "../../../../../components/header/calendars";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess, month, year, collections } = useSelector(
-      ({ payables }) => payables
+      ({ payables }) => payables,
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -33,7 +33,7 @@ export default function TopHeader() {
             year,
             month,
           },
-        })
+        }),
       );
     }
     return () => {
@@ -63,7 +63,9 @@ export default function TopHeader() {
           reset={() => dispatch(ResetDATE())}
         />
       </div>
-      <span className="white-text mx-5 text-nowrap mt-0">PAYABLES</span>
+      <span className="white-text mx-5 text-nowrap mt-0">
+        PAYABLES and REMMITANCES
+      </span>
       <div>
         <div className="text-right d-flex items-center">
           <Search

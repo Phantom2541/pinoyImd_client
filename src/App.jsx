@@ -37,7 +37,6 @@ import {
   Staff,
   AttendancePrint,
   DutyPrintout,
-  AttendancePrint,
 } from "./components/printout";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";

@@ -1,9 +1,8 @@
 import {
-  // MDBCol,
   MDBCard,
   MDBView,
   MDBCardBody,
-  MDBAvatar,
+  // MDBAvatar,
   MDBProgress,
   MDBBtnGroup,
 } from "mdbreact";
@@ -12,18 +11,23 @@ import { Cloudinary } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import {
   IMAGE,
-  UPDATE_INFO,
+  // UPDATE_INFO,
   UPLOAD,
 } from "../../services/redux/slices/assets/persons/auth";
 import { ImageCropper } from "../images";
-import ImageDragAndDrop from "../images/dragAndDrop/dragNdroping";
+// import ImageDragAndDrop from "../images/dragAndDrop/dragNdroping";
 
 export default function SignatureImage() {
-  const { auth, token, progressBar, image, isSuccess, formSubmitted } =
-      useSelector(({ auth }) => auth),
+  const {
+      auth,
+      token,
+      progressBar,
+      // image,
+      // isSuccess,
+      // formSubmitted
+    } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     { addToast } = useToasts();
-  console.log("auth", auth);
 
   const handleError = (message) =>
     addToast(message, {
@@ -48,13 +52,13 @@ export default function SignatureImage() {
         const formData = Cloudinary.buildFileForm(
           src,
           `users/${auth.email}`,
-          "signature"
+          "signature",
         );
         dispatch(
           UPLOAD({
             data: formData,
             token,
-          })
+          }),
         ).then((action) => {
           const freshUrl = `${action.payload.url}?v=${Date.now()}`;
           dispatch(IMAGE(freshUrl));
@@ -69,13 +73,13 @@ export default function SignatureImage() {
     const formData = Cloudinary.buildFileForm(
       img,
       `users/${auth.email}`,
-      "signature"
+      "signature",
     );
     dispatch(
       UPLOAD({
         data: formData,
         token,
-      })
+      }),
     );
   };
 

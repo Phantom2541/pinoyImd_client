@@ -21,7 +21,7 @@ import Deals from "./deals";
 
 const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
-      ({ payables }) => payables
+      ({ payables }) => payables,
     ),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     [activeId, setActiveId] = useState(-1),
@@ -66,7 +66,7 @@ const Tables = () => {
               branch: activePlatform?.branchId,
               user: auth._id,
             },
-          })
+          }),
         );
         Swal.fire({
           title: "Deleted!",
@@ -162,8 +162,8 @@ const Tables = () => {
                             ? isToday
                               ? "orange"
                               : isPastDue
-                              ? "red"
-                              : "black"
+                                ? "red"
+                                : "black"
                             : "black",
                           fontWeight: isPastDue ? "bold" : "normal",
                         }}
