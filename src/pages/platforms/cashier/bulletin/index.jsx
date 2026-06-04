@@ -1,12 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { axioKit } from "../../../../services/utilities";
-import {
-  BROWSE as BROWSE_REMITTANCES,
-} from "../../../../services/redux/slices/finance/bookkeeping/remittances";
-import {
-  BROWSE as BROWSE_DEALS,
-} from "../../../../services/redux/slices/commerce/pos/services/deals";
+import { BROWSE as BROWSE_REMITTANCES } from "../../../../services/redux/slices/finance/bookkeeping/remittances";
+import { BROWSE as BROWSE_DEALS } from "../../../../services/redux/slices/commerce/pos/services/deals";
 import {
   MDBContainer,
   MDBRow,
@@ -33,12 +29,12 @@ export default function Dashboard() {
 
   const { activePlatform, auth, token } = useSelector(({ auth }) => auth),
     { collections: remittanceCollections = [] } = useSelector(
-      ({ remittances }) => remittances
+      ({ remittances }) => remittances,
     ),
     { collections: dealCollections = [], lastBrowseKey: lastDealsBrowseKey } =
       useSelector(({ deals }) => deals),
     { lastBrowseKey: lastRemittancesBrowseKey } = useSelector(
-      ({ remittances }) => remittances
+      ({ remittances }) => remittances,
     ),
     dispatch = useDispatch();
 
@@ -76,7 +72,9 @@ export default function Dashboard() {
       return total + Number(item?.sales || 0);
     }, 0);
 
-    return remittedMonthSales + Math.max(0, todayLiveSales - todayRemittedSales);
+    return (
+      remittedMonthSales + Math.max(0, todayLiveSales - todayRemittedSales)
+    );
   }, [dealCollections, remittanceCollections]);
 
   useEffect(() => {
@@ -92,12 +90,12 @@ export default function Dashboard() {
     const lastMonthStart = new Date(year, month - 1, 1);
     const lastMonthEnd = new Date(year, month, 0, 23, 59, 59, 999);
 
-    const queryCurrentMonth = {
-      cashier: auth._id,
-      branch: activePlatform.branchId,
-      month: month + 1,
-      year,
-    };
+    // const queryCurrentMonth = {
+    //   cashier: auth._id,
+    //   branch: activePlatform.branchId,
+    //   month: month + 1,
+    //   year,
+    // };
 
     const remittanceBrowseKey = {
       branch: activePlatform.branchId,
@@ -131,7 +129,7 @@ export default function Dashboard() {
         BROWSE_REMITTANCES({
           token,
           key: remittanceBrowseKey,
-        })
+        }),
       );
     }
 
@@ -140,7 +138,7 @@ export default function Dashboard() {
         BROWSE_DEALS({
           token,
           key: dealsBrowseKey,
-        })
+        }),
       );
     }
 
@@ -154,7 +152,7 @@ export default function Dashboard() {
       .then((res = []) => {
         const currentTotal = res.reduce(
           (total, item) => total + Number(item?.totalAmount || 0),
-          0
+          0,
         );
         setCurrentMonthInsources(currentTotal);
       })
@@ -170,7 +168,7 @@ export default function Dashboard() {
       .then((res = []) => {
         const lastMonthTotal = res.reduce(
           (total, item) => total + Number(item?.totalAmount || 0),
-          0
+          0,
         );
         setLastMonthInsources(lastMonthTotal);
       })
@@ -180,7 +178,7 @@ export default function Dashboard() {
       axioKit.universal(
         `finance/bookkeeping/remittances/browse`,
         token,
-        queryLastMonth
+        queryLastMonth,
       ),
       axioKit.universal(`commerce/pos/services/deals/browse`, token, {
         branchId: activePlatform.branchId,
@@ -199,8 +197,8 @@ export default function Dashboard() {
         const rawDeals = Array.isArray(lastMonthDeals?.payload)
           ? lastMonthDeals.payload
           : Array.isArray(lastMonthDeals)
-          ? lastMonthDeals
-          : [];
+            ? lastMonthDeals
+            : [];
 
         const liveGross = rawDeals.reduce((total, item) => {
           if (item?.deletedAt) return total;
@@ -221,7 +219,7 @@ export default function Dashboard() {
       .then((res = []) => {
         const currentTotal = res.reduce(
           (total, item) => total + Number(item?.totalAmount || 0),
-          0
+          0,
         );
         setCurrentMonthOutsources(currentTotal);
       })
@@ -237,7 +235,7 @@ export default function Dashboard() {
       .then((res = []) => {
         const lastMonthTotal = res.reduce(
           (total, item) => total + Number(item?.totalAmount || 0),
-          0
+          0,
         );
         setLastMonthOutsources(lastMonthTotal);
       })

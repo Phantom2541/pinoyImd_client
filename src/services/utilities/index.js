@@ -78,18 +78,12 @@ import MenusToPDF from "./export/pdf/menus";
 import employment from "../fakeDb/employment";
 
 const isLocalHost = ["localhost", "127.0.0.1"].includes(
-  window.location.hostname
+  window.location.hostname,
 );
 const ENDPOINT =
   process.env.REACT_APP_API_URL ||
   (isLocalHost ? "http://localhost:5000" : window.location.origin);
 
-//
-// endpoint ni kuya kevin
-// const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
-
-//old socket set up
-// const socket = io.connect(ENDPOINT);
 const socket = io(ENDPOINT, {
   transports: ["websocket"],
   reconnection: true,

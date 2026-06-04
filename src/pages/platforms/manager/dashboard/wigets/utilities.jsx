@@ -7,7 +7,7 @@ const Utilities = () => {
   const [currentExpenses, setCurrentExpenses] = useState(0);
   const [lastMonthExpenses, setLastExpenses] = useState(0);
 
-  const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
+  const { activePlatform, token } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
     if (!activePlatform?.branchId || !token) return;
@@ -32,7 +32,7 @@ const Utilities = () => {
       .universal(
         `/finance/journals/payments/bulletin`,
         token,
-        queryCurrentMonth
+        queryCurrentMonth,
       )
       .then((res) => setCurrentExpenses(Number(res.totalAmount) || 0))
       .catch((err) => console.log(err.message));
