@@ -22,7 +22,7 @@ const Outsource = ({ currentMonthOutsources, lastMonthOutsources }) => {
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
               {currency.format(currentMonthOutsources)}
             </h5>
-            <p className="font-small grey-text">Outsources</p>
+            <p className="font-small grey-text">Current Outsources</p>
           </MDBCol>
         </MDBRow>
         <MDBRow className="my-3">

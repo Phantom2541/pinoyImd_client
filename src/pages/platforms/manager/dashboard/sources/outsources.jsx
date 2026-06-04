@@ -1,8 +1,29 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import { MDBTable, MDBCard, MDBCardBody, MDBCol, MDBBtn } from "mdbreact";
+import { useSelector } from "react-redux";
+import { axioKit, currency } from "../../../../../services/utilities";
 
 const OutSources = () => {
+  const [data, setData] = useState([]);
+  const { activePlatform, token } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    if (!activePlatform?.branchId || !token) return;
+
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
+
+    axioKit
+      .universal(`/commerce/pos/services/deals/groupOutsource`, token, {
+        branchId: activePlatform.branchId,
+        month: month + 1,
+        year,
+      })
+      .then((res = []) => setData(res))
+      .catch((err) => console.log(err.message));
+  }, [activePlatform, token]);
+
   return (
     <MDBCol lg="4" md="12">
       <MDBCard className="mb-4">
@@ -11,37 +32,24 @@ const OutSources = () => {
             <thead>
               <tr>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Keywords</strong>
+                  <strong>Outsource</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Visits</strong>
+                  <strong>Patients</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Pages</strong>
+                  <strong>Amounts</strong>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Design</td>
-                <td>15</td>
-                <td>307</td>
-              </tr>
-              <tr>
-                <td>Bootstrap</td>
-                <td>32</td>
-                <td>504</td>
-              </tr>
-              <tr>
-                <td>MDBootstrap</td>
-                <td>41</td>
-                <td>613</td>
-              </tr>
-              <tr>
-                <td>Frontend</td>
-                <td>14</td>
-                <td>208</td>
-              </tr>
+              {data?.map((item, index) => (
+                <tr key={`${item?.source || "outsource"}-${index}`}>
+                  <td>{item?.source}</td>
+                  <td>{item?.totalPatients}</td>
+                  <td>{currency.format(Number(item?.totalAmount || 0))}</td>
+                </tr>
+              ))}
             </tbody>
           </MDBTable>
           <MDBBtn

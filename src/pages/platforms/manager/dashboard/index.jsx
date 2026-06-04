@@ -25,8 +25,8 @@ import { Expenses, Purchases } from "./calendars";
 
 export default function Dashboard() {
   const [lastMonthSales, setLastMonthSales] = useState(0);
-  const [currentVouchers, setCurrentVouchers] = useState(0);
-  const [lastMonthVouchers, setLastMonthVouchers] = useState(0);
+  const [currentMonthInsources, setCurrentMonthInsources] = useState(0);
+  const [lastMonthInsources, setLastMonthInsources] = useState(0);
   const [currentMonthOutsources, setCurrentMonthOutsources] = useState(0);
   const [lastMonthOutsources, setLastMonthOutsources] = useState(0);
 
@@ -89,12 +89,6 @@ export default function Dashboard() {
     const lastMonthStart = new Date(year, month - 1, 1);
     const lastMonthEnd = new Date(year, month, 0, 23, 59, 59, 999);
 
-    const queryCurrentMonth = {
-      branch: activePlatform.branchId,
-      month: month + 1,
-      year,
-    };
-
     const remittanceBrowseKey = {
       branch: activePlatform.branchId,
       startDate: monthStart.toISOString(),
@@ -138,14 +132,32 @@ export default function Dashboard() {
     }
 
     axioKit
-      .universal(
-        `finance/bookkeeping/remittances/widgets`,
-        token,
-        queryCurrentMonth
-      )
-      .then((res) => {
-        setCurrentVouchers(res.current.totalVouchers || 0);
-        setLastMonthVouchers(res.last.totalVouchers || 0);
+      .universal(`commerce/pos/services/deals/groupSource`, token, {
+        branchId: activePlatform.branchId,
+        month: month + 1,
+        year,
+      })
+      .then((res = []) => {
+        const currentTotal = res.reduce(
+          (total, item) => total + Number(item?.totalAmount || 0),
+          0
+        );
+        setCurrentMonthInsources(currentTotal);
+      })
+      .catch((err) => console.log(err.message));
+
+    axioKit
+      .universal(`commerce/pos/services/deals/groupSource`, token, {
+        branchId: activePlatform.branchId,
+        month: month === 0 ? 12 : month,
+        year: month === 0 ? year - 1 : year,
+      })
+      .then((res = []) => {
+        const lastMonthTotal = res.reduce(
+          (total, item) => total + Number(item?.totalAmount || 0),
+          0
+        );
+        setLastMonthInsources(lastMonthTotal);
       })
       .catch((err) => console.log(err.message));
 
@@ -184,14 +196,32 @@ export default function Dashboard() {
       .catch((err) => console.log(err.message));
 
     axioKit
-      .universal(
-        `commerce/pos/services/deals/widgets`,
-        token,
-        queryCurrentMonth
-      )
-      .then((res) => {
-        setCurrentMonthOutsources(res.current.totalAmount || 0);
-        setLastMonthOutsources(res.last.totalAmount || 0);
+      .universal(`commerce/pos/services/deals/groupOutsource`, token, {
+        branchId: activePlatform.branchId,
+        month: month + 1,
+        year,
+      })
+      .then((res = []) => {
+        const currentTotal = res.reduce(
+          (total, item) => total + Number(item?.totalAmount || 0),
+          0
+        );
+        setCurrentMonthOutsources(currentTotal);
+      })
+      .catch((err) => console.log(err.message));
+
+    axioKit
+      .universal(`commerce/pos/services/deals/groupOutsource`, token, {
+        branchId: activePlatform.branchId,
+        month: month === 0 ? 12 : month,
+        year: month === 0 ? year - 1 : year,
+      })
+      .then((res = []) => {
+        const lastMonthTotal = res.reduce(
+          (total, item) => total + Number(item?.totalAmount || 0),
+          0
+        );
+        setLastMonthOutsources(lastMonthTotal);
       })
       .catch((err) => console.log(err.message));
   }, [
@@ -212,8 +242,8 @@ export default function Dashboard() {
             lastMonthSales={lastMonthSales}
           />
           <InSource
-            currentVouchers={currentVouchers}
-            lastMonthVouchers={lastMonthVouchers}
+            currentMonthInsources={currentMonthInsources}
+            lastMonthInsources={lastMonthInsources}
           />
           <OutSource
             currentMonthOutsources={currentMonthOutsources}

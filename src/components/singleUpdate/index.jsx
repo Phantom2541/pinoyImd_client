@@ -66,7 +66,7 @@ export default function SingleUpdate({
               color="info"
               className="mr-2 cursor-pointer"
               onClick={() => setSelected({ ...data, updatedKey: title })}
-              title={data[title]}
+              // title={data[title]}
             >
               {data[title]}
             </MDBBadge>

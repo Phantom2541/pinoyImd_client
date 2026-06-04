@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { MDBTable, MDBCard, MDBCardBody, MDBCol, MDBBtn } from "mdbreact";
 import { useSelector } from "react-redux";
-import { axioKit } from "../../../../../services/utilities";
+import { axioKit, currency } from "../../../../../services/utilities";
 
 const Insources = () => {
   const [data, setData] = useState([]);
@@ -10,13 +10,15 @@ const Insources = () => {
   const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
+    if (!auth?._id || !activePlatform?.branchId || !token) return;
+
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
     const queryCurrentMonth = {
-      cashier: auth._id,
-      branch: activePlatform.branchId,
+      cashierId: auth._id,
+      branchId: activePlatform.branchId,
       month: month + 1,
       year,
     };
@@ -64,6 +66,7 @@ const Insources = () => {
                 <tr key={index}>
                   <td>{data?.source}</td>
                   <td>{data?.totalPatients}</td>
+                  <td>{currency.format(Number(data?.totalAmount || 0))}</td>
                 </tr>
               ))}
             </tbody>

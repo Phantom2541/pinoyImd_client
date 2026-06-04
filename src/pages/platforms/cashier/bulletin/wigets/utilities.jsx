@@ -10,6 +10,8 @@ const Utilities = () => {
   const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
+    if (!auth?._id || !activePlatform?.branchId || !token) return;
+
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
@@ -28,20 +30,18 @@ const Utilities = () => {
       year: month === 0 ? year - 1 : year,
     };
 
-    // Fetch Current Month Sales
     axioKit
       .universal(
         `/finance/journals/payments/bulletin`,
         token,
         queryCurrentMonth
       )
-      .then((res) => setCurrentExpenses(res.totalAmount || 0))
+      .then((res) => setCurrentExpenses(Number(res.totalAmount) || 0))
       .catch((err) => console.log(err.message));
 
-    // Fetch Last Month Sales
     axioKit
       .universal(`/finance/journals/payments/bulletin`, token, queryLastMonth)
-      .then((res) => setLastExpenses(res.totalAmount || 0))
+      .then((res) => setLastExpenses(Number(res.totalAmount) || 0))
       .catch((err) => console.log(err.message));
   }, [activePlatform, auth, token]);
   return (

@@ -24,7 +24,7 @@ import PaymentDetails from "./paymentDetails";
 import "./style.css";
 const Tables = () => {
   const { token, maxPage, activePlatform, company } = useSelector(
-      ({ auth }) => auth
+      ({ auth }) => auth,
     ),
     {
       collections,
@@ -83,13 +83,13 @@ const Tables = () => {
   const handlePrintout = (selected) => {
     localStorage.setItem(
       "claimStub",
-      JSON.stringify(generateStub({ ...selected, companyId: company._id }))
+      JSON.stringify(generateStub({ ...selected, companyId: company._id })),
     );
     setTimeout(() => {
       window.open(
         "/printout/claimstub",
         "Claim Stub",
-        "top=100px,left=150px,width=450px,height=850px"
+        "top=100px,left=150px,width=450px,height=850px",
       );
     }, 50);
   };
@@ -100,7 +100,7 @@ const Tables = () => {
         ...selected,
         cart: [], // clean and transfer to soldcart for reference
         soldCart: selected.cart,
-      })
+      }),
     );
   };
 
@@ -152,7 +152,7 @@ const Tables = () => {
   };
   const getSourceForPhysician = (sourceId) => {
     const source = [...providers].find(
-      ({ clients }) => clients._id === sourceId
+      ({ clients }) => clients._id === sourceId,
     );
 
     if (!source?._id) return {};
@@ -314,7 +314,7 @@ const Tables = () => {
                                 ...value,
                                 branch: activePlatform.branchId,
                                 source: getSourceForPhysician(
-                                  deal?.source?._id
+                                  deal?.source?._id,
                                 ),
                               },
                             })
