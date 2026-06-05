@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -9,54 +9,189 @@ import {
   MDBDropdownItem,
 } from "mdbreact";
 import { capitalize } from "../../../services/utilities";
-import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth";
+import { Access } from "../../../services/fakeDb";
+import { SETAFFILIATIONPLATFORM } from "../../../services/redux/slices/assets/persons/affiliations";
+
+const platformCatalog = Access.collections || [];
+const platformAliases = {
+  accre: "accreditation",
+  accreditation: "accreditation",
+  accredetation: "accreditation",
+  accreditation: "accreditation",
+  admin: "administrator",
+  administrative: "administrator",
+  administrator: "administrator",
+  accounting: "accounting",
+  auditor: "auditor",
+  author: "author",
+  cashier: "cashier",
+  frontdesk: "frontdesk",
+  manager: "manager",
+  patron: "patron",
+  hr: "hr",
+  "human resources": "hr",
+  human_resources: "hr",
+  laboratory: "laboratory",
+  lab: "laboratory",
+  radiology: "radiology",
+  rad: "radiology",
+  pharmacist: "pharmacist",
+  pharmacy: "pharmacist",
+  procurement: "procurement",
+  utility: "utility",
+  clinical: "clinical",
+  clinic: "clinical",
+  physician: "physician",
+  dr: "physician",
+  headquarter: "headquarter",
+  headquarters: "headquarter",
+  superadmin: "superadmin",
+  "service engineer": "serviceengineer",
+  service_engineer: "serviceengineer",
+  serviceengineer: "serviceengineer",
+  se: "serviceengineer",
+};
+
+const normalizePlatform = (value = "") => {
+  const cleanedValue = String(value || "")
+    .trim()
+    .toLowerCase();
+
+  if (!cleanedValue) return "";
+
+  const matchedPlatform = platformCatalog.find(({ platform, code, name }) => {
+    const normalizedPlatform = String(platform || "")
+      .trim()
+      .toLowerCase();
+    const normalizedCode = String(code || "")
+      .trim()
+      .toLowerCase();
+    const normalizedName = String(name || "")
+      .trim()
+      .toLowerCase();
+
+    return (
+      normalizedPlatform === cleanedValue ||
+      normalizedCode === cleanedValue ||
+      normalizedName === cleanedValue
+    );
+  });
+
+  const normalizedMatch = matchedPlatform
+    ? String(
+        matchedPlatform.code ||
+          matchedPlatform.platform ||
+          matchedPlatform.name ||
+          "",
+      )
+        .trim()
+        .toLowerCase()
+    : cleanedValue;
+
+  return (
+    platformAliases[normalizedMatch] ||
+    platformAliases[cleanedValue] ||
+    cleanedValue.replace(/\s+/g, "_")
+  );
+};
+
+const getPlatformLabel = (value = "") => {
+  const normalizedValue = normalizePlatform(value);
+  const matchedPlatform = platformCatalog.find(
+    ({ platform, code, name }) =>
+      normalizePlatform(platform) === normalizedValue ||
+      normalizePlatform(code) === normalizedValue ||
+      normalizePlatform(name) === normalizedValue,
+  );
+
+  return matchedPlatform?.name || capitalize(normalizedValue.replace(/_/g, " "));
+};
 
 export default function Platforms() {
-  const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
+  const { activePlatform, auth, branches = [], token } = useSelector(
+      ({ auth }) => auth,
+    ),
     dispatch = useDispatch(),
     history = useHistory();
+
+  const affiliationId = auth?.activeAffiliation || "";
+  const currentAffiliation = useMemo(
+    () =>
+      branches.find(
+        ({ affiliationId: currentAffiliationId, _id }) =>
+          String(currentAffiliationId || _id) === String(affiliationId),
+      ) || {},
+    [branches, affiliationId],
+  );
 
   const [access, setAccess] = useState([]);
   const isDraft = activePlatform?.branch?.settings?.status === "Draft";
 
   useEffect(() => {
-    const platforms = activePlatform?.access || [];
-    const uniqueSorted = Array.from(new Set([...platforms, "patron"])).sort(
-      (a, b) => a.localeCompare(b)
+    const platforms = (currentAffiliation?.platforms || [])
+      .map((platform) => normalizePlatform(platform))
+      .filter(Boolean);
+    const uniqueSorted = Array.from(new Set(platforms)).sort((a, b) =>
+      a.localeCompare(b),
     );
     setAccess(uniqueSorted);
-  }, [activePlatform]);
+  }, [currentAffiliation]);
+
+  useEffect(() => {
+    if (!affiliationId || access.length !== 1) return;
+
+    const selectedPlatform = String(
+      currentAffiliation?.activePlatform || activePlatform?.platform || "",
+    )
+      .trim()
+      .toLowerCase();
+
+    if (selectedPlatform === access[0]) return;
+
+    dispatch(
+      SETAFFILIATIONPLATFORM({
+        data: {
+          _id: auth._id,
+          email: auth.email,
+          activeAffiliation: affiliationId,
+          activePlatform: access[0],
+        },
+        token,
+      }),
+    );
+  }, [access, activePlatform, affiliationId, auth, currentAffiliation, dispatch, token]);
 
   const handlePlatform = useCallback(
     (platform) => {
-      const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
+      const cleanedPlatform = normalizePlatform(platform);
 
       dispatch(
-        SETACTIVEPLATFORM({
+        SETAFFILIATIONPLATFORM({
           data: {
             _id: auth._id,
             email: auth.email,
-            activePlatform: {
-              ...activePlatform,
-              platform: cleanedPlatform || "patron",
-            },
+            activeAffiliation: affiliationId,
+            activePlatform: cleanedPlatform || "patron",
           },
           token,
-        })
+        }),
       );
 
-      const isManager = cleanedPlatform === "manager";
-      const redirectURL = `/${cleanedPlatform}/${
+      const routePlatform = cleanedPlatform;
+      const isManager = routePlatform === "manager";
+      const redirectURL = `/${routePlatform}/${
         isManager ? "dashboard" : "bulletin"
       }`;
       history.push(redirectURL);
     },
-    [auth, activePlatform, dispatch, token, history]
+    [affiliationId, auth, dispatch, history, token],
   );
 
   if (access.length <= 1) return null;
 
   const allowedPlatformsInDraft = ["manager", "headquarter", "superadmin"];
+  const visiblePlatform =
+    currentAffiliation?.activePlatform || activePlatform?.platform || access[0] || "patron";
 
   return (
     <MDBDropdown className="sample">
@@ -73,7 +208,7 @@ export default function Platforms() {
         <MDBIcon icon="network-wired" />
         &nbsp;
         <div className="d-none d-md-inline">
-          {capitalize(activePlatform?.platform || "patron")}
+          {getPlatformLabel(visiblePlatform)}
         </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right id="platforms-dropdown-menu">
@@ -88,8 +223,8 @@ export default function Platforms() {
               key={index}
               onClick={(e) => {
                 if (isDisabled) {
-                  e.preventDefault(); // prevent default action
-                  e.stopPropagation(); // stop from closing dropdown
+                  e.preventDefault();
+                  e.stopPropagation();
                   return;
                 }
                 handlePlatform(platform);
@@ -100,7 +235,7 @@ export default function Platforms() {
                 cursor: isDisabled ? "not-allowed" : "pointer",
               }}
             >
-              {capitalize(platform)}
+              {getPlatformLabel(platform)}
             </MDBDropdownItem>
           );
         })}

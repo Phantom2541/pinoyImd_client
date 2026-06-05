@@ -20,6 +20,8 @@ export default function Profile() {
     ),
     [platform, setPlatform] = useState("patron"),
     history = useHistory();
+  const employmentStatus =
+    activePlatform?.branch?.contract?.soe || activePlatform?.branch?.status;
 
   useEffect(() => {
     setPlatform(activePlatform?.platform);
@@ -40,7 +42,9 @@ export default function Profile() {
     }
     clearSiteData();
   };
-  const isEmployed = employment.isEmployed(activePlatform?.branch?.status);
+  const isEmployed = employment.isEmployed(
+    activePlatform?.isPhysician ? "active" : employmentStatus
+  );
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>

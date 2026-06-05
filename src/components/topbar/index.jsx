@@ -16,12 +16,16 @@ import DTR from "./dtr";
 export default function TopNavigation({ toggle, onSideNavToggleClick }) {
   const { activePlatform, auth } = useSelector((state) => state.auth);
   const aka = auth?.alias || auth?.fullName?.fname;
+  const employmentStatus =
+    activePlatform?.branch?.contract?.soe || activePlatform?.branch?.status;
 
   const navStyle = {
     paddingLeft: toggle ? "16px" : "240px",
     transition: "padding-left .3s",
   };
-  const isEmployed = employment.isEmployed(activePlatform?.branch?.status);
+  const isEmployed = employment.isEmployed(
+    activePlatform?.isPhysician ? "active" : employmentStatus
+  );
   return (
     <MDBNavbar
       className="flexible-MDBNavbar"
@@ -53,7 +57,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
               boxShadow: "0px 0px 0px 0px",
             }}
           >
-            {activePlatform?.access?.length > 0 && isEmployed
+            {activePlatform?.platforms?.length > 0 && isEmployed
               ? `${capitalize(activePlatform?.department)} :)`
               : `Welcome to Pinoy iMD :) `}
             {capitalize(aka)}
@@ -67,7 +71,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
             gap: "5px",
           }}
         >
-          {activePlatform?.access?.length > 0 && isEmployed && <DTR />}
+          {activePlatform?.platforms?.length > 0 && isEmployed && <DTR />}
           <Branches />
           <Platforms />
           <Profile />

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { HMO } from "../../../../../services/fakeDb";
 import { mobile } from "../../../../../services/utilities";
 import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
-import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(
@@ -31,7 +31,7 @@ const Body = () => {
             token,
           })
         ).then(() => {
-          dispatch(SetActivePlatform({ data: newHMO, isHMO: true }));
+          dispatch(PatchSessionPlatform({ data: newHMO, isHMO: true }));
         });
     });
   };

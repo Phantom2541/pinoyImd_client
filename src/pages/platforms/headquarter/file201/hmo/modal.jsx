@@ -13,7 +13,7 @@ import {
   UPDATE,
 } from "../../../../../services/redux/slices/assets/companies";
 import { HMO } from "../../../../../services/fakeDb";
-import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Modal() {
   const { showModal, selected, willUPDATE, isLoading, hmo } = useSelector(
@@ -51,7 +51,7 @@ export default function Modal() {
         token,
       })
     ).then(() => {
-      dispatch(SetActivePlatform({ data: newHmo, isHMO: true }));
+      dispatch(PatchSessionPlatform({ data: newHmo, isHMO: true }));
     });
     dispatch(TOGGLE()); // Close modal
   };

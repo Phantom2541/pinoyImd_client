@@ -13,7 +13,7 @@ import {
   UPDATE,
 } from "../../../../../services/redux/slices/commerce/pos/services/admission";
 import { HMO } from "../../../../../services/fakeDb";
-import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import { SearchUser } from "../../../../../components/searchables";
 import { properFullname } from "../../../../../services/utilities";
 
@@ -76,7 +76,7 @@ export default function Modal() {
         token,
       })
     ).then(() => {
-      dispatch(SetActivePlatform({ data: newHmo, isHMO: true }));
+      dispatch(PatchSessionPlatform({ data: newHmo, isHMO: true }));
     });
     dispatch(TOGGLE()); // Close modal
   };

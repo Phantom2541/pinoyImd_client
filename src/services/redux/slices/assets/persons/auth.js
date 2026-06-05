@@ -6,14 +6,20 @@ import {
   ENDPOINT,
 } from "../../../../utilities";
 import { Policy } from "../../../../fakeDb";
+import { SETAFFILIATIONPLATFORM } from "./affiliations";
 
 const url = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePlatform =
-    localStorage.getItem("activePlatform") !== "undefined" &&
-    localStorage.getItem("activePlatform"),
+  safeParseJSON = (value, fallback = {}) => {
+    try {
+      return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+      return fallback;
+    }
+  },
+  activePlatform = safeParseJSON(localStorage.getItem("activePlatform")),
   fileUrl = `/public/users/companies/${email}`;
 
 const initialState = {
@@ -48,8 +54,26 @@ const initialState = {
   message: "",
 };
 
-export const SETACTIVEPLATFORM = createAsyncThunk(
-  `${url}/setActivePlatform`,
+const normalizePlatforms = (platforms = []) =>
+  Array.from(
+    new Set(
+      (Array.isArray(platforms) ? platforms : [])
+        .flatMap((item) => {
+          if (typeof item === "string") return [item];
+          if (Array.isArray(item?.platform)) return item.platform;
+          if (typeof item?.platform === "string") return [item.platform];
+          return [];
+        })
+        .map((platform) => String(platform || "").trim().toLowerCase())
+        .filter(Boolean)
+    )
+  );
+
+const uniquePlatforms = (platforms = []) =>
+  Array.from(new Set(platforms.filter(Boolean)));
+
+export const SETACTIVEAFFILIATION = createAsyncThunk(
+  `${url}/setActiveAffiliation`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.update(`assets/persons/users`, data, token);
@@ -65,6 +89,7 @@ export const SETACTIVEPLATFORM = createAsyncThunk(
     }
   }
 );
+
 export const CHANGEPASSWORD = createAsyncThunk(
   `${url}/changePassword`,
   ({ data, token }, thunkAPI) => {
@@ -206,34 +231,60 @@ const setAP = (state, payload) => {
     access = [],
     branches = [],
     isPhysician = false,
+    activeAffiliation,
     activePlatform: oldAP = {},
   } = payload;
-  const { branchId = "" } = oldAP || {};
-  if (!branchId) return "";
-  const _access = access
-    .filter(({ branchId: bID }) => bID === branchId)
-    .map((a) => a.platform)
-    .filter((platform) => platform?.toLowerCase() !== "physician");
+  const affiliationId = activeAffiliation || oldAP?.affiliationId || "";
+  if (!affiliationId) return "";
+  const branch = branches?.find(
+    ({ affiliationId: currentAffiliationId, _id }) =>
+      (currentAffiliationId || _id) === affiliationId
+  );
+  if (!branch) return "";
 
-  const branch = branches?.find((branch) => branch?._id === branchId);
+  const branchPlatforms = normalizePlatforms(branch?.platforms);
+  const fallbackPlatforms = normalizePlatforms(oldAP?.access || access);
+  const _access = (
+    branchPlatforms.length
+      ? branchPlatforms
+      : fallbackPlatforms
+  ).filter((platform) => platform !== "physician");
   const { contract = { designation: -1 }, status, clinic } = branch || {};
-  const isEmployed = employment.isEmployed(isPhysician ? "active" : status);
+  const employmentStatus = contract?.soe || status;
+  const isEmployed = employment.isEmployed(
+    isPhysician ? "active" : employmentStatus
+  );
   const designation = isPhysician ? 122 : contract?.designation;
   const department = Policy.getDepartment(designation) || "";
   const role = Policy.getPosition(designation) || {};
+  const availablePlatforms = uniquePlatforms([
+    ..._access,
+    ...(isPhysician ? ["physician"] : []),
+  ]);
+  const currentPlatform = String(
+    oldAP?.platform || branch?.activePlatform || ""
+  )
+    .trim()
+    .toLowerCase();
+  const selectedPlatform = availablePlatforms.includes(currentPlatform)
+    ? currentPlatform
+    : availablePlatforms.length === 1
+    ? availablePlatforms[0]
+    : availablePlatforms[0] || "patron";
   const activePlatform = {
     ...oldAP,
+    affiliationId,
+    branchId: branch?.branch || branch?.branchId || branch?._id,
     branch,
     company: branch?.companyId || {},
-    access: isEmployed
-      ? [..._access, ...(isPhysician ? ["physician"] : []), "patron"]
-      : ["patron"],
+    platforms: isEmployed ? availablePlatforms : [],
+    access: isEmployed ? uniquePlatforms([...availablePlatforms, "patron"]) : ["patron"],
     department,
     role,
     isPhysician,
     position: designation,
     clinic,
-    ...(!isEmployed && { platform: "" }),
+    platform: isEmployed ? selectedPlatform : "",
   };
   localStorage.setItem("activePlatform", JSON.stringify(activePlatform));
   state.activePlatform = activePlatform;
@@ -256,7 +307,8 @@ const initializeInformation = (state, payload) => {
     isPhysician,
     branches,
     access,
-    activePlatform: auth.activePlatform,
+    activeAffiliation: auth.activeAffiliation,
+    activePlatform: state.activePlatform,
   });
   state.isPatient = isPatient;
   state.isCeo = isCeo;
@@ -295,7 +347,7 @@ export const reduxSlice = createSlice({
       localStorage.setItem("activePlatform", JSON.stringify(payload));
     },
 
-    SetActivePlatform: (state, action) => {
+    PatchSessionPlatform: (state, action) => {
       const { isHMO = false, isBranch = false, data } = action.payload;
       const current = state.activePlatform;
 
@@ -361,20 +413,45 @@ export const reduxSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(SETACTIVEPLATFORM.pending, (state) => {
+      .addCase(SETACTIVEAFFILIATION.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
+      .addCase(SETACTIVEAFFILIATION.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const convert = (data) => JSON.parse(JSON.stringify(data));
+        const updatedBranches = convert(state.branches).map((branch) => {
+          if (
+            (branch.affiliationId || branch._id) ===
+            payload?.currentAffiliation?._id
+          ) {
+            return {
+              ...branch,
+              activePlatform: payload.currentAffiliation.activePlatform,
+            };
+          }
+
+          return branch;
+        });
+
+        state.auth = {
+          ...state.auth,
+          ...payload,
+        };
+        state.branches = updatedBranches;
 
         setAP(state, {
-          branches: convert(state.branches),
+          branches: updatedBranches,
           access: convert(state.access),
           isPhysician: state.activePlatform.isPhysician,
-          activePlatform: payload.activePlatform,
+          activeAffiliation: payload.activeAffiliation,
+          activePlatform: {
+            ...state.activePlatform,
+            ...(payload?.currentAffiliation?.activePlatform && {
+              platform: payload.currentAffiliation.activePlatform,
+            }),
+          },
         });
 
         state.showModal = false;
@@ -382,7 +459,58 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(SETACTIVEPLATFORM.rejected, (state, action) => {
+      .addCase(SETACTIVEAFFILIATION.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(SETAFFILIATIONPLATFORM.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SETAFFILIATIONPLATFORM.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const convert = (data) => JSON.parse(JSON.stringify(data));
+        const updatedBranches = convert(state.branches).map((branch) => {
+          if (
+            (branch.affiliationId || branch._id) ===
+            payload?.currentAffiliation?._id
+          ) {
+            return {
+              ...branch,
+              activePlatform: payload.currentAffiliation.activePlatform,
+            };
+          }
+
+          return branch;
+        });
+
+        state.auth = {
+          ...state.auth,
+          ...payload,
+        };
+        state.branches = updatedBranches;
+
+        setAP(state, {
+          branches: updatedBranches,
+          access: convert(state.access),
+          isPhysician: state.activePlatform.isPhysician,
+          activeAffiliation: payload.activeAffiliation,
+          activePlatform: {
+            ...state.activePlatform,
+            ...(payload?.currentAffiliation?.activePlatform && {
+              platform: payload.currentAffiliation.activePlatform,
+            }),
+          },
+        });
+
+        state.showModal = false;
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(SETAFFILIATIONPLATFORM.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -436,20 +564,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const branch = state.branches.find(
-          ({ _id }) => _id === payload?.activePlatform.branchId
-        );
-        const { contract = { designation: -1 }, status } = branch || {};
-        const isEmployed = employment.isEmployed(status);
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
-        state.activePlatform = {
-          ...payload.activePlatform,
-          branch,
-          position: contract.designation,
-          ...(!isEmployed && { platform: "", access: ["patron"] }),
-        };
+        setAP(state, {
+          branches: JSON.parse(JSON.stringify(state.branches)),
+          access: JSON.parse(JSON.stringify(state.access)),
+          isPhysician: state.activePlatform.isPhysician,
+          activeAffiliation: payload.activeAffiliation,
+          activePlatform: state.activePlatform,
+        });
         state.isLoading = false;
         state.isSuccess = true;
       })
@@ -534,7 +658,7 @@ export const {
   UPLOADBAR,
   IMAGE,
   NETWORK,
-  SetActivePlatform,
+  PatchSessionPlatform,
   SetPatientCategories,
 } = reduxSlice.actions;
 

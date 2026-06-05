@@ -4,7 +4,7 @@ import {
   UPDATE_TAT,
   SetEDIT,
 } from "../../../../../services/redux/slices/assets/branches";
-import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 
 const Body = () => {
@@ -46,7 +46,7 @@ const Body = () => {
             },
           })
         ).then(() => {
-          dispatch(SetActivePlatform({ data: updatedTAT }));
+          dispatch(PatchSessionPlatform({ data: updatedTAT }));
         });
       }
     });

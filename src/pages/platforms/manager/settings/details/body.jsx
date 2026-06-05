@@ -16,7 +16,7 @@ import { RESET } from "../../../../../services/redux/slices/assets/persons/auth"
 import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 import Swal from "sweetalert2";
-import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function BranchDescription() {
   const { addToast } = useToasts();
@@ -87,7 +87,7 @@ export default function BranchDescription() {
       };
 
       dispatch(
-        SetActivePlatform({
+        PatchSessionPlatform({
           data: updatedBranch,
           isBranch: true,
         })

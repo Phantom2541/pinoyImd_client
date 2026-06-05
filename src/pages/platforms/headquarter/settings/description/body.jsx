@@ -3,7 +3,7 @@ import { useToasts } from "react-toast-notifications";
 import { useDispatch, useSelector } from "react-redux";
 import {
   RESET,
-  SetActivePlatform,
+  PatchSessionPlatform,
 } from "../../../../../services/redux/slices/assets/persons/auth";
 import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
@@ -54,7 +54,7 @@ export default function DescriptionBody() {
       const updatedCompany = payload?.payload || companyId;
 
       dispatch(
-        SetActivePlatform({
+        PatchSessionPlatform({
           data: {
             ...activePlatform,
             branch: {

@@ -15,7 +15,7 @@ import { Templates } from "../../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import { SetActivePlatform } from "../../../../../../services/redux/slices/assets/persons/auth";
+import { PatchSessionPlatform } from "../../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Modal() {
   const {
@@ -66,7 +66,7 @@ export default function Modal() {
       })
     ).then(() => {
       dispatch(
-        SetActivePlatform({ data: { tat: updatedTat }, isBranch: true })
+        PatchSessionPlatform({ data: { tat: updatedTat }, isBranch: true })
       ); // ✅ Proper update
       dispatch(TOGGLE());
     });
@@ -83,7 +83,7 @@ export default function Modal() {
         token,
       })
     ).then(() => {
-      dispatch(SetActivePlatform({ data: { tat: _tat }, isBranch: true })); // ✅ Proper update
+      dispatch(PatchSessionPlatform({ data: { tat: _tat }, isBranch: true })); // ✅ Proper update
       dispatch(TOGGLE());
     });
   };

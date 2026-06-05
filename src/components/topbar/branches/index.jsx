@@ -8,37 +8,25 @@ import {
   MDBDropdownItem,
 } from "mdbreact";
 import { capitalize } from "../../../services/utilities";
-import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth.js";
+import { SETACTIVEAFFILIATION } from "../../../services/redux/slices/assets/persons/auth.js";
 
 export default function Branches() {
   const {
       branches = [],
-      access,
       activePlatform = {},
       token,
       auth,
     } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleActiveBranch = (branchId) => {
-    const _access =
-      access
-        .filter((branch) => branch.branchId === branchId)
-        .flatMap(({ platform }) => platform) || [];
-
+  const handleActiveBranch = (affiliationId) => {
     const data = {
       _id: auth._id,
       email: auth.email,
-      activePlatform: {
-        ...activePlatform,
-        branchId,
-        position: branchId.posotion,
-        access: [..._access],
-        platform: "patron",
-      },
+      activeAffiliation: affiliationId,
     };
 
-    dispatch(SETACTIVEPLATFORM({ data, token }));
+    dispatch(SETACTIVEAFFILIATION({ data, token }));
   };
 
   const { branch = {} } = activePlatform || {};
@@ -57,11 +45,11 @@ export default function Branches() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {branches?.map(({ name, _id, displayname }, index) => (
+        {branches?.map(({ name, _id, affiliationId, displayname }, index) => (
           <MDBDropdownItem
-            active={_id === activePlatform?.branchId}
+            active={(affiliationId || _id) === activePlatform?.affiliationId}
             key={`branch-${index}`}
-            onClick={() => handleActiveBranch(_id)}
+            onClick={() => handleActiveBranch(affiliationId || _id)}
           >
             {capitalize(name || displayname)}
           </MDBDropdownItem>
