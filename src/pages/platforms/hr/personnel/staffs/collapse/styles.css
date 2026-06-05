@@ -35,3 +35,8 @@
     transform: rotate(100deg);
   }
 }
+
+.unit-editable-select .dropdown-content {
+  max-height: 16rem !important;
+  overflow-y: auto !important;
+}

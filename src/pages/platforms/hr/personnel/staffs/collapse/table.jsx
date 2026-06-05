@@ -4,6 +4,7 @@ import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Access, Policy } from "./../../../../../../services/fakeDb";
+import EditableSelect from "./../../../../../../components/customizable/editableSelect";
 import AccessModal from "./accessModal";
 import { SETOnHotSEAT } from "./../../../../../../services/redux/slices/assets/persons/personnels";
 import { capitalize } from "../../../../../../services/utilities";
@@ -58,10 +59,13 @@ function EditableField({
 export default function CollapseTable({
   employment,
   staff,
+  unit = [],
   rate,
   hasSchedule,
   contribution,
   _id,
+  formSubmitted = false,
+  isSuccess = false,
   onSubmit,
 }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
@@ -71,6 +75,12 @@ export default function CollapseTable({
   const [selected, setSelected] = useState({});
   const [dep, setDep] = useState("");
   const { platforms = [] } = staff || {};
+  const selectedUnitIds = Array.isArray(unit)
+    ? unit.map((value) => String(value))
+    : unit
+    ? [String(unit)]
+    : [];
+  const selectedUnitKey = selectedUnitIds.join(",");
   const toggle = () => setShow(!show);
   const taggedPlatforms = platforms
     .map((id) => Access.collections.find((item) => item.id === Number(id)))
@@ -91,6 +101,7 @@ export default function CollapseTable({
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
       employmentDesignation: employment?.designation || "",
+      employmentUnit: selectedUnitIds,
       hasSchedule: hasSchedule || false,
       rateMonthly: rate?.monthly || 0,
       rateCola: rate?.cola || 0,
@@ -99,14 +110,14 @@ export default function CollapseTable({
       contributionPi: contribution?.pi || 0,
       contributionSss: contribution?.sss || 0,
     });
-  }, [reset, contribution, rate, employment, hasSchedule]);
+  }, [reset, contribution, rate, employment, hasSchedule, selectedUnitKey]);
 
   useEffect(() => {
     resetData();
   }, [employment, resetData]);
 
   const saveField = handleSubmit((data) => {
-    onSubmit({
+    onSubmit(editField, {
       _id,
       ...data,
     });
@@ -131,6 +142,16 @@ export default function CollapseTable({
   const department =
     watch("employmentDepartment") ||
     Policy.getDepartment(employment?.designation);
+  const availableUnits = Policy.getUnitsByDepartmentName(department);
+  const selectedUnits = (Array.isArray(unit) ? unit : [])
+    .map((id) => Policy.units.find((item) => item.id === Number(id)))
+    .filter(Boolean);
+  const inlineUnits = selectedUnits.slice(0, 3);
+  const extraUnits = selectedUnits.length - inlineUnits.length;
+  const hiddenUnitsLabel = selectedUnits
+    .slice(3)
+    .map(({ name }) => name)
+    .join(", ");
   const isHonorarium = employment?.soe === "Honorarium";
   return (
     <>
@@ -242,6 +263,90 @@ export default function CollapseTable({
               ))}
             </select>
           </EditableField>
+          <div className="editable-field d-flex align-items-start mt-1">
+            <strong
+              style={{ fontSize: "0.9rem", color: "#757575" }}
+              className="text-nowrap"
+            >
+              Unit:
+            </strong>
+            <div className="ml-2 flex-grow-1">
+              {editField === "employmentUnit" ? (
+                <EditableSelect
+                  collections={availableUnits}
+                  keyForValue="id"
+                  keyForText="name"
+                  preValues={unit}
+                  getObject
+                  fieldData={{
+                    _id,
+                    id: selectedUnitIds,
+                    name: inlineUnits.map(({ code }) => code).join(", ") || "N/A",
+                  }}
+                  className="m-0 p-0 unit-editable-select"
+                  inputClassName="m-0 p-0"
+                  classNameTxt="ml-0"
+                  parentClassName="d-flex align-items-center w-100"
+                  multiple
+                  isEditable
+                  isCapitalize={false}
+                  displayTag="span"
+                  startOpen
+                  formSubmitted={formSubmitted}
+                  iSuccess={isSuccess}
+                  onClose={() => setEditField(null)}
+                  onSave={(data) => {
+                    onSubmit("employmentUnit", {
+                      _id,
+                      employmentUnit: (Array.isArray(data.id) ? data.id : [])
+                        .map((item) =>
+                          typeof item === "object" && item !== null ? item.id : item
+                        )
+                        .filter((value) => value !== undefined && value !== null)
+                        .map(Number)
+                        .filter((value) => Number.isFinite(value)),
+                    });
+                  }}
+                />
+              ) : (
+                <div
+                  className="d-flex flex-wrap align-items-center cursor-pointer"
+                  style={{ gap: "0.25rem" }}
+                  onClick={() => setEditField("employmentUnit")}
+                  title={hiddenUnitsLabel || undefined}
+                >
+                  {inlineUnits.length > 0 ? (
+                    <>
+                      {inlineUnits.map(({ id, code, name }) => (
+                        <MDBBadge
+                          key={id}
+                          pill
+                          title={name}
+                          className="m-0"
+                          style={{ fontSize: "0.62rem", fontWeight: 500 }}
+                        >
+                          {code}
+                        </MDBBadge>
+                      ))}
+                      {extraUnits > 0 && (
+                        <small className="text-muted" title={hiddenUnitsLabel}>
+                          +{extraUnits} more
+                        </small>
+                      )}
+                    </>
+                  ) : (
+                    <span>N/A</span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </MDBCol>
+
+        {/* Rate */}
+        <MDBCol md={!isHonorarium ? "3" : "4"}>
+          <h5>Rate</h5>
+          <hr />
           <EditableField
             label="Payment Cycle"
             fieldName="employmentPc"
@@ -270,12 +375,6 @@ export default function CollapseTable({
               <option value={3}>Quarterly</option>
             </select>
           </EditableField>
-        </MDBCol>
-
-        {/* Rate */}
-        <MDBCol md={!isHonorarium ? "3" : "4"}>
-          <h5>Rate</h5>
-          <hr />
           {[
             ...(!isHonorarium
               ? [

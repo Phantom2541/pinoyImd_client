@@ -27,29 +27,54 @@ export default function MenuCollapse({ staffs, startIndex }) {
     [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
 
-  const onSubmit = (data) => {
+  const onSubmit = (fieldName, data) => {
+    const payloadByField = {
+      employmentHor: { _id: data._id, "contract.hos": Number(data.employmentHor || 0) },
+      employmentSoe: { _id: data._id, "contract.soe": data.employmentSoe || "" },
+      employmentPc: { _id: data._id, "contract.pc": Number(data.employmentPc || 0) },
+      employmentDesignation: {
+        _id: data._id,
+        "contract.designation": Number(data.employmentDesignation || 0),
+      },
+      employmentDepartment: {
+        _id: data._id,
+        department: data.employmentDepartment || "",
+      },
+      employmentUnit: {
+        _id: data._id,
+        unit: (Array.isArray(data.employmentUnit) ? data.employmentUnit : [])
+          .filter(Boolean)
+          .map(Number),
+      },
+      hasSchedule: {
+        _id: data._id,
+        hasSchedule:
+          data.hasSchedule === true || data.hasSchedule === "true",
+      },
+      rateMonthly: { _id: data._id, "rate.monthly": Number(data.rateMonthly || 0) },
+      rateDaily: { _id: data._id, "rate.daily": Number(data.rateDaily || 0) },
+      rateCola: { _id: data._id, "rate.cola": Number(data.rateCola || 0) },
+      incentive: { _id: data._id, "rate.incentive": Number(data.incentive || 0) },
+      contributionPh: {
+        _id: data._id,
+        "contribution.ph": Number(data.contributionPh || 0),
+      },
+      contributionPi: {
+        _id: data._id,
+        "contribution.pi": Number(data.contributionPi || 0),
+      },
+      contributionSss: {
+        _id: data._id,
+        "contribution.sss": Number(data.contributionSss || 0),
+      },
+    };
+
+    const payload = payloadByField[fieldName];
+    if (!payload) return;
+
     dispatch(
       UPDATE({
-        data: {
-          _id: data._id,
-          hasSchedule: data.hasSchedule,
-          contract: {
-            hos: data.employmentHor,
-            soe: data.employmentSoe,
-            pc: data.employmentPc,
-            designation: data.employmentDesignation,
-          },
-          rate: {
-            monthly: data.rateMonthly,
-            cola: data.rateCola,
-            daily: data.rateDaily,
-          },
-          contribution: {
-            ph: data.contributionPh,
-            pi: data.contributionPi,
-            sss: data.contributionSss,
-          },
-        },
+        data: payload,
         token,
       })
     );
@@ -112,6 +137,7 @@ export default function MenuCollapse({ staffs, startIndex }) {
             user,
             contract,
             status,
+            unit,
             rate,
             hasSchedule,
             contribution,
@@ -242,10 +268,13 @@ export default function MenuCollapse({ staffs, startIndex }) {
                   <CollapseTable
                     employment={contract}
                     staff={staff}
+                    unit={unit}
                     rate={rate}
                     contribution={contribution}
                     _id={_id}
                     hasSchedule={hasSchedule}
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
                     onSubmit={onSubmit} // Updated to pass handleSubmit as onSubmit
                   />
                 </MDBCardBody>

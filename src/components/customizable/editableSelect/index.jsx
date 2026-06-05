@@ -77,7 +77,9 @@ export default function EditableSelect({
   animation = false,
   isCapitalize = true,
   displayTag = "small", //this is for editable display value tag
+  startOpen = false,
   onChange = () => {},
+  onClose = () => {},
   onSave = () => {}, //this function is use to editable mode to get the edited data
   _key = "",
 }) {
@@ -106,6 +108,21 @@ export default function EditableSelect({
     return () =>
       window.removeEventListener("close-all-editable", handleCloseAll);
   }, [instanceId]);
+
+  useEffect(() => {
+    if (!isEditable || !startOpen || !fieldData?._id || !keyForValue) return;
+
+    setEditedData((prev) => {
+      if (
+        prev?.editingKey === keyForValue &&
+        prev?._id === fieldData?._id
+      ) {
+        return prev;
+      }
+
+      return { ...fieldData, editingKey: keyForValue };
+    });
+  }, [fieldData, isEditable, keyForValue, startOpen]);
 
   const handleSelection = (array) => {
     if (multiple) {
@@ -137,12 +154,14 @@ export default function EditableSelect({
   const handleCheck = () => {
     if (String(fieldData[keyForValue]) === String(editedData?.[keyForValue])) {
       setEditedData({});
+      onClose();
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     } else {
       const { editingKey, ...rest } = editedData; // tanggalin yung keyForValue
       onSave(rest);
+      onClose();
     }
   };
 
@@ -248,7 +267,10 @@ export default function EditableSelect({
             isEditMode={isEditable && editMode}
             formSubmitted={formSubmitted}
             handleCheck={handleCheck}
-            handleClose={() => setEditedData({})}
+            handleClose={() => {
+              setEditedData({});
+              onClose();
+            }}
           />
         </div>
       ) : (

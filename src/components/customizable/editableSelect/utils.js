@@ -26,7 +26,7 @@ const utils = {
   },
   isChecked: (value, multiple = false, preValues, preValue) => {
     return multiple
-      ? preValues?.includes(value)
+      ? preValues?.map(String).includes(String(value))
       : String(preValue) === String(value);
   },
 
@@ -44,17 +44,21 @@ const utils = {
       preValue = "",
       values = "",
       keys = "",
+      keyForText = "",
+      keyForValue = "",
       getObject = false,
       multiple = false,
       preValues = [],
       collections = [],
     } = config;
+    const textKey = keyForText || values;
+    const valueKey = keyForValue || keys;
     if (multiple) {
       return preValues
         ?.map((val) =>
           getObject
-            ? collections.find((c) => String(c[keys]) === String(val))?.[
-                values
+            ? collections.find((c) => String(c[valueKey]) === String(val))?.[
+                textKey
               ] || val
             : val
         )
@@ -62,8 +66,8 @@ const utils = {
     }
 
     return getObject
-      ? collections.find((c) => String(c[keys]) === String(preValue))?.[
-          values
+      ? collections.find((c) => String(c[valueKey]) === String(preValue))?.[
+          textKey
         ] || preValue
       : preValue;
   },

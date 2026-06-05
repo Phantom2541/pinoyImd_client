@@ -1,7 +1,45 @@
 import collections from "./collections.json";
+import units from "./unit";
+
+const normalizeDepartmentKey = (value = "") =>
+  String(value || "")
+    .trim()
+    .toLowerCase();
+
+const flatUnits = Object.entries(units).flatMap(([group, entries = []]) =>
+  entries.map((entry) => ({
+    ...entry,
+    group,
+  }))
+);
+
+const unitGroupAliases = {
+  Clinical: ["clinical", "clinic"],
+  Nursing: ["nursing"],
+  Laboratory: ["laboratory"],
+  Radiology: ["radiology"],
+  Pharmacy: ["pharmacy"],
+  Rehabilitation: ["rehabilitation"],
+  Accounting: ["accounting", "finance"],
+  HumanResource: ["human resource", "human resources", "hr"],
+  Procurement: ["procurement"],
+  Dietary: ["dietary"],
+  Security: ["security", "auxillary services", "auxiliary services"],
+  Administration: ["administration", "office management", "board of directors"],
+  MedicalRecords: ["medical records", "medical records department"],
+  InformationTechnology: ["information technology", "it", "it support", "technical support"],
+  Housekeeping: ["housekeeping"],
+  Engineering: ["engineering", "maintenance"],
+  Transport: ["transport"],
+  InfectionControl: ["infection control"],
+  SocialServices: ["social services", "medical social services"],
+  SupportServices: ["support services"],
+  Education: ["education", "training"],
+};
 
 const Policy = {
   collections,
+  units: flatUnits,
   getDepartment: (pk) => {
     //get department using designation
     if (pk < 0) {
@@ -121,6 +159,26 @@ const Policy = {
     );
 
     return [...uncategorizedItems, ...departmentsInCategory];
+  },
+  getUnitsByDepartmentName: (department = "") => {
+    const normalizedDepartment = normalizeDepartmentKey(department);
+    const matchedType = Object.entries(unitGroupAliases).find(([, aliases]) =>
+      aliases.includes(normalizedDepartment)
+    )?.[0] || Object.keys(units).find(
+      (group) => normalizeDepartmentKey(group) === normalizedDepartment
+    );
+
+    if (!matchedType) return [];
+
+    return units[matchedType] || [];
+  },
+  getUnitName: (value) => {
+    const selectedUnits = Array.isArray(value) ? value : [value];
+    const names = selectedUnits
+      .map((id) => flatUnits.find((unit) => unit.id === Number(id))?.name)
+      .filter(Boolean);
+
+    return names.join(", ");
   },
 };
 export default Policy;
