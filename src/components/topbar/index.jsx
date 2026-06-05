@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -14,17 +14,29 @@ import { capitalize, employment } from "../../services/utilities";
 import DTR from "./dtr";
 
 export default function TopNavigation({ toggle, onSideNavToggleClick }) {
-  const { activePlatform, auth } = useSelector((state) => state.auth);
+  const { auth = {}, branches = [] } = useSelector((state) => state.auth);
+  const currentAffiliation = useMemo(() => {
+    const matchedAffiliation = branches.find(
+      ({ affiliationId, _id }) =>
+        String(affiliationId || _id) === String(auth?.activeAffiliation || ""),
+    );
+
+    return matchedAffiliation || (branches.length === 1 ? branches[0] : {});
+  }, [branches, auth?.activeAffiliation]);
+  const activePlatforms = Array.isArray(currentAffiliation?.platforms)
+    ? currentAffiliation.platforms
+    : [];
+  const selectedPlatform = currentAffiliation?.activePlatform || "";
   const aka = auth?.alias || auth?.fullName?.fname;
   const employmentStatus =
-    activePlatform?.branch?.contract?.soe || activePlatform?.branch?.status;
+    currentAffiliation?.contract?.soe || currentAffiliation?.status;
 
   const navStyle = {
     paddingLeft: toggle ? "16px" : "240px",
     transition: "padding-left .3s",
   };
   const isEmployed = employment.isEmployed(
-    activePlatform?.isPhysician ? "active" : employmentStatus
+    auth?.isPhysician ? "active" : employmentStatus,
   );
   return (
     <MDBNavbar
@@ -57,8 +69,8 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
               boxShadow: "0px 0px 0px 0px",
             }}
           >
-            {activePlatform?.platforms?.length > 0 && isEmployed
-              ? `${capitalize(activePlatform?.department)} :)`
+            {activePlatforms.length > 0 && isEmployed
+              ? `${capitalize(currentAffiliation?.department || "")} :)`
               : `Welcome to Pinoy iMD :) `}
             {capitalize(aka)}
           </MDBBadge>
@@ -71,10 +83,18 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
             gap: "5px",
           }}
         >
-          {activePlatform?.platforms?.length > 0 && isEmployed && <DTR />}
+          {activePlatforms.length > 0 && isEmployed && (
+            <DTR
+              currentAffiliation={currentAffiliation}
+              selectedPlatform={selectedPlatform}
+            />
+          )}
           <Branches />
           <Platforms />
-          <Profile />
+          <Profile
+            currentAffiliation={currentAffiliation}
+            selectedPlatform={selectedPlatform}
+          />
         </MDBNavbarNav>
       </div>
     </MDBNavbar>

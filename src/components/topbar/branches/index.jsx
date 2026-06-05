@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBIcon,
@@ -15,17 +15,35 @@ export default function Branches() {
     dispatch = useDispatch();
 
   const activeAffiliation = auth?.activeAffiliation || "";
-  const currentAffiliation = useMemo(
-    () =>
-      branches.find(({ _id }) => String(_id) === String(activeAffiliation)) ||
-      {},
-    [branches, activeAffiliation],
-  );
+  const currentAffiliation = useMemo(() => {
+    const matchedAffiliation = branches.find(
+      ({ affiliationId, _id }) =>
+        String(affiliationId || _id) === String(activeAffiliation),
+    );
+
+    return matchedAffiliation || (branches.length === 1 ? branches[0] : {});
+  }, [branches, activeAffiliation]);
+
+  useEffect(() => {
+    if (activeAffiliation || branches.length !== 1 || !auth?._id) return;
+
+    const onlyAffiliationId = branches[0]?.affiliationId || branches[0]?._id;
+    if (!onlyAffiliationId) return;
+
+    dispatch(
+      SETACTIVEAFFILIATION({
+        data: {
+          _id: auth._id,
+          activeAffiliation: onlyAffiliationId,
+        },
+        token,
+      }),
+    );
+  }, [activeAffiliation, auth, branches, dispatch, token]);
 
   const handleActiveBranch = (affiliationId) => {
     const data = {
       _id: auth._id,
-      email: auth.email,
       activeAffiliation: affiliationId,
     };
 
@@ -48,15 +66,23 @@ export default function Branches() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {branches.map(({ name, _id, displayname, branch }, index) => {
+        {branches.map(({ name, _id, affiliationId, displayname, branch }, index) => {
           const itemName =
             branch?.name || branch?.displayname || name || displayname || "";
+          const itemAffiliationId = affiliationId || _id;
 
           return (
             <MDBDropdownItem
-              active={String(_id) === String(activeAffiliation)}
+              active={
+                String(itemAffiliationId) ===
+                String(
+                  activeAffiliation ||
+                    currentAffiliation?.affiliationId ||
+                    currentAffiliation?._id,
+                )
+              }
               key={`branch-${index}`}
-              onClick={() => handleActiveBranch(_id)}
+              onClick={() => handleActiveBranch(itemAffiliationId)}
             >
               {capitalize(itemName)}
             </MDBDropdownItem>

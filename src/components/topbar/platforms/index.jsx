@@ -17,24 +17,21 @@ const getPlatformLabel = (value = "") =>
   capitalize(Access.getPlatformLabel(value).replace(/_/g, " "));
 
 export default function Platforms() {
-  const {
-      auth,
-      activePlatform,
-      branches = [],
-      token,
-    } = useSelector(({ auth }) => auth),
+  const { auth, branches = [], token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     history = useHistory();
 
   const affiliationId = auth?.activeAffiliation || "";
-  const currentAffiliation = useMemo(
-    () =>
-      branches.find(
-        ({ affiliationId: currentAffiliationId, _id }) =>
-          String(currentAffiliationId || _id) === String(affiliationId),
-      ) || {},
-    [branches, affiliationId],
-  );
+  const currentAffiliation = useMemo(() => {
+    const matchedAffiliation = branches.find(
+      ({ affiliationId: currentAffiliationId, _id }) =>
+        String(currentAffiliationId || _id) === String(affiliationId),
+    );
+
+    return matchedAffiliation || (branches.length === 1 ? branches[0] : {});
+  }, [branches, affiliationId]);
+  const currentAffiliationId =
+    currentAffiliation?.affiliationId || currentAffiliation?._id || "";
 
   const [access, setAccess] = useState([]);
   const selectedPlatform = normalizePlatform(
@@ -54,22 +51,20 @@ export default function Platforms() {
   }, [currentAffiliation]);
 
   useEffect(() => {
-    if (!affiliationId || access.length !== 1) return;
+    if (!currentAffiliationId || access.length !== 1) return;
 
     if (selectedPlatform === access[0]) return;
 
     dispatch(
       SETAFFILIATIONPLATFORM({
         data: {
-          _id: auth._id,
-          email: auth.email,
-          activeAffiliation: affiliationId,
+          _id: currentAffiliationId,
           activePlatform: access[0],
         },
         token,
       }),
     );
-  }, [access, affiliationId, auth, dispatch, selectedPlatform, token]);
+  }, [access, currentAffiliationId, dispatch, selectedPlatform, token]);
 
   const handlePlatform = useCallback(
     (platform) => {
@@ -78,9 +73,7 @@ export default function Platforms() {
       dispatch(
         SETAFFILIATIONPLATFORM({
           data: {
-            _id: auth._id,
-            email: auth.email,
-            activeAffiliation: affiliationId,
+            _id: currentAffiliationId,
             activePlatform: cleanedPlatform || "patron",
           },
           token,
@@ -95,12 +88,9 @@ export default function Platforms() {
       history.push(redirectURL);
     },
     [
-      affiliationId,
-      auth,
-      currentAffiliation,
+      currentAffiliationId,
       dispatch,
       history,
-      selectedPlatform,
       token,
     ],
   );

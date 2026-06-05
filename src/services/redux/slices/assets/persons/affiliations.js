@@ -5,7 +5,7 @@ export const SETAFFILIATIONPLATFORM = createAsyncThunk(
   "affiliations/setActivePlatform",
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update("assets/persons/users", data, token);
+      return axioKit.update("assets/persons/affiliations", data, token);
     } catch (error) {
       const message =
         (error.response &&
