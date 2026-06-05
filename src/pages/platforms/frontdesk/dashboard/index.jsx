@@ -16,7 +16,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { Services } from "../../../../services/fakeDb";
-import { SERVICE_CENSUS } from "../../../../services/redux/slices/commerce/pos/services/deals";
+import { SERVICE_CENSUS } from "../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 const MONTH_LABELS = [
   "January",
@@ -86,8 +86,8 @@ export default function Dashboard() {
       current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
       previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
     },
-    censusLoading,
-  } = useSelector(({ deals }) => deals);
+    isLoading: censusLoading,
+  } = useSelector(({ remittances }) => remittances);
 
   const currentAffiliation = useMemo(() => {
     const matchedAffiliation = branches.find(
@@ -176,19 +176,19 @@ export default function Dashboard() {
         key: "insources",
         color: "warning",
         icon: "clinic-medical",
-        label: "Insources",
+        label: "Referrals",
       },
       {
         key: "outsources",
         color: "info",
         icon: "share-alt",
-        label: "Outsources",
+        label: "Outsourced",
       },
       {
         key: "purchases",
         color: "danger",
-        icon: "shopping-cart",
-        label: "Purchases",
+        icon: "users",
+        label: "Patients",
       },
     ],
     [],
@@ -206,7 +206,7 @@ export default function Dashboard() {
               <MDBCol key={key} xl="3" md="6" className="mb-4 mb-r">
                 <MDBCard>
                   <MDBRow className="mt-3">
-                    <MDBCol md="5" size="5" className="text-left pl-4">
+                    <MDBCol md="3" size="3" className="text-left pl-4">
                       <MDBBtn
                         tag="a"
                         floating
@@ -218,7 +218,7 @@ export default function Dashboard() {
                         <MDBIcon icon={icon} size="2x" />
                       </MDBBtn>
                     </MDBCol>
-                    <MDBCol md="7" col="7" className="text-right pr-5">
+                    <MDBCol md="9" col="9" className="text-right pr-5">
                       <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
                         {censusLoading ? "..." : currentValue.toLocaleString()}
                       </h5>
@@ -401,13 +401,15 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {rankedServices.length > 0 ? (
-                      rankedServices.map(({ rank, serviceName, count, serviceId }) => (
-                        <tr key={`${serviceId}-${rank}`}>
-                          <td>{rank}</td>
-                          <td>{serviceName || "Unnamed service"}</td>
-                          <td>{count.toLocaleString()}</td>
-                        </tr>
-                      ))
+                      rankedServices.map(
+                        ({ rank, serviceName, count, serviceId }) => (
+                          <tr key={`${serviceId}-${rank}`}>
+                            <td>{rank}</td>
+                            <td>{serviceName || "Unnamed service"}</td>
+                            <td>{count.toLocaleString()}</td>
+                          </tr>
+                        ),
+                      )
                     ) : (
                       <tr>
                         <td colSpan="3" className="text-center grey-text">

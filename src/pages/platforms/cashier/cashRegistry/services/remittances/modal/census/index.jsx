@@ -51,12 +51,17 @@ export default function Index() {
               .reduce((acc, item) => acc + item.amount, 0)
           );
 
-          deals.forEach(({ cart, amount, payment, refNo }) => {
+          deals.forEach(({ cart, amount, payment, refNo, category }) => {
             const {
               careOf = {},
               amount: debtAmount,
               pp = "cash",
             } = refNo || {};
+            const censusCategory =
+              category === "walkin" || category === "opd"
+                ? "walkin"
+                : "referral";
+
             if (payment && amount) {
               const isMixed = payment === "mixed";
               const isVoucher = payment === "voucher";
@@ -98,8 +103,16 @@ export default function Index() {
               }
 
               packages.forEach((serviceId) => {
-                serviceCountMap[serviceId] =
-                  (serviceCountMap[serviceId] || 0) + 1;
+                if (!serviceCountMap[serviceId]) {
+                  serviceCountMap[serviceId] = {
+                    walkin: 0,
+                    referral: 0,
+                    sum: 0,
+                  };
+                }
+
+                serviceCountMap[serviceId][censusCategory] += 1;
+                serviceCountMap[serviceId].sum += 1;
               });
             });
           });

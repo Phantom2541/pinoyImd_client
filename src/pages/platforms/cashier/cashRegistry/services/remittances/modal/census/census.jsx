@@ -14,6 +14,15 @@ const Census = ({ census }) => {
     { collections } = useSelector(({ menus }) => menus),
     tabStyle = (tab) =>
       `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
+
+  const getServiceCount = (value) => {
+    if (value && typeof value === "object") {
+      return Number(value.sum ?? 0) || Number(value.walkin || 0) + Number(value.referral || 0);
+    }
+
+    return Number(value || 0);
+  };
+
   return (
     <MDBModalBody className="mb-0">
       <div className="mb-3 d-flex">
@@ -73,7 +82,7 @@ const Census = ({ census }) => {
                 <tr key={id}>
                   <td>{idx + 1}</td>
                   <td>{name}</td>
-                  <td>{count}</td>
+                  <td>{getServiceCount(count)}</td>
                 </tr>
               );
             })}

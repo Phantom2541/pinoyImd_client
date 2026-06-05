@@ -9,6 +9,11 @@ const initialState = {
   lastBrowseKey: null,
   selected: {},
   deals: [],
+  serviceCensus: [],
+  serviceCensusSummary: {
+    current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+    previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+  },
   day: 1,
   month: today.getMonth() + 1,
   year: today.getFullYear(),
@@ -39,7 +44,7 @@ export const BROWSE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const SAVE = createAsyncThunk(
@@ -57,7 +62,7 @@ export const SAVE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPDATE = createAsyncThunk(
@@ -75,7 +80,7 @@ export const UPDATE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const CENSUS = createAsyncThunk(
   `${url}/census`,
@@ -92,7 +97,7 @@ export const CENSUS = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const AUTOSELECT = createAsyncThunk(
   `${url}/autoSelect`,
@@ -109,7 +114,25 @@ export const AUTOSELECT = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
+);
+
+export const SERVICE_CENSUS = createAsyncThunk(
+  `${url}/service_census`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/service_census`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
 );
 
 export const reduxSlice = createSlice({
@@ -135,7 +158,7 @@ export const reduxSlice = createSlice({
     },
     SetLEDGER: (state, { payload }) => {
       const index = state.collections.findIndex(
-        ({ _id }) => _id === payload._id
+        ({ _id }) => _id === payload._id,
       );
       const oldRemittance = { ...state.collections[index] };
       state.collections[index] = { ...oldRemittance, ...payload };
@@ -261,6 +284,34 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
+      .addCase(SERVICE_CENSUS.pending, (state) => {
+        state.serviceCensus = [];
+        state.serviceCensusSummary = {
+          current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+          previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+        };
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SERVICE_CENSUS.fulfilled, (state, action) => {
+        const { services = [], summary } = action.payload?.payload || {};
+
+        console.log(action.payload);
+
+        state.serviceCensus = services;
+        state.serviceCensusSummary = summary || {
+          current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+          previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+        };
+        state.isLoading = false;
+      })
+      .addCase(SERVICE_CENSUS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
       .addCase(CENSUS.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
@@ -269,7 +320,7 @@ export const reduxSlice = createSlice({
       .addCase(CENSUS.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          ({ _id }) => _id === payload._id
+          ({ _id }) => _id === payload._id,
         );
         state.collections[index] = {
           ...state.collections[index],
@@ -293,7 +344,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { payload } = action.payload;
         const index = state.collections.findIndex(
-          (item) => item?._id === payload._id
+          (item) => item?._id === payload._id,
         );
         state.collections[index] = { ...payload, ...state.collections[index] };
         state.message = "Remittance Successfully Updated";
