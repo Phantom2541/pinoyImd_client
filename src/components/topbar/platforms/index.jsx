@@ -17,24 +17,22 @@ const getPlatformLabel = (value = "") =>
   capitalize(Access.getPlatformLabel(value).replace(/_/g, " "));
 
 export default function Platforms() {
-  const { activePlatform, auth, branches = [], token } = useSelector(
-      ({ auth }) => auth,
-    ),
+  const { auth, branches = [], token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     history = useHistory();
 
   const affiliationId = auth?.activeAffiliation || "";
   const currentAffiliation = useMemo(
     () =>
-      branches.find(
-        ({ affiliationId: currentAffiliationId, _id }) =>
-          String(currentAffiliationId || _id) === String(affiliationId),
-      ) || {},
+      branches.find(({ _id }) => String(_id) === String(affiliationId)) || {},
     [branches, affiliationId],
   );
 
   const [access, setAccess] = useState([]);
-  const isDraft = activePlatform?.branch?.settings?.status === "Draft";
+  const selectedPlatform = normalizePlatform(
+    currentAffiliation?.activePlatform || "",
+  );
+  const isDraft = currentAffiliation?.branch?.settings?.status === "Draft";
 
   useEffect(() => {
     const platforms = (currentAffiliation?.platforms || [])
@@ -49,26 +47,18 @@ export default function Platforms() {
   useEffect(() => {
     if (!affiliationId || access.length !== 1) return;
 
-    const selectedPlatform = String(
-      currentAffiliation?.activePlatform || activePlatform?.platform || "",
-    )
-      .trim()
-      .toLowerCase();
-
     if (selectedPlatform === access[0]) return;
 
     dispatch(
       SETAFFILIATIONPLATFORM({
         data: {
           _id: auth._id,
-          email: auth.email,
-          activeAffiliation: affiliationId,
           activePlatform: access[0],
         },
         token,
       }),
     );
-  }, [access, activePlatform, affiliationId, auth, currentAffiliation, dispatch, token]);
+  }, [access, affiliationId, auth, dispatch, selectedPlatform, token]);
 
   const handlePlatform = useCallback(
     (platform) => {
@@ -78,8 +68,6 @@ export default function Platforms() {
         SETAFFILIATIONPLATFORM({
           data: {
             _id: auth._id,
-            email: auth.email,
-            activeAffiliation: affiliationId,
             activePlatform: cleanedPlatform || "patron",
           },
           token,
@@ -99,8 +87,7 @@ export default function Platforms() {
   if (access.length <= 1) return null;
 
   const allowedPlatformsInDraft = ["manager", "headquarter", "superadmin"];
-  const visiblePlatform =
-    currentAffiliation?.activePlatform || activePlatform?.platform || access[0] || "patron";
+  const visiblePlatform = selectedPlatform || access[0] || "patron";
 
   return (
     <MDBDropdown className="sample">
