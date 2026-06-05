@@ -1,10 +1,10 @@
 //import { HotlinesPoster } from "../../../../pages/platforms/cashier";
 
-const admissions = [
+const wards = [
   {
     name: "Dashboard",
     icon: "chart-pie",
-    path: "/admissions/dashboard",
+    path: "/wards/dashboard",
   },
   {
     name: "Patient Management",
@@ -13,22 +13,22 @@ const admissions = [
       {
         name: "Patient Admission",
         icon: "bed-pulse",
-        path: "/admissions/new",
+        path: "/wards/new",
       },
       {
         name: "Admitted Patients",
         icon: "hospital-user",
-        path: "/admissions/current",
+        path: "/wards/current",
       },
       {
         name: "Discharges",
         icon: "user-check",
-        path: "/admissions/discharges",
+        path: "/wards/discharges",
       },
       {
         name: "Transfers",
         icon: "person-walking-luggage",
-        path: "/admissions/transfers",
+        path: "/wards/transfers",
       },
     ],
   },
@@ -38,17 +38,17 @@ const admissions = [
     children: [
       {
         name: "Daily Census",
-        path: "/admissions/reports/daily-census",
+        path: "/wards/reports/daily-census",
         icon: "calendar-day",
       },
       {
         name: "Monthly Census",
-        path: "/admissions/reports/monthly-census",
+        path: "/wards/reports/monthly-census",
         icon: "calendar-alt",
       },
       {
         name: "Admission History",
-        path: "/admissions/reports/history",
+        path: "/wards/reports/history",
         icon: "book-medical",
       },
     ],
@@ -59,16 +59,16 @@ const admissions = [
     children: [
       {
         name: "Ward / Room Setup",
-        path: "/admissions/settings/rooms",
+        path: "/wards/settings/rooms",
         icon: "bed",
       },
       {
         name: "Admission Types",
-        path: "/admissions/settings/types",
+        path: "/wards/settings/types",
         icon: "list",
       },
     ],
   },
 ];
 
-export default admissions;
+export default wards;

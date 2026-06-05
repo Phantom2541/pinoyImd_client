@@ -6,6 +6,7 @@ import { MDBBtn, MDBIcon, MDBTable } from "mdbreact";
 // } from "../../../../../services/redux/slices/market/machines";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ENDPOINT } from "../../../../../services/utilities";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(
@@ -26,7 +27,7 @@ const Body = () => {
 
     try {
       const response = await axios.get(
-        "http://localhost:5000/Procurements/commodity/download_middleware",
+        `${ENDPOINT}/Procurements/commodity/download_middleware`,
         {
           responseType: "blob",
           onDownloadProgress: (progressEvent) => {

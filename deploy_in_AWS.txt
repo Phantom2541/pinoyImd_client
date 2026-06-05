@@ -1,0 +1,196 @@
+# Pinoy iMD Production Deployment Guide
+
+## AWS Server Information
+
+### Active Production Server
+
+```bash
+Host: ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com
+IP: 16.176.49.31
+```
+
+> Note: The old server address `ec2-3-26-91-185.ap-southeast-2.compute.amazonaws.com` is no longer used.
+
+---
+
+# First-Time Setup
+
+## 1. Obtain the AWS Key
+
+Request the file:
+
+```text
+technowiz.pem
+```
+
+from:
+
+* Tom Pajarillaga
+* Ric Darrel A. Pajarillaga
+
+---
+
+## 2. Create SSH Folder
+
+Open PowerShell:
+
+```powershell
+mkdir C:\Users\admin\.ssh
+```
+
+---
+
+## 3. Copy the Key
+
+Place the file:
+
+```text
+technowiz.pem
+```
+
+inside:
+
+```text
+C:\Users\admin\.ssh\
+```
+
+Example:
+
+```text
+C:\Users\admin\.ssh\technowiz.pem
+```
+
+---
+
+## 4. Connect to AWS
+
+```powershell
+ssh -i "C:\Users\admin\.ssh\technowiz.pem" ubuntu@ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com
+```
+
+---
+
+# Backend Deployment (Node.js API)
+
+Connect to AWS:
+
+```powershell
+ssh -i "C:\Users\admin\.ssh\technowiz.pem" ubuntu@ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com
+```
+
+Run:
+
+```bash
+deploy-pinoyiMD
+```
+
+Or manually:
+
+```bash
+cd ~/PinoyiMD-server
+
+git pull origin main
+
+npm install
+
+sudo systemctl restart pinoyimd.service
+```
+
+Verify:
+
+```bash
+systemctl status pinoyimd.service --no-pager
+```
+
+---
+
+# Frontend Deployment (React Client)
+
+## Step 1: Build Locally
+
+Inside:
+
+```text
+pinoyIMD/client
+```
+
+Run:
+
+```powershell
+npm run build
+```
+
+Wait until:
+
+```text
+The build folder is ready to be deployed.
+```
+
+---
+
+## Step 2: Upload Build Files
+
+```powershell
+scp -i "C:\Users\admin\.ssh\technowiz.pem" -r build\* ubuntu@ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com:/home/ubuntu/PinoyiMD-server/view/
+```
+
+---
+
+## Step 3: Restart Service
+
+SSH to AWS:
+
+```powershell
+ssh -i "C:\Users\admin\.ssh\technowiz.pem" ubuntu@ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com
+```
+
+Run:
+
+```bash
+sudo systemctl restart pinoyimd.service
+```
+
+---
+
+# Production URLs
+
+Frontend:
+
+```text
+https://pinoy-imd.technowiz.work
+```
+
+Backend Server:
+
+```text
+16.176.49.31
+```
+
+Frontend Build Location:
+
+```bash
+/home/ubuntu/PinoyiMD-server/view
+```
+
+Backend Source Location:
+
+```bash
+/home/ubuntu/PinoyiMD-server
+```
+
+---
+
+# Backup Locations
+
+Previous Backend Backup:
+
+```bash
+/home/ubuntu/PinoyiMD-server-old
+```
+
+Frontend Backup:
+
+```bash
+/home/ubuntu/PinoyiMD-server/view-backup
+```
+
