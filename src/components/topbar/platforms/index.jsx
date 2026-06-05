@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -66,34 +66,24 @@ export default function Platforms() {
     );
   }, [access, currentAffiliationId, dispatch, selectedPlatform, token]);
 
-  const handlePlatform = useCallback(
-    (platform) => {
-      const cleanedPlatform = normalizePlatform(platform);
+  const handlePlatform = (platform) => {
+    const cleanedPlatform = normalizePlatform(platform);
 
-      dispatch(
-        SETAFFILIATIONPLATFORM({
-          data: {
-            _id: currentAffiliationId,
-            activePlatform: cleanedPlatform || "patron",
-          },
-          token,
-        }),
-      );
+    dispatch(
+      SETAFFILIATIONPLATFORM({
+        data: {
+          _id: currentAffiliationId,
+          activePlatform: cleanedPlatform || "patron",
+        },
+        token,
+      }),
+    );
 
-      const routePlatform = cleanedPlatform;
-      const isManager = routePlatform === "manager";
-      const redirectURL = `/${routePlatform}/${
-        isManager ? "dashboard" : "bulletin"
-      }`;
-      history.push(redirectURL);
-    },
-    [
-      currentAffiliationId,
-      dispatch,
-      history,
-      token,
-    ],
-  );
+    const routePlatform = cleanedPlatform;
+    const isManager = routePlatform === "manager";
+    const redirectURL = `/${routePlatform}/${isManager ? "dashboard" : "bulletin"}`;
+    history.push(redirectURL);
+  };
 
   if (access.length <= 1) return null;
 

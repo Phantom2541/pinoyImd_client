@@ -44,6 +44,11 @@ const initialState = {
   isLoading: false,
   dealsLoading: false, //this is for cashier deals loading
   censusLoading: false, // dedicated loader for celsus
+  serviceCensus: [],
+  serviceCensusSummary: {
+    current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+    previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+  },
   message: "",
   vendor: {},
   onPrint: false,
@@ -193,6 +198,24 @@ export const YEARLY = createAsyncThunk(
         branchId,
         year,
       });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const SERVICE_CENSUS = createAsyncThunk(
+  `${url}/service_census`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/service_census`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -1213,6 +1236,31 @@ export const reduxSlice = createSlice({
         state.censusLoading = false;
       })
       .addCase(CENSUS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.censusLoading = false;
+      })
+      .addCase(SERVICE_CENSUS.pending, (state) => {
+        state.serviceCensus = [];
+        state.serviceCensusSummary = {
+          current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+          previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+        };
+        state.censusLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SERVICE_CENSUS.fulfilled, (state, action) => {
+        const { services = [], summary } = action.payload?.payload || {};
+
+        state.serviceCensus = services;
+        state.serviceCensusSummary = summary || {
+          current: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+          previous: { opdWi: 0, insources: 0, outsources: 0, purchases: 0 },
+        };
+        state.censusLoading = false;
+      })
+      .addCase(SERVICE_CENSUS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.censusLoading = false;
