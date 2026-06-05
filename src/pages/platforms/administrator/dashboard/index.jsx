@@ -512,7 +512,7 @@ export default function Dashboard() {
                 </MDBCol>
                 <MDBCol md="9" col="9" className="text-right pr-5">
                   <p className="font-small grey-text mb-1">Facebook Users</p>
-                  <h5 className="ml-4 mb-2 font-weight-bold">4,567 </h5>
+                  <h5 className="ml-4 mb-2 font-weight-bold">43,567 </h5>
                 </MDBCol>
               </MDBRow>
             </MDBCard>

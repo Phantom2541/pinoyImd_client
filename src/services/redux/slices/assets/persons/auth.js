@@ -75,6 +75,12 @@ const normalizePlatforms = (platforms = []) =>
 const uniquePlatforms = (platforms = []) =>
   Array.from(new Set(platforms.filter(Boolean)));
 
+const findCurrentAffiliation = (branches = [], activeAffiliation = "") =>
+  branches.find(
+    ({ affiliationId, _id }) =>
+      String(affiliationId || _id) === String(activeAffiliation || "")
+  ) || null;
+
 export const SETACTIVEAFFILIATION = createAsyncThunk(
   `${url}/setActiveAffiliation`,
   ({ data, token }, thunkAPI) => {
@@ -231,27 +237,21 @@ export const DESTROY_IMG = createAsyncThunk(
 //set active platform
 const setAP = (state, payload) => {
   const {
-    access = [],
     branches = [],
     isPhysician = false,
     activeAffiliation,
-    activePlatform: oldAP = {},
   } = payload;
-  const affiliationId = activeAffiliation || oldAP?.affiliationId || "";
+  const affiliationId = activeAffiliation || state.auth?.activeAffiliation || "";
   if (!affiliationId) return "";
-  const branch = branches?.find(
-    ({ affiliationId: currentAffiliationId, _id }) =>
-      (currentAffiliationId || _id) === affiliationId
-  );
-  if (!branch) return "";
+  const branch = findCurrentAffiliation(branches, affiliationId);
+  if (!branch) {
+    state.activePlatform = {};
+    localStorage.removeItem("activePlatform");
+    return "";
+  }
 
   const branchPlatforms = normalizePlatforms(branch?.platforms);
-  const fallbackPlatforms = normalizePlatforms(oldAP?.access || access);
-  const _access = (
-    branchPlatforms.length
-      ? branchPlatforms
-      : fallbackPlatforms
-  ).filter((platform) => platform !== "physician");
+  const _access = branchPlatforms.filter((platform) => platform !== "physician");
   const { contract = { designation: -1 }, status, clinic } = branch || {};
   const normalizedContractStatus = String(contract?.soe || "")
     .trim()
@@ -273,9 +273,7 @@ const setAP = (state, payload) => {
     ..._access,
     ...(isPhysician ? ["physician"] : []),
   ]);
-  const currentPlatform = String(
-    oldAP?.platform || branch?.activePlatform || ""
-  )
+  const currentPlatform = String(branch?.activePlatform || "")
     .trim()
     .toLowerCase();
   const selectedPlatform = availablePlatforms.includes(currentPlatform)
@@ -284,7 +282,6 @@ const setAP = (state, payload) => {
     ? availablePlatforms[0]
     : availablePlatforms[0] || "patron";
   const activePlatform = {
-    ...oldAP,
     affiliationId,
     branchId: branch?.branch || branch?.branchId || branch?._id,
     branch,
@@ -318,9 +315,7 @@ const initializeInformation = (state, payload) => {
   setAP(state, {
     isPhysician,
     branches,
-    access,
     activeAffiliation: auth.activeAffiliation,
-    activePlatform: state.activePlatform,
   });
   state.isPatient = isPatient;
   state.isCeo = isCeo;
@@ -455,15 +450,8 @@ export const reduxSlice = createSlice({
 
         setAP(state, {
           branches: updatedBranches,
-          access: convert(state.access),
           isPhysician: state.activePlatform.isPhysician,
           activeAffiliation: payload.activeAffiliation,
-          activePlatform: {
-            ...state.activePlatform,
-            ...(payload?.currentAffiliation?.activePlatform && {
-              platform: payload.currentAffiliation.activePlatform,
-            }),
-          },
         });
 
         state.showModal = false;
@@ -485,36 +473,22 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         const convert = (data) => JSON.parse(JSON.stringify(data));
         const updatedBranches = convert(state.branches).map((branch) => {
-          if (
-            (branch.affiliationId || branch._id) ===
-            payload?.currentAffiliation?._id
-          ) {
+          if ((branch.affiliationId || branch._id) === payload?._id) {
             return {
               ...branch,
-              activePlatform: payload.currentAffiliation.activePlatform,
+              ...payload,
             };
           }
 
           return branch;
         });
 
-        state.auth = {
-          ...state.auth,
-          ...payload,
-        };
         state.branches = updatedBranches;
 
         setAP(state, {
           branches: updatedBranches,
-          access: convert(state.access),
           isPhysician: state.activePlatform.isPhysician,
-          activeAffiliation: payload.activeAffiliation,
-          activePlatform: {
-            ...state.activePlatform,
-            ...(payload?.currentAffiliation?.activePlatform && {
-              platform: payload.currentAffiliation.activePlatform,
-            }),
-          },
+          activeAffiliation: state.auth?.activeAffiliation,
         });
 
         state.showModal = false;
@@ -581,10 +555,8 @@ export const reduxSlice = createSlice({
         state.email = payload.email;
         setAP(state, {
           branches: JSON.parse(JSON.stringify(state.branches)),
-          access: JSON.parse(JSON.stringify(state.access)),
           isPhysician: state.activePlatform.isPhysician,
           activeAffiliation: payload.activeAffiliation,
-          activePlatform: state.activePlatform,
         });
         state.isLoading = false;
         state.isSuccess = true;

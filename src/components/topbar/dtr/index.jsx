@@ -11,8 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { UPDATE } from "../../../services/redux/slices/market/attendances";
 
-export default function DTR() {
-  const { activePlatform, auth } = useSelector(({ auth }) => auth);
+export default function DTR({
+  currentAffiliation = {},
+  selectedPlatform = "",
+}) {
+  const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
   const [dateIn, setDateIn] = useState(null);
   const [dateOut, setDateOut] = useState(null);
   const [ipIn, setIPIn] = useState("");
@@ -20,6 +23,13 @@ export default function DTR() {
   const [clockedIn, setClockedIn] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
+  const branchId =
+    currentAffiliation?.branch?._id ||
+    currentAffiliation?.branchId ||
+    currentAffiliation?.branch ||
+    activePlatform?.branchId;
+  const routePlatform =
+    selectedPlatform || currentAffiliation?.activePlatform || activePlatform?.platform || "";
 
   // Load stored DTR info
   useEffect(() => {
@@ -61,7 +71,7 @@ export default function DTR() {
       const currentIP = res.data.ip;
 
       const attendanceData = {
-        branchId: activePlatform?.branchId,
+        branchId,
         userId: auth?._id,
         publicIP: currentIP,
       };
@@ -99,15 +109,15 @@ export default function DTR() {
       dispatch(
         UPDATE({
           data: attendanceData,
-          token: activePlatform.token,
+          token,
         })
       );
     } catch (err) {
       console.error("❌ Failed to fetch IP address:", err);
 
       const fallbackData = {
-        branchId: activePlatform?.branchId,
-        userId: activePlatform?.userId,
+        branchId,
+        userId: auth?._id,
         publicIP: "Unavailable",
       };
 
@@ -124,7 +134,7 @@ export default function DTR() {
       dispatch(
         UPDATE({
           data: fallbackData,
-          token: activePlatform.token,
+          token,
         })
       );
     }
@@ -170,7 +180,7 @@ export default function DTR() {
         </MDBDropdownItem>
         <MDBDropdownItem
           onClick={() => {
-            const target = `${activePlatform?.platform?.toLowerCase()}/shifts`;
+            const target = `${String(routePlatform).toLowerCase()}/shifts`;
             if (history.location.pathname !== `/${target}`) {
               history.push(`/${target}`);
             }
@@ -180,7 +190,7 @@ export default function DTR() {
         </MDBDropdownItem>
         <MDBDropdownItem
           onClick={() => {
-            const target = `${activePlatform?.platform?.toLowerCase()}/shifts`;
+            const target = `${String(routePlatform).toLowerCase()}/shifts`;
             if (history.location.pathname !== `/${target}`) {
               history.push(`/${target}`);
             }

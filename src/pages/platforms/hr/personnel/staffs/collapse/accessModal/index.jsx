@@ -34,7 +34,7 @@ const EMPTY_OBJECT = {};
  */
 
 export default function AccessModal({ show, toggle, selected }) {
-  const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
     { formSubmitted } = useSelector(({ personnels }) => personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
@@ -54,7 +54,7 @@ export default function AccessModal({ show, toggle, selected }) {
       platforms
         .map((id) => Access.collections.find((item) => item.id === Number(id)))
         .filter(Boolean),
-    [platforms]
+    [platforms],
   );
 
   const handleSetRoles = useCallback((_roles) => {
@@ -68,11 +68,11 @@ export default function AccessModal({ show, toggle, selected }) {
         (c) =>
           _existingAccess?.every(
             (existAcc) =>
-              existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
-          )
+              existAcc.platform.toUpperCase() !== c.platform.toUpperCase(),
+          ),
       );
     },
-    [activePlatform?.branch?.category]
+    [activePlatform?.branch?.category],
   );
 
   useEffect(() => {
@@ -86,7 +86,9 @@ export default function AccessModal({ show, toggle, selected }) {
 
   const handleSubmit = () => {
     const currentIds = existingAccess.map(({ id, _id }) => Number(id || _id));
-    const originalIds = selectedPlatforms.map(({ id, _id }) => Number(id || _id));
+    const originalIds = selectedPlatforms.map(({ id, _id }) =>
+      Number(id || _id),
+    );
     const added = existingAccess
       .filter(({ id, _id }) => !originalIds.includes(Number(id || _id)))
       .map(({ id, _id, platform, name }) => ({
@@ -111,7 +113,7 @@ export default function AccessModal({ show, toggle, selected }) {
       UPDATE_ACCESS({
         data: { accessChanges: { added, deleted }, staffID: selected._id },
         token,
-      })
+      }),
     ).then(() => toggle());
   };
 
@@ -124,7 +126,7 @@ export default function AccessModal({ show, toggle, selected }) {
 
     const getIndex = (array) =>
       array.findIndex(
-        ({ _id = "", id = "" }) => String(id || _id) === String(roleID)
+        ({ _id = "", id = "" }) => String(id || _id) === String(roleID),
       );
     const index = getIndex(isDelete ? _addedRoles : _deletedRoles);
 
@@ -211,7 +213,7 @@ export default function AccessModal({ show, toggle, selected }) {
     setHasDrag(true);
     e.dataTransfer.setData(
       "application/json",
-      JSON.stringify({ role, isAdd, dragTo })
+      JSON.stringify({ role, isAdd, dragTo }),
     );
 
     const dragPreview = document.createElement("div");

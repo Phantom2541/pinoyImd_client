@@ -14,21 +14,26 @@ import {
 } from "../../../services/utilities";
 import { useHistory } from "react-router";
 
-export default function Profile() {
+export default function Profile({
+  currentAffiliation = {},
+  selectedPlatform = "",
+}) {
   const { auth, isPatient, image, activePlatform } = useSelector(
       ({ auth }) => auth
     ),
     [platform, setPlatform] = useState("patron"),
     history = useHistory();
   const employmentStatus =
-    activePlatform?.branch?.contract?.soe || activePlatform?.branch?.status;
+    currentAffiliation?.contract?.soe ||
+    currentAffiliation?.status ||
+    activePlatform?.branch?.contract?.soe ||
+    activePlatform?.branch?.status;
 
   useEffect(() => {
-    setPlatform(activePlatform?.platform);
-  }, [activePlatform]);
+    setPlatform(selectedPlatform || currentAffiliation?.activePlatform || "patron");
+  }, [currentAffiliation, selectedPlatform]);
   const handleLogout = () => {
-    const { branch = {} } = activePlatform || {};
-    const { companyId: company = "" } = branch || {};
+    const company = currentAffiliation?.companyId || {};
     var companyId = company?._id || "";
     const fakeDB = localStorage.getItem("companyId");
     if (fakeDB && !company?._id) {
@@ -43,7 +48,7 @@ export default function Profile() {
     clearSiteData();
   };
   const isEmployed = employment.isEmployed(
-    activePlatform?.isPhysician ? "active" : employmentStatus
+    auth?.isPhysician ? "active" : employmentStatus
   );
   return (
     <MDBDropdown>
