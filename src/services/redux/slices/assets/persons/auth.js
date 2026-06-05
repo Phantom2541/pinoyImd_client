@@ -5,7 +5,7 @@ import {
   employment,
   ENDPOINT,
 } from "../../../../utilities";
-import { Policy } from "../../../../fakeDb";
+import { Access, Policy } from "../../../../fakeDb";
 import { SETAFFILIATIONPLATFORM } from "./affiliations";
 
 const url = "auth",
@@ -60,11 +60,14 @@ const normalizePlatforms = (platforms = []) =>
       (Array.isArray(platforms) ? platforms : [])
         .flatMap((item) => {
           if (typeof item === "string") return [item];
+          if (typeof item === "number") return [item];
           if (Array.isArray(item?.platform)) return item.platform;
+          if (Array.isArray(item)) return item;
           if (typeof item?.platform === "string") return [item.platform];
+          if (typeof item?.id === "number") return [item.id];
           return [];
         })
-        .map((platform) => String(platform || "").trim().toLowerCase())
+        .map((platform) => Access.normalizePlatformKey(platform))
         .filter(Boolean)
     )
   );

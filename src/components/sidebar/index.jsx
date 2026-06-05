@@ -9,7 +9,7 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useSelector } from "react-redux";
-import { Policy, Sidebars } from "../../services/fakeDb";
+import { Access, Policy, Sidebars } from "../../services/fakeDb";
 import {
   Cloudinary,
   // ENDPOINT,
@@ -78,8 +78,7 @@ export default function SideNavigation({
   }, []);
 
   // ✅ Guarded sidebar loader with platform/role filtering
-  const normalizePlatform = (platform) =>
-    platform?.toLowerCase().replace(/\s/g, "_");
+  const normalizePlatform = Access.normalizePlatformKey;
 
   useEffect(() => {
     const platformKey = normalizePlatform(activePlatform?.platform);

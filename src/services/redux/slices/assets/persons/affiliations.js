@@ -16,5 +16,5 @@ export const SETAFFILIATIONPLATFORM = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
