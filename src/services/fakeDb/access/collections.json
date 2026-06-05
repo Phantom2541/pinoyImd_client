@@ -12,43 +12,43 @@
     "platform": "administrative"
   },
   {
-    "id": 2,
+    "id": 3,
     "name": "Accounting",
     "code": "accouting",
     "platform": "accounting"
   },
   {
-    "id": 3,
+    "id": 4,
     "name": "Auditor",
     "code": "auditor",
     "platform": "auditor"
   },
   {
-    "id": 4,
+    "id": 5,
     "name": "Cashier",
     "code": "cashier",
     "platform": "cashier"
   },
   {
-    "id": 5,
+    "id": 6,
     "name": "Frontdesk",
     "code": "frontdesk",
     "platform": "frontdesk"
   },
   {
-    "id": 6,
+    "id": 7,
     "name": "Manager",
     "code": "manager",
     "platform": "manager"
   },
   {
-    "id": 7,
+    "id": 8,
     "name": "Patron",
     "code": "patron",
     "platform": "patron"
   },
   {
-    "id": 8,
+    "id": 9,
     "name": "Human Resources",
     "code": "hr",
     "platform": "human_resources"

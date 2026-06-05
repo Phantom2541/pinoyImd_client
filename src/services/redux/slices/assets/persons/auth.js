@@ -253,9 +253,18 @@ const setAP = (state, payload) => {
       : fallbackPlatforms
   ).filter((platform) => platform !== "physician");
   const { contract = { designation: -1 }, status, clinic } = branch || {};
-  const employmentStatus = contract?.soe || status;
+  const normalizedContractStatus = String(contract?.soe || "")
+    .trim()
+    .toLowerCase();
+  const normalizedBranchStatus = String(status || "")
+    .trim()
+    .toLowerCase();
+  const resolvedEmploymentStatus =
+    employment.isEmployed(normalizedContractStatus) !== undefined
+      ? normalizedContractStatus
+      : normalizedBranchStatus;
   const isEmployed = employment.isEmployed(
-    isPhysician ? "active" : employmentStatus
+    isPhysician ? "active" : resolvedEmploymentStatus
   );
   const designation = isPhysician ? 122 : contract?.designation;
   const department = Policy.getDepartment(designation) || "";

@@ -17,14 +17,22 @@ const getPlatformLabel = (value = "") =>
   capitalize(Access.getPlatformLabel(value).replace(/_/g, " "));
 
 export default function Platforms() {
-  const { auth, branches = [], token } = useSelector(({ auth }) => auth),
+  const {
+      auth,
+      activePlatform,
+      branches = [],
+      token,
+    } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     history = useHistory();
 
   const affiliationId = auth?.activeAffiliation || "";
   const currentAffiliation = useMemo(
     () =>
-      branches.find(({ _id }) => String(_id) === String(affiliationId)) || {},
+      branches.find(
+        ({ affiliationId: currentAffiliationId, _id }) =>
+          String(currentAffiliationId || _id) === String(affiliationId),
+      ) || {},
     [branches, affiliationId],
   );
 
@@ -41,6 +49,7 @@ export default function Platforms() {
     const uniqueSorted = Array.from(new Set(platforms)).sort((a, b) =>
       a.localeCompare(b),
     );
+
     setAccess(uniqueSorted);
   }, [currentAffiliation]);
 
@@ -53,6 +62,8 @@ export default function Platforms() {
       SETAFFILIATIONPLATFORM({
         data: {
           _id: auth._id,
+          email: auth.email,
+          activeAffiliation: affiliationId,
           activePlatform: access[0],
         },
         token,
@@ -68,6 +79,8 @@ export default function Platforms() {
         SETAFFILIATIONPLATFORM({
           data: {
             _id: auth._id,
+            email: auth.email,
+            activeAffiliation: affiliationId,
             activePlatform: cleanedPlatform || "patron",
           },
           token,
@@ -81,7 +94,15 @@ export default function Platforms() {
       }`;
       history.push(redirectURL);
     },
-    [affiliationId, auth, dispatch, history, token],
+    [
+      affiliationId,
+      auth,
+      currentAffiliation,
+      dispatch,
+      history,
+      selectedPlatform,
+      token,
+    ],
   );
 
   if (access.length <= 1) return null;
