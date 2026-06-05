@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
-import { Policy } from "./../../../../../../services/fakeDb";
+import { Access, Policy } from "./../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
 import { SETOnHotSEAT } from "./../../../../../../services/redux/slices/assets/persons/personnels";
 import { capitalize } from "../../../../../../services/utilities";
@@ -70,8 +70,11 @@ export default function CollapseTable({
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({});
   const [dep, setDep] = useState("");
-  const { access = [] } = staff || {};
+  const { platforms = [] } = staff || {};
   const toggle = () => setShow(!show);
+  const taggedPlatforms = platforms
+    .map((id) => Access.collections.find((item) => item.id === Number(id)))
+    .filter(Boolean);
 
   const {
     register,
@@ -391,7 +394,7 @@ export default function CollapseTable({
         <MDBCol md={!isHonorarium ? "3" : "4"}>
           <div className="d-flex  align-items-center">
             <h5 className="mb-0">Access</h5>
-            {access?.length > 0 && (
+            {taggedPlatforms?.length > 0 && (
               <MDBIcon
                 icon="pencil-alt"
                 className="cursor-pointer ml-2"
@@ -401,15 +404,15 @@ export default function CollapseTable({
             )}
           </div>
           <hr />
-          {access?.length > 0 ? (
-            access.map((acc, index) => (
+          {taggedPlatforms?.length > 0 ? (
+            taggedPlatforms.map((acc, index) => (
               <MDBBadge
                 key={index}
                 className="mr-1 mb-1"
                 pill
                 style={{ fontSize: "13px", fontWeight: 400 }}
               >
-                {capitalize(acc.platform)}
+                {capitalize(acc.name || acc.platform)}
               </MDBBadge>
             ))
           ) : (

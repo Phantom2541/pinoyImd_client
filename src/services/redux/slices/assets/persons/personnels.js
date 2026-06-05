@@ -458,32 +458,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE_ACCESS.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const { staffID, accessChanges } = payload;
-        const { deleted, added } = accessChanges;
+        const { staffID, platforms = [] } = payload;
         if (state.collections.length === 0) return;
         const index = state.collections.findIndex(
           (item) => item._id === staffID
         );
 
         const staff = state.collections[index];
-        var StaffAccess = [...(staff?.access || [])];
-
-        if (deleted.length > 0) {
-          deleted.forEach((element) => {
-            const index = StaffAccess.findIndex(
-              (item) => item._id === element._id
-            );
-            //console.log(index);
-            StaffAccess.splice(index, 1);
-          });
-        }
-
-        if (added.length > 0) {
-          StaffAccess = [...added, ...StaffAccess];
-        }
         state.collections[index] = {
           ...staff,
-          access: StaffAccess,
+          platforms,
         };
 
         state.message = success;

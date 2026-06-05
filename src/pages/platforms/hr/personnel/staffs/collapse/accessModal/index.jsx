@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -16,6 +16,9 @@ import { Access } from "./../../../../../../../services/fakeDb";
 import { UPDATE_ACCESS } from "./../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
 import Spinner from "../../../../../../../components/spinner";
+
+const EMPTY_ARRAY = [];
+const EMPTY_OBJECT = {};
 
 /**
  * AccessModal component manages user access roles through a modal interface.
@@ -44,7 +47,15 @@ export default function AccessModal({ show, toggle, selected }) {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const { access = [], user = {} } = selected || {};
+  const platforms = selected?.platforms || EMPTY_ARRAY;
+  const user = selected?.user || EMPTY_OBJECT;
+  const selectedPlatforms = useMemo(
+    () =>
+      platforms
+        .map((id) => Access.collections.find((item) => item.id === Number(id)))
+        .filter(Boolean),
+    [platforms]
+  );
 
   const handleSetRoles = useCallback((_roles) => {
     setRoles(_roles);
@@ -61,21 +72,34 @@ export default function AccessModal({ show, toggle, selected }) {
           )
       );
     },
-    [activePlatform]
+    [activePlatform?.branch?.category]
   );
 
   useEffect(() => {
-    // remove existing access in collections of roles
-    if (show) {
-      const _roles = removeDuplicate(selected.access);
-      setExistingAccess(selected.access);
-      handleSetRoles(_roles);
-    }
+    if (!show) return;
+
+    const _roles = removeDuplicate(selectedPlatforms);
+    setExistingAccess(selectedPlatforms);
+    handleSetRoles(_roles);
     setAccessChanges({ deleted: [], added: [] });
-  }, [show, selected, handleSetRoles, removeDuplicate]);
+  }, [show, selectedPlatforms, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
-    const { added, deleted } = accessChanges;
+    const currentIds = existingAccess.map(({ id, _id }) => Number(id || _id));
+    const originalIds = selectedPlatforms.map(({ id, _id }) => Number(id || _id));
+    const added = existingAccess
+      .filter(({ id, _id }) => !originalIds.includes(Number(id || _id)))
+      .map(({ id, _id, platform, name }) => ({
+        id: id || _id,
+        platform: platform || name,
+      }));
+    const deleted = selectedPlatforms
+      .filter(({ id, _id }) => !currentIds.includes(Number(id || _id)))
+      .map(({ id, _id, platform, name }) => ({
+        id: id || _id,
+        platform: platform || name,
+      }));
+
     if (added.length === 0 && deleted.length === 0) {
       toggle();
       return addToast("No changes found, skipping update.", {
@@ -84,20 +108,23 @@ export default function AccessModal({ show, toggle, selected }) {
     }
 
     dispatch(
-      UPDATE_ACCESS({ data: { accessChanges, staffID: selected._id }, token })
+      UPDATE_ACCESS({
+        data: { accessChanges: { added, deleted }, staffID: selected._id },
+        token,
+      })
     ).then(() => toggle());
   };
 
   const handleAccessChanges = (role, isDelete = false) => {
-    const isExist = access.some(({ _id }) => _id === role?._id);
+    const isExist = selectedPlatforms.some(({ id }) => id === role?.id);
     const { deleted, added } = accessChanges;
     const _addedRoles = [...added];
     const _deletedRoles = [...deleted];
-    const roleID = role?._id || role?.id;
+    const roleID = role?.id || role?._id;
 
     const getIndex = (array) =>
       array.findIndex(
-        ({ _id = "", id = "" }) => String(_id || id) === String(roleID)
+        ({ _id = "", id = "" }) => String(id || _id) === String(roleID)
       );
     const index = getIndex(isDelete ? _addedRoles : _deletedRoles);
 
@@ -109,11 +136,7 @@ export default function AccessModal({ show, toggle, selected }) {
     if (!isDelete && !isExist)
       _addedRoles.push({
         platform: role.platform,
-        approvedBy: auth._id,
-        branchId: activePlatform.branchId,
-        userId: user._id,
         id: roleID,
-        status: true,
       });
 
     setAccessChanges({
@@ -134,7 +157,7 @@ export default function AccessModal({ show, toggle, selected }) {
     const _existingAccess = [...existingAccess];
     const index = _roles.findIndex(({ id }) => id === role.id);
     _roles.splice(index, 1);
-    _existingAccess.unshift({ ...role, platform: role.name, new: true });
+    _existingAccess.unshift(role);
 
     setExistingAccess(_existingAccess);
     handleAccessChanges(role, false);

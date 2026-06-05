@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE,
   SetActivePAGE,
-  SetMaxPage,
   RESET,
 } from "./../../../../../services/redux/slices/assets/persons/personnels";
 import { MDBCard, MDBCardBody, MDBView } from "mdbreact";
@@ -17,31 +16,42 @@ import { employment } from "./../../../../../services/utilities";
 
 export default function Staffs() {
   const [staffs, setStaffs] = useState([]),
-    { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading, activePage, totalPages } =
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    {
+      collections,
+      message,
+      isSuccess,
+      isLoading,
+      activePage,
+      totalPages,
+      maxPage,
+    } =
       useSelector(({ personnels }) => personnels),
     [searchKey, setSearchKey] = useState(""),
     [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+  const branchId = activePlatform?.branchId;
 
   //Initial Browse
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+    if (token && branchId) dispatch(BROWSE({ token, branchId }));
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, branchId]);
 
-  const arrangeStaffs = useCallback(() => {
-    return [...collections].filter(({ status: stats }) => {
-      return employment.isEmployed(stats);
-    });
-  }, [collections]);
+  const arrangedStaffs = useMemo(
+    () =>
+      [...collections].filter(({ status: stats }) => {
+        return employment.isEmployed(stats);
+      }),
+    [collections]
+  );
 
   useEffect(() => {
-    setStaffs(arrangeStaffs());
-    document.getElementById("item-search").value = "";
-  }, [arrangeStaffs]);
+    setStaffs(arrangedStaffs);
+    const searchInput = document.getElementById("item-search");
+    if (searchInput) searchInput.value = "";
+  }, [arrangedStaffs]);
 
   //Trigger for update
   const handleUpdate = (_) => {
@@ -62,6 +72,11 @@ export default function Staffs() {
   }, [isSuccess, message, addToast, dispatch]);
 
   const resetSearch = () => setSearchKey("");
+  const handleFilteredStaffs = useCallback((results) => setStaffs(results), []);
+  const handleResetStaffs = useCallback(
+    () => setStaffs(arrangedStaffs),
+    [arrangedStaffs]
+  );
 
   const handlePageChange = (action) => {
     const newPage = activePage + (action ? 1 : -1);
@@ -69,10 +84,6 @@ export default function Staffs() {
       dispatch(SetActivePAGE(newPage));
     }
   };
-
-  useEffect(() => {
-    dispatch(SetMaxPage(maxPage));
-  }, [dispatch, maxPage]);
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -90,9 +101,9 @@ export default function Staffs() {
           <div className="d-flex align-items-center">
             <Search
               haveAction={false}
-              collections={arrangeStaffs()}
-              setFiltered={(results) => setStaffs(results)}
-              reset={() => setStaffs(arrangeStaffs())}
+              collections={arrangedStaffs}
+              setFiltered={handleFilteredStaffs}
+              reset={handleResetStaffs}
             />
           </div>
         </MDBView>
