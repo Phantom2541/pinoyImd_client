@@ -15,6 +15,7 @@ import {
 } from "mdbreact";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
+import { Services } from "../../../../services/fakeDb";
 import { SERVICE_CENSUS } from "../../../../services/redux/slices/commerce/pos/services/deals";
 
 const MONTH_LABELS = [
@@ -121,8 +122,11 @@ export default function Dashboard() {
   const barChartData = useMemo(
     () => ({
       labels: serviceCensus.map(
-        ({ abbreviation, description }) =>
-          abbreviation || description || "Unnamed service",
+        ({ serviceId, description }) =>
+          Services.getAbbr(serviceId) ||
+          Services.getName(serviceId) ||
+          description ||
+          `Service #${serviceId}`,
       ),
       datasets: [
         {
@@ -146,6 +150,15 @@ export default function Dashboard() {
     () =>
       serviceCensus.map((service, index) => ({
         rank: index + 1,
+        label:
+          Services.getAbbr(service.serviceId) ||
+          Services.getName(service.serviceId) ||
+          service.description ||
+          `Service #${service.serviceId}`,
+        serviceName:
+          Services.getName(service.serviceId) ||
+          service.description ||
+          `Service #${service.serviceId}`,
         ...service,
       })),
     [serviceCensus],
@@ -347,10 +360,10 @@ export default function Dashboard() {
                   <tbody>
                     {rankedServices.length > 0 ? (
                       rankedServices.map(
-                        ({ description, abbreviation, count }, index) => (
-                          <tr key={`${abbreviation}-${index}`}>
-                            <td>{description || "Unnamed service"}</td>
-                            <td>{abbreviation || "-"}</td>
+                        ({ label, serviceName, count, serviceId }, index) => (
+                          <tr key={`${serviceId}-${index}`}>
+                            <td>{serviceName || "Unnamed service"}</td>
+                            <td>{label || "-"}</td>
                             <td>{count}</td>
                           </tr>
                         ),
@@ -388,10 +401,10 @@ export default function Dashboard() {
                   </thead>
                   <tbody>
                     {rankedServices.length > 0 ? (
-                      rankedServices.map(({ rank, description, count }) => (
-                        <tr key={`${description}-${rank}`}>
+                      rankedServices.map(({ rank, serviceName, count, serviceId }) => (
+                        <tr key={`${serviceId}-${rank}`}>
                           <td>{rank}</td>
-                          <td>{description || "Unnamed service"}</td>
+                          <td>{serviceName || "Unnamed service"}</td>
                           <td>{count.toLocaleString()}</td>
                         </tr>
                       ))
