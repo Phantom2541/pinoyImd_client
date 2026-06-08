@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Modal from "./modal";
 
 export default function ImageCropper({
@@ -50,18 +51,22 @@ export default function ImageCropper({
         className="d-none"
         accept={accept}
       />
-      <Modal
-        modalSize={modalSize}
-        show={show}
-        cropSize={cropSize}
-        toggle={toggle}
-        isStatic={isStatic}
-        img={img}
-        aspect={aspect}
-        ext={ext}
-        handleUpload={handleUpload}
-        isUpload={isUpload}
-      />
+      {typeof document !== "undefined" &&
+        createPortal(
+          <Modal
+            modalSize={modalSize}
+            show={show}
+            cropSize={cropSize}
+            toggle={toggle}
+            isStatic={isStatic}
+            img={img}
+            aspect={aspect}
+            ext={ext}
+            handleUpload={handleUpload}
+            isUpload={isUpload}
+          />,
+          document.body
+        )}
     </>
   );
 }

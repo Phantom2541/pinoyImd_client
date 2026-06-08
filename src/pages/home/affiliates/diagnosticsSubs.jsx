@@ -1,10 +1,11 @@
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../services/utilities";
 import BgRemover from "../../../components/bgRemover";
+import SafeSwiper from "../../../components/swiper/SafeSwiper";
 
 export default function DiagnosticsSubs() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -18,7 +19,7 @@ export default function DiagnosticsSubs() {
     <div className="affiliates-section">
       <h1 className="affiliates-title">Our Diagnostics Subscribers</h1>
       {diagnosticCompanies?.length > 0 && (
-        <Swiper
+        <SafeSwiper
           className="affiliates-swiper"
           modules={[Autoplay]}
           loop={true}
@@ -57,7 +58,7 @@ export default function DiagnosticsSubs() {
               </SwiperSlide>
             );
           })}
-        </Swiper>
+        </SafeSwiper>
       )}
     </div>
   );

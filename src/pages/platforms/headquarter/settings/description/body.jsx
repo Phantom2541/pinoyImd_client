@@ -30,6 +30,57 @@ export default function DescriptionBody() {
 
   const dispatch = useDispatch();
 
+  const contactCards = [
+    {
+      label: "Email",
+      keyForValue: "email",
+      value: companyId?.contacts?.email || "",
+      updateKey: "contacts.email",
+      title: "Click to edit email",
+    },
+    {
+      label: "Phone Number",
+      keyForValue: "mobile",
+      value: companyId?.contacts?.mobile || "",
+      updateKey: "contacts.mobile",
+      title: "Click to edit phone number",
+    },
+  ];
+
+  const storyFields = [
+    {
+      label: "Description",
+      keyForValue: "description",
+      value: companyId?.description || "",
+      updateKey: "description",
+      title: "Click to edit description",
+    },
+    {
+      label: "Tagline",
+      keyForValue: "tagline",
+      value: companyId?.tagline || "",
+      updateKey: "tagline",
+      title: "Click to edit tagline",
+    },
+  ];
+
+  const directionFields = [
+    {
+      label: "Mission",
+      keyForValue: "ms",
+      value: companyId?.ms || "",
+      updateKey: "ms",
+      title: "Click to edit mission",
+    },
+    {
+      label: "Vision",
+      keyForValue: "vs",
+      value: companyId?.vs || "",
+      updateKey: "vs",
+      title: "Click to edit vision",
+    },
+  ];
+
   useEffect(() => {
     if (message) {
       addToast(message, {
@@ -76,18 +127,69 @@ export default function DescriptionBody() {
     });
   };
 
+  const renderedValues = (Array.isArray(valuePreview)
+    ? valuePreview
+    : String(valuePreview).split("\n")
+  ).filter((line) => line.trim() !== "");
+
   return (
     <div className="companyDescription-container">
-      {/* Header */}
       <div className="companyDescription-header">
-        <Logo />
-        <div className="companyDescription-header-wrapper">
-          <span className="companyDescription-name">{companyId?.name}</span>
+        <div className="companyDescription-hero">
+          <div className="companyDescription-branding">
+            <div className="companyDescription-logoPanel">
+              <Logo />
+            </div>
+
+            <div className="companyDescription-headerWrapper">
+              <span className="companyDescription-kicker">Company profile</span>
+              <h1 className="companyDescription-name">
+                {companyId?.name || "Unnamed Company"}
+              </h1>
+              <p className="companyDescription-subtitle">
+                Keep your company identity polished with a cleaner profile,
+                better contact details, and more readable branding content.
+              </p>
+            </div>
+          </div>
+
+          <div className="companyDescription-summaryGrid">
+            {contactCards.map(({ label, value }) => (
+              <div key={label} className="companyDescription-summaryItem">
+                <span className="companyDescription-summaryLabel">{label}</span>
+                <strong className="companyDescription-summaryValue">
+                  {value || "Not set yet"}
+                </strong>
+              </div>
+            ))}
+
+            <div className="companyDescription-summaryItem">
+              <span className="companyDescription-summaryLabel">Tagline</span>
+              <strong className="companyDescription-summaryValue">
+                {companyId?.tagline || "No tagline yet"}
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="companyDescription-grid">
+        <section className="companyDescription-card companyDescription-cardWide">
+          <div className="companyDescription-cardHeader">
+            <div>
+              <span className="companyDescription-sectionKicker">
+                Branch location
+              </span>
+              <h2 className="companyDescription-sectionTitle">
+                Address Information
+              </h2>
+            </div>
+          </div>
+
           <div
-            className="patient-personal-info address-grid mt-4"
+            className="patient-personal-info address-grid companyDescription-addressGrid"
             data-title="Address Information"
           >
-            {/* Address */}
             <AddressSelect
               address={branch?.address}
               handleChange={(key, val) =>
@@ -99,9 +201,8 @@ export default function DescriptionBody() {
               }
             />
 
-            {/* Street */}
-            <div>
-              <label className="mt-2">Street (Optional)</label>
+            <div className="companyDescription-field">
+              <label className="companyDescription-label">Street (Optional)</label>
               <EditableField
                 title="Click to edit street"
                 type="string"
@@ -123,228 +224,219 @@ export default function DescriptionBody() {
               />
             </div>
           </div>
+        </section>
 
-          {/* Contact Info */}
-          <div className="d-flex mt-3" style={{ gap: "20px" }}>
-            <div className="w-50">
-              <label>
-                <strong>Email</strong>
+        <section className="companyDescription-card">
+          <div className="companyDescription-cardHeader">
+            <div>
+              <span className="companyDescription-sectionKicker">
+                Reachability
+              </span>
+              <h2 className="companyDescription-sectionTitle">
+                Contact Details
+              </h2>
+            </div>
+          </div>
+
+          <div className="companyDescription-stack">
+            {contactCards.map(
+              ({ label, keyForValue, value, updateKey, title }) => (
+                <div key={label} className="companyDescription-field">
+                  <label className="companyDescription-label">{label}</label>
+                  <EditableField
+                    title={title}
+                    type="string"
+                    width="100%"
+                    keyForValue={keyForValue}
+                    fieldData={{
+                      _id: companyId._id,
+                      [keyForValue]: value,
+                    }}
+                    onSave={(data) =>
+                      handleUpdate({
+                        _id: companyId._id,
+                        key: updateKey,
+                        value: data[keyForValue],
+                      })
+                    }
+                    formSubmitted={false}
+                    isSuccess={isSuccess}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </section>
+
+        <section className="companyDescription-card companyDescription-cardWide">
+          <div className="companyDescription-cardHeader">
+            <div>
+              <span className="companyDescription-sectionKicker">
+                Brand story
+              </span>
+              <h2 className="companyDescription-sectionTitle">
+                Company Overview
+              </h2>
+            </div>
+          </div>
+
+          <div className="companyDescription-stack">
+            {storyFields.map(
+              ({ label, keyForValue, value, updateKey, title }) => (
+                <div key={label} className="companyDescription-field">
+                  <label className="companyDescription-label">{label}</label>
+                  <EditableField
+                    title={title}
+                    type="textarea"
+                    width="100%"
+                    keyForValue={keyForValue}
+                    fieldData={{
+                      _id: companyId._id,
+                      [keyForValue]: value,
+                    }}
+                    onSave={(data) =>
+                      handleUpdate({
+                        _id: companyId._id,
+                        key: updateKey,
+                        value: data[keyForValue],
+                      })
+                    }
+                    formSubmitted={false}
+                    isSuccess={isSuccess}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </section>
+
+        <section className="companyDescription-card companyDescription-cardWide">
+          <div className="companyDescription-cardHeader">
+            <div>
+              <span className="companyDescription-sectionKicker">
+                Direction
+              </span>
+              <h2 className="companyDescription-sectionTitle">
+                Mission and Vision
+              </h2>
+            </div>
+          </div>
+
+          <div className="companyDescription-twoColumn">
+            {directionFields.map(
+              ({ label, keyForValue, value, updateKey, title }) => (
+                <div key={label} className="companyDescription-field">
+                  <label className="companyDescription-label">{label}</label>
+                  <EditableField
+                    title={title}
+                    type="textarea"
+                    width="100%"
+                    keyForValue={keyForValue}
+                    fieldData={{
+                      _id: companyId._id,
+                      [keyForValue]: value,
+                    }}
+                    onSave={(data) =>
+                      handleUpdate({
+                        _id: companyId._id,
+                        key: updateKey,
+                        value: data[keyForValue],
+                      })
+                    }
+                    formSubmitted={false}
+                    isSuccess={isSuccess}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </section>
+
+        <section className="companyDescription-card companyDescription-cardWide">
+          <div className="companyDescription-cardHeader">
+            <div>
+              <span className="companyDescription-sectionKicker">Identity</span>
+              <h2 className="companyDescription-sectionTitle">Core Values</h2>
+            </div>
+          </div>
+
+          <div className="companyDescription-valuesLayout">
+            <div className="companyDescription-field">
+              <label className="companyDescription-label">
+                Value statements
               </label>
               <EditableField
-                title="Click to edit email"
-                type="string"
+                title="Click to edit core values"
+                type="textarea"
                 width="100%"
-                keyForValue="email"
+                height="100%"
+                keyForValue="vl"
                 fieldData={{
                   _id: companyId._id,
-                  email: companyId?.contacts?.email || "",
+                  vl: Array.isArray(valuePreview)
+                    ? valuePreview.join("\n")
+                    : valuePreview,
                 }}
-                onSave={(data) =>
+                onSave={(data) => {
+                  const newValues = data.vl
+                    .split("\n")
+                    .map((v) => v.trim())
+                    .filter((v) => v.length > 0);
+
+                  setValuePreview(newValues);
                   handleUpdate({
                     _id: companyId._id,
-                    key: "contacts.email",
-                    value: data.email,
-                  })
-                }
+                    key: "vl",
+                    value: newValues,
+                  });
+                }}
+                onFocus={() => setIsValueFocused(true)}
+                onBlur={() => setIsValueFocused(false)}
                 formSubmitted={false}
                 isSuccess={isSuccess}
               />
             </div>
 
-            <div className="w-50">
-              <label>
-                <strong>Phone Number</strong>
-              </label>
-              <EditableField
-                title="Click to edit phone number"
-                type="string"
-                width="100%"
-                keyForValue="mobile"
-                fieldData={{
-                  _id: companyId._id,
-                  mobile: companyId?.contacts?.mobile || "",
-                }}
-                onSave={(data) =>
-                  handleUpdate({
-                    _id: companyId._id,
-                    key: "contacts.mobile",
-                    value: data.mobile,
-                  })
-                }
-                formSubmitted={false}
-                isSuccess={isSuccess}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Body */}
-      <div className="companyDescription-body mt-4">
-        <label>
-          <strong>Description</strong>
-        </label>
-        <EditableField
-          title="Click to edit description"
-          type="textarea"
-          width="100%"
-          keyForValue="description"
-          fieldData={{
-            _id: companyId._id,
-            description: companyId?.description || "",
-          }}
-          onSave={(data) =>
-            handleUpdate({
-              _id: companyId._id,
-              key: "description",
-              value: data.description,
-            })
-          }
-          formSubmitted={false}
-          isSuccess={isSuccess}
-        />
-
-        <label className="mt-3">
-          <strong>Tagline</strong>
-        </label>
-        <EditableField
-          title="Click to edit tagline"
-          type="textarea"
-          width="100%"
-          keyForValue="tagline"
-          fieldData={{
-            _id: companyId._id,
-            tagline: companyId?.tagline || "",
-          }}
-          onSave={(data) =>
-            handleUpdate({
-              _id: companyId._id,
-              key: "tagline",
-              value: data.tagline,
-            })
-          }
-          formSubmitted={false}
-          isSuccess={isSuccess}
-        />
-
-        <div className="d-flex align-items-center mt-3" style={{ gap: "20px" }}>
-          <div className="w-50">
-            <label>
-              <strong>Mission</strong>
-            </label>
-            <EditableField
-              title="Click to edit mission"
-              type="textarea"
-              width="100%"
-              keyForValue="ms"
-              fieldData={{
-                _id: companyId._id,
-                ms: companyId?.ms || "",
-              }}
-              onSave={(data) =>
-                handleUpdate({
-                  _id: companyId._id,
-                  key: "ms",
-                  value: data.ms,
-                })
-              }
-              formSubmitted={false}
-              isSuccess={isSuccess}
-            />
-          </div>
-
-          <div className="w-50">
-            <label>
-              <strong>Vision</strong>
-            </label>
-            <EditableField
-              title="Click to edit vision"
-              type="textarea"
-              width="100%"
-              keyForValue="vs"
-              fieldData={{
-                _id: companyId._id,
-                vs: companyId?.vs || "",
-              }}
-              onSave={(data) =>
-                handleUpdate({
-                  _id: companyId._id,
-                  key: "vs",
-                  value: data.vs,
-                })
-              }
-              formSubmitted={false}
-              isSuccess={isSuccess}
-            />
-          </div>
-        </div>
-
-        {/* Core Values */}
-        <label className="mt-3">
-          <strong>Core Values</strong>
-        </label>
-        <div className="w-100 d-flex" style={{ gap: "20px" }}>
-          <div className="w-100">
-            <EditableField
-              title="Click to edit core values"
-              type="textarea"
-              width="100%"
-              height="100%"
-              keyForValue="vl"
-              fieldData={{
-                _id: companyId._id,
-                // join array into newline text for editing
-                vl: Array.isArray(valuePreview)
-                  ? valuePreview.join("\n")
-                  : valuePreview,
-              }}
-              onSave={(data) => {
-                // split into array and trim each value
-                const newValues = data.vl
-                  .split("\n")
-                  .map((v) => v.trim())
-                  .filter((v) => v.length > 0);
-
-                setValuePreview(newValues); // keep as array
-                handleUpdate({
-                  _id: companyId._id,
-                  key: "vl",
-                  value: newValues, // send as array
-                });
-              }}
-              onFocus={() => setIsValueFocused(true)}
-              onBlur={() => setIsValueFocused(false)}
-              formSubmitted={false}
-              isSuccess={isSuccess}
-            />
-          </div>
-
-          {isValueFocused && (
             <div
-              className="mt-2 w-100"
-              style={{ paddingLeft: "10px", fontSize: "0.9rem" }}
+              className={`companyDescription-valuesPreview ${
+                isValueFocused ? "is-active" : ""
+              }`}
             >
-              <strong>Preview</strong>
-              <ul style={{ paddingLeft: "20px", marginTop: "4px" }}>
-                {(Array.isArray(valuePreview)
-                  ? valuePreview
-                  : valuePreview.split("\n")
-                )
-                  .filter((line) => line.trim() !== "")
-                  .map((line, idx) => {
-                    const [title, ...rest] = line.split("–");
-                    const detail = rest.join("–").trim();
-                    return (
-                      <li key={idx}>
-                        <strong>{title.trim()}</strong>
-                        {detail && ` – ${detail}`}
-                      </li>
-                    );
-                  })}
+              <div className="companyDescription-valuesPreviewHeader">
+                <span className="companyDescription-sectionKicker">
+                  Live preview
+                </span>
+                <h3 className="companyDescription-valuesTitle">
+                  How your values will read
+                </h3>
+              </div>
+
+              <ul className="companyDescription-valuesList">
+                {renderedValues.map((line, idx) => {
+                  const normalizedLine = line.replace(/â€“|–/g, "-");
+                  const [title, ...rest] = normalizedLine.split("-");
+                  const detail = rest.join("-").trim();
+
+                  return (
+                    <li key={idx} className="companyDescription-valueItem">
+                      <strong>{title.trim()}</strong>
+                      <span>{detail || "Add a short explanation here."}</span>
+                    </li>
+                  );
+                })}
+
+                {!renderedValues.length && (
+                  <li className="companyDescription-valueItem is-empty">
+                    <strong>No values yet</strong>
+                    <span>
+                      Add one value per line to build a cleaner company profile.
+                    </span>
+                  </li>
+                )}
               </ul>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
       </div>
     </div>
   );

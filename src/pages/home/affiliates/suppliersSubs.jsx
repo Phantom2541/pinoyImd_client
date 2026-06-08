@@ -1,5 +1,5 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 // import logo from "./../../../assets/iMD.png";
@@ -8,6 +8,7 @@ import { Cloudinary } from "../../../services/utilities";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 import { BgRemover } from "../../../components/images/index";
 import { MDBAnimation } from "mdbreact";
+import SafeSwiper from "../../../components/swiper/SafeSwiper";
 
 export default function SuppliersSubs() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -37,7 +38,7 @@ export default function SuppliersSubs() {
         <h1 className="affiliates-title">Suppliers</h1>
       </MDBAnimation>
       {supplierCompanies?.length > 0 && (
-        <Swiper
+        <SafeSwiper
           className="affiliates-swiper"
           modules={[Autoplay]}
           loop={!isFewSlides}
@@ -109,7 +110,7 @@ export default function SuppliersSubs() {
               </SwiperSlide>
             );
           })}
-        </Swiper>
+        </SafeSwiper>
       )}
     </div>
   );

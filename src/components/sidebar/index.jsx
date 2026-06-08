@@ -10,6 +10,7 @@ import {
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { Access, Policy, Sidebars } from "../../services/fakeDb";
+import { getPlatformSidebar } from "../../services/fakeDb/sidebars";
 import {
   Cloudinary,
   // ENDPOINT,
@@ -20,6 +21,7 @@ import {
 import "./style.css";
 import { BgRemover } from "../../components/images/index";
 import Hotline from "../../pages/platforms/hotline";
+const normalizePlatform = Access.normalizePlatformKey;
 const diagnostics = [
   "diagnostic",
   "clinic",
@@ -41,8 +43,14 @@ export default function SideNavigation({
   const [activeCategory, setActiveCategory] = useState("");
   const [isDiagnostics, setIsDiagnostics] = useState(true);
   const { activePlatform, company, isLoading } = useSelector(
-    ({ auth }) => auth
+    ({ auth }) => auth,
   );
+  const rawBranchName =
+    activePlatform?.branch?.displayname || activePlatform?.branch?.name || "";
+  const isMainBranch = String(rawBranchName).trim().toLowerCase() === "main";
+  const sidebarTitle = isMainBranch
+    ? company?.name || activePlatform?.branch?.company || ""
+    : activePlatform?.branch?.company || company?.name || "";
 
   useEffect(() => {
     if (diagnostics.includes(activePlatform?.branch?.category?.toLowerCase())) {
@@ -67,7 +75,7 @@ export default function SideNavigation({
   const filterSidebarByDepartment = useCallback((items, department) => {
     return items
       .filter(
-        (item) => !item.allowedFor || item.allowedFor.includes(department)
+        (item) => !item.allowedFor || item.allowedFor.includes(department),
       )
       .map((item) => ({
         ...item,
@@ -78,8 +86,6 @@ export default function SideNavigation({
   }, []);
 
   // ✅ Guarded sidebar loader with platform/role filtering
-  const normalizePlatform = Access.normalizePlatformKey;
-
   useEffect(() => {
     const platformKey = normalizePlatform(activePlatform?.platform);
     if (!platformKey) {
@@ -89,11 +95,7 @@ export default function SideNavigation({
       }
       return;
     }
-    let group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
-
-    group.superadmin = Sidebars.superadmin;
-    group.patron = Sidebars.patron;
-    const fullSidebar = group[platformKey?.replace(/_/g, "")] || [];
+    const fullSidebar = getPlatformSidebar(platformKey, { isDiagnostics });
     if (platformKey === "laboratory") {
       const role = activePlatform?.role;
       const filtered = filterSidebarByRole(fullSidebar, role);
@@ -125,7 +127,7 @@ export default function SideNavigation({
     _links,
     keyPrefix = "",
     basePath = "",
-    level = 1.5
+    level = 1.5,
   ) => {
     return _links.map((item, index) => {
       const key = `${keyPrefix}-${index}`;
@@ -150,7 +152,7 @@ export default function SideNavigation({
               item.children,
               key,
               normalizePlatform(fullPath),
-              level + 1
+              level + 1,
             )}
           </MDBSideNavCat>
         );
@@ -178,7 +180,7 @@ export default function SideNavigation({
       <MDBSideNav
         tag="div"
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
-        alt="Company Logo"
+        alt="Electronic Health Record System"
         mask="strong"
         href={"#"}
         fixed
@@ -194,13 +196,13 @@ export default function SideNavigation({
             }/logo.png`}
             fallback={FailedLogo}
             style={{
-              width: "100px",
-              height: "65px",
+              width: "230px",
+              height: "80px",
               objectFit: "scale-down",
             }}
           />
           <div className="mt-n2 text-dark" style={{ fontWeight: 500 }}>
-            {activePlatform?.branch?.company || company?.name}
+            {sidebarTitle}
           </div>
         </div>
         <hr />
@@ -210,7 +212,7 @@ export default function SideNavigation({
             ? renderNavItems(
                 links,
                 "sidebar",
-                `/${normalizePlatform(activePlatform?.platform || "patron")}`
+                `/${normalizePlatform(activePlatform?.platform || "patron")}`,
               )
             : new Array(6).fill().map((_, index) => (
                 <div className="mx-2" key={index}>

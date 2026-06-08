@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import "./style.css";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
 import { HMO } from "../../../../../../services/fakeDb";
 import { MDBIcon } from "mdbreact";
+import SafeSwiper from "../../../../../../components/swiper/SafeSwiper";
 
 export default function Partners() {
   const [showAll, setShowAll] = useState(false);
@@ -36,7 +37,7 @@ export default function Partners() {
       </h1>
 
       {!showAll && partners?.length > 0 && (
-        <Swiper
+        <SafeSwiper
           className="subscriber-partners-wrapper"
           modules={[Autoplay]}
           loop={true}
@@ -72,7 +73,7 @@ export default function Partners() {
               </div>
             </SwiperSlide>
           ))}
-        </Swiper>
+        </SafeSwiper>
       )}
       <div
         ref={containerRef}

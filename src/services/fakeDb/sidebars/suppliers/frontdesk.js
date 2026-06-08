@@ -18,9 +18,9 @@ import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
 
 const frontdesk = [
   {
-    name: "Bulletin Board",
+    name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/bulletin",
+    path: "/dashboard",
     title:
       "Displays announcements and system-wide updates for the frontdesk team.",
     component: Dashboard,

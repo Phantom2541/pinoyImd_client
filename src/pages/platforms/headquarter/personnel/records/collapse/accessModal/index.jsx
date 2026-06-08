@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -16,6 +16,26 @@ import { Access } from "../../../../../../../services/fakeDb";
 import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
 
+const mapPlatformToOption = (value) => {
+  const normalizedPlatform = Access.normalizePlatformKey(value);
+  if (!normalizedPlatform) return null;
+
+  const matched = Access.collections.find(
+    ({ id, platform, code, name }) =>
+      Access.normalizePlatformKey(id) === normalizedPlatform ||
+      Access.normalizePlatformKey(platform) === normalizedPlatform ||
+      Access.normalizePlatformKey(code) === normalizedPlatform ||
+      Access.normalizePlatformKey(name) === normalizedPlatform,
+  );
+
+  return {
+    id: matched?.id || normalizedPlatform,
+    platform: normalizedPlatform,
+    name: matched?.name || Access.getPlatformLabel(normalizedPlatform),
+    description: matched?.description || "",
+  };
+};
+
 /**
  * AccessModal component manages user access roles through a modal interface.
  * It displays available roles and existing access, allowing users to add or
@@ -30,7 +50,7 @@ import Table from "./table";
  */
 
 export default function AccessModal({ show, toggle, selected }) {
-  const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     // {stat}=useSelector(({personnels})=>personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
@@ -43,7 +63,11 @@ export default function AccessModal({ show, toggle, selected }) {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const { access = [], user = {} } = selected || {};
+  const { platforms = [], user = {} } = selected || {};
+  const selectedPlatforms = useMemo(
+    () => platforms.map((value) => mapPlatformToOption(value)).filter(Boolean),
+    [platforms],
+  );
 
   const handleSetRoles = useCallback((_roles) => {
     setRoles(_roles);
@@ -54,7 +78,8 @@ export default function AccessModal({ show, toggle, selected }) {
     return Access.collections.filter((c) =>
       _existingAccess?.every(
         (existAcc) =>
-          existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
+          String(existAcc.platform || "").toUpperCase() !==
+          String(c.platform || "").toUpperCase()
       )
     );
   }, []);
@@ -62,12 +87,12 @@ export default function AccessModal({ show, toggle, selected }) {
   useEffect(() => {
     // remove existing access in collections of roles
     if (show) {
-      const _roles = removeDuplicate(selected.access);
-      setExistingAccess(selected.access);
+      const _roles = removeDuplicate(selectedPlatforms);
+      setExistingAccess(selectedPlatforms);
       handleSetRoles(_roles);
     }
     setAccessChanges({ deleted: [], added: [] });
-  }, [show, selected, handleSetRoles, removeDuplicate]);
+  }, [show, selectedPlatforms, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
     const { added, deleted } = accessChanges;
@@ -85,15 +110,24 @@ export default function AccessModal({ show, toggle, selected }) {
   };
 
   const handleAccessChanges = (role, isDelete = false) => {
-    const isExist = access.some(({ _id }) => _id === role?._id);
+    const rolePlatform = String(
+      role?.platform || role?.id || role?._id || ""
+    ).trim().toLowerCase();
+    const isExist = selectedPlatforms.some(
+      ({ platform, id, _id }) =>
+        String(platform || id || _id || "").trim().toLowerCase() ===
+        rolePlatform
+    );
     const { deleted, added } = accessChanges;
     const _addedRoles = [...added];
     const _deletedRoles = [...deleted];
-    const roleID = role?._id || role?.id;
+    const roleID = role?._id || role?.id || role?.platform;
 
     const getIndex = (array) =>
       array.findIndex(
-        ({ _id = "", id = "" }) => String(_id || id) === String(roleID)
+        ({ _id = "", id = "", platform = "" }) =>
+          String(platform || _id || id || "").trim().toLowerCase() ===
+          rolePlatform
       );
     const index = getIndex(isDelete ? _addedRoles : _deletedRoles);
 
@@ -105,11 +139,7 @@ export default function AccessModal({ show, toggle, selected }) {
     if (!isDelete && !isExist)
       _addedRoles.push({
         platform: role.platform,
-        approvedBy: auth._id,
-        branchId: activePlatform.branchId,
-        userId: user._id,
         id: roleID,
-        status: true,
       });
 
     setAccessChanges({
@@ -130,7 +160,11 @@ export default function AccessModal({ show, toggle, selected }) {
     const _existingAccess = [...existingAccess];
     const index = _roles.findIndex(({ id }) => id === role.id);
     _roles.splice(index, 1);
-    _existingAccess.unshift({ ...role, platform: role.name, new: true });
+    _existingAccess.unshift({
+      ...role,
+      platform: Access.normalizePlatformKey(role.platform || role.name),
+      new: true,
+    });
 
     setExistingAccess(_existingAccess);
     handleAccessChanges(role, false);

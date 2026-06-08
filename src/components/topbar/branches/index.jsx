@@ -7,7 +7,6 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { capitalize } from "../../../services/utilities";
 import { SETACTIVEAFFILIATION } from "../../../services/redux/slices/assets/persons/auth.js";
 
 export default function Branches() {
@@ -50,9 +49,76 @@ export default function Branches() {
     dispatch(SETACTIVEAFFILIATION({ data, token }));
   };
 
-  const { branch = {}, name, displayname } = currentAffiliation;
-  const branchName =
-    branch?.name || branch?.displayname || name || displayname || "";
+  const toAcronym = (value = "") =>
+    String(value)
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase();
+
+  const pickAcronym = (...candidates) => {
+    const found = candidates.find(
+      (candidate) => String(candidate || "").trim().length > 0,
+    );
+
+    return String(found || "")
+      .trim()
+      .toUpperCase();
+  };
+
+  const getCompanyAcronym = (affiliation = {}) => {
+    const branchRef = affiliation?.branch || {};
+    const companyRef =
+      branchRef?.companyId ||
+      affiliation?.companyId ||
+      affiliation?.company ||
+      {};
+
+    return (
+      pickAcronym(
+        companyRef?.abbr,
+        companyRef?.acronym,
+        affiliation?.companyAbbr,
+        affiliation?.companyCode,
+      ) ||
+      toAcronym(
+        companyRef?.name ||
+          companyRef?.displayname ||
+          affiliation?.companyName ||
+          "",
+      )
+    );
+  };
+
+  const getBranchAcronym = (affiliation = {}) => {
+    const rawName = affiliation?.name || affiliation?.displayname || "";
+
+    const explicitBranchAcronym = pickAcronym(affiliation?.name);
+
+    if (explicitBranchAcronym) return explicitBranchAcronym;
+
+    return toAcronym(rawName);
+  };
+
+  const formatBranchLabel = (affiliation = {}) => {
+    const companyAcronym = getCompanyAcronym(affiliation);
+    const branchAcronym = getBranchAcronym(affiliation);
+
+    const isMain = affiliation?.branch?.isMain || affiliation?.isMain || false;
+
+    if (companyAcronym && branchAcronym) {
+      return `${companyAcronym} - ${branchAcronym}${isMain ? " (Main)" : ""}`;
+    }
+
+    if (companyAcronym) return companyAcronym;
+    if (branchAcronym) return `${branchAcronym}${isMain ? " (Main)" : ""}`;
+
+    return "";
+  };
+
+  const branchLabel = formatBranchLabel(currentAffiliation);
 
   return (
     <MDBDropdown>
@@ -60,15 +126,12 @@ export default function Branches() {
         <MDBDropdownToggle nav caret>
           <MDBIcon icon="code-branch" />
           &nbsp;
-          <div className="d-none d-md-inline">
-            {branchName ? capitalize(branchName) : ""}
-          </div>
+          <div className="d-none d-md-inline">{branchLabel || ""}</div>
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {branches.map(({ name, _id, affiliationId, displayname, branch }, index) => {
-          const itemName =
-            branch?.name || branch?.displayname || name || displayname || "";
+        {branches.map((item, index) => {
+          const { _id, affiliationId } = item;
           const itemAffiliationId = affiliationId || _id;
 
           return (
@@ -84,7 +147,7 @@ export default function Branches() {
               key={`branch-${index}`}
               onClick={() => handleActiveBranch(itemAffiliationId)}
             >
-              {capitalize(itemName)}
+              {formatBranchLabel(item)}
             </MDBDropdownItem>
           );
         })}

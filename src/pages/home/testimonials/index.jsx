@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import "./style.css";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { MDBAnimation } from "mdbreact";
 import testimonials from "./collections.js";
 import LOGO from "./../../../assets/iMD.png";
+import SafeSwiper from "../../../components/swiper/SafeSwiper";
 export default function Testimonials() {
   // Function to shuffle an array (Fisher-Yates)
   const shuffleArray = (arr) => {
@@ -53,7 +54,7 @@ export default function Testimonials() {
               className="homePage-testiminials-sliderContainer hide"
             >
               {shuffledTestimonials1?.length > 0 && (
-                <Swiper
+                <SafeSwiper
                   modules={[Autoplay]}
                   direction="vertical"
                   loop={true}
@@ -103,7 +104,7 @@ export default function Testimonials() {
                       </div>
                     </SwiperSlide>
                   ))}
-                </Swiper>
+                </SafeSwiper>
               )}
             </MDBAnimation>
             <MDBAnimation
@@ -113,7 +114,7 @@ export default function Testimonials() {
               delay="1.5s"
               className="homePage-testiminials-sliderContainer"
             >
-              <Swiper
+              <SafeSwiper
                 modules={[Autoplay]}
                 direction="vertical"
                 loop={true}
@@ -171,7 +172,7 @@ export default function Testimonials() {
                     </div>
                   </SwiperSlide>
                 ))}
-              </Swiper>
+              </SafeSwiper>
             </MDBAnimation>
           </div>
         </div>

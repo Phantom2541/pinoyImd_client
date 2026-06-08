@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
-import { Sidebars } from "../services/fakeDb";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { Access, Sidebars } from "../services/fakeDb";
+import {
+  getPlatformDefaultRoute,
+  getPlatformSidebar,
+} from "../services/fakeDb/sidebars";
 
 //404
 import NotFound from "./notFound";
@@ -31,9 +35,8 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { platform = "" } = activePlatform || {};
   const [isDiagnostics, setIsDiagnostics] = useState(true);
-  const platformPrefix = platform
-    ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
-    : "";
+  const normalizedPlatform = Access.normalizePlatformKey(platform);
+  const platformPrefix = normalizedPlatform ? `/${normalizedPlatform}` : "";
   useEffect(() => {
     if (diagnostics.includes(activePlatform?.branch?.category?.toLowerCase())) {
       setIsDiagnostics(true);
@@ -43,12 +46,11 @@ export default function Routes() {
   }, [activePlatform]);
 
   const renderSidebars = () => {
-    const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
     const sidebar = platformPrefix
-      ? group[platform?.toLowerCase()?.replace(/\s+/g, "_").replace(/_/g, "")]
+      ? getPlatformSidebar(normalizedPlatform, { isDiagnostics })
       : Sidebars.patron;
 
-    if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
+    if (!Array.isArray(sidebar)) return "Sidebar must be array";
     const sideBars = [];
 
     sidebar.forEach((element, index) => {
@@ -91,14 +93,25 @@ export default function Routes() {
 
   return (
     <Switch>
+      {!!platformPrefix && (
+        <Route path={platformPrefix} exact>
+          <Redirect
+            to={getPlatformDefaultRoute(normalizedPlatform, { isDiagnostics })}
+          />
+        </Route>
+      )}
       {renderSidebars()}
       <Route
         path={`${platformPrefix || "/patron"}/profile`}
         exact
         component={Profile}
       />
-      <Route path={`${platformPrefix}/shifts`} exact component={Attendances} />
-      <Route path={`${platformPrefix}/contract`} exact component={Contract} />
+      {!!platformPrefix && (
+        <Route path={`${platformPrefix}/shifts`} exact component={Attendances} />
+      )}
+      {!!platformPrefix && (
+        <Route path={`${platformPrefix}/contract`} exact component={Contract} />
+      )}
       <Route component={NotFound} />
     </Switch>
   );

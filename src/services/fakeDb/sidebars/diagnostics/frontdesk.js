@@ -21,7 +21,6 @@ import {
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 // import Products from "../../../../pages/platforms/frontdesk/market/products";
 // import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
-// import machines from "../../../../pages/platforms/SuperAdmin/commerce/assets/machines";
 // import generics from "../../../../pages/platforms/frontdesk/market/generics";
 // import medicines from "../../../pages/platforms/frontdesk/market/medicine";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
@@ -40,9 +39,9 @@ import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
 
 const frontdesk = [
   {
-    name: "Bulletin Board",
+    name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/bulletin",
+    path: "/dashboard",
     title:
       "Displays announcements and system-wide updates for the frontdesk team.",
     component: Dashboard,

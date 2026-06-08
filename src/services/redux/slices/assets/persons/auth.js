@@ -241,9 +241,20 @@ const setAP = (state, payload) => {
     isPhysician = false,
     activeAffiliation,
   } = payload;
-  const affiliationId = activeAffiliation || state.auth?.activeAffiliation || "";
-  if (!affiliationId) return "";
-  const branch = findCurrentAffiliation(branches, affiliationId);
+  const requestedAffiliationId =
+    activeAffiliation || state.auth?.activeAffiliation || "";
+  const fallbackAffiliationId =
+    branches.length === 1 ? branches[0]?.affiliationId || branches[0]?._id : "";
+  const affiliationId = requestedAffiliationId || fallbackAffiliationId || "";
+
+  if (!affiliationId) {
+    state.activePlatform = {};
+    localStorage.removeItem("activePlatform");
+    return "";
+  }
+  const branch =
+    findCurrentAffiliation(branches, affiliationId) ||
+    (branches.length === 1 ? branches[0] : null);
   if (!branch) {
     state.activePlatform = {};
     localStorage.removeItem("activePlatform");
@@ -259,8 +270,11 @@ const setAP = (state, payload) => {
   const normalizedBranchStatus = String(status || "")
     .trim()
     .toLowerCase();
+  const contractEmploymentStatus = employment.isEmployed(
+    normalizedContractStatus
+  );
   const resolvedEmploymentStatus =
-    employment.isEmployed(normalizedContractStatus) !== undefined
+    typeof contractEmploymentStatus === "boolean"
       ? normalizedContractStatus
       : normalizedBranchStatus;
   const isEmployed = employment.isEmployed(
@@ -295,6 +309,12 @@ const setAP = (state, payload) => {
     clinic,
     platform: isEmployed ? selectedPlatform : "",
   };
+  if (affiliationId && String(state.auth?.activeAffiliation || "") !== String(affiliationId)) {
+    state.auth = {
+      ...state.auth,
+      activeAffiliation: affiliationId,
+    };
+  }
   localStorage.setItem("activePlatform", JSON.stringify(activePlatform));
   state.activePlatform = activePlatform;
   state.company = branch?.companyId;
@@ -353,10 +373,67 @@ export const reduxSlice = createSlice({
       state.activePlatform = payload;
       localStorage.setItem("activePlatform", JSON.stringify(payload));
     },
+    SyncAffiliationPlatform: (state, { payload }) => {
+      const { affiliationId, platform } = payload || {};
+      const normalizedAffiliationId = String(affiliationId || "");
+      const normalizedPlatform = String(platform || "")
+        .trim()
+        .toLowerCase();
+
+      if (!normalizedAffiliationId || !normalizedPlatform) return;
+
+      state.branches = (state.branches || []).map((branch) =>
+        String(branch.affiliationId || branch._id || "") ===
+        normalizedAffiliationId
+          ? {
+              ...branch,
+              activePlatform: normalizedPlatform,
+            }
+          : branch
+      );
+
+      if (
+        String(state.auth?.activeAffiliation || "") === normalizedAffiliationId
+      ) {
+        const updatedActivePlatform = {
+          ...state.activePlatform,
+          platform: normalizedPlatform,
+        };
+
+        state.activePlatform = updatedActivePlatform;
+        localStorage.setItem(
+          "activePlatform",
+          JSON.stringify(updatedActivePlatform)
+        );
+      }
+    },
 
     PatchSessionPlatform: (state, action) => {
       const { isHMO = false, isBranch = false, data } = action.payload;
       const current = state.activePlatform;
+      const updatedBranchId = String(data?._id || "");
+
+      if (isBranch && updatedBranchId) {
+        state.branches = (state.branches || []).map((affiliation) => {
+          const branchRef = affiliation?.branch || {};
+          const matchesBranch =
+            String(branchRef?._id || affiliation?.branchId || "") ===
+            updatedBranchId;
+
+          if (!matchesBranch) return affiliation;
+
+          return {
+            ...affiliation,
+            name: data?.name ?? affiliation?.name,
+            displayname: data?.displayname ?? affiliation?.displayname,
+            code: data?.code ?? affiliation?.code,
+            branch: {
+              ...branchRef,
+              ...data,
+            },
+          };
+        });
+      }
 
       const updatedBranch = {
         ...current.branch,
@@ -426,12 +503,12 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SETACTIVEAFFILIATION.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success = "", payload = {} } = action.payload || {};
         const convert = (data) => JSON.parse(JSON.stringify(data));
         const updatedBranches = convert(state.branches).map((branch) => {
           if (
-            (branch.affiliationId || branch._id) ===
-            payload?.currentAffiliation?._id
+            String(branch.affiliationId || branch._id) ===
+            String(payload?.currentAffiliation?._id || "")
           ) {
             return {
               ...branch,
@@ -470,13 +547,22 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SETAFFILIATIONPLATFORM.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        const convert = (data) => JSON.parse(JSON.stringify(data));
-        const updatedBranches = convert(state.branches).map((branch) => {
-          if ((branch.affiliationId || branch._id) === payload?._id) {
+        const success =
+          action.payload?.success || "Platform updated successfully.";
+        const payload = action.payload?.payload || action.payload;
+        const normalizedPlatform = Access.normalizePlatformKey(
+          payload?.activePlatform,
+        );
+        const updatedBranches = (state.branches || []).map((branch) => {
+          if (
+            String(branch.affiliationId || branch._id) ===
+            String(payload?._id || "")
+          ) {
             return {
               ...branch,
-              ...payload,
+              ...(normalizedPlatform
+                ? { activePlatform: normalizedPlatform }
+                : {}),
             };
           }
 
@@ -549,7 +635,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success = "", payload = {} } = action.payload || {};
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
@@ -636,6 +722,7 @@ export const reduxSlice = createSlice({
 export const {
   RESET,
   OverrideActivePlatform,
+  SyncAffiliationPlatform,
   SetAUTH,
   SetCOMPANY,
   MAXPAGE,

@@ -3,10 +3,9 @@ import { MDBContainer, MDBMask, MDBView } from "mdbreact";
 import "../style.css";
 import Register from "./register";
 import Login from "../../home/login";
-import LOGO from "./../../../assets/iMD.png";
 
 import { useDispatch, useSelector } from "react-redux";
-import { ENDPOINT } from "../../../services/utilities";
+import { ENDPOINT, FailedLogo } from "../../../services/utilities";
 import Loading from "./loading";
 import Machines from "./machine";
 import Employees from "./employee";
@@ -91,7 +90,7 @@ const Suppliers = ({ match }) => {
                 <img
                   src={`${ENDPOINT}/public/companies/${name}/logo.png`}
                   alt="logo"
-                  onError={(e) => (e.target.src = LOGO)}
+                  onError={(e) => (e.target.src = FailedLogo)}
                   className="mr-2"
                 />
                 {name}

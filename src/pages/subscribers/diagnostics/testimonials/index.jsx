@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "./style.css";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import AVATAR from "../../../../assets/male.jpg";
 import { MDBAnimation } from "mdbreact";
+import SafeSwiper from "../../../../components/swiper/SafeSwiper";
 
 const testimonials = [
   {
@@ -180,7 +181,7 @@ export default function Testimonials() {
               className="subscriber-testimonials-sliderContainer"
             >
               {testimonials.length > 0 && (
-                <Swiper
+                <SafeSwiper
                   modules={[Autoplay]}
                   direction="vertical"
                   loop={true}
@@ -234,7 +235,7 @@ export default function Testimonials() {
                       </div>
                     </SwiperSlide>
                   ))}
-                </Swiper>
+                </SafeSwiper>
               )}
             </MDBAnimation>
 
@@ -244,7 +245,7 @@ export default function Testimonials() {
               duration="1500ms"
               className="subscriber-testimonials-sliderContainer"
             >
-              <Swiper
+              <SafeSwiper
                 modules={[Autoplay]}
                 direction="vertical"
                 loop={true}
@@ -299,7 +300,7 @@ export default function Testimonials() {
                     </div>
                   </SwiperSlide>
                 ))}
-              </Swiper>
+              </SafeSwiper>
             </MDBAnimation>
           </div>
         </div>

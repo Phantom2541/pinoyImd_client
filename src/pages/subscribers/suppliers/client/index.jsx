@@ -1,8 +1,9 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "./style.css";
+import SafeSwiper from "../../../../components/swiper/SafeSwiper";
 
 export default function Client() {
   const images = [
@@ -22,7 +23,7 @@ export default function Client() {
         <h1>Healthcare Institutions We Support</h1>
       </div>
       {images.length > 0 && (
-        <Swiper
+        <SafeSwiper
           modules={[Autoplay]}
           loop={true}
           speed={4000}
@@ -51,7 +52,7 @@ export default function Client() {
               />
             </SwiperSlide>
           ))}
-        </Swiper>
+        </SafeSwiper>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBMask, MDBView } from "mdbreact";
 import { axioKit, Cloudinary } from "./../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,10 @@ export default function Logo() {
   const dispatch = useDispatch();
   const [preview, setPreview] = useState("");
   const [showImgCropper, setShowImgCropper] = useState(false);
-
+  const cropperInputId = useMemo(
+    () => `company-logo-crop-${company?._id || "default"}`,
+    [company?._id]
+  );
   useEffect(() => {
     setShowImgCropper(false);
     dispatch(RESET());
@@ -57,26 +60,50 @@ export default function Logo() {
   const handleDownload = () => {
     const link = document.createElement("a");
     link.href = FailedLogo;
-    link.download = "Preset-Logo.jpg";
+    link.download = "logoWithText.png";
     link.click();
   };
 
   return (
     <>
-      <div style={{ minWidth: "150px", width: "150px", aspectRatio: "1/1" }}>
+      <div
+        style={{
+          width: "230px",
+          maxWidth: "100%",
+        }}
+      >
         <MDBView hover={!showImgCropper}>
-          <img
-            src={
-              preview ||
-              `${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
-                company.name
-              }/logo.png`
-            }
-            className="img-fluid"
-            alt={company?.name || "Default Logo"}
-            onError={(e) => (e.target.src = FailedLogo)}
-            style={{ minWidth: "150px", width: "150px", aspectRatio: "1/1" }}
-          />
+          <div
+            style={{
+              width: "230px",
+              maxWidth: "100%",
+              height: "80px",
+              background: "#ffffff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "16px",
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src={
+                preview ||
+                `${Cloudinary.getEndpoint()}/${company?.lid || ""}/companies/${
+                  company.name
+                }/logo.png`
+              }
+              alt={company?.name || "Default Logo"}
+              onError={(e) => (e.target.src = FailedLogo)}
+              style={{
+                display: "block",
+                width: "230px",
+                height: "80px",
+                objectFit: "contain",
+                background: "#ffffff",
+              }}
+            />
+          </div>
           <MDBMask overlay="grey-strong d-flex align-items-center">
             <MDBBtnGroup className="mx-auto">
               <MDBBtn
@@ -90,9 +117,11 @@ export default function Logo() {
               </MDBBtn>
               <ImageCropper
                 handleUpload={handleUpload}
+                modalSize="lg"
                 cropSize={{ width: 230, height: 80 }}
                 setIsShow={(show) => setShowImgCropper(show)}
                 isUpload
+                inputId={cropperInputId}
                 label={
                   <>
                     <MDBIcon icon="upload" />

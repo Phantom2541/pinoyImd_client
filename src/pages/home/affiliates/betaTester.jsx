@@ -1,4 +1,4 @@
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
@@ -6,6 +6,7 @@ import { Cloudinary } from "../../../services/utilities";
 import { useSelector } from "react-redux";
 import { BgRemover } from "../../../components/images/index";
 import { MDBAnimation } from "mdbreact";
+import SafeSwiper from "../../../components/swiper/SafeSwiper";
 
 export default function BetaTester() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -23,7 +24,7 @@ export default function BetaTester() {
         <h1 className="affiliates-title">Pinoy iMD Pilot Users</h1>
       </MDBAnimation>
       {earlyCompanies?.length > 0 && (
-        <Swiper
+        <SafeSwiper
           className="affiliates-swiper"
           modules={[Autoplay]}
           loop={true}
@@ -92,7 +93,7 @@ export default function BetaTester() {
               </SwiperSlide>
             );
           })}
-        </Swiper>
+        </SafeSwiper>
       )}
     </div>
   );

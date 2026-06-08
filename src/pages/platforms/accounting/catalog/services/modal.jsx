@@ -69,7 +69,7 @@ export default function Modal({
               ...form,
               _id,
             },
-          })
+          }),
         );
       }
     });
@@ -85,26 +85,26 @@ export default function Modal({
             branchId: activePlatform?.branchId,
             userId: auth._id,
           },
-        })
+        }),
       ).then(() => toggle());
 
     dispatch(
       UPDATE({
         token,
         data: form,
-      })
+      }),
     ).then(() => toggle());
   };
 
   const validateDevelopment = () => {
     const isExisting = references.find(
-      (ref) => String(ref[key]) === String(form.development)
+      (ref) => String(ref[key]) === String(form.development),
     );
 
     if (willCreate && isExisting)
       return askConsent(
         References.preferences.development[form.development],
-        isExisting._id
+        isExisting._id,
       );
 
     handleQuery();
@@ -112,13 +112,13 @@ export default function Modal({
 
   const validateGender = () => {
     const isExisting = references.find(
-      (ref) => ref[key] === Boolean(form.isMale)
+      (ref) => ref[key] === Boolean(form.isMale),
     );
 
     if (willCreate && isExisting)
       return askConsent(
         References.preferences.gender[form.isMale],
-        isExisting._id
+        isExisting._id,
       );
 
     handleQuery();
@@ -139,7 +139,7 @@ export default function Modal({
 
     if (!validateHierarchy(form))
       return handleError(
-        "Please input proper references. Hierarchy  of values is must."
+        "Please input proper references. Hierarchy  of values is must.",
       );
 
     // if (!form.units) return handleError("Please select a unit of measurement.");
@@ -192,7 +192,7 @@ export default function Modal({
                           {choice.name ? choice.name : choice}
                           {choice.ageGap ? `(${choice.ageGap})` : ""}
                         </MDBSelectOption>
-                      )
+                      ),
                     )}
                   </MDBSelectOptions>
                 </MDBSelect>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
-import LOGO from "./../../../../assets/iMD.png";
 
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -15,6 +14,7 @@ import { useToasts } from "react-toast-notifications";
 import { useSelector } from "react-redux";
 import {
   ENDPOINT,
+  FailedLogo,
   fullAddress,
   LatitudeAddress,
   mobile,
@@ -118,7 +118,7 @@ export default function ContactUs() {
             <img
               src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
               alt="logo"
-              onError={(e) => (e.target.src = LOGO)}
+              onError={(e) => (e.target.src = FailedLogo)}
               width="90px"
               height="90px"
             />

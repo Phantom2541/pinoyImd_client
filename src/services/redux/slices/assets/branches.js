@@ -515,12 +515,13 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        if (state?.collections?.length > 0) {
+        const { success = "", payload = null } = action.payload || {};
+        if (payload && state?.collections?.length > 0) {
           const updateCollections = (collections) => {
             const index = collections.findIndex(
               (item) => item._id === payload._id
             );
+            if (index < 0) return;
             const oldData = { ...collections[index] };
             collections[index] = { ...oldData, ...payload };
           };
@@ -528,8 +529,8 @@ export const reduxSlice = createSlice({
           updateCollections(state.collections);
           updateCollections(state.filtered);
         }
-        state.ct = payload;
-        state.message = success;
+        state.ct = payload || state.ct;
+        state.message = success || state.message || "Branch updated.";
         state.isSuccess = true;
         state.formSubmitted = false;
       })

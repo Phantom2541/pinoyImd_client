@@ -88,13 +88,13 @@ const Banner = () => {
     const formData = Cloudinary.buildFileForm(
       base64,
       `companies/${companyId.name}/${branch}`,
-      "banner"
+      "banner",
     );
     dispatch(
       UPLOAD({
         data: formData,
         token,
-      })
+      }),
     );
   };
 
@@ -146,7 +146,7 @@ const Banner = () => {
       (o) => o.settings?.status?.trim().toLowerCase() !== "active", // active first
       (o) => o.name.toLowerCase().trim(), // alphabetical
     ],
-    ["asc", "asc", "asc"]
+    ["asc", "asc", "asc"],
   );
 
   if (!sortedCollections || sortedCollections.length === 0) {
@@ -161,21 +161,21 @@ const Banner = () => {
     direction === "left"
       ? "bannerFadeInLeft"
       : direction === "right"
-      ? "bannerFadeInRight"
-      : "";
+        ? "bannerFadeInRight"
+        : "";
 
   const shadowColor =
     settings?.status === "Active"
       ? "#198754"
       : settings?.status === "Draft"
-      ? "#6f42c1"
-      : settings?.status === "Expired"
-      ? "#dc3545"
-      : settings?.status === "Suspended"
-      ? "#ffc107"
-      : settings?.status === "Cancelled"
-      ? "#b23c17"
-      : "";
+        ? "#6f42c1"
+        : settings?.status === "Expired"
+          ? "#dc3545"
+          : settings?.status === "Suspended"
+            ? "#ffc107"
+            : settings?.status === "Cancelled"
+              ? "#b23c17"
+              : "";
 
   return (
     <div>
@@ -187,7 +187,8 @@ const Banner = () => {
           note
           noteTitle={"Description: "}
         >
-          Hover over the banner to upload or download a new one.
+          Hover over the banner to upload a new image or download the current
+          one.
         </MDBTypography>
 
         {/* key changes when currentIndex or direction changes -> remount and play animation */}
@@ -256,6 +257,7 @@ const Banner = () => {
                   </MDBBtnGroup>
                 </MDBMask>
               </MDBView>
+              <hr />
               <MDBRow className="my-2">
                 <MDBCol md="6">
                   <h6>

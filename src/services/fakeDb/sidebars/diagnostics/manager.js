@@ -392,6 +392,13 @@ const ManagerSidebar = [
             component: Outsources,
           },
           {
+            name: "Insources", //Tie Ups
+            title: "Partner companies, and schools for contracts or APE.",
+            path: "/tieup",
+            icon: "handshake",
+            component: Tieups,
+          },
+          {
             name: "Suppliers",
             title:
               "Vendors providing reagents, equipment, and office supplies.",
@@ -412,13 +419,6 @@ const ManagerSidebar = [
             path: "/hotlines",
             icon: "phone",
             component: Hotlines,
-          },
-          {
-            name: "Tie Ups",
-            title: "Partner companies, HMOs, and schools for contracts or APE.",
-            path: "/tieup",
-            icon: "handshake",
-            component: Tieups,
           },
         ],
       },

@@ -15,6 +15,7 @@ import {
   RESET,
   UPDATE,
 } from "../../../../../../services/redux/slices/assets/branches";
+import { PatchSessionPlatform } from "../../../../../../services/redux/slices/assets/persons/auth";
 import { useDispatch, useSelector } from "react-redux";
 import AddressSelect from "../../../../../../components/searchables/addressSelect";
 import Search from "../../../../../../components/searchables/ao";
@@ -113,16 +114,47 @@ export default function Modal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const sanitizedForm = {
+      _id: form?._id,
+      name: form?.name || "",
+      displayname: form?.displayname || "",
+      code: form?.code || "",
+      contacts: {
+        mobile: form?.contacts?.mobile || "",
+        email: form?.contacts?.email || "",
+      },
+      address: {
+        region: form?.address?.region || "",
+        province: form?.address?.province || "",
+        city: form?.address?.city || "",
+        barangay: form?.address?.barangay || "",
+        street: form?.address?.street || "",
+      },
+    };
 
     if (selected?._id) {
-      dispatch(UPDATE({ token, data: form }));
+      dispatch(UPDATE({ token, data: sanitizedForm })).then((action) => {
+        const updatedBranch = action?.payload?.payload;
+
+        if (updatedBranch?._id) {
+          dispatch(
+            PatchSessionPlatform({
+              isBranch: true,
+              data: updatedBranch,
+            })
+          );
+        }
+      });
     } else {
       dispatch(
         SAVE({
           token,
           data: {
             branch: {
-              ...form,
+              ...sanitizedForm,
+              ao: form?.ao || "",
+              department: form?.department || "",
+              designation: form?.designation || "",
               companyId: activePlatform?.branch?.companyId?._id,
             },
             auth,
@@ -195,11 +227,11 @@ export default function Modal() {
             <MDBCol>
               <MDBInput
                 label="Mobile"
-                value={form.contact?.mobile}
+                value={form.contacts?.mobile}
                 onChange={({ target }) =>
                   setForm({
                     ...form,
-                    contact: { ...form.contact, mobile: target.value },
+                    contacts: { ...form.contacts, mobile: target.value },
                   })
                 }
               />
@@ -208,11 +240,11 @@ export default function Modal() {
               <MDBInput
                 label="Email"
                 type="email"
-                value={form.contact?.email}
+                value={form.contacts?.email}
                 onChange={({ target }) =>
                   setForm({
                     ...form,
-                    contact: { ...form.contact, email: target.value },
+                    contacts: { ...form.contacts, email: target.value },
                   })
                 }
               />
@@ -276,7 +308,12 @@ export default function Modal() {
           )}
           <AddressSelect
             address={form.address}
-            handleChange={(key, value) => setForm({ ...form, [key]: value })}
+            handleChange={(key, value) =>
+              setForm({
+                ...form,
+                address: { ...form.address, [key]: value },
+              })
+            }
           />
           <div className="text-center">
             <MDBBtn

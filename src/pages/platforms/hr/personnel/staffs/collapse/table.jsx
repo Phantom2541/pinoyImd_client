@@ -83,7 +83,24 @@ export default function CollapseTable({
   const selectedUnitKey = selectedUnitIds.join(",");
   const toggle = () => setShow(!show);
   const taggedPlatforms = platforms
-    .map((id) => Access.collections.find((item) => item.id === Number(id)))
+    .map((value) => {
+      const normalizedPlatform = Access.normalizePlatformKey(value);
+      if (!normalizedPlatform) return null;
+
+      const matched = Access.collections.find(
+        ({ id, platform, code, name }) =>
+          Access.normalizePlatformKey(id) === normalizedPlatform ||
+          Access.normalizePlatformKey(platform) === normalizedPlatform ||
+          Access.normalizePlatformKey(code) === normalizedPlatform ||
+          Access.normalizePlatformKey(name) === normalizedPlatform,
+      );
+
+      return {
+        id: matched?.id || normalizedPlatform,
+        platform: normalizedPlatform,
+        name: matched?.name || Access.getPlatformLabel(normalizedPlatform),
+      };
+    })
     .filter(Boolean);
 
   const {

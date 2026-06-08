@@ -6,7 +6,7 @@ import handlePagination from "./pagination";
 import fullName from "./fullName";
 import calculateDiff from "./calculateDiff";
 import FailedBanner from "../../assets/failedBanner.jpg";
-import FailedLogo from "../../assets/iMD.png";
+import FailedLogo from "../../assets/logoWithText.png";
 import PresetUser from "../../assets/default.jpg";
 import isJpegOrJpgFile from "./isJpegOrJpgFile";
 import { fullAddress, billingAddress, LatitudeAddress } from "./fullAddress";

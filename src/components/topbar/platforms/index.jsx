@@ -10,11 +10,23 @@ import {
 } from "mdbreact";
 import { capitalize } from "../../../services/utilities";
 import { Access } from "../../../services/fakeDb";
+import { getPlatformDefaultRoute } from "../../../services/fakeDb/sidebars";
 import { SETAFFILIATIONPLATFORM } from "../../../services/redux/slices/assets/persons/affiliations";
+import { SyncAffiliationPlatform } from "../../../services/redux/slices/assets/persons/auth";
 
 const normalizePlatform = Access.normalizePlatformKey;
 const getPlatformLabel = (value = "") =>
   capitalize(Access.getPlatformLabel(value).replace(/_/g, " "));
+const diagnosticsCategories = [
+  "diagnostic",
+  "clinic",
+  "laboratory",
+  "radiology",
+  "pharmacy",
+  "infirmary",
+  "hospital",
+  "rehabilitation",
+];
 
 export default function Platforms() {
   const { auth, branches = [], token } = useSelector(({ auth }) => auth),
@@ -38,6 +50,11 @@ export default function Platforms() {
     currentAffiliation?.activePlatform || "",
   );
   const isDraft = currentAffiliation?.branch?.settings?.status === "Draft";
+  const isDiagnostics = diagnosticsCategories.includes(
+    String(currentAffiliation?.branch?.category || "")
+      .trim()
+      .toLowerCase(),
+  );
 
   useEffect(() => {
     const platforms = (currentAffiliation?.platforms || [])
@@ -66,10 +83,14 @@ export default function Platforms() {
     );
   }, [access, currentAffiliationId, dispatch, selectedPlatform, token]);
 
-  const handlePlatform = (platform) => {
-    const cleanedPlatform = normalizePlatform(platform);
+  const handlePlatform = async (platform, event) => {
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
 
-    dispatch(
+    const cleanedPlatform = normalizePlatform(platform);
+    if (!cleanedPlatform || !currentAffiliationId) return;
+
+    const result = await dispatch(
       SETAFFILIATIONPLATFORM({
         data: {
           _id: currentAffiliationId,
@@ -79,10 +100,19 @@ export default function Platforms() {
       }),
     );
 
-    const routePlatform = cleanedPlatform;
-    const isManager = routePlatform === "manager";
-    const redirectURL = `/${routePlatform}/${isManager ? "dashboard" : "bulletin"}`;
-    history.push(redirectURL);
+    if (SETAFFILIATIONPLATFORM.fulfilled.match(result)) {
+      dispatch(
+        SyncAffiliationPlatform({
+          affiliationId: currentAffiliationId,
+          platform: cleanedPlatform,
+        }),
+      );
+      history.push(
+        getPlatformDefaultRoute(cleanedPlatform, {
+          isDiagnostics,
+        }),
+      );
+    }
   };
 
   if (access.length <= 1) return null;
@@ -124,7 +154,7 @@ export default function Platforms() {
                   e.stopPropagation();
                   return;
                 }
-                handlePlatform(platform);
+                handlePlatform(platform, e);
               }}
               style={{
                 color: isDisabled ? "#aaa" : "#212529",

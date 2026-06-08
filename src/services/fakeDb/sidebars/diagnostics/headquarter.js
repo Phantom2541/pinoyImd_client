@@ -156,31 +156,23 @@ const headquarter = [
     ],
   },
   {
-    name: "System Configuration",
+    name: "Company Configuration",
     icon: "settings",
-    path: "/system-configuration",
+    path: "/company-configuration",
     title: "Company branding, structure, and general setup",
     children: [
       {
-        name: "Profile Settings",
-        path: "/profile",
+        name: "Company Settings",
+        path: "/company-settings",
         icon: "user-cog",
         children: [
           {
-            name: "Company Details",
+            name: "Basic Information",
             path: "/descriptions",
             icon: "file-text",
             title: "Company introduction or overview",
             component: Description,
           },
-          {
-            name: "Patient Categories",
-            path: "/patient-categoreis",
-            icon: "file-text",
-            title: "Company introduction or overview",
-            component: PatientCategories,
-          },
-
           {
             name: "Banner",
             path: "/banners",
@@ -195,6 +187,13 @@ const headquarter = [
             icon: "map",
             title: "List and manage all company branches",
             component: Branches,
+          },
+          {
+            name: "Patient Categories",
+            path: "/patient-categoreis",
+            icon: "file-text",
+            title: "Company introduction or overview",
+            component: PatientCategories,
           },
         ],
       },

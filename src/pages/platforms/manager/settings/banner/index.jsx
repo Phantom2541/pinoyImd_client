@@ -84,20 +84,20 @@ const Banner = () => {
       UPLOAD({
         data: formData,
         token,
-      })
+      }),
     ).then((action) => {
       dispatch(
         UPDATE({
           token,
           data: { bid: action.payload.imgId, _id: activePlatform?.branchId },
-        })
+        }),
       ).then(() =>
         dispatch(
           OverrideActivePlatform({
             ...activePlatform,
             branch: { ...branch, bid: action?.payload?.imgId },
-          })
-        )
+          }),
+        ),
       );
     });
   };

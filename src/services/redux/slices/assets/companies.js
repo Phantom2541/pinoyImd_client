@@ -393,6 +393,7 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
+        state.details = {};
       })
       .addCase(GET_DETAILS.fulfilled, (state, action) => {
         state.details = action.payload;
@@ -402,6 +403,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(GET_DETAILS.rejected, (state, action) => {
         const { error } = action;
+        state.details = {};
         state.message = error.message;
         state.isLoading = false;
       })

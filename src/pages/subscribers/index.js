@@ -21,22 +21,22 @@ export default function CompanyCategorySwitcher() {
   const { companyId } = useParams();
   const dispatch = useDispatch();
 
-  const { details, isLoading } = useSelector(({ companies }) => companies);
+  const { details, isLoading, message } = useSelector(
+    ({ companies }) => companies
+  );
 
   const category = useMemo(
     () => details?.category?.toLowerCase() || null,
     [details]
   );
-  console.log("companyId", companyId);
-  console.log("details", details);
-  console.log("category", category);
+  const hasResolvedDetails = Boolean(details?._id);
 
   useEffect(() => {
     dispatch(GET_DETAILS({ key: { companyId } }));
     localStorage.setItem("companyId", companyId);
   }, [companyId, dispatch]);
 
-  if (isLoading || !details) return <Loading />;
+  if (isLoading || !hasResolvedDetails) return <Loading />;
 
   if (category && diagnosticsCategories.includes(category)) {
     return <Diagnostics />;
@@ -46,5 +46,9 @@ export default function CompanyCategorySwitcher() {
     return <Suppliers />;
   }
 
-  return <div>Unknown category: {category}</div>;
+  return (
+    <div className="text-center py-5">
+      {message || `Unknown category: ${category || "unavailable"}`}
+    </div>
+  );
 }

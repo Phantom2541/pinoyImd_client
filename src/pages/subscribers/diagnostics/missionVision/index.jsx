@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import "./style.css";
-import LOGO from "./../../../../assets/aplhamed.png";
 import MISSION from "./../../../../assets/mission.jpg";
 import VISION from "./../../../../assets/vision.jpg";
 import VALUE from "./../../../../assets/value.jpg";
-import { Cloudinary } from "../../../../services/utilities";
+import { Cloudinary, FailedLogo } from "../../../../services/utilities";
 
 export default function MissionVision() {
   const [company, setCompany] = useState(null);
@@ -23,7 +22,7 @@ export default function MissionVision() {
 
   const logoUrl = company?.name
     ? `${Cloudinary.getEndpoint()}/companies/${company.name}/logo`
-    : LOGO; // fallback to default logo if no company
+    : FailedLogo;
 
   // Safely ensure values list is always an array
   const values = Array.isArray(company?.vl) ? company.vl : [];
@@ -63,7 +62,12 @@ export default function MissionVision() {
             </ul>
           </div>
           <div>
-            <img src={logoUrl} alt="Company Logo" loading="lazy" />
+            <img
+              src={logoUrl}
+              alt="Company Logo"
+              loading="lazy"
+              onError={(e) => (e.target.src = FailedLogo)}
+            />
             <span>{company?.name || "Company"}</span>
           </div>
           <div>

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
-import { Policy } from "../../../../../../services/fakeDb";
+import { Access, Policy } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
 import { SETOnHotSEAT } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
@@ -68,7 +68,27 @@ export default function CollapseTable({
   const [selected, setSelected] = useState({});
   const [filteredPositions, setFilteredPositions] = useState([]);
   const [dep, setDep] = useState("");
-  const { access = [] } = staff || {};
+  const { platforms = [] } = staff || {};
+  const taggedPlatforms = platforms
+    .map((value) => {
+      const normalizedPlatform = Access.normalizePlatformKey(value);
+      if (!normalizedPlatform) return null;
+
+      const matched = Access.collections.find(
+        ({ id, platform, code, name }) =>
+          Access.normalizePlatformKey(id) === normalizedPlatform ||
+          Access.normalizePlatformKey(platform) === normalizedPlatform ||
+          Access.normalizePlatformKey(code) === normalizedPlatform ||
+          Access.normalizePlatformKey(name) === normalizedPlatform,
+      );
+
+      return {
+        id: matched?.id || normalizedPlatform,
+        platform: normalizedPlatform,
+        name: matched?.name || Access.getPlatformLabel(normalizedPlatform),
+      };
+    })
+    .filter(Boolean);
   const toggle = () => setShow(!show);
 
   const {
@@ -367,7 +387,7 @@ export default function CollapseTable({
         <MDBCol md={!isHonorarium ? 3 : 4}>
           <div className="d-flex  align-items-center">
             <h5 className="mb-0">Access</h5>
-            {access?.length > 0 && (
+            {taggedPlatforms?.length > 0 && (
               <MDBIcon
                 icon="pencil-alt"
                 className="cursor-pointer ml-2"
@@ -377,15 +397,15 @@ export default function CollapseTable({
             )}
           </div>
           <hr />
-          {access?.length > 0 ? (
-            access.map((acc, index) => (
+          {taggedPlatforms?.length > 0 ? (
+            taggedPlatforms.map((acc, index) => (
               <MDBBadge
                 key={index}
                 className="mr-2 mb-3"
                 pill
                 style={{ fontSize: "15px", fontWeight: 500 }}
               >
-                {acc.platform}
+                {acc.name || acc.platform}
               </MDBBadge>
             ))
           ) : (

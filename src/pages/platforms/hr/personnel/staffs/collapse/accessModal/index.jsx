@@ -19,6 +19,25 @@ import Spinner from "../../../../../../../components/spinner";
 
 const EMPTY_ARRAY = [];
 const EMPTY_OBJECT = {};
+const mapPlatformToOption = (value) => {
+  const normalizedPlatform = Access.normalizePlatformKey(value);
+  if (!normalizedPlatform) return null;
+
+  const matched = Access.collections.find(
+    ({ id, platform, code, name }) =>
+      Access.normalizePlatformKey(id) === normalizedPlatform ||
+      Access.normalizePlatformKey(platform) === normalizedPlatform ||
+      Access.normalizePlatformKey(code) === normalizedPlatform ||
+      Access.normalizePlatformKey(name) === normalizedPlatform,
+  );
+
+  return {
+    id: matched?.id || normalizedPlatform,
+    platform: normalizedPlatform,
+    name: matched?.name || Access.getPlatformLabel(normalizedPlatform),
+    description: matched?.description || "",
+  };
+};
 
 /**
  * AccessModal component manages user access roles through a modal interface.
@@ -52,7 +71,7 @@ export default function AccessModal({ show, toggle, selected }) {
   const selectedPlatforms = useMemo(
     () =>
       platforms
-        .map((id) => Access.collections.find((item) => item.id === Number(id)))
+        .map((value) => mapPlatformToOption(value))
         .filter(Boolean),
     [platforms],
   );
@@ -68,7 +87,8 @@ export default function AccessModal({ show, toggle, selected }) {
         (c) =>
           _existingAccess?.every(
             (existAcc) =>
-              existAcc.platform.toUpperCase() !== c.platform.toUpperCase(),
+              String(existAcc.platform || "").toUpperCase() !==
+              String(c.platform || "").toUpperCase(),
           ),
       );
     },
@@ -85,18 +105,30 @@ export default function AccessModal({ show, toggle, selected }) {
   }, [show, selectedPlatforms, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
-    const currentIds = existingAccess.map(({ id, _id }) => Number(id || _id));
-    const originalIds = selectedPlatforms.map(({ id, _id }) =>
-      Number(id || _id),
+    const originalIds = selectedPlatforms.map(({ platform, id, _id }) =>
+      String(platform || id || _id || "").trim().toLowerCase(),
+    );
+    const currentPlatformKeys = existingAccess.map(({ platform, id, _id }) =>
+      String(platform || id || _id || "").trim().toLowerCase(),
     );
     const added = existingAccess
-      .filter(({ id, _id }) => !originalIds.includes(Number(id || _id)))
+      .filter(
+        ({ platform, id, _id }) =>
+          !originalIds.includes(
+            String(platform || id || _id || "").trim().toLowerCase(),
+          ),
+      )
       .map(({ id, _id, platform, name }) => ({
         id: id || _id,
         platform: platform || name,
       }));
     const deleted = selectedPlatforms
-      .filter(({ id, _id }) => !currentIds.includes(Number(id || _id)))
+      .filter(
+        ({ platform, id, _id }) =>
+          !currentPlatformKeys.includes(
+            String(platform || id || _id || "").trim().toLowerCase(),
+          ),
+      )
       .map(({ id, _id, platform, name }) => ({
         id: id || _id,
         platform: platform || name,
@@ -118,15 +150,24 @@ export default function AccessModal({ show, toggle, selected }) {
   };
 
   const handleAccessChanges = (role, isDelete = false) => {
-    const isExist = selectedPlatforms.some(({ id }) => id === role?.id);
+    const rolePlatform = String(
+      role?.platform || role?.id || role?._id || "",
+    ).trim().toLowerCase();
+    const isExist = selectedPlatforms.some(
+      ({ platform, id, _id }) =>
+        String(platform || id || _id || "").trim().toLowerCase() ===
+        rolePlatform,
+    );
     const { deleted, added } = accessChanges;
     const _addedRoles = [...added];
     const _deletedRoles = [...deleted];
-    const roleID = role?.id || role?._id;
+    const roleID = role?.id || role?._id || role?.platform;
 
     const getIndex = (array) =>
       array.findIndex(
-        ({ _id = "", id = "" }) => String(id || _id) === String(roleID),
+        ({ _id = "", id = "", platform = "" }) =>
+          String(platform || id || _id || "").trim().toLowerCase() ===
+          rolePlatform,
       );
     const index = getIndex(isDelete ? _addedRoles : _deletedRoles);
 

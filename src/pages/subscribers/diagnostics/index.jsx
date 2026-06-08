@@ -5,11 +5,10 @@ import Copyrights from "../../../components/footer";
 import Register from "../../home/slideShow";
 import ContactUs from "./contact";
 import Login from "../../home/login";
-import LOGO from "./../../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import Machines from "./machine";
 import { useSelector } from "react-redux";
-import { ENDPOINT } from "../../../services/utilities";
+import { ENDPOINT, FailedLogo } from "../../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
 import Employees from "./employee";
@@ -87,7 +86,7 @@ const Diagnostics = ({ match }) => {
                 <img
                   src={`${ENDPOINT}/public/companies/${name}/logo.png`}
                   alt="logo"
-                  onError={(e) => (e.target.src = LOGO)}
+                  onError={(e) => (e.target.src = FailedLogo)}
                   className="mr-2"
                 />
                 {name}
