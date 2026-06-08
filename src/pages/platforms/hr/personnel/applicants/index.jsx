@@ -49,9 +49,10 @@ export default function Applicants() {
   useEffect(() => {
     const _collections = [...collections].filter(({ status, branch }) => {
       if (activeBranch === "all") {
-        return status === "petition";
+        return ["petition", "pending"].includes(status);
       } else {
-        return status === "petition" && activeBranch === branch?._id;
+        return ["petition", "pending"].includes(status) &&
+          activeBranch === branch?._id;
       }
     });
 

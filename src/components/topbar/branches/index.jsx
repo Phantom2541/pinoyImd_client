@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import {
   MDBIcon,
   MDBDropdown,
@@ -7,26 +8,62 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { SETACTIVEAFFILIATION } from "../../../services/redux/slices/assets/persons/auth.js";
+import {
+  EnterPatronMode,
+  SETACTIVEAFFILIATION,
+} from "../../../services/redux/slices/assets/persons/auth.js";
+
+const PATRON_BRANCH_OPTION = {
+  _id: "__patron__",
+  isPatron: true,
+};
+
+const isVisibleAffiliation = (branch = {}) => {
+  const hiddenStatuses = ["pending", "banned", "blk", "blacklisted"];
+  const status = String(branch?.status || "")
+    .trim()
+    .toLowerCase();
+
+  return !hiddenStatuses.includes(status);
+};
 
 export default function Branches() {
   const { branches = [], auth = {}, token } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    history = useHistory();
+  const isPatronMode =
+    localStorage.getItem("preferredAffiliationMode") === "patron";
+  const visibleBranches = useMemo(
+    () => branches.filter(isVisibleAffiliation),
+    [branches],
+  );
 
   const activeAffiliation = auth?.activeAffiliation || "";
   const currentAffiliation = useMemo(() => {
-    const matchedAffiliation = branches.find(
+    const matchedAffiliation = visibleBranches.find(
       ({ affiliationId, _id }) =>
         String(affiliationId || _id) === String(activeAffiliation),
     );
 
-    return matchedAffiliation || (branches.length === 1 ? branches[0] : {});
-  }, [branches, activeAffiliation]);
+    return matchedAffiliation || (visibleBranches.length === 1 ? visibleBranches[0] : {});
+  }, [visibleBranches, activeAffiliation]);
+
+  const branchOptions = useMemo(
+    () => [...visibleBranches, PATRON_BRANCH_OPTION],
+    [visibleBranches],
+  );
 
   useEffect(() => {
-    if (activeAffiliation || branches.length !== 1 || !auth?._id) return;
+    if (
+      activeAffiliation ||
+      isPatronMode ||
+      visibleBranches.length !== 1 ||
+      !auth?._id
+    )
+      return;
 
-    const onlyAffiliationId = branches[0]?.affiliationId || branches[0]?._id;
+    const onlyAffiliationId =
+      visibleBranches[0]?.affiliationId || visibleBranches[0]?._id;
     if (!onlyAffiliationId) return;
 
     dispatch(
@@ -38,14 +75,28 @@ export default function Branches() {
         token,
       }),
     );
-  }, [activeAffiliation, auth, branches, dispatch, token]);
+  }, [
+    activeAffiliation,
+    auth,
+    visibleBranches,
+    dispatch,
+    isPatronMode,
+    token,
+  ]);
 
   const handleActiveBranch = (affiliationId) => {
+    if (affiliationId === PATRON_BRANCH_OPTION._id) {
+      dispatch(EnterPatronMode());
+      history.push("/patron/bulletin");
+      return;
+    }
+
     const data = {
       _id: auth._id,
       activeAffiliation: affiliationId,
     };
 
+    localStorage.removeItem("preferredAffiliationMode");
     dispatch(SETACTIVEAFFILIATION({ data, token }));
   };
 
@@ -103,6 +154,8 @@ export default function Branches() {
   };
 
   const formatBranchLabel = (affiliation = {}) => {
+    if (affiliation?.isPatron) return "Patron";
+
     const companyAcronym = getCompanyAcronym(affiliation);
     const branchAcronym = getBranchAcronym(affiliation);
 
@@ -118,11 +171,13 @@ export default function Branches() {
     return "";
   };
 
-  const branchLabel = formatBranchLabel(currentAffiliation);
+  const branchLabel = activeAffiliation && currentAffiliation?._id
+    ? formatBranchLabel(currentAffiliation)
+    : "Patron";
 
   return (
     <MDBDropdown>
-      {branches.length > 1 && (
+      {branchOptions.length > 1 && (
         <MDBDropdownToggle nav caret>
           <MDBIcon icon="code-branch" />
           &nbsp;
@@ -130,19 +185,21 @@ export default function Branches() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {branches.map((item, index) => {
+        {branchOptions.map((item, index) => {
           const { _id, affiliationId } = item;
           const itemAffiliationId = affiliationId || _id;
 
           return (
             <MDBDropdownItem
               active={
-                String(itemAffiliationId) ===
-                String(
-                  activeAffiliation ||
-                    currentAffiliation?.affiliationId ||
-                    currentAffiliation?._id,
-                )
+                item?.isPatron
+                  ? !activeAffiliation
+                  : String(itemAffiliationId) ===
+                    String(
+                      activeAffiliation ||
+                        currentAffiliation?.affiliationId ||
+                        currentAffiliation?._id,
+                    )
               }
               key={`branch-${index}`}
               onClick={() => handleActiveBranch(itemAffiliationId)}

@@ -23,7 +23,7 @@ import "./style.css";
 export default function UnsetApply() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     { collections, isLoading, filtered } = useSelector(
-      ({ companies }) => companies
+      ({ companies }) => companies,
     ),
     [companies, setCompanies] = useState([]),
     [page, setPage] = useState(1),
@@ -45,7 +45,7 @@ export default function UnsetApply() {
         GET_PHYSICIANS({
           token,
           key: { branchId: collections.branchId },
-        })
+        }),
       );
     return () => dispatch(RESET());
   }, [collections, dispatch, token]);
@@ -72,7 +72,7 @@ export default function UnsetApply() {
           cascade
           className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
         >
-          <div>Company List</div>
+          <div>Company Directory</div>
           <div>
             <Search
               haveAction={false}

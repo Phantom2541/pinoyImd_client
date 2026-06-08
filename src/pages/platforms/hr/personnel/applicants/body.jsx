@@ -16,6 +16,13 @@ const Body = ({ applicants }) => {
     { collections: branches } = useSelector(({ branches }) => branches),
     dispatch = useDispatch();
 
+  const getApplicantRemarks = (applicant = {}) => {
+    if (applicant?.message) return applicant.message;
+
+    const remarks = Array.isArray(applicant?.remarks) ? applicant.remarks : [];
+    return remarks[remarks.length - 1]?.reason || "";
+  };
+
   const handleDeny = (applicant) => {
     Swal.fire({
       title: "Confirm Denial",
@@ -98,7 +105,6 @@ const Body = ({ applicants }) => {
               user,
               file201 = {},
               contract,
-              remarks,
               branch,
             } = applicant;
             const { hasPds, hasResume, hasLetter } = file201;
@@ -160,7 +166,7 @@ const Body = ({ applicants }) => {
                     type="AppLetter"
                   />
                 </td>
-                <td>{remarks}</td>
+                <td>{getApplicantRemarks(applicant)}</td>
                 <td className="text-center">
                   <MDBBtnGroup>
                     <MDBBtn

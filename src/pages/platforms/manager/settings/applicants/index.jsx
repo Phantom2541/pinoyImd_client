@@ -55,7 +55,7 @@ export default function Applicants() {
 
   useEffect(() => {
     const _collections = [...collections].filter(
-      ({ status }) => status === "petition"
+      ({ status }) => ["petition", "pending"].includes(status)
     );
     setApplicants(_collections);
   }, [collections]);

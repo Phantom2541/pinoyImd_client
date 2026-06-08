@@ -613,6 +613,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(APPLICATION.fulfilled, (state, { payload }) => {
         state.collections = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(APPLICATION.rejected, (state, action) => {

@@ -113,6 +113,12 @@
   gap: 5px;
 }
 
+.application-card-titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .application-card-companyName {
   position: relative;
   width: fit-content;
@@ -144,8 +150,10 @@
 }
 
 .application-card-subName {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: #7a7a7a;
+  letter-spacing: 0.2px;
   overflow: hidden; /* walang quotes */
   text-overflow: ellipsis; /* walang quotes */
   white-space: nowrap; /* kailangan para gumana */

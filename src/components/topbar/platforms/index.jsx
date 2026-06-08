@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -28,26 +28,47 @@ const diagnosticsCategories = [
   "rehabilitation",
 ];
 
+const isVisibleAffiliation = (branch = {}) => {
+  const hiddenStatuses = ["pending", "banned", "blk", "blacklisted"];
+  const status = String(branch?.status || "")
+    .trim()
+    .toLowerCase();
+
+  return !hiddenStatuses.includes(status);
+};
+
 export default function Platforms() {
-  const { auth, branches = [], token } = useSelector(({ auth }) => auth),
+  const {
+      auth,
+      branches = [],
+      token,
+      activePlatform = {},
+    } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     history = useHistory();
+  const visibleBranches = useMemo(
+    () => branches.filter(isVisibleAffiliation),
+    [branches],
+  );
+  const isPatronMode =
+    !auth?.activeAffiliation ||
+    normalizePlatform(activePlatform?.platform) === "patron" ||
+    localStorage.getItem("preferredAffiliationMode") === "patron";
 
   const affiliationId = auth?.activeAffiliation || "";
   const currentAffiliation = useMemo(() => {
-    const matchedAffiliation = branches.find(
+    const matchedAffiliation = visibleBranches.find(
       ({ affiliationId: currentAffiliationId, _id }) =>
         String(currentAffiliationId || _id) === String(affiliationId),
     );
 
-    return matchedAffiliation || (branches.length === 1 ? branches[0] : {});
-  }, [branches, affiliationId]);
+    return matchedAffiliation || (visibleBranches.length === 1 ? visibleBranches[0] : {});
+  }, [visibleBranches, affiliationId]);
   const currentAffiliationId =
     currentAffiliation?.affiliationId || currentAffiliation?._id || "";
 
-  const [access, setAccess] = useState([]);
   const selectedPlatform = normalizePlatform(
-    currentAffiliation?.activePlatform || "",
+    currentAffiliation?.activePlatform || activePlatform?.platform || "",
   );
   const isDraft = currentAffiliation?.branch?.settings?.status === "Draft";
   const isDiagnostics = diagnosticsCategories.includes(
@@ -56,7 +77,9 @@ export default function Platforms() {
       .toLowerCase(),
   );
 
-  useEffect(() => {
+  const platformOptions = useMemo(() => {
+    if (isPatronMode) return [];
+
     const platforms = (currentAffiliation?.platforms || [])
       .map((platform) => normalizePlatform(platform))
       .filter(Boolean);
@@ -64,24 +87,30 @@ export default function Platforms() {
       a.localeCompare(b),
     );
 
-    setAccess(uniqueSorted);
-  }, [currentAffiliation]);
+    return uniqueSorted;
+  }, [currentAffiliation, isPatronMode]);
 
   useEffect(() => {
-    if (!currentAffiliationId || access.length !== 1) return;
+    if (!currentAffiliationId || platformOptions.length !== 1) return;
 
-    if (selectedPlatform === access[0]) return;
+    if (selectedPlatform === platformOptions[0]) return;
 
     dispatch(
       SETAFFILIATIONPLATFORM({
         data: {
           _id: currentAffiliationId,
-          activePlatform: access[0],
+          activePlatform: platformOptions[0],
         },
         token,
       }),
     );
-  }, [access, currentAffiliationId, dispatch, selectedPlatform, token]);
+  }, [
+    currentAffiliationId,
+    dispatch,
+    platformOptions,
+    selectedPlatform,
+    token,
+  ]);
 
   const handlePlatform = async (platform, event) => {
     event?.preventDefault?.();
@@ -115,10 +144,10 @@ export default function Platforms() {
     }
   };
 
-  if (access.length <= 1) return null;
+  if (platformOptions.length <= 1) return null;
 
   const allowedPlatformsInDraft = ["manager", "headquarter", "superadmin"];
-  const visiblePlatform = selectedPlatform || access[0] || "patron";
+  const visiblePlatform = selectedPlatform || platformOptions[0] || "patron";
 
   return (
     <MDBDropdown className="sample">
@@ -139,7 +168,7 @@ export default function Platforms() {
         </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right id="platforms-dropdown-menu">
-        {access.map((platform, index) => {
+        {platformOptions.map((platform, index) => {
           const cleanedPlatform = platform.toLowerCase();
           const isDisabled =
             isDraft &&

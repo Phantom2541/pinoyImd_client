@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -35,9 +35,26 @@ export default function ApplicationModal({
     { physicians: doctor } = useSelector(({ branches }) => branches),
     [application, setApplication] = useState({}),
     [file201Preview, setFile201Preview] = useState({}),
-    [department, setDepartment] = useState({}),
+    [department, setDepartment] = useState(""),
     [positions, setPositions] = useState([]),
     dispatch = useDispatch();
+  const sortByAscending = (array, key, isBranches = false) => {
+    return [...array].sort((a, b) => {
+      if (isBranches) {
+        if (a[key] === b[key]) {
+          return 0;
+        }
+        return a[key] ? -1 : 1;
+      }
+
+      return String(a[key]).localeCompare(String(b[key]));
+    });
+  };
+  const sortedBranches = useMemo(
+    () => sortByAscending(company?.branches || [], "isHiring", true),
+    [company?.branches],
+  );
+  const hasSingleBranch = sortedBranches.length === 1;
 
   const showDoctorSelect =
     department === "Clinic" &&
@@ -61,10 +78,18 @@ export default function ApplicationModal({
 
   useEffect(() => {
     if (visibility) {
-      setApplication({});
+      setDepartment("");
+      setPositions([]);
+      setApplication(
+        hasSingleBranch
+          ? {
+              branchId: sortedBranches[0]?._id || "",
+            }
+          : {},
+      );
       setFile201Preview({});
     }
-  }, [visibility]);
+  }, [hasSingleBranch, sortedBranches, visibility]);
   useEffect(() => {
     token &&
       visibility &&
@@ -143,6 +168,7 @@ export default function ApplicationModal({
 
     const { file201 = {} } = application;
     const { DataSheet = "", Resume = "", AppLetter = "" } = file201;
+    const trimmedMessage = String(application?.message || "").trim();
     //save file201 pdfs
     Object.entries(file201)?.forEach(([key, value]) => {
       const formData = Cloudinary.buildFileForm(
@@ -164,7 +190,7 @@ export default function ApplicationModal({
         data: {
           id,
           user: auth._id,
-          status: "petition",
+          status: "pending",
           branch: application.branchId,
           file201: {
             hasPds: DataSheet ? true : false,
@@ -177,7 +203,16 @@ export default function ApplicationModal({
             hos: 8,
           },
           platform: "Patron",
-          message: application.message,
+          message: trimmedMessage,
+          remarks: trimmedMessage
+            ? [
+                {
+                  title: "Application",
+                  reason: trimmedMessage,
+                  createdAt: new Date().toISOString(),
+                },
+              ]
+            : [],
         },
         token,
       })
@@ -209,20 +244,6 @@ export default function ApplicationModal({
     );
   };
 
-  const sortByAscending = (array, key, isBranches = false) => {
-    return [...array].sort((a, b) => {
-      if (isBranches) {
-        // Unahin ang `true`, ilagay sa taas
-        if (a[key] === b[key]) {
-          return 0;
-        }
-        return a[key] ? -1 : 1;
-      }
-
-      // Default string-based sort
-      return String(a[key]).localeCompare(String(b[key]));
-    });
-  };
   return (
     <MDBModal size="xl" isOpen={visibility} toggle={setVisibility} backdrop>
       <MDBModalHeader
@@ -233,6 +254,19 @@ export default function ApplicationModal({
           <span style={{ fontWeight: 400 }}>{company.name}'s</span> Application
           Requirements
         </h3>
+        {!!company?.subName && (
+          <div
+            className="w-100"
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 300,
+              opacity: 0.85,
+              marginTop: "0.25rem",
+            }}
+          >
+            {company.subName}
+          </div>
+        )}
         {/* <MDBBtn className="btn btn-sm" color="danger" onClick={handleToggle}>
           <MDBIcon icon="times" size="lg" />
         </MDBBtn> */}
@@ -240,17 +274,29 @@ export default function ApplicationModal({
       <form onSubmit={handleSubmit}>
         <MDBModalBody className="text-start">
           <MDBRow>
-            <MDBCol md={showDoctorSelect ? "3" : "4"}>
-              <select
-                required
-                className="form-control mb-3"
-                value={application?.branchId}
-                name="branchId"
-                onChange={(e) => handleChange(e)}
-              >
-                <option value={""}>Select a branch</option>
-                {sortByAscending(company.branches, "isHiring", true)?.map(
-                  (branch) => {
+            {hasSingleBranch ? (
+              <MDBCol md={showDoctorSelect ? "3" : "4"}>
+                <div
+                  className="form-control mb-3 d-flex align-items-center"
+                  style={{
+                    minHeight: "38px",
+                    backgroundColor: "#f8f9fa",
+                  }}
+                >
+                  {sortedBranches[0]?.name || "Selected branch"}
+                </div>
+              </MDBCol>
+            ) : (
+              <MDBCol md={showDoctorSelect ? "3" : "4"}>
+                <select
+                  required
+                  className="form-control mb-3"
+                  value={application?.branchId || ""}
+                  name="branchId"
+                  onChange={(e) => handleChange(e)}
+                >
+                  <option value={""}>Select a branch</option>
+                  {sortedBranches?.map((branch) => {
                     const { isHiring = false } = branch;
                     const disabler = collections?.find(
                       (catalog) => catalog?.branch?._id === branch?._id
@@ -272,10 +318,10 @@ export default function ApplicationModal({
                         {disabler ? " (Application on process)" : ""}
                       </option>
                     );
-                  }
-                )}
-              </select>
-            </MDBCol>
+                  })}
+                </select>
+              </MDBCol>
+            )}
 
             <MDBCol md={showDoctorSelect ? "3" : "4"}>
               <select
@@ -408,8 +454,8 @@ export default function ApplicationModal({
             <MDBCol md="12" className="mt-4">
               <textarea
                 className="form-control"
-                placeholder="Message.."
-                value={application?.message}
+                placeholder="Remarks.."
+                value={application?.message || ""}
                 name="message"
                 onChange={handleChange}
               />

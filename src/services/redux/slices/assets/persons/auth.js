@@ -75,6 +75,18 @@ const normalizePlatforms = (platforms = []) =>
 const uniquePlatforms = (platforms = []) =>
   Array.from(new Set(platforms.filter(Boolean)));
 
+const normalizeAffiliationStatus = (value = "") =>
+  String(value || "")
+    .trim()
+    .toLowerCase();
+
+const isVisibleAffiliation = (branch = {}) => {
+  const hiddenStatuses = ["pending", "banned", "blk", "blacklisted"];
+  const status = normalizeAffiliationStatus(branch?.status);
+
+  return !hiddenStatuses.includes(status);
+};
+
 const findCurrentAffiliation = (branches = [], activeAffiliation = "") =>
   branches.find(
     ({ affiliationId, _id }) =>
@@ -241,10 +253,13 @@ const setAP = (state, payload) => {
     isPhysician = false,
     activeAffiliation,
   } = payload;
+  const visibleBranches = branches.filter(isVisibleAffiliation);
   const requestedAffiliationId =
     activeAffiliation || state.auth?.activeAffiliation || "";
   const fallbackAffiliationId =
-    branches.length === 1 ? branches[0]?.affiliationId || branches[0]?._id : "";
+    visibleBranches.length === 1
+      ? visibleBranches[0]?.affiliationId || visibleBranches[0]?._id
+      : "";
   const affiliationId = requestedAffiliationId || fallbackAffiliationId || "";
 
   if (!affiliationId) {
@@ -253,8 +268,8 @@ const setAP = (state, payload) => {
     return "";
   }
   const branch =
-    findCurrentAffiliation(branches, affiliationId) ||
-    (branches.length === 1 ? branches[0] : null);
+    findCurrentAffiliation(visibleBranches, affiliationId) ||
+    (visibleBranches.length === 1 ? visibleBranches[0] : null);
   if (!branch) {
     state.activePlatform = {};
     localStorage.removeItem("activePlatform");
@@ -294,14 +309,14 @@ const setAP = (state, payload) => {
     ? currentPlatform
     : availablePlatforms.length === 1
     ? availablePlatforms[0]
-    : availablePlatforms[0] || "patron";
+    : availablePlatforms[0] || "";
   const activePlatform = {
     affiliationId,
     branchId: branch?.branch || branch?.branchId || branch?._id,
     branch,
     company: branch?.companyId || {},
     platforms: isEmployed ? availablePlatforms : [],
-    access: isEmployed ? uniquePlatforms([...availablePlatforms, "patron"]) : ["patron"],
+    access: isEmployed ? availablePlatforms : [],
     department,
     role,
     isPhysician,
@@ -314,6 +329,9 @@ const setAP = (state, payload) => {
       ...state.auth,
       activeAffiliation: affiliationId,
     };
+  }
+  if (affiliationId) {
+    localStorage.removeItem("preferredAffiliationMode");
   }
   localStorage.setItem("activePlatform", JSON.stringify(activePlatform));
   state.activePlatform = activePlatform;
@@ -471,6 +489,32 @@ export const reduxSlice = createSlice({
       };
       state.activePlatform = _activePlatform;
       localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
+    },
+    EnterPatronMode: (state) => {
+      state.auth = {
+        ...state.auth,
+        activeAffiliation: "",
+      };
+      state.activePlatform = {
+        platform: "patron",
+        access: ["patron"],
+        platforms: ["patron"],
+        branch: {},
+        company: {
+          url: "Pinoy iMD",
+          subname: "Medical Diagnostic Center",
+        },
+      };
+      state.access = ["patron"];
+      state.company = {
+        url: "Pinoy iMD",
+        subname: "Medical Diagnostic Center",
+      };
+      localStorage.setItem("preferredAffiliationMode", "patron");
+      localStorage.setItem(
+        "activePlatform",
+        JSON.stringify(state.activePlatform),
+      );
     },
 
     IMAGE: (state, { payload }) => {
@@ -731,6 +775,7 @@ export const {
   NETWORK,
   PatchSessionPlatform,
   SetPatientCategories,
+  EnterPatronMode,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

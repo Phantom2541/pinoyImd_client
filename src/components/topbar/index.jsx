@@ -15,14 +15,26 @@ import DTR from "./dtr";
 
 export default function TopNavigation({ toggle, onSideNavToggleClick }) {
   const { auth = {}, branches = [] } = useSelector((state) => state.auth);
+  const visibleBranches = useMemo(
+    () =>
+      branches.filter((branch = {}) => {
+        const hiddenStatuses = ["pending", "banned", "blk", "blacklisted"];
+        const status = String(branch?.status || "")
+          .trim()
+          .toLowerCase();
+
+        return !hiddenStatuses.includes(status);
+      }),
+    [branches],
+  );
   const currentAffiliation = useMemo(() => {
-    const matchedAffiliation = branches.find(
+    const matchedAffiliation = visibleBranches.find(
       ({ affiliationId, _id }) =>
         String(affiliationId || _id) === String(auth?.activeAffiliation || ""),
     );
 
-    return matchedAffiliation || (branches.length === 1 ? branches[0] : {});
-  }, [branches, auth?.activeAffiliation]);
+    return matchedAffiliation || (visibleBranches.length === 1 ? visibleBranches[0] : {});
+  }, [visibleBranches, auth?.activeAffiliation]);
   const activePlatforms = Array.isArray(currentAffiliation?.platforms)
     ? currentAffiliation.platforms
     : [];

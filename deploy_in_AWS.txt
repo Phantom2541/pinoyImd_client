@@ -194,3 +194,81 @@ Frontend Backup:
 /home/ubuntu/PinoyiMD-server/view-backup
 ```
 
+
+
+---------------------------------------------------------------
+to Update AWS Client
+---------------------------------------------------------------
+
+# Pinoy iMD Client Deployment (Safe Method)
+
+## Step 1: Build the Client
+
+Sa local PC:
+
+```powershell
+cd C:\Users\admin\Documents\GitHub\pinoyIMD\client
+npm run build
+```
+
+Hintayin ang:
+
+```text
+The build folder is ready to be deployed.
+```
+
+---
+
+## Step 2: Upload Build to AWS
+
+```powershell
+scp -i "C:\Users\admin\.ssh\technowiz.pem" -r build\* ubuntu@ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com:/home/ubuntu/PinoyiMD-server/view/
+```
+
+Hintayin matapos ang upload.
+
+---
+
+## Step 3: Connect to AWS
+
+```powershell
+ssh -i "C:\Users\admin\.ssh\technowiz.pem" ubuntu@ec2-16-176-49-31.ap-southeast-2.compute.amazonaws.com
+```
+
+---
+
+## Step 4: Restart Pinoy iMD
+
+```bash
+sudo systemctl restart pinoyimd.service
+```
+
+---
+
+## Step 5: Verify
+
+```bash
+systemctl status pinoyimd.service --no-pager
+```
+
+Dapat makita:
+
+```text
+Active: active (running)
+```
+
+---
+
+## Step 6: Test Production
+
+Open:
+
+https://pinoy-imd.technowiz.work
+
+Hard refresh:
+
+```text
+Ctrl + Shift + R
+```
+
+para makuha ang bagong JS/CSS build.
