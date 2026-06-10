@@ -32,7 +32,7 @@ const diagnostics = [
 // pag binago ito, dapat pati ang SideNavigation
 // dapat i-update din ang SideNavigation para sa platformPrefix
 export default function Routes() {
-  const { activePlatform } = useSelector(({ auth }) => auth),
+  const { activePlatform, branches = [] } = useSelector(({ auth }) => auth),
     { platform = "" } = activePlatform || {};
   const [isDiagnostics, setIsDiagnostics] = useState(true);
   const normalizedPlatform = Access.normalizePlatformKey(platform);
@@ -47,7 +47,11 @@ export default function Routes() {
 
   const renderSidebars = () => {
     const sidebar = platformPrefix
-      ? getPlatformSidebar(normalizedPlatform, { isDiagnostics })
+      ? getPlatformSidebar(normalizedPlatform, {
+          isDiagnostics,
+          activePlatform,
+          branches,
+        })
       : Sidebars.patron;
 
     if (!Array.isArray(sidebar)) return "Sidebar must be array";
@@ -96,7 +100,11 @@ export default function Routes() {
       {!!platformPrefix && (
         <Route path={platformPrefix} exact>
           <Redirect
-            to={getPlatformDefaultRoute(normalizedPlatform, { isDiagnostics })}
+            to={getPlatformDefaultRoute(normalizedPlatform, {
+              isDiagnostics,
+              activePlatform,
+              branches,
+            })}
           />
         </Route>
       )}

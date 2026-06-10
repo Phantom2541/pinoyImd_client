@@ -9,9 +9,9 @@ import { SetActivePAGE } from "../../../../../../services/redux/slices/assets/pr
 import TableLoading from "../../../../../../components/tableLoading";
 import Modal from "./modal";
 import RegisterBranch from "./registerBranch";
-const Referral = () => {
+const Wellness = () => {
   const { totalPages, activePage, isLoading } = useSelector(
-      ({ providers }) => providers
+      ({ providers }) => providers,
     ),
     dispatch = useDispatch();
 
@@ -45,4 +45,4 @@ const Referral = () => {
   );
 };
 
-export default Referral;
+export default Wellness;

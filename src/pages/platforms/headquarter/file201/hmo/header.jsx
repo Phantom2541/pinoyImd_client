@@ -16,16 +16,15 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { hmo, closeModal } = useSelector(({ companies }) => companies),
     { branch = {} } = activePlatform,
-    { companyId = {} } = branch,
     dispatch = useDispatch();
 
   const handleAdd = (item) => dispatch(SetUPDATE(item));
 
   useEffect(() => {
-    if (companyId) {
-      dispatch(SetHMO(companyId.hmo));
+    if (branch) {
+      dispatch(SetHMO(branch.hmo || []));
     }
-  }, [companyId, dispatch, closeModal]);
+  }, [branch, dispatch, closeModal]);
 
   // initial values
   useEffect(() => {

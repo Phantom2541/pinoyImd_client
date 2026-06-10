@@ -42,7 +42,7 @@ export default function SideNavigation({
   // const [href, setHref] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
   const [isDiagnostics, setIsDiagnostics] = useState(true);
-  const { activePlatform, company, isLoading } = useSelector(
+  const { activePlatform, company, isLoading, branches = [] } = useSelector(
     ({ auth }) => auth,
   );
   const branchName =
@@ -100,7 +100,11 @@ export default function SideNavigation({
       }
       return;
     }
-    const fullSidebar = getPlatformSidebar(platformKey, { isDiagnostics });
+    const fullSidebar = getPlatformSidebar(platformKey, {
+      isDiagnostics,
+      activePlatform,
+      branches,
+    });
     if (platformKey === "laboratory") {
       const role = activePlatform?.role;
       const filtered = filterSidebarByRole(fullSidebar, role);
@@ -120,6 +124,7 @@ export default function SideNavigation({
     }
   }, [
     activePlatform,
+    branches,
     company,
     links,
     filterSidebarByRole,

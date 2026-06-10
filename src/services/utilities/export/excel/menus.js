@@ -81,8 +81,7 @@ const handleHeader = (worksheet, form) => {
 
   if (menuType === "hmo") {
     const { branch = {} } = JSON.parse(localStorage.getItem("activePlatform"));
-    const { companyId = {} } = branch;
-    const { hmo: h } = companyId;
+    const { hmo: h = [] } = branch;
     const { cp } = h.find(({ code }) => code === hmo) || {};
     const { phone } = cp;
     generateStaticCell("A5:F5", "Name", HMO.getName(hmo));

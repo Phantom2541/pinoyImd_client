@@ -50,7 +50,7 @@ import {
   Outsources,
   Utilities,
   Hotlines,
-  // HotlinesPoster,
+  Wellness,
   Suppliers,
 } from "../../../../pages/platforms/cashier/index.js";
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
@@ -364,13 +364,6 @@ const ManagerSidebar = [
             component: Details,
           },
           {
-            name: "PhilHealth",
-            title: "PhilHealth accounts and contributions.",
-            path: "/Philhealth",
-            icon: "file-invoice",
-            component: Philhealth,
-          },
-          {
             name: "Q R Code",
             title: "Qr Code for Homepage.",
             path: "/qrCode",
@@ -478,6 +471,28 @@ const ManagerSidebar = [
         path: "/lis",
         icon: "tram",
         component: LIS,
+      },
+    ],
+  },
+  {
+    name: "Health Cards Accreditations",
+    path: "/health/cards",
+    icon: "clipboard-list",
+    title: "Service Listings",
+    children: [
+      {
+        name: "H M O Wellness",
+        path: "/wellness",
+        icon: "heartbeat",
+        title: "Partner Companies with HMO Coverage",
+        component: Wellness,
+      },
+      {
+        name: "PhilHealth Accreditations",
+        path: "/philhealth",
+        icon: "file-invoice",
+        title: "PhilHealth accounts and contributions.",
+        component: Philhealth,
       },
     ],
   },

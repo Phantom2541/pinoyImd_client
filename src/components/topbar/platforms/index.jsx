@@ -139,6 +139,8 @@ export default function Platforms() {
       history.push(
         getPlatformDefaultRoute(cleanedPlatform, {
           isDiagnostics,
+          activePlatform,
+          branches,
         }),
       );
     }

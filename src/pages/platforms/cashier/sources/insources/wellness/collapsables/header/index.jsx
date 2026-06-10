@@ -40,7 +40,7 @@ const Header = ({
 
   useEffect(() => {
     if (activePlatform) {
-      const tags = activePlatform?.branch?.companyId?.hmo?.map(({ code }) => ({
+      const tags = activePlatform?.branch?.hmo?.map(({ code }) => ({
         hmo: code,
         name: HMO.getName(code),
       }));

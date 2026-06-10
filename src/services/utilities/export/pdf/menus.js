@@ -80,8 +80,7 @@ const handleHeader = (form) => {
   const { menuType, hmo: hmoCode, insource } = form;
   if (menuType === "hmo") {
     const { branch = {} } = JSON.parse(localStorage.getItem("activePlatform"));
-    const { companyId } = branch;
-    const { hmo } = companyId;
+    const { hmo = [] } = branch;
     const foundHmo = hmo.find(({ code }) => code === hmoCode) || {};
     const { cp = {} } = foundHmo;
     return [

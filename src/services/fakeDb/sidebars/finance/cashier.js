@@ -11,6 +11,7 @@ import {
   Utilities,
   Wellness,
   Referrals,
+  Philhealth,
   Remittances,
   Hotlines,
   // HotlinesPoster,
@@ -152,13 +153,6 @@ const cashier = [
         title: "Patient Sources with Discounts or Privileges",
         children: [
           {
-            name: "H M O Wellness",
-            path: "/wellness",
-            icon: "briefcase-medical",
-            title: "Partner Companies with HMO Coverage",
-            component: Wellness,
-          },
-          {
             name: "Inhouse",
             path: "/inhouse",
             icon: "user-md",
@@ -208,6 +202,28 @@ const cashier = [
         icon: "phone-alt",
         title: "Emergency Hotlines",
         component: Hotlines,
+      },
+    ],
+  },
+  {
+    name: "HCAP",
+    path: "/health/cards",
+    icon: "clipboard-list",
+    title: "Health Cards Accredited Providers",
+    children: [
+      {
+        name: "H M O Wellness",
+        path: "/wellness",
+        icon: "heartbeat",
+        title: "Partner Companies with HMO Coverage",
+        component: Wellness,
+      },
+      {
+        name: "PhilHealth Benefits",
+        path: "/philhealth",
+        icon: "hospital",
+        title: "PhilHealth accounts and contributions.",
+        component: Philhealth,
       },
     ],
   },
