@@ -87,7 +87,7 @@ export default function Body() {
               <td key={index}>{index + startIndex + 1}</td>
               <td>
                 <strong>
-                  {getPhysicianGenderIcon(user.isMale, isGhost)}
+                  {getPhysicianGenderIcon(user?.isMale ?? item?.isMale, isGhost)}
                   {properFullname(baseName)}
                 </strong>
               </td>

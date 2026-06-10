@@ -81,7 +81,7 @@ const normalizeAffiliationStatus = (value = "") =>
     .toLowerCase();
 
 const isVisibleAffiliation = (branch = {}) => {
-  const hiddenStatuses = ["pending", "banned", "blk", "blacklisted"];
+  const hiddenStatuses = ["pending", "banned", "blk", "blacklisted", "ghost"];
   const status = normalizeAffiliationStatus(branch?.status);
 
   return !hiddenStatuses.includes(status);

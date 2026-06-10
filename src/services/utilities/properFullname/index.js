@@ -1,7 +1,13 @@
 import capitalize from "../capitalize";
 
 const properFullname = (fullname) => {
-  if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
+  const normalizedName = fullname?.fullName || fullname;
+
+  if (
+    typeof normalizedName !== "object" ||
+    !normalizedName.fname ||
+    !normalizedName.lname
+  )
     return "-";
 
   const {
@@ -10,7 +16,7 @@ const properFullname = (fullname) => {
     mname = "",
     lname = "",
     suffix = "",
-  } = fullname;
+  } = normalizedName;
 
   let middleName = mname;
 

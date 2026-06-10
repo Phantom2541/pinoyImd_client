@@ -45,12 +45,17 @@ export default function SideNavigation({
   const { activePlatform, company, isLoading } = useSelector(
     ({ auth }) => auth,
   );
-  const rawBranchName =
-    activePlatform?.branch?.displayname || activePlatform?.branch?.name || "";
-  const isMainBranch = String(rawBranchName).trim().toLowerCase() === "main";
-  const sidebarTitle = isMainBranch
-    ? company?.name || activePlatform?.branch?.company || ""
-    : activePlatform?.branch?.company || company?.name || "";
+  const branchName =
+    activePlatform?.branch?.name || activePlatform?.branch?.displayname || "";
+  const isMainBranch = Boolean(
+    activePlatform?.branch?.isMain ||
+      String(activePlatform?.branch?.displayname || "")
+        .trim()
+        .toLowerCase() === "main",
+  );
+  const sidebarTitle = branchName
+    ? `${branchName}${isMainBranch ? " Main" : ""} Branch`
+    : company?.name || activePlatform?.branch?.company || "";
 
   useEffect(() => {
     if (diagnostics.includes(activePlatform?.branch?.category?.toLowerCase())) {

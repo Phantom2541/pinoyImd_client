@@ -92,9 +92,25 @@ const Stub = ({ sale }) => {
   const isMixed = payment === "mixed";
   const cashOut = amount - refNo?.amount || 0;
   const hasCashOut = cashOut > 0 && isVoucher && pp === "cash";
+  const cardHolderProvider =
+    cardHolder?.provider ||
+    (cardHolder?.type === "wls"
+      ? cardHolder?.company?.name || ""
+      : cardHolder?.type || "");
+  const cardHolderType =
+    cardHolder?.type ||
+    (cardHolderProvider === "phi"
+      ? "phi"
+      : ["mbs", "ctr"].includes(cardHolderProvider)
+        ? cardHolderProvider
+        : cardHolderProvider
+          ? "wls"
+          : "");
 
   const isCardHolder = Boolean(
-    cardHolder?.company?.name || cardHolder?.company?.ref
+    cardHolderProvider ||
+      cardHolder?.company?.name ||
+      cardHolder?.company?.ref
   );
 
   const change = hasCashOut ? cash - cashOut : cash - amount;
@@ -180,7 +196,7 @@ const Stub = ({ sale }) => {
             <>
               <Hr />
               <Text
-                title={cardHolder.type === "wls" ? "Card No." : "Tracking No."}
+                title={cardHolderType === "wls" ? "Card No." : "Tracking No."}
                 value={`${refNo.number}`}
               />
             </>

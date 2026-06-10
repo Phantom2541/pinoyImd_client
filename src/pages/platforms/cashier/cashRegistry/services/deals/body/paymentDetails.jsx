@@ -11,8 +11,13 @@ const PaymentDetails = ({ deal = {} }) => {
 
   const arrangePayment = () => {
     if (payment === "voucher") {
-      const { company } = cardHolder;
-      const isCardHolder = Boolean(company?.name || company?.ref);
+      const provider =
+        cardHolder?.provider ||
+        (cardHolder?.type === "wls"
+          ? cardHolder?.company?.name || ""
+          : cardHolder?.type || "");
+      const { company = {} } = cardHolder || {};
+      const isCardHolder = Boolean(provider || company?.name || company?.ref);
       const { careOf = {} } = refNo;
       const { user = {} } = careOf;
       const { lname = "", fname = "" } = user?.fullName || {};

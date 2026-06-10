@@ -3,6 +3,36 @@ import { axioKit } from "../../../../utilities";
 
 const url = "/diagnostics/clinic/informations";
 
+const getCollections = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.payload)) return payload.payload;
+  return [];
+};
+
+const syncCollection = (state, clinic) => {
+  if (!clinic?._id) return;
+
+  const collectionIndex = state.collections.findIndex(
+    (item) => item?._id === clinic._id
+  );
+  const filteredIndex = state.filtered.findIndex((item) => item?._id === clinic._id);
+
+  if (collectionIndex > -1) {
+    state.collections[collectionIndex] = clinic;
+  } else {
+    state.collections.unshift(clinic);
+  }
+
+  if (filteredIndex > -1) {
+    state.filtered[filteredIndex] = clinic;
+  } else {
+    state.filtered.unshift(clinic);
+  }
+
+  state.totalPages = Math.ceil(state.filtered.length / state.maxPage) || 1;
+  state.activePage = Math.min(state.activePage, state.totalPages);
+};
+
 const initialState = {
   clinic: {},
   filter: [],
@@ -180,12 +210,13 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { success } = action.payload;
-        state.collections = state.filtered = action.payload; // Fix typo
-        state.totalPages =
-          Math.ceil(action.payload.length / state.maxPage) || 1;
+        const clinics = getCollections(action.payload);
+        state.collections = clinics;
+        state.filtered = clinics;
+        state.totalPages = Math.ceil(clinics.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-        state.isSuccess = success;
+        state.message = action.payload?.success || "";
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -215,9 +246,10 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        console.log("action.payload: ", action.payload);
         state.clinic = action.payload;
+        syncCollection(state, action.payload);
         state.showModal = false;
+        state.message = "Clinic saved successfully.";
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -233,14 +265,10 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
-
-        state.collections[index] = payload;
+        syncCollection(state, action.payload);
+        state.clinic = action.payload;
         state.showModal = false;
-        state.message = success;
+        state.message = "Clinic updated successfully.";
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -255,12 +283,18 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action;
+        const clinicId = action.payload;
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload
+          (item) => item?._id === clinicId
         );
-        state.collections.splice(index, 1);
-        state.message = success;
+        const filteredIndex = state.filtered.findIndex(
+          (item) => item?._id === clinicId
+        );
+        if (index > -1) state.collections.splice(index, 1);
+        if (filteredIndex > -1) state.filtered.splice(filteredIndex, 1);
+        state.totalPages = Math.ceil(state.filtered.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.message = "Clinic deleted successfully.";
         state.isSuccess = true;
         state.isLoading = false;
       })

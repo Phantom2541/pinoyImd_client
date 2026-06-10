@@ -109,9 +109,10 @@ const Table = ({ form, setForm = () => {} }) => {
                         size="sm"
                         className="px-2"
                         onClick={() =>
-                          setForm({
+                          setForm((prev) => ({
+                            ...prev,
                             schedules: schedules.filter((_, i) => i !== index),
-                          })
+                          }))
                         }
                       >
                         <MDBIcon icon="trash" />

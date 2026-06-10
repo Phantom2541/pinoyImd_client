@@ -53,7 +53,7 @@ export default function Modal({ show, toggle, selected, willCreate, users }) {
       UPDATE({
         data: { ...data, _id: selected.user?._id },
         token,
-      })
+      }),
     );
 
     setForm(_form);

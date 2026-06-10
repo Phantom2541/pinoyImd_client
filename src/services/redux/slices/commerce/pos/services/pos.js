@@ -20,6 +20,18 @@ const activePlatform =
   safeParseJSON(localStorage.getItem("activePlatform"));
 const branch = activePlatform?.branch || {};
 
+const defaultCardHolder = {
+  provider: "",
+  type: "",
+  company: {
+    name: "",
+    ref: "",
+    employer: "",
+    label: "",
+  },
+  tier: "",
+};
+
 const defaultCustomer = {
   fullName: {
     fname: "",
@@ -34,13 +46,7 @@ const defaultCustomer = {
     barangay: "",
     street: "",
   },
-  cardHolder: {
-    type: "",
-    company: {
-      name: "",
-      ref: "",
-    },
-  },
+  cardHolder: defaultCardHolder,
 
   dob: "",
   isMale: false,
@@ -78,6 +84,7 @@ const defaultState = {
   formSubmitted: false,
   message: undefined,
   department: [],
+  cardHolder: defaultCardHolder,
 };
 
 const initialState = {
@@ -163,7 +170,27 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetCH: (state, { payload }) => {
-      state.cardHolder = payload;
+      const provider = payload?.provider ?? payload?.type ?? "";
+      const type =
+        payload?.type ??
+        (provider === "phi"
+          ? "phi"
+          : ["mbs", "ctr", ""].includes(provider)
+            ? provider
+            : provider
+              ? "wls"
+              : "");
+
+      state.cardHolder = {
+        ...defaultCardHolder,
+        ...payload,
+        provider,
+        type,
+        company: {
+          ...defaultCardHolder.company,
+          ...(payload?.company || {}),
+        },
+      };
     },
     SETMENUS: (state, { payload }) => {
       state.menus = [...payload];
@@ -266,13 +293,7 @@ export const reduxSlice = createSlice({
       state.sourceId = null;
     },
     RESET_CARDHOLDER: (state) => {
-      state.cardHolder = {
-        type: "",
-        company: {
-          name: "",
-          ref: "",
-        },
-      };
+      state.cardHolder = defaultCardHolder;
     },
   },
   extraReducers: (builder) => {

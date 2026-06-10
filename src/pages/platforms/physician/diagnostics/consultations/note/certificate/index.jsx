@@ -4,9 +4,9 @@ import CADUCEUS from "./../../../../../../../assets/caduceus.png";
 import { useSelector } from "react-redux";
 import {
   billingAddress,
-  contacts,
+  // contacts,
   properFullname,
-  Cloudinary,
+  // Cloudinary,
   getAge,
   fullName,
   Banner,
@@ -29,7 +29,7 @@ export default function MedicalCertificate({
     height: 530,
   });
   const { patient: appointment } = useSelector(
-      ({ appointments }) => appointments
+      ({ appointments }) => appointments,
     ),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
     { fullName: name, isMale, dob, address } = appointment?.patient || {};
@@ -39,9 +39,9 @@ export default function MedicalCertificate({
   // const signUrl =
   //   `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
 
-  const companyname = activePlatform.branch.companyId.name || "";
-  const branchaddress = activePlatform.branch.address || "";
-  const branchcontact = activePlatform.branch.contacts.mobile || "";
+  // const companyname = activePlatform.branch.companyId.name || "";
+  // const branchaddress = activePlatform.branch.address || "";
+  // const branchcontact = activePlatform.branch.contacts.mobile || "";
 
   return (
     <div style={style} className="checkup-data-clearance">

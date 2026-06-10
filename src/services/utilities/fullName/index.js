@@ -1,8 +1,14 @@
 const fullName = (fullname, isComplete = false, isProper = false) => {
-  if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
+  const normalizedName = fullname?.fullName || fullname;
+
+  if (
+    typeof normalizedName !== "object" ||
+    !normalizedName.fname ||
+    !normalizedName.lname
+  )
     return "-";
 
-  const { fname, mname = "", lname, suffix = "", title = "" } = fullname;
+  const { fname, mname = "", lname, suffix = "", title = "" } = normalizedName;
 
   let middleName = mname || "";
 

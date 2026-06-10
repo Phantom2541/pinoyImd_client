@@ -6,18 +6,18 @@ import { BROWSE as BROWSE_DEALS } from "../../../../services/redux/slices/commer
 import {
   MDBContainer,
   MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBProgress,
-  MDBBtn,
-  MDBTable,
-  MDBIcon,
+  // MDBCol,
+  // MDBCard,
+  // MDBCardBody,
+  // MDBProgress,
+  // MDBBtn,
+  // MDBTable,
+  // MDBIcon,
 } from "mdbreact";
 import { Sales, OutSource, InSource, Utilities } from "./wigets";
 import Transactions from "./transactions";
 import { OutSources, InSources } from "./sources";
-import { Expenses, Purchases } from "./calendars";
+// import { Expenses, Purchases } from "./calendars";
 // import Vouchers from "../accrued/vouchers";
 
 export default function Dashboard() {

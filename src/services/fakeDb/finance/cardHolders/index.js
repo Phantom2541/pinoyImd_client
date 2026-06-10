@@ -1,8 +1,8 @@
 const cardHolders = [
-  { name: "HMO", abbr: "wls" },
-  { name: "Membership", abbr: "mbs" },
-  { name: "Contract", abbr: "ctr" },
-  { name: "PhilHealth", abbr: "ph" },
+  { name: "HMO", code: "wls" },
+  { name: "PhilHealth", code: "phi" },
+  { name: "Membership", code: "mbs" },
+  { name: "Contract", code: "ctr" },
 ];
 
 export default cardHolders;

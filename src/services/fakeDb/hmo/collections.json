@@ -6,7 +6,15 @@
     "tl": "tagline",
     "code": "",
     "icon": "/assets/logo/default.png",
-    "category": ["premium", "plus", "regular"]
+    "plan": [
+      "Regular",
+      "Premium",
+      "Executive",
+      "VIP",
+      "Corporate",
+      "Gold",
+      "Platinum"
+    ]
   },
   {
     "id": 1,

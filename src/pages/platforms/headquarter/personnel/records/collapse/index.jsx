@@ -42,6 +42,7 @@ export default function MenuCollapse({ staffs }) {
             monthly: data.rateMonthly,
             cola: data.rateCola,
             daily: data.rateDaily,
+            incentive: data.incentive,
           },
           contribution: {
             ph: data.contributionPh,

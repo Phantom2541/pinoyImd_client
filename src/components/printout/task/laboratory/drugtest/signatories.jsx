@@ -1,5 +1,5 @@
 import React from "react";
-import { ENDPOINT, properFullname } from "../../../../services/utilities";
+import { ENDPOINT, signatoryName } from "../../../../services/utilities";
 
 const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
   return (
@@ -21,7 +21,7 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
       )}
 
       <h5 className="fw-bold mb-0 text-uppercase">
-        <u>{properFullname(person?.fullName)}</u>
+        <u>{signatoryName(person?.fullName)}</u>
       </h5>
       {label}
       {label !== "Receptionist" && person?.prc && ` PRC#: ${person?.prc.id}`}

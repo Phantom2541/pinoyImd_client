@@ -4,9 +4,14 @@ import { useEffect } from "react";
 
 const Voucher = ({ refNo = {}, chargeAmount = 0, setRefNo = () => {} }) => {
   const { cardHolder = {} } = useSelector(({ pos }) => pos);
+  const provider =
+    cardHolder?.provider ||
+    (cardHolder?.type === "wls"
+      ? cardHolder?.company?.name || ""
+      : cardHolder?.type || "");
   const { company = {} } = cardHolder || {};
   const { name, ref } = company;
-  const isCardHolder = Boolean(name || ref);
+  const isCardHolder = Boolean(provider || name || ref);
   const { amount: debtAmount } = refNo;
 
   useEffect(() => {

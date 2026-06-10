@@ -1,4 +1,4 @@
-import { Cloudinary, ENDPOINT, properFullname } from "../../..";
+import { Cloudinary, ENDPOINT, signatoryName } from "../../..";
 import logo from "../../../../../assets/iMD.png";
 import QRCode from "qrcode";
 import getAge from "../../../getAge";
@@ -185,7 +185,7 @@ const utils = {
                       {
                         stack: [
                           {
-                            text: properFullname(head?.fullName)?.toUpperCase(),
+                            text: signatoryName(head?.fullName)?.toUpperCase(),
                             fontSize: 11,
                             bold: true,
                             alignment: "center",
@@ -213,7 +213,7 @@ const utils = {
                   {
                     stack: [
                       {
-                        text: properFullname(
+                        text: signatoryName(
                           frontdesk?.fullName
                         )?.toUpperCase(),
                         fontSize: 11,
@@ -242,7 +242,7 @@ const utils = {
                         width: 50,
                       },
                       {
-                        text: properFullname(dr.fullName).toUpperCase(),
+                        text: signatoryName(dr.fullName).toUpperCase(),
                         alignment: "center",
                         fontSize: 11,
                         bold: true,

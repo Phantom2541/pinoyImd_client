@@ -64,6 +64,56 @@ export default function Summary() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  const cardHolderProvider =
+    cardHolder?.provider ||
+    (cardHolder?.type === "wls"
+      ? cardHolder?.company?.name || ""
+      : cardHolder?.type || "");
+  const cardHolderType =
+    cardHolder?.type ||
+    (cardHolderProvider === "phi"
+      ? "phi"
+      : ["mbs", "ctr"].includes(cardHolderProvider)
+        ? cardHolderProvider
+        : cardHolderProvider
+          ? "wls"
+          : "");
+
+  const hasCardHolderDetails = (holder = {}) => {
+    const provider =
+      holder?.provider ||
+      (holder?.type === "wls"
+        ? holder?.company?.name || ""
+        : holder?.type || "");
+    const { company = {} } = holder || {};
+    return Boolean(provider || company?.name || company?.ref);
+  };
+
+  const getSelectedHealthCard = () => {
+    const isHMO = cardHolderType === "wls";
+    const isPhilHealth = cardHolderType === "phi";
+    const provider = isHMO
+      ? String(cardHolderProvider || "").toLowerCase()
+      : isPhilHealth
+        ? "phi"
+        : "";
+    const selectedRef = String(cardHolder?.company?.ref || "");
+    const healthCards = Array.isArray(customer?.healthCard)
+      ? customer.healthCard
+      : [];
+
+    return (
+      healthCards.find(({ _id, number = "", provider: itemProvider = "" }) => {
+        if (itemProvider !== provider) return false;
+        if (!selectedRef) return true;
+
+        return (
+          String(_id || "") === selectedRef || String(number || "") === selectedRef
+        );
+      }) || {}
+    );
+  };
+
   const { gross = 0, discount = 0 } = computeGD(
       cart,
       category,
@@ -72,15 +122,16 @@ export default function Summary() {
     ),
     amount = Math.round((gross || 0) - (discount || 0)),
     { abbr = undefined } = Categories[category],
-    providedPaymentOptions =
-      Payments[cardHolder?.type ? cardHolder?.type : abbr];
+    providedPaymentOptions = Payments[cardHolderType ? cardHolderType : abbr];
 
   useEffect(() => {
     setPayment(
-      ["mbs", "wls", "ctr"].includes(cardHolder?.type) ? "voucher" : "cash"
+      ["mbs", "wls", "ctr", "phi"].includes(cardHolderType)
+        ? "voucher"
+        : "cash"
     );
     setRefNo({ ..._refNo, pp: "cash" });
-  }, [cardHolder]);
+  }, [cardHolder, cardHolderType]);
 
   useEffect(() => {
     setIsVoucher(payment === "voucher");
@@ -89,6 +140,11 @@ export default function Summary() {
     const baseRefNo = utils.build(refNo, payment, amount, cardHolder);
     const _cash =
       utils.hasCash(refNo, payment, amount) && payment !== "mixed" ? cash : 0;
+    const normalizedCardHolder = removeUndefinedValues({
+      provider: cardHolderProvider,
+      company: cardHolder?.company,
+      ...(cardHolder?.tier && { tier: cardHolder.tier }),
+    });
     let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
@@ -109,7 +165,7 @@ export default function Summary() {
       cashier: auth?.fullName,
       isPrint: true,
       status: "pending",
-      ...(cardHolder?.type && { cardHolder }),
+      ...(cardHolderProvider && { cardHolder: normalizedCardHolder }),
       ...(baseRefNo && {
         refNo: baseRefNo,
       }),
@@ -200,8 +256,8 @@ export default function Summary() {
 
   const handleCheckout = async (e) => {
     e.preventDefault();
-    const { type = "", company = { name: "", ref: "" } } = cardHolder || {};
-    const { name = "", ref = "" } = company || {};
+    const { company = { name: "", ref: "" } } = cardHolder || {};
+    const { ref = "" } = company || {};
     const { careOf = {} } = refNo;
     if (
       careOf.pp === "co" &&
@@ -224,22 +280,40 @@ export default function Summary() {
         backdrop: true,
       });
     }
-    if (type === "ctr" && !ref) {
+    if (cardHolderType === "ctr" && !ref) {
       return showAlert(
         "Please select a company card for the Card Holder contract before continuing."
       );
     }
 
-    if (type === "mbs" && !ref) {
+    if (cardHolderType === "mbs" && !ref) {
       return showAlert(
         "Please select a company card  for the Card Holder Membership before continuing."
       );
     }
 
-    if (type === "wls" && !name) {
+    if (cardHolderType === "wls" && !ref) {
       return showAlert(
         "Please select a company card  for the HMO Card Holder before continuing."
       );
+    }
+
+    if (["wls", "phi"].includes(cardHolderType)) {
+      const healthCard = getSelectedHealthCard();
+      if (!ref || !healthCard?.number || !healthCard?.memberType) {
+        return Swal.fire({
+          icon: "warning",
+          title: `Incomplete ${
+            cardHolderType === "wls" ? "HMO" : "PhilHealth"
+          } Details`,
+          text: `Please update the patient's ${
+            cardHolderType === "wls" ? "HMO" : "PhilHealth"
+          } details first. Card/Member No. and Member Type are required.`,
+          confirmButtonText: "Got it",
+          confirmButtonColor: "#3085d6",
+          backdrop: true,
+        });
+      }
     }
 
     if (!allServicesHavePrices(cart, category, hmo)) {
@@ -303,9 +377,7 @@ export default function Summary() {
                 value={payment}
                 onChange={({ target }) => {
                   const _payment = target.value;
-                  const { company = {} } = cardHolder || {};
-                  const { name, ref } = company;
-                  const isCardHolder = Boolean(name || ref);
+                  const isCardHolder = hasCardHolderDetails(cardHolder);
                   const careOfPP =
                     _payment === "mixed"
                       ? "cash"

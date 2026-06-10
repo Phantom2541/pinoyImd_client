@@ -250,8 +250,12 @@ export const reduxSlice = createSlice({
       state.message = "";
     },
     SET_COLLECTIONS: (state, { payload }) => {
-      state.collections = [...payload];
-      state.filtered = [...payload];
+      const collections = Array.isArray(payload)
+        ? payload
+        : payload?.tieups || payload?.collections || [];
+
+      state.collections = [...collections];
+      state.filtered = [...collections];
     },
   },
   extraReducers: (builder) => {
@@ -439,20 +443,22 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        if (state.collections?.length > 0) {
-          const index = state?.collections?.tieups?.findIndex(
+        const success = action.payload?.success || "Physician updated.";
+        const payload = action.payload?.payload || action.payload;
+
+        if (payload?._id && state.collections?.length > 0) {
+          const index = state.collections.findIndex(
             (item) => item?._id === payload?._id
           );
 
-          state.collections[index] = payload;
+          if (index > -1) state.collections[index] = payload;
         }
-        if (state.filtered?.length > 0) {
-          const index = state?.filtered?.findIndex(
+        if (payload?._id && state.filtered?.length > 0) {
+          const index = state.filtered.findIndex(
             (item) => item?._id === payload?._id
           );
 
-          state.collections[index] = payload;
+          if (index > -1) state.filtered[index] = payload;
         }
 
         state.message = success;

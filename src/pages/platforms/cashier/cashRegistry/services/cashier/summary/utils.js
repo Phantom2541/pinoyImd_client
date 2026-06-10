@@ -9,8 +9,13 @@ const utils = {
     // if (paymentMethod === "voucher")
     //   return { amount: chargeAmount, pp: "cash" };
 
+    const provider =
+      cardHolder?.provider ||
+      (cardHolder?.type === "wls"
+        ? cardHolder?.company?.name || ""
+        : cardHolder?.type || "");
     const { company = {} } = cardHolder || {};
-    const isCardHolder = Boolean(company?.name || company?.ref);
+    const isCardHolder = Boolean(provider || company?.name || company?.ref);
     const { careOf, pp = "cash", amount: creditCovered, ...rest } = refNo;
     const creditCoveredEnough = creditCovered >= chargeAmount;
 

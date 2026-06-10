@@ -3,7 +3,13 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody, MDBBtn, MDBRow } from "mdbreact";
-import { collapse, properFullname } from "../../../../../../services/utilities";
+import EditableField from "../../../../../../components/customizable/editableField";
+import ClinicModal from "../clinicModal";
+import {
+  collapse,
+  dateFormat,
+  properFullname,
+} from "../../../../../../services/utilities";
 import {
   DESTROY,
   SET_COLLECTIONS,
@@ -12,9 +18,14 @@ import {
 import Swal from "sweetalert2";
 
 export default function CollapsableIndex() {
-  const { filtered, activePage, maxPage, isSuccess, closeModal } = useSelector(
-      ({ physicians }) => physicians
-    ),
+  const {
+      filtered,
+      activePage,
+      maxPage,
+      isSuccess,
+      closeModal,
+      formSubmitted,
+    } = useSelector(({ physicians }) => physicians),
     { filtered: collection } = useSelector(({ applicants }) => applicants);
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
@@ -25,18 +36,41 @@ export default function CollapsableIndex() {
 
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId] = useState(-1);
+  const [selectedPhysician, setSelectedPhysician] = useState(null);
+  const [showClinicModal, setShowClinicModal] = useState(false);
 
   const dispatch = useDispatch(),
     [tieups, setTieups] = useState([]);
 
+  const inlineUpdate = (data) => {
+    dispatch(
+      UPDATE({
+        token,
+        data,
+      }),
+    ).then(({ payload }) => {
+      const physician = payload?.payload || payload;
+
+      if (!physician?._id) return;
+
+      const updated = tieups.map((entry) =>
+        entry._id === physician._id ? physician : entry,
+      );
+
+      setTieups(updated);
+      dispatch(SET_COLLECTIONS(updated));
+    });
+  };
+
   const finalcollection = collection.filter(
-    (item) => item.status !== "pending" && item.status !== "banned"
+    (item) => item.status !== "pending" && item.status !== "banned",
   );
 
   //Set fetched data for mapping
   useEffect(() => {
+    console.log("Filtered Physicians:", filtered); // Debug log
     setTieups(filtered);
-  }, [filtered, isSuccess, closeModal]);
+  }, [filtered]);
 
   const renderStatusBadge = (status) => {
     let className = "badge";
@@ -59,7 +93,7 @@ export default function CollapsableIndex() {
   const handleDelete = (item) => {
     Swal.fire({
       title: `Are you sure to remove  ${String(
-        properFullname(item?.user?.fullName, true)
+        properFullname(item?.user?.fullName, true),
       ).toUpperCase()}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -99,7 +133,7 @@ export default function CollapsableIndex() {
 
         Swal.fire({
           title: `Assign ${properFullname(
-            selectedSec.user.fullName
+            selectedSec.user.fullName,
           )} as a Patient Care Associate?`,
           icon: "question",
           showCancelButton: true,
@@ -116,7 +150,7 @@ export default function CollapsableIndex() {
                   branch: activePlatform.branchId,
                   secretaries: [value],
                 },
-              })
+              }),
             ).then(({ payload: physician }) => {
               const updated = [
                 ...tieups.filter((p) => p._id !== physician._id), // replace the old
@@ -130,116 +164,197 @@ export default function CollapsableIndex() {
     });
   };
 
+  const handleClinicModal = (physician) => {
+    setSelectedPhysician(physician);
+    setShowClinicModal(true);
+  };
+
+  const handleClinicSaved = (clinic) => {
+    if (!selectedPhysician?._id || !clinic?._id) return;
+
+    const updated = tieups.map((entry) =>
+      entry._id === selectedPhysician._id ? { ...entry, clinic } : entry,
+    );
+
+    setTieups(updated);
+    dispatch(SET_COLLECTIONS(updated));
+  };
+
   return (
-    <div className="table-responsive">
-      <table className="table table-bordered table-hover">
-        <thead className="light-blue">
-          <tr>
-            <th>#</th>
-            <th>Physician's Name</th>
-            <th>Specialization</th>
-            <th>Clinic Status</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData?.map((item, index) => {
-            const {
-              user,
-              ghostName,
-              specialization,
-              clinic,
-              status,
-              _id,
-              secretary,
-            } = item;
-            const actualIndex = startIndex + index;
-            const { color } = collapse.getStyle(
-              actualIndex,
-              activeId,
-              didHoverId
-            );
-            const isActive = activeId === actualIndex;
-            const textClass = isActive
-              ? "font-weight-bold text-dark"
-              : "text-dark";
+    <>
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover">
+          <thead className="light-blue">
+            <tr>
+              <th>#</th>
+              <th>Physician's Name</th>
+              <th>Specialization</th>
+              <th title="PhilHealth Requirements">Professional Tax Receipt</th>
+              <th>Clinic Status</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedData?.map((item, index) => {
+              const {
+                account,
+                isGhost,
+                specialization,
+                specialty,
+                clinic,
+                status,
+                _id,
+                secretary,
+              } = item;
+              const actualIndex = startIndex + index;
+              const { color } = collapse.getStyle(
+                actualIndex,
+                activeId,
+                didHoverId,
+              );
+              const isActive = activeId === actualIndex;
+              const textClass = isActive
+                ? "font-weight-bold text-dark"
+                : "text-dark";
 
-            return (
-              <React.Fragment key={`item-${actualIndex}`}>
-                <tr className={color}>
-                  <td>{++index}</td>
-                  <td className={textClass}>
-                    {user
-                      ? properFullname(user.fullName)
-                      : properFullname(ghostName)}
-                  </td>
-                  <td className={textClass}>{specialization}</td>
-                  <td style={{ color: "black" }}>
-                    {renderStatusBadge(clinic && clinic?.status)}
-                  </td>
-                  <td style={{ color: "black" }}>
-                    {renderStatusBadge(status)}
-                  </td>
-                  <td>
-                    <button
-                      onClick={() =>
-                        setActiveId((prev) =>
-                          actualIndex === prev ? -1 : actualIndex
-                        )
-                      }
-                      className="btn btn-link p-0"
-                    >
-                      <span title="Patient Care Associate">PCA</span>{" "}
-                      <i
-                        className="fa fa-angle-left"
-                        style={{
-                          transform: `rotate(${
-                            activeId === actualIndex ? "-90deg" : "0deg"
-                          })`,
-                          transition: "transform 0.3s ease",
-                          marginLeft: "5px",
+              return (
+                <React.Fragment key={`item-${actualIndex}`}>
+                  <tr className={color}>
+                    <td>{++index}</td>
+                    <td className={textClass}>
+                      <h5>
+                        {properFullname(account.fullName)}
+                        {isGhost && (
+                          <i
+                            className="fa fa-user-secret ml-2 text-warning"
+                            title="Ghost Physician"
+                          />
+                        )}
+                      </h5>
+                      <small className="text-muted">
+                        PRC #:{" "}
+                        {(account.prc?.id || item?.prc?.id) ?? "No PRC ID"}|
+                        Valid Until :{" "}
+                        {dateFormat(account.prc?.to || item?.prc?.to)}
+                      </small>
+                    </td>
+                    <td className={textClass}>
+                      <EditableField
+                        displayTag="span"
+                        className="form-control form-control-sm"
+                        classNameTxt={textClass}
+                        fieldData={{
+                          _id,
+                          specialization: specialization || specialty || "",
                         }}
+                        formSubmitted={formSubmitted}
+                        keyForValue="specialization"
+                        onSave={(data) => inlineUpdate({ _id, ...data })}
+                        placeholder="Add specialization"
+                        width="16rem"
                       />
-                    </button>
+                    </td>
+                    <td>{account.ptr?.id || item?.ptr?.id || "No PTR ID"}</td>
+                    <td style={{ color: "black" }}>
+                      {renderStatusBadge(clinic && clinic?.status)}
+                    </td>
+                    <td style={{ color: "black" }}>
+                      {renderStatusBadge(status)}
+                    </td>
+                    <td>
+                      <MDBBtn
+                        color="danger"
+                        size="sm"
+                        onClick={() => handleDelete(item)}
+                      >
+                        Untag
+                      </MDBBtn>
+                      {!isGhost && (
+                        <MDBBtn
+                          color={
+                            !account?._id
+                              ? "warning"
+                              : clinic?._id
+                                ? "secondary"
+                                : "info"
+                          }
+                          size="sm"
+                          disabled={!account?._id}
+                          title={
+                            !account?._id
+                              ? "Clinic is only available for registered physicians"
+                              : clinic?._id
+                                ? "Edit clinic"
+                                : "Create clinic"
+                          }
+                          onClick={() => handleClinicModal(item)}
+                        >
+                          {clinic?._id ? "Edit Clinic" : "Create Clinic"}
+                        </MDBBtn>
+                      )}
+                      {!isGhost && (
+                        <button
+                          onClick={() =>
+                            setActiveId((prev) =>
+                              actualIndex === prev ? -1 : actualIndex,
+                            )
+                          }
+                          className="btn btn-link p-0"
+                        >
+                          <span title="Patient Care Associate">PCA</span>{" "}
+                          <i
+                            className="fa fa-angle-left"
+                            style={{
+                              transform: `rotate(${
+                                activeId === actualIndex ? "-90deg" : "0deg"
+                              })`,
+                              transition: "transform 0.3s ease",
+                              marginLeft: "5px",
+                            }}
+                          />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
 
-                    <MDBBtn
-                      color="danger"
-                      size="sm"
-                      onClick={() => handleDelete(item)}
-                    >
-                      Untag
-                    </MDBBtn>
-                  </td>
-                </tr>
+                  <tr>
+                    <td colSpan="6" className="p-0 m-0">
+                      <MDBCollapse isOpen={activeId === actualIndex}>
+                        <MDBCardBody className="m-0 p-3">
+                          <MDBRow className="d-flex align-items-center justify-content-between m-2">
+                            <h6 className="mb-0">Patient Care Associate</h6>
 
-                <tr>
-                  <td colSpan="6" className="p-0 m-0">
-                    <MDBCollapse isOpen={activeId === actualIndex}>
-                      <MDBCardBody className="m-0 p-3">
-                        <MDBRow className="d-flex align-items-center justify-content-between m-2">
-                          <h6 className="mb-0">Patient Care Associate</h6>
+                            <MDBBtn
+                              color="primary"
+                              size="sm"
+                              rounded
+                              onClick={() => handleAssign(_id)}
+                            >
+                              Tag Secretary
+                            </MDBBtn>
+                          </MDBRow>
 
-                          <MDBBtn
-                            color="primary"
-                            size="sm"
-                            rounded
-                            onClick={() => handleAssign(_id)}
-                          >
-                            Tag Secretary
-                          </MDBBtn>
-                        </MDBRow>
-
-                        <CollapsableBody secretary={secretary} />
-                      </MDBCardBody>
-                    </MDBCollapse>
-                  </td>
-                </tr>
-              </React.Fragment>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                          <CollapsableBody secretary={secretary} />
+                        </MDBCardBody>
+                      </MDBCollapse>
+                    </td>
+                  </tr>
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <ClinicModal
+        show={showClinicModal}
+        toggle={() => {
+          setShowClinicModal(false);
+          setSelectedPhysician(null);
+        }}
+        physician={selectedPhysician}
+        onSaved={handleClinicSaved}
+      />
+    </>
   );
 }

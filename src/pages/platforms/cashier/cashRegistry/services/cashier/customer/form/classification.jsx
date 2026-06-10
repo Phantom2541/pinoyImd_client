@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBadge, MDBBtn, MDBTypography } from "mdbreact";
 import { useHistory } from "react-router";
-import {
-  Categories,
-  Privileges,
-} from "../../../../../../../../services/fakeDb";
+import { Categories, HMO, Privileges } from "../../../../../../../../services/fakeDb";
 import {
   SETCATEGORY,
   SETPRIVILEGE,
@@ -23,11 +20,36 @@ import {
 import { BROWSE as BROWSE_BRANCHES } from "../../../../../../../../services/redux/slices/assets/branches";
 import { capitalize } from "lodash";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
-import { CardHolders } from "../../../../../../../../services/fakeDb/finance";
 import CardCompany from "./cardCompany";
+
 const contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
+};
+const buildHealthCardOptionValue = (card = {}) =>
+  `card:${card.provider || ""}:${String(card._id || card.number || "")}`;
+const getHealthCardOptionLabel = (card = {}) => {
+  const { provider = "", employer = "" } = card;
+  if (provider === "phi") {
+    return employer ? `PhilHealth - ${employer}` : "PhilHealth";
+  }
+
+  const normalized = String(provider || "").toLowerCase();
+  const matched = HMO.collections.find(
+    ({ code = "", abbr = "", name = "" }) =>
+      [code, abbr, name].some(
+        (value) => String(value || "").toLowerCase() === normalized,
+      ),
+  );
+
+  const baseLabel = (
+    matched?.abbr ||
+    matched?.name ||
+    String(provider || "").replace(/\b\w/g, (char) => char.toUpperCase()) ||
+    "HMO"
+  );
+
+  return employer ? `${baseLabel} - ${employer}` : baseLabel;
 };
 
 export default function PosCard() {
@@ -86,7 +108,7 @@ export default function PosCard() {
               vendors: activePlatform.branchId,
               status: "approved",
             },
-          })
+          }),
         )
           .then(({ payload }) => {
             // Assuming the response contains the source data in 'payload'
@@ -96,7 +118,7 @@ export default function PosCard() {
             // Store the fetched data in localStorage for future use
             localStorage.setItem(
               `source_${branchId}`,
-              JSON.stringify(sourceData)
+              JSON.stringify(sourceData),
             );
           })
           .catch((error) => {
@@ -113,6 +135,45 @@ export default function PosCard() {
 
   const { _id, privilege: userPrivilege = 0 } = customer,
     didSelect = Boolean(_id);
+  const savedHealthCards = Array.isArray(customer?.healthCard)
+    ? customer.healthCard.filter(
+        ({ provider = "", number = "" }) => provider || number,
+      )
+    : [];
+  const hasMembershipSources = collections.some(({ category = "" }) => category === "mbs");
+  const hasContractSources = collections.some(({ category = "" }) => category === "ctr");
+  const cardHolderOptions = [
+    { value: "", label: "None" },
+    ...savedHealthCards.map((card) => {
+      return {
+        value: buildHealthCardOptionValue(card),
+        label: getHealthCardOptionLabel(card),
+      };
+    }),
+    ...(hasMembershipSources ? [{ value: "mbs", label: "Membership" }] : []),
+    ...(hasContractSources ? [{ value: "ctr", label: "Contract" }] : []),
+  ];
+  const currentCardHolderProvider =
+    cardHolder?.provider ||
+    (cardHolder?.type === "wls"
+      ? cardHolder?.company?.name || ""
+      : cardHolder?.type || "");
+  const selectedCardHolderValue = (() => {
+    if (!currentCardHolderProvider) return "";
+
+    if (cardHolder?.type === "phi" || cardHolder?.type === "wls") {
+      const matchedCard = savedHealthCards.find(
+        (card) =>
+          card.provider === currentCardHolderProvider &&
+          String(card._id || card.number || "") ===
+            String(cardHolder?.company?.ref || ""),
+      );
+
+      return matchedCard ? buildHealthCardOptionValue(matchedCard) : "";
+    }
+
+    return currentCardHolderProvider;
+  })();
 
   const handleCategory = (category) => {
     const { abbr } = Categories[category];
@@ -140,7 +201,7 @@ export default function PosCard() {
   const isInhouse = scType === "inhouse";
   //filter the sources by source type
   const _sources = [...collections]?.filter(
-    ({ category }) => category === scType
+    ({ category }) => category === scType,
   );
   //if inhouse set the branches to sources if not get the filtered sources
   const sources = isInhouse
@@ -151,7 +212,7 @@ export default function PosCard() {
     if (!_id) return [];
 
     const branch = sources?.find(
-      (source) => source._id.toString() === _id.toString()
+      (source) => source._id.toString() === _id.toString(),
     );
     return isInhouse ? branch?.affiliated : branch?.clients?.affiliated;
   };
@@ -175,17 +236,15 @@ export default function PosCard() {
   const getCIndex = (abbr) =>
     Categories.findIndex(({ abbr: name }) => name === abbr);
 
-  const getCHIndex = (abbr) =>
-    CardHolders.findIndex(({ abbr: name }) => name === abbr);
   const srcEndPoint =
     Categories[getCIndex(scType)]?.name ||
-    CardHolders[getCHIndex(scType)]?.name;
+    (scType === "mbs" ? "Membership" : scType === "ctr" ? "Contract" : "");
   const hasSources = sources?.length > 0;
   return (
     <>
       <div>
         <div className="patient-form">
-          <span title="Signs and Symptoms">ssx</span>
+          <span title="Signs and Symptoms">Signs and Symptoms</span>
           <input
             placeholder="3 days fever, headache (etc)..."
             type="text"
@@ -220,7 +279,7 @@ export default function PosCard() {
           </select>
         </div>
         <div className="patient-form mt-2">
-          <span>Category</span>
+          .<span>Category</span>
           <select
             disabled={!didSelect}
             value={category}
@@ -240,25 +299,57 @@ export default function PosCard() {
           <span>Card Holder</span>
           <select
             disabled={!didSelect}
-            value={cardHolder?.type}
+            value={selectedCardHolderValue}
             onChange={({ target }) => {
               const value = target.value;
+
+              if (value.startsWith("card:")) {
+                const [, provider = "", ref = ""] = value.split(":");
+                const selectedHealthCard = savedHealthCards.find(
+                  (card) =>
+                    card.provider === provider &&
+                    String(card._id || card.number || "") === ref,
+                );
+
+                setSource({});
+                setPhysicians([]);
+                dispatch(RESET_INSOURCE());
+                dispatch(
+                  SetCH({
+                    provider,
+                    type: provider === "phi" ? "phi" : "wls",
+                    company: {
+                      name: provider,
+                      ref,
+                      employer: selectedHealthCard?.employer || "",
+                      label: getHealthCardOptionLabel(selectedHealthCard || {}),
+                    },
+                    tier: "",
+                  }),
+                );
+                return;
+              }
+
               const haveSource = ["mbs", "ctr"].includes(value);
               if (haveSource) {
                 setScType(value);
               }
-              dispatch(SetCH({ type: target.value }));
+              if (!haveSource && ["mbs", "ctr"].includes(scType)) {
+                setScType("rfr");
+              }
+              setSource({});
+              setPhysicians([]);
+              dispatch(RESET_INSOURCE());
+              dispatch(SetCH({ provider: value }));
             }}
           >
-            <option value={""}>None</option>
-            {CardHolders?.map(({ name = "", abbr = "", color = "" }, index) => {
+            {cardHolderOptions.map(({ value, label }, index) => {
               return (
                 <option
-                  value={abbr}
+                  value={value}
                   key={`category-${index}`}
-                  style={{ color }}
                 >
-                  {name}
+                  {label}
                 </option>
               );
             })}
@@ -302,7 +393,7 @@ export default function PosCard() {
                 history.push(
                   `/cashier/sources/insources/${
                     !isInhouse ? srcEndPoint?.toLowerCase() : "inhouse"
-                  }`
+                  }`,
                 );
             }}
             className={!hasSources ? "text-primary cursor-pointer" : ""}

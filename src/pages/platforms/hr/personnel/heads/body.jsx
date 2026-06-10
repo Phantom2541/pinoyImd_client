@@ -7,7 +7,10 @@ import {
   RESET,
 } from "../../../.././../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
-import { fullName, Cloudinary } from "../../../../../services/utilities";
+import {
+  signatoryName,
+  Cloudinary,
+} from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
@@ -62,7 +65,9 @@ export default function Body() {
 
   const handleDelete = (_id, user) => {
     Swal.fire({
-      title: `Are you sure you want to delete ${fullName(user.fullName)}?`,
+      title: `Are you sure you want to delete ${signatoryName(
+        user.fullName
+      )}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -415,7 +420,7 @@ export default function Body() {
                               }
                             />
                             <span className="signatories-cropper-guide">
-                              {fullName(cropperUser?.fullName)}
+                              {signatoryName(cropperUser?.fullName)}
                             </span>
                           </div>
                           <div className="signatories-cropper-controls">
@@ -461,13 +466,13 @@ export default function Body() {
                       collections={[
                         ...personnels.map(({ user }) => ({
                           userId: user?._id,
-                          text: fullName(user?.fullName),
+                          text: signatoryName(user?.fullName),
                         })),
                       ]}
                       fieldData={{
                         _id,
                         userId: user._id,
-                        text: fullName(user.fullName),
+                        text: signatoryName(user.fullName),
                       }}
                       keyForValue="userId"
                       keyForText="text"

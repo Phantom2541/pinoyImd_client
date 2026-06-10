@@ -1,80 +1,103 @@
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { HMO } from "../../../../../../../../services/fakeDb";
+import { MDBIcon } from "mdbreact";
 import { SetCH } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 
-const CardCompany = () => {
-  const { cardHolder = {}, customer } = useSelector(({ pos }) => pos);
-  const { collections } = useSelector(({ providers }) => providers);
-  const { activePlatform = {} } = useSelector(({ auth }) => auth);
-  const { branch = {} } = activePlatform;
-  const { companyId: company = {} } = branch || {};
-  const { type = "" } = cardHolder;
+export default function CardCompany() {
   const dispatch = useDispatch();
+  const { cardHolder = {}, sourceId } = useSelector(
+      ({ pos }) => pos,
+    ),
+    { collections = [] } = useSelector(({ providers }) => providers);
 
-  const insources =
-    [...collections]?.filter(({ category }) => category === cardHolder.type) ||
-    [];
-  const handleSource = (_id) => {
-    const _source = _id
-      ? insources?.find((source) => source?._id.toString() === _id)
-      : {};
+  const type =
+    cardHolder?.type ||
+    (cardHolder?.provider === "phi"
+      ? "phi"
+      : ["mbs", "ctr"].includes(cardHolder?.provider)
+        ? cardHolder?.provider
+        : cardHolder?.provider
+          ? "wls"
+          : "");
+  const { company = {}, tier = "" } = cardHolder;
 
-    const { membership = "", contract = "", clients } = _source || {};
+  const selectedSource = useMemo(
+    () =>
+      collections.find(({ _id = "", clients = {} }) => {
+        const clientId = clients?._id || _id;
+        return String(clientId) === String(sourceId || "");
+      }) || {},
+    [collections, sourceId],
+  );
+
+  useEffect(() => {
+    if (!["mbs", "ctr"].includes(type)) return;
+
+    const sourceName =
+      selectedSource?.clients?.displayname ||
+      selectedSource?.displayname ||
+      selectedSource?.name ||
+      "";
+    const nextTier =
+      type === "mbs" ? selectedSource?.membership || "" : selectedSource?.contract || "";
+    const nextRef = sourceId || "";
+
+    if (
+      company?.name === sourceName &&
+      company?.ref === nextRef &&
+      tier === nextTier
+    ) {
+      return;
+    }
 
     dispatch(
       SetCH({
-        ...cardHolder,
-        company: { ...cardHolder.company, ref: clients?._id },
-        tier: contract || membership,
-      })
+        provider: type,
+        type,
+        company: {
+          name: sourceName,
+          ref: nextRef,
+          employer: "",
+          label: sourceName,
+        },
+        tier: nextTier,
+      }),
     );
-  };
+  }, [company?.name, company?.ref, dispatch, selectedSource, sourceId, tier, type]);
 
-  if (!type) return null;
+  if (type === "mbs" || type === "ctr") {
+    const sourceLabel =
+      selectedSource?.clients?.displayname ||
+      selectedSource?.displayname ||
+      selectedSource?.name ||
+      "";
+    const tierLabel = type === "mbs" ? selectedSource?.membership : selectedSource?.contract;
 
-  if (type === "wls") {
     return (
       <div className="patient-form mt-2">
-        <span>Company Card:</span>
-        <select
-          onChange={({ target }) =>
-            dispatch(
-              SetCH({
-                ...cardHolder,
-                company: { ...cardHolder.company, name: target.value },
-              })
-            )
-          }
+        <span>{type === "mbs" ? "Membership Source" : "Contract Source"}</span>
+        <div
+          className="d-flex align-items-center"
+          style={{
+            minHeight: "38px",
+            border: "1px solid #ced4da",
+            borderRadius: "4px",
+            padding: "0 12px",
+            color: sourceLabel ? "#495057" : "#6c757d",
+            background: "#fff",
+            gap: "8px",
+          }}
         >
-          <option value={""}>None</option>
-          {company?.hmo?.map(({ code }) => (
-            <option value={code}>{HMO.getName(code)}</option>
-          ))}
-        </select>
-      </div>
-    );
-  } else {
-    return (
-      <div className="patient-form mt-2 ">
-        <span>Company Card:</span>
-        <select
-          disabled={!customer._id}
-          onChange={({ target }) => handleSource(target.value)}
-        >
-          <option value="">None</option>
-          {insources?.map(({ clients, _id = "" }) => {
-            const { name = "", displayname = "" } = clients || {};
-
-            return (
-              <option key={_id} value={_id}>
-                {displayname || name}
-              </option>
-            );
-          })}
-        </select>
+          <MDBIcon icon={type === "mbs" ? "id-card" : "building"} />
+          <span>
+            {sourceLabel
+              ? `${sourceLabel}${tierLabel ? ` - ${tierLabel}` : ""}`
+              : `Select a ${type === "mbs" ? "membership" : "contract"} source first`}
+          </span>
+        </div>
       </div>
     );
   }
-};
 
-export default CardCompany;
+  return null;
+}

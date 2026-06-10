@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-
 import { useSelector } from "react-redux";
-import { MDBBtn, MDBIcon, MDBInput } from "mdbreact";
+import { MDBInput } from "mdbreact";
 import {
   generateEmail,
   getAge,

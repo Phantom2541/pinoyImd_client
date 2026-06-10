@@ -32,6 +32,7 @@ import getDevelopment from "./getDevelopment";
 import formColor from "./formColor";
 import referenceColor from "./referenceColor";
 import properFullname from "./properFullname";
+import signatoryName from "./signatoryName";
 import calculateIndicators from "./calculateIndicators";
 import formatToSI from "./formatToSI";
 import formatNameToObj from "./formatNameToObject";
@@ -149,6 +150,7 @@ export {
   formColor,
   referenceColor,
   properFullname,
+  signatoryName,
   calculateIndicators,
   formatToSI,
   findReference,

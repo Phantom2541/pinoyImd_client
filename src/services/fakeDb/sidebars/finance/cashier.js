@@ -44,15 +44,38 @@ const cashier = [
     title: "Cash Register Functions",
     children: [
       {
-        name: "P O S",
+        name: "Self-Pay P O S",
         path: "/pos",
         icon: "shopping-cart",
         title: "Point of Sales",
         component: Cashier,
       },
+      // online payments and billing will be handled by frontdesk, cashier will only handle walk-in transactions and pre-authorization
       {
-        name: "Deals",
-        path: "/deals",
+        name: "H M O  P O S",
+        path: "/authorization",
+        icon: "check-circle",
+        // Letter of Authorization (LOA))
+        // Covered ba ang specific test/procedure? May LOA ba?
+        title:
+          "Pre-authorization for HMO-covered services → check specific service if covered by HMO -> LOA ",
+        component: Preauthorization,
+      },
+
+      {
+        name: "PhilHealth P O S",
+        path: "/express-lane",
+        icon: "sign-in-alt",
+        // Qualified ba ang case/service para sa PhilHealth benefit?
+        title:
+          "Express Lane for PhilHealth → check if case/service is qualified for PhilHealth benefit",
+
+        component: ExpressLane,
+      },
+      // Pre-charged → moves to Accrued Vouchers/frontdesk onboarding when done
+      {
+        name: "Daily Deals",
+        path: "/daily/deals",
         icon: "tags",
         title: "Service Deals of the Day",
         component: Deals,
@@ -63,22 +86,6 @@ const cashier = [
         icon: "exchange-alt",
         title: "Daily Remittance Ledger",
         component: Remittances,
-      },
-      {
-        name: "Pre-Authorization",
-        path: "/authorization",
-        icon: "check-circle",
-        title:
-          "Letter of Authorization (LOA))/Pre-Registered Patients & HMO Approvals → moves to cashier Onboarding when done",
-        component: Preauthorization,
-      },
-      {
-        name: "No Express Charge",
-        path: "/onboarding",
-        icon: "sign-in-alt",
-        title:
-          "Pre-charged → moves to Accrued Vouchers/frontdesk onboarding when done",
-        component: ExpressLane,
       },
     ],
   },

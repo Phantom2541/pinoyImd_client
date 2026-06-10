@@ -7,7 +7,21 @@ const individual = (menu, category, privilege, cardHolder) => {
     : category;
 
   var gross = menu[_abbr];
-  const { type = "", company = {}, tier = "" } = cardHolder || {};
+  const provider =
+    cardHolder?.provider ||
+    (cardHolder?.type === "wls"
+      ? cardHolder?.company?.name || ""
+      : cardHolder?.type || "");
+  const type =
+    cardHolder?.type ||
+    (provider === "phi"
+      ? "phi"
+      : ["mbs", "ctr"].includes(provider)
+        ? provider
+        : provider
+          ? "wls"
+          : "");
+  const { company = {}, tier = "" } = cardHolder || {};
   const isWellness = type === "wls";
   if (type === "wls") gross = HMO.getSrp(company.name, menu?.hmo);
   if (type === "ctr") gross = menu?.[tier];
@@ -104,7 +118,21 @@ const computeGD = (menu, categoryIndex, privilege, cardHolder) => {
 };
 
 const allServicesHavePrices = (cart, categoryIndex, cardHolder = {}) => {
-  const { type, company, tier } = cardHolder;
+  const provider =
+    cardHolder?.provider ||
+    (cardHolder?.type === "wls"
+      ? cardHolder?.company?.name || ""
+      : cardHolder?.type || "");
+  const type =
+    cardHolder?.type ||
+    (provider === "phi"
+      ? "phi"
+      : ["mbs", "ctr"].includes(provider)
+        ? provider
+        : provider
+          ? "wls"
+          : "");
+  const { company, tier } = cardHolder;
   if (cart?.length === 0) return false;
 
   const category = Categories[categoryIndex] || {};

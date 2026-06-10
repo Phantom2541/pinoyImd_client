@@ -4,7 +4,7 @@ import {
   MDBView,
   MDBCardBody,
   MDBAvatar,
-  MDBProgress,
+  // MDBProgress,
   MDBBtnGroup,
 } from "mdbreact";
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ import { useToasts } from "react-toast-notifications";
 import { ImageCropper } from "../../../../../../components/images";
 
 export default function Profile({ form, setForm = () => {} }) {
-  const { auth, token } = useSelector(({ auth }) => auth),
+  const { auth } = useSelector(({ auth }) => auth),
     { addToast } = useToasts();
 
   const handleError = (message) =>

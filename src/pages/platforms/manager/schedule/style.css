@@ -1,0 +1,45 @@
+.manager-schedule-toolbar select {
+  min-width: 140px;
+}
+
+.manager-schedule-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.manager-schedule-department-card {
+  border: 1px solid #dfe5ec;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  padding: 1rem;
+}
+
+.manager-schedule-department-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.manager-schedule-empty {
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  background: #fafcff;
+}
+
+@media (max-width: 768px) {
+  .manager-schedule-toolbar {
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .manager-schedule-toolbar .ml-2 {
+    margin-left: 0 !important;
+  }
+
+  .manager-schedule-department-header {
+    flex-direction: column;
+  }
+}

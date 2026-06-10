@@ -6,7 +6,7 @@ import { BOARD_MEMBERS } from "../../../../../services/redux/slices/assets/perso
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ personnels }) => personnels),
-    { branchId = {} } = activePlatform,
+    branchId = activePlatform?.branchId,
     dispatch = useDispatch();
   const handlePrintout = () => {
     window.print();
@@ -14,7 +14,7 @@ const Header = () => {
 
   // keys keys:{branchId,designations:Policy.getBoardMembersIds()}
   useEffect(() => {
-    if (token) {
+    if (token && branchId) {
       dispatch(
         BOARD_MEMBERS({
           token,
@@ -25,7 +25,7 @@ const Header = () => {
         })
       );
     }
-  }, [dispatch, token, branchId, activePlatform]);
+  }, [dispatch, token, branchId]);
 
   //initial values
 

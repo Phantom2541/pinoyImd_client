@@ -18,7 +18,13 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
   const visibleBranches = useMemo(
     () =>
       branches.filter((branch = {}) => {
-        const hiddenStatuses = ["pending", "banned", "blk", "blacklisted"];
+        const hiddenStatuses = [
+          "pending",
+          "banned",
+          "blk",
+          "blacklisted",
+          "ghost",
+        ];
         const status = String(branch?.status || "")
           .trim()
           .toLowerCase();

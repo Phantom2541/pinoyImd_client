@@ -26,7 +26,7 @@ import Patient from "./patient";
 export const Tables = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
     { refined, maxPage, activePage, formSubmitted, isSuccess } = useSelector(
-      ({ deals }) => deals
+      ({ deals }) => deals,
     ),
     { collections: sources } = useSelector(({ providers }) => providers),
     [deals, setDeals] = useState([]),
@@ -90,7 +90,7 @@ export const Tables = () => {
             year: today.getFullYear(),
             deletedAt: today.toLocaleString(),
           },
-        })
+        }),
       );
     }
   };
@@ -158,14 +158,14 @@ export const Tables = () => {
           <tr>
             <td><strong>Discount:</strong></td>
             <td style="text-align: right; color: red;">-${currency.format(
-              discount
+              discount,
             )}</td>
           </tr>
           <tr><td colspan="2"><hr /></td></tr>
           <tr>
             <td><strong>New Amount:</strong></td>
             <td style="text-align: right; color: green;"><strong>₱${currency.format(
-              newAmount
+              newAmount,
             )}</strong></td>
           </tr>
         </table>
@@ -191,18 +191,18 @@ export const Tables = () => {
               discount: amount - newAmount,
               authorizedBy: auth._id,
             },
-          })
+          }),
         ).then(() => {
           Swal.fire({
             title: "Discount Applied!",
             html: `
           <p style="font-size: 1.1rem;">
             A discount of <strong style="color: red;">${currency.format(
-              discount
+              discount,
             )}</strong> has been successfully applied.
           </p>
           <p style="font-size: 1rem;">New total: <strong style="color: green;">${currency.format(
-            newAmount
+            newAmount,
           )}</strong></p>
         `,
             icon: "success",
@@ -218,7 +218,7 @@ export const Tables = () => {
       UPDATE_INFO({
         data: { ...editedData, updatedKey: editedData.editingKey },
         token,
-      })
+      }),
     );
   };
 
@@ -258,7 +258,7 @@ export const Tables = () => {
 
     Swal.fire({
       title: `📅 Reschedule for <span style="color:#3085d6;">${fullName(
-        deal?.customerId?.fullName
+        deal?.customerId?.fullName,
       )}</span>`,
       html: `
       <p style="font-size:14px;margin-bottom:12px;color:#555;">
@@ -302,7 +302,7 @@ export const Tables = () => {
           day,
           originalTime.getHours(),
           originalTime.getMinutes(),
-          originalTime.getSeconds()
+          originalTime.getSeconds(),
         );
 
         return updatedDate;
@@ -314,7 +314,7 @@ export const Tables = () => {
           RESCHEDULE({
             token,
             data: { _id: deal._id, createdAt: new Date(newDate) },
-          })
+          }),
         ).then(() => {
           Swal.fire({
             icon: "success",

@@ -45,7 +45,20 @@ export default function Payments() {
         cardHolder = { type: "" },
       } = item;
       const { careOf = {}, pp = "cash" } = refNo;
-      const { type: chType = "" } = cardHolder;
+      const provider =
+        cardHolder?.provider ||
+        (cardHolder?.type === "wls"
+          ? cardHolder?.company?.name || ""
+          : cardHolder?.type || "");
+      const chType =
+        cardHolder?.type ||
+        (provider === "phi"
+          ? "phi"
+          : ["mbs", "ctr"].includes(provider)
+            ? provider
+            : provider
+              ? "wls"
+              : "");
       const isMixed = payment === "mixed";
       const isVoucher = payment === "voucher";
       const baseAmount = isVoucher

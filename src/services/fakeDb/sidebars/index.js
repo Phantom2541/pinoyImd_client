@@ -1,7 +1,7 @@
 import superadmin from "./superadmin";
 import diagnostics from "./diagnostics";
 import suppliers from "./suppliers";
-import patron from "./diagnostics/patron";
+import patron from "./administrations/patron";
 import Access from "../access";
 
 const Sidebars = {
@@ -17,10 +17,7 @@ export const resolveSidebarGroup = (isDiagnostics = true) => ({
   patron,
 });
 
-export const getPlatformSidebar = (
-  platform,
-  { isDiagnostics = true } = {},
-) => {
+export const getPlatformSidebar = (platform, { isDiagnostics = true } = {}) => {
   const platformKey = Access.normalizePlatformKey(platform).replace(/_/g, "");
   const group = resolveSidebarGroup(isDiagnostics);
 
@@ -34,7 +31,9 @@ export const getPlatformDefaultRoute = (
   { isDiagnostics = true } = {},
 ) => {
   const sidebar = getPlatformSidebar(platform, { isDiagnostics });
-  const defaultPath = sidebar.find(({ path }) => typeof path === "string")?.path;
+  const defaultPath = sidebar.find(
+    ({ path }) => typeof path === "string",
+  )?.path;
 
   if (!defaultPath) {
     return `/${Access.normalizePlatformKey(platform || "patron")}`;

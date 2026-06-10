@@ -6,8 +6,8 @@ import CADUCEUS from "./../../../../../../../assets/caduceus.png";
 import {
   Banner,
   billingAddress,
-  Cloudinary,
-  contacts,
+  // Cloudinary,
+  // contacts,
   fullName,
   getAge,
   properFullname,
@@ -20,20 +20,20 @@ export default function Clearance({ active, buttonRefs, togglePanel }) {
     height: 530,
   });
   const { patient: appointment } = useSelector(
-      ({ appointments }) => appointments
+      ({ appointments }) => appointments,
     ),
     { auth, activePlatform } = useSelector(({ auth }) => auth),
     { fullName: name, isMale, dob, address } = appointment?.patient || {};
-  const logoURL =
-    `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-      activePlatform.branch.companyId.name
-    )}/logo` || "";
-  const signUrl =
-    `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
+  // const logoURL =
+  //   `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+  //     activePlatform.branch.companyId.name,
+  //   )}/logo` || "";
+  // const signUrl =
+  //   `${Cloudinary.getEndpoint()}/users/${auth.email}/signature` || "";
 
-  const companyname = activePlatform.branch.companyId.name || "";
-  const branchaddress = activePlatform.branch.address || "";
-  const branchcontact = activePlatform.branch.contacts.mobile || "";
+  // const companyname = activePlatform.branch.companyId.name || "";
+  // const branchaddress = activePlatform.branch.address || "";
+  // const branchcontact = activePlatform.branch.contacts.mobile || "";
   return (
     <div
       style={{

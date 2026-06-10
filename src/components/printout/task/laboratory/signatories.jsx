@@ -1,4 +1,4 @@
-import { Cloudinary, properFullname } from "../../../../services/utilities";
+import { Cloudinary, signatoryName } from "../../../../services/utilities";
 import "./style.css";
 
 const Signature = ({ person, label, style = {}, withSignature }) => {
@@ -30,7 +30,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
           zIndex: 1, // Bring text in front
         }}
       >
-        <u>{properFullname(person?.fullName)}</u>
+        <u>{signatoryName(person?.fullName)}</u>
       </h5>
 
       <div style={{ position: "relative", zIndex: 1 }}>

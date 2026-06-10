@@ -66,15 +66,17 @@ export default function Modal() {
     } else {
       // Ghost physician
       return {
-        title: form.title,
         user: form.user,
         branch: activePlatform.branchId,
         ghostName: {
-          fname,
-          mname,
-          lname,
-          suffix: form.suffix,
-          postnominal: form.postnominal,
+          fullName: {
+            title: form.title,
+            fname,
+            mname,
+            lname,
+            suffix: form.suffix,
+            postnominal: form.postnominal,
+          },
         },
       };
     }
@@ -86,7 +88,7 @@ export default function Modal() {
     if (!form.fullName?.includes(",")) {
       return addToast(
         "Please enter name in the format: Lastname, Firstname Middlename",
-        { appearance: "error" }
+        { appearance: "error" },
       );
     }
 
@@ -98,7 +100,7 @@ export default function Modal() {
         SAVE({
           data: { ...fullData, isGhost, branchId: activePlatform?.branchId }, // contains `user` field
           token,
-        })
+        }),
       ).then(() => {
         addToast(
           isGhost
@@ -106,7 +108,7 @@ export default function Modal() {
             : "Registered physician saved successfully.",
           {
             appearance: "success",
-          }
+          },
         );
         dispatch(TOGGLE());
       });
@@ -135,7 +137,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Services
+        {willCreate ? "Tag" : "Update"} Physician
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>

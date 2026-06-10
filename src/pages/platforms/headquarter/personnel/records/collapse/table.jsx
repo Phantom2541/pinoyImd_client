@@ -99,17 +99,21 @@ export default function CollapseTable({
   } = useForm();
 
   const resetData = useCallback(() => {
-    const deptCode = employment?.department;
-    setFilteredPositions(Policy.getPositions(deptCode));
-    setDep(Policy.getDepartment(employment?.designation));
+    const departmentName = Policy.getDepartment(employment?.designation) || "";
+    setFilteredPositions(
+      Policy.getPositionsByDepartmentName(departmentName) || []
+    );
+    setDep(departmentName);
     reset({
       employmentHor: employment?.hos || 0,
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
+      employmentDepartment: departmentName,
       employmentDesignation: employment?.designation || "",
       rateMonthly: rate?.monthly || 0,
       rateCola: rate?.cola || 0,
       rateDaily: rate?.daily || 0,
+      incentive: rate?.incentive || 0,
       contributionPh: contribution?.ph || 0,
       contributionPi: contribution?.pi || 0,
       contributionSss: contribution?.sss || 0,
@@ -141,9 +145,11 @@ export default function CollapseTable({
   };
 
   const handleDepartmentChange = (e) => {
-    const selectedDeptCode = e.target.value;
-    setDep(Policy.getDepname(e.target.value));
-    setFilteredPositions(Policy.getPositionsByDepartmentName(selectedDeptCode));
+    const selectedDepartment = e.target.value;
+    setDep(selectedDepartment);
+    setFilteredPositions(
+      Policy.getPositionsByDepartmentName(selectedDepartment) || []
+    );
   };
   const isHonorarium = employment?.soe === "Honorarium";
   return (

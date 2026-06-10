@@ -12,6 +12,7 @@ import {
 import UserManual from "../../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../../pages/platforms/manager/purchases/request/index.jsx";
 import Banners from "../../../../pages/platforms/manager/settings/banner/index.jsx";
+import Clinic from "../../../../pages/platforms/manager/settings/clinic/index.jsx";
 import TatServices from "../../../../pages/platforms/manager/commerce/tatServices/index.jsx";
 
 import {
@@ -22,7 +23,7 @@ import {
   Heads,
 } from "../../../../pages/platforms/hr/index.js";
 
-import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
+import StockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
 import { Quest } from "../../../../pages/platforms/laboratory/staffManagement/index.js";
 
 import {
@@ -44,8 +45,6 @@ import {
   ExperimentalLedger,
 } from "../../../../pages/platforms/accounting/index.js";
 
-import { Schedule } from "../../../../pages/platforms/hr/index.js";
-
 import {
   Philhealth,
   Outsources,
@@ -57,6 +56,7 @@ import {
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
 import QrCodePage from "../../../../pages/platforms/manager/settings/qrCode/index.jsx";
 import Attendance from "../../../../pages/platforms/manager/attendance/index.jsx";
+import ScheduleManager from "../../../../pages/platforms/manager/schedule/index.jsx";
 const ManagerSidebar = [
   {
     name: "Dashboard",
@@ -119,11 +119,11 @@ const ManagerSidebar = [
         title: "Employee daily attendance tracker.",
         path: "/schedule",
         icon: "clock",
-        component: Schedule,
+        component: ScheduleManager,
       },
       {
-        name: "Staff",
-        title: "Active staff directory.",
+        name: "Work Profile",
+        title: "View and manage employee work profiles.",
         path: "/staff",
         icon: "user",
         component: Staffs,
@@ -159,9 +159,16 @@ const ManagerSidebar = [
       {
         name: "Stockholders",
         title: "Company stakeholders and investors.",
-        path: "/stockHolder",
+        path: "/stackholder",
         icon: "user-tie",
-        component: stockHolder,
+        component: StockHolder,
+      },
+      {
+        name: "Stakeholder",
+        title: "Company stakeholders and investors.",
+        path: "/stakeholder",
+        icon: "user-tie",
+        // component: StockHolder,
       },
     ],
   },
@@ -332,13 +339,7 @@ const ManagerSidebar = [
     ],
   },
   {
-    name: "Clinic",
-    title: "Listings and status of clinic services.",
-    icon: "clinic-medical",
-    path: "/clinic",
-  },
-  {
-    name: "System Configuration",
+    name: "Branch Configuration",
     title: "Configuration of system profiles and resources.",
     icon: "sliders-h",
     path: "/config",
@@ -422,7 +423,6 @@ const ManagerSidebar = [
           },
         ],
       },
-
       {
         name: "Product & Services Setup",
         path: "/product-config",
@@ -464,6 +464,13 @@ const ManagerSidebar = [
             component: Products,
           },
         ],
+      },
+      {
+        name: "Clinic",
+        title: "Listings and status of clinic services.",
+        icon: "clinic-medical",
+        path: "/clinic",
+        component: Clinic,
       },
       {
         name: "LIS",

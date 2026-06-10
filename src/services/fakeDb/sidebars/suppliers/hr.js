@@ -1,6 +1,6 @@
 import Dashboard from "../../../../pages/platforms/hr/dashboard";
 import Payrolls from "../../../../pages/platforms/accounting/payroll";
-import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder";
+import StockHolder from "../../../../pages/platforms/hr/personnel/stockHolder";
 import {
   Schedule,
   Staffs,
@@ -75,9 +75,9 @@ const humanresources = [
       {
         name: "Stockholders",
         title: "Company stakeholders and investors.",
-        path: "/stockHolder",
+        path: "/stackholder",
         icon: "user-tie",
-        component: stockHolder,
+        component: StockHolder,
       },
       {
         name: "Org Chart",

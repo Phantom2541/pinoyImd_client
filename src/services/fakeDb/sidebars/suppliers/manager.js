@@ -23,7 +23,7 @@ import {
   Heads,
 } from "../../../../pages/platforms/hr/index.js";
 
-import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
+import StockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
 import { Quest } from "../../../../pages/platforms/laboratory/staffManagement/index.js";
 
 // import {
@@ -45,8 +45,6 @@ import {
   ExperimentalLedger,
 } from "../../../../pages/platforms/accounting/index.js";
 
-import { Schedule } from "../../../../pages/platforms/hr/index.js";
-
 import {
   Philhealth,
   Outsources,
@@ -56,6 +54,7 @@ import {
 } from "../../../../pages/platforms/cashier/index.js";
 import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
 import QrCodePage from "../../../../pages/platforms/manager/settings/qrCode/index.jsx";
+import ScheduleManager from "../../../../pages/platforms/manager/schedule/index.jsx";
 
 const ManagerSidebar = [
   {
@@ -119,7 +118,7 @@ const ManagerSidebar = [
         title: "Employee daily attendance tracker.",
         path: "/schedule",
         icon: "clock",
-        component: Schedule,
+        component: ScheduleManager,
       },
       {
         name: "Staff",
@@ -152,9 +151,9 @@ const ManagerSidebar = [
       {
         name: "Stockholders",
         title: "Company stakeholders and investors.",
-        path: "/stockHolder",
+        path: "/stackholder",
         icon: "user-tie",
-        component: stockHolder,
+        component: StockHolder,
       },
     ],
   },

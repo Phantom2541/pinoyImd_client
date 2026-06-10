@@ -1,5 +1,5 @@
 import React from "react";
-import { Markup } from "interweave";
+// import { Markup } from "interweave";
 import {
   PhysicalExam,
   Microexam,
@@ -13,7 +13,7 @@ export default function Seminogram({ task, fontSize = 10 }) {
   const renderRows = (categories, values, preferences, isSelectCheck) =>
     categories.map((category, index) => {
       const key = Array.isArray(values) ? index : Object.keys(values)[index];
-      const value = Array.isArray(values) ? values[index] : values[key] ?? "";
+      const value = Array.isArray(values) ? values[index] : (values[key] ?? "");
 
       const pref = preferences[category] || {};
       const { lo = "", hi = "", unit = "" } = pref;
@@ -74,7 +74,7 @@ export default function Seminogram({ task, fontSize = 10 }) {
             PhysicalExam.Title,
             pe,
             PhysicalExam.Preferences.physical,
-            (c) => ["Appearance", "Color", "Viscosity"].includes(c)
+            (c) => ["Appearance", "Color", "Viscosity"].includes(c),
           )}
 
           {/* Microscopic Exam */}
@@ -87,7 +87,7 @@ export default function Seminogram({ task, fontSize = 10 }) {
             Microexam.Category,
             me,
             PhysicalExam.Preferences.semen,
-            (c) => c === "Agglutination"
+            (c) => c === "Agglutination",
           )}
 
           {/* Morphology */}

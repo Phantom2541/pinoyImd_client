@@ -1,6 +1,6 @@
 import React from "react";
 import usePanelPosition from "./../panelPosition";
-import Header from "./header";
+// import Header from "./header";
 import Patient from "./patient";
 import Body from "./body";
 import Footer from "./footer";
