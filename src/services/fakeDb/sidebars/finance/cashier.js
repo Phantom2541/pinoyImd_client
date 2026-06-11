@@ -206,10 +206,10 @@ const cashier = [
     ],
   },
   {
-    name: "HCAP",
+    name: "A H C",
     path: "/health/cards",
     icon: "clipboard-list",
-    title: "Health Cards Accredited Providers",
+    title: "Accredited Health Cards",
     children: [
       {
         name: "H M O Wellness",

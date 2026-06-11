@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Input } from "../../../../../components/customizable";
 
+const philhealthLogo = `${process.env.PUBLIC_URL || ""}/assets/logo/philhealth.png`;
+
 const Index = () => {
   const [toggleValue, setToggleValue] = useState(false);
   const [selected, setSelected] = useState({});
@@ -125,13 +127,13 @@ const Index = () => {
         <MDBCardBody>
           <MDBView className="text-center">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/1/11/Www.philhealth.gov.ph.png"
-              alt="Philhealth"
+              src={philhealthLogo}
+              alt="PhilHealth"
               style={{
-                height: "150px",
-                width: "100%",
-                paddingLeft: "20%",
-                paddingRight: "20%",
+                width: "220px",
+                maxWidth: "100%",
+                height: "auto",
+                marginBottom: "0.75rem",
               }}
             />
             <h5>

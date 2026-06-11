@@ -20,7 +20,7 @@ import Swal from "sweetalert2";
 import CollapseTable from "./table";
 import Header from "./header";
 
-export default function MenuCollapse() {
+export default function HMOCollapse() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
       filtered,
@@ -85,7 +85,7 @@ export default function MenuCollapse() {
           branchId,
         },
         token,
-      })
+      }),
     ).then(({ payload: response }) => {
       const { payload } = response;
       dispatch(SetBRANCHES(payload));
@@ -133,7 +133,7 @@ export default function MenuCollapse() {
               TagPHYSICIAN({
                 data: { physicianId, providerId, branchId },
                 token,
-              })
+              }),
             ).unwrap();
           })
           .then((branch) => {
@@ -143,7 +143,7 @@ export default function MenuCollapse() {
             Swal.fire(
               "Error",
               "Failed to register physician. Please try again.",
-              "error"
+              "error",
             );
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -180,7 +180,7 @@ export default function MenuCollapse() {
             branch,
             providerId: providerID,
             isUpdateBranch: true,
-          })
+          }),
         );
       })
       .catch((error) => console.error("Update Error:", error));
@@ -191,7 +191,7 @@ export default function MenuCollapse() {
       SPECIFIC_UPDATE({
         data: editedData,
         token,
-      })
+      }),
     );
   };
   const itemsPerPage = maxPage; // Number of items per page

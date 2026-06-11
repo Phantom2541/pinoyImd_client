@@ -475,10 +475,10 @@ const ManagerSidebar = [
     ],
   },
   {
-    name: "Health Cards Accreditations",
+    name: "A H C",
     path: "/health/cards",
     icon: "clipboard-list",
-    title: "Service Listings",
+    title: "Accredited Health Cards",
     children: [
       {
         name: "H M O Wellness",
