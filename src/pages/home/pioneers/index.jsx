@@ -3,18 +3,13 @@ import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 
 export default function Pioneers() {
-  // const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
-  // const CHANNEY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/channey.jpg`;
-  // const KEVIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kev.jpg`;
-  // const ROVAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
-  // const VARGILIO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/vargilio.jpg`;
   const RIC = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/ric.jpg`;
   const JERWIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/jerwin.jpg`;
   const RICO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rico.png`;
-  const MAGTALAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kevin.jpg`;
-  const NICK = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/nick.jpg`;
+  const MAGTALAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kevin.png`;
+  const NICK = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/nick.png`;
   const MELUIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/meluin.jpg`;
 
   const PIONEERS = [

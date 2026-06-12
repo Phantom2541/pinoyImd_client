@@ -19,7 +19,7 @@ export default function Partners() {
       (item) =>
         hmoCodes.includes(item.code) &&
         item.icon &&
-        item.icon !== "/assets/logo/default.png"
+        item.icon !== "/assets/logo/default.png",
     );
 
   useEffect(() => {
@@ -35,6 +35,16 @@ export default function Partners() {
       <h1 className="subscriber-testimonials-title mb-5">
         Accredited HMO Partners
       </h1>
+
+      {partners.length === 0 && (
+        <div className="subscriber-partners-coming-soon">
+          <h3>HMO Partnerships Coming Soon</h3>
+          <p>
+            This healthcare provider is preparing to offer HMO coverage for
+            patients.
+          </p>
+        </div>
+      )}
 
       {!showAll && partners?.length > 0 && (
         <SafeSwiper
@@ -58,7 +68,7 @@ export default function Partners() {
             1600: { slidesPerView: 6, spaceBetween: 30 },
           }}
         >
-          {partners.slice(1).map((hmo, index) => (
+          {partners.map((hmo, index) => (
             <SwiperSlide key={index}>
               <div className="subscriber-partners-container">
                 <img
@@ -80,7 +90,7 @@ export default function Partners() {
         className="subscriber-partners-imageAll-container"
         style={{ height: `${height}px` }}
       >
-        {partners.slice(1).map((hmo, index) => (
+        {partners.map((hmo, index) => (
           <div key={index} className="subscriber-partners-container">
             <img
               src={hmo.icon}
@@ -94,7 +104,7 @@ export default function Partners() {
           </div>
         ))}
       </div>
-      <button
+      {partners.length > 0 && <button
         className="subscriber-partners-arrow-button-down"
         onClick={() => setShowAll(!showAll)}
       >
@@ -127,7 +137,7 @@ export default function Partners() {
             } subscriber-partners-trail2`}
           ></i>
         </span>
-      </button>
+      </button>}
     </div>
   );
 }

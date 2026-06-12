@@ -22,7 +22,6 @@ import MissionVision from "./missionVision";
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
     { activePlatform } = useSelector(({ auth }) => auth),
-    { hmo, hasPhilHealth } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [flipped, setFlipped] = useState(false),
@@ -34,6 +33,11 @@ const Subscriber = ({ match }) => {
     dispatch = useDispatch(),
     linkRefs = useRef({}),
     menuRef = useRef(null);
+  const mainBranch = (details?.branches || []).find(
+    (branch) =>
+      branch?.isMain ||
+      String(branch?.displayname || "").trim().toLowerCase() === "main",
+  );
   const { branch = {} } = activePlatform;
   const { companyId: company = {} } = branch || {};
   const { _id: companyId } = company;
@@ -260,16 +264,12 @@ const Subscriber = ({ match }) => {
               <MissionVision />
             </div>
 
-            {hmo?.length > 0 && (
-              <div id="partners">
-                <Partners />
-              </div>
-            )}
-            {hasPhilHealth && (
-              <div id="testimonials">
-                <Philhealth />
-              </div>
-            )}
+            <div id="partners">
+              <Partners />
+            </div>
+            <div id="philhealth">
+              <Philhealth phi={mainBranch?.phi} />
+            </div>
 
             <ECGWave color="#1266f1" waves={19} className="my-4" />
             <div id="testimonials">

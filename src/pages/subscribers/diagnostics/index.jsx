@@ -19,7 +19,6 @@ import MissionVision from "./missionVision";
 
 const Diagnostics = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
-    { hmo, hasPhilHealth } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [flipped, setFlipped] = useState(false),
@@ -30,6 +29,12 @@ const Diagnostics = ({ match }) => {
     [indicatorStyle, setIndicatorStyle] = useState({}),
     linkRefs = useRef({}),
     menuRef = useRef(null);
+  const mainBranch = (details?.branches || []).find(
+    (branch) =>
+      branch?.isMain ||
+      String(branch?.displayname || "").trim().toLowerCase() === "main",
+  );
+  const mainBranchHmo = mainBranch?.hmo || [];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -248,16 +253,12 @@ const Diagnostics = ({ match }) => {
               <MissionVision />
             </div>
 
-            {hmo?.length > 0 && (
-              <div id="partners">
-                <Partners />
-              </div>
-            )}
-            {hasPhilHealth && (
-              <div id="testimonials">
-                <Philhealth />
-              </div>
-            )}
+            <div id="partners">
+              <Partners hmo={mainBranchHmo} />
+            </div>
+            <div id="philhealth">
+              <Philhealth phi={mainBranch?.phi} />
+            </div>
 
             <ECGWave color="#1266f1" waves={19} className="my-4" />
             <div id="testimonials">
