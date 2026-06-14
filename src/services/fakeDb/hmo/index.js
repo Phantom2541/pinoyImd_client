@@ -11,7 +11,8 @@ const HMO = {
     const activePlatform = JSON.parse(localStorage.getItem("activePlatform"));
     const { branch = {} } = activePlatform;
     const { hmo = [] } = branch;
-    return hmo?.find(({ code }) => code === pk)?.cp || {};
+    const match = hmo?.find(({ provider }) => provider === pk) || {};
+    return match?.contacts || match?.cp || {};
   },
 
   getName: (_code) =>

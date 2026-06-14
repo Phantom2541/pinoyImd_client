@@ -2,6 +2,9 @@
   "name": "mdbreact-admin-pro",
   "version": "4.25.0",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",

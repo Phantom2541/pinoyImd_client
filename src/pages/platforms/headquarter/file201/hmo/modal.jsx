@@ -10,10 +10,12 @@ import {
 } from "mdbreact";
 import {
   TOGGLE,
-  UPDATE,
+  SetFILTER,
+  SetHMO,
 } from "../../../../../services/redux/slices/assets/companies";
 import { HMO } from "../../../../../services/fakeDb";
 import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { UPDATE as UPDATE_BRANCH } from "../../../../../services/redux/slices/assets/branches";
 
 export default function Modal() {
   const { showModal, selected, willUPDATE, isLoading, hmo } = useSelector(
@@ -24,34 +26,75 @@ export default function Modal() {
     [collections, setCollections] = useState([]),
     dispatch = useDispatch();
 
+  const normalizedContacts = {
+    person: selected?.contacts?.person || selected?.cp?.agent || "",
+    mobile: selected?.contacts?.mobile || selected?.cp?.phone || "",
+    email: selected?.contacts?.email || selected?.cp?.email || "",
+  };
+
   // 👇 Update filtered HMO options when modal opens or hmo list updates
   useEffect(() => {
     if (hmo && showModal) {
-      const codeList = hmo.map((item) => item.code);
+      const codeList = hmo.map((item) => item.provider || item.code);
       const filtered = HMO.collections.filter(
-        (item) => !codeList.includes(item.code)
+        (item) =>
+          item.code === selected?.provider || !codeList.includes(item.code)
       );
       setCollections(filtered);
     }
-  }, [hmo, showModal]);
+  }, [hmo, selected, showModal]);
 
   // 👇 Reset form when modal opens
   useEffect(() => {
     if (showModal) {
-      setForm({});
+      setForm(
+        selected?.provider || selected?.code
+          ? {
+              ...selected,
+              provider: selected?.provider || selected?.code || "",
+              contacts: normalizedContacts,
+            }
+          : {
+              contacts: {
+                person: "",
+                mobile: "",
+                email: "",
+              },
+            }
+      );
     }
-  }, [showModal]);
+  }, [normalizedContacts, selected, showModal]);
 
   // 👇 Create new HMO entry
   const handleAdd = () => {
-    const newHmo = [...hmo, form];
+    const isEditing = Boolean(
+      selected?._id || selected?.provider || selected?.code
+    );
+    const newHmo = isEditing
+      ? hmo.map((item) => {
+          const sameById =
+            selected?._id &&
+            item?._id &&
+            String(item._id) === String(selected._id);
+          const sameByCode =
+            !selected?._id &&
+            item?.provider === (selected?.provider || selected?.code);
+
+          return sameById || sameByCode ? { ...item, ...form } : item;
+        })
+      : [...hmo, form];
     dispatch(
-      UPDATE({
-        data: { _id: activePlatform.branch.companyId._id, hmo: newHmo },
+      UPDATE_BRANCH({
+        data: { _id: activePlatform.branchId, hmo: newHmo },
         token,
       })
-    ).then(() => {
-      dispatch(PatchSessionPlatform({ data: newHmo, isHMO: true }));
+    ).then(({ payload }) => {
+      const updatedBranch = payload?.payload;
+      if (!updatedBranch) return;
+
+      dispatch(SetHMO(updatedBranch.hmo || []));
+      dispatch(SetFILTER(updatedBranch.hmo || []));
+      dispatch(PatchSessionPlatform({ data: updatedBranch, isBranch: true }));
     });
     dispatch(TOGGLE()); // Close modal
   };
@@ -63,7 +106,7 @@ export default function Modal() {
 
   const handleClose = () => dispatch(TOGGLE());
 
-  const { cp = {}, code } = form;
+  const { contacts = {}, provider } = form;
 
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="md">
@@ -80,7 +123,7 @@ export default function Modal() {
           <label>HMO</label>
           <select
             className="form-control"
-            value={code || ""}
+            value={provider || ""}
             required
             onChange={(e) => {
               const selectedCode = e.target.value;
@@ -90,9 +133,12 @@ export default function Modal() {
               if (selectedItem) {
                 setForm({
                   ...form,
-                  code: selectedItem.code,
-                  name: selectedItem.name,
-                  cp: { phone: "", email: "", agent: "" }, // reset contact person info
+                  provider: selectedItem.code,
+                  contacts: {
+                    person: form?.contacts?.person || "",
+                    mobile: form?.contacts?.mobile || "",
+                    email: form?.contacts?.email || "",
+                  },
                 });
               }
             }}
@@ -113,28 +159,37 @@ export default function Modal() {
             label="Phone"
             type="number"
             maxLength="11"
-            value={cp.phone || ""}
+            value={contacts.mobile || ""}
             required
             onChange={(e) =>
-              setForm({ ...form, cp: { ...cp, phone: e.target.value } })
+              setForm({
+                ...form,
+                contacts: { ...contacts, mobile: e.target.value },
+              })
             }
           />
           <MDBInput
             label="Email"
             type="text"
-            value={cp.email || ""}
+            value={contacts.email || ""}
             required
             onChange={(e) =>
-              setForm({ ...form, cp: { ...cp, email: e.target.value } })
+              setForm({
+                ...form,
+                contacts: { ...contacts, email: e.target.value },
+              })
             }
           />
           <MDBInput
             label="Contact Person"
             type="text"
-            value={cp.agent || ""}
+            value={contacts.person || ""}
             required
             onChange={(e) =>
-              setForm({ ...form, cp: { ...cp, agent: e.target.value } })
+              setForm({
+                ...form,
+                contacts: { ...contacts, person: e.target.value },
+              })
             }
           />
 

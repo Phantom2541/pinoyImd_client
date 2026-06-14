@@ -81,8 +81,8 @@ const handleHeader = (form) => {
   if (menuType === "hmo") {
     const { branch = {} } = JSON.parse(localStorage.getItem("activePlatform"));
     const { hmo = [] } = branch;
-    const foundHmo = hmo.find(({ code }) => code === hmoCode) || {};
-    const { cp = {} } = foundHmo;
+    const foundHmo = hmo.find(({ provider }) => provider === hmoCode) || {};
+    const cp = foundHmo?.contacts || foundHmo?.cp || {};
     return [
       {
         width: "*",
@@ -92,7 +92,7 @@ const handleHeader = (form) => {
       },
       {
         width: "*",
-        text: [{ text: "Contact Number: ", bold: true }, cp?.phone],
+        text: [{ text: "Contact Number: ", bold: true }, cp?.mobile || cp?.phone],
         fontSize: 11,
         alignment: "right",
       },

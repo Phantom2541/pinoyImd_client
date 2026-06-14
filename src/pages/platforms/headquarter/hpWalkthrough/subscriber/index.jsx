@@ -19,6 +19,24 @@ import Philhealth from "./philhealth";
 import ECGWave from "./cardioGraph";
 import MissionVision from "./missionVision";
 
+const normalizeMainLabel = (value = "") => String(value || "").trim().toLowerCase();
+
+const resolveMainBranch = (branches = [], activeBranchId = "") => {
+  const branchList = Array.isArray(branches) ? branches : [];
+  const matchesMainLabel = (branch = {}) =>
+    ["main", "main branch"].includes(normalizeMainLabel(branch?.displayname)) ||
+    ["main", "main branch"].includes(normalizeMainLabel(branch?.name));
+
+  return (
+    branchList.find((branch) => branch?.isMain) ||
+    branchList.find(matchesMainLabel) ||
+    branchList.find((branch) => String(branch?._id || "") === String(activeBranchId || "")) ||
+    branchList.find((branch) => Array.isArray(branch?.hmo) && branch.hmo.length > 0) ||
+    branchList[0] ||
+    {}
+  );
+};
+
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
     { activePlatform } = useSelector(({ auth }) => auth),
@@ -33,14 +51,10 @@ const Subscriber = ({ match }) => {
     dispatch = useDispatch(),
     linkRefs = useRef({}),
     menuRef = useRef(null);
-  const mainBranch = (details?.branches || []).find(
-    (branch) =>
-      branch?.isMain ||
-      String(branch?.displayname || "").trim().toLowerCase() === "main",
-  );
   const { branch = {} } = activePlatform;
   const { companyId: company = {} } = branch || {};
   const { _id: companyId } = company;
+  const mainBranch = resolveMainBranch(details?.branches, branch?._id);
 
   useEffect(() => {
     dispatch(GET_DETAILS({ key: { companyId } }));
@@ -265,7 +279,7 @@ const Subscriber = ({ match }) => {
             </div>
 
             <div id="partners">
-              <Partners />
+              <Partners hmo={mainBranch?.hmo || []} />
             </div>
             <div id="philhealth">
               <Philhealth phi={mainBranch?.phi} />

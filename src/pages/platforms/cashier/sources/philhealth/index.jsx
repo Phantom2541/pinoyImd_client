@@ -1,125 +1,118 @@
-import { MDBCard, MDBCardBody, MDBCol, MDBRow, MDBView } from "mdbreact";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { Input } from "../../../../../components/customizable";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
+import Swal from "sweetalert2";
+
+import TableLoading from "../../../../../components/tableLoading";
+import {
+  CTBROWSE,
+  UPDATE,
+} from "../../../../../services/redux/slices/assets/branches";
 
 const philhealthLogo = `${process.env.PUBLIC_URL || ""}/assets/logo/philhealth.png`;
 
 const Index = () => {
-  const [toggleValue, setToggleValue] = useState(false);
-  const [selected, setSelected] = useState({});
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const {
+    ct: branch = {},
+    isLoading,
+    formSubmitted,
+  } = useSelector(({ branches }) => branches);
 
-  const { activePlatform } = useSelector(({ auth }) => auth);
-  const philhealth = activePlatform?.philhealth || {};
+  const phi = branch?.phi || {};
+  const isAccredited = useMemo(() => {
+    if (typeof phi?.accredited === "boolean") return phi.accredited;
 
-  const handleSelected = (data) => {
-    const { id, ...val } = data;
-    const [key] = Object.keys(val);
-    const value = val[key];
+    const start = phi?.validity?.start ? new Date(phi.validity.start) : null;
+    const end = phi?.validity?.end ? new Date(phi.validity.end) : null;
+    if (!start || !end) return false;
 
-    if (selected?.id === id && selected.key === key) {
-      setSelected({});
-    } else {
-      setSelected({ id, key, value, old: value });
+    const now = new Date();
+    return start <= now && end >= now;
+  }, [phi]);
+
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      dispatch(
+        CTBROWSE({
+          token,
+          data: { _id: activePlatform.branchId },
+        }),
+      );
     }
+  }, [activePlatform?.branchId, dispatch, token]);
+
+  const formatDateInput = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
   };
 
-  const handleUpdate = () => {
-    const { id, key, value } = selected;
-    console.log("updated", { id, [key]: value });
-    // dispatch(...) here
-    setSelected({});
+  const formatDateDisplay = (value) => {
+    if (!value) return "N/A";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "N/A" : date.toLocaleDateString();
   };
 
-  const renderEditableField = (label, keyName, type = "text") => (
-    <h6>
-      <b>{label}:</b>{" "}
-      {selected?.key === keyName ? (
-        <div style={{ width: "13rem" }}>
-          <Input
-            _key={"value"}
-            className="mt-2 form-control form-control-sm"
-            type={type}
-            isSuccess={true}
-            selected={selected}
-            onChange={(key, val) => setSelected({ ...selected, [key]: val })}
-            handleCheck={handleUpdate}
-            handleClose={() => setSelected({})}
-          />
-        </div>
-      ) : (
-        <strong
-          onClick={() =>
-            handleSelected({
-              id: "philhealth",
-              [keyName]: philhealth[keyName] || "",
-            })
-          }
-        >
-          {philhealth[keyName] || "N/A"}
-        </strong>
-      )}
-    </h6>
-  );
+  const handleEdit = () => {
+    Swal.fire({
+      title: "Edit PhilHealth Accreditation",
+      html: `
+        <input id="phi-an" class="swal2-input" placeholder="Accreditation number">
+        <input id="phi-start" class="swal2-input" type="date" placeholder="Start date">
+        <input id="phi-end" class="swal2-input" type="date" placeholder="End date">
+        <textarea id="phi-remarks" class="swal2-textarea" placeholder="Remarks"></textarea>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      focusConfirm: false,
+      didOpen: () => {
+        document.getElementById("phi-an").value = phi?.an || "";
+        document.getElementById("phi-start").value = formatDateInput(
+          phi?.validity?.start,
+        );
+        document.getElementById("phi-end").value = formatDateInput(
+          phi?.validity?.end,
+        );
+        document.getElementById("phi-remarks").value = phi?.remarks || "";
+      },
+      preConfirm: () => {
+        const an = document.getElementById("phi-an")?.value.trim();
+        const start = document.getElementById("phi-start")?.value;
+        const end = document.getElementById("phi-end")?.value;
+        const remarks = document.getElementById("phi-remarks")?.value.trim();
 
-  const ToggleSwitch = ({ isToggled, setIsToggled }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-      <span
-        style={{ minWidth: "20px", marginBottom: "8px", textAlign: "right" }}
-      >
-        False
-      </span>
-      <label
-        style={{
-          position: "relative",
-          display: "inline-block",
-          width: "40px",
-          height: "21px",
-        }}
-      >
-        <input
-          type="checkbox"
-          checked={isToggled}
-          onChange={() => setIsToggled(!isToggled)}
-          style={{
-            opacity: 0,
-            width: 0,
-            height: 0,
-            margin: 0,
-            padding: 0,
-          }}
-        />
-        <span
-          style={{
-            position: "absolute",
-            cursor: "pointer",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: isToggled ? "#05e30c" : "#4a4a4a",
-            borderRadius: "34px",
-            transition: "0.4s",
-          }}
-        >
-          <span
-            style={{
-              position: "absolute",
-              height: "15px",
-              width: "15px",
-              left: isToggled ? "22px" : "3px",
-              bottom: "3px",
-              backgroundColor: "white",
-              transition: "0.4s",
-              borderRadius: "50%",
-            }}
-          />
-        </span>
-      </label>
-      <span style={{ minWidth: "20px", marginBottom: "8px" }}>True</span>
-    </div>
-  );
+        if (start && end && new Date(start) > new Date(end)) {
+          Swal.showValidationMessage(
+            "Validity start date must be earlier than end date.",
+          );
+          return false;
+        }
+
+        return {
+          an,
+          validity: {
+            ...(start ? { start } : {}),
+            ...(end ? { end } : {}),
+          },
+          remarks,
+        };
+      },
+    }).then(({ isConfirmed, value }) => {
+      if (!isConfirmed) return;
+
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id: activePlatform.branchId,
+            phi: value,
+          },
+        }),
+      );
+    });
+  };
 
   return (
     <div style={{ width: "800px" }} className="mx-auto">
@@ -140,39 +133,47 @@ const Index = () => {
               <b>Accreditation</b>
             </h5>
           </MDBView>
+          {isLoading ? (
+            <TableLoading />
+          ) : (
+            <>
+              <div className="d-flex justify-content-center mb-3">
+                <span
+                  className={`badge px-3 py-2 ${
+                    isAccredited ? "badge-success" : "badge-secondary"
+                  }`}
+                  style={{ fontSize: "0.95rem" }}
+                >
+                  {isAccredited ? "Accredited" : "Not Accredited"}
+                </span>
+              </div>
 
-          <div
-            style={{ display: "flex", justifyContent: "center", gap: "8px" }}
-          >
-            <ToggleSwitch
-              isToggled={toggleValue}
-              setIsToggled={setToggleValue}
-            />
-          </div>
-
-          {toggleValue && (
-            <MDBRow
-              className="my-2"
-              style={{ width: "100%", paddingLeft: "20%" }}
-            >
-              <MDBCol md="6">
-                {renderEditableField(
-                  "Accreditation Number",
-                  "accreditationNumber"
-                )}
+              <div className="px-md-5">
                 <h6>
-                  <b>Validity</b>
+                  <b>Accreditation Number:</b> {phi?.an || "N/A"}
                 </h6>
-                {renderEditableField("Start", "start", "date")}
-                {renderEditableField("End", "end", "date")}
-                {renderEditableField("Remarks", "remarks")}
-              </MDBCol>
-              <MDBCol md="6">
-                <h6 className="text-md-end">
-                  {/* Right-aligned optional content */}
+                <h6>
+                  <b>Validity Start:</b> {formatDateDisplay(phi?.validity?.start)}
                 </h6>
-              </MDBCol>
-            </MDBRow>
+                <h6>
+                  <b>Validity End:</b> {formatDateDisplay(phi?.validity?.end)}
+                </h6>
+                <h6>
+                  <b>Remarks:</b> {phi?.remarks || "N/A"}
+                </h6>
+              </div>
+
+              <div className="text-center mt-4">
+                <MDBBtn
+                  color="info"
+                  disabled={formSubmitted}
+                  onClick={handleEdit}
+                >
+                  <MDBIcon icon="edit" className="mr-1" />
+                  Edit PhilHealth
+                </MDBBtn>
+              </div>
+            </>
           )}
         </MDBCardBody>
       </MDBCard>

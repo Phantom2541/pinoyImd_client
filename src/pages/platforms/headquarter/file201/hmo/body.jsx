@@ -3,8 +3,12 @@ import { MDBIcon } from "mdbreact";
 import { useDispatch } from "react-redux";
 import { HMO } from "../../../../../services/fakeDb";
 import { mobile } from "../../../../../services/utilities";
-import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
+import {
+  SetFILTER,
+  SetHMO,
+} from "../../../../../services/redux/slices/assets/companies";
 import { PatchSessionPlatform } from "../../../../../services/redux/slices/assets/persons/auth";
+import { UPDATE as UPDATE_BRANCH } from "../../../../../services/redux/slices/assets/branches";
 import Swal from "sweetalert2";
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(
@@ -26,12 +30,17 @@ const Body = () => {
     }).then((result) => {
       if (result.isConfirmed)
         dispatch(
-          UPDATE({
-            data: { _id: activePlatform.branch.companyId._id, hmo: newHMO },
+          UPDATE_BRANCH({
+            data: { _id: activePlatform.branchId, hmo: newHMO },
             token,
           })
-        ).then(() => {
-          dispatch(PatchSessionPlatform({ data: newHMO, isHMO: true }));
+        ).then(({ payload }) => {
+          const updatedBranch = payload?.payload;
+          if (!updatedBranch) return;
+
+          dispatch(SetHMO(updatedBranch.hmo || []));
+          dispatch(SetFILTER(updatedBranch.hmo || []));
+          dispatch(PatchSessionPlatform({ data: updatedBranch, isBranch: true }));
         });
     });
   };
@@ -48,8 +57,10 @@ const Body = () => {
       style={{ gap: "15px" }}
     >
       {paginatedData.map((data, index) => {
-        const { code = "", cp = {} } = data;
-        const { phone = "", email = "", agent = "" } = cp;
+        const { code = "", contacts = {}, cp = {} } = data;
+        const person = contacts.person || cp.agent || "";
+        const phone = contacts.mobile || cp.phone || "";
+        const email = contacts.email || cp.email || "";
         return (
           <div className="template7-card">
             <div className="template7-card-header">
@@ -62,7 +73,7 @@ const Body = () => {
             <div className="template7-card-body">
               <span className="template7-card-title">{HMO.getName(code)}</span>
               <div className="template7-card-info">
-                <span className="template7-card-name">{agent}</span>
+                <span className="template7-card-name">{person}</span>
                 <span className="template7-card-number">{mobile(phone)}</span>
                 <span className="template7-card-email">{email}</span>
               </div>

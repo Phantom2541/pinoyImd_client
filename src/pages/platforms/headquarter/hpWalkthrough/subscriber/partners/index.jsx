@@ -9,18 +9,23 @@ import { HMO } from "../../../../../../services/fakeDb";
 import { MDBIcon } from "mdbreact";
 import SafeSwiper from "../../../../../../components/swiper/SafeSwiper";
 
-export default function Partners() {
+export default function Partners({ hmo = [] }) {
   const [showAll, setShowAll] = useState(false);
   const [height, setHeight] = useState(0);
   const containerRef = useRef(null);
-  const { details } = useSelector(({ companies }) => companies),
-    hmoCodes = (details?.hmo || []).map((item) => item.code),
-    partners = HMO.collections.filter(
-      (item) =>
-        hmoCodes.includes(item.code) &&
-        item.icon &&
-        item.icon !== "/assets/logo/default.png",
-    );
+  const { details } = useSelector(({ companies }) => companies);
+
+  const fallbackHmo = details?.hmo || [];
+  const branchHmo = Array.isArray(hmo) && hmo.length ? hmo : fallbackHmo;
+  const hmoCodes = branchHmo
+    .map((item) => item?.provider || item?.code)
+    .filter(Boolean);
+  const partners = HMO.collections.filter(
+    (item) =>
+      hmoCodes.includes(item.code) &&
+      item.icon &&
+      item.icon !== "/assets/logo/default.png",
+  );
 
   useEffect(() => {
     if (showAll && containerRef.current) {

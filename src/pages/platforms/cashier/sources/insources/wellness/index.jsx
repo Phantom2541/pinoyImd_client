@@ -26,9 +26,12 @@ import {
 const Wellness = () => {
   const dispatch = useDispatch();
   const { token, activePlatform, maxPage } = useSelector(({ auth }) => auth);
-  const { ct: branch = {}, activePage, isLoading, formSubmitted } = useSelector(
-    ({ branches }) => branches,
-  );
+  const {
+    ct: branch = {},
+    activePage,
+    isLoading,
+    formSubmitted,
+  } = useSelector(({ branches }) => branches);
   const [filtered, setFiltered] = useState([]);
 
   const isManager = activePlatform?.platform === "manager";
@@ -37,13 +40,15 @@ const Wellness = () => {
     () =>
       hmo.map((item) => ({
         ...item,
-        name: HMO.getName(item.code),
-        abbr: HMO.getAbbr(item.code),
+        name: HMO.getName(item.provider),
+        abbr: HMO.getAbbr(item.provider),
       })),
     [hmo],
   );
   const availableHmos = useMemo(() => {
-    const selectedCodes = new Set(hmo.map(({ code }) => code).filter(Boolean));
+    const selectedCodes = new Set(
+      hmo.map(({ provider }) => provider).filter(Boolean),
+    );
 
     return HMO.collections
       .slice(1)
@@ -84,10 +89,10 @@ const Wellness = () => {
     );
 
   const openOrganizationForm = (item = {}) => {
-    const { code, contacts = {} } = item;
+    const { provider, contacts = {} } = item;
 
     Swal.fire({
-      title: `Edit ${HMO.getName(code)}`,
+      title: `Edit ${HMO.getName(provider)}`,
       html: `
         <input id="hmo-person" class="swal2-input" placeholder="Contact person">
         <input id="hmo-mobile" class="swal2-input" placeholder="Mobile">
@@ -103,6 +108,7 @@ const Wellness = () => {
       preConfirm: () => {
         return {
           ...item,
+          provider,
           contacts: {
             person: document.getElementById("hmo-person")?.value.trim(),
             mobile: document.getElementById("hmo-mobile")?.value.trim(),
@@ -113,7 +119,11 @@ const Wellness = () => {
     }).then(({ isConfirmed, value }) => {
       if (!isConfirmed) return;
       updateHmo(
-        hmo.map((entry) => (entry._id === item._id ? value : entry)),
+        hmo.map((entry) =>
+          entry._id === item._id || entry.provider === item.provider
+            ? value
+            : entry,
+        ),
       );
     });
   };
@@ -124,39 +134,65 @@ const Wellness = () => {
       return;
     }
 
-    const inputOptions = availableHmos.reduce(
-      (options, { code, name, abbr }) => ({
-        ...options,
-        [code]: `${name}${abbr ? ` (${abbr})` : ""}`,
-      }),
-      {},
-    );
-
     Swal.fire({
       title: "Select Accredited HMO",
-      input: "select",
-      inputOptions,
-      inputPlaceholder: "Select HMO",
+      html: `
+        <select id="hmo-code" class="swal2-select">
+          <option value="">Select HMO</option>
+          ${availableHmos
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map(
+              ({ code, name, abbr }) =>
+                `<option value="${code}">${name}${abbr ? ` (${abbr})` : ""}</option>`,
+            )
+            .join("")}
+        </select>
+        <input id="hmo-person" class="swal2-input" placeholder="Contact person">
+        <input id="hmo-mobile" class="swal2-input" placeholder="Mobile">
+        <input id="hmo-email" class="swal2-input" placeholder="Email">
+      `,
       showCancelButton: true,
       confirmButtonText: "Add",
-      inputValidator: (code) => (!code ? "Please select an HMO." : undefined),
-    }).then(({ isConfirmed, value: code }) => {
+      focusConfirm: false,
+      preConfirm: () => {
+        const provider = document.getElementById("hmo-code")?.value;
+        if (!provider) {
+          Swal.showValidationMessage("Please select an HMO.");
+          return false;
+        }
+
+        return {
+          provider,
+          contacts: {
+            person: document.getElementById("hmo-person")?.value.trim(),
+            mobile: document.getElementById("hmo-mobile")?.value.trim(),
+            email: document.getElementById("hmo-email")?.value.trim(),
+          },
+        };
+      },
+    }).then(({ isConfirmed, value }) => {
       if (!isConfirmed) return;
-      updateHmo([...hmo, { code }]);
+      updateHmo([...hmo, value]);
     });
   };
 
   const handleRemove = (item) => {
     Swal.fire({
       title: "Remove Accredited Health Organization?",
-      text: HMO.getName(item.code),
+      text: HMO.getName(item.provider),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       confirmButtonText: "Remove",
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        updateHmo(hmo.filter(({ _id }) => _id !== item._id));
+        updateHmo(
+          hmo.filter(
+            ({ _id, provider }) =>
+              _id !== item._id && provider !== item.provider,
+          ),
+        );
       }
     });
   };
@@ -173,7 +209,7 @@ const Wellness = () => {
         className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
       >
         <span className="white-text mx-3 text-nowrap">
-          {hmo.length} Accredited Health Management Organization
+          {hmo.length} Tag Health Management Organization
           {hmo.length === 1 ? "" : "s"}
         </span>
         <Search
@@ -196,12 +232,15 @@ const Wellness = () => {
           <MDBTable striped bordered responsive>
             <MDBTableHead>
               <tr>
-                <th>#</th>
-                <th>Organization</th>
-                <th>Contact Person</th>
+                <th rowSpan={2}>#</th>
+                <th colSpan={4}>Contacts</th>
+                {isManager && <th rowSpan={2}>Actions</th>}
+              </tr>
+              <tr>
+                <th>Provider</th>
+                <th>Person</th>
                 <th>Mobile</th>
                 <th>Email</th>
-                {isManager && <th>Actions</th>}
               </tr>
             </MDBTableHead>
             <MDBTableBody>
@@ -213,9 +252,9 @@ const Wellness = () => {
                 </tr>
               )}
               {paginated.map((item, index) => (
-                <tr key={item._id || `${item.code}-${index}`}>
+                <tr key={item._id || `${item.provider}-${index}`}>
                   <td>{startIndex + index + 1}</td>
-                  <td>{HMO.getName(item.code)}</td>
+                  <td>{HMO.getName(item.provider) || item.provider}</td>
                   <td>{item.contacts?.person}</td>
                   <td>{item.contacts?.mobile}</td>
                   <td>{item.contacts?.email}</td>

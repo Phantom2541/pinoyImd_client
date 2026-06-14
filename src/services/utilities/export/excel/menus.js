@@ -82,10 +82,11 @@ const handleHeader = (worksheet, form) => {
   if (menuType === "hmo") {
     const { branch = {} } = JSON.parse(localStorage.getItem("activePlatform"));
     const { hmo: h = [] } = branch;
-    const { cp } = h.find(({ code }) => code === hmo) || {};
-    const { phone } = cp;
+    const foundHmo = h.find(({ provider }) => provider === hmo) || {};
+    const cp = foundHmo?.contacts || foundHmo?.cp || {};
+    const phone = cp?.mobile || cp?.phone;
     generateStaticCell("A5:F5", "Name", HMO.getName(hmo));
-    generateStaticCell("G5:L5", "Contact Number.", mobile(phone));
+    generateStaticCell("G5:L5", "Contact Number.", mobile(phone || ""));
   }
   if (menuType === "mbs") {
     const { insource } = form;

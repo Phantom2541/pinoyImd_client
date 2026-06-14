@@ -30,6 +30,11 @@ const _form = {
   category: "insource",
   ao: "",
   membership: "",
+  contacts: {
+    person: "",
+    mobile: "",
+    email: "",
+  },
   cutoff: 10,
   credit: 0,
   voucher_approval_status: false,
@@ -64,23 +69,36 @@ export default function Modal() {
 
   useEffect(() => {
     if (showModal) {
-      setForm(_form);
+      setForm({
+        ..._form,
+        contacts: {
+          ..._form.contacts,
+          ...(selected?.contacts || {}),
+        },
+      });
       setCategory(defaultCategory);
     }
-  }, [showModal, defaultCategory]);
+  }, [showModal, defaultCategory, selected]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { ao = "" } = form;
+    const payload = { ...form };
+    const { ao = "", contacts = {} } = payload;
     if (!ao) {
-      delete form.ao;
+      delete payload.ao;
+    }
+    const hasContacts = Object.values(contacts).some((value) =>
+      String(value || "").trim()
+    );
+    if (!hasContacts) {
+      delete payload.contacts;
     }
 
     dispatch(
       SAVE({
         token,
         data: {
-          ...form,
+          ...payload,
           clients: selected._id,
           status: "approved",
           category: "mbs",
@@ -136,6 +154,56 @@ export default function Modal() {
                 values={"text"}
                 keys={"value"}
                 preValue={form.membership}
+              />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow>
+            <MDBCol>
+              <MDBInput
+                label="Contact Person"
+                value={form.contacts?.person || ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    contacts: {
+                      ...form.contacts,
+                      person: e.target.value,
+                    },
+                  })
+                }
+              />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow style={{ marginTop: "-1rem" }}>
+            <MDBCol>
+              <MDBInput
+                label="Contact Mobile"
+                value={form.contacts?.mobile || ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    contacts: {
+                      ...form.contacts,
+                      mobile: e.target.value,
+                    },
+                  })
+                }
+              />
+            </MDBCol>
+            <MDBCol>
+              <MDBInput
+                label="Contact Email"
+                type="email"
+                value={form.contacts?.email || ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    contacts: {
+                      ...form.contacts,
+                      email: e.target.value,
+                    },
+                  })
+                }
               />
             </MDBCol>
           </MDBRow>
