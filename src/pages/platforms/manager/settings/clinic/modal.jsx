@@ -13,9 +13,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useToasts } from "react-toast-notifications";
-import { SearchPhysicians } from "../../../../../components/searchables";
 import Information from "../../../physician/dashboard/register/information";
 import Schedule from "../../../physician/dashboard/register/schedule";
+import { BROWSE as BROWSE_PHYSICIANS } from "../../../../../services/redux/slices/assets/persons/physicians";
 import {
   RESET,
   SAVE,
@@ -32,6 +32,16 @@ const defaultForm = {
   schedules: [],
 };
 
+const getPhysicianName = (physician = null) => {
+  if (!physician) return "";
+  return properFullname(
+    physician?.user?.fullName ||
+      physician?.fullName ||
+      physician?.ghost?.fullName ||
+      physician?.ghostName
+  );
+};
+
 export default function ClinicModal({
   show = false,
   toggle = () => {},
@@ -44,14 +54,24 @@ export default function ClinicModal({
   const { isLoading, isSuccess, formSubmitted } = useSelector(
     ({ clinicInfo }) => clinicInfo
   );
+  const {
+    collections: taggedPhysicians = [],
+    isLoading: physiciansLoading,
+  } = useSelector(({ physicians }) => physicians);
   const [form, setForm] = useState(defaultForm);
   const [physician, setPhysician] = useState(null);
   const [isSchedule, setIsSchedule] = useState(false);
 
-  const physicianName = useMemo(() => {
-    if (!physician) return "";
-    return properFullname(physician?.user?.fullName || physician?.fullName);
-  }, [physician]);
+  const physicianName = useMemo(() => getPhysicianName(physician), [physician]);
+  const physicianOptions = useMemo(
+    () =>
+      (taggedPhysicians || []).map((item) => ({
+        ...item,
+        value: item?._id,
+        label: getPhysicianName(item) || item?.specialization || "Unnamed physician",
+      })),
+    [taggedPhysicians]
+  );
 
   useEffect(() => {
     if (!willCreate || !physician) return;
@@ -85,6 +105,17 @@ export default function ClinicModal({
   }, [selected, show]);
 
   useEffect(() => {
+    if (!show || !token || !activePlatform?.branchId) return;
+
+    dispatch(
+      BROWSE_PHYSICIANS({
+        token,
+        key: { branchId: activePlatform.branchId },
+      })
+    );
+  }, [activePlatform?.branchId, dispatch, show, token]);
+
+  useEffect(() => {
     if (!show || !isSuccess) return;
     toggle();
     dispatch(RESET());
@@ -95,18 +126,23 @@ export default function ClinicModal({
     setIsSchedule(true);
   };
 
+  const handlePhysicianChange = ({ target }) => {
+    const nextPhysician = physicianOptions.find(
+      (item) => String(item.value) === String(target.value)
+    );
+
+    setPhysician(nextPhysician || null);
+  };
+
   const handleSave = () => {
     const { schedules = [] } = form;
+    const physicianRecordId =
+      physician?.physicianId || physician?._id || selected?.physicianId?._id;
+    const physicianUserId =
+      physician?.user?._id || physician?.userId?._id || selected?.userId?._id;
 
-    if (!physician?._id) {
+    if (!physicianRecordId) {
       addToast("Please select a physician first.", {
-        appearance: "warning",
-      });
-      return;
-    }
-
-    if (physician?.isGhost || !physician?.user?._id) {
-      addToast("Ghost physicians cannot be assigned to a clinic yet.", {
         appearance: "warning",
       });
       return;
@@ -124,9 +160,10 @@ export default function ClinicModal({
 
     const payload = {
       ...form,
+      ...(selected?._id ? { _id: selected._id } : {}),
       branchId: activePlatform?.branchId,
-      userId: physician?.user?._id,
-      physicianId: physician?.user?._id,
+      physicianId: physicianRecordId,
+      ...(physicianUserId ? { userId: physicianUserId } : {}),
       specialization: form?.specialization || "",
       specializations: form?.specialization ? [form.specialization] : [],
     };
@@ -200,22 +237,37 @@ export default function ClinicModal({
             <MDBRow>
               <MDBCol md="12" className="mb-3">
                 <strong>Physician</strong>
-                {willCreate ? (
-                  <>
-                    <div className="mt-2">
-                      <SearchPhysicians setPhysician={setPhysician} />
-                    </div>
-                    {physicianName && (
-                      <small className="d-block mt-2 text-primary">
-                        Selected: {physicianName}
-                      </small>
-                    )}
-                  </>
-                ) : (
-                  <div className="mt-2 text-primary">
-                    {physicianName || form?.title || "No physician assigned"}
-                  </div>
-                )}
+                <>
+                  <select
+                    className="browser-default custom-select mt-2"
+                    value={physician?._id || ""}
+                    onChange={handlePhysicianChange}
+                    disabled={physiciansLoading || isLoading || formSubmitted}
+                  >
+                    <option value="">
+                      {physiciansLoading
+                        ? "Loading tagged physicians..."
+                        : "Select tagged physician"}
+                    </option>
+                    {physicianOptions.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                        {item?.specialization ? ` - ${item.specialization}` : ""}
+                        {item?.isGhost ? " (Ghost)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                  {physicianName && (
+                    <small className="d-block mt-2 text-primary">
+                      Selected: {physicianName}
+                    </small>
+                  )}
+                  {!physiciansLoading && !physicianOptions.length && (
+                    <small className="d-block mt-2 text-muted">
+                      No tagged physicians found for this branch.
+                    </small>
+                  )}
+                </>
               </MDBCol>
             </MDBRow>
 

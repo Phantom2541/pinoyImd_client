@@ -53,13 +53,13 @@ const Index = () => {
         const physician =
           clinic?.physician ||
           clinic?.physicianId ||
-        (clinic?.userId
-          ? {
-              _id: clinic?.userId?._id,
-              user: clinic.userId,
-              fullName: clinic?.userId?.fullName,
-            }
-          : null);
+          (clinic?.userId
+            ? {
+                _id: clinic?.physicianId?._id,
+                user: clinic.userId,
+                fullName: clinic?.userId?.fullName,
+              }
+            : null);
 
         return {
           ...clinic,
@@ -161,7 +161,10 @@ const Index = () => {
               {!isLoading && clinics.length > 0 ? (
                 clinics.map((clinic, index) => {
                   const physicianName = properFullname(
-                    clinic?.physician?.user?.fullName || clinic?.physician?.fullName
+                    clinic?.physician?.user?.fullName ||
+                      clinic?.physician?.fullName ||
+                      clinic?.physician?.ghost?.fullName ||
+                      clinic?.physician?.ghostName
                   );
 
                   return (

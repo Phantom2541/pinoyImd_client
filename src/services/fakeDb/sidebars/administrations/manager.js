@@ -339,10 +339,10 @@ const ManagerSidebar = [
     ],
   },
   {
-    name: "Branch Configuration",
+    name: "Basic Configuration",
     title: "Configuration of system profiles and resources.",
     icon: "sliders-h",
-    path: "/config",
+    path: "/basic/config",
     children: [
       {
         name: "Profile Settings",
@@ -458,6 +458,14 @@ const ManagerSidebar = [
           },
         ],
       },
+    ],
+  },
+  {
+    name: "Advance Configuration",
+    path: "/advance/config",
+    icon: "clipboard-list",
+    title: "Accredited Health Cards",
+    children: [
       {
         name: "Clinic",
         title: "Listings and status of clinic services.",
@@ -472,14 +480,6 @@ const ManagerSidebar = [
         icon: "tram",
         component: LIS,
       },
-    ],
-  },
-  {
-    name: "A H C",
-    path: "/health/cards",
-    icon: "clipboard-list",
-    title: "Accredited Health Cards",
-    children: [
       {
         name: "H M O Wellness",
         path: "/wellness",

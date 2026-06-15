@@ -91,16 +91,16 @@ export default function CollapsableIndex() {
   };
 
   const handleDelete = (item) => {
+    const physicianName = properFullname(item?.account?.fullName || item?.user?.fullName);
+
     Swal.fire({
-      title: `Are you sure to remove  ${String(
-        properFullname(item?.user?.fullName, true),
-      ).toUpperCase()}?`,
-      text: "You won't be able to revert this!",
+      title: `End service for ${String(physicianName || "this physician").toUpperCase()}?`,
+      text: "This will untag the physician from this branch so the active list stays clean.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, remove",
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(DESTROY({ token, data: { id: item._id } })).then(() => {
@@ -266,10 +266,17 @@ export default function CollapsableIndex() {
                       <MDBBtn
                         color="danger"
                         size="sm"
+                        className="mb-1"
+                        title="Use this when the physician's service in this branch is already finished."
                         onClick={() => handleDelete(item)}
                       >
-                        Untag
+                        End Service
                       </MDBBtn>
+                      <div>
+                        <small className="text-muted d-block">
+                          Removes them from the active attending list
+                        </small>
+                      </div>
                       {!isGhost && (
                         <MDBBtn
                           color={

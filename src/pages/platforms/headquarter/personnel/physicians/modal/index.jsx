@@ -22,44 +22,35 @@ export default function Modal() {
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     [user, setUser] = useState({}),
-    [showInputFields, setShowInputFields] = useState(false),
+    [registerCandidate, setRegisterCandidate] = useState(null),
+    [showGhostFields, setShowGhostFields] = useState(false),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
     if (selected && Object.keys(selected).length > 0) {
+      const ghostFullName = selected?.ghostName?.fullName || {};
+
       setForm({
         ...selected,
-        fullName: displayName || "",
+        lname: ghostFullName?.lname || "",
+        fname: ghostFullName?.fname || "",
       });
-      setShowInputFields(true);
+      setUser(selected?.user || {});
+      setRegisterCandidate(null);
+      setShowGhostFields(!selected?.user?._id);
     } else {
       setForm({});
-      setShowInputFields(false);
+      setUser({});
+      setShowGhostFields(false);
+      setRegisterCandidate(null);
     }
   }, [selected, displayName]);
 
-  const splitFullName = (fullName) => {
-    if (!fullName.includes(",")) {
-      return { fname: "", mname: "", lname: fullName.trim() };
-    }
-
-    const [lastName, rest] = fullName.split(",").map((s) => s.trim());
-    const parts = rest.split(/\s+/);
-    const mname = parts.length > 1 ? parts[parts.length - 1] : "";
-    const fname = parts.slice(0, -1).join(" ");
-
-    return { fname, mname, lname: lastName };
-  };
-
   const buildData = () => {
-    const { fname, mname, lname } = splitFullName(form.fullName || "");
     if (user._id) {
       // Registered physician
       return {
-        title: form.title,
-        postnominal: form.postnominal,
-        suffix: form.suffix,
         branch: activePlatform.branchId,
         user: user._id,
       };
@@ -70,12 +61,9 @@ export default function Modal() {
         branch: activePlatform.branchId,
         ghostName: {
           fullName: {
-            title: form.title,
-            fname,
-            mname,
-            lname,
-            suffix: form.suffix,
-            postnominal: form.postnominal,
+            fname: String(form.fname || "").trim(),
+            mname: "",
+            lname: String(form.lname || "").trim(),
           },
         },
       };
@@ -85,9 +73,21 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.fullName?.includes(",")) {
+    if (!user._id && !showGhostFields) {
       return addToast(
-        "Please enter name in the format: Lastname, Firstname Middlename",
+        "Search and select a physician first, or use register for a ghost physician.",
+        {
+          appearance: "warning",
+        },
+      );
+    }
+
+    if (
+      !user._id &&
+      (!String(form.lname || "").trim() || !String(form.fname || "").trim())
+    ) {
+      return addToast(
+        "Please enter both last name and first name for the ghost physician.",
         { appearance: "error" },
       );
     }
@@ -125,7 +125,23 @@ export default function Modal() {
   const handleValue = (key) => form?.[key] || "";
   const handlePhysicians = (physician) => {
     setUser(physician);
+    setRegisterCandidate(null);
+    setShowGhostFields(false);
+    setForm({});
     dispatch(SETPHYSICIAN(physician));
+  };
+
+  const handleRegister = (name) => {
+    setUser({});
+    setRegisterCandidate(name);
+    setShowGhostFields(true);
+    setForm((prev) => ({
+      ...prev,
+      lname: prev?.lname || name?.lname || "",
+      fname: prev?.fname || name?.fname || "",
+    }));
+
+    console.log("Registering ghost physician with name:", name);
   };
 
   const handleClose = () => dispatch(TOGGLE());
@@ -145,34 +161,37 @@ export default function Modal() {
             <strong>Search Physician</strong>
           </label>
 
-          <SearchUser setPatient={handlePhysicians} />
-          {showInputFields && (
+          <SearchUser
+            setPatient={handlePhysicians}
+            setRegister={handleRegister}
+            notFoundMessage="No physician record found."
+          />
+          {user?._id && (
+            <div className="mt-2 mb-2 text-primary">
+              Selected registered physician: {displayName}
+            </div>
+          )}
+          {showGhostFields && (
             <>
               <MDBInput
-                label="Title (e.g., Dr., Mr.)"
+                label="Last Name"
                 type="text"
-                value={handleValue("title")}
-                onChange={(e) => handleChange("title", e.target.value)}
-              />
-              <MDBInput
-                label="Full Name (Format: Lastname, Firstname Middlename)"
-                type="text"
-                value={handleValue("fullName")}
+                value={handleValue("lname")}
                 required
-                onChange={(e) => handleChange("fullName", e.target.value)}
+                onChange={(e) => handleChange("lname", e.target.value)}
               />
               <MDBInput
-                label="Post-nominal (e.g., MD)"
+                label="First Name"
                 type="text"
-                value={handleValue("postnominal")}
-                onChange={(e) => handleChange("postnominal", e.target.value)}
+                value={handleValue("fname")}
+                required
+                onChange={(e) => handleChange("fname", e.target.value)}
               />
-              <MDBInput
-                label="Suffix (e.g., Jr., Sr.)"
-                type="text"
-                value={handleValue("suffix")}
-                onChange={(e) => handleChange("suffix", e.target.value)}
-              />
+              {registerCandidate && (
+                <small className="d-block mt-n2 mb-3 text-muted">
+                  Ghost physician mode: no existing user record was selected.
+                </small>
+              )}
             </>
           )}
           <div className="text-center mb-1-half">

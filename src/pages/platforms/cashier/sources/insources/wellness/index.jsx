@@ -120,9 +120,7 @@ const Wellness = () => {
       if (!isConfirmed) return;
       updateHmo(
         hmo.map((entry) =>
-          entry._id === item._id || entry.provider === item.provider
-            ? value
-            : entry,
+          entry.provider === item.provider ? value : entry,
         ),
       );
     });
@@ -187,12 +185,7 @@ const Wellness = () => {
       confirmButtonText: "Remove",
     }).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        updateHmo(
-          hmo.filter(
-            ({ _id, provider }) =>
-              _id !== item._id && provider !== item.provider,
-          ),
-        );
+        updateHmo(hmo.filter(({ provider }) => provider !== item.provider));
       }
     });
   };
