@@ -237,7 +237,7 @@ ssh -i "C:\Users\admin\.ssh\technowiz.pem" ubuntu@ec2-16-176-49-31.ap-southeast-
 
 ---
 
-## Step 4: Restart Pinoy iMD
+## Step 4: Restart Pinoy iMD (connted to AWS)
 
 ```bash
 sudo systemctl restart pinoyimd.service
@@ -254,7 +254,9 @@ systemctl status pinoyimd.service --no-pager
 Dapat makita:
 
 ```text
+Loaded: loaded
 Active: active (running)
+Main PID: 259093 (npm start)
 ```
 
 ---
