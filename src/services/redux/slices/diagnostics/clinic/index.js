@@ -1,4 +1,6 @@
 export { default as appointments } from "./appointments";
+export { default as clinicalBilling } from "./clinicalBilling";
+export { default as clinicalSchedules } from "./clinicalSchedules";
 export { default as checkup } from "./checkup";
 export { default as quest } from "./quest";
 export { default as clinicInfo } from "./clinicInfo";

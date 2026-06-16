@@ -471,15 +471,23 @@ export const reduxSlice = createSlice({
         const { success, payload = [] } = action.payload;
         state.roster = payload;
         state.physicians = payload.map(({ physicianId }) => physicianId);
-        // initial values
-        state.activePhysician = payload[0].physicianId;
-        state.collections = payload[0].appointments;
-
-        state.scheds = arrangeSchedules(payload[0]?.schedules);
-        state.activeSched = state.scheds[0];
-        state.filtered = payload[0].appointments.filter(
-          ({ sched }) => sched === state.activeSched
-        );
+        if (!payload.length) {
+          state.activePhysician = {};
+          state.collections = [];
+          state.scheds = [];
+          state.activeSched = "";
+          state.filtered = [];
+        } else {
+          state.activePhysician = payload[0].physicianId || {};
+          state.collections = payload[0].appointments || [];
+          state.scheds = arrangeSchedules(payload[0]?.schedules || []);
+          state.activeSched = state.scheds[0] || "";
+          state.filtered = state.activeSched
+            ? (payload[0].appointments || []).filter(
+                ({ sched }) => sched === state.activeSched
+              )
+            : payload[0].appointments || [];
+        }
 
         state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -811,6 +819,40 @@ export function sortSchedules(schedules) {
     // compare by startHour
     return pa.startHour - pb.startHour;
   });
+}
+
+const scheduleDayLabel = {
+  Sun: "Sunday",
+  M: "Monday",
+  T: "Tuesday",
+  W: "Wednesday",
+  TH: "Thursday",
+  F: "Friday",
+  Sat: "Saturday",
+};
+
+const formatHourLabel = (hour) => {
+  if (!Number.isFinite(hour)) return "";
+
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const normalizedHour = hour % 12 || 12;
+
+  return `${normalizedHour}:00 ${suffix}`;
+};
+
+export function formatScheduleLabel(code = "") {
+  const match = String(code).match(/^([A-Za-z]+)(\d{2})(\d{2})-/);
+
+  if (!match) return code;
+
+  const [, dayCode, startHourRaw, endHourRaw] = match;
+  const dayLabel = scheduleDayLabel[dayCode] || dayCode;
+  const startLabel = formatHourLabel(parseInt(startHourRaw, 10));
+  const endLabel = formatHourLabel(parseInt(endHourRaw, 10));
+
+  if (!startLabel || !endLabel) return dayLabel;
+
+  return `${dayLabel} ${startLabel} - ${endLabel}`;
 }
 
 export const {

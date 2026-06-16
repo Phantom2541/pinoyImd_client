@@ -1,10 +1,8 @@
-import {
-  Tasks,
-  Reports,
-} from "../../../../pages/platforms/laboratory/diagnostics";
 import { Menus } from "../../../../pages/platforms/physician";
 import { Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
+import Billing from "../../../../pages/platforms/clinical/billing";
+import Schedules from "../../../../pages/platforms/clinical/schedules";
 
 const clinical = [
   {
@@ -13,34 +11,44 @@ const clinical = [
     path: "/clinical/bulletin",
   },
   {
-    name: "Consultations",
+    name: "Clinic Desk",
     path: "/consultations",
-    icon: "cogs",
+    icon: "stethoscope",
     children: [
       {
         name: "Appointments",
         path: "/appointments",
-        icon: "cogs",
+        icon: "calendar-check",
+        title: "Booking, check-in, queue, cancelled, done",
         component: Appointments,
       },
       {
-        name: "Tasks",
-        path: "/tasks",
-        icon: "cogs",
-        title: "active Checkup",
-        component: Tasks,
+        name: "Billing",
+        path: "/billing",
+        icon: "cash-register",
+        title: "Consultation payment and POS",
+        component: Billing,
       },
       {
-        name: "Reports",
-        path: "/reports",
-        icon: "cogs",
-        component: Reports,
+        name: "Daily Collections",
+        path: "/collections",
+        icon: "cash-register",
+        title: "Consultation payment and POS",
+        // component: POS,
       },
       {
-        name: "schedules",
+        name: "Patient Records",
+        path: "/records",
+        icon: "folder-open",
+        title: "Search and view patient records",
+        // component: Records,
+      },
+      {
+        name: "Physician Schedule",
         path: "/schedules",
         icon: "calendar-alt",
-        // component: Reports,
+        title: "Doctor clinic schedule and availability",
+        component: Schedules,
       },
     ],
   },

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
 import { BROWSE } from "../../../../../services/redux/slices/assets/branches";
+import { BROWSE as BROWSE_COMPANIES } from "../../../../../services/redux/slices/assets/companies";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
@@ -15,6 +16,11 @@ const Index = () => {
   useEffect(() => {
     if (token) dispatch(BROWSE({ token }));
   }, [token, dispatch]);
+
+  useEffect(() => {
+    if (token) dispatch(BROWSE_COMPANIES({ token }));
+  }, [token, dispatch]);
+
   return (
     <>
       <MDBAnimation type="bounceInDown">

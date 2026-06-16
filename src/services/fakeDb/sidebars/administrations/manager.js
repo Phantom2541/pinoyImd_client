@@ -373,37 +373,46 @@ const ManagerSidebar = [
         ],
       },
       {
-        name: "Sources & Utilities",
+        name: "Business Network",
         path: "/sources",
         icon: "cogs",
         children: [
           {
             name: "Outsourcing",
             title:
-              "Services or tests referred to external labs when not available in-house.",
-            path: "/outsourcing",
+              "External labs and service providers for tests or services not offered in-house.",
+            path: "/sendout/providers",
             icon: "external-link",
             component: Outsources,
           },
           {
-            name: "Insources", //Tie Ups
-            title: "Partner companies, and schools for contracts or APE.",
-            path: "/tieup",
+            name: "Insources", // Tie Ups
+            title:
+              "Partner clinics or labs with special arrangements for referrals and services.",
+            path: "/insource/providers",
             icon: "handshake",
             component: Tieups,
+          },
+          {
+            name: "Referring Clinics/Doctors",
+            title:
+              "Clinics or doctors that refer patients for services, generating referral rebates.",
+            path: "/referring/clinics",
+            icon: "clinic-medical",
+            // component: Referring,
           },
           {
             name: "Suppliers",
             title:
               "Vendors providing reagents, equipment, and office supplies.",
-            path: "/suppliers",
+            path: "/supplies/providers",
             icon: "briefcase",
             component: Suppliers,
           },
           {
             name: "Utilities",
             title: "Basic services such as water, electricity, and internet.",
-            path: "/utilities",
+            path: "/services/providers",
             icon: "tools",
             component: Utilities,
           },

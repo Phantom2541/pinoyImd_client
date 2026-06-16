@@ -20,7 +20,7 @@ const Header = () => {
         FILTERBYCATEGORY({
           token,
           keys: { clients: activePlatform?.branchId, category: "supplier" },
-        })
+        }),
       );
     }
   }, [token, activePlatform, dispatch]);
@@ -34,7 +34,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} Suppliers
+          {filtered.length} Branch Suppliers
         </span>
       </div>
       <div>

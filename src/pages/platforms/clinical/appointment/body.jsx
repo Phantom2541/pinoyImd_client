@@ -61,7 +61,7 @@ const Body = () => {
               ...rest,
             },
           },
-        })
+        }),
       );
     } else {
       // normal appointment update
@@ -89,6 +89,13 @@ const Body = () => {
     draft: "info",
     confirmed: "primary",
     cancelled: "danger",
+  };
+
+  const getCardColor = (card) => {
+    if (!card.isActive) return "danger"; // expired
+    if (!card.verified) return "warning"; // active pero di pa verified
+
+    return "success"; // verified at active
   };
 
   return (
@@ -151,45 +158,13 @@ const Body = () => {
                 </td>
                 <td>
                   {fullName(patient?.fullName)}
-
-                  <div>
-                    <MDBBadge
-                      color={statusColors[status] || "info"}
-                      className="ml-2"
-                    >
-                      <EditableSelect
-                        animation
-                        animationStyle={{
-                          width: "10rem",
-                          marginLeft: "-.3rem",
-                          marginTop: "-.4rem",
-                        }}
-                        className="mb-n3"
-                        preValue={status}
-                        keyForText="status"
-                        keyForValue="status"
-                        isEditable
-                        collections={Object.keys(statusColors)}
-                        fieldData={{ _id, status }}
-                        onSave={handleUpdate}
-                        formSubmitted={formSubmitted}
-                        isSuccess={isSuccess}
-                      />
-                    </MDBBadge>
-
-                    {status === "done" && (
-                      <>
-                        <Notes appointment={item} />
-
-                        <MDBIcon
-                          icon="cash-register"
-                          onClick={() => dispatch(SetTRANSAC(item))}
-                          size="lg"
-                          className="ml-3 cursor-pointer"
-                          title="Transaction"
-                        />
-                      </>
-                    )}
+                  <div className="d-flex flex-wrap gap-1">
+                    {patient?.healthCard?.map((card, index) => (
+                      <MDBBadge key={index} color={getCardColor(card)} pill>
+                        {card.provider?.toUpperCase()}
+                        {!card.isActive && " (Expired)"}
+                      </MDBBadge>
+                    ))}
                   </div>
                 </td>
 
@@ -217,6 +192,43 @@ const Body = () => {
                     formSubmitted={formSubmitted}
                     isSuccess={isSuccess}
                   />
+                  <MDBBadge
+                    color={statusColors[status] || "info"}
+                    className="ml-2"
+                  >
+                    <EditableSelect
+                      animation
+                      animationStyle={{
+                        width: "10rem",
+                        marginLeft: "-.3rem",
+                        marginTop: "-.4rem",
+                      }}
+                      className="mb-n3"
+                      preValue={status}
+                      keyForText="status"
+                      keyForValue="status"
+                      isEditable
+                      collections={Object.keys(statusColors)}
+                      fieldData={{ _id, status }}
+                      onSave={handleUpdate}
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                    />
+                  </MDBBadge>
+
+                  {status === "done" && (
+                    <>
+                      <Notes appointment={item} />
+
+                      <MDBIcon
+                        icon="cash-register"
+                        onClick={() => dispatch(SetTRANSAC(item))}
+                        size="lg"
+                        className="ml-3 cursor-pointer"
+                        title="Transaction"
+                      />
+                    </>
+                  )}
                 </td>
                 <td className="text-center">
                   <MDBIcon
@@ -267,7 +279,7 @@ const Body = () => {
                         ...consultation,
                         appointment: _id,
                         patient: patient,
-                      })
+                      }),
                     );
                   }}
                 >

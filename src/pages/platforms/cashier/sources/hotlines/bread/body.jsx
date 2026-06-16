@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable, MDBBadge } from "mdbreact";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
@@ -11,7 +11,7 @@ import { formatPhoneNumber } from "../../../../../../services/utilities/phoneNum
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
+    { hotlines, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
     dispatch = useDispatch();
@@ -44,7 +44,9 @@ const Body = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = (hotlines || [])
+    .filter(Boolean)
+    .slice(startIndex, endIndex); // Get only items for the active page
   return (
     <MDBTable responsive hover bordered>
       <thead>
@@ -58,27 +60,11 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((hotlines, index) => {
-          const { _id, abbr, displayname, number, address } = hotlines;
+          const { _id, displayname, number, address } = hotlines;
           return (
             <tr key={`${index}-${_id}`}>
               <td key={index}>{index + startIndex + 1}</td>
-              <td style={{ fontWeight: 400 }}>
-                <div>{displayname}</div>
-
-                <div className="text-muted">
-                  {abbr ? (
-                    // If not editing, show the abbreviation as a badge
-                    <MDBBadge
-                      title="Click me to update"
-                      className="cursor-pointer"
-                    >
-                      {abbr}
-                    </MDBBadge>
-                  ) : (
-                    <p className="mb-0">No abbreviation</p>
-                  )}
-                </div>
-              </td>
+              <td style={{ fontWeight: 400 }}>{displayname}</td>
               <td>{formatPhoneNumber(number) || "No number"}</td>
               <td>{address}</td>
               <td className="text-center">

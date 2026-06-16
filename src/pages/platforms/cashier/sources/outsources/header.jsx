@@ -22,7 +22,7 @@ const Header = () => {
           key: {
             clients: activePlatform?.branchId,
           },
-        })
+        }),
       );
     }
   }, [token, activePlatform, dispatch]);
@@ -34,7 +34,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered?.length} Outsources
+          {filtered?.length} Outsources (Sendout)
         </span>
       </div>
       <div>

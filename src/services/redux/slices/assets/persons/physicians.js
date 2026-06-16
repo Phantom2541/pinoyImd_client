@@ -40,7 +40,7 @@ export const BROWSE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const SECRETARYAPPLICANTS = createAsyncThunk(
   `${url}/secretaryApplicants`,
@@ -57,7 +57,7 @@ export const SECRETARYAPPLICANTS = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const SEARCH = createAsyncThunk(
@@ -75,7 +75,7 @@ export const SEARCH = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const FILTER = createAsyncThunk(
@@ -93,7 +93,7 @@ export const FILTER = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const TIEUPS = createAsyncThunk(
@@ -111,7 +111,7 @@ export const TIEUPS = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
@@ -167,7 +167,7 @@ export const CHANGE_MAIN = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
@@ -227,14 +227,31 @@ export const reduxSlice = createSlice({
       state.selected = {};
       state.closeModal = !state.closeModal;
     },
-    SetCREATE: (state) => {
-      state.selected = {
-        name: "",
-        email: "",
-        phone: "",
-      };
-      state.willCreate = true;
+    SetCREATE: (state, { payload }) => {
+      const searchKey = String(payload || "").trim();
 
+      if (searchKey) {
+        const [lname = "", fname = ""] = searchKey
+          .split(",")
+          .map((item) => item.trim());
+
+        state.selected = {
+          lname,
+          fname,
+        };
+      } else {
+        state.selected = {
+          lname: "",
+          fname: "",
+        };
+      }
+
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload || {};
+      state.willCreate = false;
       state.showModal = true;
     },
     SetMaxPage: (state, { payload }) => {
@@ -252,7 +269,7 @@ export const reduxSlice = createSlice({
     SET_COLLECTIONS: (state, { payload }) => {
       const collections = Array.isArray(payload)
         ? payload
-        : payload?.tieups || payload?.collections || [];
+        : payload?.physicians || payload?.collections || [];
 
       state.collections = [...collections];
       state.filtered = [...collections];
@@ -371,8 +388,8 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
 
         state.message = success;
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
+        state.collections = [payload, ...(state.collections || [])];
+        state.filtered = [payload, ...(state.filtered || [])];
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -390,10 +407,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(TAG.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
-          state.collections.unshift(payload);
-          state.filtered.unshift(payload);
-        }
+        state.collections = [payload, ...(state.collections || [])];
+        state.filtered = [payload, ...(state.filtered || [])];
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -448,14 +463,14 @@ export const reduxSlice = createSlice({
 
         if (payload?._id && state.collections?.length > 0) {
           const index = state.collections.findIndex(
-            (item) => item?._id === payload?._id
+            (item) => item?._id === payload?._id,
           );
 
           if (index > -1) state.collections[index] = payload;
         }
         if (payload?._id && state.filtered?.length > 0) {
           const index = state.filtered.findIndex(
-            (item) => item?._id === payload?._id
+            (item) => item?._id === payload?._id,
           );
 
           if (index > -1) state.filtered[index] = payload;
@@ -480,7 +495,7 @@ export const reduxSlice = createSlice({
 
         // ✅ If backend returned deleted item _id
         state.collections = state.collections.filter(
-          (item) => item._id !== payload
+          (item) => item._id !== payload,
         );
 
         // ✅ Also update filtered list
@@ -505,6 +520,7 @@ export const {
   SetFILTERED,
   SET_COLLECTIONS,
   SetCREATE,
+  SetEDIT,
   SetActivePAGE,
   SetMaxPage,
   TOGGLE,

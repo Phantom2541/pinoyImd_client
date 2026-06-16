@@ -3,11 +3,13 @@ import diagnostics from "./diagnostics";
 import suppliers from "./suppliers";
 import patron from "./administrations/patron";
 import Access from "../access";
+import utilities from "./utilities";
 
 const Sidebars = {
   superadmin,
   diagnostics,
   suppliers,
+  utilities,
   patron, //for patients diagnostics
 };
 
@@ -32,7 +34,9 @@ const getCompanyId = (affiliation = {}) =>
 const isMainBranch = (branch = {}) =>
   Boolean(
     branch?.isMain ||
-      String(branch?.displayname || "").trim().toLowerCase() === "main",
+    String(branch?.displayname || "")
+      .trim()
+      .toLowerCase() === "main",
   );
 
 const resolveMainBranch = (activePlatform = {}, branches = []) => {
@@ -108,7 +112,7 @@ export const getPlatformSidebar = (
 
   if (!platformKey) return group.patron || [];
 
-  const sidebar = group[platformKey] || [];
+  const sidebar = group[platformKey] || utilities[platformKey] || [];
 
   if (platformKey === "cashier") {
     return filterCashierItems(sidebar, { activePlatform, branches });

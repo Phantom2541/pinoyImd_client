@@ -13,9 +13,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useToasts } from "react-toast-notifications";
+import { SearchUser } from "../../../../../components/searchables";
 import Information from "../../../physician/dashboard/register/information";
 import Schedule from "../../../physician/dashboard/register/schedule";
 import { BROWSE as BROWSE_PHYSICIANS } from "../../../../../services/redux/slices/assets/persons/physicians";
+import { BROWSE as BROWSE_USERS } from "../../../../../services/redux/slices/assets/persons/users";
 import {
   RESET,
   SAVE,
@@ -26,9 +28,11 @@ import { properFullname } from "../../../../../services/utilities";
 const defaultForm = {
   title: "",
   code: "",
+  status: "draft",
   specialization: "",
   description: "",
   remarks: "",
+  secretaries: [],
   schedules: [],
 };
 
@@ -41,6 +45,16 @@ const getPhysicianName = (physician = null) => {
       physician?.ghostName
   );
 };
+
+const getSecretaryId = (secretary = null) =>
+  secretary?._id || secretary?.value || secretary;
+
+const getSecretaryName = (secretary = null) =>
+  properFullname(
+    secretary?.fullName ||
+      secretary?.user?.fullName ||
+      secretary?.contactId?.fullName
+  );
 
 export default function ClinicModal({
   show = false,
@@ -58,6 +72,10 @@ export default function ClinicModal({
     collections: taggedPhysicians = [],
     isLoading: physiciansLoading,
   } = useSelector(({ physicians }) => physicians);
+  const {
+    collections: branchUsers = [],
+    isLoading: usersLoading,
+  } = useSelector(({ users }) => users);
   const [form, setForm] = useState(defaultForm);
   const [physician, setPhysician] = useState(null);
   const [isSchedule, setIsSchedule] = useState(false);
@@ -71,6 +89,21 @@ export default function ClinicModal({
         label: getPhysicianName(item) || item?.specialization || "Unnamed physician",
       })),
     [taggedPhysicians]
+  );
+  const selectedSecretaryNames = useMemo(
+    () =>
+      (form?.secretaries || [])
+        .map((item) => {
+          if (typeof item !== "string") return getSecretaryName(item);
+
+          return branchUsers.find((user) => String(user?._id) === String(item))
+            ? getSecretaryName(
+                branchUsers.find((user) => String(user?._id) === String(item))
+              )
+            : "";
+        })
+        .filter(Boolean),
+    [branchUsers, form?.secretaries]
   );
 
   useEffect(() => {
@@ -98,6 +131,7 @@ export default function ClinicModal({
       ...defaultForm,
       ...selected,
       specialization,
+      secretaries: selected?.secretaries || [],
       schedules: selected?.schedules || [],
     });
     setPhysician(selected?.physician || null);
@@ -105,10 +139,38 @@ export default function ClinicModal({
   }, [selected, show]);
 
   useEffect(() => {
+    if (!show || !branchUsers.length) return;
+
+    setForm((prev) => {
+      const hasStringSecretary = (prev?.secretaries || []).some(
+        (item) => typeof item === "string"
+      );
+
+      if (!hasStringSecretary) return prev;
+
+      return {
+        ...prev,
+        secretaries: (prev?.secretaries || []).map((item) =>
+          typeof item === "string"
+            ? branchUsers.find((user) => String(user?._id) === String(item)) ||
+              item
+            : item
+        ),
+      };
+    });
+  }, [branchUsers, show]);
+
+  useEffect(() => {
     if (!show || !token || !activePlatform?.branchId) return;
 
     dispatch(
       BROWSE_PHYSICIANS({
+        token,
+        key: { branchId: activePlatform.branchId },
+      })
+    );
+    dispatch(
+      BROWSE_USERS({
         token,
         key: { branchId: activePlatform.branchId },
       })
@@ -132,6 +194,26 @@ export default function ClinicModal({
     );
 
     setPhysician(nextPhysician || null);
+  };
+
+  const handleSecretarySelect = (user) => {
+    setForm((prev) => ({
+      ...prev,
+      secretaries: (prev?.secretaries || []).some(
+        (item) => String(getSecretaryId(item)) === String(user?._id)
+      )
+        ? prev.secretaries
+        : [...(prev?.secretaries || []), user],
+    }));
+  };
+
+  const handleSecretaryRemove = (secretaryId) => {
+    setForm((prev) => ({
+      ...prev,
+      secretaries: (prev?.secretaries || []).filter(
+        (item) => String(getSecretaryId(item)) !== String(secretaryId)
+      ),
+    }));
   };
 
   const handleSave = () => {
@@ -164,6 +246,9 @@ export default function ClinicModal({
       branchId: activePlatform?.branchId,
       physicianId: physicianRecordId,
       ...(physicianUserId ? { userId: physicianUserId } : {}),
+      secretaries: (form?.secretaries || [])
+        .map((item) => getSecretaryId(item))
+        .filter(Boolean),
       specialization: form?.specialization || "",
       specializations: form?.specialization ? [form.specialization] : [],
     };
@@ -265,6 +350,63 @@ export default function ClinicModal({
                   {!physiciansLoading && !physicianOptions.length && (
                     <small className="d-block mt-2 text-muted">
                       No tagged physicians found for this branch.
+                    </small>
+                  )}
+                </>
+              </MDBCol>
+              <MDBCol md="12" className="mb-3">
+                <strong>Secretary</strong>
+                <>
+                  <div className="mt-2">
+                    <SearchUser
+                      setPatient={handleSecretarySelect}
+                      excludes={form?.secretaries || []}
+                      excludeKey="_id"
+                      notFoundMessage="No secretary user found."
+                      allowRegister={false}
+                    />
+                  </div>
+                  <small className="d-block mt-2 text-muted">
+                    Search and select a user to tag as secretary.
+                  </small>
+                  {!!form?.secretaries?.length && (
+                    <div className="mt-3">
+                      {(form?.secretaries || []).map((secretary) => {
+                        const secretaryId = getSecretaryId(secretary);
+                        const secretaryName = getSecretaryName(secretary);
+
+                        return (
+                          <div
+                            key={secretaryId}
+                            className="d-flex justify-content-between align-items-center border rounded px-3 py-2 mb-2"
+                            style={{ background: "#f8fbff" }}
+                          >
+                            <div>
+                              <div className="font-weight-bold">
+                                {secretaryName || "Unnamed user"}
+                              </div>
+                              <small className="text-muted">
+                                {secretary?.email || secretaryId}
+                              </small>
+                            </div>
+                            <MDBBtn
+                              type="button"
+                              size="sm"
+                              color="danger"
+                              rounded
+                              className="px-2 mb-0"
+                              onClick={() => handleSecretaryRemove(secretaryId)}
+                            >
+                              <MDBIcon icon="times" />
+                            </MDBBtn>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {!usersLoading && !selectedSecretaryNames.length && (
+                    <small className="d-block mt-2 text-muted">
+                      No tagged secretary yet.
                     </small>
                   )}
                 </>

@@ -11,7 +11,7 @@ export default function InitialSetupGuide() {
     activePlatform?.branch ||
     "";
   const platformPrefix = `/${String(
-    activePlatform?.platform || "manager"
+    activePlatform?.platform || "manager",
   ).toLowerCase()}`;
   const category = String(activePlatform?.branch?.category || "").toLowerCase();
   const diagnosticsCategories = [
@@ -31,14 +31,14 @@ export default function InitialSetupGuide() {
     {
       title: "Menu (Price Declarations)",
       action: "Add, edit, or update initial prices",
-      path: "Branch Config -> Product & Services Setup -> Menu",
+      path: "Basic Config -> Product & Services Setup -> Menu",
       route: `${platformPrefix}/config/product-config/menus`,
       suggestion: "Start with Chemistry & Serology, then add more as needed",
     },
     {
       title: "Services (Reference Values)",
       action: "Update reference values (esp. Chemistry & Serology)",
-      path: "Branch Config -> Product & Services Setup -> Services",
+      path: "Basic Config -> Product & Services Setup -> Services",
       route: `${platformPrefix}/config/product-config/services`,
       suggestion: "Ensure all reference values are accurate and up-to-date",
     },
@@ -54,7 +54,7 @@ export default function InitialSetupGuide() {
       action: "Encode and upload signatories (MedTech, Pathologist, etc.)",
       path: isDiagnostics
         ? "Human Resources -> Signatories"
-        : "Branch Config -> Profile Settings -> Signatories",
+        : "Basic Config -> Profile Settings -> Signatories",
       route: isDiagnostics
         ? `${platformPrefix}/hr/signatories`
         : `${platformPrefix}/config/profile/signatories`,
@@ -62,7 +62,7 @@ export default function InitialSetupGuide() {
     {
       title: "Sources",
       action: "Register outsource, insource, utilities, or hotlines",
-      path: "Branch Config -> Sources & Utilities",
+      path: "Basic Config -> Sources & Utilities",
       route: `${platformPrefix}/config/sources`,
     },
   ];

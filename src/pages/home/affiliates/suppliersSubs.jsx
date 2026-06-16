@@ -14,7 +14,7 @@ export default function SuppliersSubs() {
   const { collections } = useSelector(({ companies }) => companies);
 
   const supplierCompanies = collections.filter(
-    (company) => company.category?.toLowerCase() === "supplier"
+    (company) => company.category?.toLowerCase() === "supplier",
   );
 
   // Determine slidesPerView based on window width (simplified)
@@ -69,11 +69,11 @@ export default function SuppliersSubs() {
 
             // Get first main branch (or undefined)
             const mainBranch = branches.find(
-              (branch) => branch.isMain === true
+              (branch) => branch.isMain === true,
             );
             const address = mainBranch?.address || {};
             const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
-              item.name
+              item.name,
             )}/profile/logo`;
             return (
               <SwiperSlide key={item._id || index}>

@@ -29,9 +29,15 @@ const contractCategories = [
   { text: "Subcontract", value: "sbc" },
   { text: "Special Subcontract", value: "ssc" },
 ];
+
+const getPayloadData = (payload) => payload?.payload ?? payload;
+const asArray = (value) => (Array.isArray(value) ? value : []);
+const compactItems = (value) => asArray(value).filter(Boolean);
+
 const initialState = {
   collections: [],
   filtered: [],
+  hotlineCollections: [],
   hotlines: [],
   categories: categories,
   contractCategories,
@@ -352,6 +358,9 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetHOTLINESFILTER: (state, { payload }) => {
+      state.hotlines = compactItems(payload);
+    },
     SetINSOURCE: (state, { payload }) => {
       state.collections = payload;
     },
@@ -362,6 +371,14 @@ export const reduxSlice = createSlice({
         state.page = state.totalPages;
       }
       state.filtered = collections;
+    },
+    ResetHOTLINES: (state) => {
+      const hotlineCollections = compactItems(state.hotlineCollections);
+      state.totalPages = Math.ceil(hotlineCollections.length / state.maxPage);
+      if (state.page > state.totalPages) {
+        state.page = state.totalPages;
+      }
+      state.hotlines = hotlineCollections;
     },
     RESET_COLLECTIONS: (state) => {
       state.didSearch = false;
@@ -473,7 +490,11 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(TIEUPS.fulfilled, (state, { payload }) => {
-        state.collections = payload;
+        const data = compactItems(getPayloadData(payload));
+        state.collections = data;
+        state.filtered = data;
+        state.totalPages = Math.ceil((data?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(TIEUPS.rejected, (state, { payload }) => {
@@ -495,8 +516,29 @@ export const reduxSlice = createSlice({
         state.formSubmitted = true;
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
+        const data = getPayloadData(payload);
+        const collections = asArray(state.collections);
+        const filtered = asArray(state.filtered);
+
+        collections.unshift(data);
+        filtered.unshift(data);
+
+        state.collections = collections;
+        state.filtered = filtered;
+
+        if (data?.category === "hotline") {
+          const hotlineCollections = compactItems(state.hotlineCollections);
+          const hotlines = compactItems(state.hotlines);
+
+          hotlineCollections.unshift(data);
+          hotlines.unshift(data);
+
+          state.hotlineCollections = hotlineCollections;
+          state.hotlines = hotlines;
+          state.totalPages =
+            Math.ceil((hotlineCollections.length || 0) / state.maxPage) || 1;
+        }
+
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -545,6 +587,19 @@ export const reduxSlice = createSlice({
 
         state.collections = _collections;
         state.filtered = _filtered;
+
+        if (data?.category === "hotline") {
+          const hotlineCollections = compactItems(state.hotlineCollections).map(
+            (item) => (item?._id === data?._id ? data : item),
+          );
+          const hotlines = compactItems(state.hotlines).map((item) =>
+            item?._id === data?._id ? data : item,
+          );
+
+          state.hotlineCollections = hotlineCollections;
+          state.hotlines = hotlines;
+        }
+
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -587,12 +642,18 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
 
         const updateCollections = (collections) => {
-          const index = collections.findIndex((item) => item._id === payload);
-          collections.splice(index, 1);
+          const safeCollections = compactItems(collections);
+          const index = safeCollections.findIndex(
+            (item) => item?._id === payload,
+          );
+          if (index !== -1) safeCollections.splice(index, 1);
+          return safeCollections;
         };
 
-        updateCollections(state.collections);
-        updateCollections(state.filtered);
+        state.collections = updateCollections(state.collections);
+        state.filtered = updateCollections(state.filtered);
+        state.hotlineCollections = updateCollections(state.hotlineCollections);
+        state.hotlines = updateCollections(state.hotlines);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -609,9 +670,20 @@ export const reduxSlice = createSlice({
       })
       .addCase(FILTERBYCATEGORY.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.hotlines = state.filtered = payload;
+        const category = action.meta?.arg?.keys?.category;
+
+        if (category === "hotline") {
+          const sanitizedPayload = compactItems(payload);
+          state.hotlineCollections = sanitizedPayload;
+          state.hotlines = sanitizedPayload;
+        } else {
+          const sanitizedPayload = compactItems(payload);
+          state.collections = sanitizedPayload;
+          state.filtered = sanitizedPayload;
+        }
+
         state.totalPages =
-          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+          Math.ceil((compactItems(payload)?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
 
         state.isSuccess = success;
@@ -649,5 +721,7 @@ export const {
   SetActivePAGE,
   RESET,
   SetFILTERED,
+  SetHOTLINESFILTER,
+  ResetHOTLINES,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

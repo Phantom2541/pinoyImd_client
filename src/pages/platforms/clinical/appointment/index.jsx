@@ -13,7 +13,7 @@ import ResultsModal from "./results";
 import TransactionModal from "./transaction";
 
 const Index = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ appointments }) => appointments),
     dispatch = useDispatch();
 
@@ -22,17 +22,22 @@ const Index = () => {
     if (token && activePlatform) {
       const physicianIds =
         activePlatform.branch.physicians?.map(({ _id }) => _id) || [];
+      const secretaryId = auth?._id || "";
+      const branchId =
+        activePlatform?.branchId || activePlatform?.branch?._id || "";
 
       dispatch(
         BROWSE({
           token,
           data: {
-            physicianIds,
+            ...(secretaryId ? { secretaryId } : {}),
+            ...(branchId ? { branchId } : {}),
+            ...(physicianIds.length ? { physicianIds } : {}),
           },
         })
       );
     }
-  }, [dispatch, token, activePlatform]);
+  }, [dispatch, token, activePlatform, auth]);
 
   return (
     <>

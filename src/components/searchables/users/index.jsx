@@ -32,6 +32,8 @@ export default function Search({
   excludes = [],
   excludeKey = "",
   notFoundMessage = "No Patient Record found.",
+  initialSearchKey = "",
+  allowRegister = true,
 }) {
   const { filtered } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
@@ -86,6 +88,22 @@ export default function Search({
     };
   }, [debouncedSearch]);
 
+  useEffect(() => {
+    const nextSearchKey = String(initialSearchKey || "").trim();
+
+    if (!nextSearchKey) return;
+    if (nextSearchKey === searchKey) return;
+
+    setSearchKey(nextSearchKey);
+
+    const parts = nextSearchKey.split(",");
+    if (parts.length > 1 && parts[1].trim()) {
+      setIsFetching(true);
+      setDidSearch(true);
+      debouncedSearch(nextSearchKey);
+    }
+  }, [initialSearchKey, debouncedSearch, searchKey]);
+
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);
@@ -120,13 +138,19 @@ export default function Search({
             <>
               {!patients.length ? (
                 <small
-                  className={didHover ? "text-primary" : ""}
-                  style={{ cursor: "pointer" }}
-                  onClick={handleRegister}
-                  onMouseEnter={() => setDidHover(true)}
-                  onMouseLeave={() => setDidHover(false)}
+                  className={allowRegister && didHover ? "text-primary" : ""}
+                  style={{ cursor: allowRegister ? "pointer" : "default" }}
+                  onClick={allowRegister ? handleRegister : undefined}
+                  onMouseEnter={() => allowRegister && setDidHover(true)}
+                  onMouseLeave={() => allowRegister && setDidHover(false)}
                 >
-                  {notFoundMessage} <br /> click here to register
+                  {notFoundMessage}
+                  {allowRegister ? (
+                    <>
+                      {" "}
+                      <br /> click here to register
+                    </>
+                  ) : null}
                 </small>
               ) : (
                 <ul>

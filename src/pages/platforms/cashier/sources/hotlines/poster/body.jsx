@@ -17,7 +17,7 @@ import "./style.css";
 
 const Body = () => {
   const {
-      filtered = [],
+      hotlines = [],
       isSuccess,
       formSubmitted,
     } = useSelector(({ providers }) => providers),
@@ -29,7 +29,7 @@ const Body = () => {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6; // ilang items per page
-  const totalPages = Math.ceil((filtered?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((hotlines?.length || 0) / itemsPerPage);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
@@ -45,7 +45,7 @@ const Body = () => {
   };
 
   // slice data per page
-  const paginatedData = filtered?.slice(
+  const paginatedData = hotlines?.slice(
     currentPage * itemsPerPage,
     currentPage * itemsPerPage + itemsPerPage
   );

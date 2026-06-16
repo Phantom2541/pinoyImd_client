@@ -13,6 +13,7 @@ import {
 import {
   DESTROY,
   SET_COLLECTIONS,
+  SetEDIT,
   UPDATE,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import Swal from "sweetalert2";
@@ -22,8 +23,6 @@ export default function CollapsableIndex() {
       filtered,
       activePage,
       maxPage,
-      isSuccess,
-      closeModal,
       formSubmitted,
     } = useSelector(({ physicians }) => physicians),
     { filtered: collection } = useSelector(({ applicants }) => applicants);
@@ -40,7 +39,7 @@ export default function CollapsableIndex() {
   const [showClinicModal, setShowClinicModal] = useState(false);
 
   const dispatch = useDispatch(),
-    [tieups, setTieups] = useState([]);
+    [physicians, setPhysicians] = useState([]);
 
   const inlineUpdate = (data) => {
     dispatch(
@@ -53,11 +52,11 @@ export default function CollapsableIndex() {
 
       if (!physician?._id) return;
 
-      const updated = tieups.map((entry) =>
+      const updated = physicians.map((entry) =>
         entry._id === physician._id ? physician : entry,
       );
 
-      setTieups(updated);
+      setPhysicians(updated);
       dispatch(SET_COLLECTIONS(updated));
     });
   };
@@ -69,7 +68,7 @@ export default function CollapsableIndex() {
   //Set fetched data for mapping
   useEffect(() => {
     console.log("Filtered Physicians:", filtered); // Debug log
-    setTieups(filtered);
+    setPhysicians(filtered);
   }, [filtered]);
 
   const renderStatusBadge = (status) => {
@@ -91,7 +90,9 @@ export default function CollapsableIndex() {
   };
 
   const handleDelete = (item) => {
-    const physicianName = properFullname(item?.account?.fullName || item?.user?.fullName);
+    const physicianName = properFullname(
+      item?.account?.fullName || item?.user?.fullName,
+    );
 
     Swal.fire({
       title: `End service for ${String(physicianName || "this physician").toUpperCase()}?`,
@@ -104,13 +105,13 @@ export default function CollapsableIndex() {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(DESTROY({ token, data: { id: item._id } })).then(() => {
-          const updated = tieups.filter((i) => i._id !== item._id);
+          const updated = physicians.filter((i) => i._id !== item._id);
 
           // ✅ update local component state
-          // setTieups(updated);
+          // setPhysicians(updated);
 
           // ✅ update Redux store using the action creator
-          dispatch(SET_COLLECTIONS({ tieups: updated }));
+          dispatch(SET_COLLECTIONS({ physicians: updated }));
         });
       }
     });
@@ -153,10 +154,10 @@ export default function CollapsableIndex() {
               }),
             ).then(({ payload: physician }) => {
               const updated = [
-                ...tieups.filter((p) => p._id !== physician._id), // replace the old
+                ...physicians.filter((p) => p._id !== physician._id), // replace the old
                 physician, // add new
               ];
-              dispatch(SET_COLLECTIONS({ tieups: updated }));
+              dispatch(SET_COLLECTIONS({ physicians: updated }));
             });
           }
         });
@@ -172,11 +173,11 @@ export default function CollapsableIndex() {
   const handleClinicSaved = (clinic) => {
     if (!selectedPhysician?._id || !clinic?._id) return;
 
-    const updated = tieups.map((entry) =>
+    const updated = physicians.map((entry) =>
       entry._id === selectedPhysician._id ? { ...entry, clinic } : entry,
     );
 
-    setTieups(updated);
+    setPhysicians(updated);
     dispatch(SET_COLLECTIONS(updated));
   };
 
@@ -263,6 +264,14 @@ export default function CollapsableIndex() {
                       {renderStatusBadge(status)}
                     </td>
                     <td>
+                      <MDBBtn
+                        color="primary"
+                        size="sm"
+                        className="mb-1 mr-1"
+                        onClick={() => dispatch(SetEDIT(item))}
+                      >
+                        Edit
+                      </MDBBtn>
                       <MDBBtn
                         color="danger"
                         size="sm"

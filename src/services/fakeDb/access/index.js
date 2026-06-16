@@ -5,7 +5,7 @@ import collections from "./collections.json";
  11 = Radiology
  18 = Clinic
  4 = Cashier
- 20 = Service Engineer
+ 20 = Engineering
 */
 const laboratory = [10, 18, 4];
 const radiology = [11, 18, 4];
@@ -50,10 +50,12 @@ const platformAliases = {
   headquarter: "headquarter",
   headquarters: "headquarter",
   superadmin: "superadmin",
-  "service engineer": "serviceengineer",
-  service_engineer: "serviceengineer",
-  serviceengineer: "serviceengineer",
-  se: "serviceengineer",
+  engineering: "engineering",
+  engineer: "engineering",
+  "service engineer": "engineering",
+  service_engineer: "engineering",
+  serviceengineer: "engineering",
+  se: "engineering",
 };
 
 const normalizePlatformKey = (value = "") => {

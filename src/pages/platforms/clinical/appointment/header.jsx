@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
+  formatScheduleLabel,
   SetPHYSICIAN,
   SetSCHED,
   TOGGLE_PATIENT_MODAL,
@@ -11,7 +12,6 @@ import { Search } from "../../../../components/searchables";
 import { useState } from "react";
 
 const Header = () => {
-  const { activePlatform } = useSelector(({ auth }) => auth);
   const { collections, physicians, scheds, activeSched, activePhysician } =
       useSelector(({ appointments }) => appointments),
     [lastSched, setLastSched] = useState(""),
@@ -32,7 +32,7 @@ const Header = () => {
             onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
           >
             <option value="">All</option>
-            {activePlatform.branch.physicians.map((user) => {
+            {physicians.map((user) => {
               const isExisting = physicians.some(({ _id }) => _id === user._id);
               return (
                 <option
@@ -61,7 +61,7 @@ const Header = () => {
             <option value="">All</option>
             {scheds.map((sched) => (
               <option key={sched} value={sched}>
-                {sched}
+                {formatScheduleLabel(sched)}
               </option>
             ))}
           </select>

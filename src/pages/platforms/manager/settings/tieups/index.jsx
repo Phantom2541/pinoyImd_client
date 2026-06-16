@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  TIEUPS,
+  INSOURCE,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers";
 import { useToasts } from "react-toast-notifications";
@@ -23,9 +23,17 @@ export default function Index() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(TIEUPS({ data: { branch: activePlatform?.branchId }, token }));
-    // dispatch(TIEUPS({ token, key: { branch: activePlatform?.branchId } }));
+    if (token && activePlatform?.branchId) {
+      dispatch(
+        INSOURCE({
+          token,
+          key: {
+            vendors: activePlatform?.branchId,
+            categories: ["ctr"],
+          },
+        }),
+      );
+    }
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
@@ -102,12 +110,23 @@ export default function Index() {
         ]}
         tableBodies={[
           {
-            _key: "name",
-            _format: (name) => <strong>{name}</strong>,
+            _key: "_id",
+            _format: (_, row) => (
+              <strong>
+                {row?.clients?.companyId?.name || row?.name || ""}
+              </strong>
+            ),
           },
           {
-            _key: "subName",
-            _format: (subName) => <em>{subName || ""}</em>,
+            _key: "_id",
+            _format: (_, row) => (
+              <em>
+                {row?.clients?.displayname ||
+                  row?.clients?.name ||
+                  row?.subName ||
+                  ""}
+              </em>
+            ),
           },
         ]}
         handleSearch={handleSearch}

@@ -19,7 +19,7 @@ import {
 
 export default function Hotline() {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered, isSuccess, formSubmitted } = useSelector(
+  const { hotlines, isSuccess, formSubmitted } = useSelector(
     ({ providers }) => providers
   );
   const dispatch = useDispatch();
@@ -72,10 +72,10 @@ export default function Hotline() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const totalPages = Math.ceil((filtered?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((hotlines?.length || 0) / itemsPerPage);
 
   // slice data per page
-  const paginatedData = filtered?.slice(
+  const paginatedData = (hotlines || []).filter(Boolean).slice(
     currentPage * itemsPerPage,
     currentPage * itemsPerPage + itemsPerPage
   );

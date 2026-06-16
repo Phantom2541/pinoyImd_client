@@ -14,7 +14,7 @@ import { mobile } from "../../../../../services/utilities";
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
     { filtered, activePage, maxPage, formSubmitted, isSuccess } = useSelector(
-      ({ providers }) => providers
+      ({ providers }) => providers,
     ),
     dispatch = useDispatch();
   console.log("filtered", filtered);
@@ -65,22 +65,21 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((supplier, index) => {
-          const { _id, displayname, name, abbr, number, address, status } =
-            supplier;
+          const { _id, subName, name, number, address, status } = supplier;
 
           return (
             <tr key={_id}>
               <td>{index + startIndex + 1}</td>
               <td style={{ fontWeight: 400 }}>
-                <div>{displayname || name}</div>
+                <div>{name}</div>
 
                 <div className="text-muted">
-                  {abbr ? (
+                  {subName ? (
                     <MDBBadge
                       title="Click me to update"
                       className="cursor-pointer"
                     >
-                      {abbr}
+                      {subName}
                     </MDBBadge>
                   ) : (
                     <p className="mb-0">No abbreviation</p>

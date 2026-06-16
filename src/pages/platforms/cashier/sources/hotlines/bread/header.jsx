@@ -4,14 +4,14 @@ import { MDBView } from "mdbreact";
 import { Search } from "../../../../../../components/searchables";
 import {
   FILTERBYCATEGORY,
-  SetFILTER,
-  ResetFILTER,
+  SetHOTLINESFILTER,
+  ResetHOTLINES,
   SetCREATE,
 } from "../../../../../../services/redux/slices/assets/providers";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ providers }) => providers),
+    { hotlines, hotlineCollections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   // Fetch hotlines on component mount and update filtered services based on the category
@@ -28,7 +28,7 @@ const Header = () => {
 
   // Handle Add function - make sure service is not empty before dispatching
   const handleAdd = (key) => dispatch(SetCREATE({ displayname: key }));
-  const handleFiltered = (items) => dispatch(SetFILTER(items));
+  const handleFiltered = (items) => dispatch(SetHOTLINESFILTER(items));
   return (
     <MDBView
       cascade
@@ -36,15 +36,15 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} hotlines
+          {hotlines.length} hotlines
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
           <Search
-            collection={filtered}
-            handleFiltered={handleFiltered}
-            reset={() => dispatch(ResetFILTER())}
+            collections={hotlineCollections}
+            setFiltered={handleFiltered}
+            reset={() => dispatch(ResetHOTLINES())}
             handleAdd={handleAdd}
           />
         </div>

@@ -30,6 +30,19 @@ const Information = ({ form, setForm = () => {} }) => {
             }
           />
         </MDBCol>
+        <MDBCol>
+          <label className="grey-text mt-3">Status</label>
+          <select
+            className="browser-default custom-select"
+            value={form?.status || "draft"}
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
+          >
+            <option value="draft">Draft</option>
+            <option value="posted">Posted</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="done">Done</option>
+          </select>
+        </MDBCol>
       </MDBRow>
       <MDBRow>
         <MDBCol>

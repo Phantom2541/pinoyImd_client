@@ -115,8 +115,8 @@
   },
   {
     "id": 20,
-    "name": "Service Engineer",
-    "code": "SE",
-    "platform": "Service Engineer"
+    "name": "Engineering",
+    "code": "engineering",
+    "platform": "engineering"
   }
 ]
