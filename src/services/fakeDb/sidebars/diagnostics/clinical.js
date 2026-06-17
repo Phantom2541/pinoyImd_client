@@ -3,12 +3,15 @@ import { Services } from "../../../../pages/platforms/cashier";
 import Appointments from "../../../../pages/platforms/clinical/appointment";
 import Billing from "../../../../pages/platforms/clinical/billing";
 import Schedules from "../../../../pages/platforms/clinical/schedules";
-
+import Dashboard from "../../../../pages/platforms/clinical/dashboard";
 const clinical = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/clinical/bulletin",
+    path: "/bulletin",
+    title:
+      "Displays announcements and system-wide updates for the frontdesk team.",
+    component: Dashboard,
   },
   {
     name: "Clinic Desk",
