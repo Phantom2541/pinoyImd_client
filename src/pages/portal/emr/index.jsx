@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BROWSE } from "../../../services/redux/slices/portal/emr";
 import Footer from "./footer";
 import "./style.css";
-import Login from "../../home/login";
+import { TopLogin as Login } from "../../../components/auth";
 import { SetAUTH } from "../../../services/redux/slices/assets/persons/auth";
 
 const EMR = ({ match }) => {

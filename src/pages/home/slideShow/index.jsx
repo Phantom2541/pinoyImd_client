@@ -31,7 +31,7 @@ const slides = [
   },
 ];
 
-export default function SlideShow({ handleFlip, flipped }) {
+export default function SlideShow({ handleFlip, flipped, onRegistered }) {
   return (
     <MDBAnimation reveal type="fadeIn" duration="2000ms" delay="500ms">
       <div className="subscriber-register-section">
@@ -73,7 +73,7 @@ export default function SlideShow({ handleFlip, flipped }) {
               <button className="subscriber-back-button" onClick={handleFlip}>
                 <MDBIcon fas icon="arrow-left" />
               </button>
-              <Register />
+              <Register onRegistered={onRegistered} />
             </div>
           </div>
         </div>

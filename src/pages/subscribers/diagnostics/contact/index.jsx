@@ -14,7 +14,7 @@ import { useToasts } from "react-toast-notifications";
 import { useSelector } from "react-redux";
 import {
   Cloudinary,
-  FailedLogo,
+  Logo,
   fullAddress,
   LatitudeAddress,
   mobile,
@@ -123,7 +123,7 @@ export default function ContactUs() {
               src={logoUrl}
               alt="logo"
               loading="lazy"
-              onError={(e) => (e.target.src = FailedLogo)}
+              onError={(e) => (e.target.src = Logo)}
               width="90px"
               height="90px"
             />

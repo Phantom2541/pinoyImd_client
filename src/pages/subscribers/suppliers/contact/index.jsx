@@ -14,7 +14,7 @@ import { useToasts } from "react-toast-notifications";
 import { useSelector } from "react-redux";
 import {
   ENDPOINT,
-  FailedLogo,
+  Logo,
   fullAddress,
   LatitudeAddress,
   mobile,
@@ -118,7 +118,7 @@ export default function ContactUs() {
             <img
               src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
               alt="logo"
-              onError={(e) => (e.target.src = FailedLogo)}
+              onError={(e) => (e.target.src = Logo)}
               width="90px"
               height="90px"
             />

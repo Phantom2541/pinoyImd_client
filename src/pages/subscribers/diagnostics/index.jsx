@@ -4,11 +4,11 @@ import "../style.css";
 import Copyrights from "../../../components/footer";
 import Register from "../../home/slideShow";
 import ContactUs from "./contact";
-import Login from "../../home/login";
+import { TopLogin as Login } from "../../../components/auth";
 import Testimonials from "./testimonials";
 import Machines from "./machine";
 import { useSelector } from "react-redux";
-import { ENDPOINT, FailedLogo } from "../../../services/utilities";
+import { ENDPOINT, Logo } from "../../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
 import Employees from "./employee";
@@ -32,7 +32,9 @@ const Diagnostics = ({ match }) => {
   const mainBranch = (details?.branches || []).find(
     (branch) =>
       branch?.isMain ||
-      String(branch?.displayname || "").trim().toLowerCase() === "main",
+      String(branch?.displayname || "")
+        .trim()
+        .toLowerCase() === "main",
   );
   const mainBranchHmo = mainBranch?.hmo || [];
 
@@ -91,7 +93,7 @@ const Diagnostics = ({ match }) => {
                 <img
                   src={`${ENDPOINT}/public/companies/${name}/logo.png`}
                   alt="logo"
-                  onError={(e) => (e.target.src = FailedLogo)}
+                  onError={(e) => (e.target.src = Logo)}
                   className="mr-2"
                 />
                 {name}
@@ -223,7 +225,7 @@ const Diagnostics = ({ match }) => {
           />
 
           <section id="home">
-            <Login show={show} toggle={() => setShow(!show)} />
+            <Login show={show} toggle={() => setShow(!show)} allowSignup />
             <MDBView className={`${!flipped || "flipped"}`}>
               <MDBMask
                 className="d-flex justify-content-center align-items-center"
@@ -233,6 +235,10 @@ const Diagnostics = ({ match }) => {
                   <Register
                     handleFlip={() => setFlipped(!flipped)}
                     flipped={flipped}
+                    onRegistered={() => {
+                      setFlipped(false);
+                      setShow(true);
+                    }}
                   />
                 </div>
               </MDBMask>

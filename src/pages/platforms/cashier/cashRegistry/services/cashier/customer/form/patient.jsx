@@ -25,6 +25,7 @@ import { SETPATIENT } from "../../../../../../../../services/redux/slices/commer
 import Swal from "sweetalert2";
 import Spinner from "../../../../../../../../components/spinner";
 import HealthCardFields from "./healthCard";
+import showLoginDetails from "./loginDetails";
 
 const defaultHealthCard = {
   provider: "",
@@ -64,7 +65,6 @@ const sanitizeHealthCard = (card = {}) => {
 
 const getHealthCardLabel = ({ provider = "", number = "" }) =>
   `${provider === "phi" ? "PhilHealth" : HMO.getAbbr(provider) || provider || "Health Card"} - ${number || "No ID yet"}`;
-
 
 export const maskEmail = (email = "") => {
   if (!email.includes("@")) return email;
@@ -317,9 +317,20 @@ export default function Patient({
             dispatch(SETPATIENT(action?.payload?.payload));
             setShowPatientInfo(true);
             setActiveIndex(0);
-            return addToast("Successfully registered patient.", {
-              appearance: "success",
-            });
+            // Tell the cashier how this patient signs in. "Show as toast" in
+            // the alert keeps the same details on screen as a toast instead.
+            return showLoginDetails(
+              {
+                email: body.data.email,
+                dob: body.data.dob,
+                emailWasGenerated: !email,
+              },
+              (content) =>
+                addToast(content, {
+                  appearance: "success",
+                  autoDismiss: false,
+                }),
+            );
           }
         });
       }

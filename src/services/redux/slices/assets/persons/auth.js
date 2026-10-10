@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
+  clearSiteData,
   Cloudinary,
   employment,
   ENDPOINT,
@@ -52,6 +53,10 @@ const initialState = {
   isLoading: false,
   formSubmitted: false,
   message: "",
+  // The server turned the session down (expired, or the password changed).
+  sessionEnded: false,
+  // The "Signing you out..." screen after Log out is showing.
+  signingOut: false,
 };
 
 const normalizePlatforms = (platforms = []) =>
@@ -68,8 +73,8 @@ const normalizePlatforms = (platforms = []) =>
           return [];
         })
         .map((platform) => Access.normalizePlatformKey(platform))
-        .filter(Boolean)
-    )
+        .filter(Boolean),
+    ),
   );
 
 const uniquePlatforms = (platforms = []) =>
@@ -90,7 +95,7 @@ const isVisibleAffiliation = (branch = {}) => {
 const findCurrentAffiliation = (branches = [], activeAffiliation = "") =>
   branches.find(
     ({ affiliationId, _id }) =>
-      String(affiliationId || _id) === String(activeAffiliation || "")
+      String(affiliationId || _id) === String(activeAffiliation || ""),
   ) || null;
 
 export const SETACTIVEAFFILIATION = createAsyncThunk(
@@ -108,7 +113,7 @@ export const SETACTIVEAFFILIATION = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const CHANGEPASSWORD = createAsyncThunk(
@@ -126,7 +131,7 @@ export const CHANGEPASSWORD = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const LOGIN = createAsyncThunk(
@@ -144,7 +149,7 @@ export const LOGIN = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const VALIDATEREFRESH = createAsyncThunk(
@@ -162,7 +167,7 @@ export const VALIDATEREFRESH = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPDATE = createAsyncThunk(
@@ -180,7 +185,7 @@ export const UPDATE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPDATE_INFO = createAsyncThunk(
@@ -198,7 +203,7 @@ export const UPDATE_INFO = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPLOAD = createAsyncThunk(
@@ -207,7 +212,7 @@ export const UPLOAD = createAsyncThunk(
     try {
       return axioKit.upload(data, token, (progress) => {
         thunkAPI.dispatch(
-          UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
+          UPLOADBAR(Math.round((progress.loaded * 100) / progress.total)),
         );
       });
     } catch (error) {
@@ -220,7 +225,7 @@ export const UPLOAD = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const DESTROY_IMG = createAsyncThunk(
@@ -231,7 +236,7 @@ export const DESTROY_IMG = createAsyncThunk(
         "/assets/persons/auth",
         data,
         token,
-        "destroy_img"
+        "destroy_img",
       );
     } catch (error) {
       const message =
@@ -243,16 +248,12 @@ export const DESTROY_IMG = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 //set active platform
 const setAP = (state, payload) => {
-  const {
-    branches = [],
-    isPhysician = false,
-    activeAffiliation,
-  } = payload;
+  const { branches = [], isPhysician = false, activeAffiliation } = payload;
   const visibleBranches = branches.filter(isVisibleAffiliation);
   const requestedAffiliationId =
     activeAffiliation || state.auth?.activeAffiliation || "";
@@ -277,7 +278,9 @@ const setAP = (state, payload) => {
   }
 
   const branchPlatforms = normalizePlatforms(branch?.platforms);
-  const _access = branchPlatforms.filter((platform) => platform !== "physician");
+  const _access = branchPlatforms.filter(
+    (platform) => platform !== "physician",
+  );
   const { contract = { designation: -1 }, status, clinic } = branch || {};
   const normalizedContractStatus = String(contract?.soe || "")
     .trim()
@@ -286,14 +289,14 @@ const setAP = (state, payload) => {
     .trim()
     .toLowerCase();
   const contractEmploymentStatus = employment.isEmployed(
-    normalizedContractStatus
+    normalizedContractStatus,
   );
   const resolvedEmploymentStatus =
     typeof contractEmploymentStatus === "boolean"
       ? normalizedContractStatus
       : normalizedBranchStatus;
   const isEmployed = employment.isEmployed(
-    isPhysician ? "active" : resolvedEmploymentStatus
+    isPhysician ? "active" : resolvedEmploymentStatus,
   );
   const designation = isPhysician ? 122 : contract?.designation;
   const department = Policy.getDepartment(designation) || "";
@@ -308,8 +311,8 @@ const setAP = (state, payload) => {
   const selectedPlatform = availablePlatforms.includes(currentPlatform)
     ? currentPlatform
     : availablePlatforms.length === 1
-    ? availablePlatforms[0]
-    : availablePlatforms[0] || "";
+      ? availablePlatforms[0]
+      : availablePlatforms[0] || "";
   const activePlatform = {
     affiliationId,
     branchId: branch?.branch || branch?.branchId || branch?._id,
@@ -324,7 +327,10 @@ const setAP = (state, payload) => {
     clinic,
     platform: isEmployed ? selectedPlatform : "",
   };
-  if (affiliationId && String(state.auth?.activeAffiliation || "") !== String(affiliationId)) {
+  if (
+    affiliationId &&
+    String(state.auth?.activeAffiliation || "") !== String(affiliationId)
+  ) {
     state.auth = {
       ...state.auth,
       activeAffiliation: affiliationId,
@@ -407,7 +413,7 @@ export const reduxSlice = createSlice({
               ...branch,
               activePlatform: normalizedPlatform,
             }
-          : branch
+          : branch,
       );
 
       if (
@@ -421,7 +427,7 @@ export const reduxSlice = createSlice({
         state.activePlatform = updatedActivePlatform;
         localStorage.setItem(
           "activePlatform",
-          JSON.stringify(updatedActivePlatform)
+          JSON.stringify(updatedActivePlatform),
         );
       }
     },
@@ -537,6 +543,51 @@ export const reduxSlice = createSlice({
     SetCOMPANY: (state, { payload }) => {
       state.company = payload;
     },
+    // Log out: the session ends (token, user, everything held for them) but the
+    // remembered account stays -- "Welcome back" then needs only the password.
+    // One step, so the app can't re-check the old token in between.
+    SignOut: (state) => ({
+      ...initialState,
+      email: state.email,
+      token: "",
+      image: "",
+      activePlatform: {},
+      isOnline: state.isOnline,
+      signingOut: true,
+    }),
+    // The "Signing you out..." screen is done.
+    SignOutDone: (state) => {
+      state.signingOut = false;
+    },
+    // "Use another account": forget the signed-in account and the saved one, in
+    // ONE step (two would let the app re-check the old token in between and
+    // bring it back). Only this slice: pages keep their own data -- a company
+    // page, for one, shows what it loaded and does not fetch it again.
+    ForgetAccount: (state) => ({
+      ...initialState,
+      // initialState was read from browser storage when the page loaded.
+      email: "",
+      token: "",
+      image: "",
+      activePlatform: {},
+      isOnline: state.isOnline,
+    }),
+    // The server rejected our token. Drop the session so the sign-in modal
+    // takes over; the saved email stays so "Welcome back" can offer it.
+    SessionEnded: (state) => {
+      state.auth = {};
+      state.token = "";
+      state.access = [];
+      state.branches = [];
+      state.sessionEnded = true;
+      try {
+        // Only the token goes; the saved account stays so "Welcome back" can
+        // still show who it is (as it did before this existed).
+        localStorage.removeItem("token");
+      } catch (error) {
+        // Storage unavailable; the in-memory session is gone either way.
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -644,8 +695,9 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
 
         setTimeout(() => {
-          localStorage.clear();
-          window.location.href = "/";
+          clearSiteData().finally(() => {
+            window.location.href = "/";
+          });
         }, 2500);
       })
       .addCase(CHANGEPASSWORD.rejected, (state, action) => {
@@ -658,6 +710,7 @@ export const reduxSlice = createSlice({
       .addCase(LOGIN.pending, (state) => {
         state.isLoading = true;
         state.loginSuccess = false;
+        state.sessionEnded = false;
         state.message = "";
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
@@ -769,6 +822,10 @@ export const {
   SyncAffiliationPlatform,
   SetAUTH,
   SetCOMPANY,
+  SessionEnded,
+  SignOut,
+  SignOutDone,
+  ForgetAccount,
   MAXPAGE,
   UPLOADBAR,
   IMAGE,

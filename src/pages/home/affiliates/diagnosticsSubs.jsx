@@ -12,7 +12,7 @@ export default function DiagnosticsSubs() {
 
   // Pre-filter once to avoid filtering inside render repeatedly
   const diagnosticCompanies = collections.filter(
-    (company) => company.category?.toLowerCase() === "diagnostic"
+    (company) => company.category?.toLowerCase() === "diagnostic",
   );
 
   return (

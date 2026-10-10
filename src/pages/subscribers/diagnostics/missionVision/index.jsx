@@ -3,7 +3,7 @@ import "./style.css";
 import MISSION from "./../../../../assets/mission.jpg";
 import VISION from "./../../../../assets/vision.jpg";
 import VALUE from "./../../../../assets/value.jpg";
-import { Cloudinary, FailedLogo } from "../../../../services/utilities";
+import { Cloudinary, Logo } from "../../../../services/utilities";
 
 export default function MissionVision() {
   const [company, setCompany] = useState(null);
@@ -22,7 +22,7 @@ export default function MissionVision() {
 
   const logoUrl = company?.name
     ? `${Cloudinary.getEndpoint()}/companies/${company.name}/logo`
-    : FailedLogo;
+    : Logo;
 
   // Safely ensure values list is always an array
   const values = Array.isArray(company?.vl) ? company.vl : [];
@@ -66,7 +66,7 @@ export default function MissionVision() {
               src={logoUrl}
               alt="Company Logo"
               loading="lazy"
-              onError={(e) => (e.target.src = FailedLogo)}
+              onError={(e) => (e.target.src = Logo)}
             />
             <span>{company?.name || "Company"}</span>
           </div>

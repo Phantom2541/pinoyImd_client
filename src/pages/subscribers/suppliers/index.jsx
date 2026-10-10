@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { MDBContainer, MDBMask, MDBView } from "mdbreact";
 import "../style.css";
 import Register from "./register";
-import Login from "../../home/login";
+import { TopLogin as Login } from "../../../components/auth";
 
 import { useDispatch, useSelector } from "react-redux";
-import { ENDPOINT, FailedLogo } from "../../../services/utilities";
+import { ENDPOINT, Logo } from "../../../services/utilities";
 import Loading from "./loading";
 import Machines from "./machine";
 import Employees from "./employee";
@@ -90,7 +90,7 @@ const Suppliers = ({ match }) => {
                 <img
                   src={`${ENDPOINT}/public/companies/${name}/logo.png`}
                   alt="logo"
-                  onError={(e) => (e.target.src = FailedLogo)}
+                  onError={(e) => (e.target.src = Logo)}
                   className="mr-2"
                 />
                 {name}

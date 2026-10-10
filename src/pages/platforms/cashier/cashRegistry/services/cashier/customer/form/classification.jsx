@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBadge, MDBBtn, MDBTypography } from "mdbreact";
 import { useHistory } from "react-router";
-import { Categories, HMO, Privileges } from "../../../../../../../../services/fakeDb";
+import {
+  Categories,
+  HMO,
+  Privileges,
+} from "../../../../../../../../services/fakeDb";
 import {
   SETCATEGORY,
   SETPRIVILEGE,
@@ -35,19 +39,17 @@ const getHealthCardOptionLabel = (card = {}) => {
   }
 
   const normalized = String(provider || "").toLowerCase();
-  const matched = HMO.collections.find(
-    ({ code = "", abbr = "", name = "" }) =>
-      [code, abbr, name].some(
-        (value) => String(value || "").toLowerCase() === normalized,
-      ),
+  const matched = HMO.collections.find(({ code = "", abbr = "", name = "" }) =>
+    [code, abbr, name].some(
+      (value) => String(value || "").toLowerCase() === normalized,
+    ),
   );
 
-  const baseLabel = (
+  const baseLabel =
     matched?.abbr ||
     matched?.name ||
     String(provider || "").replace(/\b\w/g, (char) => char.toUpperCase()) ||
-    "HMO"
-  );
+    "HMO";
 
   return employer ? `${baseLabel} - ${employer}` : baseLabel;
 };
@@ -140,8 +142,12 @@ export default function PosCard() {
         ({ provider = "", number = "" }) => provider || number,
       )
     : [];
-  const hasMembershipSources = collections.some(({ category = "" }) => category === "mbs");
-  const hasContractSources = collections.some(({ category = "" }) => category === "ctr");
+  const hasMembershipSources = collections.some(
+    ({ category = "" }) => category === "mbs",
+  );
+  const hasContractSources = collections.some(
+    ({ category = "" }) => category === "ctr",
+  );
   const cardHolderOptions = [
     { value: "", label: "None" },
     ...savedHealthCards.map((card) => {
@@ -345,10 +351,7 @@ export default function PosCard() {
           >
             {cardHolderOptions.map(({ value, label }, index) => {
               return (
-                <option
-                  value={value}
-                  key={`category-${index}`}
-                >
+                <option value={value} key={`category-${index}`}>
                   {label}
                 </option>
               );

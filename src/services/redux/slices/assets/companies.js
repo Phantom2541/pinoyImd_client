@@ -50,7 +50,7 @@ export const BROWSE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const GET_DETAILS = createAsyncThunk(
@@ -68,7 +68,7 @@ export const GET_DETAILS = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const GET_ORG = createAsyncThunk(
@@ -86,7 +86,7 @@ export const GET_ORG = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPDATE_ORG = createAsyncThunk(
@@ -104,7 +104,7 @@ export const UPDATE_ORG = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const FIND = createAsyncThunk(
   `${url}/find`,
@@ -121,7 +121,7 @@ export const FIND = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const VENDORS = createAsyncThunk(
@@ -139,7 +139,7 @@ export const VENDORS = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const OUTSOURCE = createAsyncThunk(
@@ -157,7 +157,7 @@ export const OUTSOURCE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const GETBRANCHES = createAsyncThunk(
@@ -175,7 +175,7 @@ export const GETBRANCHES = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const SAVE = createAsyncThunk(
@@ -193,7 +193,7 @@ export const SAVE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const UPDATE = createAsyncThunk(
@@ -211,7 +211,7 @@ export const UPDATE = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
@@ -228,12 +228,17 @@ export const DESTROY = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    // Show a clinic's details straight away (from the copy kept in the
+    // browser) while the fresh ones load.
+    SeedDetails: (state, { payload }) => {
+      state.details = payload;
+    },
     SetUPDATE: (state, { payload }) => {
       state.selected = payload;
       state.willUPDATE = true;
@@ -303,7 +308,7 @@ export const reduxSlice = createSlice({
 
       state.paginated = state.filtered.slice(
         (page - 1) * max,
-        max + (page - 1) * max
+        max + (page - 1) * max,
       );
     },
     SetCOLLECTIONS: (state, { payload }) => {
@@ -389,11 +394,16 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(GET_DETAILS.pending, (state) => {
-        state.isLoading = true;
+      .addCase(GET_DETAILS.pending, (state, action) => {
         state.isSuccess = false;
         state.message = "";
-        state.details = {};
+        // `silent`: the details on screen are for this same company. Keep them
+        // and don't flag a load (the company pages hide their content while
+        // `isLoading` is true) -- the fresh copy simply replaces them.
+        if (!action.meta?.arg?.silent) {
+          state.isLoading = true;
+          state.details = {};
+        }
       })
       .addCase(GET_DETAILS.fulfilled, (state, action) => {
         state.details = action.payload;
@@ -403,7 +413,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(GET_DETAILS.rejected, (state, action) => {
         const { error } = action;
-        state.details = {};
+        // A failed background refresh keeps what is already on screen.
+        if (!action.meta?.arg?.silent) state.details = {};
         state.message = error.message;
         state.isLoading = false;
       })
@@ -498,7 +509,7 @@ export const reduxSlice = createSlice({
 
         // ✅ Retrieve current localStorage object
         const activePlatform = JSON.parse(
-          localStorage.getItem("activePlatform")
+          localStorage.getItem("activePlatform"),
         );
 
         const baseKey = isCategories ? "pc" : "hmo";
@@ -514,7 +525,7 @@ export const reduxSlice = createSlice({
                 ...branch,
                 companyId: { ...companyId, [baseKey]: payload[baseKey] },
               },
-            })
+            }),
           );
         }
 
@@ -536,7 +547,7 @@ export const reduxSlice = createSlice({
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          (item) => item._id === payload
+          (item) => item._id === payload,
         );
 
         state.collections.splice(index, 1);
@@ -554,6 +565,7 @@ export const reduxSlice = createSlice({
 
 export const {
   RESET,
+  SeedDetails,
   SetUPDATE,
   SetUPDATEhmo,
   SetCOLLECTIONS,

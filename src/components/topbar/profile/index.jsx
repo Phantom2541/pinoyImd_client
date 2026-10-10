@@ -6,7 +6,11 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SignOut,
+  SignOutDone,
+} from "../../../services/redux/slices/assets/persons/auth";
 import {
   PresetImage,
   clearSiteData,
@@ -14,14 +18,18 @@ import {
 } from "../../../services/utilities";
 import { useHistory } from "react-router";
 
+// How long the "Signing you out..." screen stays after Log out.
+const SIGN_OUT_SCREEN_MS = 2000;
+
 export default function Profile({
   currentAffiliation = {},
   selectedPlatform = "",
 }) {
   const { auth, isPatient, image, activePlatform } = useSelector(
-      ({ auth }) => auth
+      ({ auth }) => auth,
     ),
     [platform, setPlatform] = useState("patron"),
+    dispatch = useDispatch(),
     history = useHistory();
   const employmentStatus =
     currentAffiliation?.contract?.soe ||
@@ -30,7 +38,9 @@ export default function Profile({
     activePlatform?.branch?.status;
 
   useEffect(() => {
-    setPlatform(selectedPlatform || currentAffiliation?.activePlatform || "patron");
+    setPlatform(
+      selectedPlatform || currentAffiliation?.activePlatform || "patron",
+    );
   }, [currentAffiliation, selectedPlatform]);
   const handleLogout = () => {
     const company = currentAffiliation?.companyId || {};
@@ -39,16 +49,37 @@ export default function Profile({
     if (fakeDB && !company?._id) {
       companyId = fakeDB.replace(/"/g, "");
     }
-    localStorage.clear();
-    if (companyId !== "null" && companyId !== null) {
-      history.push(`/subscribers/${companyId}`);
-    } else {
-      history.push(`/`);
+    // No clinic to return to (a patient, for instance): the start page.
+    // "/subscribers/" with no id matches no page and leaves a blank screen.
+    const hasCompany = companyId && companyId !== "null";
+
+    // Signed out for real -- a password is needed to come back -- but who it
+    // was is remembered, so "Welcome back" only asks for the password.
+    const remembered = {
+      email: auth?.email,
+      pid: auth?.pid,
+      isMale: auth?.isMale,
+    };
+    if (remembered.email) {
+      localStorage.setItem("rememberedAccount", JSON.stringify(remembered));
     }
-    clearSiteData();
+    dispatch(SignOut());
+    history.push(hasCompany ? `/subscribers/${companyId}` : `/`);
+
+    // Wipe everything else about the person; the redirect doesn't wait on it.
+    // Kept: the clinic's id and public details (its page opens at once) and the
+    // small remembered-account record.
+    clearSiteData({
+      keep: ["companyId", "patronCompany", "email", "rememberedAccount"],
+    });
+
+    // The next page appears in a blink, which can feel like nothing happened:
+    // a short "Signing you out..." screen (see components/auth/signOutOverlay)
+    // covers it. It is switched off by this timer, which outlives the page.
+    setTimeout(() => dispatch(SignOutDone()), SIGN_OUT_SCREEN_MS);
   };
   const isEmployed = employment.isEmployed(
-    auth?.isPhysician ? "active" : employmentStatus
+    auth?.isPhysician ? "active" : employmentStatus,
   );
   return (
     <MDBDropdown>

@@ -63,7 +63,7 @@ export const REGISTER = createAsyncThunk(
   `${url}/register`,
   ({ data }, thunkAPI) => {
     try {
-      return axioKit.save(url, data);
+      return axioKit.save(url, data, "", "register");
     } catch (error) {
       const message =
         (error?.response &&

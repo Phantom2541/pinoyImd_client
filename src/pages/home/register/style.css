@@ -179,3 +179,10 @@
     font-size: 0.875rem;
   }
 }
+
+/* Date of birth: MDB gives the picker a 1.5rem top margin (.md-form), which
+   left a gap under its label and put it lower than the Sex checkboxes. */
+#registration-dob-field .md-form {
+  margin-top: 0;
+  margin-bottom: 0;
+}

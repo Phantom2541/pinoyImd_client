@@ -50,7 +50,7 @@ export default function BetaTester() {
 
             // Get first main branch (or undefined)
             const mainBranch = branches.find(
-              (branch) => branch.isMain === true
+              (branch) => branch.isMain === true,
             );
             const address = mainBranch?.address || {};
 

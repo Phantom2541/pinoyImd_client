@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
+import { SignOutOverlay } from "./components/auth";
 import "./animations.css";
 import Platforms from "./pages/platforms";
 import Home from "./pages/home";
@@ -55,87 +56,90 @@ export default function App() {
   }, [auth, token, isOnline, dispatch]);
 
   return (
-    <Switch>
-      <Route path="/" exact component={Home} />
-      {/* Frequent Ask Questions */}
-      <Route path="/printout/FAQ" exact component={FAQ} />
-      <Route path="/printout/claimstub" exact component={ClaimStub} />
-      <Route path="/printout/clinicStub" exact component={ClinicStub} />
-      <Route path="/printout/request/form" exact component={RequestForm} />
-      <Route path="/printout/chart" exact component={ChartPrintout} />
-      <Route path="/printout/notes" exact component={NotesPrintout} />
-      <Route
-        path="/printout/laboratoryRequestForm"
-        exact
-        component={RequestFormPrint}
-      />
-      <Route
-        path="/printout/laboratoryClearanceRequestForm"
-        exact
-        component={RequestClearancePrint}
-      />
-      <Route
-        path="/printout/certificate"
-        exact
-        component={MedicalExaminationClearance}
-      />
-      <Route
-        path="/printout/request/outsource"
-        exact
-        component={RequestOutSource}
-      />
-      <Route path="/printout/MenuPriceList" exact component={MenuPriceList} />
-      <Route path="/printout/contract" exact component={contract} />
-      <Route path="/printout/temperature/graph" exact component={TempGraph} />
+    <>
+      <SignOutOverlay />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        {/* Frequent Ask Questions */}
+        <Route path="/printout/FAQ" exact component={FAQ} />
+        <Route path="/printout/claimstub" exact component={ClaimStub} />
+        <Route path="/printout/clinicStub" exact component={ClinicStub} />
+        <Route path="/printout/request/form" exact component={RequestForm} />
+        <Route path="/printout/chart" exact component={ChartPrintout} />
+        <Route path="/printout/notes" exact component={NotesPrintout} />
+        <Route
+          path="/printout/laboratoryRequestForm"
+          exact
+          component={RequestFormPrint}
+        />
+        <Route
+          path="/printout/laboratoryClearanceRequestForm"
+          exact
+          component={RequestClearancePrint}
+        />
+        <Route
+          path="/printout/certificate"
+          exact
+          component={MedicalExaminationClearance}
+        />
+        <Route
+          path="/printout/request/outsource"
+          exact
+          component={RequestOutSource}
+        />
+        <Route path="/printout/MenuPriceList" exact component={MenuPriceList} />
+        <Route path="/printout/contract" exact component={contract} />
+        <Route path="/printout/temperature/graph" exact component={TempGraph} />
 
-      {/* Logbooks */}
-      <Route path="/printout/chem" exact component={ChemLog} />
-      <Route path="/printout/hema" exact component={HemaLog} />
-      <Route path="/printout/urin" exact component={UrinLog} />
-      <Route path="/printout/feca" exact component={FecaLog} />
-      <Route path="/printout/sero" exact component={SeroLog} />
-      <Route path="/printout/misc" exact component={MiscLog} />
-      <Route
-        path="/printout/census?month=:month&year:year"
-        exact
-        component={Census}
-      />
+        {/* Logbooks */}
+        <Route path="/printout/chem" exact component={ChemLog} />
+        <Route path="/printout/hema" exact component={HemaLog} />
+        <Route path="/printout/urin" exact component={UrinLog} />
+        <Route path="/printout/feca" exact component={FecaLog} />
+        <Route path="/printout/sero" exact component={SeroLog} />
+        <Route path="/printout/misc" exact component={MiscLog} />
+        <Route
+          path="/printout/census?month=:month&year:year"
+          exact
+          component={Census}
+        />
 
-      <Route path="/printout/reseco" exact component={ResecoPrintout} />
-      <Route
-        path="/printout/laboratory/task"
-        exact
-        component={LabTaskPrintout}
-      />
-      <Route
-        path="/printout/laboratory/drugtest"
-        exact
-        component={DrugTestPrintout}
-      />
-      <Route
-        path="/printout/radiology/task"
-        exact
-        component={RadTaskPrintout}
-      />
-      <Route path="/printout/duty" exact component={DutyPrintout} />
-      <Route path="/printout/payslip" exact component={Payslip} />
-      <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
-      <Route path="/printout/soa" exact component={SOA} />
-      <Route path="/printout/remittance" exact component={Remittance} />
+        <Route path="/printout/reseco" exact component={ResecoPrintout} />
+        <Route
+          path="/printout/laboratory/task"
+          exact
+          component={LabTaskPrintout}
+        />
+        <Route
+          path="/printout/laboratory/drugtest"
+          exact
+          component={DrugTestPrintout}
+        />
+        <Route
+          path="/printout/radiology/task"
+          exact
+          component={RadTaskPrintout}
+        />
+        <Route path="/printout/duty" exact component={DutyPrintout} />
+        <Route path="/printout/payslip" exact component={Payslip} />
+        <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
+        <Route path="/printout/soa" exact component={SOA} />
+        <Route path="/printout/remittance" exact component={Remittance} />
 
-      <Route path="/printout/machines" exact component={Machines} />
-      <Route path="/printout/staffs" exact component={Staff} />
-      <Route path="/printout/Attendances" exact component={AttendancePrint} />
-      {/* Diagnostic Portal */}
-      <Route path="/emr/portal/:companyId/:dealId" exact component={EMR} />
-      <Route
-        path="/icard/portal/:companyId/:personnelId"
-        exact
-        component={ICard}
-      />
-      <Route path="/subscribers/:companyId" exact component={Subscribers} />
+        <Route path="/printout/machines" exact component={Machines} />
+        <Route path="/printout/staffs" exact component={Staff} />
+        <Route path="/printout/Attendances" exact component={AttendancePrint} />
+        {/* Diagnostic Portal */}
+        <Route path="/emr/portal/:companyId/:dealId" exact component={EMR} />
+        <Route
+          path="/icard/portal/:companyId/:personnelId"
+          exact
+          component={ICard}
+        />
+        <Route path="/subscribers/:companyId" exact component={Subscribers} />
 
-      <Platforms />
-    </Switch>
+        <Platforms />
+      </Switch>
+    </>
   );
 }

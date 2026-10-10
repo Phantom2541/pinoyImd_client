@@ -9,12 +9,8 @@ import axios from "axios";
  */
 const login = async (email, password) =>
   await axios
-    .get("assets/persons/auth/login", {
-      params: {
-        email,
-        password,
-      },
-    })
+    // POST: credentials in a body, not in a URL that gets logged.
+    .post("assets/persons/auth/login", { email, password })
     .then(({ data }) => {
       /**
        * Clear the local storage first
@@ -25,6 +21,15 @@ const login = async (email, password) =>
       localStorage.setItem("token", token);
       localStorage.setItem("email", auth.email);
       localStorage.setItem("auth", JSON.stringify(auth));
+      // The little that "Welcome back" needs after a Log out.
+      localStorage.setItem(
+        "rememberedAccount",
+        JSON.stringify({
+          email: auth.email,
+          pid: auth.pid,
+          isMale: auth.isMale,
+        }),
+      );
       localStorage.removeItem("activePlatform");
       localStorage.setItem("companyId", JSON.stringify(companyId));
 
@@ -34,7 +39,7 @@ const login = async (email, password) =>
       const { response } = error || {};
       const { error: errorLabel, message } = response?.data || {};
       throw new Error(
-        message ? `${errorLabel}: ${message}` : errorLabel || error.message
+        message ? `${errorLabel}: ${message}` : errorLabel || error.message,
       );
     });
 

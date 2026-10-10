@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import SideNavigation from "../../components/sidebar";
 import TopNavigation from "../../components/topbar";
 import Routes from "../Routes";
-import Login from "../home/login";
+import { TopLogin as Login } from "../../components/auth";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { fullName, socket } from "../../services/utilities";
 import { NETWORK } from "../../services/redux/slices/assets/persons/auth";
 import bell from "../../assets/bell.mp3";
@@ -18,15 +19,19 @@ export default function Platforms() {
     [dynamicLeftPadding, setDynamicLeftPadding] = useState("0"),
     { email, auth, token, isOnline } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
+    history = useHistory(),
     audioRef = useRef(null);
 
   const handleResize = () => setWindowWidth(window.innerWidth);
 
+  // Nobody signed in and no saved account: back to the start page. A normal
+  // navigation, not a page load, so a reset ("Use another account") doesn't
+  // reload the page.
   useEffect(() => {
     if (!token && !email) {
-      window.location.href = "/";
+      history.replace("/");
     }
-  }, [token, email]);
+  }, [token, email, history]);
 
   useEffect(() => {
     audioRef.current = new Audio(bell);

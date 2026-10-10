@@ -58,7 +58,7 @@ export default function ContactUs() {
         (err) => {
           console.error(err);
           setLocationLoaded(true);
-        }
+        },
       );
     }
   }, []);

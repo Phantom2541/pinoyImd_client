@@ -5,9 +5,7 @@ import { SetCH } from "../../../../../../../../services/redux/slices/commerce/po
 
 export default function CardCompany() {
   const dispatch = useDispatch();
-  const { cardHolder = {}, sourceId } = useSelector(
-      ({ pos }) => pos,
-    ),
+  const { cardHolder = {}, sourceId } = useSelector(({ pos }) => pos),
     { collections = [] } = useSelector(({ providers }) => providers);
 
   const type =
@@ -39,7 +37,9 @@ export default function CardCompany() {
       selectedSource?.name ||
       "";
     const nextTier =
-      type === "mbs" ? selectedSource?.membership || "" : selectedSource?.contract || "";
+      type === "mbs"
+        ? selectedSource?.membership || ""
+        : selectedSource?.contract || "";
     const nextRef = sourceId || "";
 
     if (
@@ -63,7 +63,15 @@ export default function CardCompany() {
         tier: nextTier,
       }),
     );
-  }, [company?.name, company?.ref, dispatch, selectedSource, sourceId, tier, type]);
+  }, [
+    company?.name,
+    company?.ref,
+    dispatch,
+    selectedSource,
+    sourceId,
+    tier,
+    type,
+  ]);
 
   if (type === "mbs" || type === "ctr") {
     const sourceLabel =
@@ -71,7 +79,8 @@ export default function CardCompany() {
       selectedSource?.displayname ||
       selectedSource?.name ||
       "";
-    const tierLabel = type === "mbs" ? selectedSource?.membership : selectedSource?.contract;
+    const tierLabel =
+      type === "mbs" ? selectedSource?.membership : selectedSource?.contract;
 
     return (
       <div className="patient-form mt-2">

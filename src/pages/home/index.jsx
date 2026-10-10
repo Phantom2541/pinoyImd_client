@@ -9,7 +9,7 @@ import {
 import "./style.css";
 import Copyrights from "../../components/footer";
 import ContactUs from "./contact";
-import Login from "./login";
+import { TopLogin as Login } from "../../components/auth";
 import Description from "./description";
 import Pioneers from "./pioneers";
 import LOGO from "./../../assets/iMD.png";
@@ -55,6 +55,9 @@ export default class Home extends React.Component {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  // After a successful sign-up: back to the slides, with the login open.
+  handleRegistered = () => this.setState({ flipped: false, show: true });
 
   handleFlip = () => {
     this.setState({ flipped: !this.state.flipped });
@@ -264,16 +267,17 @@ export default class Home extends React.Component {
         ></div>
 
         <section id="home">
-          <Login show={this.state.show} toggle={this.toggle} />
+          <Login show={this.state.show} toggle={this.toggle} allowSignup />
           <MDBView>
             <MDBMask
               className="d-flex justify-content-center align-items-center"
               overlay="gradient"
             >
-              <div className="homePage-container" id="home">
+              <div className="homePage-container" id="home-content">
                 <SlideShow
                   handleFlip={this.handleFlip}
                   flipped={this.state.flipped}
+                  onRegistered={this.handleRegistered}
                 />
               </div>
             </MDBMask>
@@ -288,12 +292,12 @@ export default class Home extends React.Component {
             <Description />
           </div>
           <ECGWave color="#00B8D4" waves={10} className="my-4" />
-          <div id="about">
+          <div id="about-us">
             <AboutUs />
           </div>
           <ECGWave color="#00B8D4" waves={19} className="my-4" />
 
-          <div id="about">
+          <div id="affiliates">
             <Affiliates />
           </div>
 
@@ -310,7 +314,7 @@ export default class Home extends React.Component {
           </div>
           <ECGWave color="#00B8D4" waves={19} className="my-4" />
 
-          <div id="pioneers">
+          <div id="gallery">
             <Gallery />
           </div>
           <ECGWave color="#00B8D4" waves={5} className="my-4" />
