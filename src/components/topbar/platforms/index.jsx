@@ -62,7 +62,10 @@ export default function Platforms() {
         String(currentAffiliationId || _id) === String(affiliationId),
     );
 
-    return matchedAffiliation || (visibleBranches.length === 1 ? visibleBranches[0] : {});
+    return (
+      matchedAffiliation ||
+      (visibleBranches.length === 1 ? visibleBranches[0] : {})
+    );
   }, [visibleBranches, affiliationId]);
   const currentAffiliationId =
     currentAffiliation?.affiliationId || currentAffiliation?._id || "";
@@ -175,9 +178,13 @@ export default function Platforms() {
           const isDisabled =
             isDraft &&
             !allowedPlatformsInDraft.includes(cleanedPlatform.toLowerCase());
+          // The platform in use, highlighted like the selected branch next to it.
+          const isActive =
+            cleanedPlatform === String(visiblePlatform).toLowerCase();
 
           return (
             <MDBDropdownItem
+              active={isActive}
               key={index}
               onClick={(e) => {
                 if (isDisabled) {
@@ -188,7 +195,8 @@ export default function Platforms() {
                 handlePlatform(platform, e);
               }}
               style={{
-                color: isDisabled ? "#aaa" : "#212529",
+                // The highlighted item keeps the menu's own (white) text colour.
+                color: isDisabled ? "#aaa" : isActive ? undefined : "#212529",
                 pointerEvents: isDisabled ? "none" : "auto",
                 cursor: isDisabled ? "not-allowed" : "pointer",
               }}

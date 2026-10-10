@@ -1,0 +1,32 @@
+/* The menus on the right of the top bar (DTR, branch, platform, profile): one
+   row, one centre line. They were different heights -- the profile toggle is
+   taller (it holds the 35px avatar) -- so the branch and platform labels sat
+   about 6px higher than the avatar and the word "Profile". */
+.flexible-MDBNavbar .navbar-nav {
+  align-items: center;
+}
+
+.flexible-MDBNavbar .navbar-nav > .dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.flexible-MDBNavbar .navbar-nav > .dropdown > .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  /* The avatar's height plus the toggle's own spacing. */
+  height: 51px;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Icons, the avatar and the label all sit on that centre line. */
+.flexible-MDBNavbar .navbar-nav > .dropdown > .dropdown-toggle > i,
+.flexible-MDBNavbar .navbar-nav > .dropdown > .dropdown-toggle > img,
+.flexible-MDBNavbar .navbar-nav > .dropdown > .dropdown-toggle > span,
+.flexible-MDBNavbar .navbar-nav > .dropdown > .dropdown-toggle > div {
+  vertical-align: middle;
+}

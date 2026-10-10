@@ -12,6 +12,7 @@ import Profile from "./profile";
 import Branches from "./branches";
 import { capitalize, employment } from "../../services/utilities";
 import DTR from "./dtr";
+import "./style.css";
 
 export default function TopNavigation({ toggle, onSideNavToggleClick }) {
   const { auth = {}, branches = [] } = useSelector((state) => state.auth);
@@ -39,7 +40,10 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
         String(affiliationId || _id) === String(auth?.activeAffiliation || ""),
     );
 
-    return matchedAffiliation || (visibleBranches.length === 1 ? visibleBranches[0] : {});
+    return (
+      matchedAffiliation ||
+      (visibleBranches.length === 1 ? visibleBranches[0] : {})
+    );
   }, [visibleBranches, auth?.activeAffiliation]);
   const activePlatforms = Array.isArray(currentAffiliation?.platforms)
     ? currentAffiliation.platforms
